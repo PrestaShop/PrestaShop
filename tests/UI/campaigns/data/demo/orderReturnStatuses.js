@@ -4,7 +4,7 @@ module.exports = {
       id: 1,
       name: 'Waiting for confirmation',
     },
-    waitingForPackaging: {
+    waitingForPackage: {
       id: 2,
       name: 'Waiting for package',
     },
