@@ -91,6 +91,17 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then I should get error that product already has a file
+     */
+    public function assertProductAlreadyHasAFileError(): void
+    {
+        $this->assertLastErrorIs(
+            VirtualProductFileConstraintException::class,
+            VirtualProductFileConstraintException::ALREADY_HAS_A_FILE
+        );
+    }
+
+    /**
      * @Then product :productReference should have a virtual product file :fileReference with following details:
      *
      * @param string $productReference

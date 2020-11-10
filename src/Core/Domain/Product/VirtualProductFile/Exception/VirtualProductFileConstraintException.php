@@ -52,5 +52,5 @@ class VirtualProductFileConstraintException extends VirtualProductFileException
     public const INVALID_PRODUCT_TYPE = 110;
 
     /** Is thrown when file already exists for given product */
-    public const ALREADY_EXISTS = 120;
+    public const ALREADY_HAS_A_FILE = 120;
 }

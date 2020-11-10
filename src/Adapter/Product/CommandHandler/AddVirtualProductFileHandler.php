@@ -89,7 +89,7 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
         if ($this->productDownloadRepository->findByProductId($command->getProductId())) {
             throw new VirtualProductFileConstraintException(
                 sprintf('File already exists for product #%d', $product->id),
-                VirtualProductFileConstraintException::ALREADY_EXISTS
+                VirtualProductFileConstraintException::ALREADY_HAS_A_FILE
             );
         }
 
