@@ -52,7 +52,7 @@ class ProductDownloadValidator extends AbstractObjectModelValidator
         $this->validateProductDownloadProperty($productDownload, 'nb_days_accessible', VirtualProductFileConstraintException::INVALID_ACCESS_DAYS);
         $this->validateProductDownloadProperty($productDownload, 'nb_downloadable', VirtualProductFileConstraintException::INVALID_DOWNLOAD_TIMES_LIMIT);
         $this->validateProductDownloadProperty($productDownload, 'active', VirtualProductFileConstraintException::INVALID_ACTIVE);
-        $this->validateProductDownloadProperty($productDownload, 'is_shareable', VirtualProductFileConstraintException::INVALID_ACTIVE);
+        $this->validateProductDownloadProperty($productDownload, 'is_shareable', VirtualProductFileConstraintException::INVALID_SHAREABLE);
     }
 
     /**
