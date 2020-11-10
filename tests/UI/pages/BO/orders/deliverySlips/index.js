@@ -20,7 +20,7 @@ class DeliverySlips extends BOBasePage {
     this.deliverySlipForm = '#form-delivery-slips-options';
     this.deliveryPrefixInput = '#form_prefix_1';
     this.deliveryNumberInput = '#form_number';
-    this.deliveryEnableProductImage = id => `${this.deliverySlipForm} label[for='form_enable_product_image_${id}']`;
+    this.deliveryProductImageStatusToggleInput = toggle => `#form_enable_product_image_${toggle}`;
     this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} #save-delivery-slip-options-button`;
   }
 
@@ -100,7 +100,7 @@ class DeliverySlips extends BOBasePage {
    * @return {Promise<void>}
    */
   async setEnableProductImage(page, enable = true) {
-    await page.click(this.deliveryEnableProductImage(enable ? 1 : 0));
+    await page.check(this.deliveryProductImageStatusToggleInput(enable ? 1 : 0));
   }
 
   /** Save delivery slip options
