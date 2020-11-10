@@ -40,7 +40,7 @@ use RuntimeException;
 class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @Then virtual product :productReference should not have a file
+     * @Then product :productReference should not have a file
      *
      * @param string $productReference
      */
@@ -52,13 +52,13 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I add new virtual product :productReference file :fileReference with following details:
+     * @When I add virtual product file :fileReference to :productReference with following details:
      *
-     * @param string $productReference
      * @param string $fileReference
+     * @param string $productReference
      * @param TableNode $dataTable
      */
-    public function addFile(string $productReference, string $fileReference, TableNode $dataTable): void
+    public function addFile(string $fileReference, string $productReference, TableNode $dataTable): void
     {
         $dataRows = $dataTable->getRowsHash();
         $filePath = $this->uploadDummyFile($dataRows['file name']);
@@ -91,7 +91,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then virtual product :productReference should have a file :fileReference with following details:
+     * @Then product :productReference should have a virtual product file :fileReference with following details:
      *
      * @param string $productReference
      * @param string $fileReference
@@ -112,7 +112,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         Assert::assertEquals(
             $this->getSharedStorage()->get($fileReference),
             $actualFile->getId(),
-            'Unexpected virtual product file (ids doesn\'t match)'
+            'Unexpected virtual product file (ids do not match)'
         );
 
         $dataRows = $dataTable->getRowsHash();
