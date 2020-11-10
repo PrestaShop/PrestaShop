@@ -85,7 +85,7 @@ describe('Import customers', async () => {
 
       const uploadSuccessText = await importPage.uploadSampleFile(
         page,
-        SampleFiles.customers.dropdownValue,
+        SampleFiles.customers.value,
         renamedSampleFilePath,
       );
       await expect(uploadSuccessText).contain(SampleFiles.customers.name);
