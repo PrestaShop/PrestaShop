@@ -28,9 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -53,20 +57,68 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
+     * @param Request $request
      * @param int $productId
      *
      * @return Response
      */
-    public function editAction(int $productId): Response
+    public function editAction(Request $request, int $productId): Response
     {
-        $productPriceForm = $this->createForm(ProductPriceType::class, [
-            'price_tax_excluded' => 100,
-            'price_tax_included' => 110,
-            'tax_rule_group' => 1,
-        ]);
+        $productForm = $this->getCurrencyFormBuilder()->getFormFor($productId);
+
+        try {
+            $productForm->handleRequest($request);
+
+            $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
-            'productPriceForm' => $productPriceForm->createView(),
+            'productForm' => $productForm->createView(),
         ]);
+    }
+
+    /**
+     * Gets form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getCurrencyFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.product_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getProductFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.product_form_handler');
+    }
+
+    /**
+     * Gets an error by exception class and its code.
+     *
+     * @param Exception $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e)
+    {
+        return [
+            ProductConstraintException::class => [
+                ProductConstraintException::INVALID_PRICE => $this->trans(
+                    'Product price is invalid',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }
