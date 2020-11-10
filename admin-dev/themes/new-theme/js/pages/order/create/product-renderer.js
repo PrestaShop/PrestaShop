@@ -160,7 +160,7 @@ export default class ProductRenderer {
    * @param {object} product
    */
   renderProductMetadata(product) {
-    this.renderStock(product.stock, product.availableOutOfStock ? true : (product.stock <= 0));
+    this.renderStock(product.stock, product.availableOutOfStock || (product.stock <= 0));
     this._renderCombinations(product.combinations);
     this._renderCustomizations(product.customizationFields);
   }
