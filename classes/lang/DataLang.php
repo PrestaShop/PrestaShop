@@ -57,7 +57,7 @@ class DataLangCore
      * @param string $locale
      * @param TranslatorInterface|null $translator If defined, use this translator
      */
-    public function __construct($locale, $translator = null)
+    public function __construct($locale, ?TranslatorInterface $translator = null)
     {
         $this->locale = $locale;
 
