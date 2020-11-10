@@ -586,3 +586,6 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
+
+    prestashop.adapter.product.command.builder:
+        class: PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\ProductCommandsBuilder
