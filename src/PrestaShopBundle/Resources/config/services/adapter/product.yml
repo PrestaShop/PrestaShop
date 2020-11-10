@@ -578,7 +578,7 @@ services:
             - '@prestashop.adapter.file.uploader.virtual_product_file_uploader'
             - '@prestashop.adapter.product.repository.product_download_repository'
 
-   prestashop.adapter.product.command_handler.add_virtual_product_file_handler:
+    prestashop.adapter.product.command_handler.add_virtual_product_file_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddVirtualProductFileHandler
         arguments:
             - '@prestashop.adapter.product.update.virtual_product_updater'
