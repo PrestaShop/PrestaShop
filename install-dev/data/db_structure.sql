@@ -162,6 +162,7 @@ CREATE TABLE `PREFIX_cart` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `checkout_session_data` MEDIUMTEXT NULL,
+  `id_order` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id_cart`),
   KEY `cart_customer` (`id_customer`),
   KEY `id_address_delivery` (`id_address_delivery`),
@@ -172,7 +173,8 @@ CREATE TABLE `PREFIX_cart` (
   KEY `id_guest` (`id_guest`),
   KEY `id_shop_group` (`id_shop_group`),
   KEY `id_shop_2` (`id_shop`, `date_upd`),
-  KEY `id_shop` (`id_shop`, `date_add`)
+  KEY `id_shop` (`id_shop`, `date_add`),
+  KEY `id_order` (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Contains all the promo code rules */
