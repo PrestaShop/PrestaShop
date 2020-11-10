@@ -1,7 +1,7 @@
 module.exports = {
   SampleFiles: {
     customers: {
-      dropdownValue: 'Customers',
+      value: 'Customers',
       name: 'customers_import',
     },
   },
