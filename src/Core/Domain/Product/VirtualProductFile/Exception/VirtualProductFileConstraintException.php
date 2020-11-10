@@ -34,7 +34,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception
  */
 class VirtualProductFileConstraintException extends VirtualProductFileException
 {
-    //@todo: check https://github.com/PrestaShop/PrestaShop/pull/21110#discussion_r519180880
     public const INVALID_ID = 10;
     public const INVALID_PRODUCT_ID = 20;
     public const INVALID_PRODUCT_TYPE = 30;
