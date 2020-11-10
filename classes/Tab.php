@@ -58,10 +58,10 @@ class TabCore extends ObjectModel
     /** @var string Icon font */
     public $icon;
 
-    /** @var string Wording to use for the display name */
+    /** @var string|null Wording to use for the display name */
     public $wording;
 
-    /** @var string Wording domain to use for the display name */
+    /** @var string|null Wording domain to use for the display name */
     public $wording_domain;
 
     /**
@@ -86,8 +86,8 @@ class TabCore extends ObjectModel
             'enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'hide_host_mode' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
-            'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
-            'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
+            'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
+            'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64],
         ],
