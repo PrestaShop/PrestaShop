@@ -719,6 +719,26 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
+     * Provides locale by language id (e.g. en-US, fr-FR, ru-RU)
+     *
+     * @param int $langId
+     *
+     * @return string|null
+     */
+    public static function getLocaleById(int $langId): ?string
+    {
+        $locale = Db::getInstance()->getValue('
+            SELECT `locale` FROM `' . _DB_PREFIX_ . 'lang` WHERE `id_lang` = ' . $langId
+        );
+
+        if (!$locale) {
+            return null;
+        }
+
+        return $locale;
+    }
+
+    /**
      * Returns language information form the all_languages file using IETF language tag
      *
      * @param string $locale IETF language tag
