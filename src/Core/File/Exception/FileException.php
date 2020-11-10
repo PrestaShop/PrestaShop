@@ -32,8 +32,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Base exception for files
- *
- * @todo: there are very similar exceptions in Core/Image. Images are also files, should/how could these be unified? (it's a mess)
  */
 class FileException extends CoreException
 {
