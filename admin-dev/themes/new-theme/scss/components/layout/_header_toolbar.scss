@@ -26,8 +26,8 @@
   .container-fluid {
     .title-row {
       display: flex;
-      justify-content: space-between;
       flex-wrap: wrap;
+      justify-content: space-between;
 
       &::after {
         content: none;
