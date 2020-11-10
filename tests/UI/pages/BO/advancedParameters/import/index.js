@@ -55,7 +55,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   * Click on the "Next step" button
+   * Go to 'Next step' of import
    * @param page
    * @return {Promise<string>}
    */
