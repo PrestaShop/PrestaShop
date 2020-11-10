@@ -24,7 +24,7 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme productPriceForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme productForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
@@ -32,16 +32,26 @@
 
 {# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
 {% block content %}
-  {% block product_price_form %}
-    {{ form_start(productPriceForm) }}
+  {% block product_price %}
+    {{ form_start(productForm) }}
     <div class="card">
+      <h3 class="card-header">
+        {{ 'Product'|trans }}
+      </h3>
       <div class="card-block row">
         <div class="card-text">
-          {{ form_widget(productPriceForm) }}
+          {{ form_widget(productForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
         </div>
       </div>
     </div>
-    {{ form_end(productPriceForm) }}
+    {{ form_end(productForm) }}
   {% endblock %}
 {% endblock %}
 
