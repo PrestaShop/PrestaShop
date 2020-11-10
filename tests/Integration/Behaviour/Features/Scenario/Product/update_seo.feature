@@ -169,30 +169,30 @@ Feature: Update product SEO options from Back Office (BO)
   Scenario: Search product for seo redirect option by name
     Given I add product product3 with following information:
       | name       | en-US:nice boots |
-      | is_virtual | false      |
+      | is_virtual | false            |
     And I update product product3 options with following information:
       | reference | 1234567 |
     And I add product product4 with following information:
       | name       | en-US:nice pants |
-      | is_virtual | false      |
+      | is_virtual | false            |
     And I update product product4 options with following information:
       | reference | 1334567 |
     And I add product product5 with following information:
       | name       | en-US:nice hat |
-      | is_virtual | false    |
+      | is_virtual | false          |
     And I update product product5 options with following information:
       | reference | 1344567 |
     And I add product product6 with following information:
       | name       | en-US:nice scarf |
-      | is_virtual | false      |
+      | is_virtual | false            |
     And I update product product6 options with following information:
       | reference | 1344567 |
     And I add product product7 with following information:
       | name       | en-US:nice glasses |
-      | is_virtual | false        |
+      | is_virtual | false              |
     And I update product product7 options with following information:
       | reference | 1345567 |
-    When I search products for SEO redirect option in "en" language by phrase "nic"
+    When I search products for SEO redirect option in "en" language by phrase "nic" and limit 10
     Then search results for product SEO redirect option should be the following:
       | product  | name         | reference |
       | product3 | nice boots   | 1234567   |
@@ -200,3 +200,32 @@ Feature: Update product SEO options from Back Office (BO)
       | product5 | nice hat     | 1344567   |
       | product6 | nice scarf   | 1344567   |
       | product7 | nice glasses | 1345567   |
+    When I search products for SEO redirect option in "en" language by phrase "nic" and limit 10
+    When I search products for SEO redirect option in "en" language by phrase "nic" and limit 3
+    Then search results for product SEO redirect option should be the following:
+      | product  | name         | reference |
+      | product3 | nice boots   | 1234567   |
+      | product4 | nice pants   | 1334567   |
+      | product5 | nice hat     | 1344567   |
+
+  Scenario: I search product for seo redirect option by reference
+    Given product "product3" localized "name" should be "en-US:nice boots"
+    And product product3 should have following options information:
+      | reference | 1234567 |
+    And product "product4" localized "name" should be "en-US:nice pants"
+    And product product4 should have following options information:
+      | reference | 1334567 |
+    And product "product5" localized "name" should be "en-US:nice hat"
+    And product product5 should have following options information:
+      | reference | 1344567 |
+    And product "product6" localized "name" should be "en-US:nice scarf"
+    And product product6 should have following options information:
+      | reference | 1344567 |
+    And product "product7" localized "name" should be "en-US:nice glasses"
+    And product product7 should have following options information:
+      | reference | 1345567 |
+    When I search products for SEO redirect option in "en" language by phrase "1344" and limit 10
+    Then search results for product SEO redirect option should be the following:
+      | product  | name       | reference |
+      | product5 | nice hat   | 1344567   |
+      | product6 | nice scarf | 1344567   |

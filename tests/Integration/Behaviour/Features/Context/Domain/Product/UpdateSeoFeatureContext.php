@@ -44,7 +44,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
     /**
      * Key for shared storage, where previous search results are stored
      */
-    const SEARCH_RESULTS_KEY = 'search_for_redirect_product';
+    const LATEST_SEARCH_RESULTS_STORAGE_KEY = 'search_for_redirect_product_results';
 
     /**
      * @When I update product :productReference SEO information with following values:
@@ -156,17 +156,22 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I search products for SEO redirect option in :iso language by phrase :searchPhrase
+     * @When I search products for SEO redirect option in :iso language by phrase ":searchPhrase" and limit :limit
      *
      * @param string $iso
      * @param string $searchPhrase
+     * @param int $limit
      */
-    public function searchProductsForRedirect(string $iso, string $searchPhrase): void
+    public function searchProductsForRedirect(string $iso, string $searchPhrase, int $limit): void
     {
         $languageId = Language::getIdByIso($iso, true);
-        $searchResults = $this->getQueryBus()->handle(new SearchProductsForRedirectOption($searchPhrase, $languageId));
+        $searchResults = $this->getQueryBus()->handle(new SearchProductsForRedirectOption(
+            $searchPhrase,
+            $languageId,
+            $limit
+        ));
 
-        $this->getSharedStorage()->set(self::SEARCH_RESULTS_KEY, $searchResults);
+        $this->getSharedStorage()->set(self::LATEST_SEARCH_RESULTS_STORAGE_KEY, $searchResults);
     }
 
     /**
@@ -209,8 +214,8 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
      */
     private function getSearchResults(): array
     {
-        return $this->getSharedStorage()->exists(self::SEARCH_RESULTS_KEY) ?
-            $this->getSharedStorage()->get(self::SEARCH_RESULTS_KEY) :
+        return $this->getSharedStorage()->exists(self::LATEST_SEARCH_RESULTS_STORAGE_KEY) ?
+            $this->getSharedStorage()->get(self::LATEST_SEARCH_RESULTS_STORAGE_KEY) :
             []
         ;
     }
