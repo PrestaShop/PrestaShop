@@ -34,8 +34,7 @@ use ProductDownload;
 
 /**
  * Validates ProductDownload properties using legacy object model validation
- *
- * @todo: rename to VirtualProductFileValidator or keep using legacy name as its in adapter?
+ * ProductDownload is referred as VirtualProductFile in Core
  */
 class ProductDownloadValidator extends AbstractObjectModelValidator
 {
