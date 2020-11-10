@@ -23,7 +23,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I add virtual product file with limited access days, downloads and expiration date
     And I add product "product2" with following information:
       | name       | en-US:puffin icon 2 |
-      | is_virtual | true              |
+      | is_virtual | true                |
     And product "product2" should not have a file
     And product product2 type should be virtual
     When I add virtual product file "file2" to "product2" with following details:
@@ -41,7 +41,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I add zip type virtual product file
     And I add product "product3" with following information:
       | name       | en-US:puffin icon 3 |
-      | is_virtual | true              |
+      | is_virtual | true                |
     And product "product3" should not have a file
     And product product3 type should be virtual
     When I add virtual product file "file3" to "product3" with following details:
@@ -58,12 +58,32 @@ Feature: Add virtual product file from BO (Back Office).
 
   Scenario: I should not be able to add file to a product which is not virtual
     Given I add product product4 with following information:
-      | name       | en-US:puffin icon |
-      | is_virtual | false             |
+      | name       | en-US:puffin icon 4 |
+      | is_virtual | false               |
     And product product4 type should be standard
     And product "product4" should not have a file
     When I add virtual product file "file4" to "product4" with following details:
-      | file name            | dummy_zip.zip       |
-      | display name         | zipped files pack   |
+      | file name    | dummy_zip.zip     |
+      | display name | zipped files pack |
     Then I should get error that only virtual product can have file
     And product "product4" should not have a file
+
+  Scenario: I should not be able to add file to a product which already has a file
+    Given I add product product5 with following information:
+      | name       | en-US:puffin icon 5 |
+      | is_virtual | true                |
+    And product product5 type should be virtual
+    And product "product5" should not have a file
+    When I add virtual product file "file5" to "product5" with following details:
+      | file name    | dummy_zip.zip                      |
+      | display name | zipped files pack for fith product |
+    Then product "product5" should have a virtual product file "file5" with following details:
+      | display name         | zipped files pack for fith product |
+      | access days          | 0                                  |
+      | download times limit | 0                                  |
+      | expiration date      | 0000-00-00 00:00:00                |
+    When I add virtual product file "file5" to "product5" with following details:
+    When I add virtual product file "file5-5" to "product5" with following details:
+      | file name            | app_icon.png        |
+      | display name         | puffin-logo2.png    |
+    Then I should get error that product already has a file
