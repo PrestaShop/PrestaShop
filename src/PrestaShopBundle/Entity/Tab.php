@@ -109,14 +109,14 @@ class Tab
     private $icon;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="wording", type="string", length=255, nullable=true)
      */
     private $wording;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="wording_domain", type="string", length=255, nullable=true)
      */
@@ -175,7 +175,7 @@ class Tab
     /**
      * @return string|null
      */
-    public function getWording()
+    public function getWording(): ?string
     {
         return $this->wording;
     }
@@ -183,7 +183,7 @@ class Tab
     /**
      * @return string|null
      */
-    public function getWordingDomain()
+    public function getWordingDomain(): ?string
     {
         return $this->wordingDomain;
     }
