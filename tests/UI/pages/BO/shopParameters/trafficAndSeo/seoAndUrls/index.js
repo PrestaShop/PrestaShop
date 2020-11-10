@@ -59,7 +59,8 @@ class SeoAndUrls extends BOBasePage {
     this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
 
     // Seo options form
-    this.switchDisplayAttributesToggleInput = toggle => `#meta_settings_seo_options_form_product_attributes_in_title_${toggle}`;
+    this.switchDisplayAttributesToggleInput = toggle => '#meta_settings_seo_options_form_product_attributes_in_title_'
+      + `${toggle}`;
     this.saveSeoOptionsFormButton = '#meta_settings_seo_options_form_save_button';
   }
 

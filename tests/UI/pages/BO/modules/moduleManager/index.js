@@ -69,7 +69,7 @@ class ModuleManager extends BOBasePage {
    */
   async filterByStatus(page, enabled) {
     // Open dropdown
-    await page.click(this.statusDropdownDiv)
+    await page.click(this.statusDropdownDiv);
     await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='true']`);
 
     // Select dropdown item

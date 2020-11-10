@@ -40,7 +40,7 @@ class OrderSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   async setFinalSummaryStatus(page, toEnable = true) {
-    await page.check( this.enableFinalSummaryToggleInput(toEnable ? 1 : 0));
+    await page.check(this.enableFinalSummaryToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -52,7 +52,7 @@ class OrderSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setGuestCheckoutStatus(page, toEnable = true) {
-    await page.check( this.enableGuestCheckoutToggleInput(toEnable ? 1 : 0));
+    await page.check(this.enableGuestCheckoutToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -64,7 +64,7 @@ class OrderSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setReorderOptionStatus(page, toEnable = true) {
-    await page.check( this.disableReorderingToggleInput(toEnable ? 1 : 0));
+    await page.check(this.disableReorderingToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -89,7 +89,7 @@ class OrderSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setTermsOfService(page, toEnable = true, pageName = '') {
-    await page.check( this.enableTermsOfServiceToggleInput(toEnable ? 1 : 0));
+    await page.check(this.enableTermsOfServiceToggleInput(toEnable ? 1 : 0));
     if (toEnable) {
       await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
