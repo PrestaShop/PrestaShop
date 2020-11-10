@@ -120,10 +120,13 @@ class ProductDuplicator
      */
     public function duplicate(ProductId $productId): ProductId
     {
-        //@todo: don't forget to add hooks from PrestaShopBundle\Controller\Admin\ProductController L1063 when new controller is implemented
-        //@todo: add database transaction. blocked by PR #20518
+        //@todo: add database transaction. After/if PR #21740 gets merged
         $product = $this->productRepository->get($productId);
         $oldProductId = $productId->getValue();
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAdminDuplicateBefore',
+            ['id_product' => $oldProductId]
+        );
         $newProduct = $this->duplicateProduct($product);
         $newProductId = (int) $newProduct->id;
 
@@ -139,6 +142,11 @@ class ProductDuplicator
         );
 
         $this->updateSearchIndexation($newProduct, $oldProductId);
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAdminDuplicateAfter',
+            ['id_product' => $oldProductId, 'id_product_new' => $newProductId]
+        );
 
         return new ProductId((int) $newProduct->id);
     }
