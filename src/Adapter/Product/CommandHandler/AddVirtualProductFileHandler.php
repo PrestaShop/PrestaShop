@@ -28,12 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use ProductDownload;
@@ -44,33 +41,17 @@ use ProductDownload;
 final class AddVirtualProductFileHandler implements AddVirtualProductFileHandlerInterface
 {
     /**
-     * @var VirtualProductFileUploader
+     * @var VirtualProductUpdater
      */
-    private $virtualProductFileUploader;
+    private $virtualProductUpdater;
 
     /**
-     * @var ProductDownloadRepository
-     */
-    private $productDownloadRepository;
-
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @param VirtualProductFileUploader $virtualProductFileUploader
-     * @param ProductDownloadRepository $productDownloadRepository
-     * @param ProductRepository $productRepository
+     * @param VirtualProductUpdater $virtualProductUpdater
      */
     public function __construct(
-        VirtualProductFileUploader $virtualProductFileUploader,
-        ProductDownloadRepository $productDownloadRepository,
-        ProductRepository $productRepository
+        VirtualProductUpdater $virtualProductUpdater
     ) {
-        $this->virtualProductFileUploader = $virtualProductFileUploader;
-        $this->productDownloadRepository = $productDownloadRepository;
-        $this->productRepository = $productRepository;
+        $this->virtualProductUpdater = $virtualProductUpdater;
     }
 
     /**
@@ -78,39 +59,22 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
      */
     public function handle(AddVirtualProductFileCommand $command): VirtualProductFileId
     {
-        $product = $this->productRepository->get($command->getProductId());
-        if (!$product->is_virtual) {
-            throw new VirtualProductFileConstraintException(
-                'Only virtual product can have file',
-                VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
-            );
-        }
-
-        if ($this->productDownloadRepository->findByProductId($command->getProductId())) {
-            throw new VirtualProductFileConstraintException(
-                sprintf('File already exists for product #%d', $product->id),
-                VirtualProductFileConstraintException::ALREADY_HAS_A_FILE
-            );
-        }
-
-        $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
-        $productDownload = $this->buildObjectModel($command, pathinfo($uploadedFilePath, PATHINFO_FILENAME));
-
-        return $this->productDownloadRepository->add($productDownload);
+        return $this->virtualProductUpdater->addFile(
+            $command->getProductId(),
+            $command->getFilePath(),
+            $this->buildObjectModel($command)
+        );
     }
 
     /**
      * @param AddVirtualProductFileCommand $command
-     * @param string $uploadedFileName
      *
      * @return ProductDownload
      */
-    private function buildObjectModel(AddVirtualProductFileCommand $command, string $uploadedFileName): ProductDownload
+    private function buildObjectModel(AddVirtualProductFileCommand $command): ProductDownload
     {
         $productDownload = new ProductDownload();
-        $productDownload->id_product = $command->getProductId()->getValue();
         $productDownload->display_filename = $command->getDisplayName();
-        $productDownload->filename = $uploadedFileName;
         $productDownload->nb_days_accessible = $command->getAccessDays() ?: 0;
         $productDownload->nb_downloadable = $command->getDownloadTimesLimit() ?: 0;
         $productDownload->date_expiration = $command->getExpirationDate() ?
