@@ -510,3 +510,5 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing
 
+    prestashop.adapter.product.command.builder:
+        class: PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\ProductCommandsBuilder
