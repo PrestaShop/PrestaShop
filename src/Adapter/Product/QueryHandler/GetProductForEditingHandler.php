@@ -53,12 +53,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
-use ProductDownload;
 use Tag;
 
 /**
@@ -353,12 +351,11 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
     {
-        $productDownloadId = ProductDownload::getIdFromIdProduct($product->id);
-        if (!$productDownloadId) {
+        $productDownload = $this->productDownloadRepository->findByProductId(new ProductId($product->id));
+
+        if (!$productDownload) {
             return null;
         }
-
-        $productDownload = $this->productDownloadRepository->get(new VirtualProductFileId((int) $productDownloadId));
 
         return new VirtualProductFileForEditing(
             (int) $productDownload->id,
