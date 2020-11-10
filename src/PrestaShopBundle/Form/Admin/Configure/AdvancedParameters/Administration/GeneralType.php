@@ -33,10 +33,31 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 class GeneralType extends TranslatorAwareType
 {
+    /**
+     * @var bool
+     */
+    private $isDebug;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param bool $isDebug
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        bool $isDebug
+    ) {
+        parent::__construct($translator, $locales);
+
+        $this->isDebug = $isDebug;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,11 +66,14 @@ class GeneralType extends TranslatorAwareType
         $builder
             ->add('check_modules_update', SwitchType::class, [
                 'required' => true,
-            ])
-            ->add('check_modules_stability_channel', ChoiceType::class, [
+            ]);
+        if ($this->isDebug) {
+            $builder->add('check_modules_stability_channel', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->getStabilityChannelsValues(),
-            ])
+            ]);
+        }
+        $builder
             ->add('check_ip_address', SwitchType::class, [
                 'required' => true,
             ])
@@ -90,7 +114,7 @@ class GeneralType extends TranslatorAwareType
     {
         $values = [];
         foreach (Tools::ADDONS_API_MODULE_CHANNELS as $key) {
-            $values[$key] = $this->getStabilityChannelsValue($key);
+            $values[$this->getStabilityChannelsValue($key)] = $key;
         }
 
         return $values;
