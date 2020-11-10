@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 class GeneralType extends TranslatorAwareType
@@ -42,6 +43,26 @@ class GeneralType extends TranslatorAwareType
     public const FIELD_COOKIE_SAMESITE = 'cookie_samesite';
 
     /**
+     * @var bool
+     */
+    private $isDebug;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param bool $isDebug
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        bool $isDebug
+    ) {
+        parent::__construct($translator, $locales);
+
+        $this->isDebug = $isDebug;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -49,12 +70,17 @@ class GeneralType extends TranslatorAwareType
         $builder
             ->add('check_modules_update', SwitchType::class, [
                 'label' => $this->trans('Automatically check for module updates', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Choose a stability level for the modules downloaded from Addons Marketplace. All zips pushed on Addons are in stable state unless stated otherwise.', 'Admin.Advparameters.Help'),
+            ]);
+        if ($this->isDebug) {
+            $builder->add('check_modules_stability_channel', ChoiceType::class, [
+                'label' => $this->trans('Addons API stability channel', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('New modules and updates are displayed on the modules page.', 'Admin.Advparameters.Help'),
-            ])
-            ->add('check_modules_stability_channel', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->getStabilityChannelsValues(),
-            ])
+            ]);
+        }
+        $builder
             ->add('check_ip_address', SwitchType::class, [
                 'label' => $this->trans('Check the cookie\'s IP address', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', 'Admin.Advparameters.Help'),
@@ -99,7 +125,7 @@ class GeneralType extends TranslatorAwareType
     {
         $values = [];
         foreach (Tools::ADDONS_API_MODULE_CHANNELS as $key) {
-            $values[$key] = $this->getStabilityChannelsValue($key);
+            $values[$this->getStabilityChannelsValue($key)] = $key;
         }
 
         return $values;
