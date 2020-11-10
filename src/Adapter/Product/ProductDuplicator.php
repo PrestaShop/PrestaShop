@@ -231,9 +231,9 @@ class ProductDuplicator
     }
 
     /**
-     * @todo: move this somewhere? add methods in MultistoreContextCheckerInterface?
-     *
      * @return array<int, array<string, string>>
+     *
+     * @throws CoreException
      */
     private function getContextShops(): array
     {
