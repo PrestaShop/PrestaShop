@@ -81,6 +81,7 @@ describe('Import customers', async () => {
     it(`should upload ${SampleFiles.customers.name} sample text file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
+      // Rename the file and add file extension to be able to upload it
       await files.renameFile(sampleFilePath, renamedSampleFilePath);
 
       const uploadSuccessText = await importPage.uploadSampleFile(
