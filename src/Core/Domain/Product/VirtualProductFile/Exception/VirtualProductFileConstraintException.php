@@ -30,19 +30,27 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception
 
 /**
  * Thrown when virtual product file constraints are violated
- * Each constant represents violated property
+ * Each constant represents related error code
  */
 class VirtualProductFileConstraintException extends VirtualProductFileException
 {
+    /**
+     * Each of following constants respectively represents invalid entity properties
+     */
     public const INVALID_ID = 10;
     public const INVALID_PRODUCT_ID = 20;
-    public const INVALID_PRODUCT_TYPE = 30;
-    public const INVALID_DISPLAY_NAME = 40;
-    public const INVALID_FILENAME = 50;
-    public const INVALID_CREATION_DATE = 60;
-    public const INVALID_EXPIRATION_DATE = 70;
-    public const INVALID_ACCESS_DAYS = 80;
-    public const INVALID_DOWNLOAD_TIMES_LIMIT = 90;
-    public const INVALID_ACTIVE = 100;
-    public const INVALID_SHAREABLE = 110;
+    public const INVALID_DISPLAY_NAME = 30;
+    public const INVALID_FILENAME = 40;
+    public const INVALID_CREATION_DATE = 50;
+    public const INVALID_EXPIRATION_DATE = 60;
+    public const INVALID_ACCESS_DAYS = 70;
+    public const INVALID_DOWNLOAD_TIMES_LIMIT = 80;
+    public const INVALID_ACTIVE = 90;
+    public const INVALID_SHAREABLE = 100;
+
+    /** Is thrown when product type is not valid to have a file */
+    public const INVALID_PRODUCT_TYPE = 110;
+
+    /** Is thrown when file already exists for given product */
+    public const ALREADY_EXISTS = 120;
 }
