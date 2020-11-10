@@ -31,7 +31,7 @@ Create 2 tax rules
 Enable/Disable by quick edit
 Enable/Disable/Delete by bulk actions
  */
-describe('Enable/Disable/delete taxes by quick edit and bulk actions', async () => {
+describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -152,8 +152,8 @@ describe('Enable/Disable/delete taxes by quick edit and bulk actions', async () 
     });
   });
 
-  // 3 : Enable/Disable with bulk actions
-  describe('Enable and Disable Tax rules with Bulk Actions', async () => {
+  // 3 : Enable/Disable by bulk actions
+  describe('Enable and Disable Tax rules by Bulk Actions', async () => {
     const tests = [
       {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}, expected: 'Disabled'},
       {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}, expected: 'Enabled'},

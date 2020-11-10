@@ -34,7 +34,7 @@ class TaxRules extends BOBasePage {
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnActiveEnabledIcon = row => `${this.tableColumnActive(row)} .icon-check`;
+    this.tableColumnCheckIcon = row => `${this.tableColumnActive(row)} .icon-check`;
 
     // Bulk actions selectors
     this.toggleDropDown = row => `${this.tableRow(row)} button[data-toggle='dropdown']`;
@@ -345,7 +345,7 @@ class TaxRules extends BOBasePage {
    */
   async getToggleColumnValue(page, row) {
     await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
-    return this.elementVisible(page, this.tableColumnActiveEnabledIcon(row), 100);
+    return this.elementVisible(page, this.tableColumnCheckIcon(row), 100);
   }
 
   /**
