@@ -13,8 +13,6 @@ Feature: Duplicate product from Back Office (BO).
     And category "men" in default language named "Men" exists
     And category "clothes" in default language named "Clothes" exists
     And manufacturer studioDesign named "Studio Design" exists
-
-  Scenario: I duplicate product
     Given language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
@@ -96,9 +94,12 @@ Feature: Duplicate product from Back Office (BO).
       | name        | en-US:puffin ;fr-FR:macareux           |
       | file_name   | app_icon.png                           |
     And I associate attachment "att1" with product product1
+
+  Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
     When I duplicate product product1 to a copy_of_product1
-    Then product "product1" should have following values:
+    Then product "copy_of_product1" should have following values:
+    #todo: activate the product and check that duplication is deactivating the duplicate.
       | active | false |
     And product "copy_of_product1" type should be standard
     And product "copy_of_product1" localized "name" should be "en-US:copy of smart sunglasses; fr-FR:copy of lunettes de soleil"
