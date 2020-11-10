@@ -29,14 +29,22 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsToRelate;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductToRelate;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 
 class RelatedProductsFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * Shared storage key to save latest search results for products to relate
+     */
+    public const LATEST_SEARCH_RESULTS_STORAGE_KEY = 'search_products_to_relate_results';
+
     /**
      * @Then product :productReference should have no related products
      *
@@ -105,5 +113,70 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
         $this->getCommandBus()->handle(new RemoveAllRelatedProductsCommand($productId));
+    }
+
+    /**
+     * @When I search products to relate in :iso language by phrase :phrase and limit :limit
+     *
+     * @param string $iso
+     * @param string $phrase
+     * @param int $limit
+     */
+    public function searchProductsToRelate(string $iso, string $phrase, int $limit): void
+    {
+        $languageId = Language::getIdByIso($iso, true);
+        $searchResults = $this->getQueryBus()->handle(new SearchProductsToRelate(
+            $phrase,
+            $languageId,
+            $limit
+        ));
+
+        $this->getSharedStorage()->set(self::LATEST_SEARCH_RESULTS_STORAGE_KEY, $searchResults);
+    }
+
+    /**
+     * @Then search results for product to relate should be the following:
+     *
+     * @param TableNode $tableNode
+     */
+    public function assertSearchResults(TableNode $tableNode): void
+    {
+        $expectedDataRows = $tableNode->getColumnsHash();
+        $searchResults = $this->getSearchResults();
+        Assert::assertEquals(count($expectedDataRows), count($searchResults), 'Unexpected search results count');
+
+        foreach ($expectedDataRows as $key => $expectedDataRow) {
+            $productToRelate = $searchResults[$key];
+
+            Assert::assertEquals(
+                $this->getSharedStorage()->get($expectedDataRow['product']),
+                $productToRelate->getProductId(),
+                'Unexpected product id in search results'
+            );
+
+            Assert::assertEquals(
+                $expectedDataRow['name'],
+                $productToRelate->getName(),
+                'Unexpected product name in search results'
+            );
+
+            Assert::assertEquals(
+                $expectedDataRow['reference'],
+                $productToRelate->getReference(),
+                'Unexpected product name in search results'
+            );
+            //@todo: image is not asserted. How to?
+        }
+    }
+
+    /**
+     * @return ProductToRelate[]
+     */
+    private function getSearchResults(): array
+    {
+        return $this->getSharedStorage()->exists(self::LATEST_SEARCH_RESULTS_STORAGE_KEY) ?
+            $this->getSharedStorage()->get(self::LATEST_SEARCH_RESULTS_STORAGE_KEY) :
+            []
+        ;
     }
 }
