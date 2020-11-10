@@ -66,7 +66,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   * Confirm the upload by clicking on the "import" button
+   * Confirm the upload by clicking on the 'import' button
    * @param page
    * @return {Promise<string>}
    */
