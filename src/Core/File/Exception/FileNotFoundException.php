@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Core\File\Exception;
 
 /**
  * Thrown when file is not found
- *
- * @todo: Core/Exception/FileNotFoundExists. Is it worth introducing new one?
  */
 class FileNotFoundException extends FileException
 {
