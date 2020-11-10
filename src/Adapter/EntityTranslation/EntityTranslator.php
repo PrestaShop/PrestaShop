@@ -84,7 +84,6 @@ class EntityTranslator implements EntityTranslatorInterface
         TranslatorInterface $translator,
         DataLangCore $dataLang
     ) {
-        //$this->translatorLanguageLoader = new TranslatorLanguageLoader(true);
         $this->dataLang = $dataLang;
         $this->db = $db;
         $this->dbPrefix = $dbPrefix;

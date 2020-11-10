@@ -43,8 +43,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
     const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
     const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
-    const PACK_TYPE_EMAILS = 'emails';
-    const PACK_TYPE_SYMFONY = 'sf';
+    public const PACK_TYPE_EMAILS = 'emails';
+    public const PACK_TYPE_SYMFONY = 'sf';
 
     /**
      * Timeout for downloading a translation pack, in seconds
@@ -1420,7 +1420,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public static function installFirstLanguagePack(string $iso, array $params = [], &$errors = []): bool
+    public static function installFirstLanguagePack(string $iso, array $params = [], array &$errors = []): bool
     {
         $lang_pack = static::getLangDetails($iso);
 
