@@ -15,7 +15,7 @@ class AddEmployee extends BOBasePage {
     this.passwordInput = '#employee_password';
     this.defaultPageSpan = '.select2-selection[aria-labelledby=\'select2-employee_default_page-container\']';
     this.languageSelect = '#employee_language';
-    this.activeSwitchLabel = toggle => `label[for='employee_active_${toggle}']`;
+    this.statusToggleInput = toggle => `#employee_active_${toggle}`;
     this.permissionProfileSelect = '#employee_profile';
     this.saveButton = '#save-button';
     this.cancelButton = '#cancel-link';
@@ -40,7 +40,7 @@ class AddEmployee extends BOBasePage {
     await this.selectByVisibleText(page, this.languageSelect, employeeData.language);
     await this.selectDefaultPage(page, employeeData.defaultPage);
     // replace toggle by 1 in the selector if active = YES / 0 if active = NO
-    await page.click(this.activeSwitchLabel(employeeData.active ? 1 : 0));
+    await page.check(this.statusToggleInput(employeeData.active ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
