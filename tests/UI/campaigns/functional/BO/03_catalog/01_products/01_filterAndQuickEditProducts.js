@@ -132,7 +132,7 @@ describe('Filter Products', async () => {
     ];
 
     tests.forEach((test) => {
-      filterValue = test.args.filterValue.min === undefined ? `'${test.args.filterValue}`
+      filterValue = test.args.filterValue.min === undefined ? `'${test.args.filterValue}'`
         : `'${test.args.filterValue.min}-${test.args.filterValue.max}'`;
 
       it(`should filter by ${test.args.filterBy} ${filterValue}`, async function () {
@@ -149,14 +149,17 @@ describe('Filter Products', async () => {
         await expect(numberOfProductsAfterFilter).to.within(0, numberOfProducts);
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.equal(test.expected);
-          } else if (test.args.filterValue.min !== undefined) {
-            await expect(textColumn).to.within(test.args.filterValue.min, test.args.filterValue.max);
+          if (test.args.filterBy === 'active') {
+            const productStatus = await productsPage.getProductStatusFromList(page, i);
+            await expect(productStatus).to.equal(test.args.filterValue);
           } else {
-            await expect(textColumn).to.contains(test.args.filterValue);
+            const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
+
+            if (test.args.filterValue.min !== undefined) {
+              await expect(textColumn).to.within(test.args.filterValue.min, test.args.filterValue.max);
+            } else {
+              await expect(textColumn).to.contains(test.args.filterValue);
+            }
           }
         }
       });
@@ -195,7 +198,7 @@ describe('Filter Products', async () => {
       it(`should ${productStatus.args.status} the product`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${productStatus.args.status}Product`, baseContext);
 
-        const isActionPerformed = await productsPage.updateToggleColumnValue(
+        const isActionPerformed = await productsPage.setProductStatus(
           page,
           1,
           productStatus.args.enable,
@@ -214,7 +217,7 @@ describe('Filter Products', async () => {
           }
         }
 
-        const currentStatus = await productsPage.getToggleColumnValue(page, 1);
+        const currentStatus = await productsPage.getProductStatusFromList(page, 1);
         await expect(currentStatus).to.be.equal(productStatus.args.enable);
       });
     });
