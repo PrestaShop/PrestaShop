@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotAddVirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 use ProductDownload;
 
 /**
@@ -79,13 +81,25 @@ class ProductDownloadRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return ProductDownload
+     * @return ProductDownload|null
      *
      * @throws VirtualProductFileNotFoundException
      */
-    public function findByProductId(ProductId $productId): ProductDownload
+    public function findByProductId(ProductId $productId): ?ProductDownload
     {
-        $id = ProductDownload::getIdFromIdProduct($productId->getValue());
+        try {
+            $id = (int) ProductDownload::getIdFromIdProduct($productId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to find ProductDownload by product id #%d', $productId->getValue()),
+                0,
+                $e
+            );
+        }
+
+        if (!$id) {
+            return null;
+        }
 
         return $this->get(new VirtualProductFileId($id));
     }
