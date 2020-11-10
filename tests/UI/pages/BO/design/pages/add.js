@@ -13,8 +13,8 @@ class AddPage extends BOBasePage {
     this.metaDescriptionInput = '#cms_page_meta_description_1';
     this.metaKeywordsInput = '#cms_page_meta_keyword_1-tokenfield';
     this.pageContentIframe = '#cms_page_content_1_ifr';
-    this.indexation = id => `#cms_page_is_indexed_for_search_${id}`;
-    this.displayedToggle = toggle => `label[for='cms_page_is_displayed_${toggle}']`;
+    this.indexationToggleInput = toggle => `#cms_page_is_indexed_for_search_${toggle}`;
+    this.displayedToggleInput = toggle => `#cms_page_is_displayed_${toggle}`;
     this.savePageButton = '#save-button';
     this.saveAndPreviewPageButton = '#save-and-preview-button';
     this.cancelButton = '#cancel-link';
@@ -37,8 +37,8 @@ class AddPage extends BOBasePage {
     await this.setValue(page, this.metaDescriptionInput, pageData.metaDescription);
     await this.setValue(page, this.metaKeywordsInput, pageData.metaKeywords);
     await this.setValueOnTinymceInput(page, this.pageContentIframe, pageData.content);
-    await page.click(this.indexation(pageData.indexation ? 1 : 0));
-    await page.click(this.displayedToggle(pageData.displayed ? 1 : 0));
+    await page.check(this.indexationToggleInput(pageData.indexation ? 1 : 0));
+    await page.check(this.displayedToggleInput(pageData.displayed ? 1 : 0));
 
     // Save form
     await this.clickAndWaitForNavigation(page, this.savePageButton);

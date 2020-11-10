@@ -46,8 +46,8 @@ class SeoAndUrls extends BOBasePage {
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     // Set up URL form
-    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_friendly_url_${toggle}']`;
-    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_accented_url_${toggle}']`;
+    this.switchFriendlyUrlLabel = toggle => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;
+    this.switchAccentedUrlLabel = toggle => `#meta_settings_set_up_urls_form_accented_url_${toggle}`;
     this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
     // Delete modal
     this.confirmDeleteModal = '#meta-grid-confirm-modal';
@@ -59,8 +59,8 @@ class SeoAndUrls extends BOBasePage {
     this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
 
     // Seo options form
-    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_seo_options_form_product'
-      + `_attributes_in_title_${toggle}']`;
+    this.switchDisplayAttributesToggleInput = toggle => '#meta_settings_seo_options_form_product_attributes_in_title_'
+      + `${toggle}`;
     this.saveSeoOptionsFormButton = '#meta_settings_seo_options_form_save_button';
   }
 
@@ -321,7 +321,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.switchDisplayAttributesLabel(toEnable ? 1 : 0));
+    await page.check(this.switchDisplayAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

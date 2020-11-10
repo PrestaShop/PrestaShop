@@ -12,7 +12,7 @@ class AddWebserviceKey extends BOBasePage {
     this.webserviceKeyInput = '#webservice_key_key';
     this.generateButton = 'button.js-generator-btn';
     this.keyDescriptionTextarea = '#webservice_key_description';
-    this.statusSwitchLabel = id => `label[for='webservice_key_status_${id}']`;
+    this.statusToggleInput = toggle => `#webservice_key_status_${toggle}`;
     this.saveButton = '#save-button';
   }
 
@@ -36,7 +36,7 @@ class AddWebserviceKey extends BOBasePage {
 
     await this.setValue(page, this.keyDescriptionTextarea, webserviceData.keyDescription);
     // id = 1 if active = YES / 0 if active = NO
-    await page.click(this.statusSwitchLabel(webserviceData.status ? 1 : 0));
+    await page.check(this.statusToggleInput(webserviceData.status ? 1 : 0));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);

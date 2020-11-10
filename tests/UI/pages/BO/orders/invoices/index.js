@@ -26,16 +26,15 @@ class Invoice extends BOBasePage {
 
     // Invoice options form
     this.invoiceOptionsForm = '#form-invoices-options';
-    this.invoiceOptionsEnable = id => `${this.invoiceOptionsForm} label[for='form_enable_invoices_${id}']`;
-    this.taxBreakdownEnable = id => `${this.invoiceOptionsForm} label[for='form_enable_tax_breakdown_${id}']`;
-    this.invoiceOptionEnableProductImage = id => `${this.invoiceOptionsForm}`
-      + ` label[for='form_enable_product_images_${id}']`;
+    this.invoiceOptionsStatusToggleInput = toggle => `#form_enable_invoices_${toggle}`;
+    this.taxBreakdownStatusToggleInput = toggle => `#form_enable_tax_breakdown_${toggle}`;
+    this.invoiceOptionStatusToggleInput = toggle => `#form_enable_product_images_${toggle}`;
     this.invoiceNumberInput = '#form_invoice_number';
     this.legalFreeTextInput = '#form_legal_free_text_1';
     this.footerTextInput = '#form_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} #save-invoices-options-button`;
     this.invoicePrefixInput = '#form_invoice_prefix_1';
-    this.invoiceAddCurrentYear = id => `${this.invoiceOptionsForm} label[for='form_add_current_year_${id}']`;
+    this.invoiceAddCurrentYearToggleInput = toggle => `#form_add_current_year_${toggle}`;
     this.optionYearPositionRadioButton = id => `#form_year_position_${id}`;
   }
 
@@ -133,7 +132,7 @@ class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableInvoices(page, enable = true) {
-    await page.click(this.invoiceOptionsEnable(enable ? 1 : 0));
+    await page.check(this.invoiceOptionsStatusToggleInput(enable ? 1 : 0));
   }
 
   /** Save invoice options
@@ -152,7 +151,7 @@ class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableProductImage(page, enable = true) {
-    await page.click(this.invoiceOptionEnableProductImage(enable ? 1 : 0));
+    await page.check(this.invoiceOptionStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -162,7 +161,7 @@ class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableTaxBreakdown(page, enable = true) {
-    await page.click(this.taxBreakdownEnable(enable ? 1 : 0));
+    await page.check(this.taxBreakdownStatusToggleInput(enable ? 1 : 0));
   }
 
   /**
@@ -183,7 +182,7 @@ class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableAddCurrentYearToInvoice(page, enable = true) {
-    await page.click(this.invoiceAddCurrentYear(enable ? 1 : 0));
+    await page.check(this.invoiceAddCurrentYearToggleInput(enable ? 1 : 0));
   }
 
   /**

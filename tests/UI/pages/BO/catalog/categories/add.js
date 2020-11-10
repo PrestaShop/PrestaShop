@@ -10,7 +10,7 @@ class AddCategory extends BOBasePage {
 
     // Selectors
     this.nameInput = '#category_name_1';
-    this.displayed = id => `label[for='category_active_${id}']`;
+    this.displayedToggleInput = toggle => `#category_active_${toggle}`;
     this.descriptionIframe = '#category_description_1_ifr';
     this.categoryCoverImage = '#category_cover_image';
     this.metaTitleInput = '#category_meta_title_1';
@@ -19,7 +19,7 @@ class AddCategory extends BOBasePage {
     this.saveCategoryButton = '#save-button';
     // Selectors fo root category
     this.rootCategoryNameInput = '#root_category_name_1';
-    this.rootCategoryDisplayed = id => `label[for='root_category_active_${id}']`;
+    this.rootCategoryDisplayedToggleInput = toggle => `#root_category_active_${toggle}`;
     this.rootCategoryDescriptionIframe = '#root_category_description_1_ifr';
     this.rootCategoryCoverImage = '#root_category_cover_image';
     this.rootCategoryMetaTitleInput = '#root_category_meta_title_1';
@@ -38,7 +38,7 @@ class AddCategory extends BOBasePage {
    */
   async createEditCategory(page, categoryData) {
     await this.setValue(page, this.nameInput, categoryData.name);
-    await page.click(this.displayed(categoryData.displayed ? 1 : 0));
+    await page.check(this.displayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
     await this.uploadFile(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
@@ -57,7 +57,7 @@ class AddCategory extends BOBasePage {
    */
   async editHomeCategory(page, categoryData) {
     await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
-    await page.click(this.rootCategoryDisplayed(categoryData.displayed ? 1 : 0));
+    await page.check(this.rootCategoryDisplayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);
     await this.uploadFile(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.rootCategoryMetaTitleInput, categoryData.metaTitle);

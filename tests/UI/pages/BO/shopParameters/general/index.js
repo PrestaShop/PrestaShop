@@ -9,9 +9,9 @@ class ShopParamsGeneral extends BOBasePage {
 
     // Selectors
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
-    this.displaySuppliersLabel = toggle => `label[for='form_display_suppliers_${toggle}']`;
-    this.displayBrandsLabel = toggle => `label[for='form_display_manufacturers_${toggle}']`;
-    this.enableMultiStoreLabel = toggle => `label[for='form_multishop_feature_active_${toggle}']`;
+    this.displaySuppliersToggleInput = toggle => `#form_display_suppliers_${toggle}`;
+    this.displayBrandsToggleInput = toggle => `#form_display_manufacturers_${toggle}`;
+    this.enableMultiStoreToggleInput = toggle => `#form_multishop_feature_active_${toggle}`;
     this.saveFormButton = '#form-preferences-save-button';
   }
 
@@ -35,7 +35,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplaySuppliers(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.displaySuppliersLabel(toEnable ? 1 : 0));
+    await page.check(this.displaySuppliersToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -47,7 +47,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayBrands(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.displayBrandsLabel(toEnable ? 1 : 0));
+    await page.check(this.displayBrandsToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
@@ -59,7 +59,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setMultiStoreStatus(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.enableMultiStoreLabel(toEnable ? 1 : 0));
+    await page.check(this.enableMultiStoreToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

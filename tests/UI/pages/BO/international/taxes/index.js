@@ -38,10 +38,10 @@ class Taxes extends BOBasePage {
     this.toggleColumnValidIcon = (row, column) => `${this.taxesGridColumn(row, column)} i.grid-toggler-icon-valid`;
 
     // Form Taxes Options
-    this.enabledTaxSwitchLabel = id => `label[for='form_enable_tax_${id}']`;
-    this.displayTaxInCartSwitchLabel = id => `label[for='form_display_tax_in_cart_${id}']`;
+    this.taxStatusToggleInput = toggle => `#form_enable_tax_${toggle}`;
+    this.displayTaxInCartToggleInput = toggle => `#form_display_tax_in_cart_${toggle}`;
     this.taxAddressTypeSelect = '#form_tax_address_type';
-    this.useEcoTaxSwitchLabel = id => `label[for='form_use_eco_tax_${id}']`;
+    this.useEcoTaxToggleInput = toggle => `#form_use_eco_tax_${toggle}`;
     this.ecoTaxSelect = '#form_eco_tax_rule_group';
     this.saveTaxOptionButton = '#form-tax-options-save-button';
 
@@ -275,25 +275,19 @@ class Taxes extends BOBasePage {
    * @returns {Promise<string>}
    */
   async updateTaxOption(page, taxOptionData) {
+    await page.check(this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
     if (taxOptionData.enabled) {
-      await page.click(this.enabledTaxSwitchLabel(1));
-      if (taxOptionData.displayInShoppingCart) {
-        await page.click(this.displayTaxInCartSwitchLabel(1));
-      } else {
-        await page.click(this.displayTaxInCartSwitchLabel(0));
-      }
-    } else {
-      await page.click(this.enabledTaxSwitchLabel(0));
+      await page.check(this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));
     }
+
     await this.selectByVisibleText(page, this.taxAddressTypeSelect, taxOptionData.basedOn);
-    if (taxOptionData.useEcoTax) {
-      await page.click(this.useEcoTaxSwitchLabel(1));
-      if (taxOptionData.ecoTax !== undefined) {
-        await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
-      }
-    } else {
-      await page.click(this.useEcoTaxSwitchLabel(0));
+
+    await page.check(this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
+
+    if (taxOptionData.useEcoTax && taxOptionData.ecoTax !== undefined) {
+      await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
     }
+
     // Click on save tax Option
     await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);

@@ -43,9 +43,8 @@ class AddOrder extends BOBasePage {
     this.invoiceAddressSelect = '#invoice-address-select';
 
     // Shipping form selectors
-    this.shippingBlock = '#shipping-block';
     this.deliveryOptionSelect = '#delivery-option-select';
-    this.freeShippingToggle = toggle => `${this.shippingBlock} label[for='free-shipping_${toggle}']`;
+    this.freeShippingToggleInput = toggle => `#free-shipping_${toggle}`;
 
     // Summary selectors
     this.paymentMethodSelect = '#cart_summary_payment_module';
@@ -173,14 +172,14 @@ class AddOrder extends BOBasePage {
    */
   async setDeliveryOption(page, deliveryOptionName, freeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await page.click(this.freeShippingToggle(freeShipping ? 1 : 0));
+    await page.check(this.freeShippingToggleInput(freeShipping ? 1 : 0));
   }
 
   /* Summary methods */
   /**
    * Set payment method
    * @param page
-   * @param paymentMethod
+   * @param paymentMethodName
    * @return {Promise<void>}
    */
   async setPaymentMethod(page, paymentMethodName) {

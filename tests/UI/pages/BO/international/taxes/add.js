@@ -15,7 +15,7 @@ class AddTax extends BOBasePage {
     this.inputLangDropdownButton = 'button#tax_name';
     this.inputLangChoiceSpan = lang => `div.dropdown-menu span[data-locale='${lang}']`;
     this.rateInput = '#tax_rate';
-    this.enabledSwitchLabel = id => `label[for='tax_is_enabled_${id}']`;
+    this.statusToggleInput = toggle => `#tax_is_enabled_${toggle}`;
     this.saveTaxButton = '#save-button';
   }
   /*
@@ -51,7 +51,7 @@ class AddTax extends BOBasePage {
     await this.changeInputLanguage(page, 'fr');
     await this.setValue(page, this.nameFrInput, taxData.frName);
     await this.setValue(page, this.rateInput, taxData.rate);
-    await page.click(this.enabledSwitchLabel(taxData.enabled ? 1 : 0));
+    await page.check(this.statusToggleInput(taxData.enabled ? 1 : 0));
     // Save Tax
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);

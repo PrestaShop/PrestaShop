@@ -401,7 +401,7 @@ class Categories extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditHomeCategoryPage(page) {
-    await this.waitForSelectorAndClick(page, this.editHomeCategoryButton);
+    await this.clickAndWaitForNavigation(page, this.editHomeCategoryButton);
   }
 
   /* Pagination methods */

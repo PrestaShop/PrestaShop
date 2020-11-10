@@ -9,7 +9,7 @@ class AddPageCategory extends BOBasePage {
 
     // Selectors
     this.nameInput = '#cms_page_category_name_1';
-    this.displayedToggle = toggle => `label[for='cms_page_category_is_displayed_${toggle}']`;
+    this.displayedToggleInput = toggle => `#cms_page_category_is_displayed_${toggle}`;
     this.descriptionIframe = '#cms_page_category_description_1';
     this.metaTitleInput = '#cms_page_category_meta_title_1';
     this.metaDescriptionInput = '#cms_page_category_meta_description_1';
@@ -29,7 +29,7 @@ class AddPageCategory extends BOBasePage {
    */
   async createEditPageCategory(page, pageCategoryData) {
     await this.setValue(page, this.nameInput, pageCategoryData.name);
-    await page.click(this.displayedToggle(pageCategoryData.displayed ? 1 : 0));
+    await page.check(this.displayedToggleInput(pageCategoryData.displayed ? 1 : 0));
     await this.setValue(page, this.descriptionIframe, pageCategoryData.description);
     await this.setValue(page, this.metaTitleInput, pageCategoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionInput, pageCategoryData.metaDescription);

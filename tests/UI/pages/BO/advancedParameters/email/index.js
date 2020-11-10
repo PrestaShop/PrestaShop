@@ -31,7 +31,7 @@ class Email extends BOBasePage {
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_selection';
     // Email form
-    this.logEmailsLabel = toggle => `label[for='form_log_emails_${toggle}']`;
+    this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
     this.saveEmailFormButton = '#form-log-email-save-button';
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
@@ -194,7 +194,7 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setLogEmails(page, toEnable) {
-    await this.waitForSelectorAndClick(page, this.logEmailsLabel(toEnable ? 1 : 0));
+    await page.check(this.logEmailsToggleInput(toEnable ? 1 : 0));
     await page.$eval(this.saveEmailFormButton, el => el.click());
     await page.waitForNavigation();
     return this.getTextContent(page, this.alertSuccessBlock);

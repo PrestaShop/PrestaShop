@@ -14,7 +14,7 @@ class AddContact extends BOBasePage {
     this.titleInputEN = '#contact_title_1';
     this.titleInputFR = '#contact_title_2';
     this.emailAddressInput = '#contact_email';
-    this.enableSaveMessagesLabel = id => `label[for='contact_is_messages_saving_enabled_${id}']`;
+    this.enableSaveMessagesToggleInput = toggle => `#contact_is_messages_saving_enabled_${toggle}`;
     this.descriptionTextareaEN = '#contact_description_1';
     this.descriptionTextareaFR = '#contact_description_2';
     this.saveContactButton = '#save-button';
@@ -54,7 +54,7 @@ class AddContact extends BOBasePage {
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.titleInputFR, contactData.title);
     await this.setValue(page, this.descriptionTextareaFR, contactData.description);
-    await page.click(this.enableSaveMessagesLabel(contactData.saveMessage ? 1 : 0));
+    await page.check(this.enableSaveMessagesToggleInput(contactData.saveMessage ? 1 : 0));
     // Save Contact
     await this.clickAndWaitForNavigation(page, this.saveContactButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
