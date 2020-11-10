@@ -85,6 +85,9 @@ class CartCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
+    /** @var int Order ID */
+    public $id_order;
+
     public $checkedTos = false;
     public $pictures;
     public $textFields;
@@ -138,6 +141,7 @@ class CartCore extends ObjectModel
             'allow_seperated_package' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
         ],
     ];
 
