@@ -32,7 +32,7 @@ const tableName = 'order_return';
 /*
 Filter order return status by : Id, Name
 Sort order return status by : Id, Name
-Create 2 order return statuses
+Create 16 order return statuses
 Pagination next and previous
 Delete by bulk actions
  */
