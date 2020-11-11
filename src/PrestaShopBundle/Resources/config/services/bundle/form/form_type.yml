@@ -480,6 +480,34 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.localization.local_units:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.localization.advanced_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.geolocation.by_address:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.geolocation.ip_address_white_list:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationIpAddressWhitelistType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.geolocation.options:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
         parent: 'form.type.translatable.aware'
