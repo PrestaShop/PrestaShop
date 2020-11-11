@@ -30,6 +30,8 @@ use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Type;
 
 class UploadQuotaType extends TranslatorAwareType
 {
@@ -44,7 +46,6 @@ class UploadQuotaType extends TranslatorAwareType
                 'max_size_attached_files',
                 TextWithUnitType::class,
                 [
-                    'required' => true,
                     'label' => $this->trans(
                         'Maximum size for attached files',
                         'Admin.Advparameters.Feature'
@@ -57,13 +58,26 @@ class UploadQuotaType extends TranslatorAwareType
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
+                    'constraints' => [
+                        new Type(
+                            [
+                                'value' => 'numeric',
+                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                            ]
+                        ),
+                        new GreaterThanOrEqual(
+                            [
+                                'value' => 0,
+                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                            ]
+                        ),
+                    ],
                 ]
             )
             ->add(
                 'max_size_downloadable_product',
                 TextWithUnitType::class,
                 [
-                    'required' => true,
                     'label' => $this->trans(
                         'Maximum size for a downloadable product',
                         'Admin.Advparameters.Feature'
@@ -76,13 +90,26 @@ class UploadQuotaType extends TranslatorAwareType
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
+                    'constraints' => [
+                        new Type(
+                            [
+                                'value' => 'numeric',
+                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                            ]
+                        ),
+                        new GreaterThanOrEqual(
+                            [
+                                'value' => 0,
+                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                            ]
+                        ),
+                    ],
                 ]
             )
             ->add(
                 'max_size_product_image',
                 TextWithUnitType::class,
                 [
-                    'required' => true,
                     'label' => $this->trans(
                         'Maximum size for a product\'s image',
                         'Admin.Advparameters.Feature'
@@ -94,6 +121,20 @@ class UploadQuotaType extends TranslatorAwareType
                             '%size%' => $configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE'),
                         ]
                     ),
+                    'constraints' => [
+                        new Type(
+                            [
+                                'value' => 'numeric',
+                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                            ]
+                        ),
+                        new GreaterThanOrEqual(
+                            [
+                                'value' => 0,
+                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                            ]
+                        ),
+                    ],
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
                 ]
             );
