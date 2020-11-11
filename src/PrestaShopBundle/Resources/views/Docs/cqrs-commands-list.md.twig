@@ -1,0 +1,16 @@
+{#@todo: where to put thi file? what about docs in other langs?#}
+### Commands
+| Nr. | Class | Description |
+| --- | ----- | ----------- |
+{% for index, commandDefinition in commandDefinitions.command %}
+{% set nr = index + 1 %}
+| {{ nr }} | {{ commandDefinition.className }} | {{ commandDefinition.description }} |
+{% endfor %}
+
+### Queries
+| Nr. | Class | Description |
+| --- | ----- | ----------- |
+{% for index, queryDefinition in commandDefinitions.query %}
+{% set nr = index + 1 %}
+| {{ nr }} | {{ queryDefinition.className }} | {{ queryDefinition.description }} |
+{% endfor %}
