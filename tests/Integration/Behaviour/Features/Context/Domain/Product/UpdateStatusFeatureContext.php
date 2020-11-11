@@ -37,7 +37,7 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     use StringToBooleanTransform;
 
     /**
-     * @When I :status product :productReference
+     * @When /^I (enable|disable) product "(.*)"$/
      *
      * @Transform(enable|disable)
      *
@@ -53,7 +53,7 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should be :expectedStatus
+     * @Then /^product "(.*)" should be (enabled|disabled)$/
      *
      * @Transform(enabled|disabled)
      *

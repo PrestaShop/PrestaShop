@@ -11,9 +11,9 @@ Feature: Update product status from BO (Back Office)
       | is_virtual | false                                  |
     And product product1 type should be standard
     And product "product1" should be disabled
-    When I enable product product1
+    When I enable product "product1"
     And product "product1" should be enabled
-    When I disable product product1
+    When I disable product "product1"
     And product "product1" should be disabled
 
   Scenario: I update virtual product status
@@ -22,9 +22,9 @@ Feature: Update product status from BO (Back Office)
       | is_virtual | true                                     |
     And product product2 type should be virtual
     And product "product2" should be disabled
-    When I enable product product2
+    When I enable product "product2"
     And product "product2" should be enabled
-    When I disable product product2
+    When I disable product "product2"
     And product "product2" should be disabled
 
   Scenario: I update combination product status
@@ -38,19 +38,19 @@ Feature: Update product status from BO (Back Office)
       | blackM    | 130      | Size:M;Color:Black |
     And product product3 type should be combination
     And product "product3" should be disabled
-    When I enable product product3
+    When I enable product "product3"
     And product "product3" should be enabled
-    When I disable product product3
+    When I disable product "product3"
     Then product "product3" should be disabled
 
   Scenario: I disable product which is already disabled
     And product "product1" should be disabled
-    When I disable product product1
+    When I disable product "product1"
     And product "product1" should be disabled
 
   Scenario: I enable product which is already enabled
     And product "product1" should be disabled
-    And I enable product product1
+    And I enable product "product1"
     And product "product1" should be enabled
-    When I enable product product1
+    When I enable product "product1"
     Then product "product1" should be enabled
