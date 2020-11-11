@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -77,15 +77,19 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function processGeneralFormAction(Request $request)
     {
-        return $this->processForm(
+        $generalForm = $this->processForm(
             $request,
             $this->getGeneralFormHandler(),
             'General'
         );
+        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
+        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
+
+        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
     }
 
     /**
@@ -96,15 +100,19 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function processUploadQuotaFormAction(Request $request)
     {
-        return $this->processForm(
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $uploadQuotaForm = $this->processForm(
             $request,
             $this->getUploadQuotaFormHandler(),
             'UploadQuota'
         );
+        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
+
+        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
     }
 
     /**
@@ -115,15 +123,36 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function processNotificationsFormAction(Request $request)
     {
-        return $this->processForm(
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $notificationsForm = $this->processForm(
             $request,
             $this->getNotificationsFormHandler(),
             'Notifications'
         );
+        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
+
+        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
+    }
+
+    protected function renderForm($generalForm, $uploadQuotaForm, $notificationsForm)
+    {
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'requireBulkActions' => false,
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
+            'requireFilterStatus' => false,
+            'generalForm' => $generalForm->createView(),
+            'uploadQuotaForm' => $uploadQuotaForm->createView(),
+            'notificationsForm' => $notificationsForm->createView(),
+        ]);
     }
 
     /**
@@ -133,7 +162,7 @@ class AdministrationController extends FrameworkBundleAdminController
      * @param FormHandlerInterface $formHandler
      * @param string $hookName
      *
-     * @return RedirectResponse
+     * @return FormInterface
      */
     protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
@@ -147,7 +176,7 @@ class AdministrationController extends FrameworkBundleAdminController
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $saveErrors = $formHandler->save($data);
 
@@ -158,7 +187,7 @@ class AdministrationController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_administration');
+        return $form;
     }
 
     /**
