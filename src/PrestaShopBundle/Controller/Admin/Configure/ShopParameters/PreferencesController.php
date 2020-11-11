@@ -54,31 +54,11 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @throws \LogicException
      */
-    public function indexAction(Request $request, FormInterface $form = null)
+    public function indexAction(Request $request)
     {
-        if (null === $form) {
-            $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();
-        }
+        $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();
 
-        /** @var Tools $toolsAdapter */
-        $toolsAdapter = $this->get('prestashop.adapter.tools');
-
-        // SSL URI is used for the merchant to check if he has SSL enabled
-        $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
-
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Preferences', [], 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'requireBulkActions' => false,
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminPreferences'),
-            'requireFilterStatus' => false,
-            'generalForm' => $form->createView(),
-            'isSslEnabled' => $this->configuration->get('PS_SSL_ENABLED'),
-            'sslUri' => $sslUri,
-        ]);
+        return $this->renderForm($request, $form);
     }
 
     /**
@@ -90,7 +70,7 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @DemoRestricted(redirectRoute="admin_preferences")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response
      *
      * @throws \LogicException
      */
@@ -102,32 +82,53 @@ class PreferencesController extends FrameworkBundleAdminController
         $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted()) {
-            return $this->redirectToRoute('admin_preferences');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $saveErrors = $this->get('prestashop.adapter.preferences.form_handler')->save($data);
+
+            if (0 === count($saveErrors)) {
+                /** @var EntityManager $em */
+                $em = $this->get('doctrine.orm.entity_manager');
+
+                /** @var TabRepository $tabRepository */
+                $tabRepository = $em->getRepository(Tab::class);
+
+                $tabRepository->changeStatusByClassName(
+                    'AdminShopGroup',
+                    (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_preferences');
+            }
+
+            $this->flashErrors($saveErrors);
         }
 
-        $data = $form->getData();
-        $saveErrors = $this->get('prestashop.adapter.preferences.form_handler')->save($data);
+        return $this->renderForm($request, $form);
+    }
 
-        if (0 === count($saveErrors)) {
-            /** @var EntityManager $em */
-            $em = $this->get('doctrine.orm.entity_manager');
+    private function renderForm(Request $request, FormInterface $form)
+    {
+        /** @var Tools $toolsAdapter */
+        $toolsAdapter = $this->get('prestashop.adapter.tools');
 
-            /** @var TabRepository $tabRepository */
-            $tabRepository = $em->getRepository(Tab::class);
+        // SSL URI is used for the merchant to check if he has SSL enabled
+        $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
 
-            $tabRepository->changeStatusByClassName(
-                'AdminShopGroup',
-                (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')
-            );
-
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
-            return $this->redirectToRoute('admin_preferences');
-        }
-
-        $this->flashErrors($saveErrors);
-
-        return $this->redirectToRoute('admin_preferences');
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig', [
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'requireBulkActions' => false,
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminPreferences'),
+            'requireFilterStatus' => false,
+            'generalForm' => $form->createView(),
+            'isSslEnabled' => $this->configuration->get('PS_SSL_ENABLED'),
+            'sslUri' => $sslUri,
+        ]);
     }
 }
