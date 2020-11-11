@@ -818,14 +818,14 @@
         class: attr.class ~ ' disabled'
       }) %}
     {% endif %}
-
-    {{ form_widget(form, {'attr': attr}) }}
+    {{- block('form_widget_simple') -}}
 
     <label class="custom-file-label" for="{{ form.vars.id }}">
       {% set attributes = form.vars.attr %}
       {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
   </div>
+  {{- block('form_help') -}}
 {% endblock file_widget %}
 
 {% block shop_restriction_checkbox_widget %}
