@@ -115,6 +115,11 @@
   {{ block('form_help') }}
 {% endblock switch_widget %}
 
+{% block custom_content_widget %}
+  {% include template with data %}
+  {{ block('form_help') }}
+{% endblock %}
+
 {% block text_with_length_counter_widget %}
   <div class="input-group js-text-with-length-counter">
     {% set current_length = form.vars.max_length - form.vars.value|length %}
