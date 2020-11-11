@@ -156,3 +156,11 @@ table.table {
     width: 100%;
   }
 }
+
+.choice-table {
+  .table {
+    .form-check {
+        padding-left: 0;
+    }
+  }
+}
