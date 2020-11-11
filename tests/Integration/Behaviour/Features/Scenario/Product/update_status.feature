@@ -10,28 +10,22 @@ Feature: Update product status from BO (Back Office)
       | name       | en-US:Values list poster nr. 1 (paper) |
       | is_virtual | false                                  |
     And product product1 type should be standard
-    And product "product1" should have following values:
-      | active | false |
+    And product "product1" should be disabled
     When I enable product product1
-    Then product "product1" should have following values:
-      | active | true |
+    And product "product1" should be enabled
     When I disable product product1
-    Then product "product1" should have following values:
-      | active | false |
+    And product "product1" should be disabled
 
   Scenario: I update virtual product status
     And I add product "product2" with following information:
       | name       | en-US:Values list poster nr. 2 (virtual) |
       | is_virtual | true                                     |
     And product product2 type should be virtual
-    And product "product2" should have following values:
-      | active | false |
+    And product "product2" should be disabled
     When I enable product product2
-    And product "product2" should have following values:
-      | active | true |
+    And product "product2" should be enabled
     When I disable product product2
-    Then product "product2" should have following values:
-      | active | false |
+    And product "product2" should be disabled
 
   Scenario: I update combination product status
     And I add product "product3" with following information:
@@ -43,25 +37,20 @@ Feature: Update product status from BO (Back Office)
       | whiteM    | 150      | Size:M;Color:White |
       | blackM    | 130      | Size:M;Color:Black |
     And product product3 type should be combination
-    And product "product3" should have following values:
-      | active | false |
+    And product "product3" should be disabled
     When I enable product product3
-    And product "product3" should have following values:
-      | active | true |
+    And product "product3" should be enabled
     When I disable product product3
-    Then product "product3" should have following values:
-      | active | false |
+    Then product "product3" should be disabled
 
   Scenario: I disable product which is already disabled
-    And product "product1" should have following values:
-      | active | false |
+    And product "product1" should be disabled
     When I disable product product1
-    Then product "product1" should have following values:
-      | active | false |
+    And product "product1" should be disabled
 
   Scenario: I enable product which is already enabled
-    And product "product1" should have following values:
-      | active | false |
+    And product "product1" should be disabled
+    And I enable product product1
+    And product "product1" should be enabled
     When I enable product product1
-    Then product "product1" should have following values:
-      | active | true |
+    Then product "product1" should be enabled

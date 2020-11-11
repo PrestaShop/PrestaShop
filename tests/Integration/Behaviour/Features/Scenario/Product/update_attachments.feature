@@ -12,8 +12,7 @@ Feature: Update product attachments from Back Office (BO).
     When I add product "product1" with following information:
       | name       | en-US:mug with photo |
       | is_virtual | false                |
-    Then product "product1" should have following values:
-      | active | false |
+    Then product "product1" should be disabled
     And product "product1" type should be standard
     Given I add new attachment "att1" with following properties:
       | description | en-US:puffin photo nr1 |

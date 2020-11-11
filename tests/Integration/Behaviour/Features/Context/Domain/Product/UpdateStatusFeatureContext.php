@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
@@ -49,5 +50,19 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
             $this->getSharedStorage()->get($productReference),
             $status
         ));
+    }
+
+    /**
+     * @Then product :productReference should be :expectedStatus
+     *
+     * @Transform(enabled|disabled)
+     *
+     * @param string $productReference
+     * @param bool $expectedStatus
+     */
+    public function assertStatus(string $productReference, bool $expectedStatus): void
+    {
+        $actualStatus = $this->extractValueFromProductForEditing($this->getProductForEditing($productReference), 'active');
+        Assert::assertSame($expectedStatus, $actualStatus, 'Unexpected product status');
     }
 }

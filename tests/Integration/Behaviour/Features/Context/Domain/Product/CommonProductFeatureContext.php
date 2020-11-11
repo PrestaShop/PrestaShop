@@ -134,27 +134,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following values:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     *
-     * @todo: method can be simplified if there is no more than single common field at the end of product migration
-     */
-    public function assertProductFields(string $productReference, TableNode $table)
-    {
-        $productForEditing = $this->getProductForEditing($productReference);
-        $data = $table->getRowsHash();
-
-        $this->assertBoolProperty($productForEditing, $data, 'active');
-
-        // Assertions checking isset() can hide some errors if it doesn't find array key,
-        // to make sure all provided fields were checked we need to unset every asserted field
-        // and finally, if provided data is not empty, it means there are some unnasserted values left
-        Assert::assertEmpty($data, sprintf('Some provided product fields haven\'t been asserted: %s', var_export($data, true)));
-    }
-
-    /**
      * @When I update product :productReference prices and apply non-existing tax rules group
      *
      * @param string $productReference
