@@ -46,13 +46,12 @@ class PreferencesController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
-     * @param FormInterface|null $form
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return Response
      *
-     * @throws \LogicException
+     * @throws \Exception
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      */
     public function indexAction(Request $request)
     {
