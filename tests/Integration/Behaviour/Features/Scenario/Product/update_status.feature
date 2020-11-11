@@ -1,3 +1,7 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-status
+@reset-database-before-feature
+@clear-cache-before-feature
+@update-status
 Feature: Update product status from BO (Back Office)
   As an employee I must be able to update product status (enable/disable)
 
