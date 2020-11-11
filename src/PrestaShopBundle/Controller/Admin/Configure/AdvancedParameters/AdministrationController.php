@@ -138,7 +138,14 @@ class AdministrationController extends FrameworkBundleAdminController
         return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
     }
 
-    protected function renderForm($generalForm, $uploadQuotaForm, $notificationsForm)
+    /**
+     * @param FormInterface $generalForm
+     * @param FormInterface $uploadQuotaForm
+     * @param FormInterface $notificationsForm
+     *
+     * @return Response|null
+     */
+    protected function renderForm(FormInterface $generalForm, FormInterface $uploadQuotaForm, FormInterface $notificationsForm)
     {
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
