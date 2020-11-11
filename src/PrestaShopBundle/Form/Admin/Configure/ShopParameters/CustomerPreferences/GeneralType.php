@@ -31,6 +31,8 @@ use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Class generates "General" form
@@ -66,6 +68,20 @@ class GeneralType extends TranslatorAwareType
                     'Password reset delay',
                     'Admin.Shopparameters.Feature'
                 ),
+                'constraints' => [
+                    new GreaterThanOrEqual(
+                        [
+                            'value' => 0,
+                            'message' => $this->trans('The field is invalid.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                    new Type(
+                        [
+                            'value' => 'numeric',
+                            'message' => $this->trans('The field is invalid.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                ],
                 'help' => $this->trans(
                     'Minimum time required between two requests for a password reset.',
                     'Admin.Shopparameters.Help'
