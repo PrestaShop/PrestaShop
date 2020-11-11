@@ -73,13 +73,6 @@ class UrlSchemaType extends TranslatorAwareType
                 ),
                 'help' => $this->getKeywords('category_rule'),
             ])
-            ->add('layered_rule', TextType::class, [
-                'label' => $this->trans(
-                    'Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module',
-                    'Admin.Shopparameters.Feature'
-                ),
-                'help' => $this->getKeywords('layered_rule'),
-            ])
             ->add('supplier_rule', TextType::class, [
                 'label' => $this->trans(
                     'Route to supplier',
