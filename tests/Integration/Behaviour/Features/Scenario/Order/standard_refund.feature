@@ -15,8 +15,8 @@ Feature: Refund Order from Back Office (BO)
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
-    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
-    And I add 1 products "Mug Today is a good day" to the cart "dummy_cart"
+    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
+    And I update quantity of product "Mug Today is a good day" in the cart "dummy_cart" to 1
     And I watch the stock of product "Mug The best is yet to come"
     And I watch the stock of product "Mug Today is a good day"
 

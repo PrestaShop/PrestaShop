@@ -16,7 +16,7 @@ Feature: Add discounts to order from Back Office (BO)
     And cart dummy_cart delivery and invoice address for customer "testCustomer" is in "Florida" state of "US" country
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
-    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |

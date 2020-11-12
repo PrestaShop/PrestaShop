@@ -12,7 +12,7 @@ Feature: Delete product from cart in Back Office (BO)
   @bo-delete-product
   Scenario: Delete standard product from cart
     Given I create an empty cart "dummy_cart" for customer "testCustomer"
-    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
     And product "Mug The best is yet to come" quantity in cart "dummy_cart" should be 2 excluding gift products
     When I delete product "Mug The best is yet to come" from cart "dummy_cart"
     Then cart "dummy_cart" should not contain product "Mug The best is yet to come"
@@ -20,7 +20,7 @@ Feature: Delete product from cart in Back Office (BO)
   @bo-delete-product
   Scenario: Delete standard product from cart when cart has another identical product added as a gift
     Given I create an empty cart "dummy_cart_2" for customer "testCustomer"
-    And I add 2 products "Mountain fox notebook" to the cart "dummy_cart_2"
+    And I update quantity of product "Mountain fox notebook" in the cart "dummy_cart_2" to 2
     And product "Mountain fox notebook" quantity in cart "dummy_cart_2" should be 2 excluding gift products
     When I use a voucher "giftFoxNotebook" which provides a gift product "Mountain fox notebook" on the cart "dummy_cart_2"
     And gifted product "Mountain fox notebook" quantity in cart "dummy_cart_2" should be 1

@@ -122,11 +122,11 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
      *
      * @param Cart $cart
      * @param int $productId
-     * @param int $combinationId
+     * @param int|null $combinationId
      *
      * @return int
      */
-    private function getProductGiftedQuantity(Cart $cart, int $productId, int $combinationId): int
+    private function getProductGiftedQuantity(Cart $cart, int $productId, ?int $combinationId): int
     {
         $giftedQuantity = 0;
         $giftCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
@@ -134,7 +134,7 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
             foreach ($giftCartRules as $giftCartRule) {
                 if (
                     $productId == $giftCartRule['gift_product'] &&
-                    $combinationId == $giftCartRule['gift_product_attribute']
+                    (null === $combinationId || $combinationId == $giftCartRule['gift_product_attribute'])
                 ) {
                     ++$giftedQuantity;
                 }

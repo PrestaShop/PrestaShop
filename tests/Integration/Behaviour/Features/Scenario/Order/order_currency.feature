@@ -31,7 +31,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I update the cart "dummy_cart" currency to "currency2"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
-    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
