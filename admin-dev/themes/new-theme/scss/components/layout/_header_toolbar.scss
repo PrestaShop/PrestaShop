@@ -27,7 +27,14 @@
     .title-row {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       justify-content: space-between;
+
+      @media screen and (max-width: 1300px) {
+        .toolbar-icons {
+          padding: 15px 0;
+        }
+      }
 
       &::after {
         content: none;
