@@ -72,8 +72,8 @@ class EditableCartRule
         EditableCartRuleInformation $information,
         EditableCartRuleConditions $conditions,
         EditableCartRuleActions $actions,
-        ?DateTimeInterface $dateAdd,
-        ?DateTimeInterface $dateUpd
+        ?DateTime $dateAdd,
+        ?DateTime $dateUpd
     ) {
         $this->cartRuleId = $cartRuleId;
         $this->information = $information;
