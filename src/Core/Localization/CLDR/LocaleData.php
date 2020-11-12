@@ -79,7 +79,7 @@ class LocaleData
      * Collection of all available decimal patterns (by numbering system)
      * Array of strings (patterns).
      *
-     * @var string[]
+     * @var string[]|null
      */
     protected $decimalPatterns;
 
@@ -146,7 +146,11 @@ class LocaleData
         }
 
         if (null !== $localeData->getDecimalPatterns()) {
-            $this->setDecimalPatterns($localeData->getDecimalPatterns());
+            $initialDecimalPatterns = $this->getDecimalPatterns();
+            if (!is_array($initialDecimalPatterns)) {
+                $initialDecimalPatterns = [];
+            }
+            $this->setDecimalPatterns(array_merge($initialDecimalPatterns, $localeData->getDecimalPatterns()));
         }
 
         if (null !== $localeData->getPercentPatterns()) {
@@ -274,7 +278,7 @@ class LocaleData
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getDecimalPatterns()
     {
