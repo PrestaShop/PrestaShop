@@ -10,8 +10,7 @@ Feature: Add basic product from Back Office (BO)
     When I add product "product1" with following information:
       | name       | en-US:bottle of beer |
       | is_virtual | false                |
-    Then product "product1" should have following values:
-      | active           | false          |
+    Then product "product1" should be disabled
     And product "product1" type should be standard
     And product "product1" localized "name" should be "en-US:bottle of beer"
     And product "product1" should be assigned to default category
@@ -20,8 +19,7 @@ Feature: Add basic product from Back Office (BO)
     When I add product "product1" with following information:
       | name       | en-US:bottle of beer |
       | is_virtual | true                 |
-    Then product "product1" should have following values:
-      | active           | false          |
+    Then product "product1" should be disabled
     Then product "product1" should have following options information:
       | condition        | new            |
     And product "product1" type should be virtual
