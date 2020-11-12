@@ -54,7 +54,7 @@ class LanguageType extends TranslatorAwareType
      *
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param $isMultistoreFeatureActive
+     * @param bool $isMultistoreFeatureActive
      */
     public function __construct(TranslatorInterface $translator, array $locales, $isMultistoreFeatureActive)
     {
