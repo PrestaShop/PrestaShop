@@ -97,6 +97,8 @@ services:
     prestashop.core.grid.definition.factory.customer.address:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerAddressGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@=service("request_stack").getCurrentRequest().getUri()'
         public: true
 
     prestashop.core.grid.definition.factory.language:
