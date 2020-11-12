@@ -73,6 +73,8 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
         $products = $this->productRepository->searchByNameAndReference(
             $query->getPhrase(),
             $query->getLanguageId(),
+            false,
+            false,
             $query->getLimit()
         );
 

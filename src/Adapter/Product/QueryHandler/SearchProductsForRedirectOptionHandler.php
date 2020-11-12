@@ -69,6 +69,8 @@ final class SearchProductsForRedirectOptionHandler implements SearchProductsForR
         $results = $this->productRepository->searchByNameAndReference(
             $query->getPhrase(),
             $query->getLanguageId(),
+            true,
+            true,
             $query->getLimit()
         );
 

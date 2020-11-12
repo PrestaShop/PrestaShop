@@ -321,20 +321,32 @@ class ProductRepository extends AbstractObjectModelRepository
     /**
      * @param string $query
      * @param LanguageId $languageId
+     * @param bool $includePacks include product packs in results
+     * @param bool $includeVirtualProducts include virtual products in results
      * @param int|null $limit
      * @param int|null $offset
      *
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
+     *
+     * @todo: or should dedicated methods be implemented for each case? (related products, for packing, for seo)?
+     * @todo: decide how to refactor this. Should this be some "search" method with filters etc (maybe moved out to service then)
      */
-    public function searchByNameAndReference(string $query, LanguageId $languageId, ?int $limit = null, ?int $offset = null): array
-    {
+    public function searchByNameAndReference(
+        string $query,
+        LanguageId $languageId,
+        bool $includePacks = true,
+        //@todo: virtual products seems to be not supported to add in a pack
+        bool $includeVirtualProducts = true,
+        ?int $limit = null,
+        ?int $offset = null
+    ): array {
         if ('' === $query) {
             return [];
         }
 
         //@todo: shop association not handled
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('p.id_product, p.reference, pl.name, pl.link_rewrite, i.id_image, p.cache_default_attribute')
+        $qb->select('p.id_product, p.reference, pl.name, pl.link_rewrite, i.id_image, p.cache_default_attribute, p.cache_is_pack, p.is_virtual')
             ->from($this->dbPrefix . 'product', 'p')
             ->leftJoin(
                 'p',
@@ -351,11 +363,21 @@ class ProductRepository extends AbstractObjectModelRepository
             ->where('pl.name LIKE :searchQuery')
             ->orWhere('p.reference LIKE :searchQuery')
             ->setParameter('searchQuery', '%' . $query . '%')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
         ;
 
-        $results = $qb->execute()->fetchAll();
+        if (!$includePacks) {
+            $qb->andWhere('p.cache_is_pack = 0');
+        }
+
+        if (!$includeVirtualProducts) {
+            $qb->andWhere('p.is_virtual = 0');
+        }
+
+        $results = $qb->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->execute()
+            ->fetchAll()
+        ;
 
         if (!$results) {
             return [];

@@ -69,6 +69,8 @@ final class SearchProductsToRelateHandler implements SearchProductsToRelateHandl
         $results = $this->productRepository->searchByNameAndReference(
             $query->getPhrase(),
             $query->getLanguageId(),
+            true,
+            true,
             $query->getLimit()
         );
 

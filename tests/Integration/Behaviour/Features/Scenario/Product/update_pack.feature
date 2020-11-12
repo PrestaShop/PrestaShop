@@ -229,8 +229,13 @@ Feature: Add product to pack from Back Office (BO)
     Then search results for packing product should be the following:
       | product              | name                                              | reference            |
       | product2             | shady sunglasses                                  | ref2                 |
-      | product3             | sunny summerstreet                                | ref3                 |
-      | product4             | sunny winterstreet                                | ref4                 |
       | productSkirt1_whiteS | regular skirt "oh, Sunny" Size - S, Color - White | productSkirt1_whiteS |
       | productSkirt1_whiteM | regular skirt "oh, Sunny" Size - M, Color - White | productSkirt1_whiteM |
       | productSkirt1_blackM | regular skirt "oh, Sunny" Size - M, Color - Black | productSkirt1_blackM |
+
+#    @todo: different scenarios:
+#       1. search by name,
+#       2. search by reference,
+#       3. should not find virtual products,
+#       4. should not find pack products,
+#       5. test limits at least & maybe pagination

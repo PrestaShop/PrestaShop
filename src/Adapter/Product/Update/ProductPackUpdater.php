@@ -76,6 +76,7 @@ class ProductPackUpdater
      */
     public function setPackProducts(PackId $packId, array $productsForPacking): void
     {
+        //@todo: virtual products seems to be not supported to add in a pack. Double check and add constraints.
         $pack = $this->productRepository->get($packId);
 
         // validate if provided products are available for packing before emptying the pack
