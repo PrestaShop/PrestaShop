@@ -97,7 +97,9 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
                 );
 
                 if (!empty($combinations)) {
-                    $productsForPacking[] = $this->formatCombinationsForPacking($product, $combinations);
+                    foreach ($combinations as $combination) {
+                        $productsForPacking[] = $this->formatCombinationForPacking($product, $combination);
+                    }
 
                     continue;
                 }
@@ -125,26 +127,20 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
     }
 
     /**
-     * @param array $product
-     * @param array $combinations
+     * @param array<string, mixed> $product
+     * @param array<string, mixed> $combination
      *
-     * @return ProductForPacking[]
+     * @return ProductForPacking
      */
-    private function formatCombinationsForPacking(array $product, array $combinations): array
+    private function formatCombinationForPacking(array $product, array $combination): ProductForPacking
     {
-        $combinationsForPacking = [];
-
-        foreach ($combinations as $combination) {
-            $combinationsForPacking[] = new ProductForPacking(
-                (int) $combination['id_product'],
+        return new ProductForPacking(
+                (int) $product['id_product'],
                 $this->buildCombinationName($product, $combination),
                 $combination['reference'],
                 $this->getImage($product['link_rewrite'], (int) $combination['id_image']),
                 (int) $combination['id_product_attribute']
             );
-        }
-
-        return $combinationsForPacking;
     }
 
     /**

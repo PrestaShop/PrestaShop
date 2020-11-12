@@ -333,7 +333,7 @@ class ProductRepository extends AbstractObjectModelRepository
 
         //@todo: shop association not handled
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('p.id_product, p.reference, pl.name, pl.link_rewrite, i.id_image')
+        $qb->select('p.id_product, p.reference, pl.name, pl.link_rewrite, i.id_image, p.cache_default_attribute')
             ->from($this->dbPrefix . 'product', 'p')
             ->leftJoin(
                 'p',
@@ -407,7 +407,7 @@ class ProductRepository extends AbstractObjectModelRepository
                 'pai',
                 'pai.id_product_attribute = pa.id_product_attribute'
             )->where('pa.id_product = :productId')
-            ->groupBy('pa.id_product_attribute', 'ag.attribute_group')
+            ->groupBy('pa.id_product_attribute', 'ag.id_attribute_group')
             ->orderBy('pa.id_product_attribute');
 
         $results = $qb->execute()->fetchAll();
