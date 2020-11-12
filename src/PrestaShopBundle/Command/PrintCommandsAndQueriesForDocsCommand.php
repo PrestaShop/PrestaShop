@@ -74,6 +74,12 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return int|null
+     */
     public function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $filePath = $input->getOption(self::FILE_PATH_OPTION_NAME);
@@ -122,7 +128,6 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param Filesystem $fs
      * @param string $filePath
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -132,7 +137,6 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     private function confirmExistingFileWillBeLost(string $filePath, InputInterface $input, OutputInterface $output): bool
     {
         if ($this->fs->exists($filePath) && filesize($filePath)) {
-            /** @var $dialog */
             $helper = $this->getHelper('question');
             $confirmation = new ConfirmationQuestion(sprintf(
                 '<question>File "%s" is not empty. All data will be lost. Proceed?</question>',
