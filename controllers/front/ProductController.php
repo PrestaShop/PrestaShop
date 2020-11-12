@@ -468,8 +468,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
-            // We use the meta_title key because product_title is used for the title of the page
-            'product_title' => $product['meta_title'],
+            'product_title' => $this->getProductPageTitle(
+                $this->getTemplateVarPage()['meta'] ?? []
+            ),
             'is_quick_view' => $isQuickView,
         ]));
     }
