@@ -676,5 +676,5 @@ UPDATE `PREFIX_hook_alias` SET name = 'displayHeader', alias = 'Header' WHERE na
 
 /* add id_order in cart */
 ALTER TABLE `PREFIX_cart`
-    ADD `id_order` INT(10) UNSIGNED,
+    ADD `id_order` INT(10) UNSIGNED NULL DEFAULT NULL,
     ADD INDEX (id_order);
