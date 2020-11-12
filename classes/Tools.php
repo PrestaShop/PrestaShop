@@ -42,22 +42,6 @@ class ToolsCore
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
-    /** @var string */
-    public const ADDONS_API_MODULE_CHANNEL_STABLE = 'stable';
-
-    /** @var string */
-    public const ADDONS_API_MODULE_CHANNEL_BETA = 'beta';
-
-    /** @var string */
-    public const ADDONS_API_MODULE_CHANNEL_ALPHA = 'alpha';
-
-    /** @var array<string> */
-    public const ADDONS_API_MODULE_CHANNELS = [
-        self::ADDONS_API_MODULE_CHANNEL_STABLE,
-        self::ADDONS_API_MODULE_CHANNEL_BETA,
-        self::ADDONS_API_MODULE_CHANNEL_ALPHA,
-    ];
-
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;

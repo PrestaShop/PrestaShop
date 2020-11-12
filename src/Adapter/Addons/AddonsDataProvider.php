@@ -40,6 +40,22 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AddonsDataProvider implements AddonsInterface
 {
+    /** @var string */
+    public const ADDONS_API_MODULE_CHANNEL_STABLE = 'stable';
+
+    /** @var string */
+    public const ADDONS_API_MODULE_CHANNEL_BETA = 'beta';
+
+    /** @var string */
+    public const ADDONS_API_MODULE_CHANNEL_ALPHA = 'alpha';
+
+    /** @var array<string> */
+    public const ADDONS_API_MODULE_CHANNELS = [
+        self::ADDONS_API_MODULE_CHANNEL_STABLE,
+        self::ADDONS_API_MODULE_CHANNEL_BETA,
+        self::ADDONS_API_MODULE_CHANNEL_ALPHA,
+    ];
+
     /**
      * @var bool
      */
