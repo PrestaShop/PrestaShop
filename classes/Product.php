@@ -615,7 +615,7 @@ class ProductCore extends ObjectModel
                 'fields' => [
                     'id' => [
                         'required' => true,
-                        'xlink_resource' => 'product', ],
+                        'xlink_resource' => 'products', ],
                 ],
             ],
             'product_bundle' => [
