@@ -202,6 +202,17 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
                 'Unexpected product id in search results'
             );
 
+            $expectedCombinationId = empty($expectedDataRow['combination']) ?
+                null :
+                $this->getSharedStorage()->get($expectedDataRow['combination'])
+            ;
+
+            Assert::assertEquals(
+                $expectedCombinationId,
+                $productForPacking->getCombinationId(),
+                'Unexpected combination id in search results'
+            );
+
             Assert::assertEquals(
                 $expectedDataRow['name'],
                 $productForPacking->getName(),
