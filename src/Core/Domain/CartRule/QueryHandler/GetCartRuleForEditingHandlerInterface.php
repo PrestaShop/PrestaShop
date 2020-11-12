@@ -24,17 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
+declare(strict_types=1);
 
-class CannotDeleteCartRuleException extends CartRuleException
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+
+/**
+ * Defines contract for GetCartRuleForEditingHandler
+ */
+interface GetCartRuleForEditingHandlerInterface
 {
     /**
-     * When fails to delete single cart rule
+     * @param GetCartRuleForEditing $query
+     *
+     * @return EditableCartRule
      */
-    public const FAILED_DELETE = 10;
-
-    /**
-     * When fails to delete cart rule in bulk action
-     */
-    public const FAILED_BULK_DELETE = 20;
+    public function handle(GetCartRuleForEditing $query): EditableCartRule;
 }

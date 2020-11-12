@@ -24,17 +24,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
+declare(strict_types=1);
 
-class CannotDeleteCartRuleException extends CartRuleException
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+
+/**
+ * Deletes cart rules in bulk action
+ */
+class BulkDeleteCartRuleCommand
 {
     /**
-     * When fails to delete single cart rule
+     * @var CartRuleId[]
      */
-    public const FAILED_DELETE = 10;
+    private $cartRuleIds;
 
     /**
-     * When fails to delete cart rule in bulk action
+     * @param int[] $cartRuleIds
+     *
+     * @throws CartRuleConstraintException
      */
-    public const FAILED_BULK_DELETE = 20;
+    public function __construct(array $cartRuleIds)
+    {
+        $this->setCartRuleIds($cartRuleIds);
+    }
+
+    /**
+     * @return CartRuleId[]
+     */
+    public function getCartRuleIds(): array
+    {
+        return $this->cartRuleIds;
+    }
+
+    /**
+     * @param int[] $cartRuleIds
+     *
+     * @throws CartRuleConstraintException
+     */
+    private function setCartRuleIds(array $cartRuleIds): void
+    {
+        foreach ($cartRuleIds as $cartRuleId) {
+            $this->cartRuleIds[] = new CartRuleId($cartRuleId);
+        }
+    }
 }

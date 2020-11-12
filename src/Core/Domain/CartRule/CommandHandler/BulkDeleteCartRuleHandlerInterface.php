@@ -24,17 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
+declare(strict_types=1);
 
-class CannotDeleteCartRuleException extends CartRuleException
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
+
+/**
+ * Defines contract for BulkDeleteCartRuleHandler
+ */
+interface BulkDeleteCartRuleHandlerInterface
 {
     /**
-     * When fails to delete single cart rule
+     * @param BulkDeleteCartRuleCommand $command
+     *
+     * @throws CartRuleException
      */
-    public const FAILED_DELETE = 10;
-
-    /**
-     * When fails to delete cart rule in bulk action
-     */
-    public const FAILED_BULK_DELETE = 20;
+    public function handle(BulkDeleteCartRuleCommand $command): void;
 }

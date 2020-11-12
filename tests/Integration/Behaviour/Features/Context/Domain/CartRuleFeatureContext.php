@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use CartRule;
 use Configuration;
 use Currency;
@@ -33,7 +34,14 @@ use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
@@ -46,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Transform\CurrencyTransform;
 use Tests\Integration\Behaviour\Features\Transform\SharedStorageTransform;
 use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
@@ -402,7 +411,220 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I create cart rule :cartRuleReference with following properties:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $node
+     *
+     * @throws CartRuleConstraintException
+     * @throws DomainConstraintException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function createCartRuleWithReference(string $cartRuleReference, TableNode $node): void
+    {
+        $data = $node->getRowsHash();
+        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+
+        $cartRuleAction = $this->createCartRuleAction(
+            $data['free_shipping'] ?? false,
+            $data['reduction_percentage'] ?? null,
+            $data['reduction_applies_to_discounted_products'] ?? null,
+            $data['reduction_amount'] ?? null,
+            $data['reduction_currency'] ?? null,
+            $data['reduction_tax'] ?? null,
+            $data['gift_product_id'] ?? null,
+            $data['gift_product_attribute_id'] ?? null
+        );
+
+        $currency = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
+
+        $command = new AddCartRuleCommand(
+            [$defaultLanguageId => $data['name_in_default_language']],
+            $data['highlight'],
+            $data['allow_partial_use'],
+            $data['priority'],
+            $data['is_active'],
+            new DateTime($data['valid_from']),
+            new DateTime($data['valid_to']),
+            $data['total_quantity'],
+            $data['quantity_per_user'],
+            $cartRuleAction,
+            $data['minimum_amount'],
+            (int) $currency->id,
+            $data['minimum_amount_tax_included'],
+            $data['minimum_amount_shipping_included']
+        );
+
+        $command->setDescription($data['description'] ?? '');
+        $command->setCode($data['code'] ?? '');
+
+        /** @var $cartRule CartRuleId */
+        $cartRule = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($cartRuleReference, new CartRule($cartRule->getValue()));
+    }
+
+    /**
+     * @When I delete Cart rule with reference :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function deleteCartRule(string $cartRuleReference): void
+    {
+        $cartRule = SharedStorage::getStorage()->get($cartRuleReference);
+        $command = new DeleteCartRuleCommand((int) $cartRule->id);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I disable cart rule with reference :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     */
+    public function disableCartRule(string $cartRuleReference): void
+    {
+        $cartRule = SharedStorage::getStorage()->get($cartRuleReference);
+        $command = new ToggleCartRuleStatusCommand((int) $cartRule->id, false);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I enable cart rule with reference :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     */
+    public function enableCartRule(string $cartRuleReference): void
+    {
+        $cartRule = SharedStorage::getStorage()->get($cartRuleReference);
+        $command = new ToggleCartRuleStatusCommand((int) $cartRule->id, true);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I bulk enable cart rules :cartRuleReferences
+     *
+     * @param string $cartRuleReferences
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function bulkEnableCartRules(string $cartRuleReferences): void
+    {
+        $cartRuleIds = [];
+        $cartRuleReferenceArray = explode(',', $cartRuleReferences);
+
+        foreach ($cartRuleReferenceArray as $carRuleReference) {
+            $cartRuleIds[] = SharedStorage::getStorage()->get($carRuleReference)->id;
+        }
+
+        $command = new BulkToggleCartRuleStatusCommand($cartRuleIds, true);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I bulk disable cart rules :cartRuleReferences
+     *
+     * @param string $cartRuleReferences
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function bulkDisableCartRules(string $cartRuleReferences): void
+    {
+        $cartRuleIds = [];
+        $cartRuleReferenceArray = explode(',', $cartRuleReferences);
+
+        foreach ($cartRuleReferenceArray as $carRuleReference) {
+            $cartRuleIds[] = SharedStorage::getStorage()->get($carRuleReference)->id;
+        }
+
+        $command = new BulkToggleCartRuleStatusCommand($cartRuleIds, false);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I bulk delete cart rules :cartRuleReferences
+     *
+     * @param string $cartRuleReferences
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function bulkDeleteCartRules(string $cartRuleReferences): void
+    {
+        $cartRuleIds = [];
+        $cartRuleReferenceArray = explode(',', $cartRuleReferences);
+
+        foreach ($cartRuleReferenceArray as $carRuleReference) {
+            $cartRuleIds[] = SharedStorage::getStorage()->get($carRuleReference)->id;
+        }
+        $command = new BulkDeleteCartRuleCommand($cartRuleIds);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then Cart rule with reference :cartRuleReference is enabled
+     *
+     * @param string $cartRuleReference
+     *
+     * @throws CartRuleConstraintException
+     * @throws RuntimeException
+     */
+    public function assertCartRuleEnabled(string $cartRuleReference): void
+    {
+        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
+
+        /** @var $cartRule EditableCartRule */
+        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
+        if (!$cartRule->getInformation()->isEnabled() === true) {
+            throw new RuntimeException(sprintf('Cart rule %s is not disabled', $cartRuleReference));
+        }
+    }
+
+    /**
+     * @Then Cart rule with reference :cartRuleReference is disabled
+     *
+     * @param string $cartRuleReference
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function assertCartRuleDisabled(string $cartRuleReference): void
+    {
+        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
+
+        /** @var $cartRule EditableCartRule */
+        $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
+        if (!$cartRule->getInformation()->isEnabled() === false) {
+            throw new RuntimeException(sprintf('Cart rule %s is not enabled', $cartRuleReference));
+        }
+    }
+
+    /**
+     * @Then Cart rule with reference :cartRuleReference does not exist
+     *
+     * @param $cartRuleReference
+     *
+     * @throws CartRuleConstraintException
+     * @throws NoExceptionAlthoughExpectedException
+     */
+    public function assertCartRuleDeleted(string $cartRuleReference): void
+    {
+        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
+
+        try {
+            $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
+            throw new NoExceptionAlthoughExpectedException(sprintf('Cart rule "%s" was found, but it was expected to be deleted', $cartRuleReference));
+        } catch (CartRuleNotFoundException $e) {
+            SharedStorage::getStorage()->clear($cartRuleReference);
+        }
+    }
+
+    /**
      * @Transform /^(active from|active until|quantity per user|partial use|status|highlight in cart)$/
+     *
+     * @param string $property
+     *
+     * @return string
      */
     public function getMappedProperty(string $property): string
     {
@@ -420,6 +642,10 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Transform /^applies to ([^"]+)$/
+     *
+     * @param string $type
+     *
+     * @return mixed|string
      */
     public function getMappedDiscountApplicationType(string $type)
     {
@@ -439,7 +665,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @param CartRule $cartRule
      * @param string $discountApplicationType
      */
-    private function assertDiscountApplicationTypeIsValid(CartRule $cartRule, string $discountApplicationType)
+    private function assertDiscountApplicationTypeIsValid(CartRule $cartRule, string $discountApplicationType): void
     {
         $reductionType = (int) $cartRule->reduction_product;
 
@@ -519,7 +745,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         int $customerId = null,
         string $discountApplicationType = null,
         int $discountProductId = null
-    ) {
+    ): CartRuleId {
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
         $command = new AddCartRuleCommand(
@@ -578,6 +804,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      * @throws DomainConstraintException
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException
      */
     private function createCartRuleAction(
         bool $isFreeShipping,

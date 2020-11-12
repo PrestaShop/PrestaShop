@@ -24,17 +24,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
+declare(strict_types=1);
 
-class CannotDeleteCartRuleException extends CartRuleException
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
+
+/**
+ * Toggles cart rule status
+ */
+class ToggleCartRuleStatusCommand
 {
     /**
-     * When fails to delete single cart rule
+     * @var int
      */
-    public const FAILED_DELETE = 10;
+    private $cartRuleId;
 
     /**
-     * When fails to delete cart rule in bulk action
+     * @var bool
      */
-    public const FAILED_BULK_DELETE = 20;
+    private $expectedStatus;
+
+    /**
+     * @param int $cartRuleId
+     * @param bool $expectedStatus
+     */
+    public function __construct(int $cartRuleId, bool $expectedStatus)
+    {
+        $this->expectedStatus = $expectedStatus;
+        $this->cartRuleId = new CartRuleId($cartRuleId);
+    }
+
+    /**
+     * @return CartRuleId
+     */
+    public function getCartRuleId(): CartRuleId
+    {
+        return $this->cartRuleId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExpectedStatus(): bool
+    {
+        return $this->expectedStatus;
+    }
 }

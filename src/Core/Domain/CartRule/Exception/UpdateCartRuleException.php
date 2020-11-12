@@ -24,17 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 
-class CannotDeleteCartRuleException extends CartRuleException
+/**
+ * Is thrown when cannot update cart rule
+ */
+class UpdateCartRuleException extends CartRuleException
 {
     /**
-     * When fails to delete single cart rule
+     * When fails to update single cart rule status
      */
-    public const FAILED_DELETE = 10;
+    const FAILED_UPDATE_STATUS = 10;
 
     /**
-     * When fails to delete cart rule in bulk action
+     * When fails to update cart rule status in bulk action
      */
-    public const FAILED_BULK_DELETE = 20;
+    const FAILED_BULK_UPDATE_STATUS = 20;
 }

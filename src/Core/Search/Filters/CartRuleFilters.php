@@ -24,17 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
+declare(strict_types=1);
 
-class CannotDeleteCartRuleException extends CartRuleException
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Responsible for providing default filters for cart rule grid.
+ */
+final class CartRuleFilters extends Filters
 {
-    /**
-     * When fails to delete single cart rule
-     */
-    public const FAILED_DELETE = 10;
+    /** @var string */
+    protected $filterId = CartRuleGridDefinitionFactory::GRID_ID;
 
     /**
-     * When fails to delete cart rule in bulk action
+     * {@inheritdoc}
      */
-    public const FAILED_BULK_DELETE = 20;
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_cart_rule',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
 }

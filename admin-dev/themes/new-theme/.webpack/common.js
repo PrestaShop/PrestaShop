@@ -43,6 +43,7 @@ module.exports = {
     backup: './js/pages/backup',
     catalog: './js/app/pages/catalog',
     catalog_product: './js/pages/catalog/product',
+    cart_rule: './js/pages/cart-rule',
     catalog_price_rule: './js/pages/catalog-price-rule',
     catalog_price_rule_form: './js/pages/catalog-price-rule/form',
     category: './js/pages/category',

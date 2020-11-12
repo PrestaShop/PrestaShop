@@ -96,4 +96,9 @@ class CartRuleConstraintException extends CartRuleException
      * Used when cart rule id constraints are violated
      */
     const INVALID_ID = 13;
+
+    /**
+     * When cart rule status is not valid
+     */
+    const INVALID_STATUS = 20;
 }
