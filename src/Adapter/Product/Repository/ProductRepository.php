@@ -321,12 +321,12 @@ class ProductRepository extends AbstractObjectModelRepository
     /**
      * @param string $query
      * @param LanguageId $languageId
+     * @param int|null $limit
      * @param int|null $offset
-     * @param int $limit
      *
      * @return array<string, mixed>
      */
-    public function searchByNameAndReference(string $query, LanguageId $languageId, ?int $offset = null, ?int $limit = null): array
+    public function searchByNameAndReference(string $query, LanguageId $languageId, ?int $limit = null, ?int $offset = null): array
     {
         if ('' === $query) {
             return [];
@@ -367,12 +367,20 @@ class ProductRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      * @param LanguageId $languageId
+     * @param int|null $limit
+     * @param int|null $offset
      *
-     * @return array<string, mixed>
+     * @return array<string, array<string, mixed>>
      */
-    public function getCombinations(ProductId $productId, LanguageId $languageId): array
+    public function getCombinations(ProductId $productId, LanguageId $languageId, ?int $limit = null, ?int $offset = null): array
     {
-        //@todo: shop association not handled
+        //@todo; multistore not considered
+        $combinationIds = $this->getCombinationIds($productId, $languageId, $limit, $offset);
+
+        if (!$combinationIds) {
+            return [];
+        }
+
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pa.id_product_attribute, pa.reference, ag.id_attribute_group, pai.id_image, agl.name AS group_name, al.name AS attribute_name, a.id_attribute')
             ->from($this->dbPrefix . 'product_attribute', 'pa')
@@ -409,15 +417,57 @@ class ProductRepository extends AbstractObjectModelRepository
                 'pai',
                 'pai.id_product_attribute = pa.id_product_attribute'
             )->where('pa.id_product = :productId')
+            ->where('pa.id_product_attribute IN (:combinationIds)')
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ->groupBy('pa.id_product_attribute', 'ag.id_attribute_group')
-            ->orderBy('pa.id_product_attribute');
+            ->orderBy('pa.id_product_attribute')
+        ;
 
-        $results = $qb->execute()->fetchAll();
+        $combinations = [];
+        foreach ($qb->execute()->fetchAll() as $result) {
+            $combinationId = (int) $result['id_product_attribute'];
+            $combinations[$combinationId]['id_product_attribute'] = $combinationId;
+            $combinations[$combinationId]['id_image'] = (int) $result['id_image'];
+            $combinations[$combinationId]['reference'] = $result['reference'];
+            $combinations[$combinationId]['attributes'][] = [
+                'id_attribute_group' => (int) $result['id_attribute_group'],
+                'group_name' => $result['group_name'],
+                'id_attribute' => (int) $result['id_attribute'],
+                'attribute_name' => $result['attribute_name'],
+            ];
+        }
 
-        if (!$results) {
+        return $combinations;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return int[]
+     */
+    private function getCombinationIds(ProductId $productId, LanguageId $languageId, ?int $limit = null, ?int $offset = null): array
+    {
+        //@todo: shop association not handled
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->setParameter('langId', $languageId->getValue())
+            ->setParameter('productId', $productId->getValue())
+            ->where('pa.id_product = :productId')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
+        $combinationIds = $qb->execute()->fetchAll();
+
+        if (empty($combinationIds)) {
             return [];
         }
 
-        return $results;
+        return array_map(function (array $result): int {
+            return (int) $result['id_product_attribute'];
+        }, $combinationIds);
     }
 }

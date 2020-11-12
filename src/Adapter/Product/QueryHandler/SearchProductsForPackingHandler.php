@@ -76,28 +76,34 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
             $query->getLimit()
         );
 
-        return $this->formatProductsForPacking($products, $query->getLanguageId());
+        return $this->formatProductsForPacking($products, $query->getLanguageId(), $query->getLimit());
     }
 
     /**
      * @param array $products
      * @param LanguageId $languageId
+     * @param int $limit
      *
      * @return ProductForPacking[]
      */
-    private function formatProductsForPacking(array $products, LanguageId $languageId): array
+    private function formatProductsForPacking(array $products, LanguageId $languageId, int $limit): array
     {
         $productsForPacking = [];
+        $combinationFeatureOn = Combination::isFeatureActive();
 
         foreach ($products as $product) {
-            if (Combination::isFeatureActive() && $product['cache_default_attribute']) {
+            if ($combinationFeatureOn && $product['cache_default_attribute']) {
                 $combinations = $this->productRepository->getCombinations(
                     new ProductId((int) $product['id_product']),
-                    $languageId
+                    $languageId,
+                    $limit
                 );
 
                 if (!empty($combinations)) {
                     foreach ($combinations as $combination) {
+                        if (count($productsForPacking) === $limit) {
+                            break;
+                        }
                         $productsForPacking[] = $this->formatCombinationForPacking($product, $combination);
                     }
 
@@ -135,12 +141,12 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
     private function formatCombinationForPacking(array $product, array $combination): ProductForPacking
     {
         return new ProductForPacking(
-                (int) $product['id_product'],
-                $this->buildCombinationName($product, $combination),
-                $combination['reference'],
-                $this->getImage($product['link_rewrite'], (int) $combination['id_image']),
-                (int) $combination['id_product_attribute']
-            );
+            (int) $product['id_product'],
+            $this->buildCombinationName($product, $combination),
+            $combination['reference'],
+            $this->getImage($product['link_rewrite'], $combination['id_image']),
+            $combination['id_product_attribute']
+        );
     }
 
     /**
@@ -151,12 +157,21 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
      */
     private function buildCombinationName(array $product, array $combination): string
     {
-        return sprintf(
-            '%s %s-%s',
-            $product['name'],
-            $combination['group_name'],
-            $combination['attribute_name']
-        );
+        //@todo: PR #20518 has DTO CombinationAttributeInformation & almost similar method for command name building
+        //todo  check it if its possible to reuse those
+        // it is used in separate commands, so might be worth to extract to some common service with command-independent DTO)
+        $combinedNameParts = [];
+        foreach ($combination['attributes'] as $attributeInformation) {
+            $combinedNameParts[] = sprintf(
+                '%s - %s',
+                $attributeInformation['group_name'],
+                $attributeInformation['attribute_name']
+            );
+        }
+
+        $attributeNames = implode(', ', $combinedNameParts);
+
+        return sprintf('%s %s', $product['name'], $attributeNames);
     }
 
     /**
