@@ -35,6 +35,7 @@ Feature: Add product to pack from Back Office (BO)
       | name       | en-US: winterstreet |
       | is_virtual | true                |
     And product "product3" type should be virtual
+    And product "product4" type should be virtual
     When I update pack "productPack2" with following product quantities:
       | product  | quantity |
       | product3 | 3        |
@@ -104,72 +105,133 @@ Feature: Add product to pack from Back Office (BO)
       | name       | en-US:regular skirt |
       | is_virtual | false               |
     And product "productSkirt1" has following combinations:
-      | reference | quantity | attributes         |
-      | whiteS    | 15       | Size:S;Color:White |
-      | whiteM    | 15       | Size:M;Color:White |
-      | blackM    | 13       | Size:M;Color:Black |
+      | reference            | quantity | attributes         |
+      | productSkirt1_whiteS | 15       | Size:S;Color:White |
+      | productSkirt1_whiteM | 15       | Size:M;Color:White |
+      | productSkirt1_blackM | 13       | Size:M;Color:Black |
     And product productSkirt1 type should be combination
     And product "productPack4" type should be standard
     When I update pack productPack4 with following product quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_whiteM | 11       |
+      | productSkirt1 | productSkirt1_blackM | 12       |
     Then product "productPack4" type should be pack
     And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_whiteM | 11       |
+      | productSkirt1 | productSkirt1_blackM | 12       |
 
   Scenario: Add combination & standard product to a pack
     Given product "product2" type should be standard
     And product productSkirt1 type should be combination
     And product "productSkirt1" has following combinations:
-      | reference | quantity | attributes         |
-      | whiteS    | 15       | Size:S;Color:White |
-      | whiteM    | 15       | Size:M;Color:White |
-      | blackM    | 13       | Size:M;Color:Black |
+      | reference            | quantity | attributes         |
+      | productSkirt1_whiteS | 15       | Size:S;Color:White |
+      | productSkirt1_whiteM | 15       | Size:M;Color:White |
+      | productSkirt1_blackM | 13       | Size:M;Color:Black |
     When I update pack productPack4 with following product quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-      | product2      |             | 2        |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_whiteM | 11       |
+      | productSkirt1 | productSkirt1_blackM | 12       |
+      | product2      |                      | 2        |
     Then product "productPack4" type should be pack
     And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-      | product2      |             | 2        |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_whiteM | 11       |
+      | productSkirt1 | productSkirt1_blackM | 12       |
+      | product2      |                      | 2        |
 
   Scenario: I remove one combination of same product from existing pack and change another combination quantity
     Given product "productPack4" type should be pack
     And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-      | product2      |             | 2        |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_whiteM | 11       |
+      | productSkirt1 | productSkirt1_blackM | 12       |
+      | product2      |                      | 2        |
     When I update pack productPack4 with following product quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 9        |
-      | product2      |             | 2        |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_blackM | 9        |
+      | product2      |                      | 2        |
     Then pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 9        |
-      | product2      |             | 2        |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_blackM | 9        |
+      | product2      |                      | 2        |
     Then product "productPack4" type should be pack
 
   Scenario: I remove all products from existing pack when it contains combination and standard products
     Given product "productPack4" type should be pack
     And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 9        |
-      | product2      |             | 2        |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_blackM | 9        |
+      | product2      |                      | 2        |
     When I remove all products from pack productPack4
     Then product "productPack4" type should be standard
+
+  Scenario: I search products for packing by name
+    Given product "productPack1" localized "name" should be "en-US:weird sunglasses box"
+    And product "productPack1" type should be pack
+    And I update product "productPack1" options with following information:
+      | reference | refPack1 |
+    And product "productPack1" should have following options information:
+      | reference | refPack1
+    And product "productPack2" localized "name" should be "en-US:street photos"
+    And product "productPack2" type should be pack
+    And I update product "productPack2" options with following information:
+      | reference | refPack2 |
+    And product "productPack2" should have following options information:
+      | reference | refPack2 |
+    And product "productPack4" type should be standard
+    And I update pack productPack4 with following product quantities:
+      | product       | combination | quantity |
+      | productSkirt1 | whiteS      | 10       |
+      | productSkirt1 | whiteM      | 11       |
+      | productSkirt1 | blackM      | 12       |
+      | product2      |             | 2        |
+    And product "productPack4" type should be pack
+    And product "product2" localized "name" should be "en-US:shady sunglasses"
+    And product "product2" type should be standard
+    And I update product "product2" options with following information:
+      | reference | ref2 |
+    And product "product2" should have following options information:
+      | reference | ref2 |
+    And product "product3" localized "name" should be "en-US:summerstreet"
+    And product "product3" type should be virtual
+    And I update product "product3" options with following information:
+      | reference | ref3 |
+    And product "product3" should have following options information:
+      | reference | ref3 |
+    And product "product4" localized "name" should be "en-US:winterstreet"
+    And product "product4" type should be virtual
+    And I update product "product4" options with following information:
+      | reference | ref4 |
+    And product "product4" should have following options information:
+      | reference | ref4 |
+    And product productSkirt1 type should be combination
+    And product "productSkirt1" localized "name" should be "en-US:regular skirt"
+    And I update product "productSkirt1" options with following information:
+      | reference | refSkirt1 |
+    And product "productSkirt1" should have following options information:
+      | reference | refSkirt1 |
+    And product "productSkirt1" has following combinations:
+      | reference | quantity | attributes         |
+      | productSkirt1_whiteS    | 15       | Size:S;Color:White |
+      | productSkirt1_whiteM    | 15       | Size:M;Color:White |
+      | productSkirt1_blackM    | 13       | Size:M;Color:Black |
+    When I search products for packing in "en" language by phrase "s" with limit 10
+    Then search results for packing product should be the following:
+      | product  | name                                  | reference |
+      | product2 | shady sunglasses                      | ref2      |
+      | product3 | summerstreet                          | ref3      |
+      | product4 | winterstreet                          | ref4      |
+      | productSkirt1_whiteS   | regular skirt Color - White, Size - S | productSkirt1_whiteS    |
+      | productSkirt1_whiteM   | regular skirt Color - White, Size - M | productSkirt1_whiteM    |
+      | productSkirt1_blackM   | regular skirt Color - Black, Size - M | productSkirt1_blackM    |
+
