@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
@@ -36,11 +37,18 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForPacking;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForPacking;
 use RuntimeException;
 
 class UpdatePackFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * Key for shared storage, where previous search results are stored
+     */
+    public const LATEST_SEARCH_RESULTS_STORAGE_KEY = 'search_for_packing_product_results';
+
     /**
      * @When I update pack :packReference with following product quantities:
      *
@@ -155,6 +163,61 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I search products for packing in ":iso" language by phrase ":searchPhrase" and limit :limit
+     *
+     * @param string $iso
+     * @param string $searchPhrase
+     * @param int $limit
+     */
+    public function searchProductsForPacking(string $iso, string $searchPhrase, int $limit): void
+    {
+        $languageId = Language::getIdByIso($iso, true);
+        $searchResults = $this->getQueryBus()->handle(new SearchProductsForPacking(
+            $searchPhrase,
+            $languageId,
+            $limit
+        ));
+
+        $this->getSharedStorage()->set(self::LATEST_SEARCH_RESULTS_STORAGE_KEY, $searchResults);
+    }
+
+    /**
+     * @Then search results for packing product should be the following:
+     *
+     * @param TableNode $tableNode
+     */
+    public function assertSearchResults(TableNode $tableNode): void
+    {
+        $expectedDataRows = $tableNode->getColumnsHash();
+        $searchResults = $this->getSearchResults();
+        Assert::assertEquals(count($expectedDataRows), count($searchResults), 'Unexpected search results count');
+
+        //@todo: fix assertion
+        foreach ($expectedDataRows as $key => $expectedDataRow) {
+            $productForPacking = $searchResults[$key];
+
+            Assert::assertEquals(
+                $this->getSharedStorage()->get($expectedDataRow['product']),
+                $productForPacking->getProductId(),
+                'Unexpected product id in search results'
+            );
+
+            Assert::assertEquals(
+                $expectedDataRow['name'],
+                $productForPacking->getName(),
+                'Unexpected product name in search results'
+            );
+
+            Assert::assertEquals(
+                $expectedDataRow['reference'],
+                $productForPacking->getReference(),
+                'Unexpected product name in search results'
+            );
+            //@todo: image is not asserted. How to?
+        }
+    }
+
+    /**
      * @Then I should get error that product for packing quantity is invalid
      */
     public function assertPackProductQuantityError()
@@ -174,6 +237,17 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
             ProductPackConstraintException::class,
             ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
         );
+    }
+
+    /**
+     * @return ProductForPacking[]
+     */
+    private function getSearchResults(): array
+    {
+        return $this->getSharedStorage()->exists(self::LATEST_SEARCH_RESULTS_STORAGE_KEY) ?
+            $this->getSharedStorage()->get(self::LATEST_SEARCH_RESULTS_STORAGE_KEY) :
+            []
+        ;
     }
 
     /**

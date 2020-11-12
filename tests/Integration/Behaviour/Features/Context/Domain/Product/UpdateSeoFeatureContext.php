@@ -44,7 +44,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
     /**
      * Key for shared storage, where previous search results are stored
      */
-    const LATEST_SEARCH_RESULTS_STORAGE_KEY = 'search_for_redirect_product_results';
+    public const LATEST_SEARCH_RESULTS_STORAGE_KEY = 'search_for_redirect_product_results';
 
     /**
      * @When I update product :productReference SEO information with following values:

@@ -8,12 +8,12 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: I add standard product to a pack
     Given I add product "productPack1" with following information:
-      | name       | en-US: weird sunglasses box |
-      | is_virtual | false                       |
+      | name       | en-US:weird sunglasses box |
+      | is_virtual | false                      |
     And product "productPack1" type should be standard
     And I add product "product2" with following information:
-      | name       | en-US: shady sunglasses |
-      | is_virtual | false                   |
+      | name       | en-US:shady sunglasses |
+      | is_virtual | false                  |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -25,15 +25,15 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: I add virtual products to a pack
     Given I add product "productPack2" with following information:
-      | name       | en-US: street photos |
-      | is_virtual | false                |
+      | name       | en-US:street photos |
+      | is_virtual | false               |
     And product "productPack2" type should be standard
     And I add product "product3" with following information:
-      | name       | en-US: summerstreet |
-      | is_virtual | true                |
+      | name       | en-US:sunny summerstreet |
+      | is_virtual | true               |
     And I add product "product4" with following information:
-      | name       | en-US: winterstreet |
-      | is_virtual | true                |
+      | name       | en-US:sunny winterstreet |
+      | is_virtual | true               |
     And product "product3" type should be virtual
     And product "product4" type should be virtual
     When I update pack "productPack2" with following product quantities:
@@ -102,7 +102,7 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: Add combination product to a pack
     Given I add product "productSkirt1" with following information:
-      | name       | en-US:regular skirt |
+      | name       | en-US:regular skirt "oh, Sunny" |
       | is_virtual | false               |
     And product "productSkirt1" has following combinations:
       | reference            | quantity | attributes         |
@@ -181,7 +181,7 @@ Feature: Add product to pack from Back Office (BO)
     And I update product "productPack1" options with following information:
       | reference | refPack1 |
     And product "productPack1" should have following options information:
-      | reference | refPack1
+      | reference | refPack1 |
     And product "productPack2" localized "name" should be "en-US:street photos"
     And product "productPack2" type should be pack
     And I update product "productPack2" options with following information:
@@ -190,11 +190,11 @@ Feature: Add product to pack from Back Office (BO)
       | reference | refPack2 |
     And product "productPack4" type should be standard
     And I update pack productPack4 with following product quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-      | product2      |             | 2        |
+      | product       | combination          | quantity |
+      | productSkirt1 | productSkirt1_whiteS | 10       |
+      | productSkirt1 | productSkirt1_whiteM | 11       |
+      | productSkirt1 | productSkirt1_blackM | 12       |
+      | product2      |                      | 2        |
     And product "productPack4" type should be pack
     And product "product2" localized "name" should be "en-US:shady sunglasses"
     And product "product2" type should be standard
@@ -202,36 +202,36 @@ Feature: Add product to pack from Back Office (BO)
       | reference | ref2 |
     And product "product2" should have following options information:
       | reference | ref2 |
-    And product "product3" localized "name" should be "en-US:summerstreet"
+    And product "product3" localized "name" should be "en-US:sunny summerstreet"
     And product "product3" type should be virtual
     And I update product "product3" options with following information:
       | reference | ref3 |
     And product "product3" should have following options information:
       | reference | ref3 |
-    And product "product4" localized "name" should be "en-US:winterstreet"
+    And product "product4" localized "name" should be "en-US:sunny winterstreet"
     And product "product4" type should be virtual
     And I update product "product4" options with following information:
       | reference | ref4 |
     And product "product4" should have following options information:
       | reference | ref4 |
     And product productSkirt1 type should be combination
-    And product "productSkirt1" localized "name" should be "en-US:regular skirt"
+    And product "productSkirt1" localized "name" should be "en-US:regular skirt "oh, Sunny""
     And I update product "productSkirt1" options with following information:
       | reference | refSkirt1 |
     And product "productSkirt1" should have following options information:
       | reference | refSkirt1 |
     And product "productSkirt1" has following combinations:
-      | reference | quantity | attributes         |
-      | productSkirt1_whiteS    | 15       | Size:S;Color:White |
-      | productSkirt1_whiteM    | 15       | Size:M;Color:White |
-      | productSkirt1_blackM    | 13       | Size:M;Color:Black |
-    When I search products for packing in "en" language by phrase "s" with limit 10
+      | reference            | quantity | attributes         |
+      | productSkirt1_whiteS | 15       | Size:S;Color:White |
+      | productSkirt1_whiteM | 15       | Size:M;Color:White |
+      | productSkirt1_blackM | 13       | Size:M;Color:Black |
+    When I search products for packing in "en" language by phrase "sun" and limit 10
     Then search results for packing product should be the following:
-      | product  | name                                  | reference |
-      | product2 | shady sunglasses                      | ref2      |
-      | product3 | summerstreet                          | ref3      |
-      | product4 | winterstreet                          | ref4      |
-      | productSkirt1_whiteS   | regular skirt Color - White, Size - S | productSkirt1_whiteS    |
-      | productSkirt1_whiteM   | regular skirt Color - White, Size - M | productSkirt1_whiteM    |
-      | productSkirt1_blackM   | regular skirt Color - Black, Size - M | productSkirt1_blackM    |
+      | product              | name                                  | reference            |
+      | product2             | shady sunglasses                      | ref2                 |
+      | product3             | sunny summerstreet                          | ref3                 |
+      | product4             | sunny winterstreet                          | ref4                 |
+      | productSkirt1_whiteS | regular skirt "oh, Sunny" Color - White, Size - S | productSkirt1_whiteS |
+      | productSkirt1_whiteM | regular skirt "oh, Sunny" Color - White, Size - M | productSkirt1_whiteM |
+      | productSkirt1_blackM | regular skirt "oh, Sunny" Color - Black, Size - M | productSkirt1_blackM |
 
