@@ -85,7 +85,7 @@ class CartCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
-    /** @var int Order ID */
+    /** @var int|null Order ID */
     public $id_order;
 
     public $checkedTos = false;
