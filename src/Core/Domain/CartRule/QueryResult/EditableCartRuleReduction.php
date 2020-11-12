@@ -28,19 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class EditableCartRuleReduction
 {
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $percent;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $amount;
 
@@ -65,8 +65,8 @@ class EditableCartRuleReduction
     private $excludeSpecial;
 
     public function __construct(
-        Number $percent,
-        Number $amount,
+        DecimalNumber $percent,
+        DecimalNumber $amount,
         bool $tax,
         ?CurrencyId $currencyId,
         ?ProductId $productId,
@@ -81,17 +81,17 @@ class EditableCartRuleReduction
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getPercent(): Number
+    public function getPercent(): DecimalNumber
     {
         return $this->percent;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getAmount(): Number
+    public function getAmount(): DecimalNumber
     {
         return $this->amount;
     }

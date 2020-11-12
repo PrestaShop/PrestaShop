@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
@@ -39,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -96,7 +99,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
     /**
      * {@inheritdoc}
      */
-    protected function getColumns(): ColumnCollection
+    protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
             ->add(
@@ -178,7 +181,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
     /**
      * {@inheritdoc}
      */
-    protected function getFilters(): FilterCollection
+    protected function getFilters(): FilterCollectionInterface
     {
         return (new FilterCollection())
             ->add(
@@ -263,7 +266,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
     /**
      * {@inheritdoc}
      */
-    protected function getBulkActions(): BulkActionCollection
+    protected function getBulkActions(): BulkActionCollectionInterface
     {
         return (new BulkActionCollection())
             ->add(

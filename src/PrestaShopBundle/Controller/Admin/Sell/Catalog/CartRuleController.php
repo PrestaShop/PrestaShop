@@ -111,14 +111,14 @@ class CartRuleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
-     * @param $cartRuleId
+     * @param int $cartRuleId
      *
      * @return RedirectResponse
      */
-    public function deleteAction($cartRuleId): RedirectResponse
+    public function deleteAction(int $cartRuleId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteCartRuleCommand((int) $cartRuleId));
+            $this->getCommandBus()->handle(new DeleteCartRuleCommand($cartRuleId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')

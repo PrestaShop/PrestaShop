@@ -61,7 +61,7 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextIdLang
      * @param MultistoreContextCheckerInterface $multistoreContextChecker

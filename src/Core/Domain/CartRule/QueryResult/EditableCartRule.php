@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
 use DateTime;
-use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 /**
@@ -58,12 +57,12 @@ class EditableCartRule
     private $actions;
 
     /**
-     * @var DateTimeInterface|null
+     * @var DateTime|null
      */
     private $dateAdd;
 
     /**
-     * @var DateTimeInterface|null
+     * @var DateTime|null
      */
     private $dateUpd;
 
@@ -72,8 +71,8 @@ class EditableCartRule
         EditableCartRuleInformation $information,
         EditableCartRuleConditions $conditions,
         EditableCartRuleActions $actions,
-        ?DateTimeInterface $dateAdd,
-        ?DateTimeInterface $dateUpd
+        ?DateTime $dateAdd,
+        ?DateTime $dateUpd
     ) {
         $this->cartRuleId = $cartRuleId;
         $this->information = $information;
@@ -116,7 +115,7 @@ class EditableCartRule
     }
 
     /**
-     * @return DateTimeInterface|null
+     * @return DateTime|null
      */
     public function getDateAdd(): ?DateTime
     {
@@ -124,7 +123,7 @@ class EditableCartRule
     }
 
     /**
-     * @return DateTimeInterface|null
+     * @return DateTime|null
      */
     public function getDateUpd(): ?DateTime
     {
