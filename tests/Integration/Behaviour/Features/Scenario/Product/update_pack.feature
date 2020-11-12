@@ -30,10 +30,10 @@ Feature: Add product to pack from Back Office (BO)
     And product "productPack2" type should be standard
     And I add product "product3" with following information:
       | name       | en-US:sunny summerstreet |
-      | is_virtual | true               |
+      | is_virtual | true                     |
     And I add product "product4" with following information:
       | name       | en-US:sunny winterstreet |
-      | is_virtual | true               |
+      | is_virtual | true                     |
     And product "product3" type should be virtual
     And product "product4" type should be virtual
     When I update pack "productPack2" with following product quantities:
@@ -103,7 +103,7 @@ Feature: Add product to pack from Back Office (BO)
   Scenario: Add combination product to a pack
     Given I add product "productSkirt1" with following information:
       | name       | en-US:regular skirt "oh, Sunny" |
-      | is_virtual | false               |
+      | is_virtual | false                           |
     And product "productSkirt1" has following combinations:
       | reference            | quantity | attributes         |
       | productSkirt1_whiteS | 15       | Size:S;Color:White |
@@ -227,11 +227,10 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1_blackM | 13       | Size:M;Color:Black |
     When I search products for packing in "en" language by phrase "sun" and limit 10
     Then search results for packing product should be the following:
-      | product              | name                                  | reference            |
-      | product2             | shady sunglasses                      | ref2                 |
-      | product3             | sunny summerstreet                          | ref3                 |
-      | product4             | sunny winterstreet                          | ref4                 |
-      | productSkirt1_whiteS | regular skirt "oh, Sunny" Color - White, Size - S | productSkirt1_whiteS |
-      | productSkirt1_whiteM | regular skirt "oh, Sunny" Color - White, Size - M | productSkirt1_whiteM |
-      | productSkirt1_blackM | regular skirt "oh, Sunny" Color - Black, Size - M | productSkirt1_blackM |
-
+      | product              | name                                              | reference            |
+      | product2             | shady sunglasses                                  | ref2                 |
+      | product3             | sunny summerstreet                                | ref3                 |
+      | product4             | sunny winterstreet                                | ref4                 |
+      | productSkirt1_whiteS | regular skirt "oh, Sunny" Size - S, Color - White | productSkirt1_whiteS |
+      | productSkirt1_whiteM | regular skirt "oh, Sunny" Size - M, Color - White | productSkirt1_whiteM |
+      | productSkirt1_blackM | regular skirt "oh, Sunny" Size - M, Color - Black | productSkirt1_blackM |

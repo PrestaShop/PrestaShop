@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Combination;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
@@ -48,9 +49,14 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     public function addCombinationsToProduct(string $productReference, TableNode $tableNode)
     {
         $details = $tableNode->getColumnsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
         $combinationsDetails = [];
 
         foreach ($details as $combination) {
+            // don't create combination if it exists. @todo: add optional id in CombinationDetails and rewrite combination
+            if (Combination::getIdByReference($productId, $combination['reference'])) {
+                continue;
+            }
             $combinationsDetails[] = new CombinationDetails(
                 $combination['reference'],
                 (int) $combination['quantity'],
@@ -58,10 +64,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             );
         }
 
-        $combinations = ProductCombinationFactory::makeCombinations(
-            $this->getSharedStorage()->get($productReference),
-            $combinationsDetails
-        );
+        $combinations = ProductCombinationFactory::makeCombinations($productId, $combinationsDetails);
 
         foreach ($combinations as $combination) {
             $this->getSharedStorage()->set($combination->reference, (int) $combination->id);
