@@ -20,7 +20,7 @@ Feature: Order from Back Office (BO)
     And a carrier "price_carrier" with name "My cheap carrier" exists
     And a carrier "weight_carrier" with name "My light carrier" exists
     And I create an empty cart "dummy_cart" for customer "testCustomer"
-    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
 
   Scenario: Use a carrier that depends on price, add product to change order total the shipping price should update as well

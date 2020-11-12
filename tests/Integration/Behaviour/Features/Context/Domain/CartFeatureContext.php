@@ -39,6 +39,7 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
@@ -144,6 +145,35 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      * @param string $cartReference
      */
     public function addProductsToCart(int $quantity, string $productName, string $cartReference)
+    {
+        $productId = $this->getProductIdByName($productName);
+
+        $this->lastException = null;
+        try {
+            $this->getCommandBus()->handle(
+                new AddProductToCartCommand(
+                    SharedStorage::getStorage()->get($cartReference),
+                    $productId,
+                    $quantity
+                )
+            );
+            SharedStorage::getStorage()->set($productName, $productId);
+
+            // Clear cart static cache or it will have no products in next calls
+            Cart::resetStaticCache();
+        } catch (MinimalQuantityException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I update quantity of product :productName in the cart :cartReference to :quantity
+     *
+     * @param int $quantity
+     * @param string $productName
+     * @param string $cartReference
+     */
+    public function updateProductQuantityInCart(int $quantity, string $productName, string $cartReference)
     {
         $productId = $this->getProductIdByName($productName);
 
@@ -725,6 +755,53 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new RuntimeException(sprintf('Voucher was %s not found in cart', $voucherCode));
+    }
+
+    /**
+     * @Then cart :cartReference should contain :quantity products
+     *
+     * @param string $cartReference
+     * @param int $quantity
+     */
+    public function assertCartNumberOfProducts(string $cartReference, int $quantity)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        $cartProductsQuantity = \count($cartInfo->getProducts());
+
+        if ($quantity !== $cartProductsQuantity) {
+            throw new RuntimeException(sprintf(
+                'Cart contains %d products instead of %d',
+                $cartProductsQuantity,
+                $quantity
+            ));
+        }
+    }
+
+    /**
+     * @Then cart :cartReference should contain :quantity products excluding gifts
+     *
+     * @param string $cartReference
+     * @param int $quantity
+     */
+    public function assertCartNumberOfProductsExcludingGifts(string $cartReference, int $quantity)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        $cartProductsQuantity = 0;
+        foreach ($cartInfo->getProducts() as $product) {
+            if (false === (bool) $product->isGift()) {
+                ++$cartProductsQuantity;
+            }
+        }
+
+        if ($quantity !== $cartProductsQuantity) {
+            throw new RuntimeException(sprintf(
+                'Cart contains %d products instead of %d',
+                $cartProductsQuantity,
+                $quantity
+            ));
+        }
     }
 
     /**
