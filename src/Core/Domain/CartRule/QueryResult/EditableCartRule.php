@@ -58,12 +58,12 @@ class EditableCartRule
     private $actions;
 
     /**
-     * @var DateTimeInterface|null
+     * @var DateTime|null
      */
     private $dateAdd;
 
     /**
-     * @var DateTimeInterface|null
+     * @var DateTime|null
      */
     private $dateUpd;
 

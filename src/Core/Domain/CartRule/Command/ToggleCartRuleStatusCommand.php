@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 class ToggleCartRuleStatusCommand
 {
     /**
-     * @var int
+     * @var getCartRuleId
      */
     private $cartRuleId;
 
