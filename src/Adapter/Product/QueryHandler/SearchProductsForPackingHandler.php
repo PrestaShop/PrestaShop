@@ -69,6 +69,7 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
      */
     public function handle(SearchProductsForPacking $query): array
     {
+        //@todo: pack products should not be found
         $products = $this->productRepository->searchByNameAndReference(
             $query->getPhrase(),
             $query->getLanguageId(),
@@ -87,10 +88,9 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
     private function formatProductsForPacking(array $products, LanguageId $languageId): array
     {
         $productsForPacking = [];
-        $combinationsFeatureIsOn = (bool) Combination::isFeatureActive();
 
         foreach ($products as $product) {
-            if ($combinationsFeatureIsOn && $product['cache_default_attribute']) {
+            if (Combination::isFeatureActive() && $product['cache_default_attribute']) {
                 $combinations = $this->productRepository->getCombinations(
                     new ProductId((int) $product['id_product']),
                     $languageId
