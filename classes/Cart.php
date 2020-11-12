@@ -141,7 +141,7 @@ class CartCore extends ObjectModel
             'allow_seperated_package' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'allow_null' => true],
         ],
     ];
 
