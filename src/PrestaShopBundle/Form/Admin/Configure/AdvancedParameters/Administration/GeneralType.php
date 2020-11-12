@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use Cookie;
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -34,7 +35,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Tools;
 
 class GeneralType extends TranslatorAwareType
 {
@@ -124,7 +124,7 @@ class GeneralType extends TranslatorAwareType
     private function getStabilityChannelsValues(): array
     {
         $values = [];
-        foreach (Tools::ADDONS_API_MODULE_CHANNELS as $key) {
+        foreach (AddonsDataProvider::ADDONS_API_MODULE_CHANNELS as $key) {
             $values[$this->getStabilityChannelsValue($key)] = $key;
         }
 
@@ -134,11 +134,11 @@ class GeneralType extends TranslatorAwareType
     private function getStabilityChannelsValue(string $value): string
     {
         switch ($value) {
-            case Tools::ADDONS_API_MODULE_CHANNEL_ALPHA:
+            case AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_ALPHA:
                 return $this->trans('Alpha', 'Admin.Advparameters.Feature');
-            case Tools::ADDONS_API_MODULE_CHANNEL_BETA:
+            case AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_BETA:
                 return $this->trans('Beta', 'Admin.Advparameters.Feature');
-            case Tools::ADDONS_API_MODULE_CHANNEL_STABLE:
+            case AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE:
                 return $this->trans('Stable', 'Admin.Advparameters.Feature');
         }
 

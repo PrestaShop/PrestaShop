@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Tools;
 
 /**
  * Manages the configuration data about general options.
@@ -72,7 +72,7 @@ class GeneralConfiguration implements DataConfigurationInterface
         if ($this->isDebug) {
             $configuration['check_modules_stability_channel'] = $this->configuration->get(
                 'ADDONS_API_MODULE_CHANNEL',
-                Tools::ADDONS_API_MODULE_CHANNEL_STABLE
+                AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE
             );
         }
 
@@ -128,11 +128,11 @@ class GeneralConfiguration implements DataConfigurationInterface
         if ($this->isDebug) {
             $isValid &= in_array(
                 $configuration['check_modules_stability_channel'],
-                Tools::ADDONS_API_MODULE_CHANNELS
+                AddonsDataProvider::ADDONS_API_MODULE_CHANNELS
             );
         }
 
-        return $isValid;
+        return (bool) $isValid;
     }
 
     /**
