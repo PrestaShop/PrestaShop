@@ -116,7 +116,7 @@ class EditableCartRule
     }
 
     /**
-     * @return DateTimeInterface|null
+     * @return DateTime|null
      */
     public function getDateAdd(): ?DateTime
     {
@@ -124,7 +124,7 @@ class EditableCartRule
     }
 
     /**
-     * @return DateTimeInterface|null
+     * @return DateTime|null
      */
     public function getDateUpd(): ?DateTime
     {

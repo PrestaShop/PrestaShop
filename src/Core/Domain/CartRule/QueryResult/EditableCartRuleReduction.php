@@ -40,7 +40,7 @@ class EditableCartRuleReduction
     private $percent;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $amount;
 
