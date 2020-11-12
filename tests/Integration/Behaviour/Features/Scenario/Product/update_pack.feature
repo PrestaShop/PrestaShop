@@ -175,7 +175,7 @@ Feature: Add product to pack from Back Office (BO)
     When I remove all products from pack productPack4
     Then product "productPack4" type should be standard
 
-  Scenario: I search products for packing by name
+  Scenario: I search products for packing
     Given product "productPack1" localized "name" should be "en-US:weird sunglasses box"
     And product "productPack1" type should be pack
     And I update product "productPack1" options with following information:
@@ -232,8 +232,31 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1 | productSkirt1_whiteS | regular skirt "oh, Sunny" Size - S, Color - White | productSkirt1_whiteS |
       | productSkirt1 | productSkirt1_whiteM | regular skirt "oh, Sunny" Size - M, Color - White | productSkirt1_whiteM |
       | productSkirt1 | productSkirt1_blackM | regular skirt "oh, Sunny" Size - M, Color - Black | productSkirt1_blackM |
+    When I search products for packing in "en" language by phrase "sun" and limit 3
+    Then search results for packing product should be the following:
+      | product       | combination          | name                                              | reference            |
+      | product2      |                      | shady sunglasses                                  | ref2                 |
+      | productSkirt1 | productSkirt1_whiteS | regular skirt "oh, Sunny" Size - S, Color - White | productSkirt1_whiteS |
+      | productSkirt1 | productSkirt1_whiteM | regular skirt "oh, Sunny" Size - M, Color - White | productSkirt1_whiteM |
+    When I search products for packing in "en" language by phrase "skir" and limit 10
+    Then search results for packing product should be the following:
+      | product       | combination          | name                                              | reference            |
+      | productSkirt1 | productSkirt1_whiteS | regular skirt "oh, Sunny" Size - S, Color - White | productSkirt1_whiteS |
+      | productSkirt1 | productSkirt1_whiteM | regular skirt "oh, Sunny" Size - M, Color - White | productSkirt1_whiteM |
+      | productSkirt1 | productSkirt1_blackM | regular skirt "oh, Sunny" Size - M, Color - Black | productSkirt1_blackM |
+    When I search products for packing in "en" language by phrase "ref2" and limit 10
+    Then search results for packing product should be the following:
+      | product       | combination          | name                                              | reference            |
+      | product2      |                      | shady sunglasses                                  | ref2                 |
+    When I search products for packing in "en" language by phrase "ref" and limit 10
+    Then search results for packing product should be the following:
+      | product       | combination          | name                                              | reference            |
+      | product2      |                      | shady sunglasses                                  | ref2                 |
+      | productSkirt1 | productSkirt1_whiteS | regular skirt "oh, Sunny" Size - S, Color - White | productSkirt1_whiteS |
+      | productSkirt1 | productSkirt1_whiteM | regular skirt "oh, Sunny" Size - M, Color - White | productSkirt1_whiteM |
+      | productSkirt1 | productSkirt1_blackM | regular skirt "oh, Sunny" Size - M, Color - Black | productSkirt1_blackM |
 
-#    @todo: different scenarios:
+#    @todo: split to different scenarios? (would require loading/asserting all the data each time):
 #       1. search by name,
 #       2. search by reference,
 #       3. should not find virtual products,
