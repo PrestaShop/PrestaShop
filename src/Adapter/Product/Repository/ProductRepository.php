@@ -321,11 +321,12 @@ class ProductRepository extends AbstractObjectModelRepository
     /**
      * @param string $query
      * @param LanguageId $languageId
+     * @param int|null $offset
      * @param int $limit
      *
      * @return array<string, mixed>
      */
-    public function searchByNameAndReference(string $query, LanguageId $languageId, int $limit): array
+    public function searchByNameAndReference(string $query, LanguageId $languageId, ?int $offset = null, ?int $limit = null): array
     {
         if ('' === $query) {
             return [];
@@ -350,6 +351,7 @@ class ProductRepository extends AbstractObjectModelRepository
             ->where('pl.name LIKE :searchQuery')
             ->orWhere('p.reference LIKE :searchQuery')
             ->setParameter('searchQuery', '%' . $query . '%')
+            ->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
 

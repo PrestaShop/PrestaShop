@@ -56,18 +56,26 @@ class SearchProductsToRelate
     private $limit;
 
     /**
+     * @var int
+     */
+    private $offset;
+
+    /**
      * @param string $phrase
      * @param int $languageId
      * @param int $limit
+     * @param int $offset
      */
     public function __construct(
         string $phrase,
         int $languageId,
-        int $limit = self::LIMIT_DEFAULT
+        int $limit = self::LIMIT_DEFAULT,
+        int $offset = 0
     ) {
         $this->phrase = $phrase;
         $this->languageId = new LanguageId($languageId);
         $this->limit = $limit;
+        $this->offset = $offset;
     }
 
     /**
@@ -92,5 +100,13 @@ class SearchProductsToRelate
     public function getLimit(): int
     {
         return $this->limit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset(): int
+    {
+        return $this->offset;
     }
 }
