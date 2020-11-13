@@ -29,14 +29,14 @@
 {% set isValid = record[column.id] is same as('1') %}
 
 <div class="text-center">
-  <i
-    class="material-icons ps-togglable-row grid-toggler-icon-{% if isValid == true %}valid{% else %}not-valid{% endif %}"
+  <div 
+    class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center ps-togglable-row"
     data-toggle-url="{{ path(column.options.route, {(column.options.route_param_name) : id_primary_key})}}"
   >
-    {% if isValid %}
-      check
-    {% else %}
-      clear
-    {% endif %}
-  </i>
+  <input type="radio" name="input-{{ column.options.route }}-{{ id_primary_key }}" id="input-false-{{ column.options.route }}-{{ id_primary_key }}" value="0" {% if not isValid %}checked{% endif %}>
+      <label for="input-false-{{ column.options.route }}-{{ id_primary_key }}">Off</label>
+      <input type="radio" name="input-{{ column.options.route }}-{{ id_primary_key }}" id="input-true-{{ column.options.route }}-{{ id_primary_key }}" value="1" {% if isValid %}checked{% endif %}>
+      <label for="input-true-{{ column.options.route }}-{{ id_primary_key }}">On</label>
+      <span class="slide-button"></span>
+  </div>
 </div>
