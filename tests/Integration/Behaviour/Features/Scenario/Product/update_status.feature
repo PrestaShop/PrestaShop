@@ -20,12 +20,25 @@ Feature: Update product status from BO (Back Office)
     And I add product "product2" with following information:
       | name       | en-US:Values list poster nr. 2 (virtual) |
       | is_virtual | true                                     |
+    And I update product product2 SEO information with following values:
+      | redirect_type   | 301-product |
+      | redirect_target | product1    |
+    And product product2 should have following seo options:
+      | redirect_type   | 301-product |
+      | redirect_target | product1    |
     And product product2 type should be virtual
     And product "product2" should be disabled
     When I enable product "product2"
+#   for some reason updating status resets redirect option
+    And product product2 should have following seo options:
+      | redirect_type   | 301-product |
+      | redirect_target | product1    |
     And product "product2" should be enabled
     When I disable product "product2"
     And product "product2" should be disabled
+    And product product2 should have following seo options:
+      | redirect_type   | 301-product |
+      | redirect_target | product1    |
 
   Scenario: I update combination product status
     And I add product "product3" with following information:
