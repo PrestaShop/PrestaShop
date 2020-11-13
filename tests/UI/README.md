@@ -26,6 +26,7 @@ npm install
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
 | HEADLESS            | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
+| SLOW_MO             | Integer to slow down Playwright operations by the specified amount of milliseconds (default to 5 milliseconds) |
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 
