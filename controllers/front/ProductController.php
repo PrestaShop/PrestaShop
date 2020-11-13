@@ -86,6 +86,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function getCanonicalUrl(): string
     {
         $product = $this->context->smarty->getTemplateVars('product');
+        if (!($product instanceof Product)) {
+            return;
+        }
 
         return $product->getCanonicalUrl();
     }
