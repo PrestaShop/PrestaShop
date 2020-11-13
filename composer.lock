@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fee5073ca1bb1008de481af152233c52",
+    "content-hash": "b162a751f0b751755fb211490f1ce2b9",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -332,16 +332,16 @@
         },
         {
             "name": "csa/guzzle-bundle",
-            "version": "v1.3.0",
+            "version": "dev-1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/CsaGuzzleBundle.git",
-                "reference": "079fc43d6ce7fb738d5dd742a21220da3f9b632b"
+                "reference": "59385d8d6cbcd697c9487ea747a147979ab535df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/CsaGuzzleBundle/zipball/079fc43d6ce7fb738d5dd742a21220da3f9b632b",
-                "reference": "079fc43d6ce7fb738d5dd742a21220da3f9b632b",
+                "url": "https://api.github.com/repos/PrestaShop/CsaGuzzleBundle/zipball/59385d8d6cbcd697c9487ea747a147979ab535df",
+                "reference": "59385d8d6cbcd697c9487ea747a147979ab535df",
                 "shasum": ""
             },
             "require": {
@@ -387,7 +387,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/CsaGuzzleBundle/tree/v1.3.0"
             },
-            "time": "2015-06-12T13:09:26+00:00"
+            "time": "2019-09-30T13:13:08+00:00"
         },
         {
             "name": "cssjanus/cssjanus",
@@ -1625,6 +1625,7 @@
                 "reflection",
                 "static"
             ],
+            "abandoned": "roave/better-reflection",
             "time": "2020-03-27T11:06:43+00:00"
         },
         {
@@ -10220,6 +10221,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "csa/guzzle-bundle": 20,
         "cssjanus/cssjanus": 20,
         "phake/phake": 0
     },
@@ -10228,18 +10230,18 @@
     "platform": {
         "php": ">=7.1.3",
         "ext-curl": "*",
+        "ext-dom": "*",
         "ext-fileinfo": "*",
-        "ext-intl": "*",
-        "ext-mbstring": "*",
-        "ext-zip": "*",
-        "ext-iconv": "*",
-        "ext-json": "*",
         "ext-gd": "*",
-        "ext-dom": "*"
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.1.3"
     },
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "1.1.0"
 }
