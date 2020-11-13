@@ -20,25 +20,12 @@ Feature: Update product status from BO (Back Office)
     And I add product "product2" with following information:
       | name       | en-US:Values list poster nr. 2 (virtual) |
       | is_virtual | true                                     |
-    And I update product product2 SEO information with following values:
-      | redirect_type   | 301-product |
-      | redirect_target | product1    |
-    And product product2 should have following seo options:
-      | redirect_type   | 301-product |
-      | redirect_target | product1    |
     And product product2 type should be virtual
     And product "product2" should be disabled
     When I enable product "product2"
-#   for some reason updating status resets redirect option
-    And product product2 should have following seo options:
-      | redirect_type   | 301-product |
-      | redirect_target | product1    |
     And product "product2" should be enabled
     When I disable product "product2"
     And product "product2" should be disabled
-    And product product2 should have following seo options:
-      | redirect_type   | 301-product |
-      | redirect_target | product1    |
 
   Scenario: I update combination product status
     And I add product "product3" with following information:
@@ -67,3 +54,39 @@ Feature: Update product status from BO (Back Office)
     And product "product1" should be enabled
     When I enable product "product1"
     Then product "product1" should be enabled
+
+  Scenario: I enable product which has redirect options set
+    Given I add product "product4" with following information:
+      | name       | en-US:Values list poster nr. 3 (standard) |
+      | is_virtual | false                                     |
+    And product "product4" should be disabled
+    And I update product product4 SEO information with following values:
+      | redirect_type   | 301-product |
+      | redirect_target | product1    |
+    And product product4 should have following seo options:
+      | redirect_type   | 301-product |
+      | redirect_target | product1    |
+    When I enable product "product4"
+    And product "product4" should be enabled
+    And product product4 should have following seo options:
+      | redirect_type | 404 |
+
+  Scenario: I disable product which has redirect options set
+    And category "men" in default language named "Men" exists
+    Given I add product "product5" with following information:
+      | name       | en-US:Man jeans |
+      | is_virtual | false           |
+    And product "product5" should be disabled
+    And I enable product "product5"
+    And product "product5" should be enabled
+    And I update product product5 SEO information with following values:
+      | redirect_type   | 302-category |
+      | redirect_target | men          |
+    And product product5 should have following seo options:
+      | redirect_type   | 302-category |
+      | redirect_target | men          |
+    When I disable product "product5"
+    Then product "product5" should be disabled
+    And product product5 should have following seo options:
+      | redirect_type | 301-category |
+
