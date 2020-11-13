@@ -138,7 +138,7 @@ describe('Filter, sort and pagination catalog price rules', async () => {
       },
       {
         args: {
-          testIdentifier: 'filterShop', filterType: 'input', filterBy: 's!name', filterValue: global.INSTALL.SHOPNAME,
+          testIdentifier: 'filterShop', filterType: 'input', filterBy: 's!name', filterValue: global.INSTALL.SHOP_NAME,
         },
       },
       {

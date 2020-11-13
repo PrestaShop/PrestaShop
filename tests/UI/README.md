@@ -20,7 +20,7 @@ npm install
 | LASTNAME            | Lastname of your admin employee (default to **`demo`**) |
 | LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
 | PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
-| SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
+| SHOP_NAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
 | DB_SERVER           | The Database server address (default to **`127.0.0.1`**) |
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
