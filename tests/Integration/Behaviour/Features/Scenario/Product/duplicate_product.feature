@@ -93,6 +93,9 @@ Feature: Duplicate product from Back Office (BO).
       | file_name   | app_icon.png                           |
     And I associate attachment "att1" with product product1
     And I enable product "product1"
+    When I update product product1 SEO information with following values:
+      | redirect_type   | 301-product |
+      | redirect_target | product2    |
     And product product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
