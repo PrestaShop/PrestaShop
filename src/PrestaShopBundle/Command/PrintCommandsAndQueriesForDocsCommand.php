@@ -36,12 +36,20 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Loader\LoaderInterface;
 
 /**
  * Prints all existing commands and queries to .md file for documentation
  */
 class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
 {
+    /**
+     * @var string
+     */
+    protected static $defaultName = 'prestashop:print-docs:commands-and-queries';
+
     /**
      * Command option name for providing destination file path
      */
@@ -52,10 +60,17 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     private $fs;
 
+    /**
+     * @var LoaderInterface
+     */
+    private $twigLoader;
+
     public function __construct()
     {
-        parent::__construct('prestashop:print-docs:commands-and-queries');
         $this->fs = new Filesystem();
+        $this->twigLoader = new FilesystemLoader(__DIR__);
+
+        parent::__construct();
     }
 
     /**
@@ -92,12 +107,9 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         }
 
         $this->fs->remove($filePath);
-
-        $content = $this->getContainer()->get('twig')->render(
-            '@PrestaShop/Docs/cqrs-commands-list.md.twig', [
-                'commandDefinitions' => $this->getCommandDefinitions(),
-            ]
-        );
+        $content = (new Environment($this->twigLoader))->render('views/cqrs-commands-list.md.twig', [
+            'commandDefinitions' => $this->getCommandDefinitions(),
+        ]);
 
         $this->fs->dumpFile($filePath, $content);
         $output->writeln(sprintf('<info>dumped commands & queries to %s</info>', $filePath));
