@@ -58,8 +58,6 @@ Feature: Duplicate product from Back Office (BO).
       | link_rewrite     | en-US:smart-sunglasses ;fr-FR:lunettes-de-soleil   |
       | redirect_type    | 301-product                                        |
       | redirect_target  | product2                                           |
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
     And I update product product1 shipping information with following values:
       | width                            | 10.5                                                  |
       | height                           | 6                                                     |
@@ -94,13 +92,15 @@ Feature: Duplicate product from Back Office (BO).
       | name        | en-US:puffin ;fr-FR:macareux           |
       | file_name   | app_icon.png                           |
     And I associate attachment "att1" with product product1
+    And I enable product "product1"
+    And product product1 should have following seo options:
+      | redirect_type   | 301-product |
+      | redirect_target | product2    |
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
     When I duplicate product product1 to a copy_of_product1
-    Then product "copy_of_product1" should have following values:
-    #todo: activate the product and check that duplication is deactivating the duplicate.
-      | active | false |
+    And product "copy_of_product1" should be disabled
     And product "copy_of_product1" type should be standard
     And product "copy_of_product1" localized "name" should be "en-US:copy of smart sunglasses; fr-FR:copy of lunettes de soleil"
     And product "copy_of_product1" localized "description" should be "en-US:nice sunglasses; fr-FR:belles lunettes"
