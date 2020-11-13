@@ -367,7 +367,7 @@ class CarriersController extends FrameworkBundleAdminController
                 ),
             ],
             CannotToggleCarrierIsFreeStatusException::class => $this->trans(
-                'An error occurred while updating the is-free status.',
+                'An error occurred while updating the free shipping status.',
                 'Admin.Shipping.Notification'
             ),
         ];
