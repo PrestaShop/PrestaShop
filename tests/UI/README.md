@@ -11,6 +11,9 @@ npm install
 ```
 
 ## Available command line parameters
+
+### PrestaShop parameters
+
 | Parameter           | Description      |
 |---------------------|----------------- |
 | URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost/prestashop/`**) |
@@ -25,6 +28,10 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+
+### Playwright parameters
+
+| BROWSER             | Specific browser to launch for tests (default to **`chromium`**) |
 | HEADLESS            | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
 | SLOW_MO             | Integer to slow down Playwright operations by the specified amount of milliseconds (default to 5 milliseconds) |
 
