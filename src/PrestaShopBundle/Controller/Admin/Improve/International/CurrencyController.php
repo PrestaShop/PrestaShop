@@ -214,8 +214,12 @@ class CurrencyController extends FrameworkBundleAdminController
         $languagesData = [];
         /** @var LanguageInterface $language */
         foreach ($languages as $language) {
-            $locale = $localeRepository->getLocale($language->getLocale());
-            $cldrLocale = $cldrLocaleRepository->getLocale($language->getLocale());
+            $localeString = $language->getLocale();
+            if ('' === $localeString) {
+                $localeString = $language->getLanguageCode();
+            }
+            $locale = $localeRepository->getLocale($localeString);
+            $cldrLocale = $cldrLocaleRepository->getLocale($localeString);
             $cldrCurrency = $cldrLocale->getCurrency($currencyIsoCode);
             $priceSpecification = $locale->getPriceSpecification($currencyIsoCode);
 

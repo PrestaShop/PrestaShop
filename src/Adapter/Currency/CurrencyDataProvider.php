@@ -109,7 +109,12 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
     {
+        // Language available from the CLDR
         $idLang = Language::getIdByLocale($locale, true);
+        if (false === $idLang) {
+            // Language not available from the CLDR
+            $idLang = Language::getIdByCode($locale);
+        }
 
         return $this->getCurrencyByIsoCode($isoCode, $idLang);
     }

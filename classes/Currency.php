@@ -1134,13 +1134,13 @@ class CurrencyCore extends ObjectModel
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
+            $localeString = $language->locale;
             if (empty($language->locale)) {
-                // Language doesn't have locale we can't install this language
-                continue;
+                $localeString = $language->getLanguageCode();
             }
 
             // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+            $cldrLocale = $localeRepoCLDR->getLocale($localeString);
             // CLDR currency gives data from CLDR reference, for the given language
             $cldrCurrency = $cldrLocale->getCurrency($this->iso_code);
 

@@ -230,7 +230,12 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         /** @var LanguageInterface $language */
         foreach ($this->languages as $language) {
             if ($langId === $language->getId()) {
-                return $this->localeRepoCLDR->getLocale($language->getLocale())->getCurrencyPattern();
+                $localeString = $language->getLocale();
+                if ('' === $localeString) {
+                    $localeString = $language->getLanguageCode();
+                }
+
+                return $this->localeRepoCLDR->getLocale($localeString)->getCurrencyPattern();
             }
         }
 

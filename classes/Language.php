@@ -794,6 +794,28 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
+     * Returns language id from language code
+     *
+     * @param string $code Locale IETF language tag
+     * @param bool $noCache
+     *
+     * @return int|false|null
+     */
+    public static function getIdByCode($code, $noCache = false)
+    {
+        $key = 'Language::getIdByCode_' . $code;
+        if ($noCache || !Cache::isStored($key)) {
+            $idLang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `language_code` = \'' . pSQL(strtolower($code)) . '\'');
+
+            Cache::store($key, $idLang);
+
+            return $idLang;
+        }
+
+        return Cache::retrieve($key);
+    }
+
+    /**
      * Returns language information from the all-languages file
      *
      * @param string $iso 2-letter ISO code
