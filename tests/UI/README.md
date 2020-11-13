@@ -11,6 +11,9 @@ npm install
 ```
 
 ## Available command line parameters
+
+### PrestaShop parameters
+
 | Parameter           | Description      |
 |---------------------|----------------- |
 | URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost/prestashop/`**) |
@@ -20,12 +23,17 @@ npm install
 | LASTNAME            | Lastname of your admin employee (default to **`demo`**) |
 | LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
 | PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
-| SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
+| SHOP_NAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
 | DB_SERVER           | The Database server address (default to **`127.0.0.1`**) |
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+
+### Playwright parameters
+
+| BROWSER             | Specific browser to launch for tests (default to **`chromium`**) |
 | HEADLESS            | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
+| SLOW_MO             | Integer to slow down Playwright operations by the specified amount of milliseconds (default to 5 milliseconds) |
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 
@@ -58,11 +66,8 @@ npm run sanity-travis
 This campaign verifies that each function of the software application operate in conformance with the functional requirements. 
 Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing the actual results with the expected results.
 
-### Launch all scripts
-If you want to run all functional tests, you need to specify **`DOWNLOAD_PATH`** env param.
-
 ```bash
-DOWNLOAD_PATH="/home/user/Downloads" URL_FO="Your_Shop_URL_FO" npm run functional-tests
+URL_FO="Your_Shop_URL_FO" npm run functional-tests
 ```
 
 ## Specific test 
