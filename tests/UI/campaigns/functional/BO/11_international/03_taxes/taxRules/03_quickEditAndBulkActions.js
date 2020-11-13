@@ -16,7 +16,7 @@ const TaxRuleFaker = require('@data/faker/taxRuleGroup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_taxes_bulkActions';
+const baseContext = 'functional_BO_international_localization_taxes_quickEditAndBulkActions';
 
 let browserContext;
 let page;
@@ -26,8 +26,12 @@ let numberOfTaxRules = 0;
 const firstTaxRuleData = new TaxRuleFaker({name: 'toDelete1'});
 const secondTaxRuleData = new TaxRuleFaker({name: 'toDelete2', enabledValue: false});
 
-// Create tax rules, Then disable / Enable and Delete with Bulk actions
-describe('Create Tax rules, Then disable / Enable and Delete with Bulk actions', async () => {
+/*
+Create 2 tax rules
+Enable/Disable by quick edit
+Enable/Disable/Delete by bulk actions
+ */
+describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -109,8 +113,47 @@ describe('Create Tax rules, Then disable / Enable and Delete with Bulk actions',
     });
   });
 
-  // 2 : Enable/Disable with bulk actions
-  describe('Enable and Disable Tax rules with Bulk Actions', async () => {
+  // 2 - Enable/disable by quick edit
+  describe('Enable and Disable Tax rules by quick edit', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterTaxesToQuickEdit', baseContext);
+
+      await taxRulesPage.filterTable(page, 'input', 'name', firstTaxRuleData.name);
+
+      const textResult = await taxRulesPage.getTextColumnFromTable(page, 1, 'name');
+      await expect(textResult).to.contains(firstTaxRuleData.name);
+    });
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
+    ];
+
+    tests.forEach((test) => {
+      it(`should ${test.args.action} tax rule`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
+
+        const isActionPerformed = await taxRulesPage.updateToggleColumnValue(page, 1, test.args.enabledValue);
+
+        if (isActionPerformed) {
+          const resultMessage = await taxRulesPage.getTextContent(page, taxRulesPage.alertSuccessBlock);
+          await expect(resultMessage).to.contains(taxRulesPage.successfulUpdateStatusMessage);
+        }
+
+        const status = await taxRulesPage.getToggleColumnValue(page, 1);
+        await expect(status).to.be.equal(test.args.enabledValue);
+      });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
+
+      const numberOfLinesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfLinesAfterReset).to.be.equal(numberOfTaxRules + 2);
+    });
+  });
+
+  // 3 : Enable/Disable by bulk actions
+  describe('Enable and Disable Tax rules by Bulk Actions', async () => {
     const tests = [
       {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}, expected: 'Disabled'},
       {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}, expected: 'Enabled'},
@@ -157,7 +200,7 @@ describe('Create Tax rules, Then disable / Enable and Delete with Bulk actions',
     });
   });
 
-  // 3 : Delete with bulk actions
+  // 4 : Delete with bulk actions
   describe('Delete Tax rules with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
