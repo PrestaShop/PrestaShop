@@ -55,6 +55,8 @@ Feature: Update product status from BO (Back Office)
     When I enable product "product1"
     Then product "product1" should be enabled
 
+# toggling product status will reset product redirect options. Check Product::toggleStatus()
+# enabling product will reset product redirect target to 0 and redirect type to 404.
   Scenario: I enable product which has redirect options set
     Given I add product "product4" with following information:
       | name       | en-US:Values list poster nr. 3 (standard) |
@@ -71,6 +73,7 @@ Feature: Update product status from BO (Back Office)
     And product product4 should have following seo options:
       | redirect_type | 404 |
 
+# disabling product will reset product redirect target to 0 and redirect type to 301-category
   Scenario: I disable product which has redirect options set
     And category "men" in default language named "Men" exists
     Given I add product "product5" with following information:
