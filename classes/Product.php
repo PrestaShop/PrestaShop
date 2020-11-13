@@ -33,6 +33,7 @@ define('_CUSTOMIZE_TEXTFIELD_', 1);
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
@@ -1133,12 +1134,12 @@ class ProductCore extends ObjectModel
         //  /!\ after parent::toggleStatus() active will be false, that why we set 404 by default :p
         if ($this->active) {
             //case where active will be false after parent::toggleStatus()
-            $this->id_type_redirected = 0;
-            $this->redirect_type = ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY;
+            $this->id_type_redirected = RedirectTarget::NO_TARGET;
+            $this->redirect_type = RedirectType::TYPE_CATEGORY_PERMANENT;
         } else {
             //case where active will be true after parent::toggleStatus()
-            $this->id_type_redirected = 0;
-            $this->redirect_type = '';
+            $this->id_type_redirected = RedirectTarget::NO_TARGET;
+            $this->redirect_type = RedirectType::TYPE_NOT_FOUND;
         }
 
         return parent::toggleStatus();
