@@ -73,8 +73,8 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var int Language ID */
     public $id_lang;
 
-    /** @var bool In all shop */
-    public $in_all_shop;
+    /** @var bool In all shops */
+    public $in_all_shops;
 
     /**
      * @see ObjectModel::$definition
@@ -90,7 +90,7 @@ class PrestaShopLoggerCore extends ObjectModel
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'in_all_shop' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'in_all_shops' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
@@ -164,7 +164,7 @@ class PrestaShopLoggerCore extends ObjectModel
         }
 
         $log->id_lang = (int) $context->language->id ?? null;
-        $log->in_all_shop = (Shop::getContext() == Shop::CONTEXT_ALL) ?? false;
+        $log->in_all_shops = (Shop::getContext() == Shop::CONTEXT_ALL) ?? false;
         $log->id_shop = (Shop::getContext() == Shop::CONTEXT_SHOP) ? (int) $context->shop->getContextualShopId() : null;
         $log->id_shop_group = (Shop::getContext() == Shop::CONTEXT_GROUP) ? (int) $context->shop->getContextShopGroupID() : null;
 
@@ -199,7 +199,7 @@ class PrestaShopLoggerCore extends ObjectModel
                 $this->id_shop .
                 $this->id_shop_group .
                 $this->id_lang .
-                $this->in_all_shop
+                $this->in_all_shops
             );
         }
 
@@ -241,7 +241,7 @@ class PrestaShopLoggerCore extends ObjectModel
                     ->where('id_shop = ' . (int) $this->id_shop)
                     ->where('id_shop_group = ' . (int) $this->id_shop_group)
                     ->where('id_lang = ' . (int) $this->id_lang)
-                    ->where('in_all_shop = ' . (int) $this->in_all_shop)
+                    ->where('in_all_shops = ' . (int) $this->in_all_shops)
             );
         }
 

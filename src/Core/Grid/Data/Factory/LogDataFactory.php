@@ -109,7 +109,7 @@ final class LogDataFactory implements GridDataFactoryInterface
     {
         $shop_name = $this->defaultEmptyData;
 
-        if ($record['in_all_shop']) {
+        if ($record['in_all_shops']) {
             $shop_name = $this->translator->trans('All shops', [], 'Admin.Global');
         }
 
