@@ -874,11 +874,11 @@ services:
 
     form.type.contact:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
           - '@prestashop.bundle.form.data_transformer.default_language_to_filled_array'
           - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
 

@@ -32,11 +32,13 @@ use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -44,10 +46,8 @@ use Symfony\Component\Validator\Constraints\Regex;
 /**
  * Class ContactType
  */
-class ContactType extends AbstractType
+class ContactType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var bool
      */
@@ -59,13 +59,18 @@ class ContactType extends AbstractType
     private $singleDefaultLanguageArrayToFilledArrayDataTransformer;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param DataTransformerInterface $singleDefaultLanguageArrayToFilledArrayDataTransformer
      * @param bool $isShopFeatureEnabled
      */
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         DataTransformerInterface $singleDefaultLanguageArrayToFilledArrayDataTransformer,
         $isShopFeatureEnabled
     ) {
+        parent::__construct($translator, $locales);
         $this->isShopFeatureEnabled = $isShopFeatureEnabled;
         $this->singleDefaultLanguageArrayToFilledArrayDataTransformer = $singleDefaultLanguageArrayToFilledArrayDataTransformer;
     }
@@ -77,6 +82,8 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('title', TranslatableType::class, [
+                'label' => $this->trans('Title', 'Admin.Global'),
+                'help' => $this->trans('Contact name (e.g. Customer Support).', 'Admin.Shopparameters.Help'),
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
@@ -86,7 +93,6 @@ class ContactType extends AbstractType
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans(
                                 '%s is invalid.',
-                                [],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -95,19 +101,24 @@ class ContactType extends AbstractType
                 ],
             ])
             ->add('email', EmailType::class, [
+                'label' => $this->trans('Email address', 'Admin.Global'),
+                'help' => $this->trans('Emails will be sent to this address.', 'Admin.Shopparameters.Help'),
                 'required' => false,
                 'constraints' => [
                     new Email([
                         'message' => $this->trans(
                             '%s is invalid.',
-                            [],
                             'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
             ])
-            ->add('is_messages_saving_enabled', SwitchType::class)
+            ->add('is_messages_saving_enabled', SwitchType::class, [
+                'label' => $this->trans('Save messages?', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.', 'Admin.Shopparameters.Help'),
+            ])
             ->add('description', TranslatableType::class, [
+                'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => TextareaType::class,
                 'required' => false,
                 'options' => [
@@ -115,7 +126,6 @@ class ContactType extends AbstractType
                         new CleanHtml([
                             'message' => $this->trans(
                                 '%s is invalid.',
-                                [],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -128,14 +138,15 @@ class ContactType extends AbstractType
 
         if ($this->isShopFeatureEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Shop association', [], 'Admin.Global')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Shop association','Admin.Global')),
+                            ]
                         ),
                     ]),
                 ],
