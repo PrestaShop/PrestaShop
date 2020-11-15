@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Service\Routing\Router;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -76,8 +75,8 @@ class CurrencyExchangeRateType extends TranslatorAwareType
                 'label' => $this->trans('Live exchange rates', 'Admin.International.Feature'),
                 'attr' => [
                     'class' => 'js-live-exchange-rate',
-                    'data-url' => $this->router->generate('admin_currencies_update_live_exchange_rates')
-                ]
+                    'data-url' => $this->router->generate('admin_currencies_update_live_exchange_rates'),
+                ],
             ])
         ;
     }

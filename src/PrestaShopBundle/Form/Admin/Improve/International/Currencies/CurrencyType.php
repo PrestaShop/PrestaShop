@@ -244,7 +244,7 @@ class CurrencyType extends TranslatorAwareType
                             ]
                         ),
                     ]),
-                    /**
+                    /*
                      * I added this constraint because if range is too big it causes an "out of range" error in Vue.
                      * I chose maximum precision based on this
                      * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Precision_range
