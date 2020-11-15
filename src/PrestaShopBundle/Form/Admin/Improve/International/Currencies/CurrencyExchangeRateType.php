@@ -27,13 +27,16 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class CurrencyExchangeRateType
  */
-class CurrencyExchangeRateType extends AbstractType
+class CurrencyExchangeRateType extends TranslatorAwareType
 {
     /**
      * @var bool
@@ -41,11 +44,25 @@ class CurrencyExchangeRateType extends AbstractType
     private $isCronModuleInstalled;
 
     /**
-     * @param bool $isCronModuleInstalled
+     * @var Router
      */
-    public function __construct($isCronModuleInstalled)
-    {
+    private $router;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param bool $isCronModuleInstalled
+     * @param Router $router
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        $isCronModuleInstalled,
+        Router $router
+    ) {
+        parent::__construct($translator, $locales);
         $this->isCronModuleInstalled = $isCronModuleInstalled;
+        $this->router = $router;
     }
 
     /**
@@ -56,6 +73,11 @@ class CurrencyExchangeRateType extends AbstractType
         $builder
             ->add('live_exchange_rate', SwitchType::class, [
                 'disabled' => !$this->isCronModuleInstalled,
+                'label' => $this->trans('Live exchange rates', 'Admin.International.Feature'),
+                'attr' => [
+                    'class' => 'js-live-exchange-rate',
+                    'data-url' => $this->router->generate('admin_currencies_update_live_exchange_rates')
+                ]
             ])
         ;
     }
