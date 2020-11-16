@@ -192,7 +192,7 @@ class ProductDuplicator
      */
     private function duplicateProduct(Product $product): Product
     {
-        $this->setName($product);
+        $product->name = $this->getNewProductName($product->name);
         $this->setPriceByShops($product);
 
         $product->indexed = false;
@@ -202,18 +202,23 @@ class ProductDuplicator
     }
 
     /**
-     * Sets new name for duplicated product by modifying the existing name with a new pattern
+     * Provides duplicated product name
      *
-     * @param Product $product
+     * @param array<int, string> $oldProductLocalizedNames
+     *
+     * @return array<int, string>
      */
-    private function setName(Product $product): void
+    private function getNewProductName(array $oldProductLocalizedNames): array
     {
-        foreach ($product->name as $langId => $oldName) {
+        $newProductLocalizedNames = [];
+        foreach ($oldProductLocalizedNames as $langId => $oldName) {
             $langId = (int) $langId;
             $namePattern = $this->translator->trans('copy of %s', [], 'Admin.Catalog.Feature', Language::getLocaleById($langId));
             $newName = sprintf($namePattern, $oldName);
-            $product->name[$langId] = $this->stringModifier->cutEnd($newName, ProductSettings::MAX_NAME_LENGTH);
+            $newProductLocalizedNames[$langId] = $this->stringModifier->cutEnd($newName, ProductSettings::MAX_NAME_LENGTH);
         }
+
+        return $newProductLocalizedNames;
     }
 
     /**
