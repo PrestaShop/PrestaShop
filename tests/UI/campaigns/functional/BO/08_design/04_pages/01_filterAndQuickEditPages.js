@@ -109,7 +109,6 @@ describe('Filter And Quick Edit Pages', async () => {
             filterBy: 'active',
             filterValue: Pages.securePayment.displayed,
           },
-        expected: 'check',
       },
     ];
 
@@ -129,11 +128,11 @@ describe('Filter And Quick Edit Pages', async () => {
         await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
 
         for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-          const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, i, test.args.filterBy);
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const pagesStatus = await pagesPage.getStatus(page, 'cms_page', i);
+            await expect(pagesStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -182,7 +181,7 @@ describe('Filter And Quick Edit Pages', async () => {
       it(`should ${pageStatus.args.status} the page`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${pageStatus.args.status}Page`, baseContext);
 
-        const isActionPerformed = await pagesPage.updateToggleColumnValue(
+        const isActionPerformed = await pagesPage.setStatus(
           page,
           'cms_page',
           1,
@@ -198,7 +197,7 @@ describe('Filter And Quick Edit Pages', async () => {
           await expect(resultMessage).to.contains(pagesPage.successfulUpdateStatusMessage);
         }
 
-        const currentStatus = await pagesPage.getToggleColumnValue(page, 'cms_page', 1);
+        const currentStatus = await pagesPage.getStatus(page, 'cms_page', 1);
         await expect(currentStatus).to.be.equal(pageStatus.args.enable);
       });
     });
