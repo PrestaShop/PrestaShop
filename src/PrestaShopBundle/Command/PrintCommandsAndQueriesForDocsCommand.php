@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinition;
+use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinition;
+use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinitionParser;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -122,18 +124,19 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     private function getCommandDefinitions(): array
     {
-        $commands = $this->getContainer()->getParameter('prestashop.commands_and_queries');
-        $commandDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_definition_provider');
+        $handlerDefinitions = $this->getContainer()->getParameter('prestashop.commands_and_queries');
+        /** @var CommandHandlerDefinitionParser $commandHandlerDefinitionParser */
+        $commandHandlerDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_handler_definition_parser');
 
         $commandDefinitions = [];
-        foreach ($commands as $key => $commandName) {
-            $commandDefinition = $commandDefinitionParser->parseDefinition($commandName);
-            if ('Command' === $commandDefinition->getCommandType()) {
-                $commandDefinitions['command'][] = $commandDefinition;
+        foreach ($handlerDefinitions as $handlerClass => $commandClass) {
+            $commandDefinition = $commandHandlerDefinitionParser->parseDefinition($handlerClass, $commandClass);
+            if ($commandDefinition->isQueryType()) {
+                $commandDefinitions[CommandHandlerDefinition::TYPE_QUERY][] = $commandDefinition;
                 continue;
             }
 
-            $commandDefinitions['query'][] = $commandDefinition;
+            $commandDefinitions[CommandHandlerDefinition::TYPE_COMMAND][] = $commandDefinition;
         }
 
         return $commandDefinitions;
