@@ -24,58 +24,68 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
-import 'velocity-animate';
+// eslint-disable-next-line
+import "velocity-animate";
 
 import ProductMinitature from './components/product-miniature';
 
 $(document).ready(() => {
   const history = window.location.href;
 
-  prestashop.on('clickQuickView', function (elm) {
-    let data = {
+  prestashop.on('clickQuickView', (elm) => {
+    const data = {
       action: 'quickview',
       id_product: elm.dataset.idProduct,
       id_product_attribute: elm.dataset.idProductAttribute,
     };
     $.post(prestashop.urls.pages.product, data, null, 'json')
-      .then(function (resp) {
+      .then((resp) => {
         $('body').append(resp.quickview_html);
-        let productModal = $(`#quickview-modal-${resp.product.id}-${resp.product.id_product_attribute}`);
+        const productModal = $(
+          `#quickview-modal-${resp.product.id}-${resp.product.id_product_attribute}`,
+        );
         productModal.modal('show');
         productConfig(productModal);
-        productModal.on('hidden.bs.modal', function () {
+        productModal.on('hidden.bs.modal', () => {
           productModal.remove();
         });
       })
       .fail((resp) => {
         prestashop.emit('handleError', {
           eventType: 'clickQuickView',
-          resp: resp,
+          resp,
         });
       });
   });
 
-  var productConfig = (qv) => {
+  const productConfig = (qv) => {
     const MAX_THUMBS = 4;
-    var $arrows = $(prestashop.themeSelectors.product.arrows);
-    var $thumbnails = qv.find('.js-qv-product-images');
+    const $arrows = $(prestashop.themeSelectors.product.arrows);
+    const $thumbnails = qv.find('.js-qv-product-images');
     $(prestashop.themeSelectors.product.thumb).on('click', (event) => {
       if ($(prestashop.themeSelectors.product.thumb).hasClass('selected')) {
         $(prestashop.themeSelectors.product.thumb).removeClass('selected');
       }
       $(event.currentTarget).addClass('selected');
-      $(prestashop.themeSelectors.product.cover).attr('src', $(event.target).data('image-large-src'));
+      $(prestashop.themeSelectors.product.cover).attr(
+        'src',
+        $(event.target).data('image-large-src'),
+      );
     });
     if ($thumbnails.find('li').length <= MAX_THUMBS) {
       $arrows.hide();
     } else {
       $arrows.on('click', (event) => {
-        if ($(event.target).hasClass('arrow-up') && $('.js-qv-product-images').position().top < 0) {
+        if (
+          $(event.target).hasClass('arrow-up')
+          && $('.js-qv-product-images').position().top < 0
+        ) {
           move('up');
           $(prestashop.themeSelectors.arrowDown).css('opacity', '1');
         } else if (
-          $(event.target).hasClass('arrow-down') &&
-          $thumbnails.position().top + $thumbnails.height() > $('.js-qv-mask').height()
+          $(event.target).hasClass('arrow-down')
+          && $thumbnails.position().top + $thumbnails.height()
+            > $('.js-qv-mask').height()
         ) {
           move('down');
           $(prestashop.themeSelectors.arrowUp).css('opacity', '1');
@@ -92,42 +102,61 @@ $(document).ready(() => {
       max: 1000000,
     });
   };
-  var move = (direction) => {
+
+  const move = (direction) => {
     const THUMB_MARGIN = 20;
-    var $thumbnails = $('.js-qv-product-images');
-    var thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
-    var currentPosition = $thumbnails.position().top;
+    const $thumbnails = $('.js-qv-product-images');
+    const thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
+    const currentPosition = $thumbnails.position().top;
     $thumbnails.velocity(
       {
-        translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight,
+        translateY:
+          direction === 'up'
+            ? currentPosition + thumbHeight
+            : currentPosition - thumbHeight,
       },
-      function () {
+      () => {
         if ($thumbnails.position().top >= 0) {
           $('.arrow-up').css('opacity', '.2');
-        } else if ($thumbnails.position().top + $thumbnails.height() <= $('.js-qv-mask').height()) {
+        } else if (
+          $thumbnails.position().top + $thumbnails.height()
+          <= $('.js-qv-mask').height()
+        ) {
           $('.arrow-down').css('opacity', '.2');
         }
-      }
+      },
     );
   };
-  $('body').on('click', prestashop.themeSelectors.listing.searchFilterToggler, function () {
-    $(prestashop.themeSelectors.listing.searchFiltersWrapper).removeClass('hidden-sm-down');
-    $(prestashop.themeSelectors.contentWrapper).addClass('hidden-sm-down');
-    $(prestashop.themeSelectors.footer).addClass('hidden-sm-down');
-  });
-  $(prestashop.themeSelectors.listing.searchFilterControls + ' ' + prestashop.themeSelectors.clear).on(
+  $('body').on(
     'click',
-    function () {
-      $(prestashop.themeSelectors.listing.searchFiltersWrapper).addClass('hidden-sm-down');
-      $(prestashop.themeSelectors.contentWrapper).removeClass('hidden-sm-down');
-      $(prestashop.themeSelectors.footer).removeClass('hidden-sm-down');
-    }
+    prestashop.themeSelectors.listing.searchFilterToggler,
+    () => {
+      $(prestashop.themeSelectors.listing.searchFiltersWrapper).removeClass(
+        'hidden-sm-down',
+      );
+      $(prestashop.themeSelectors.contentWrapper).addClass('hidden-sm-down');
+      $(prestashop.themeSelectors.footer).addClass('hidden-sm-down');
+    },
   );
-  $(prestashop.themeSelectors.listing.searchFilterControls + ' .ok').on('click', function () {
-    $(prestashop.themeSelectors.listing.searchFiltersWrapper).addClass('hidden-sm-down');
+  $(
+    `${prestashop.themeSelectors.listing.searchFilterControls} ${prestashop.themeSelectors.clear}`,
+  ).on('click', () => {
+    $(prestashop.themeSelectors.listing.searchFiltersWrapper).addClass(
+      'hidden-sm-down',
+    );
     $(prestashop.themeSelectors.contentWrapper).removeClass('hidden-sm-down');
     $(prestashop.themeSelectors.footer).removeClass('hidden-sm-down');
   });
+  $(`${prestashop.themeSelectors.listing.searchFilterControls} .ok`).on(
+    'click',
+    () => {
+      $(prestashop.themeSelectors.listing.searchFiltersWrapper).addClass(
+        'hidden-sm-down',
+      );
+      $(prestashop.themeSelectors.contentWrapper).removeClass('hidden-sm-down');
+      $(prestashop.themeSelectors.footer).removeClass('hidden-sm-down');
+    },
+  );
 
   const parseSearchUrl = function (event) {
     if (event.target.dataset.searchUrl !== undefined) {
@@ -141,28 +170,45 @@ $(document).ready(() => {
     return $(event.target).parent()[0].dataset.searchUrl;
   };
 
-  $('body').on('change', prestashop.themeSelectors.listing.searchFilters + ' input[data-search-url]', function (event) {
-    prestashop.emit('updateFacets', parseSearchUrl(event));
-  });
+  $('body').on(
+    'change',
+    `${prestashop.themeSelectors.listing.searchFilters} input[data-search-url]`,
+    (event) => {
+      prestashop.emit('updateFacets', parseSearchUrl(event));
+    },
+  );
 
-  $('body').on('click', prestashop.themeSelectors.listing.searchFiltersClearAll, function (event) {
-    prestashop.emit('updateFacets', parseSearchUrl(event));
-  });
+  $('body').on(
+    'click',
+    prestashop.themeSelectors.listing.searchFiltersClearAll,
+    (event) => {
+      prestashop.emit('updateFacets', parseSearchUrl(event));
+    },
+  );
 
-  $('body').on('click', prestashop.themeSelectors.listing.searchLink, function (event) {
+  $('body').on('click', prestashop.themeSelectors.listing.searchLink, (event) => {
     event.preventDefault();
-    prestashop.emit('updateFacets', $(event.target).closest('a').get(0).href);
+    prestashop.emit(
+      'updateFacets',
+      $(event.target)
+        .closest('a')
+        .get(0).href,
+    );
   });
 
-  window.addEventListener('popstate', function (e) {
-    var state = e.state;
+  window.addEventListener('popstate', (e) => {
+    const {state} = e;
     window.location.href = state && state.current_url ? state.current_url : history;
   });
 
-  $('body').on('change', prestashop.themeSelectors.listing.searchFilters + ' select', function (event) {
-    const form = $(event.target).closest('form');
-    prestashop.emit('updateFacets', '?' + form.serialize());
-  });
+  $('body').on(
+    'change',
+    `${prestashop.themeSelectors.listing.searchFilters} select`,
+    (event) => {
+      const form = $(event.target).closest('form');
+      prestashop.emit('updateFacets', `?${form.serialize()}`);
+    },
+  );
 
   prestashop.on('updateProductList', (data) => {
     updateProductListDOM(data);
@@ -171,15 +217,25 @@ $(document).ready(() => {
 });
 
 function updateProductListDOM(data) {
-  $(prestashop.themeSelectors.listing.searchFilters).replaceWith(data.rendered_facets);
-  $(prestashop.themeSelectors.listing.activeSearchFilters).replaceWith(data.rendered_active_filters);
-  $(prestashop.themeSelectors.listing.listTop).replaceWith(data.rendered_products_top);
+  $(prestashop.themeSelectors.listing.searchFilters).replaceWith(
+    data.rendered_facets,
+  );
+  $(prestashop.themeSelectors.listing.activeSearchFilters).replaceWith(
+    data.rendered_active_filters,
+  );
+  $(prestashop.themeSelectors.listing.listTop).replaceWith(
+    data.rendered_products_top,
+  );
   $(prestashop.themeSelectors.listing.list).replaceWith(data.rendered_products);
-  $(prestashop.themeSelectors.listing.listBottom).replaceWith(data.rendered_products_bottom);
+  $(prestashop.themeSelectors.listing.listBottom).replaceWith(
+    data.rendered_products_bottom,
+  );
   if (data.rendered_products_header) {
-    $(prestashop.themeSelectors.listing.listHeader).replaceWith(data.rendered_products_header);
+    $(prestashop.themeSelectors.listing.listHeader).replaceWith(
+      data.rendered_products_header,
+    );
   }
 
-  let productMinitature = new ProductMinitature();
+  const productMinitature = new ProductMinitature();
   productMinitature.init();
 }
