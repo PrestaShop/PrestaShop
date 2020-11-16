@@ -1016,7 +1016,7 @@ Feature: Order from Back Office (BO)
       | total_price_tax_excl        | 30.00 |
     And order "bo_order1" should have cart rule "AutoGiftCartRule" with amount "$15.00"
     And the available stock for product "Test Product Gifted" should be 98
-fds
+
   Scenario: I add the product with associated gift when the cart already has the gift, and the gift product quantity in stock before cart rule applies is 1
     Given there is a product in the catalog named "product triggering gift" with a price of 12.0 and 100 items in stock
     Given there is a product in the catalog named "gifted product" with a price of 15.0 and 2 items in stock
@@ -1058,7 +1058,6 @@ fds
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
       | total_price_tax_excl        | 30.00 |
-<<<<<<< HEAD
     And order "bo_order1" should have following details:
       | total_products           | 65.800 |
       | total_products_wt        | 69.750 |
@@ -1071,5 +1070,3 @@ fds
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-=======
->>>>>>> style
