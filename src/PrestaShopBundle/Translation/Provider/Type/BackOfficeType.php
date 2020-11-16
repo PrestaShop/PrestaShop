@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for 'back' type of translation.
+ * Properties container for 'backoffice' type of translation.
  */
-class BackType extends AbstractCoreType
+class BackOfficeType extends AbstractCoreType
 {
     /**
      * {@inheritdoc}

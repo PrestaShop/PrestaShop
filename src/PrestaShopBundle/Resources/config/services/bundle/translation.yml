@@ -80,7 +80,7 @@ services:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractorCache
         arguments:
             - "@prestashop.translation.extractor.theme"
-            - "%themes_translations_dir%"
+            - "%themes_translations_cache_dir%"
 
     prestashop.translation.extractor.legacy_module:
         class: PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor

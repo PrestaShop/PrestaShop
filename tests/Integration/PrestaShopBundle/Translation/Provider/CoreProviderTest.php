@@ -28,22 +28,25 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\CoreProvider;
-use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\BackOfficeType;
 use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
 use PrestaShopBundle\Translation\Provider\Type\OthersType;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Test the provider of back translations
  */
-class CoreProviderTest extends TestCase
+class CoreProviderTest extends KernelTestCase
 {
-    const TRANSLATIONS_DIR = __DIR__ . '/../../../../Resources/translations/';
+    /**
+     * @var string
+     */
+    private $translationsDir;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|DatabaseTranslationReader
@@ -52,6 +55,9 @@ class CoreProviderTest extends TestCase
 
     public function setUp()
     {
+        self::bootKernel();
+        $this->translationsDir = self::$kernel->getContainer()->getParameter('translations_dir');
+
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
@@ -87,7 +93,7 @@ class CoreProviderTest extends TestCase
     ) {
         $provider = new CoreProvider(
             new MockDatabaseTranslationReader($databaseContent),
-            self::TRANSLATIONS_DIR,
+            $this->translationsDir,
             $providerType->getFilenameFilters(),
             $providerType->getTranslationDomains()
         );
@@ -120,7 +126,7 @@ class CoreProviderTest extends TestCase
         return [
             'back' => [
                 $this->getBackDatabaseContent(),
-                new BackType(),
+                new BackOfficeType(),
                 ['AdminActions'],
                 'AdminActions',
                 90,
@@ -191,7 +197,7 @@ class CoreProviderTest extends TestCase
     ) {
         $provider = new CoreProvider(
             new MockDatabaseTranslationReader($databaseContent),
-            self::TRANSLATIONS_DIR,
+            $this->translationsDir,
             $providerType->getFilenameFilters(),
             $providerType->getTranslationDomains()
         );
@@ -229,7 +235,7 @@ class CoreProviderTest extends TestCase
         return [
             'back' => [
                 $this->getBackDatabaseContent(),
-                new BackType(),
+                new BackOfficeType(),
                 ['AdminActions'],
                 'AdminActions',
                 91,
@@ -298,7 +304,7 @@ class CoreProviderTest extends TestCase
     ) {
         $provider = new CoreProvider(
             new MockDatabaseTranslationReader($databaseContent),
-            self::TRANSLATIONS_DIR,
+            $this->translationsDir,
             $providerType->getFilenameFilters(),
             $providerType->getTranslationDomains()
         );
@@ -329,7 +335,7 @@ class CoreProviderTest extends TestCase
         return [
             'back' => [
                 $this->getBackDatabaseContent(),
-                new BackType(),
+                new BackOfficeType(),
                 ['AdminActions'],
                 'AdminActions',
                 1,

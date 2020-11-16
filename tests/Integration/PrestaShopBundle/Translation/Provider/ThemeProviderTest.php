@@ -45,7 +45,10 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class ThemeProviderTest extends KernelTestCase
 {
-    const THEMES_DIR = __DIR__ . '/../../../../Resources/themes/';
+    /**
+     * @var string
+     */
+    private $themesDirectory;
 
     /**
      * @var string
@@ -86,7 +89,8 @@ class ThemeProviderTest extends KernelTestCase
         self::bootKernel();
         $this->container = static::$kernel->getContainer();
         $this->themeName = 'fakeThemeForTranslations';
-        $this->cacheDir = $this->container->getParameter('themes_translations_dir');
+        $this->themesDirectory = $this->container->getParameter('translations_theme_dir');
+        $this->cacheDir = $this->container->getParameter('themes_translations_cache_dir');
         $this->configDir = $this->container->getParameter('kernel.cache_dir') . '/themes-config/';
         $this->filesystem = $this->container->get('filesystem');
         $this->frontProvider = $this->container->get('prestashop.translation.provider.factory.core')->build(
@@ -132,7 +136,7 @@ class ThemeProviderTest extends KernelTestCase
             $this->createMock(ThemeExtractorInterface::class),
             $this->buildThemeRepository(),
             $this->filesystem,
-            self::THEMES_DIR,
+            $this->themesDirectory,
             $this->themeName
         );
 
@@ -176,7 +180,7 @@ class ThemeProviderTest extends KernelTestCase
             $themeExtractorMock,
             $this->buildThemeRepository(),
             $this->filesystem,
-            self::THEMES_DIR,
+            $this->themesDirectory,
             $this->themeName
         );
 
@@ -233,7 +237,7 @@ class ThemeProviderTest extends KernelTestCase
             $this->createMock(ThemeExtractorInterface::class),
             $this->buildThemeRepository(),
             $this->filesystem,
-            self::THEMES_DIR,
+            $this->themesDirectory,
             $this->themeName
         );
 
@@ -270,7 +274,7 @@ class ThemeProviderTest extends KernelTestCase
             ->method('get')
             ->willReturnCallback(function ($param) {
                 $configs = [
-                    '_PS_ALL_THEMES_DIR_' => self::THEMES_DIR,
+                    '_PS_ALL_THEMES_DIR_' => $this->themesDirectory,
                     '_PS_CONFIG_DIR_' => $this->configDir,
                 ];
 

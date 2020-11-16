@@ -32,7 +32,7 @@ use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
-use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\BackOfficeType;
 use PrestaShopBundle\Translation\Provider\Type\CoreDomainType;
 use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
@@ -64,7 +64,7 @@ class ProviderFactoryTest extends KernelTestCase
 
     public function testBuildBackProvider()
     {
-        $provider = $this->providerFactory->build(new BackType());
+        $provider = $this->providerFactory->build(new BackOfficeType());
 
         $this->assertInstanceOf(CoreProvider::class, $provider);
     }
