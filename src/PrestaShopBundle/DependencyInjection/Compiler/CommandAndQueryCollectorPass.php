@@ -59,9 +59,10 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
         $handlers = $container->findTaggedServiceIds('tactician.handler');
 
         $commands = [];
-        foreach ($handlers as $handler) {
+        foreach ($handlers as $id => $handler) {
+            $definition = $container->getDefinition($id);
             if (isset(current($handler)['command'])) {
-                $commands[] = current($handler)['command'];
+                $commands[$definition->getClass()] = current($handler)['command'];
             }
         }
 
