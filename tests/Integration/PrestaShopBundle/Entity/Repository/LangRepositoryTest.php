@@ -40,12 +40,12 @@ class LangRepositoryTest extends KernelTestCase
         parent::setUp();
         self::bootKernel();
 
-        $langId = \Language::getIdByIso('fr', true);
-        if ($langId) {
-            \Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
-            );
-        }
+//        $langId = \Language::getIdByIso('fr', true);
+//        if ($langId) {
+//            \Db::getInstance()->execute(
+//                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
+//            );
+//        }
     }
 
     public function testInterface()

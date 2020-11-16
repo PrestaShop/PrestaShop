@@ -32,7 +32,7 @@ use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\BackOfficeType;
 use PrestaShopBundle\Translation\Provider\Type\CoreDomainType;
 use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
@@ -407,7 +407,7 @@ class TranslationController extends ApiController
             case self::TYPE_THEMES:
                 return new ThemesType($theme);
             case self::TYPE_BACK:
-                return new BackType();
+                return new BackOfficeType();
             case self::TYPE_CORE_FRONT:
                 return new CoreFrontType();
             case self::TYPE_MAILS:

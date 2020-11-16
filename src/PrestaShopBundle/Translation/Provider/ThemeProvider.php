@@ -45,7 +45,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class ThemeProvider implements ProviderInterface
 {
-    const DEFAULT_THEME_NAME = 'classic';
+    public const DEFAULT_THEME_NAME = 'classic';
 
     /**
      * @var string Path to the main "themes" directory

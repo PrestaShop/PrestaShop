@@ -76,7 +76,7 @@ class LegacyModuleExtractorTest extends KernelTestCase
             $phpExtractor,
             $smartyExtractor,
             $twigExtractor,
-            $this->getModuleFolder()
+            $container->getParameter('translations_modules_dir')
         );
 
         $catalogue = $extractor->extract(self::MODULE_NAME, $locale);
@@ -84,14 +84,6 @@ class LegacyModuleExtractorTest extends KernelTestCase
         $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
 
         $this->catalogueVerifier->assertCataloguesMatch($catalogue, $expected);
-    }
-
-    /**
-     * @return string
-     */
-    private function getModuleFolder()
-    {
-        return __DIR__ . '/../../../../Resources/modules';
     }
 
     public function provideTestCases()

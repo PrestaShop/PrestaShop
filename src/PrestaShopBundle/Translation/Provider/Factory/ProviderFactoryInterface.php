@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
@@ -42,6 +43,8 @@ interface ProviderFactoryInterface
 
     /**
      * @return ProviderInterface
+     *
+     * @throws InvalidArgumentException
      */
     public function build($providerType): ProviderInterface;
 }

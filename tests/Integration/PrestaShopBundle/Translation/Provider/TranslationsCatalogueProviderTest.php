@@ -34,7 +34,7 @@ use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider;
-use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\BackOfficeType;
 use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -92,14 +92,14 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
     {
         $providerFactory = $this->createMock(ProviderFactory::class);
 
-        $type = new BackType();
+        $type = new BackOfficeType();
         $providerFactory
             ->expects($this->any())
             ->method('build')
             ->willReturn(
                 new CoreProvider(
                     $this->databaseReader,
-                    $this->getDefaultTranslationsDirectory(),
+                    $this->container->getParameter('translations_dir'),
                     $type->getFilenameFilters(),
                     $type->getTranslationDomains()
                 )
@@ -107,7 +107,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
 
         $provider = new TranslationsCatalogueProvider($providerFactory);
 
-        $messages = $provider->getCatalogue(new BackType(), 'fr-FR');
+        $messages = $provider->getCatalogue(new BackOfficeType(), 'fr-FR');
         $this->assertIsArray($messages);
 
         // Check integrity of translations
@@ -140,7 +140,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
             ->willReturn(
                 new CoreProvider(
                     $this->databaseReader,
-                    $this->getDefaultTranslationsDirectory(),
+                    $this->container->getParameter('translations_dir'),
                     $type->getFilenameFilters(),
                     $type->getTranslationDomains()
                 )
@@ -183,8 +183,8 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
             ->willReturn(
                 new ModulesProvider(
                     $this->databaseReader,
-                    $this->getBuiltInModuleDirectory(),
-                    $this->getDefaultTranslationsDirectory(),
+                    $this->container->getParameter('translations_modules_dir'),
+                    $this->container->getParameter('translations_dir'),
                     $this->container->get('prestashop.translation.loader.legacy_file'),
                     $this->container->get('prestashop.translation.extractor.legacy_module'),
                     'checkpayment'
@@ -245,8 +245,8 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
             ->willReturn(
                 new ModulesProvider(
                     $this->databaseReader,
-                    $this->getBuiltInModuleDirectory(),
-                    $this->getDefaultTranslationsDirectory(),
+                    $this->container->getParameter('translations_modules_dir'),
+                    $this->container->getParameter('translations_dir'),
                     $this->container->get('prestashop.translation.loader.legacy_file'),
                     $this->container->get('prestashop.translation.extractor.legacy_module'),
                     'checkpayment'
@@ -297,28 +297,12 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
 
     protected function tearDown()
     {
-        $langId = Language::getIdByIso('fr', true);
-        if ($langId) {
-            \Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
-            );
-        }
+//        $langId = Language::getIdByIso('fr', true);
+//        if ($langId) {
+//            \Db::getInstance()->execute(
+//                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
+//            );
+//        }
         self::$kernel->shutdown();
-    }
-
-    /**
-     * @return string
-     */
-    private function getBuiltInModuleDirectory(): string
-    {
-        return __DIR__ . '/../../../../Resources/modules';
-    }
-
-    /**
-     * @return string
-     */
-    private function getDefaultTranslationsDirectory(): string
-    {
-        return __DIR__ . '/../../../../Resources/translations';
     }
 }

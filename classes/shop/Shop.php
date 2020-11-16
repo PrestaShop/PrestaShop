@@ -489,7 +489,7 @@ class ShopCore extends ObjectModel
     public function setTheme()
     {
         $context = Context::getContext();
-        if ($context->shop && $context->shop->theme) {
+        if (!empty($context->shop->theme)) {
             $this->theme = $context->shop->theme;
 
             return;
