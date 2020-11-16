@@ -120,12 +120,12 @@
         {% set isNewsletterSubscribed = customerInformation.personalInformation.subscriptions.newsletterSubscribed %}
         {% set isPartnerOffersSubscribed = customerInformation.personalInformation.subscriptions.partnerOffersSubscribed %}
 
-        <span class="customer-newsletter-subscription-status badge badge-{% if isNewsletterSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-newsletter-subscription-status badge badge-{% if isNewsletterSubscribed %}success{% else %}danger{% endif %} rounded">
           <i class="material-icons">{% if isNewsletterSubscribed %}check{% else %}cancel{% endif %}</i>
           {{ 'Newsletter'|trans({}, 'Admin.Global') }}
         </span>
 
-        <span class="customer-partner-offers-status badge badge-{% if isPartnerOffersSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-partner-offers-status badge badge-{% if isPartnerOffersSubscribed %}success{% else %}danger{% endif %} rounded">
           <i class="material-icons">{% if isPartnerOffersSubscribed %}check{% else %}cancel{% endif %}</i>
           {{ 'Partner offers'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </span>
@@ -148,7 +148,7 @@
       <div class="col-8">
         {% set isCustomerActive = customerInformation.personalInformation.active %}
 
-        <span class="customer-status badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-status badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded">
           {% if isCustomerActive %}
             <i class="material-icons">check</i>
             {{ 'Active'|trans({}, 'Admin.Global') }}
