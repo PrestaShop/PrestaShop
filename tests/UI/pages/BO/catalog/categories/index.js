@@ -284,7 +284,7 @@ class Categories extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeCategoriesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),
