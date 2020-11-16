@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\EditMetaHandler;
 use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductBasicInformationHandler;
 use PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler;
 use PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\EditProfileHandler;
+use PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\AddSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\AddTaxHandler;
 use PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\EditTaxHandler;
 use PrestaShop\PrestaShop\Adapter\Tax\QueryHandler\GetTaxForEditingHandler;
@@ -53,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterfa
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\EditTaxHandlerInterface;
@@ -229,5 +231,24 @@ class CommandHandlerDefinitionParserTest extends TestCase
     public function getDataForConstructorParamsAssertion(): Generator
     {
         yield [AddTaxHandler::class, AddTaxCommand::class, ['array localizedNames', 'rate', 'enabled']];
+        yield [GetProductForEditingHandler::class, GetProductForEditing::class, ['int productId']];
+        yield [AddSupplierHandler::class, AddSupplierCommand::class, [
+            'string name',
+            'string address',
+            'string city',
+            'int countryId',
+            'bool enabled',
+            'array localizedDescriptions',
+            'array localizedMetaTitles',
+            'array localizedMetaDescriptions',
+            'array localizedMetaKeywords',
+            'array shopAssociation',
+            '?string address2 = NULL',
+            '?string postCode = NULL',
+            '?int stateId = NULL',
+            '?string phone = NULL',
+            '?string mobilePhone = NULL',
+            '?string dni = NULL',
+        ]];
     }
 }
