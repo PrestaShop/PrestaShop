@@ -47,7 +47,7 @@ class CoreDomainProviderTest extends KernelTestCase
     protected function setUp()
     {
         self::bootKernel();
-        $resourcesDir = __DIR__ . '/../../../../Resources/translations';
+        $resourcesDir = self::$kernel->getContainer()->getParameter('translations_dir');
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
@@ -146,12 +146,12 @@ class CoreDomainProviderTest extends KernelTestCase
 
     protected function tearDown()
     {
-        $langId = Language::getIdByIso('fr', true);
-        if ($langId) {
-            \Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
-            );
-        }
+//        $langId = Language::getIdByIso('fr', true);
+//        if ($langId) {
+//            \Db::getInstance()->execute(
+//                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
+//            );
+//        }
         self::$kernel->shutdown();
     }
 }
