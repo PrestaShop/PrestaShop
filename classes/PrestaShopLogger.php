@@ -64,13 +64,13 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
-    /** @var int Shop ID */
+    /** @var int|null Shop ID */
     public $id_shop;
 
-    /** @var int Shop group ID */
+    /** @var int|null Shop group ID */
     public $id_shop_group;
 
-    /** @var int Language ID */
+    /** @var int|null Language ID */
     public $id_lang;
 
     /** @var bool In all shops */
