@@ -27,7 +27,6 @@
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
@@ -879,16 +878,13 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $container = SymfonyContainer::getInstance();
-                if (null !== $container) {
-                    $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
-                } else {
-                    // SymfonyContainer not available, we won't have TranslationService nor ProviderFactory
-                    $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
-                }
+                $themes = (SymfonyContainer::getInstance())
+                    ->get('prestashop.core.addon.theme.theme_manager_builder')
+                    ->buildRepository()
+                    ->getList();
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
-                foreach ($themeManagerBuilder->buildRepository()->getList() as $theme) {
+                foreach ($themes as $theme) {
                     /* @var Theme $theme */
                     foreach ($languages as $language) {
                         $kpi_key = substr(strtoupper($theme->getName() . '_' . $language['iso_code']), 0, 16);

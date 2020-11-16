@@ -36,12 +36,15 @@ use Symfony\Component\Yaml\Yaml;
 
 class ThemeExtractorTest extends KernelTestCase
 {
-    const THEME_DIRECTORY = __DIR__ . '/../../../../Resources/themes/fakeThemeForTranslations';
-
     /**
      * @var object|ThemeExtractor
      */
     private $themeExtractor;
+
+    /**
+     * @var string
+     */
+    private $themeDirectory;
 
     protected function setUp()
     {
@@ -49,6 +52,8 @@ class ThemeExtractorTest extends KernelTestCase
 
         $container = self::$kernel->getContainer();
         $this->themeExtractor = $container->get('prestashop.translation.extractor.theme');
+        $this->themeDirectory = rtrim($container->getParameter('translations_theme_dir'), DIRECTORY_SEPARATOR)
+            . DIRECTORY_SEPARATOR . 'fakeThemeForTranslations';
     }
 
     public function testItExtractsCatalogueFromFiles()
@@ -71,10 +76,10 @@ class ThemeExtractorTest extends KernelTestCase
 
     private function getFakeTheme(): Theme
     {
-        $configFile = self::THEME_DIRECTORY . '/config/theme.yml';
+        $configFile = $this->themeDirectory . '/config/theme.yml';
         $config = Yaml::parse(file_get_contents($configFile));
 
-        $config['directory'] = self::THEME_DIRECTORY;
+        $config['directory'] = $this->themeDirectory;
         $config['physical_uri'] = 'http://my-wonderful-shop.com';
 
         return new Theme($config);

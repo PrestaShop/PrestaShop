@@ -81,7 +81,7 @@ class ModulesProviderTest extends KernelTestCase
         $phpExtractor = $container->get('prestashop.translation.extractor.php');
         $smartyExtractor = $container->get('prestashop.translation.extractor.smarty.legacy');
         $twigExtractor = $container->get('prestashop.translation.extractor.twig');
-        $modulesDirectory = $this->getBuiltInModuleDirectory();
+        $modulesDirectory = $container->getParameter('translations_modules_dir');
 
         $extractor = new LegacyModuleExtractor(
             $phpExtractor,
@@ -93,7 +93,7 @@ class ModulesProviderTest extends KernelTestCase
         $this->provider = new ModulesProvider(
             new MockDatabaseTranslationReader($databaseContent),
             $modulesDirectory,
-            $this->getDefaultModuleDirectory(),
+            $container->getParameter('resources_dir'),
             $legacyFileLoader,
             $extractor,
             self::MODULE_NAME
@@ -218,21 +218,5 @@ class ModulesProviderTest extends KernelTestCase
 
         // verify translations
         $this->assertSame('Bonjour le monde', $catalogue->get('Hello World', 'ModulesTranslationtest'));
-    }
-
-    /**
-     * @return string
-     */
-    private function getBuiltInModuleDirectory(): string
-    {
-        return __DIR__ . '/../../../../Resources/modules';
-    }
-
-    /**
-     * @return string
-     */
-    private function getDefaultModuleDirectory(): string
-    {
-        return __DIR__ . '/../../../../Resources';
     }
 }

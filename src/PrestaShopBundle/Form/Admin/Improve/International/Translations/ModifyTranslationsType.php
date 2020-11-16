@@ -126,9 +126,7 @@ class ModifyTranslationsType extends TranslatorAwareType
      */
     private function excludeDefaultThemeFromChoices(array $themeChoices): array
     {
-        if (array_key_exists(ThemeProvider::DEFAULT_THEME_NAME, $themeChoices)) {
-            unset($themeChoices[ThemeProvider::DEFAULT_THEME_NAME]);
-        }
+        unset($themeChoices[ThemeProvider::DEFAULT_THEME_NAME]);
 
         return $themeChoices;
     }
