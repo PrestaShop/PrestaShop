@@ -205,10 +205,9 @@ abstract class AbstractOrderHandler
         ?Combination $combination
     ): void {
         $productSpecificPrice = $this->getProductSpecificPriceInOrder($product, $order, $combination);
-
         $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
-        $priceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $product);
 
+        // If provided price is equal to catalog price no need to have specific price
         if ($productOriginalPrice->equals($priceTaxExcluded)) {
             // Product specific price is not useful any more we can delete it
             if (null !== $productSpecificPrice) {
@@ -218,8 +217,11 @@ abstract class AbstractOrderHandler
             return;
         }
 
+        // If price tax excluded and price tax included don't match exactly, we use the price tax included as a base to recompute
+        // the price tax excluded, this gives us more precision and decimals which avoids offset in later computing (totals)
+        $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $product);
         if (null !== $productSpecificPrice) {
-            $productSpecificPrice->price = (float) (string) $priceTaxExcluded;
+            $productSpecificPrice->price = (float) (string) $precisePriceTaxExcluded;
             $productSpecificPrice->update();
 
             return;
@@ -235,7 +237,7 @@ abstract class AbstractOrderHandler
         $specificPrice->id_customer = $order->id_customer;
         $specificPrice->id_product = $product->id;
         $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-        $specificPrice->price = (float) (string) $priceTaxExcluded;
+        $specificPrice->price = (float) (string) $precisePriceTaxExcluded;
         $specificPrice->from_quantity = SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY;
         $specificPrice->reduction = 0;
         $specificPrice->reduction_type = 'amount';

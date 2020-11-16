@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCom
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -146,17 +147,22 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->getCommandBus()->handle(
-            new UpdateProductQuantityInCartCommand(
-                SharedStorage::getStorage()->get($cartReference),
-                $productId,
-                $quantity
-            )
-        );
-        SharedStorage::getStorage()->set($productName, $productId);
+        $this->lastException = null;
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    SharedStorage::getStorage()->get($cartReference),
+                    $productId,
+                    $quantity
+                )
+            );
+            SharedStorage::getStorage()->set($productName, $productId);
 
-        // Clear cart static cache or it will have no products in next calls
-        Cart::resetStaticCache();
+            // Clear cart static cache or it will have no products in next calls
+            Cart::resetStaticCache();
+        } catch (MinimalQuantityException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -813,6 +819,25 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         if (!$cartRule->add()) {
             throw new RuntimeException('Cannot add cart rule to database');
+        }
+    }
+
+    /**
+     * @Then I should get error that minimum quantity of :minQuantity must be added to cart
+     *
+     * @param int $minQuantity
+     */
+    public function assertLastErrorIsMinimumQuantityWhichMustBeAddedToCart(int $minQuantity)
+    {
+        $this->assertLastErrorIs(
+            MinimalQuantityException::class
+        );
+        if ($minQuantity !== $this->lastException->getMinimalQuantity()) {
+            throw new RuntimeException(sprintf(
+                'Minimal quantity in exception, expected %s but got %s',
+                $minQuantity,
+                $this->lastException->getMinimalQuantity()
+            ));
         }
     }
 }

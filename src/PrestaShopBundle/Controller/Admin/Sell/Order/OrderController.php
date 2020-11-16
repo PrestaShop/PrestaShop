@@ -73,7 +73,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
@@ -1573,17 +1572,15 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $orderId
-     * @param int $type
      * @param string $name
      * @param string $value
      *
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function displayCustomizationImageAction(int $orderId, int $type, string $name, string $value)
+    public function displayCustomizationImageAction(int $orderId, string $name, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
-        $customizationForViewing = new OrderProductCustomizationForViewing($type, $name, $value);
-        $filePath = $uploadDir . $customizationForViewing->getValue();
+        $filePath = $uploadDir . $value;
         $filesystem = new Filesystem();
 
         try {
