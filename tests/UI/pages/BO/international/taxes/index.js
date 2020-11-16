@@ -31,11 +31,12 @@ class Taxes extends BOBasePage {
     this.searchFilterButton = `${this.taxesGridTable} .grid-search-button`;
     this.taxesGridRow = row => `${this.taxesGridTable} tbody tr:nth-child(${row})`;
     this.taxesGridColumn = (row, column) => `${this.taxesGridRow(row)} td.column-${column}`;
+    this.taxesGridStatusColumn = row => `${this.taxesGridColumn(row, 'active')} .ps-switch`;
+    this.taxesGridStatusColumnToggleInput = row => `${this.taxesGridStatusColumn(row)} input`;
     this.taxesGridActionsColumn = row => this.taxesGridColumn(row, 'actions');
     this.taxesGridColumnEditLink = row => `${this.taxesGridActionsColumn(row)} a.grid-edit-row-link`;
     this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
     this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a.grid-delete-row-link`;
-    this.toggleColumnValidIcon = (row, column) => `${this.taxesGridColumn(row, column)} i.grid-toggler-icon-valid`;
 
     // Form Taxes Options
     this.taxStatusToggleInput = toggle => `#form_enable_tax_${toggle}`;
@@ -119,11 +120,18 @@ class Taxes extends BOBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @param column
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row, column) {
-    return this.elementVisible(page, this.toggleColumnValidIcon(row, column), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.taxesGridStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -133,12 +141,12 @@ class Taxes extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.taxesGridColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row, 'active') !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.taxesGridColumn(row, 'active'));
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.taxesGridStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -218,7 +226,7 @@ class Taxes extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeTaxesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllLabel, el => el.click()),
