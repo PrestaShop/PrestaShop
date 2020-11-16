@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
  */
 class QuerySorting
 {
-    const ASC = 'ASC';
-    const DESC = 'DESC';
+    public const ASC = 'ASC';
+    public const DESC = 'DESC';
 
     /**
      * @var string
