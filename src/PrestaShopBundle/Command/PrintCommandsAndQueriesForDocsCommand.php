@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinition;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinition;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinitionParser;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -110,7 +109,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
 
         $this->fs->remove($filePath);
         $content = (new Environment($this->twigLoader))->render('views/cqrs-commands-list.md.twig', [
-            'commandDefinitions' => $this->getCommandDefinitions(),
+            'commandDefinitions' => $this->getCommandHandlerDefinitions(),
         ]);
 
         $this->fs->dumpFile($filePath, $content);
@@ -120,9 +119,9 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return array<string, array<int, CommandDefinition>>
+     * @return array<string, array<int, CommandHandlerDefinition>>
      */
-    private function getCommandDefinitions(): array
+    private function getCommandHandlerDefinitions(): array
     {
         $handlerDefinitions = $this->getContainer()->getParameter('prestashop.commands_and_queries');
         /** @var CommandHandlerDefinitionParser $commandHandlerDefinitionParser */
