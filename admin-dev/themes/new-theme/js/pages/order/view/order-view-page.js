@@ -310,26 +310,33 @@ export default class OrderViewPage {
           this.orderProductRenderer.updatePaginationControls();
 
           let numPage = 1;
+          let message = '';
           // Display alert
           if (initialNumProducts > newNumProducts) { // product deleted
-            $.growl.notice({
-              title: '',
-              message: window.translate_javascripts['Items successfully removed']
-                  .replace('[1]', (initialNumProducts-newNumProducts))
-            });
+            message = (initialNumProducts-newNumProducts === 1) ?
+                window.translate_javascripts['The product was successfully removed.'] :
+                window.translate_javascripts['[1] products were successfully removed.']
+                    .replace('[1]', (initialNumProducts-newNumProducts))
+            ;
+
             // Set target page to the page of the deleted item
             numPage = (newPagesNum === 1) ? 1 : currentPage;
           }
           else if (initialNumProducts < newNumProducts) { // product added
-            $.growl.notice({
-              title: '',
-              message: window.translate_javascripts['Items successfully added']
-                  .replace('[1]', (newNumProducts-initialNumProducts))
-            });
+            message = (newNumProducts - initialNumProducts === 1) ?
+                window.translate_javascripts['The product was successfully added.'] :
+                window.translate_javascripts['[1] products were successfully added.']
+                    .replace('[1]', (newNumProducts-initialNumProducts))
+            ;
 
             // Move to first page to see the added product
             numPage = 1;
           }
+
+          $.growl.notice({
+            title: '',
+            message: message,
+          });
 
           // Move to page of the deleted item
           EventEmitter.emit(OrderViewEventMap.productListPaginated, {
@@ -340,7 +347,10 @@ export default class OrderViewPage {
           this.resetToolTips();
         })
         .fail(errors => {
-          location.reload();
+          $.growl.error({
+            title: '',
+            message: 'Failed to reload the products list. Please reload the page',
+          });
         })
     ;
   }

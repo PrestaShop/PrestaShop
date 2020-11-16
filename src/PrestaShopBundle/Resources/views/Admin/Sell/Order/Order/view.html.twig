@@ -117,7 +117,9 @@
 {% endblock %}
 
 {% set js_translatable = {
-  "Items successfully added": 'Succesfully added [1] item(s).'|trans({}, 'Admin.Notifications.Success'),
-  "Items successfully removed": 'Succesfully removed [1] item(s).'|trans({}, 'Admin.Notifications.Success'),
+  "The product was successfully added.": 'The product was successfully added.'|trans({}, 'Admin.Notifications.Success'),
+  "The product was successfully removed.": 'The product was successfully removed.'|trans({}, 'Admin.Notifications.Success'),
+  "[1] products were successfully added.": '[1] products were successfully added.'|trans({}, 'Admin.Notifications.Success'),
+  "[1] products were successfully removed.": '[1] products were successfully removed.'|trans({}, 'Admin.Notifications.Success'),
 }|merge(js_translatable)
 %}
