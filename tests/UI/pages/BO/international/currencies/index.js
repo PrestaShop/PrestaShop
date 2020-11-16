@@ -27,8 +27,9 @@ class Currencies extends LocalizationBasePage {
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // enable column
-    this.enableColumn = row => this.tableColumn(row, 'active');
-    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
+
     // Actions buttons in row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
@@ -142,7 +143,7 @@ class Currencies extends LocalizationBasePage {
       symbol: await this.getTextColumnFromTableCurrency(page, row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(page, row, 'iso_code'),
       exchangeRate: await this.getExchangeRateValue(page, row),
-      enabled: await this.getToggleColumnValue(page, row),
+      enabled: await this.getStatus(page, row),
     };
   }
 
@@ -150,10 +151,18 @@ class Currencies extends LocalizationBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row = 1) {
-    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+  async getStatus(page, row = 1) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.statusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -163,12 +172,12 @@ class Currencies extends LocalizationBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row = 1, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.enableColumn(row));
+  async setStatus(page, row = 1, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
       return true;
     }
+
     return false;
   }
 
