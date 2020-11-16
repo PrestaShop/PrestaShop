@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinitionParser;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,17 +54,26 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $commands = $this->getContainer()->getParameter('prestashop.commands_and_queries');
-        $commandDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_definition_provider');
+        /** @var CommandHandlerDefinitionParser $handlerDefinitionParser */
+        $handlerDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_handler_definition_parser');
 
         $outputStyle = new OutputFormatterStyle('blue', null);
         $output->getFormatter()->setStyle('blue', $outputStyle);
 
-        foreach ($commands as $key => $commandName) {
-            $commandDefinition = $commandDefinitionParser->parseDefinition($commandName);
+        $i = 1;
+        foreach ($commands as $handlerName => $commandName) {
+            $commandDefinition = $handlerDefinitionParser->parseDefinition($handlerName, $commandName);
 
-            $output->writeln(++$key . '.');
-            $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');
-            $output->writeln('<blue>Type: </blue><info>' . $commandDefinition->getCommandType() . '</info>');
+            if (empty($commandDefinition->getHandlerInterfaces())) {
+                $interfaces = '';
+            } else {
+                $interfaces = sprintf('(Implements: %s)', implode(', ', $commandDefinition->getHandlerInterfaces()));
+            }
+
+            $output->writeln($i++ . '.');
+            $output->writeln('<blue>' . ucfirst($commandDefinition->getType()) . ': </blue><info>' . $commandDefinition->getCommandClass() . '</info>');
+            $output->writeln('<blue>Handler: </blue><info>' . $commandDefinition->getHandlerClass() . '. ' . $interfaces . '</info>');
+            $output->writeln('<blue>Return type: </blue><info>' . $commandDefinition->getReturnType() ?: 'not defined' . '</info>');
             $output->writeln('<comment>' . $commandDefinition->getDescription() . '</comment>');
             $output->writeln('');
         }
