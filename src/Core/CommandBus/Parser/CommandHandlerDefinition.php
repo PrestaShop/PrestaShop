@@ -51,7 +51,7 @@ class CommandHandlerDefinition
     /**
      * @var array
      */
-    private $arguments;
+    private $commandConstructorParams;
 
     /**
      * @var string
@@ -72,7 +72,7 @@ class CommandHandlerDefinition
      * @param string $type command or query
      * @param string $handlerClass
      * @param string $commandClass
-     * @param array $commandArguments
+     * @param array $commandConstructorParams
      * @param string $description
      * @param string|null $returnType
      * @param array $handlerInterfaces
@@ -81,7 +81,7 @@ class CommandHandlerDefinition
         string $type,
         string $handlerClass,
         string $commandClass,
-        array $commandArguments,
+        array $commandConstructorParams,
         string $description,
         ?string $returnType,
         array $handlerInterfaces = []
@@ -89,7 +89,7 @@ class CommandHandlerDefinition
         $this->type = $type;
         $this->handlerClass = $handlerClass;
         $this->commandClass = $commandClass;
-        $this->arguments = $commandArguments;
+        $this->commandConstructorParams = $commandConstructorParams;
         $this->returnType = $returnType;
         $this->description = $description;
         $this->handlerInterfaces = $handlerInterfaces;
@@ -122,9 +122,9 @@ class CommandHandlerDefinition
     /**
      * @return array
      */
-    public function getArguments(): array
+    public function getCommandConstructorParams(): array
     {
-        return $this->arguments;
+        return $this->commandConstructorParams;
     }
 
     /**
