@@ -24,6 +24,13 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.6.9 - (2020-11-16)
+####################################
+- Core:
+  - Bug fix:
+    - #GHSA-frf2-c9q3-qg9m:  Improper Access Control with submitReorder function (by @PierreRambaud)
+
+####################################
 #   v1.7.6.8 - (2020-09-24)
 ####################################
 - Core:
