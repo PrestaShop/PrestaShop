@@ -113,7 +113,7 @@ describe('Filter And Quick Edit brands', async () => {
 
         for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
-            const brandStatus = await brandsPage.getStatus(page, i);
+            const brandStatus = await brandsPage.getBrandStatus(page, i);
             await expect(brandStatus).to.equal(test.args.filterValue);
           } else {
             const textColumn = await brandsPage.getTextColumnFromTableBrands(page, i, test.args.filterBy);
@@ -153,7 +153,7 @@ describe('Filter And Quick Edit brands', async () => {
       it(`should ${test.args.action} first brand`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Brand`, baseContext);
 
-        const isActionPerformed = await brandsPage.setStatus(page, 1, test.args.enabledValue);
+        const isActionPerformed = await brandsPage.setBrandStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
           const resultMessage = await brandsPage.getTextContent(
@@ -164,7 +164,7 @@ describe('Filter And Quick Edit brands', async () => {
           await expect(resultMessage).to.contains(brandsPage.successfulUpdateStatusMessage);
         }
 
-        const brandsStatus = await brandsPage.getStatus(page, 1);
+        const brandsStatus = await brandsPage.getBrandStatus(page, 1);
         await expect(brandsStatus).to.be.equal(test.args.enabledValue);
       });
     });

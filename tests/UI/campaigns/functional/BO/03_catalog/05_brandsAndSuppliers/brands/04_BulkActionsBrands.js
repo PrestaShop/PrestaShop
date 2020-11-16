@@ -119,15 +119,15 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     });
 
     const tests = [
-      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
-      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
     ];
 
     tests.forEach((test) => {
       it(`should ${test.args.action} brands`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Brand`, baseContext);
 
-        const textResult = await brandsPage.changeBrandsEnabledColumnBulkActions(
+        const textResult = await brandsPage.bulkSetBrandsStatus(
           page,
           test.args.enabledValue,
         );
@@ -138,8 +138,8 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
         await expect(numberOfBrandsInGrid).to.be.at.most(numberOfBrands);
 
         for (let i = 1; i <= numberOfBrandsInGrid; i++) {
-          const textColumn = await brandsPage.getTextColumnFromTableBrands(page, i, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const brandStatus = await brandsPage.getBrandStatus(page, i);
+          await expect(brandStatus).to.equal(test.args.enabledValue);
         }
       });
     });

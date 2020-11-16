@@ -183,7 +183,7 @@ class Brands extends BOBasePage {
    * @param row
    * @return {Promise<boolean>}
    */
-  async getStatus(page, row) {
+  async getBrandStatus(page, row) {
     // Get value of the check input
     const inputValue = await this.getAttributeContent(
       page,
@@ -202,8 +202,8 @@ class Brands extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async setStatus(page, row, valueWanted = true) {
-    if (await this.getStatus(page, row) !== valueWanted) {
+  async setBrandStatus(page, row, valueWanted = true) {
+    if (await this.getBrandStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.brandsTableColumnStatus(row));
       return true;
     }
@@ -314,7 +314,7 @@ class Brands extends BOBasePage {
    * @param enable
    * @return {Promise<string>}
    */
-  async changeBrandsEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetBrandsStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel('manufacturer'), el => el.click()),
@@ -405,7 +405,7 @@ class Brands extends BOBasePage {
       name: await this.getTextColumnFromTableBrands(page, row, 'name'),
       addresses: await this.getTextColumnFromTableBrands(page, row, 'addresses_count'),
       products: await this.getTextColumnFromTableBrands(page, row, 'products_count'),
-      status: await this.getStatus(page, row),
+      status: await this.getBrandStatus(page, row),
     };
   }
 
