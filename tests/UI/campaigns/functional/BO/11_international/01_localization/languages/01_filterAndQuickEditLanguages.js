@@ -137,7 +137,6 @@ describe('Filter and quick edit languages', async () => {
             filterBy: 'active',
             filterValue: Languages.english.enabled,
           },
-        expected: 'check',
       },
     ];
 
@@ -158,15 +157,16 @@ describe('Filter and quick edit languages', async () => {
         await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfLanguagesAfterFilter; i++) {
-          const textColumn = await languagesPage.getTextColumnFromTable(
-            page,
-            i,
-            test.args.filterBy,
-          );
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const languageStatus = await languagesPage.getStatus(page, i);
+            await expect(languageStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await languagesPage.getTextColumnFromTable(
+              page,
+              i,
+              test.args.filterBy,
+            );
+
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -198,7 +198,7 @@ describe('Filter and quick edit languages', async () => {
     it('should disable \'en\' language and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMainLanguage', baseContext);
 
-      await languagesPage.quickEditLanguage(page, 1, false);
+      await languagesPage.setStatus(page, 1, false);
       const textError = await languagesPage.getAlertDangerMessage(page);
       await expect(textError).to.equal(languagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
     });
@@ -235,7 +235,7 @@ describe('Filter and quick edit languages', async () => {
       it(`should ${test.args.action} first language`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Language`, baseContext);
 
-        const isActionPerformed = await languagesPage.quickEditLanguage(page, 1, test.args.enabledValue);
+        const isActionPerformed = await languagesPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
           const resultMessage = await languagesPage.getTextContent(
@@ -245,7 +245,7 @@ describe('Filter and quick edit languages', async () => {
 
           await expect(resultMessage).to.contains(languagesPage.successfulUpdateStatusMessage);
         }
-        const languageStatus = await languagesPage.isEnabled(page, 1);
+        const languageStatus = await languagesPage.getStatus(page, 1);
         await expect(languageStatus).to.be.equal(test.args.enabledValue);
       });
     });
