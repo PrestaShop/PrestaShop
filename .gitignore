@@ -111,6 +111,10 @@ tests/Resources/img/os/*
 !tests/Resources/img/os/.gitkeep
 tests/Resources/img/genders/*
 !tests/Resources/img/genders/.gitkeep
+tests/Resources/img/c/*
+!tests/Resources/img/c/.gitkeep
+tests/Resources/img/tmp/*
+tests/Resources/img/tmp/.gitkeep
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
