@@ -18,6 +18,8 @@ class WebService extends BOBasePage {
     this.webserviceListForm = '#webservice_key_grid';
     this.webserviceListTableRow = row => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
     this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow(row)} td.column-${column}`;
+    this.webserviceListTableStatusColumn = row => `${this.webserviceListTableColumn(row, 'active')} .ps-switch`;
+    this.webserviceListTableStatusColumnToggleInput = row => `${this.webserviceListTableStatusColumn(row)} input`;
     this.webserviceListTableColumnAction = row => this.webserviceListTableColumn(row, 'actions');
     this.webserviceListTableToggleDropDown = row => `${this.webserviceListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
@@ -46,9 +48,9 @@ class WebService extends BOBasePage {
     this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.webserviceListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_selection`;
-    this.bulkActionsEnableButton = `${this.webserviceListForm} 
+    this.bulkActionsEnableButton = `${this.webserviceListForm}
     #webservice_key_grid_bulk_action_webservice_enable_selection`;
-    this.bulkActionsDisableButton = `${this.webserviceListForm} 
+    this.bulkActionsDisableButton = `${this.webserviceListForm}
     #webservice_key_grid_bulk_action_webservice_disable_selection`;
 
     // Modal Dialog
@@ -146,8 +148,16 @@ class WebService extends BOBasePage {
    * @param row, row in table
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
-    return this.elementVisible(page, this.webserviceListColumnValidIcon(row), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.webserviceListTableStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -157,16 +167,12 @@ class WebService extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.webserviceListTableColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
-      await page.click(this.webserviceListTableColumn(row, 'active'));
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.webserviceListColumnValidIcon(row) : this.webserviceListColumnNotValidIcon(row)),
-      );
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.webserviceListTableStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -246,7 +252,7 @@ class WebService extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async enableDisableByColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),
