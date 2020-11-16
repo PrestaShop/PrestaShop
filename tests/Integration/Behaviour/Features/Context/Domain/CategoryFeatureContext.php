@@ -535,6 +535,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
+        //@todo: useless test. Must retrieve it from db.
         return new EditableCategory(
             new CategoryId($categoryId),
             $name,
@@ -585,6 +586,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function pretendImageUploaded(array $testCaseData, int $categoryId): string
     {
+        //@todo: refactor CategoryCoverUploader. Move uploaded file in Form handler instead of Uploader and use the uploader here in tests
         $categoryCoverImageName = $testCaseData['Category cover image'];
         $data = base64_decode(self::JPG_IMAGE_STRING);
         $im = imagecreatefromstring($data);
