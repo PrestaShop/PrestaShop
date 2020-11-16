@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class AddProductFeatureContext extends AbstractProductFeatureContext
@@ -55,5 +56,8 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+        // Fix issue related to modules hooked on `actionProductSave` and calling `Product::priceCalculation()`
+        // leading to cache issues later
+        Product::resetStaticCache();
     }
 }

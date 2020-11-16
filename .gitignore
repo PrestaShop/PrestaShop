@@ -85,6 +85,24 @@ tests-legacy/resources/modules/ps_emailalerts/
 tests-legacy/resources/modules/ps_emailsubscription/mails/
 tests-legacy/resources/modules/referralprogram/
 
+# themes listed in the modules_to_hook section of the theme.yml
+tests-legacy/resources/modules/blockreassurance
+tests-legacy/resources/modules/ps_contactinfo
+tests-legacy/resources/modules/ps_languageselector
+tests-legacy/resources/modules/ps_currencyselector
+tests-legacy/resources/modules/ps_customersignin
+tests-legacy/resources/modules/ps_shoppingcart
+tests-legacy/resources/modules/ps_mainmenu
+tests-legacy/resources/modules/ps_searchbar
+tests-legacy/resources/modules/ps_imageslider
+tests-legacy/resources/modules/ps_customtext
+tests-legacy/resources/modules/ps_socialfollow
+tests-legacy/resources/modules/ps_linklist
+tests-legacy/resources/modules/ps_customeraccountlinks
+tests-legacy/resources/modules/ps_categorytree
+tests-legacy/resources/modules/ps_facetedsearch
+tests-legacy/resources/modules/ps_sharebuttons
+
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
 !/admin-dev/autoupgrade/backup/index.php

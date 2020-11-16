@@ -848,6 +848,7 @@ class Install extends AbstractInstall
 
                 return false;
             }
+            Context::getContext()->employee = $employee;
         } else {
             $this->setError($this->translator->trans('Cannot create admin account', [], 'Install'));
 
