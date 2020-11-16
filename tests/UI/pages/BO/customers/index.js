@@ -17,14 +17,14 @@ class Customers extends BOBasePage {
     this.customersListForm = '#customer_grid';
     this.customersListTableRow = row => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row, column) => `${this.customersListTableRow(row)} td.column-${column}`;
+    this.customersListToggleColumn = (row, column) => `${this.customersListTableColumn(row, column)} .ps-switch`;
+    this.customersListToggleColumnInput = (row, column) => `${this.customersListToggleColumn(row, column)} input`;
     this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
     this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)} a.grid-edit-row-link`;
     this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)}`
       + ' a[data-toggle=\'dropdown\']';
     this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a.grid-view-row-link`;
     this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a.grid-delete-row-link`;
-    this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
-      + ' i.grid-toggler-icon-valid';
     // Filters
     this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
     this.filterSearchButton = `${this.customersListForm} .grid-search-button`;
@@ -143,8 +143,15 @@ class Customers extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getToggleColumnValue(page, row, column) {
-    await this.waitForVisibleSelector(page, this.customersListTableColumn(row, column), 2000);
-    return this.elementVisible(page, this.customersListColumnValidIcon(row, column), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.customersListToggleColumnInput(row, column)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -157,12 +164,10 @@ class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(page, row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
-      await Promise.all([
-        page.$eval(`${this.customersListTableColumn(row, column)} i`, el => el.click()),
-        page.waitForNavigation({waitUntil: 'networkidle'}),
-      ]);
+      await this.clickAndWaitForNavigation(page, this.customersListToggleColumn(row, column));
       return true;
     }
+
     return false;
   }
 
@@ -321,7 +326,7 @@ class Customers extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeCustomersEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
