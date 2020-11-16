@@ -1134,12 +1134,12 @@ class ProductCore extends ObjectModel
         //  /!\ after parent::toggleStatus() active will be false, that why we set 404 by default :p
         if ($this->active) {
             //case where active will be false after parent::toggleStatus()
-            $this->id_type_redirected = RedirectTarget::NO_TARGET;
-            $this->redirect_type = RedirectType::TYPE_CATEGORY_PERMANENT;
+            $this->id_type_redirected = 0;
+            $this->redirect_type = ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY;
         } else {
             //case where active will be true after parent::toggleStatus()
-            $this->id_type_redirected = RedirectTarget::NO_TARGET;
-            $this->redirect_type = RedirectType::TYPE_NOT_FOUND;
+            $this->id_type_redirected = 0;
+            $this->redirect_type = '';
         }
 
         return parent::toggleStatus();
