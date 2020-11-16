@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
@@ -65,7 +66,7 @@ class CoreProviderFactory implements ProviderFactoryInterface
     public function build($providerType): ProviderInterface
     {
         if (!$this->implements($providerType)) {
-            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
+            throw new InvalidArgumentException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
         /* @var AbstractCoreType $providerType */
