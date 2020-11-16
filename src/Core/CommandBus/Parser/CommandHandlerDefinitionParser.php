@@ -74,7 +74,7 @@ class CommandHandlerDefinitionParser
             $param = sprintf('%s', $parameter->getName());
 
             if ($parameter->getType()) {
-                $param = sprintf('%s %s', $param, $parameter->getType()->getName());
+                $param = sprintf('%s %s', $parameter->getType()->getName(), $param);
             }
 
             if ($parameter->isOptional()) {

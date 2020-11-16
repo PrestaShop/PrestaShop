@@ -1,15 +1,15 @@
 ### Commands
-| Nr. | Class | Description |
-| --- | ----- | ----------- |
-{% for index, commandDefinition in commandDefinitions.command %}
+| Nr. | Command class | Command Constructor | Handler class | Description | Return type |
+| --- | ------------- | ------------------- | ------------- | ----------- | ----------- |
+{% for index, definition in commandDefinitions.command %}
 {% set nr = index + 1 %}
-| {{ nr }} | {{ commandDefinition.className }} | {{ commandDefinition.description }} |
+| {{ nr }} | {{ definition.commandClass }} | <ul>{% for argument in definition.commandConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <p> Implements: </p> <ul> {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {{ definition.description }} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
 {% endfor %}
 
 ### Queries
-| Nr. | Class | Description |
-| --- | ----- | ----------- |
+| Nr. | Query class | Command Constructor | Handler class | Description | Return type |
+| --- | ----------- | ------------------- | ------------- | ----------- | ----------- |
 {% for index, queryDefinition in commandDefinitions.query %}
 {% set nr = index + 1 %}
-| {{ nr }} | {{ queryDefinition.className }} | {{ queryDefinition.description }} |
+| {{ nr }} | {{ definition.commandClass }} | <ul>{% for argument in definition.commandConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <ul> Implements: {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {{ definition.description }} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
 {% endfor %}
