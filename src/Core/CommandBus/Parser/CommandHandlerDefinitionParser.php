@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\CommandBus\Parser;
 
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 
 class CommandHandlerDefinitionParser
 {
@@ -73,8 +74,9 @@ class CommandHandlerDefinitionParser
         foreach ($constructor->getParameters() as $parameter) {
             $param = sprintf('%s', $parameter->getName());
 
-            if ($parameter->getType()) {
-                $param = sprintf('%s %s', $parameter->getType()->getName(), $param);
+            /** @var ReflectionNamedType|null $type */
+            if ($type = $parameter->getType()) {
+                $param = sprintf('%s %s', $type->getName(), $param);
             }
 
             if ($parameter->isOptional()) {
