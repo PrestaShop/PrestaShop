@@ -672,7 +672,7 @@ class OrderController extends FrameworkBundleAdminController
     public function addProductAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $previousProducts = [];
         foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
@@ -719,7 +719,7 @@ class OrderController extends FrameworkBundleAdminController
          * We keep it for now to avoid Breaking Change
          */
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $updatedProducts = [];
         foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {

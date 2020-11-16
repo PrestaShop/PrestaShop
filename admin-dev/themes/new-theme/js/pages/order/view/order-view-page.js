@@ -340,46 +340,53 @@ export default class OrderViewPage {
           const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
 
           this.orderProductRenderer.updateNumProducts(newNumProducts);
-
-          // Update pagination
-          if (newPagesNum > initialPagesNum) {
-            this.orderProductRenderer.paginationAddPage(newPagesNum);
-          }
+          this.orderProductRenderer.updatePaginationControls();
 
           let numPage = 1;
+          let message = '';
           // Display alert
-          const $alertBlock = $('#js-order-view-success-block');
-          if (initialNumProducts > newNumProducts) {
-            $alertBlock.find('.alert-text').html(
-                window.translate_javascripts['Items successfully removed']
+          if (initialNumProducts > newNumProducts) { // product deleted
+            message = (initialNumProducts-newNumProducts === 1) ?
+                window.translate_javascripts['The product was successfully removed.'] :
+                window.translate_javascripts['[1] products were successfully removed.']
                     .replace('[1]', (initialNumProducts-newNumProducts))
-                    .replace('[2]', (initialNumProducts-newNumProducts) > 1 ? 's' : '')
-            );
-            this._fadeAlert($alertBlock);
+            ;
+
+            // Set target page to the page of the deleted item
+            numPage = (newPagesNum === 1) ? 1 : currentPage;
           }
-          else if (initialNumProducts < newNumProducts) {
-            $alertBlock.find('.alert-text').html(
-                window.translate_javascripts['Items successfully added']
+          else if (initialNumProducts < newNumProducts) { // product added
+            message = (newNumProducts - initialNumProducts === 1) ?
+                window.translate_javascripts['The product was successfully added.'] :
+                window.translate_javascripts['[1] products were successfully added.']
                     .replace('[1]', (newNumProducts-initialNumProducts))
-                    .replace('[2]', (newNumProducts-initialNumProducts) > 1 ? 's' : '')
-            );
-            this._fadeAlert($alertBlock);
+            ;
+
+            // Move to first page to see the added product
+            numPage = 1;
           }
 
-          // Bind actions on products
-          this.listenForProductDelete();
-          this.listenForProductEdit();
+          if ('' !== message) {
+            $.growl.notice({
+              title: '',
+              message: message,
+            });
+          }
+
+          // Move to page of the deleted item
+          EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+            numPage: numPage
+          });
+
+          // Bind hover on product rows buttons
           this.resetToolTips();
         })
         .fail(errors => {
-          location.reload();
+          $.growl.error({
+            title: '',
+            message: 'Failed to reload the products list. Please reload the page',
+          });
         })
     ;
-  }
-
-  _fadeAlert(alertBlock) {
-    alertBlock.removeClass("d-none").delay(5000).queue(function(){
-      $(this).addClass("d-none").dequeue();
-    });
   }
 }
