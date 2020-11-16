@@ -147,7 +147,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -161,7 +160,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -832,11 +831,11 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             MinimalQuantityException::class
         );
-        if ($minQuantity !== $this->lastException->getMinimalQuantity()) {
+        if ($minQuantity !== $this->getLastException()->getMinimalQuantity()) {
             throw new RuntimeException(sprintf(
                 'Minimal quantity in exception, expected %s but got %s',
                 $minQuantity,
-                $this->lastException->getMinimalQuantity()
+                $this->getLastException()->getMinimalQuantity()
             ));
         }
     }
