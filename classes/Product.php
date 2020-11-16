@@ -33,7 +33,6 @@ define('_CUSTOMIZE_TEXTFIELD_', 1);
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
