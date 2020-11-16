@@ -116,7 +116,6 @@ describe('Filter And Quick Edit Employees', async () => {
             filterBy: 'active',
             filterValue: createEmployeeData.active,
           },
-        expected: 'clear',
       },
     ];
     it('should go to add new employee page', async function () {
@@ -152,11 +151,11 @@ describe('Filter And Quick Edit Employees', async () => {
         await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
 
         for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-          const textColumn = await employeesPage.getTextColumnFromTable(page, i, test.args.filterBy);
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const employeeStatus = await employeesPage.getStatus(page, i);
+            await expect(employeeStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await employeesPage.getTextColumnFromTable(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -200,7 +199,7 @@ describe('Filter And Quick Edit Employees', async () => {
             baseContext,
           );
 
-          const isActionPerformed = await employeesPage.updateToggleColumnValue(
+          const isActionPerformed = await employeesPage.setStatus(
             page,
             1,
             employeeStatus.args.enable,
@@ -214,7 +213,7 @@ describe('Filter And Quick Edit Employees', async () => {
             await expect(resultMessage).to.contains(employeesPage.successfulUpdateStatusMessage);
           }
 
-          const currentStatus = await employeesPage.getToggleColumnValue(page, 1);
+          const currentStatus = await employeesPage.getStatus(page, 1);
           await expect(currentStatus).to.be.equal(employeeStatus.args.enable);
         });
       });

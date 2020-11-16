@@ -18,6 +18,8 @@ class Employees extends BOBasePage {
     this.employeesListForm = '#employee_grid';
     this.employeesListTableRow = row => `${this.employeesListForm} tbody tr:nth-child(${row})`;
     this.employeesListTableColumn = (row, column) => `${this.employeesListTableRow(row)} td.column-${column}`;
+    this.employeesListTableStatusColumn = row => `${this.employeesListTableColumn(row, 'active')} .ps-switch`;
+    this.employeesListTableStatusColumnToggleInput = row => `${this.employeesListTableStatusColumn(row)} input`;
     this.employeesListTableColumnAction = row => this.employeesListTableColumn(row, 'actions');
     this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
@@ -147,8 +149,16 @@ class Employees extends BOBasePage {
    * @param row, row in table
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
-    return this.elementVisible(page, this.employeesListColumnValidIcon(row), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.employeesListTableStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -158,16 +168,12 @@ class Employees extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.employeesListTableColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
-      page.click(this.employeesListTableColumn(row, 'active'));
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.employeesListColumnValidIcon(row) : this.employeesListColumnNotValidIcon(row)),
-      );
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.employeesListTableStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -210,7 +216,7 @@ class Employees extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -265,7 +271,7 @@ class Employees extends BOBasePage {
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.employeesListTableColumn(i, column));
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
+        rowContent = await this.getStatus(page, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
