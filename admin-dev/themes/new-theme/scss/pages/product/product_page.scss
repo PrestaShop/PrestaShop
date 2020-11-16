@@ -17,17 +17,18 @@
   padding-bottom: 80px;
 
   .widget-radio-inline {
-    div.radio {
-      display: inline;
-    }
+    margin-bottom: 10px;
 
-    label {
+    div.radio {
       display: inline-block;
+      margin-bottom: 0;
+      vertical-align: middle;
     }
 
     a.btn {
       display: inline;
       height: 29px;
+      vertical-align: middle;
     }
   }
 

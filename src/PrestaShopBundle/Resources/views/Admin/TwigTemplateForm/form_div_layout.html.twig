@@ -122,6 +122,7 @@
 {%- block radio_widget -%}
   <input
     type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+  <i class="form-check-round"></i>
 {% endblock radio_widget -%}
 
 {%- block datetime_widget -%}
