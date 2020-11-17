@@ -115,8 +115,17 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                     throw new RuntimeException(sprintf('File "%s" does not exist', $imgPath));
                 }
 
-                $info = getimagesize($imgPath);
-                dump($info);
+                $imgInfo = getimagesize($imgPath);
+                Assert::assertEquals(
+                    $dataRow['width'],
+                    $imgInfo[0],
+                    sprintf('Unexpected generated image "%s" width', $dataRow['name'])
+                );
+                Assert::assertEquals(
+                    $dataRow['height'],
+                    $imgInfo[1],
+                    sprintf('Unexpected generated image "%s" height', $dataRow['name'])
+                );
             }
         }
     }
@@ -132,7 +141,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $directories = str_split((string) $imageId);
         $path = implode('/', $directories);
 
-        return _PS_IMG_DIR_ . $path . '/' . $imageId . '-' . $imageTypeName . '.jpg';
+        return _PS_PROD_IMG_DIR_ . $path . '/' . $imageId . '-' . $imageTypeName . '.jpg';
     }
 
     /**
