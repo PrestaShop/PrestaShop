@@ -53,9 +53,16 @@
     {% if multiple %}
       {{ block('material_choice_tree_item_checkbox_widget') }}
     {% else %}
+      {{ block('material_choice_tree_item_radio_widget') }}
     {% endif %}
 
     {% if has_children %}
+      <ul>
+        {% for item in choice[choice_children] %}
+          {% set choice = item %}
+          {{ block('material_choice_tree_item_widget') }}
+        {% endfor %}
+      </ul>
     {% endif %}
   </li>
 {% endblock material_choice_tree_item_widget %}
