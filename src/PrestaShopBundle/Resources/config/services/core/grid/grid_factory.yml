@@ -335,3 +335,12 @@ services:
         - '@prestashop.core.grid.data_provider.order_return_states'
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.cart:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        public: true
+        arguments:
+          - '@prestashop.core.grid.definition.factory.cart'
+          - '@prestashop.adapter.grid.data_factory.cart_decorator'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'

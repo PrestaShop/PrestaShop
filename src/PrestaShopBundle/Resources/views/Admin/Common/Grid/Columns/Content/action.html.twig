@@ -24,12 +24,18 @@
  *#}
 
 {% set actions = column.options.actions %}
+{% set applicableActions = [] %}
+{% for action in actions %}
+  {% if action.isApplicable(record) %}
+    {% set applicableActions = applicableActions|merge([action]) %}
+  {% endif %}
+{% endfor %}
 
-{% if actions is not empty %}
+{% if applicableActions is not empty %}
     {% set inlineActions = [] %}
     {% set regularActions = [] %}
 
-    {% for action in actions %}
+    {% for action in applicableActions %}
       {% if action.options['use_inline_display'] == true %}
           {% set inlineActions = inlineActions|merge([action]) %}
         {% else %}
@@ -37,9 +43,9 @@
       {% endif %}
     {% endfor %}
 
-    <div class="btn-group-action text-right">
+    <div class="btn-group-action text-{{ column.options.text_align }}">
       {% if inlineActions is not empty %}
-        <div class="btn-group d-flex justify-content-between text-right">
+        <div class="btn-group d-flex justify-content-between text-{{ column.options.text_align }}">
           {% for inlineAction in inlineActions -%}
             {% if inlineAction.isApplicable(record) %}
 
@@ -89,7 +95,7 @@
             >
             </a>
 
-            <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-menu dropdown-menu-{{ column.options.text_align }}">
               {% for action in regularActions|slice(skippedActions) if action.isApplicable(record) %}
                 {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
                   'grid': grid,

@@ -47,6 +47,8 @@ final class CategoryPositionColumn extends AbstractColumn
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setRequired([
                 'field',
@@ -56,6 +58,7 @@ final class CategoryPositionColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'sortable' => true,
+                'text_align' => 'center',
             ])
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('field', 'string')

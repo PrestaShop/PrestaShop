@@ -29,7 +29,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
@@ -38,9 +40,12 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkDeleteCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
@@ -54,14 +59,86 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Manages page "Sell > Orders > Shopping Carts"
+ */
 class CartController extends FrameworkBundleAdminController
 {
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param CartFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, CartFilters $filters)
+    {
+        $cartGrid = $this->get('prestashop.core.grid.factory.cart')->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig', [
+            'cartGrid' => $this->presentGrid($cartGrid),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
+    }
+
+    /**
+     * Provides filters functionality
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.cart'),
+            $request,
+            CartGridDefinitionFactory::GRID_ID,
+            'admin_carts_index'
+        );
+    }
+
+    /**
+     * Deletes given cart
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param int $cartId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($cartId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCartCommand((int) $cartId));
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
@@ -145,8 +222,55 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * Changes the cart address information
+     * Exports carts
      *
+     * @param CartFilters $filters
+     *
+     * @return CsvResponse
+     */
+    public function exportAction(CartFilters $filters)
+    {
+        $filters = new CartFilters(['limit' => null] + $filters->all());
+        /** @var GridFactory $cartGridFactory */
+        $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
+        $cartGrid = $cartGridFactory->getGrid($filters);
+
+        $isGuestCheckoutEnabled = $this->configuration->get('PS_GUEST_CHECKOUT_ENABLED');
+
+        $headers = [
+            'id_cart' => $this->trans('ID', 'Admin.Global'),
+            'id_order' => $this->trans('Order ID', 'Admin.Orderscustomers.Feature'),
+            'customer_name' => $this->trans('Customer', 'Admin.Global'),
+            'cart_total' => $this->trans('Total', 'Admin.Global'),
+            'carrier_name' => $this->trans('Carrier', 'Admin.Shipping.Feature'),
+            'date_add' => $this->trans('Date', 'Admin.Global'),
+        ];
+
+        if ($isGuestCheckoutEnabled) {
+            $headers['online'] = $this->trans('Online', 'Admin.Global');
+        }
+
+        $data = [];
+        $keys_headers = array_keys($headers);
+
+        foreach ($cartGrid->getData()->getRecords()->all() as $record) {
+            $item = [];
+
+            foreach ($keys_headers as $header) {
+                $item[$header] = $record[$header];
+            }
+
+            $data[] = $item;
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('cart_' . date('Y-m-d_His') . '.csv')
+        ;
+    }
+
+    /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $cartId
@@ -505,6 +629,31 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Bulk delete carts
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_carts_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $cartIds = $request->request->get('cart_cart_bulk_action');
+        $cartIds = array_map(static function ($cartId) { return (int) $cartId; }, $cartIds);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCartCommand($cartIds));
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CartException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_carts_index');
+    }
+
+    /**
      * Checks if all submitted files reached the request.
      * If submitted form size exceeds php.ini post_max_size setting the $_FILES global doesn't contain the file.
      * For this reason custom headers where passed containing submitted file sizes
@@ -537,8 +686,15 @@ class CartController extends FrameworkBundleAdminController
         $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
 
         return [
-            CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CartRuleValidityException::class => $e->getMessage(),
+            CartNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            DeleteCartWithOrderException::class => $this->trans(
+                'An error occurred during deletion.',
+                'Admin.Notifications.Error'
+            ),
             CartConstraintException::class => [
                 CartConstraintException::INVALID_QUANTITY => $this->trans(
                     'Positive product quantity is required.',
@@ -593,6 +749,14 @@ class CartController extends FrameworkBundleAdminController
             InvalidGiftMessageException::class => $this->trans(
                 'Gift message not valid',
                 'Admin.Notifications.Error'
+            ),
+            BulkDeleteCartException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteCartException ? implode(', ', $e->getCartIds()) : ''
             ),
         ];
     }
