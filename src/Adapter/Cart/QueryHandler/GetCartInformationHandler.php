@@ -132,19 +132,29 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         ;
 
         try {
-            $legacySummary = $cart->getSummaryDetails(null, true);
+            $legacySummary = $cart->getSummaryDetails(null, true, $query->splitGifts());
             $addresses = $this->getAddresses($cart);
+
+            if ($query->splitGifts()) {
+                $products = $this->extractProductsWithGiftSplitFromLegacySummary($cart, $legacySummary, $currency);
+                $cartRules = $this->extractCartRulesWithGiftSplitFromLegacySummary($cart, $legacySummary, $currency);
+            } else {
+                $products = $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency);
+                $cartRules = $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency);
+            }
 
             $result = new CartInformation(
                 $cart->id,
-                $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency),
+                $products,
                 (int) $currency->id,
                 (int) $language->id,
-                $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency),
+                $cartRules,
                 $addresses,
                 $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
                 $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
             );
+
+            $this->contextStateManager->restorePreviousContext();
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
@@ -210,7 +220,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      *
      * @return CartInformation\CartRule[]
      */
-    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
+    private function extractCartRulesWithGiftSplitFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $cartRules = [];
 
@@ -252,9 +262,33 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @param array $legacySummary
      * @param Currency $currency
      *
+     * @return CartInformation\CartRule[]
+     */
+    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
+    {
+        $cartRules = [];
+
+        foreach ($legacySummary['discounts'] as $discount) {
+            $cartRuleId = (int) $discount['id_cart_rule'];
+            $cartRules[$cartRuleId] = new CartInformation\CartRule(
+                (int) $discount['id_cart_rule'],
+                $discount['name'],
+                $discount['description'],
+                (new Number((string) $discount['value_tax_exc']))->round($currency->precision)
+            );
+        }
+
+        return $cartRules;
+    }
+
+    /**
+     * @param Cart $cart
+     * @param array $legacySummary
+     * @param Currency $currency
+     *
      * @return CartProduct[]
      */
-    private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
+    private function extractProductsWithGiftSplitFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $products = [];
         $mergedGifts = $this->mergeGiftProducts($legacySummary['gift_products']);
@@ -272,6 +306,23 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         }
 
         foreach ($mergedGifts as $product) {
+            $products[] = $this->buildCartProduct($cart, $currency, $product);
+        }
+
+        return $products;
+    }
+
+    /**
+     * @param Cart $cart
+     * @param array $legacySummary
+     * @param Currency $currency
+     *
+     * @return CartProduct[]
+     */
+    private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
+    {
+        $products = [];
+        foreach ($legacySummary['products'] as &$product) {
             $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
