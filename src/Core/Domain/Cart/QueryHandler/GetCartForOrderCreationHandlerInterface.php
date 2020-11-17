@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 
 /**
- * Interface for handling GetCartInformation query
+ * Interface for handling GetCartForOrderCreation query
  */
-interface GetCartInformationHandlerInterface
+interface GetCartForOrderCreationHandlerInterface
 {
-    public function handle(GetCartInformation $query): CartInformation;
+    public function handle(GetCartForOrderCreation $query): CartInformation;
 }

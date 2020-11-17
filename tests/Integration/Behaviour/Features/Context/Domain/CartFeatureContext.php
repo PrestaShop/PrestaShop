@@ -51,7 +51,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
@@ -521,7 +521,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
             if (!$cartProduct->isGift()) {
                 throw new RuntimeException(sprintf(
-                    'Cart contains product #%s, but it is not a gift',
+                    'Cart contains product "%s", but it is not a gift',
                     $productName
                 ));
             }
@@ -844,7 +844,11 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $cartId = $this->getSharedStorage()->get($cartReference);
 
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId, true));
+        return $this->getQueryBus()->handle(
+            (new GetCartForOrderCreation($cartId))
+            ->setSeparateGiftProducts(true)
+            ->setSeparateGiftCartRules(true)
+        );
     }
 
     /**

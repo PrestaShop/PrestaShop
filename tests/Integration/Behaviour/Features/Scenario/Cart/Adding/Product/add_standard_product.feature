@@ -26,7 +26,7 @@ Feature: Add product in cart
     And  I create an empty cart "dummy_cart" for customer "testCustomer"
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And the product "product1" minimal quantity is 10
-    When I update quantity of product "product1" in the cart "dummy_cart" to 5
+    When I add 5 products "product1" to the cart "dummy_cart"
     Then I should get error that minimum quantity of 10 must be added to cart
     Then my cart should contain 0 units of product "product1", excluding items in pack
     Then the remaining available stock for product "product1" should be 1000

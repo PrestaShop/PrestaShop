@@ -42,8 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -110,7 +110,11 @@ class CartController extends FrameworkBundleAdminController
     public function getInfoAction(int $cartId)
     {
         try {
-            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId, false));
+            $cartInfo = $this->getQueryBus()->handle(
+                (new GetCartForOrderCreation($cartId))
+                    ->setSeparateGiftProducts(true)
+                    ->setSeparateGiftCartRules(true)
+            );
 
             return $this->json($cartInfo);
         } catch (Exception $e) {
@@ -505,7 +509,11 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getCartInfo(int $cartId): CartInformation
     {
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId, false));
+        return $this->getQueryBus()->handle(
+            (new GetCartForOrderCreation($cartId))
+                ->setSeparateGiftProducts(true)
+                ->setSeparateGiftCartRules(true)
+        );
     }
 
     /**
@@ -635,13 +643,6 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getProductGiftedQuantity(int $cartId, int $productId, ?int $attributeId): int
     {
-        return 0;
-//        $productCartRules = $this->getCommandBus()->handle(new GetProductCartRulesCommand(
-//            $cartId,
-//            $productId,
-//            $combinationId ?: null
-//        ));
-
         $cart = new \Cart($cartId);
         $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
         if (count($giftCartRules) <= 0) {

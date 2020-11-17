@@ -40,8 +40,8 @@ use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForOrderCreationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartDeliveryOption;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
@@ -58,9 +58,9 @@ use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Handles GetCartInformation query using legacy object models
+ * Handles GetCartForOrderCreation query using legacy object models
  */
-final class GetCartInformationHandler extends AbstractCartHandler implements GetCartInformationHandlerInterface
+final class GetCartForOrderCreationHandler extends AbstractCartHandler implements GetCartForOrderCreationHandlerInterface
 {
     /**
      * @var LocaleInterface
@@ -109,7 +109,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     }
 
     /**
-     * @param GetCartInformation $query
+     * @param GetCartForOrderCreation $query
      *
      * @return CartInformation
      *
@@ -117,7 +117,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @throws LocalizationException
      * @throws PrestaShopException
      */
-    public function handle(GetCartInformation $query): CartInformation
+    public function handle(GetCartForOrderCreation $query): CartInformation
     {
         $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
@@ -132,15 +132,14 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         ;
 
         try {
-            $legacySummary = $cart->getSummaryDetails(null, true, $query->splitGifts());
             $addresses = $this->getAddresses($cart);
 
-            if ($query->splitGifts()) {
+            if ($query->separateGiftProducts()) {
+                $legacySummary = $cart->getSummaryDetails($cart->id_lang, true);
                 $products = $this->extractProductsWithGiftSplitFromLegacySummary($cart, $legacySummary, $currency);
-                $cartRules = $this->extractCartRulesWithGiftSplitFromLegacySummary($cart, $legacySummary, $currency);
             } else {
+                $legacySummary = $cart->getRawSummaryDetails($cart->id_lang, true);
                 $products = $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency);
-                $cartRules = $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency);
             }
 
             $result = new CartInformation(
@@ -148,7 +147,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 $products,
                 (int) $currency->id,
                 (int) $language->id,
-                $cartRules,
+                $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency, $query->separateGiftCartRules()),
                 $addresses,
                 $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
                 $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
@@ -217,10 +216,11 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @param Cart $cart
      * @param array $legacySummary
      * @param Currency $currency
+     * @param bool $separateGiftCartRules
      *
      * @return CartInformation\CartRule[]
      */
-    private function extractCartRulesWithGiftSplitFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
+    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency, bool $separateGiftCartRules = false): array
     {
         $cartRules = [];
 
@@ -234,48 +234,26 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             );
         }
 
-        foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
-            $giftRuleId = (int) $giftRule['id_cart_rule'];
-            $finalValue = new Number((string) $giftRule['value_tax_exc']);
+        if ($separateGiftCartRules) {
+            foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
+                $giftRuleId = (int) $giftRule['id_cart_rule'];
+                $finalValue = new Number((string) $giftRule['value_tax_exc']);
 
-            if (isset($cartRules[$giftRuleId])) {
-                // it is possible that one cart rule can have a gift product, but also have other conditions,
-                //so we need to sum their reduction values
-                /** @var CartInformation\CartRule $cartRule */
-                $cartRule = $cartRules[$giftRuleId];
-                $finalValue = $finalValue->plus(new Number($cartRule->getValue()));
+                if (isset($cartRules[$giftRuleId])) {
+                    // it is possible that one cart rule can have a gift product, but also have other conditions,
+                    //so we need to sum their reduction values
+                    /** @var CartInformation\CartRule $cartRule */
+                    $cartRule = $cartRules[$giftRuleId];
+                    $finalValue = $finalValue->plus(new Number($cartRule->getValue()));
+                }
+
+                $cartRules[$giftRuleId] = new CartInformation\CartRule(
+                    (int) $giftRule['id_cart_rule'],
+                    $giftRule['name'],
+                    $giftRule['description'],
+                    $finalValue->round($currency->precision)
+                );
             }
-
-            $cartRules[$giftRuleId] = new CartInformation\CartRule(
-                (int) $giftRule['id_cart_rule'],
-                $giftRule['name'],
-                $giftRule['description'],
-                $finalValue->round($currency->precision)
-            );
-        }
-
-        return $cartRules;
-    }
-
-    /**
-     * @param Cart $cart
-     * @param array $legacySummary
-     * @param Currency $currency
-     *
-     * @return CartInformation\CartRule[]
-     */
-    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
-    {
-        $cartRules = [];
-
-        foreach ($legacySummary['discounts'] as $discount) {
-            $cartRuleId = (int) $discount['id_cart_rule'];
-            $cartRules[$cartRuleId] = new CartInformation\CartRule(
-                (int) $discount['id_cart_rule'],
-                $discount['name'],
-                $discount['description'],
-                (new Number((string) $discount['value_tax_exc']))->round($currency->precision)
-            );
         }
 
         return $cartRules;
