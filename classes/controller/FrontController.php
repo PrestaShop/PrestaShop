@@ -2012,9 +2012,7 @@ class FrontControllerCore extends Controller
 
         if (!empty($url_details['query'])) {
             parse_str($url_details['query'], $query);
-            foreach ($query as $key => $value) {
-                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-            }
+            $params = $this->sanitizeQueryOutput($query);
         }
 
         $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
@@ -2034,6 +2032,27 @@ class FrontControllerCore extends Controller
         $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
 
         return $sanitizedUrl;
+    }
+
+    /**
+     * Recursively sanitize output query
+     *
+     * @param array $query URL query
+     *
+     * @return array
+     */
+    protected function sanitizeQueryOutput(array $query): array
+    {
+        $params = [];
+        foreach ($query as $key => $value) {
+            if (is_array($value)) {
+                $params[Tools::safeOutput($key)] = $this->sanitizeQueryOutput($value);
+            } else {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        return $params;
     }
 
     /**
