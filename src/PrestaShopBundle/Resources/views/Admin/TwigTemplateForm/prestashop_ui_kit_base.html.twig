@@ -751,9 +751,9 @@
       <div {{ block('widget_container_attributes') -}}>
     {%- endif %}
 
-    {% set yearWidget = '<div class="col pl-0">' ~ form_widget(form.year) ~ '</div>'|raw %}
-    {% set monthWidget = '<div class="col">' ~ form_widget(form.month) ~ '</div>'|raw %}
-    {% set dayWidget = '<div class="col pr-0">' ~ form_widget(form.day) ~ '</div>'|raw %}
+    {% set yearWidget = '<div class="col pl-0 birthday-select-container">' ~ form_widget(form.year) ~ '</div>'|raw %}
+    {% set monthWidget = '<div class="col birthday-select-container">' ~ form_widget(form.month) ~ '</div>'|raw %}
+    {% set dayWidget = '<div class="col pr-0 birthday-select-container">' ~ form_widget(form.day) ~ '</div>'|raw %}
 
     {{- date_pattern|replace({
       '{{ year }}': yearWidget,

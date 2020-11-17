@@ -151,3 +151,18 @@ table.table {
     display: initial;
   }
 }
+
+.birthday-select-container {
+  .custom-select.form-control {
+    width: 100%;
+  }
+}
+
+/// Need this in order for material choice table select boxes to be aligned correctly
+.choice-table {
+  .table {
+    .form-check {
+      padding-left: 0;
+    }
+  }
+}
