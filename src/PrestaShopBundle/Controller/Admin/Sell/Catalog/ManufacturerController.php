@@ -300,6 +300,8 @@ class ManufacturerController extends FrameworkBundleAdminController
             $imageTypes = ImageType::getImagesTypes('manufacturers');
             $imageTypeFormat = '%s%s-%s.jpg';
             $imageFormat = '%s%s.jpg';
+            $imgTmpFormat = '%smanufacturer_%s.jpg';
+            $imgMiniTmpFormat = '%smanufacturer_mini_%s.jpg';
             foreach ($imageTypes as $imageType) {
                 $path = sprintf($imageTypeFormat, _PS_MANU_IMG_DIR_, $manufacturerId, stripslashes($imageType['name']));
                 if ($fs->exists($path)) {
@@ -309,6 +311,19 @@ class ManufacturerController extends FrameworkBundleAdminController
             $imagePath = sprintf($imageFormat, _PS_MANU_IMG_DIR_, $manufacturerId);
             if ($fs->exists($imagePath)) {
                 $fs->remove($imagePath);
+            }
+
+            //delete tmp image
+            $imgTmpPath = sprintf($imgTmpFormat, _PS_TMP_IMG_DIR_, $manufacturerId);
+            if ($fs->exists($imgTmpPath)) {
+                $fs->remove($imgTmpPath);
+            }
+
+            //delete tmp image mini
+            $imgMiniTmpPath = sprintf($imgMiniTmpFormat, _PS_TMP_IMG_DIR_, $manufacturerId);
+
+            if ($fs->exists($imgMiniTmpPath)) {
+                $fs->remove($imgMiniTmpPath);
             }
 
             $this->addFlash(

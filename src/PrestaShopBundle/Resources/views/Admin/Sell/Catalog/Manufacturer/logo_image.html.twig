@@ -25,7 +25,7 @@
 <figure class="figure">
   <img src="{{ logoImage.path }}" class="figure-img img-fluid img-thumbnail">
   <figcaption class="figure-caption">
-    <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }}{{ logoImage.size }}</p>
+    <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</p>
     <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
             data-form-submit-url="{{ path('admin_manufacturer_delete_cover_image', {'manufacturerId': app.request.get('manufacturerId')}) }}"
             data-form-csrf-token="{{ csrf_token('delete-cover-thumbnail') }}"

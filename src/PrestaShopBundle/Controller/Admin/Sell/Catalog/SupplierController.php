@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use ImageType;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierExc
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
@@ -53,6 +55,7 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -159,6 +162,70 @@ class SupplierController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
+    }
+
+    /**
+     * Deletes supplier cover image.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_suppliers_edit",
+     *     redirectQueryParamsToKeep={"supplierId"}
+     * )
+     *
+     * @param Request $request
+     * @param int $supplierId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteCoverImageAction(Request $request, $supplierId)
+    {
+        $fs = new Filesystem();
+
+        try {
+            $imageTypes = ImageType::getImagesTypes('suppliers');
+            $imageTypeFormat = '%s%s-%s.jpg';
+            $imageFormat = '%s%s.jpg';
+            $imgTmpFormat = '%ssupplier_%s.jpg';
+            $imgMiniTmpFormat = '%ssupplier_mini_%s.jpg';
+
+            foreach ($imageTypes as $imageType) {
+                $path = sprintf($imageTypeFormat, _PS_SUPP_IMG_DIR_, $supplierId, stripslashes($imageType['name']));
+                if ($fs->exists($path)) {
+                    $fs->remove($path);
+                }
+            }
+
+            //Delete original image
+            $imagePath = sprintf($imageFormat, _PS_SUPP_IMG_DIR_, $supplierId);
+            if ($fs->exists($imagePath)) {
+                $fs->remove($imagePath);
+            }
+
+            //delete tmp image
+            $imgTmpPath = sprintf($imgTmpFormat, _PS_TMP_IMG_DIR_, $supplierId);
+            if ($fs->exists($imgTmpPath)) {
+                $fs->remove($imgTmpPath);
+            }
+
+            //delete tmp image mini
+            $imgMiniTmpPath = sprintf($imgMiniTmpFormat, _PS_TMP_IMG_DIR_, $supplierId);
+            if ($fs->exists($imgMiniTmpPath)) {
+                $fs->remove($imgMiniTmpPath);
+            }
+
+            $this->addFlash(
+                'success',
+                $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (SupplierException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_suppliers_edit', [
+            'supplierId' => $supplierId,
+        ]);
     }
 
     /**
@@ -498,9 +565,12 @@ class SupplierController extends FrameworkBundleAdminController
             ),
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
-                    'Maximum image size: %s.', 'Admin.Global', [
+                    'Maximum image size: %s.',
+                    'Admin.Global',
+                    [
                         $iniConfig->getUploadMaxSizeInBytes(),
-                    ]),
+                    ]
+                ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'

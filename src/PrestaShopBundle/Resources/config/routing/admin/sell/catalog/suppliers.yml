@@ -60,6 +60,18 @@ admin_suppliers_delete:
   requirements:
     supplierId: \d+
 
+admin_suppliers_delete_cover_image:
+  path: /{supplierId}/delete-cover-image
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Supplier:deleteCoverImage'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:deleteImage
+    _legacy_parameters:
+      id_supplier: supplierId
+    requirements:
+      supplierId: \d+
+
 admin_suppliers_bulk_delete:
   path: /bulk-delete
   methods: POST
