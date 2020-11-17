@@ -128,7 +128,7 @@ class CommandHandlerDefinitionParserTest extends TestCase
      * @param string $command
      * @param string $expectedType
      */
-    public function testItProvidesCorrectTypeWhenQueryHandlerIsGiven(string $handler, string $command, string $expectedType): void
+    public function testItProvidesCorrectType(string $handler, string $command, string $expectedType): void
     {
         $definition = $this->parser->parseDefinition($handler, $command);
 
