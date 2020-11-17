@@ -110,7 +110,7 @@ class CartController extends FrameworkBundleAdminController
     public function getInfoAction(int $cartId)
     {
         try {
-            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId, false));
 
             return $this->json($cartInfo);
         } catch (Exception $e) {
@@ -438,12 +438,15 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $newQty = $request->request->getInt('newQty');
+            $combinationId = $request->request->getInt('attributeId');
+
+            $giftedQuantity = $this->getProductGiftedQuantity($cartId, $productId, $combinationId);
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
-                $newQty,
-                $request->request->getInt('attributeId') ?: null,
+                $newQty+$giftedQuantity,
+                $combinationId ?: null,
                 $request->request->getInt('customizationId') ?: null
             ));
 
@@ -502,7 +505,7 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getCartInfo(int $cartId): CartInformation
     {
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        return $this->getQueryBus()->handle(new GetCartInformation($cartId, false));
     }
 
     /**
@@ -619,5 +622,31 @@ class CartController extends FrameworkBundleAdminController
         }
 
         return Response::HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    /**
+     * This method will be removed in the next patch version. We rely on Cart ObjectModel to simplify the code
+     *
+     * @param int $cartId
+     * @param int $productId
+     * @param int|null $combinationId
+     * @return int
+     */
+    private function getProductGiftedQuantity(int $cartId, int $productId, ?int $combinationId): int
+    {
+        $giftedQuantity = 0;
+        $cart = new \Cart($cartId);
+        $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
+        if (count($giftCartRules) > 0) {
+            foreach ($giftCartRules as $giftCartRule) {
+                if (
+                    $productId == $giftCartRule['gift_product'] &&
+                    (null === $combinationId || $combinationId == $giftCartRule['gift_product_attribute'])
+                ) {
+                    ++$giftedQuantity;
+                }
+            }
+        }
+        return $giftedQuantity;
     }
 }

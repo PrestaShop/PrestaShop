@@ -3790,7 +3790,7 @@ class CartCore extends ObjectModel
      *
      * @return array Cart details
      */
-    public function getSummaryDetails($id_lang = null, $refresh = false)
+    public function getSummaryDetails($id_lang = null, $refresh = false, $splitGift = true)
     {
         $context = Context::getContext();
         if (!$id_lang) {
@@ -3865,7 +3865,7 @@ class CartCore extends ObjectModel
                 $total_shipping_tax_exc = 0;
             }
 
-            if ($cart_rule['gift_product']) {
+            if ($splitGift && $cart_rule['gift_product']) {
                 foreach ($products as $key => &$product) {
                     if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
                         // Update total products

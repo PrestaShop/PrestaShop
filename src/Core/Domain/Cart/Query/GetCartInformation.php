@@ -40,13 +40,20 @@ class GetCartInformation
     private $cartId;
 
     /**
+     * @var bool
+     */
+    private $splitGifts;
+
+    /**
      * @param int $cartId
+     * @param bool $splitGifts
      *
      * @throws CartConstraintException
      */
-    public function __construct(int $cartId)
+    public function __construct(int $cartId, bool $splitGifts = false)
     {
         $this->cartId = new CartId($cartId);
+        $this->splitGifts = $splitGifts;
     }
 
     /**
@@ -55,5 +62,13 @@ class GetCartInformation
     public function getCartId(): CartId
     {
         return $this->cartId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function splitGifts(): bool
+    {
+        return $this->splitGifts;
     }
 }
