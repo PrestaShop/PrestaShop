@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Cart;
-use CartRule;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
