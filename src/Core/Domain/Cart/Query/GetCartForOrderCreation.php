@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 /**
  * Query for getting cart information
  */
-class GetCartInformation
+class GetCartForOrderCreation
 {
     /**
      * @var CartId
@@ -42,18 +42,21 @@ class GetCartInformation
     /**
      * @var bool
      */
-    private $splitGifts;
+    private $separateGiftProducts = false;
+
+    /**
+     * @var bool
+     */
+    private $separateGiftCartRules = false;
 
     /**
      * @param int $cartId
-     * @param bool $splitGifts
      *
      * @throws CartConstraintException
      */
-    public function __construct(int $cartId, bool $splitGifts = false)
+    public function __construct(int $cartId)
     {
         $this->cartId = new CartId($cartId);
-        $this->splitGifts = $splitGifts;
     }
 
     /**
@@ -67,8 +70,40 @@ class GetCartInformation
     /**
      * @return bool
      */
-    public function splitGifts(): bool
+    public function separateGiftProducts(): bool
     {
-        return $this->splitGifts;
+        return $this->separateGiftProducts;
+    }
+
+    /**
+     * @param bool $separateGiftProducts
+     *
+     * @return GetCartForOrderCreation
+     */
+    public function setSeparateGiftProducts(bool $separateGiftProducts): GetCartForOrderCreation
+    {
+        $this->separateGiftProducts = $separateGiftProducts;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function separateGiftCartRules(): bool
+    {
+        return $this->separateGiftCartRules;
+    }
+
+    /**
+     * @param bool $separateGiftCartRules
+     *
+     * @return GetCartForOrderCreation
+     */
+    public function setSeparateGiftCartRules(bool $separateGiftCartRules): GetCartForOrderCreation
+    {
+        $this->separateGiftCartRules = $separateGiftCartRules;
+
+        return $this;
     }
 }
