@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityInCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
@@ -132,7 +133,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
                 Attribute::getAttributeMinimalQty($combinationIdValue) :
                 $product->minimal_quantity;
 
-            throw new CartException(sprintf('Minimum quantity of %d must be added to cart.', $minQuantity));
+            throw new MinimalQuantityException('Minimum quantity of %d must be added to cart.', $minQuantity);
         }
     }
 

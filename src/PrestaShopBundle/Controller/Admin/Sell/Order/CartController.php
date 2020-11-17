@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
@@ -368,7 +369,7 @@ class CartController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                $this->getErrorCode($e)
             );
         }
     }
@@ -535,6 +536,7 @@ class CartController extends FrameworkBundleAdminController
     private function getErrorMessages(Exception $e)
     {
         $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+        $minimalQuantity = $e instanceof MinimalQuantityException ? $e->getMinimalQuantity() : 0;
 
         return [
             CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
@@ -594,6 +596,28 @@ class CartController extends FrameworkBundleAdminController
                 'Gift message not valid',
                 'Admin.Notifications.Error'
             ),
+            MinimalQuantityException::class => $this->trans(
+                'You must add a minimum quantity of %d',
+                'Admin.Orderscustomers.Notification',
+                [
+                    $minimalQuantity,
+                ]
+            ),
         ];
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return int
+     */
+    private function getErrorCode(Exception $e): int
+    {
+        switch (get_class($e)) {
+            case ProductOutOfStockException::class:
+                return Response::HTTP_CONFLICT;
+        }
+
+        return Response::HTTP_INTERNAL_SERVER_ERROR;
     }
 }

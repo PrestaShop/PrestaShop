@@ -263,6 +263,19 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^the product "(.+)" minimal quantity is (\d+)$/
+     *
+     * @param string $productName
+     * @param int $minimalQty
+     */
+    public function setProductMinimalQuantity(string $productName, int $minimalQty)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->minimal_quantity = $minimalQty;
+        $this->products[$productName]->save();
+    }
+
+    /**
      * @Given /^product "(.+)" can be ordered out of stock$/
      *
      * @param string $productName
