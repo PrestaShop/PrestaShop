@@ -30,12 +30,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
-use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
 {
-    use StringToBooleanTransform;
-
     /**
      * @When /^I (enable|disable) product "(.*)"$/
      *

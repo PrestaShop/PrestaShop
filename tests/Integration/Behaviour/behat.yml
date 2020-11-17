@@ -21,6 +21,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         category:
             paths:
                 - %paths.base%/Features/Scenario/Category
@@ -55,6 +56,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         order:
             paths:
                 - %paths.base%/Features/Scenario/Order
@@ -89,6 +92,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         currency:
             paths:
                 - %paths.base%/Features/Scenario/Currency
@@ -144,6 +149,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         meta:
             paths:
                 - %paths.base%/Features/Scenario/Meta
@@ -154,6 +161,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\MetaFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\MetaFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         feature:
             paths:
                 - %paths.base%/Features/Scenario/Feature
@@ -234,3 +242,4 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\RelatedProductsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DuplicateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext

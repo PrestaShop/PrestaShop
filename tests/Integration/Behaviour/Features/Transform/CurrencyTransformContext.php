@@ -32,6 +32,9 @@ use Configuration;
 use Currency;
 use InvalidArgumentException;
 
+/**
+ * Currency related transformations
+ */
 class CurrencyTransformContext
 {
     /**

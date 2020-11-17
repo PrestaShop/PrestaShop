@@ -28,13 +28,10 @@ namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Configuration;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
-use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 use Tools;
 
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
-    use StringToBooleanTransform;
-
     /**
      * @Given /^shop configuration for "(.+)" is set to (.+)$/
      */
