@@ -14,10 +14,12 @@ class Email extends BOBasePage {
     this.emailGridPanel = '#email_logs_grid_panel';
     this.emailGridTitle = `${this.emailGridPanel} h3.card-header-title`;
     this.emailsListForm = '#email_logs_grid_table';
+
     // Filters
     this.emailFilterColumnInput = filterBy => `#email_logs_${filterBy}`;
     this.filterSearchButton = `${this.emailsListForm} .grid-search-button`;
     this.filterResetButton = `${this.emailsListForm} .grid-reset-button`;
+
     // Table rows and columns
     this.tableBody = `${this.emailsListForm} tbody`;
     this.tableRows = `${this.tableBody} tr`;
@@ -26,18 +28,27 @@ class Email extends BOBasePage {
     this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a.grid-delete-row-link`;
     this.confirmDeleteModal = '#email_logs-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+
     // Bulk Actions
     this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_selection';
+
     // Email form
     this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
     this.saveEmailFormButton = '#form-log-email-save-button';
+
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
     this.sendTestEmailInput = '#test_email_sending_send_email_to';
     this.sendTestEmailButton = `${this.sendTestEmailForm} button.js-send-test-email-btn`;
     this.sendTestEmailAlertParagraph = `${this.sendTestEmailForm} .alert-success p.alert-text`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.emailGridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.emailGridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.emailGridPanel} [aria-label='Previous']`;
   }
 
   /*
@@ -207,6 +218,52 @@ class Email extends BOBasePage {
    */
   async isLogEmailsTableVisible(page) {
     return this.elementVisible(page, this.emailGridPanel, 1000);
+  }
+
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 

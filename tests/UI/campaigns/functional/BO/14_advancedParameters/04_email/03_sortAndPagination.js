@@ -63,8 +63,8 @@ describe('Sort and pagination emails', async () => {
     await expect(isHomePage, 'Fail to open FO home page').to.be.true;
   });
 
-  // 1 - Create 11 orders to have 22 emails in the list
-  const tests = new Array(11).fill(0, 0, 11);
+  // 1 - Create 6 orders to have 12 emails in the list
+  const tests = new Array(6).fill(0, 0, 6);
 
   tests.forEach((test, index) => {
     describe(`Create order n°${index + 1} to have email logs`, async () => {
@@ -127,8 +127,8 @@ describe('Sort and pagination emails', async () => {
     });
   });
 
-  // 4 - Delete all emails
-  describe('Delete emails by bulk action', async () => {
+  // 2 : Pagination
+  describe('Pagination next and previous', async () => {
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
@@ -140,10 +140,43 @@ describe('Sort and pagination emails', async () => {
         dashboardPage.emailLink,
       );
 
+      await dashboardPage.closeSfToolBar(page);
+
       const pageTitle = await emailPage.getPageTitle(page);
       await expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await emailPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await emailPage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await emailPage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await emailPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 4 - Delete all emails
+  describe('Delete emails by bulk action', async () => {
     it('should delete all emails', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
