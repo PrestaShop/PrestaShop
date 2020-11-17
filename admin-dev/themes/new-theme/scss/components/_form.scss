@@ -25,7 +25,6 @@
  */
 
 .form-horizontal {
-
   .card-block {
     justify-content: center;
     padding: 1.875rem $card-spacer-x;
@@ -78,4 +77,14 @@
 
 .invalid-feedback-container {
   padding-top: 8px;
+}
+
+.modal {
+  > form {
+    display: initial;
+
+    .modal-dialog {
+      top: 45%;
+    }
+  }
 }
