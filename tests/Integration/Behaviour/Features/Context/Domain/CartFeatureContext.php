@@ -844,7 +844,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $cartId = $this->getSharedStorage()->get($cartReference);
 
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        return $this->getQueryBus()->handle(new GetCartInformation($cartId, true));
     }
 
     /**

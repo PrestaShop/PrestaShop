@@ -268,32 +268,3 @@ Feature: Check cart to order data copy
     Then current cart order shipping fees should be 7.0 tax excluded
     Then current cart order should have a discount in position 1 with an amount of 36.989680 tax included and 35.567000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
-
-  Scenario: 1 product in cart, 1 cart rule offering free gift, change the product quantity
-    Given I am logged in as "test@prestashop.com" employee
-    Given there is customer "customer1" with email "pub@prestashop.com"
-    Given I create an empty cart "dummy_custom_cart" for customer "customer1"
-    Given email sending is disabled
-    Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
-    Given there is a cart rule named "cartrule13" that applies no discount with priority 13, quantity of 1000 and quantity per user 1000
-    Given cart rule "cartrule13" has a discount code "foo13"
-    Given cart rule "cartrule13" offers a gift product "product4"
-    When I add 1 products "product1" to the cart "dummy_custom_cart"
-    Then product "product1" quantity in cart "dummy_custom_cart" should be 1 excluding gift products
-    Then cart "dummy_custom_cart" should contain 1 products
-    When I use the discount "cartrule13"
-    Then gifted product "product4" quantity in cart "dummy_custom_cart" should be 1
-    Then cart "dummy_custom_cart" should contain 2 products
-    When I update quantity of product "product1" in the cart "dummy_custom_cart" to 2
-    Then product "product1" quantity in cart "dummy_custom_cart" should be 2 excluding gift products
-    When I add 1 products "product1" to the cart "dummy_custom_cart"
-    Then product "product1" quantity in cart "dummy_custom_cart" should be 3 excluding gift products
-    Then cart "dummy_custom_cart" should contain 2 products
-    When I add 1 products "product4" to the cart "dummy_custom_cart"
-    Then product "product4" quantity in cart "dummy_custom_cart" should be 1 excluding gift products
-    When I update quantity of product "product4" in the cart "dummy_custom_cart" to 3
-    Then product "product4" quantity in cart "dummy_custom_cart" should be 3 excluding gift products
-    Then cart "dummy_custom_cart" should contain 3 products
-    Then cart "dummy_custom_cart" should contain 2 products excluding gifts
