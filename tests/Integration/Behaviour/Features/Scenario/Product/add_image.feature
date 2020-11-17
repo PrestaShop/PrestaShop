@@ -7,7 +7,14 @@ Feature: Add product image from Back Office (BO)
   As an employee I need to be able to add new product image
 
   Scenario: Add new product image
-    Given I add product "product1" with following information:
+    Given following image types should be applicable to products:
+      | reference     | name           | width | height |
+      | cartDefault   | cart_default   | 125   | 125    |
+      | homeDefault   | home_default   | 250   | 250    |
+      | largeDefault  | large_default  | 800   | 800    |
+      | mediumDefault | medium_default | 452   | 452    |
+      | smallDefault  | small_default  | 98    | 98     |
+    And I add product "product1" with following information:
       | name       | en-US:bottle of beer |
       | is_virtual | false                |
     And product "product1" type should be standard
@@ -21,5 +28,10 @@ Feature: Add product image from Back Office (BO)
       | image reference | is cover | legend | position |
       | image1          | true     | en-US: | 1        |
       | image2          | false    | en-US: | 2        |
-
-#todo: assert image types (which is not present in dummy database), assert combination & pack images
+    And images "[image1, image2]" should have following types generated:
+      | name           | width | height |
+      | cart_default   | 125   | 125    |
+      | home_default   | 250   | 250    |
+      | large_default  | 800   | 800    |
+      | medium_default | 452   | 452    |
+      | small_default  | 98    | 98     |

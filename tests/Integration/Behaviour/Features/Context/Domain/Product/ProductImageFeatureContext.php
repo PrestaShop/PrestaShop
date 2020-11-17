@@ -30,15 +30,29 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Behaviour\Features\Transform\StringArrayTransform;
 use Tests\Resources\DummyFileUploader;
 
 class ProductImageFeatureContext extends AbstractProductFeatureContext
 {
+    use StringArrayTransform;
+
+    /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    public function __construct()
+    {
+        $this->productImageRepository = $this->getContainer()->get('prestashop.adapter.product.repository.product_image_repository');
+    }
+
     /**
      * @When I add new product :productReference image :imageReference named :fileName
      *
@@ -57,6 +71,61 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($imageReference, $imageId->getValue());
+    }
+
+    /**
+     * @Given following image types should be applicable to products:
+     */
+    public function assertProductsImageTypesExists(TableNode $tableNode)
+    {
+        $dataRows = $tableNode->getColumnsHash();
+        $imageTypes = $this->productImageRepository->getProductImageTypes();
+
+        Assert::assertEquals(
+            count($dataRows),
+            count($imageTypes),
+            'Expected and actual image types count does not match'
+        );
+
+        foreach ($dataRows as $key => $expectedType) {
+            $actualType = $imageTypes[$key];
+            Assert::assertEquals($expectedType['name'], $actualType->name, 'Unexpected image type name');
+            Assert::assertEquals($expectedType['width'], $actualType->width, 'Unexpected image type width');
+            Assert::assertEquals($expectedType['height'], $actualType->width, 'Unexpected image type height');
+
+            $this->getSharedStorage()->set($expectedType['reference'], (int) $actualType->id);
+        }
+    }
+
+    /**
+     * @Given /^images "\[.*?\]" should have following types generated:$/
+     *
+     * @Transform("\[.*?\]")
+     *
+     * @param string[] $imageReferences
+     * @param TableNode $tableNode
+     */
+    public function assertProductImageTypesGenerated(array $imageReferences, TableNode $tableNode)
+    {
+        $dataRows = $tableNode->getColumnsHash();
+
+        foreach ($imageReferences as $imageReference) {
+            $imageId = $this->getSharedStorage()->get($imageReference);
+            foreach ($dataRows as $dataRow) {
+                $imgPath = $this->parseGeneratedImagePath($imageId, $dataRow['name']);
+                if (file_exists($imgPath)) {
+                    //@todo: assert file dimensions
+                }
+            }
+        }
+    }
+
+    private function parseGeneratedImagePath(int $imageId, string $imageTypeName): string
+    {
+        $directories = str_split((string) $imageId);
+        $path = implode('/', $directories);
+
+        return _PS_IMG_DIR_ . $path . '/' . $imageId . '-' . $imageTypeName . '.jpg';
     }
 
     /**
