@@ -82,15 +82,17 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             unset($dataRows['redirect_type']);
         }
 
-        if (isset($dataRows['redirect_target'])) {
-            $targetId = $this->getSharedStorage()->get($dataRows['redirect_target']);
-            Assert::assertEquals(
-                $targetId,
-                $productSeoOptions->getRedirectTargetId(),
-                'Unexpected redirect target'
-            );
-            unset($dataRows['redirect_target']);
-        }
+        $expectedRedirectTarget = isset($dataRows['redirect_target']) ?
+            $this->getSharedStorage()->get($dataRows['redirect_target']) :
+            RedirectTarget::NO_TARGET
+        ;
+
+        Assert::assertEquals(
+            $expectedRedirectTarget,
+            $productSeoOptions->getRedirectTargetId(),
+            'Unexpected redirect target'
+        );
+        unset($dataRows['redirect_target']);
     }
 
     /**
@@ -143,20 +145,6 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             $productForEditing->getProductSeoOptions()->getRedirectTargetId(),
             'Product "%s" expected to have no redirect target'
         );
-    }
-
-    /**
-     * @Then product :productReference redirect target should be :targetReference
-     *
-     * @param string $productReference
-     * @param string $targetReference
-     */
-    public function assertRedirectTarget(string $productReference, string $targetReference)
-    {
-        $productSeo = $this->getProductForEditing($productReference)->getProductSeoOptions();
-        $targetId = $this->getSharedStorage()->get($targetReference);
-
-        Assert::assertEquals($targetId, $productSeo->getRedirectTargetId(), 'Unexpected product redirect target');
     }
 
     /**

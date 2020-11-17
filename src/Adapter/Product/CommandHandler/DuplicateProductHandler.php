@@ -24,37 +24,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\String;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DuplicateProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * This class defines reusable methods for strings modifications.
+ * Handles @see DuplicateProductCommand
  */
-final class StringModifier implements StringModifierInterface
+final class DuplicateProductHandler implements DuplicateProductHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @var ProductDuplicator
      */
-    public function splitByCamelCase($string)
-    {
-        $regex = '/(?)(?<=[a-z])(?=[A-Z]) | (?<=[A-Z])(?=[A-Z][a-z])/x';
+    private $productDuplicator;
 
-        $splitString = preg_split($regex, $string);
-
-        return implode(' ', $splitString);
+    /**
+     * @param ProductDuplicator $productDuplicator
+     */
+    public function __construct(
+        ProductDuplicator $productDuplicator
+    ) {
+        $this->productDuplicator = $productDuplicator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function cutEnd(string $string, int $expectedLength): string
+    public function handle(DuplicateProductCommand $command): ProductId
     {
-        $length = strlen($string);
-
-        if ($length > $expectedLength) {
-            // cut symbols difference from the end of the string
-            $string = substr($string, 0, $expectedLength - $length);
-        }
-
-        return $string;
+        return $this->productDuplicator->duplicate($command->getProductId());
     }
 }

@@ -90,6 +90,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             return;
         }
 
+        $htmlEncodedProperties = ['description', 'description_short'];
+
         foreach ($expectedLocalizedValues as $langId => $expectedValue) {
             $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
             $langIso = Language::getIsoById($langId);
@@ -102,7 +104,10 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
                 ));
             }
 
-            $actualValue = $actualValues[$langId];
+            $actualValue = in_array($fieldName, $htmlEncodedProperties) ?
+                html_entity_decode($actualValues[$langId]) :
+                $actualValues[$langId]
+            ;
 
             if ($expectedValue !== $actualValue) {
                 throw new RuntimeException(

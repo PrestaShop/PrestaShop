@@ -24,37 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\String;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
- * This class defines reusable methods for strings modifications.
+ * Defines settings for product
  */
-final class StringModifier implements StringModifierInterface
+class ProductSettings
 {
     /**
-     * {@inheritdoc}
+     * Maximum length of product name
      */
-    public function splitByCamelCase($string)
-    {
-        $regex = '/(?)(?<=[a-z])(?=[A-Z]) | (?<=[A-Z])(?=[A-Z][a-z])/x';
-
-        $splitString = preg_split($regex, $string);
-
-        return implode(' ', $splitString);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function cutEnd(string $string, int $expectedLength): string
-    {
-        $length = strlen($string);
-
-        if ($length > $expectedLength) {
-            // cut symbols difference from the end of the string
-            $string = substr($string, 0, $expectedLength - $length);
-        }
-
-        return $string;
-    }
+    const MAX_NAME_LENGTH = 128;
 }

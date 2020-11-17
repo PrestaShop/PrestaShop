@@ -29,15 +29,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 use Product;
@@ -83,6 +88,57 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
         $this->defaultCategoryId = $defaultCategoryId;
+    }
+
+    /**
+     * Duplicates product entity without relations
+     *
+     * @param Product $product
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     * @throws CannotDuplicateProductException
+     * @throws ProductConstraintException
+     * @throws ProductException
+     */
+    public function duplicate(Product $product): Product
+    {
+        unset($product->id, $product->id_product);
+
+        $this->productValidator->validateCreation($product);
+        $this->productValidator->validate($product);
+        $this->addObjectModel($product, CannotDuplicateProductException::class);
+
+        return $product;
+    }
+
+    /**
+     * Gets product price by provided shop
+     *
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return DecimalNumber|null
+     */
+    public function getPriceByShop(ProductId $productId, ShopId $shopId): ?DecimalNumber
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('price')
+            ->from($this->dbPrefix . 'product_shop')
+            ->where('id_product = :productId')
+            ->andWhere('id_shop = :shopId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new DecimalNumber($result['price']);
     }
 
     /**

@@ -32,6 +32,7 @@ define('_CUSTOMIZE_TEXTFIELD_', 1);
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
@@ -493,7 +494,7 @@ class ProductCore extends ObjectModel
                     'modifier' => 'modifierWsLinkRewrite',
                 ],
             ],
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => 128],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => ProductSettings::MAX_NAME_LENGTH],
             'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
             'description_short' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
             'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
@@ -5282,6 +5283,59 @@ class ProductCore extends ObjectModel
             unset($row['id_product_supplier']);
             $row['id_product'] = $id_product_new;
             if (!Db::getInstance()->insert('product_supplier', $row)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds carriers from old product onto a newly duplicated product.
+     *
+     * @param int $oldProductId Old Product identifier
+     * @param int $newProductId New Product identifier
+     *
+     * @return bool
+     */
+    public static function duplicateCarriers(int $oldProductId, int $newProductId): bool
+    {
+        //@todo: this will copy carriers from all shops. todo - Handle multishop according context & specifications.
+        $oldProductCarriers = Db::getInstance()->executeS('
+            SELECT *
+            FROM `' . _DB_PREFIX_ . 'product_carrier`
+            WHERE `id_product` = ' . (int) $oldProductId
+        );
+
+        foreach ($oldProductCarriers as $row) {
+            $row['id_product'] = $newProductId;
+            if (!Db::getInstance()->insert('product_carrier', $row)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Associates attachments from old product onto a newly duplicated product.
+     *
+     * @param int $oldProductId Old Product identifier
+     * @param int $newProductId New Product identifier
+     *
+     * @return bool
+     */
+    public static function duplicateAttachmentAssociation(int $oldProductId, int $newProductId): bool
+    {
+        $oldProductAttachments = Db::getInstance()->executeS('
+            SELECT *
+            FROM `' . _DB_PREFIX_ . 'product_attachment`
+            WHERE `id_product` = ' . (int) $oldProductId
+        );
+
+        foreach ($oldProductAttachments as $row) {
+            $row['id_product'] = $newProductId;
+            if (!Db::getInstance()->insert('product_attachment', $row)) {
                 return false;
             }
         }
