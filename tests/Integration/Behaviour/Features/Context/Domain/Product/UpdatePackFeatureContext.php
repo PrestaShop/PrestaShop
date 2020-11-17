@@ -47,7 +47,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
      * @param string $packReference
      * @param TableNode $table
      */
-    public function updateProductPack(string $packReference, TableNode $table)
+    public function updateProductPack(string $packReference, TableNode $table): void
     {
         $data = $table->getColumnsHash();
 
@@ -73,7 +73,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $packReference
      */
-    public function removeAllProductsFromPack(string $packReference)
+    public function removeAllProductsFromPack(string $packReference): void
     {
         $packId = $this->getSharedStorage()->get($packReference);
 
@@ -90,7 +90,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
      * @param string $packReference
      * @param TableNode $table
      */
-    public function assertPackContents(string $packReference, TableNode $table)
+    public function assertPackContents(string $packReference, TableNode $table): void
     {
         $data = $table->getColumnsHash();
         $packId = $this->getSharedStorage()->get($packReference);

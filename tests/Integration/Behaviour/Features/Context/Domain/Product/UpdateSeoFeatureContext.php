@@ -44,7 +44,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function updateSeo(string $productReference, TableNode $tableNode)
+    public function updateSeo(string $productReference, TableNode $tableNode): void
     {
         $dataRows = $tableNode->getRowsHash();
         $productId = $this->getSharedStorage()->get($productReference);

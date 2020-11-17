@@ -73,7 +73,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductHasNoCarriers(string $productReference)
+    public function assertProductHasNoCarriers(string $productReference): void
     {
         $productForEditing = $this->getProductForEditing($productReference);
 
@@ -120,7 +120,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      * @param array $expectedValues
      * @param ProductShippingInformation $actualValues
      */
-    private function assertNumberShippingFields(array &$expectedValues, ProductShippingInformation $actualValues)
+    private function assertNumberShippingFields(array &$expectedValues, ProductShippingInformation $actualValues): void
     {
         $numberShippingFields = [
             'width',
@@ -152,7 +152,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      * @param array $data
      * @param ProductShippingInformation $productShippingInformation
      */
-    private function assertDeliveryTimeNotes(array &$data, ProductShippingInformation $productShippingInformation)
+    private function assertDeliveryTimeNotes(array &$data, ProductShippingInformation $productShippingInformation): void
     {
         $notesTypeNamedValues = [
             'none' => DeliveryTimeNotesType::TYPE_NONE,

@@ -45,7 +45,7 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateProductTags(string $productReference, TableNode $table)
+    public function updateProductTags(string $productReference, TableNode $table): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
         $data = $table->getRowsHash();

@@ -30,13 +30,14 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When /^I (enable|disable) product "(.*)"$/
      *
-     * @Transform(enable|disable)
+     * status transformation handled by @see StringToBoolTransformContext
      *
      * @param bool $status
      * @param string $productReference
@@ -52,7 +53,7 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     /**
      * @Then /^product "(.*)" should be (enabled|disabled)$/
      *
-     * @Transform(enabled|disabled)
+     * status transformation handled by @see StringToBoolTransformContext
      *
      * @param string $productReference
      * @param bool $expectedStatus
