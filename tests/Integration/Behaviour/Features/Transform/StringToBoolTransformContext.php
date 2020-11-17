@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Transform;
 
+use Behat\Behat\Context\Context;
+
 /**
  * Contains string to boolean transformations
  */
-class StringToBoolTransformContext
+class StringToBoolTransformContext implements Context
 {
     /**
      * @Transform /^(enabled|enable|included|should|includes)$/

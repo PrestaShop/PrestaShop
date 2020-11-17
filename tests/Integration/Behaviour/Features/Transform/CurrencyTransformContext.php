@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Transform;
 
+use Behat\Behat\Context\Context;
 use Configuration;
 use Currency;
 use InvalidArgumentException;
@@ -35,7 +36,7 @@ use InvalidArgumentException;
 /**
  * Currency related transformations
  */
-class CurrencyTransformContext
+class CurrencyTransformContext implements Context
 {
     /**
      * Transforms currency iso code to instance
