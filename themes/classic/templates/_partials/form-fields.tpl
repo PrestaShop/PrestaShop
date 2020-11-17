@@ -41,7 +41,15 @@
       {if $field.type === 'select'}
 
         {block name='form_field_item_select'}
-          <select class="form-control form-control-select" name="{$field.name}" {if $field.required}required{/if}>
+          <select 
+            {if empty($field.attributes)} 
+                class="form-control form-control-select" name="{$field.name}" {if $field.required}required{/if} 
+            {else}
+                {foreach from=$field.attributes item="value" key="attribute"}
+                    {$attribute} = {$value} 
+                {/foreach}
+            {/if}
+           >
             <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
             {foreach from=$field.availableValues item="label" key="value"}
               <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
@@ -53,9 +61,13 @@
 
         {block name='form_field_item_country'}
           <select
-          class="form-control form-control-select js-country"
-          name="{$field.name}"
-          {if $field.required}required{/if}
+            {if empty($field.attributes)} 
+                class="form-control form-control-select js-country" name="{$field.name}" {if $field.required}required{/if}
+            {else}
+                {foreach from=$field.attributes item="value" key="attribute"}
+                    {$attribute} = "{$value}"   
+                {/foreach}
+            {/if}
           >
             <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
             {foreach from=$field.availableValues item="label" key="value"}
@@ -71,11 +83,17 @@
             <label class="radio-inline">
               <span class="custom-radio">
                 <input
-                  name="{$field.name}"
-                  type="radio"
-                  value="{$value}"
-                  {if $field.required}required{/if}
-                  {if $value eq $field.value} checked {/if}
+                    {if empty($field.attributes)} 
+                      name="{$field.name}"
+                      type="radio"
+                      value="{$value}"
+                      {if $field.required}required{/if}
+                      {if $value eq $field.value} checked {/if}
+                    {else}
+                        {foreach from=$field.attributes item="value" key="attribute"}
+                            {$attribute} = "{$value}"   
+                        {/foreach}
+                    {/if}
                 >
                 <span></span>
               </span>
@@ -89,7 +107,15 @@
         {block name='form_field_item_checkbox'}
           <span class="custom-checkbox">
             <label>
-              <input name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
+              <input
+                {if empty($field.attributes)}
+                    name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}
+                {else}
+                    {foreach from=$field.attributes item="value" key="attribute"}
+                        {$attribute} = "{$value}"   
+                    {/foreach}
+                {/if}
+              >
               <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
               {$field.label nofilter}
             </label>
@@ -99,7 +125,14 @@
       {elseif $field.type === 'date'}
 
         {block name='form_field_item_date'}
-          <input name="{$field.name}" class="form-control" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+          <input 
+            {if empty($field.attributes)}
+                name="{$field.name}" class="form-control" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+            {else}
+                {foreach from=$field.attributes item="value" key="attribute"}
+                    {$attribute} = "{$value}"   
+                {/foreach}
+            {/if}
           {if isset($field.availableValues.comment)}
             <span class="form-control-comment">
               {$field.availableValues.comment}
@@ -134,13 +167,19 @@
         {block name='form_field_item_password'}
           <div class="input-group js-parent-focus">
             <input
-              class="form-control js-child-focus js-visible-password"
-              name="{$field.name}"
-              title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
-              type="password"
-              value=""
-              pattern=".{literal}{{/literal}5,{literal}}{/literal}"
-              {if $field.required}required{/if}
+                {if empty($field.attributes)}
+                      class="form-control js-child-focus js-visible-password"
+                      name="{$field.name}"
+                      title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
+                      type="password"
+                      value=""
+                      pattern=".{literal}{{/literal}5,{literal}}{/literal}"
+                      {if $field.required}required{/if}
+                {else}
+                    {foreach from=$field.attributes item="value" key="attribute"}
+                        {$attribute} = "{$value}"   
+                    {/foreach}
+                {/if}
             >
             <span class="input-group-btn">
               <button
@@ -160,13 +199,19 @@
 
         {block name='form_field_item_other'}
           <input
-            class="form-control"
-            name="{$field.name}"
-            type="{$field.type}"
-            value="{$field.value}"
-            {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
-            {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
-            {if $field.required}required{/if}
+            {if empty($field.attributes)}
+                class="form-control"
+                name="{$field.name}"
+                type="{$field.type}"
+                value="{$field.value}"
+                {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
+                {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
+                {if $field.required}required{/if}
+            {else}
+                {foreach from=$field.attributes item="value" key="attribute"} 
+                    {$attribute} = "{$value}"   
+                {/foreach}
+            {/if}
           >
           {if isset($field.availableValues.comment)}
             <span class="form-control-comment">
