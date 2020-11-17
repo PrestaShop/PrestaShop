@@ -136,6 +136,7 @@
         "friendsofphp/php-cs-fixer": "^2.16.1",
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
+        "mockery/mockery": "^1.3",
         "phake/phake": "@stable",
         "phpstan/phpstan": "^0.12.48",
         "phpunit/phpunit": "~7.5.18",

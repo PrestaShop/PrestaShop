@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
  *
  * @internal
  */
-final class SetInternalOrderNoteHandler extends AbstractOrderHandler implements SetInternalOrderNoteHandlerInterface
+class SetInternalOrderNoteHandler extends AbstractOrderHandler implements SetInternalOrderNoteHandlerInterface
 {
     /**
      * @param SetInternalOrderNoteCommand $command
