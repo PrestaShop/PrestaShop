@@ -63,30 +63,30 @@ describe('Sort and pagination emails', async () => {
     await expect(isHomePage, 'Fail to open FO home page').to.be.true;
   });
 
-  // 1 - Create 6 orders to have 12 emails in the list
-  const tests = new Array(6).fill(0, 0, 6);
+  describe('Create 6 order to have email logs', async () => {
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
 
-  tests.forEach((test, index) => {
-    describe(`Create order n°${index + 1} to have email logs`, async () => {
-      it('should go to login page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
+      await homePage.goToLoginPage(page);
 
-        await homePage.goToLoginPage(page);
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
 
-        const pageTitle = await foLoginPage.getPageTitle(page);
-        await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-      });
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      it('should sign in with default customer', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await foLoginPage.customerLogin(page, DefaultAccount);
 
-        await foLoginPage.customerLogin(page, DefaultAccount);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
 
-        const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-        await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-      });
+    // 1 - Create 6 orders to have 12 emails in the list
+    const tests = new Array(6).fill(0, 0, 6);
 
-      it('should create an order', async function () {
+    tests.forEach((test, index) => {
+      it(`should create the order n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
         // Go to home page
@@ -116,14 +116,14 @@ describe('Sort and pagination emails', async () => {
         const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
         await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
+    });
 
-      it('should sign out from FO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
+    it('should sign out from FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
 
-        await orderConfirmationPage.logout(page);
-        const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-        await expect(isCustomerConnected, 'Customer is connected').to.be.false;
-      });
+      await orderConfirmationPage.logout(page);
+      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
   });
 
