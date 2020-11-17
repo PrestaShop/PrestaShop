@@ -36,13 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
-use Tests\Integration\Behaviour\Features\Transform\StringArrayTransform;
 use Tests\Resources\DummyFileUploader;
 
 class ProductImageFeatureContext extends AbstractProductFeatureContext
 {
-    use StringArrayTransform;
-
     /**
      * @var ProductImageRepository
      */
