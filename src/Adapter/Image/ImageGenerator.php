@@ -65,7 +65,7 @@ class ImageGenerator
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 
-        return $resized;
+        return (bool) $resized;
     }
 
     /**

@@ -46,3 +46,4 @@ services:
             - "@prestashop.adapter.image.image_generator"
             - "@prestashop.core.hook.dispatcher"
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
+            - '@prestashop.adapter.product.repository.product_image_repository'
