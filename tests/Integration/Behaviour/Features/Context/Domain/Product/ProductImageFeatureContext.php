@@ -98,9 +98,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Given /^images "\[.*?\]" should have following types generated:$/
-     *
-     * @Transform("\[.*?\]")
+     * @Given images :imageReferences should have following types generated:
      *
      * @param string[] $imageReferences
      * @param TableNode $tableNode
@@ -113,13 +111,22 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $imageId = $this->getSharedStorage()->get($imageReference);
             foreach ($dataRows as $dataRow) {
                 $imgPath = $this->parseGeneratedImagePath($imageId, $dataRow['name']);
-                if (file_exists($imgPath)) {
-                    //@todo: assert file dimensions
+                if (!file_exists($imgPath)) {
+                    throw new RuntimeException(sprintf('File "%s" does not exist', $imgPath));
                 }
+
+                $info = getimagesize($imgPath);
+                dump($info);
             }
         }
     }
 
+    /**
+     * @param int $imageId
+     * @param string $imageTypeName
+     *
+     * @return string
+     */
     private function parseGeneratedImagePath(int $imageId, string $imageTypeName): string
     {
         $directories = str_split((string) $imageId);

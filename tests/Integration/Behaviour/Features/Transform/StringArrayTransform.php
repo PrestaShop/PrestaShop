@@ -36,7 +36,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 trait StringArrayTransform
 {
     /**
-     * @Transform /"\[.*?\]"$/
+     * @Transform /^\[.*?\]$/
      *
      * @param string $string
      *
