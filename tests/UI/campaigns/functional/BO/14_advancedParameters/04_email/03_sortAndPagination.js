@@ -86,7 +86,7 @@ describe('Sort and pagination emails', async () => {
 
     tests.forEach((test, index) => {
       it(`should create the order n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
 
         // Go to home page
         await foLoginPage.goToHomePage(page);
