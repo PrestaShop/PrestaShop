@@ -74,7 +74,7 @@ describe('Sort and pagination emails', async () => {
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultAccount);
 
