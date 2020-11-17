@@ -1127,26 +1127,6 @@ class ProductCore extends ObjectModel
     /**
      * {@inheritdoc}
      */
-    public function toggleStatus()
-    {
-        //test if the product is active and if redirect_type is empty string and set default value to id_type_redirected & redirect_type
-        //  /!\ after parent::toggleStatus() active will be false, that why we set 404 by default :p
-        if ($this->active) {
-            //case where active will be false after parent::toggleStatus()
-            $this->id_type_redirected = 0;
-            $this->redirect_type = ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY;
-        } else {
-            //case where active will be true after parent::toggleStatus()
-            $this->id_type_redirected = 0;
-            $this->redirect_type = '';
-        }
-
-        return parent::toggleStatus();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function delete()
     {
         /*
