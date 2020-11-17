@@ -28,12 +28,11 @@ const baseContext = 'functional_BO_advancedParameters_email_sortAndPagination';
 let browserContext;
 let page;
 
-let numberOfEmails = 0;
-
 /*
-Create 10 orders to have 20 emails
+Create 6 orders to have 12 emails
 Pagination
 Sort by Id, Recipient, Template, Language, Subject, Send
+Delete by bulk actions
  */
 describe('Sort and pagination emails', async () => {
   // before and after functions
@@ -50,20 +49,21 @@ describe('Sort and pagination emails', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to FO page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+  // 1 - Create 6 orders to have 12 emails in the list
+  describe('Create 6 orders to have email logs', async () => {
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    // Click on view my shop
-    page = await dashboardPage.viewMyShop(page);
+      // Click on view my shop
+      page = await dashboardPage.viewMyShop(page);
 
-    // Change language on FO
-    await homePage.changeLanguage(page, 'en');
+      // Change language on FO
+      await homePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-  });
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
 
-  describe('Create 6 order to have email logs', async () => {
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
 
@@ -82,7 +82,6 @@ describe('Sort and pagination emails', async () => {
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    // 1 - Create 6 orders to have 12 emails in the list
     const tests = new Array(6).fill(0, 0, 6);
 
     tests.forEach((test, index) => {
@@ -172,6 +171,106 @@ describe('Sort and pagination emails', async () => {
 
       const paginationNumber = await emailPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 3 : Sort emails
+  const tests = [
+    {
+      args:
+        {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_mail', sortDirection: 'desc', isFloat: true,
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByRecipientAsc', sortBy: 'recipient', sortDirection: 'asc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByRecipientDesc', sortBy: 'recipient', sortDirection: 'desc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByTemplateDesc', sortBy: 'template', sortDirection: 'desc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByTemplateAsc', sortBy: 'template', sortDirection: 'asc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByLanguageDesc', sortBy: 'language', sortDirection: 'desc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByLanguageAsc', sortBy: 'language', sortDirection: 'asc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByDateAddDesc', sortBy: 'date_add', sortDirection: 'desc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByDateAddAsc', sortBy: 'date_add', sortDirection: 'asc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortBySubjectDesc', sortBy: 'subject', sortDirection: 'desc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortBySubjectAsc', sortBy: 'subject', sortDirection: 'asc',
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_mail', sortDirection: 'asc', isFloat: true,
+        },
+    },
+  ];
+
+  describe('Sort emails table', async () => {
+    tests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await emailPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await emailPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await emailPage.getAllRowsColumnContent(page, test.args.sortBy);
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await emailPage.sortArray(nonSortedTable, test.args.isFloat);
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
     });
   });
 
