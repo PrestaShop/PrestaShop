@@ -54,6 +54,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
         order:
             paths:
                 - %paths.base%/Features/Scenario/Order
@@ -87,6 +88,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
         currency:
             paths:
                 - %paths.base%/Features/Scenario/Currency
@@ -141,6 +143,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
         meta:
             paths:
                 - %paths.base%/Features/Scenario/Meta
