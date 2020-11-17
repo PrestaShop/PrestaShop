@@ -150,12 +150,4 @@ class CommandHandlerDefinition
     {
         return $this->handlerInterfaces;
     }
-
-    /**
-     * @return bool
-     */
-    public function isQueryType(): bool
-    {
-        return $this->type === self::TYPE_QUERY;
-    }
 }
