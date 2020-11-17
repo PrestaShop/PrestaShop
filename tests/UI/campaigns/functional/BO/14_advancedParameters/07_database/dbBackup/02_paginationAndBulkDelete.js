@@ -14,17 +14,18 @@ const dbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_database_dbBackup_bulkDeleteDbBackups';
+const baseContext = 'functional_BO_advancedParams_database_dbBackup_paginationAndBulkActions';
 
 let browserContext;
 let page;
 let numberOfBackups = 0;
 
 /*
-Generate 2 backups
-Delete backups with bulk actions
+Create 11 SQL queries
+Pagination next and previous
+Delete by bulk actions
  */
-describe('Generate 2 db backup and bulk delete them', async () => {
+describe('Pagination and bulk delete DB backup', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,24 +64,58 @@ describe('Generate 2 db backup and bulk delete them', async () => {
     await expect(pageTitle).to.contains(dbBackupPage.pageTitle);
   });
 
-  it('should check number of db backups', async function () {
+  it('should get number of db backups', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfDbBackups', baseContext);
 
     numberOfBackups = await dbBackupPage.getNumberOfElementInGrid(page);
     await expect(numberOfBackups).to.equal(0);
   });
 
-  describe('Generate 2 db backups', async () => {
-    ['first', 'second'].forEach((test, index) => {
-      it(`should generate ${test} db backup`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `generateNewDbBackup${index + 1}`, baseContext);
+  // 1 - Create 11 DB backup
+  const creationTests = new Array(11).fill(0, 0, 11);
+
+  creationTests.forEach((test, index) => {
+    describe(`Create DB backup n°${index + 1} in BO`, async () => {
+      it('should generate new db backup', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `generateNewDbBackup${index}`, baseContext);
 
         const result = await dbBackupPage.createDbDbBackup(page);
         await expect(result).to.equal(dbBackupPage.successfulBackupCreationMessage);
 
         const numberOfBackupsAfterCreation = await dbBackupPage.getNumberOfElementInGrid(page);
-        await expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + index + 1);
+        await expect(numberOfBackupsAfterCreation).to.equal(numberOfBackups + 1 + index);
       });
+    });
+  });
+
+  // 2 - Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await dbBackupPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await dbBackupPage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await dbBackupPage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await dbBackupPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
