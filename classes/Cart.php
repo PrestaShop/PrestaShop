@@ -3790,7 +3790,7 @@ class CartCore extends ObjectModel
      *
      * @return array Cart details
      */
-    public function getSummaryDetails($id_lang = null, $refresh = false, $splitGift = true)
+    public function getSummaryDetails($id_lang = null, $refresh = false, bool $splitGift = true)
     {
         $context = Context::getContext();
         if (!$id_lang) {
