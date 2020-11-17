@@ -282,7 +282,7 @@ export default class ProductManager {
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(
       combination.stock,
-      this.selectedProduct.availableOutOfStock || (combination.stock <= 0)
+      this.selectedProduct.availableOutOfStock || (combination.stock <= 0),
     );
 
     return combination;
