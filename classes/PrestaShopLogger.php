@@ -233,7 +233,7 @@ class PrestaShopLoggerCore extends ObjectModel
                 (new DbQuery())
                     ->select('COUNT(*)')
                     ->from('log', 'l')
-                    ->where('message ="' . pSQL($this->message) . '"')
+                    ->where('message = "' . pSQL($this->message) . '"')
                     ->where('severity = ' . (int) $this->severity)
                     ->where('error_code = ' . (int) $this->error_code)
                     ->where('object_type = "' . pSQL($this->object_type) . '"')
