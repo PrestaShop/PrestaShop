@@ -84,7 +84,7 @@ class CommandHandlerDefinition
         array $commandConstructorParams,
         string $description,
         ?string $returnType,
-        array $handlerInterfaces = []
+        array $handlerInterfaces
     ) {
         $this->type = $type;
         $this->handlerClass = $handlerClass;
