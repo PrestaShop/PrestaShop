@@ -443,6 +443,7 @@ class AdminModuleController {
     let moduleCategory;
     let tagExists;
     let newValue;
+    let defaultMax;
 
     const modulesListLength = self.modulesList.length;
     const counter = {};
@@ -493,11 +494,10 @@ class AdminModuleController {
             counter[moduleCategory] = 0;
           }
 
-          if (moduleCategory === self.CATEGORY_RECENTLY_USED) {
-            if (counter[moduleCategory] >= self.DEFAULT_MAX_RECENTLY_USED) {
-              isVisible &= self.currentCategoryDisplay[moduleCategory];
-            }
-          } else if (counter[moduleCategory] >= self.DEFAULT_MAX_PER_CATEGORIES) {
+          defaultMax = moduleCategory === self.CATEGORY_RECENTLY_USED
+            ? self.DEFAULT_MAX_RECENTLY_USED
+            : self.DEFAULT_MAX_PER_CATEGORIES;
+          if (counter[moduleCategory] >= defaultMax) {
             isVisible &= self.currentCategoryDisplay[moduleCategory];
           }
 
