@@ -236,7 +236,7 @@ class PrestaShopLoggerCore extends ObjectModel
                     ->where('message ="' . pSQL($this->message) . '"')
                     ->where('severity = ' . (int) $this->severity)
                     ->where('error_code = ' . (int) $this->error_code)
-                    ->where('object_type ="' . pSQL($this->object_type) . '"')
+                    ->where('object_type = "' . pSQL($this->object_type) . '"')
                     ->where('object_id = ' . (int) $this->object_id)
                     ->where('id_shop = ' . (int) $this->id_shop)
                     ->where('id_shop_group = ' . (int) $this->id_shop_group)
