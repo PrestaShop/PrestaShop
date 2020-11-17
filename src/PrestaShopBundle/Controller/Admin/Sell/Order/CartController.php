@@ -630,6 +630,7 @@ class CartController extends FrameworkBundleAdminController
      * @param int $cartId
      * @param int $productId
      * @param int|null $combinationId
+     *
      * @return int
      */
     private function getProductGiftedQuantity(int $cartId, int $productId, ?int $combinationId): int
