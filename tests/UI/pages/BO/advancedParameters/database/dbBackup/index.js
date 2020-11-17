@@ -197,7 +197,6 @@ class DbBackup extends BOBasePage {
 
     return this.getPaginationLabel(page);
   }
-
 }
 
 module.exports = new DbBackup();
