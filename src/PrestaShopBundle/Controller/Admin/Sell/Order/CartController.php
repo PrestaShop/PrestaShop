@@ -438,15 +438,15 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $newQty = $request->request->getInt('newQty');
-            $combinationId = $request->request->getInt('attributeId');
+            $attributeId = $request->request->getInt('attributeId');
 
-            $giftedQuantity = $this->getProductGiftedQuantity($cartId, $productId, $combinationId);
+            $giftedQuantity = $this->getProductGiftedQuantity($cartId, $productId, $attributeId);
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
                 $newQty + $giftedQuantity,
-                $combinationId ?: null,
+                $attributeId ?: null,
                 $request->request->getInt('customizationId') ?: null
             ));
 
@@ -629,23 +629,25 @@ class CartController extends FrameworkBundleAdminController
      *
      * @param int $cartId
      * @param int $productId
-     * @param int|null $combinationId
+     * @param int|null $attributeId
      *
      * @return int
      */
-    private function getProductGiftedQuantity(int $cartId, int $productId, ?int $combinationId): int
+    private function getProductGiftedQuantity(int $cartId, int $productId, ?int $attributeId): int
     {
-        $giftedQuantity = 0;
         $cart = new \Cart($cartId);
         $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
-        if (count($giftCartRules) > 0) {
-            foreach ($giftCartRules as $giftCartRule) {
-                if (
-                    $productId == $giftCartRule['gift_product'] &&
-                    (null === $combinationId || $combinationId == $giftCartRule['gift_product_attribute'])
-                ) {
-                    ++$giftedQuantity;
-                }
+        if (count($giftCartRules) <= 0) {
+            return 0;
+        }
+
+        $giftedQuantity = 0;
+        foreach ($giftCartRules as $giftCartRule) {
+            if (
+                $productId == $giftCartRule['gift_product'] &&
+                (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
+            ) {
+                ++$giftedQuantity;
             }
         }
 
