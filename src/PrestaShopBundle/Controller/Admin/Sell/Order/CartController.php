@@ -110,7 +110,7 @@ class CartController extends FrameworkBundleAdminController
     public function getInfoAction(int $cartId)
     {
         try {
-            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId, true));
+            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId, false));
 
             return $this->json($cartInfo);
         } catch (Exception $e) {
@@ -505,7 +505,7 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getCartInfo(int $cartId): CartInformation
     {
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId, true));
+        return $this->getQueryBus()->handle(new GetCartInformation($cartId, false));
     }
 
     /**
@@ -635,6 +635,13 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getProductGiftedQuantity(int $cartId, int $productId, ?int $attributeId): int
     {
+        return 0;
+//        $productCartRules = $this->getCommandBus()->handle(new GetProductCartRulesCommand(
+//            $cartId,
+//            $productId,
+//            $combinationId ?: null
+//        ));
+
         $cart = new \Cart($cartId);
         $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
         if (count($giftCartRules) <= 0) {
