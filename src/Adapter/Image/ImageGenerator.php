@@ -98,7 +98,7 @@ class ImageGenerator
 
         return ImageManager::resize(
             $filePath,
-            sprintf('%s-%s%s', rtrim($filePath, $fileExtension), stripslashes($imageType->name), $destinationExtension),
+            sprintf('%s-%s%s', rtrim($filePath, '.' . $fileExtension), stripslashes($imageType->name), $destinationExtension),
             $width,
             $height,
             trim(mime_content_type($filePath), 'image/')
