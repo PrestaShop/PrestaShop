@@ -426,9 +426,6 @@ class OrderAmountUpdater
                 $invoiceProducts[$orderProduct['id_order_invoice']][] = $orderProduct;
             }
         }
-        if (empty($invoiceProducts)) {
-            return;
-        }
 
         $invoiceCollection = $order->getInvoicesCollection();
         $firstInvoice = $invoiceCollection->getFirst();
