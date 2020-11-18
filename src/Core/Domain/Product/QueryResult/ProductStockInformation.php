@@ -31,9 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 use DateTimeInterface;
 
 /**
- * Transfers data about Product stock
+ * Transfers data about Product stock information
  */
-class ProductStock
+class ProductStockInformation
 {
     /**
      * @var bool
