@@ -24,26 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Transform;
 
+use Behat\Behat\Context\Context;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+
 /**
- * Trait containing boolean transformations.
+ * Shared storage related transformations
  */
-trait StringToBooleanTransform
+class SharedStorageTransformContext implements Context
 {
     /**
-     * @Transform /^(enabled|enable|included|should|includes)$/
+     * Helps access the latest resource that was put into storage.
+     *
+     * @Transform /^(it|its)$/
      */
-    public function transformTruthyStringToBoolean(string $string)
+    public function getLatestResource()
     {
-        return true;
-    }
-
-    /**
-     * @Transform /^(disabled|disable|excluded|should not|excludes)$/
-     */
-    public function transformFalsyStringToBoolean(string $string)
-    {
-        return false;
+        return SharedStorage::getStorage()->getLatestResource();
     }
 }

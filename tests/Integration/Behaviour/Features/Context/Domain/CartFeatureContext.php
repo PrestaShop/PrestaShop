@@ -60,12 +60,9 @@ use Product;
 use RuntimeException;
 use State;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
-    use StringToBooleanTransform;
-
     /**
      * @Given the current currency is :currencyIsoCode
      */

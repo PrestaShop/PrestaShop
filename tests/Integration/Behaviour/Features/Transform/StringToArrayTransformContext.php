@@ -24,27 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Transform;
 
-use Configuration;
-use Currency;
-use InvalidArgumentException;
+use Behat\Behat\Context\Context;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-trait CurrencyTransform
+/**
+ * Contains string to array transformations
+ */
+class StringToArrayTransformContext implements Context
 {
     /**
-     * Transforms currency iso code to instance
+     * @Transform /^\[.*?\]$/
      *
-     * @Transform /^currency "([^"]+)"$/
+     * @param string $string
+     *
+     * @return array
      */
-    public function transformIsoToCurrency(string $currencyIso)
+    public function transformStringArrayToArray(string $string): array
     {
-        $currency = new Currency(Currency::getIdByIsoCode($currencyIso, Configuration::get('PS_SHOP_DEFAULT')));
-
-        if (!$currency->id) {
-            throw new InvalidArgumentException(sprintf('Currency not found by iso code "%s"', $currencyIso));
-        }
-
-        return $currency;
+        return PrimitiveUtils::castStringArrayIntoArray($string);
     }
 }

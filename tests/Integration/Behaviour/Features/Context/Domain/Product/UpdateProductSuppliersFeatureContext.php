@@ -48,7 +48,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function deleteAllProductSuppliers(string $productReference)
+    public function deleteAllProductSuppliers(string $productReference): void
     {
         try {
             $this->getCommandBus()->handle(new RemoveAllAssociatedProductSuppliersCommand(
@@ -125,7 +125,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertProductSuppliers(string $productReference, TableNode $table)
+    public function assertProductSuppliers(string $productReference, TableNode $table): void
     {
         $expectedProductSuppliers = $table->getColumnsHash();
         $actualProductSupplierOptions = $this->getProductSupplierOptions($productReference);
@@ -163,7 +163,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductDefaultSupplierReferenceIsEmpty(string $productReference)
+    public function assertProductDefaultSupplierReferenceIsEmpty(string $productReference): void
     {
         Assert::assertEmpty(
             $this->getProductSupplierOptions($productReference)->getDefaultSupplierReference(),
@@ -176,7 +176,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductHasNoSuppliers(string $productReference)
+    public function assertProductHasNoSuppliers(string $productReference): void
     {
         Assert::assertEmpty(
             $this->getProductSupplierOptions($productReference)->getOptionsBySupplier(),
@@ -187,7 +187,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     /**
      * @Then I should get error that supplier is not associated with product
      */
-    public function assertFailedUpdateDefaultSupplierWhichIsNotAssigned()
+    public function assertFailedUpdateDefaultSupplierWhichIsNotAssigned(): void
     {
         $this->assertLastErrorIs(ProductSupplierException::class);
     }
@@ -197,7 +197,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductHasNoDefaultSupplier(string $productReference)
+    public function assertProductHasNoDefaultSupplier(string $productReference): void
     {
         $defaultSupplierId = $this->getProductSupplierOptions($productReference)->getDefaultSupplierId();
 
