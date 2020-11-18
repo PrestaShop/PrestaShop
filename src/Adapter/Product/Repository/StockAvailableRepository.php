@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockA
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 use StockAvailable;
 
 /**
@@ -93,7 +94,16 @@ class StockAvailableRepository extends AbstractObjectModelRepository
         $stockAvailable = new StockAvailable();
         $stockAvailable->id_product = $productId->getValue();
         $shopParams = [];
-        StockAvailable::addSqlShopParams($shopParams);
+        try {
+            StockAvailable::addSqlShopParams($shopParams);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to add StockAvailable shop params #%d', $productId->getValue()),
+                0,
+                $e
+            );
+        }
+
         $stockAvailable->id_shop = $shopParams['id_shop'] ?? 0;
         $stockAvailable->id_shop_group = $shopParams['id_shop_group'] ?? 0;
         $this->addObjectModel($stockAvailable, CannotAddStockAvailableException::class);

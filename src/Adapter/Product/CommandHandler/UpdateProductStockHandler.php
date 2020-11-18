@@ -28,17 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockHandlerInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 
 /**
  * Handles @see UpdateProductStockCommand using legacy object model
  */
-final class UpdateProductStockHandler extends AbstractProductHandler implements UpdateProductStockHandlerInterface
+final class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -77,7 +77,7 @@ final class UpdateProductStockHandler extends AbstractProductHandler implements 
      * @param Product $product
      * @param UpdateProductStockCommand $command
      *
-     * @return array
+     * @return string[]|array<string, int[]>
      */
     private function fillUpdatableProperties(
         Product $product,
@@ -114,7 +114,7 @@ final class UpdateProductStockHandler extends AbstractProductHandler implements 
             $updatableProperties[] = 'quantity';
         }
         if (null !== $command->getAvailableDate()) {
-            $product->available_date = $command->getAvailableDate()->format('Y-m-d');
+            $product->available_date = $command->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
             $updatableProperties[] = 'available_date';
         }
 

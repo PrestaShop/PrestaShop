@@ -35,6 +35,8 @@ use RuntimeException;
 
 /**
  * Sets products of product pack
+ *
+ * @todo this should be moved into a new PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command namespace
  */
 class SetPackProductsCommand
 {
