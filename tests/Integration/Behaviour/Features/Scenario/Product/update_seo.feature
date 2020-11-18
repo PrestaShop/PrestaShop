@@ -137,16 +137,16 @@ Feature: Update product SEO options from Back Office (BO)
     And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:product2 meta description"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:waterproof-boots"
     When I update product product2 SEO information with following values:
-      | meta_title       | en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1           |
-      | meta_description | en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1 |
+      | meta_title       | en-US:metatitl prod2;fr-FR:toolazytofindFRtrans meta title1           |
+      | meta_description | en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc2 |
       | link_rewrite     | en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr           |
-    Then product "product2" localized "meta_title" should be "en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1"
-    Then product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
+    Then product "product2" localized "meta_title" should be "en-US:metatitl prod2;fr-FR:toolazytofindFRtrans meta title1"
+    Then product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc2"
     Then product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"
 
   Scenario: Update product SEO multi-lang fields with invalid values
-    Given product "product2" localized "meta_title" should be "en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1"
-    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
+    Given product "product2" localized "meta_title" should be "en-US:metatitl product2;fr-FR:toolazytofindFRtrans meta title1"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc2"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"
     When I update product product2 SEO information with following values:
       | meta_title | en-US:#{ |
@@ -163,6 +163,6 @@ Feature: Update product SEO options from Back Office (BO)
     Then I should get error that product meta_description is invalid
     When I update product product2 localized SEO field link_rewrite with a value of 256 symbols length
     Then I should get error that product link_rewrite is invalid
-    And product "product2" localized "meta_title" should be "en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1"
-    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
+    And product "product2" localized "meta_title" should be "en-US:metatitl product2;fr-FR:toolazytofindFRtrans meta title1"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc2"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"
