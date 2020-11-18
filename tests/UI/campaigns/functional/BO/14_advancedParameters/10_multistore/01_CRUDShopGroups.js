@@ -168,7 +168,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should enable "Multi store"', async function () {
+    it('should disable "Multi store"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, false);
