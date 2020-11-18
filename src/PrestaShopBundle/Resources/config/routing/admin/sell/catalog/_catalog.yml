@@ -1,0 +1,15 @@
+_products:
+    resource: "products/products.yml"
+    prefix: /products/
+
+_categories:
+    resource: "categories.yml"
+    prefix: /categories/
+
+_suppliers:
+    resource: "suppliers.yml"
+    prefix: /suppliers/
+
+_manufacturers:
+    resource: "manufacturer.yml"
+    prefix: /brands

@@ -1,0 +1,178 @@
+admin_cms_pages_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:index'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent
+
+admin_cms_pages_search:
+  path: /search
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:search'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:submitFiltercms
+
+admin_cms_pages_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:create'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:addcms
+
+admin_cms_pages_edit:
+  path: /{cmsPageId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:edit'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:updatecms
+    _legacy_parameters:
+      id_cms: cmsPageId
+  requirements:
+    cmsPageId: \d+
+
+admin_cms_pages_toggle:
+  path: /{cmsId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:toggleCms'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:statuscms
+    _legacy_parameters:
+      id_cms: cmsId
+  requirements:
+    cmsId: \d+
+
+admin_cms_pages_delete:
+  path: /{cmsId}/delete
+  methods: DELETE
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:deleteCms'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:deletecms
+    _legacy_parameters:
+      id_cms: cmsId
+  requirements:
+    cmsId: \d+
+
+admin_cms_pages_bulk_enable_status:
+  path: /bulk-enable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:bulkEnableCmsPageStatus'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:submitBulkenableSelectioncms
+
+admin_cms_pages_bulk_disable_status:
+  path: /bulk-disable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:bulkDisableCmsPageStatus'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:submitBulkdisableSelectioncms
+
+admin_cms_pages_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:bulkDeleteCmsPage'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:submitBulkdeletecms
+
+admin_cms_pages_search_cms_category:
+  path: /category/search
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.cms_page_category
+    redirectRoute: admin_cms_pages_index
+    redirectQueryParamsToKeep:
+      - 'id_cms_category'
+    _legacy_link: AdminCmsContent:submitFiltercms_category
+
+admin_cms_pages_category_create:
+  path: /category/new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:createCmsCategory'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:addcms_category
+
+admin_cms_pages_category_edit:
+  path: /category/{cmsCategoryId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:editCmsCategory'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:updatecms_category
+    _legacy_parameters:
+      id_cms_category: cmsCategoryId
+  requirements:
+    cmsCategoryId: \d+
+
+admin_cms_pages_category_delete:
+  path: /category/{cmsCategoryId}/delete
+  methods: DELETE
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:deleteCmsCategory'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:deletecms_category
+    _legacy_parameters:
+      id_cms_category: cmsCategoryId
+  requirements:
+    cmsCategoryId: \d+
+
+admin_cms_pages_category_delete_bulk:
+  path: /category/delete-bulk
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:deleteBulkCmsCategory'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:submitBulkdeletecms_category
+
+admin_cms_pages_category_toggle:
+  path: /category/{cmsCategoryId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:toggleCmsCategory'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:statuscms_category
+    _legacy_parameters:
+      id_cms_category: cmsCategoryId
+  requirements:
+    cmsCategoryId: \d+
+
+admin_cms_pages_category_bulk_status_enable:
+  path: /category/bulk-enable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:bulkCmsPageCategoryStatusEnable'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:submitBulkenableSelectioncms_category
+
+admin_cms_pages_category_bulk_status_disable:
+  path: /category/bulk-disable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:bulkCmsPageCategoryStatusDisable'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:submitBulkdisableSelectioncms_category
+
+admin_cms_pages_category_update_position:
+  path: /category/update-position
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:updateCmsCategoryPosition'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:updatecms_category
+
+admin_cms_pages_update_position:
+  path: /update-position
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:updateCmsPosition'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: AdminCmsContent:updatecms

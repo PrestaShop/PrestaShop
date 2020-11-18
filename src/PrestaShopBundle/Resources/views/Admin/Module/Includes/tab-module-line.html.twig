@@ -1,0 +1,74 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{%
+  set moduleImage = module.attributes.img is null ?
+    constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo :
+    module.attributes.img
+%}
+<tr>
+  <td class="fixed-with-sm center">
+    <img
+      class="img-thumbnail"
+      alt="{{ module.attributes.name }}"
+      src="{{ moduleImage }}"
+    />
+  </td>
+  <td>
+    <div id="anchor{{ module.attributes.name|capitalize }}" title="{{ module.attributes.displayName }}">
+      <div class="module_name">
+        <span style="display:none">{{ module.attributes.name }}</span>
+        {{ module.attributes.displayName }}
+        <small class="text-muted">v{{ module.attributes.version }} - by {{ module.attributes.author }}</small>
+        {% if module.attributes.type is not empty and module.attributes.type == 'addonsBought' %}
+        - <span class="module-badge-bought help-tooltip text-warning" data-title="{{ 'You bought this module on PrestaShop Addons. Thank You.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-pushpin"></i> <small>{{ 'Bought'|trans({}, 'Admin.Modules.Help') }}</small></span>
+        {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsMustHave' %}
+        - <span class="module-badge-popular help-tooltip text-primary" data-title="{{ 'This module is available on PrestaShop Addons.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-group"></i> <small>{{ 'Popular'|trans({}, 'Admin.Modules.Help') }}</small></span>
+        {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsPartner' %}
+        - <span class="module-badge-partner help-tooltip text-warning" data-title="{{ 'This module is available for free thanks to our partner.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-pushpin"></i> <small>{{ 'Official'|trans({}, 'Admin.Modules.Help') }}</small></span>
+        {% elseif module.attributes.id is defined and module.attributes.id >= 0 %}
+          {% if module.attributes.version_addons is defined and module.attributes.version_addons %}
+            <span class="label label-warning">{{ 'Need update'|trans({}, 'Admin.Modules.Help') }}</span>
+          {% endif %}
+        {% endif %}
+      </div>
+      <p class="module_description">
+        {% if module.attributes.description is defined and module.attributes.description is not empty %}
+          {{ module.attributes.description }}
+        {% endif %}
+      </p>
+      {% if (module.attributes.message is defined and module.attributes.name is not empty) and (module.attributes.type is not defined or module.attributes.type != 'addonsMustHave' or module.attributes.type != 'addonsNative') %}
+        <div class="alert alert-success" role="alert">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p class="alert-text">
+            {{ module.attributes.message }}
+          </p>
+        </div>
+      {% endif %}
+    </div>
+  </td>
+  <td class="module-container module-quick-action-list clearfix">
+    {{ include('@PrestaShop/Admin/Module/Includes/action_menu.html.twig', {'module': module}) }}
+  </td>
+</tr>

@@ -1,0 +1,15 @@
+# This file is an example of data configuration which can be applied to a module
+
+# Data to be updated in Configuration table
+configuration:
+    update:
+        # Option 1: having a pair key/value
+        PAYPAL_SANDBOX: 1
+        PAYPAL_API_CARD: 0
+        # Option 2: use "value" subkey. Will allow to use addtionnal keys later
+        PAYPAL_SANDBOX_2:
+            value: 1
+            multilang: false
+        # Question: how to handle multi lang values ?
+    delete:
+        - "PAYPAL_ONBOARDING"

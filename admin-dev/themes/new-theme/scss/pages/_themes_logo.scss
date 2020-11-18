@@ -1,0 +1,73 @@
+#themes-logo-page {
+  @import "partials/theme_logo_configuration";
+  @import "partials/theme_logo_theme_card";
+
+  #adapt_theme_to_rtl_languages_theme_to_adapt {
+    width: 18.75rem;
+  }
+
+  .btn-tertiary {
+    border-radius: 2px;
+    background-color: #6c868e;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.2px;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  .btn-tertiary-outline {
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.2px;
+    text-align: center;
+    color: #363a41;
+    border: 1px solid #6C858C;
+    background-color: transparent;
+  }
+
+  .btn-tertiary:hover {
+    background-color: #363a41;
+  }
+
+  .layout-configuration {
+    .inner-content {
+      padding: 0.9375rem;
+      background-color: #f8f8f8;
+      border-radius: 0.25rem;
+
+      .title {
+        font-size: 14px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #4a4a4a;
+      }
+
+      .description {
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.33;
+        letter-spacing: normal;
+        color: #6c868e;
+      }
+    }
+
+    .layout-logo {
+      vertical-align: text-bottom;
+      padding-right: 1rem;
+    }
+
+    .choose-layouts-button {
+      margin-right: 0.9375rem;
+    }
+  }
+}

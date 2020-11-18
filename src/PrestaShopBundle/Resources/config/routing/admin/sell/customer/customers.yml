@@ -1,0 +1,163 @@
+admin_customers_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:index
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers
+
+admin_customers_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:searchGrid
+    _legacy_controller: AdminCustomers
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer
+    redirectRoute: admin_customers_index
+    _legacy_link: AdminCustomers:submitFiltercustomer
+
+admin_customers_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:create
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:addcustomer
+
+admin_customers_edit:
+  path: /{customerId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:edit
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:updatecustomer
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+
+admin_customers_view:
+  path: /{customerId}/view
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:view
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:viewcustomer
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+
+admin_customers_set_private_note:
+  path: /{customerId}/set-private-note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:setPrivateNote
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:updateCustomerNote
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+
+admin_customers_toggle_status:
+  path: /{customerId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:toggleStatus
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:statuscustomer
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+
+admin_customers_transform_guest_to_customer:
+  path: /{customerId}/transform-guest-to-customer
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:transformGuestToCustomer
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:guesttocustomer
+    _legacy_parameters:
+      id_customer: customerId
+
+admin_customers_toggle_newsletter_subscription:
+  path: /{customerId}/toggle-newsletter-subscription
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:toggleNewsletterSubscription
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:changeNewsletterVal
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+
+admin_customers_set_required_fields:
+  path: /set-required-fields
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:setRequiredFields
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:submitFields
+
+admin_customers_toggle_partner_offer_subscription:
+  path: /{customerId}/toggle-partner-offer-subscription
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:togglePartnerOfferSubscription
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:changeOptinVal
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+
+admin_customers_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:deleteBulk
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:submitBulkdeletecustomer
+
+admin_customers_delete:
+  path: /delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:delete
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:deletecustomer
+
+admin_customers_enable_bulk:
+  path: /enable-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:enableBulk
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:submitBulkenableSelectioncustomer
+
+admin_customers_disable_bulk:
+  path: /disable-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:disableBulk
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:submitBulkdisableSelectioncustomer
+
+admin_customers_export:
+  path: /export
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:export
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:exportcustomer
+
+admin_customers_search:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:search
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers:searchCustomers

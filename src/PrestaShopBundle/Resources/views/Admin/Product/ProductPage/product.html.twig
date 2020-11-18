@@ -1,0 +1,354 @@
+ {#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+
+  <form name="form" id="form" method="post" class="form-horizontal product-page row justify-content-md-center" novalidate="novalidate">
+
+    {% if not editable %} <fieldset disabled id="field-disabled"> {% endif %}
+    {# PRODUCT HEADER #}
+    {% block product_header %}
+      {{ include('@Product/ProductPage/Blocks/header.html.twig', {
+        'formName': form.step1.name,
+        'formType': form.step1.type_product,
+        'is_multishop_context': is_multishop_context,
+        'languages': languages,
+        'help_link': help_link,
+        'stats_link': stats_link
+        })
+      }}
+    {% endblock %}
+
+    <div class="col-md-10">
+      <div id="form_bubbling_errors">
+        {{ form_errors(form) }}
+      </div>
+    </div>
+
+    <div id="form-loading" class="col-xxl-10">
+      {# FORM TABS CONTAINER #}
+      {% block product_tabs_container %}
+        {{ include('@Product/ProductPage/Blocks/tabs.html.twig') }}
+      {% endblock %}
+      <div id="form_content" class="tab-content">
+
+        {# PANEL ESSENTIALS #}
+        {% block product_panel_essentials %}
+          {% set formQuantityShortcut = form.step1.qty_0_shortcut is defined ? form.step1.qty_0_shortcut : null  %}
+          {{ include('@Product/ProductPage/Panels/essentials.html.twig', {
+              'formPackItems': form.step1.inputPackItems,
+              'productId': id_product,
+              'images': form.step1.vars.value.images,
+              'formShortDescription': form.step1.description_short,
+              'formDescription': form.step1.description,
+              'formFeatures': form.step1.features,
+              'formManufacturer': form.step1.id_manufacturer,
+              'formRelatedProducts': form.step1.related_products,
+              'is_combination_active': is_combination_active,
+              'has_combinations': has_combinations,
+              'formReference': form.step6.reference,
+              'formQuantityShortcut': formQuantityShortcut,
+              'formPriceShortcut': form.step1.price_shortcut,
+              'formPriceShortcutTTC': form.step1.price_ttc_shortcut,
+              'formCategories': form.step1,
+            })
+          }}
+        {% endblock %}
+
+        {# PANEL COMBINATIONS #}
+        {% block product_panel_combinations %}
+          {% set formStockQuantity = form.step3.qty_0 is defined ? form.step3.qty_0 : null  %}
+          {{ include('@Product/ProductPage/Panels/combinations.html.twig', {
+              'formDependsOnStocks': form.step3.depends_on_stock,
+              'productId': id_product,
+              'formStockQuantity': formStockQuantity,
+              'formStockMinimalQuantity': form.step3.minimal_quantity,
+              'formLowStockThreshold': form.step3.low_stock_threshold,
+              'formLocation': form.step3.location,
+              'formLowStockAlert': form.step3.low_stock_alert,
+              'formVirtualProduct': form.step3.virtual_product,
+              'asm_globally_activated': asm_globally_activated,
+              'formType': form.step1.type_product,
+              'formAdvancedStockManagement': form.step3.advanced_stock_management,
+              'formPackStockType': form.step3.pack_stock_type,
+              'formStep3': form.step3,
+              'formCombinations': formCombinations,
+              'has_combinations': has_combinations,
+              'max_upload_size': max_upload_size
+            })
+          }}
+        {% endblock %}
+
+        {# PANEL SHIPPING #}
+        {% block product_panel_shipping %}
+          <div role="tabpanel" class="form-contenttab tab-pane" id="step4">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="container-fluid">
+                  <div class="row">
+                    {{ include('@Product/ProductPage/Forms/form_shipping.html.twig', {
+                      'form' : form.step4,
+                      'asm_globally_activated': asm_globally_activated,
+                      'isNotVirtual': form.step1.type_product.vars.value != "2",
+                      'isChecked': form.step3.advanced_stock_management.vars.checked,
+                      'warehouses': warehouses
+                    }) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endblock %}
+
+        {# PANEL PRICING #}
+        {% block product_panel_pricing %}
+          {{ include('@Product/ProductPage/Panels/pricing.html.twig', {
+            'pricingForm': form.step2,
+            'is_multishop_context': is_multishop_context,
+            'productId': id_product
+          }) }}
+        {% endblock %}
+
+        {# PANEL SEO #}
+        {% block product_panel_seo %}
+          {{ include('@Product/ProductPage/Panels/seo.html.twig', {
+            'seoForm': form.step5,
+            'productId': id_product
+          }) }}
+        {% endblock %}
+
+        {# PANEL OPTIONS #}
+        {% block product_panel_options %}
+          {{ include('@Product/ProductPage/Panels/options.html.twig', {
+            'optionsForm': form.step6,
+            'productId': id_product
+          }) }}
+        {% endblock %}
+
+        {# PANEL HOOKED MODULES #}
+        {% block product_panel_modules %}
+          {% if hookcount('displayAdminProductsExtra') > 0 %}
+            <div role="tabpanel" class="form-contenttab tab-pane" id="hooks">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="container-fluid">
+                    <div class="row">
+
+                      {# LEFT #}
+                      <div class="col-md-12">
+                        {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
+
+                        <div class="row module-selection" style="display: none;">
+                          <div class="col-md-12 col-lg-7">
+                            {% for module in hooks %}
+                              <div class="module-render-container module-{{ module.attributes.name }}">
+                                <div>
+                                  <img class="top-logo" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}">
+                                  <h2 class="text-ellipsis module-name-grid">
+                                    {{ module.attributes.displayName }}
+                                  </h2>
+                                  <div class="text-ellipsis small-text module-version">
+                                    {{ module.attributes.version }} by {{ module.attributes.author }}
+                                  </div>
+                                </div>
+                                <div class="small no-padding">
+                                  {{ module.attributes.description }}
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                          <div class="col-md-12 col-lg-5">
+                            <h2>{{ 'Module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+                            <select class="modules-list-select" data-toggle="select2">
+                              {% for module in hooks %}
+                                <option value="module-{{ module.attributes.name }}">{{ module.attributes.displayName }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="module-render-container all-modules">
+                          <p>
+                            <h2>{{ 'Choose a module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+                            {{ 'These modules are relative to the product page of your shop.'|trans({}, 'Admin.Catalog.Feature') }}<br />
+                            {{ 'To manage all your modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Feature')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}
+                          </p>
+                          <div class="row">
+                            {% for module in hooks %}
+                              <div class="col-md-12 col-lg-6 col-xl-4">
+                                <div class="module-item-wrapper-grid">
+                                  <div class="module-item-heading-grid">
+                                    <img class="module-logo-thumb-grid" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}">
+                                    <h3 class="text-ellipsis module-name-grid">
+                                      {{ module.attributes.displayName }}
+                                    </h3>
+                                    <div class="text-ellipsis small-text module-version-author-grid">
+                                      {{ module.attributes.version }} by {{ module.attributes.author }}
+                                    </div>
+                                  </div>
+                                  <div class="module-quick-description-grid small no-padding">
+                                    {{ module.attributes.description }}
+                                  </div>
+                                  <div class="module-container">
+                                    <div class="module-quick-action-grid clearfix">
+                                      <button class="modules-list-button btn btn-outline-primary pull-xs-right" data-target="module-{{ module.id }}">
+                                        {{ 'Configure'|trans({}, 'Admin.Actions') }}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+
+                        {% for module in hooks %}
+                          <div
+                            id="module_{{ module.id }}"
+                            class="module-render-container module-{{ module.attributes.name }}"
+                            style="display: none;"
+                          >
+                            <div>
+                              {{ module.content|raw }}
+                            </div>
+                          </div>
+                        {% endfor %}
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endblock %}
+      </div>
+
+      {{ form_widget(form.id_product) }}
+      {{ form_widget(form._token) }}
+
+    </div>
+    {# FOOTER #}
+    {{ include('@Product/ProductPage/Blocks/footer.html.twig', {
+      'preview_link': preview_link,
+      'preview_link_deactivate': preview_link_deactivate,
+      'is_shop_context': is_shop_context,
+      'editable': editable,
+      'is_active': form.step1.vars.value.active,
+      'productId': id_product
+    }) }}
+    {% if not editable %} </fieldset> {% endif %}
+  </form>
+
+
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
+    'id': 'confirmation_modal',
+    'title': "Warning"|trans({}, 'Admin.Notifications.Warning'),
+    'closable': false,
+    'actions': [
+      {
+        'type': 'button',
+        'label': "No"|trans({}, 'Admin.Global'),
+        'class': 'btn btn-outline-secondary btn-lg cancel'
+      },
+      {
+        'type': 'button',
+        'label': "Yes"|trans({}, 'Admin.Global'),
+        'class': 'btn btn-primary btn-lg continue'
+      }
+    ],
+  } %}
+    {% block content %}
+      <div class="modal-body"></div>
+    {% endblock %}
+  {% endembed %}
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/catalog_product.bundle.js') }}"></script>
+
+  <script src="{{ asset('themes/default/js/bundle/product/product-manufacturer.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/product-related.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/product-category-tags.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/default-category.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/product-combinations.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/modal-confirmation.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/product_page.bundle.js') }}"></script>
+  <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
+  <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
+  <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
+
+  <script>
+      $(function() {
+        var editable = '{{ editable }}';
+
+        if (editable !== '1'){
+          $('#field-disabled').find("select").each(function() {
+            $(this).removeClass('select2-hidden-accessible');
+          });
+          $('#field-disabled').find("span.select2").each(function() {
+            $(this).hide();
+          });
+          $('#field-disabled').find("a.pstaggerClosingCross").each(function() {
+            $(this).attr("disabled", "disabled").on("click", function() {
+              return false;
+            });
+          });
+        }
+      });
+  </script>
+{% endblock %}
+
+{% set js_translatable = {
+"Are you sure to disable variations ? they will all be deleted": "This will delete all the combinations. Do you wish to proceed?"|trans({}, 'Admin.Catalog.Notification'),
+}|merge(js_translatable) %}
+
+{% set js_translatable = {
+"Form update success": "Settings updated."|trans({}, 'Admin.Notifications.Success'),
+"Form update errors": "Unable to update settings."|trans({}, 'Admin.Notifications.Error'),
+"Delete": "Delete"|trans({}, 'Admin.Actions'),
+"ToLargeFile": "The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2]."|trans({}, 'Admin.Notifications.Error')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
+"Drop images here": "Drop images here"|trans({}, 'Admin.Catalog.Feature'),
+"or select files": "or select files"|trans({}, 'Admin.Catalog.Feature'),
+"files recommandations": "Recommended size 800 x 800px for default theme."|trans({}, 'Admin.Catalog.Feature'),
+"files recommandations2": "JPG, GIF or PNG format."|trans({}, 'Admin.Catalog.Feature'),
+"Cover": "Cover"|trans({}, 'Admin.Catalog.Feature'),
+"Are you sure to delete this?": "Are you sure to delete this?"|trans({}, 'Admin.Notifications.Warning'),
+"This will delete the specific price. Do you wish to proceed?": "This will delete the specific price. Do you wish to proceed?"|trans({}, 'Admin.Catalog.Notification'),
+"Quantities": "Quantities"|trans({}, 'Admin.Catalog.Feature'),
+"Combinations": "Combinations"|trans({}, 'Admin.Catalog.Feature'),
+"Virtual product": "Virtual product"|trans({}, 'Admin.Catalog.Feature'),
+"tax incl.": "tax incl."|trans({}, 'Admin.Catalog.Feature'),
+"tax excl.": "tax excl."|trans({}, 'Admin.Catalog.Feature'),
+"You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "A pack of products can't have combinations."|trans({}, "Admin.Catalog.Notification") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
+"You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "A virtual product can't have combinations."|trans({}, "Admin.Catalog.Notification") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
+}|merge(js_translatable) %}

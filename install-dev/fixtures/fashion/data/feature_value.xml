@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_feature_value>
+  <fields id="value" class="FeatureValue">
+    <field name="id_feature"/>
+    <field name="custom"/>
+  </fields>
+  <entities>
+    <feature_value id="Polyester" id_feature="1" custom="0"/>
+    <feature_value id="Wool" id_feature="1" custom="0"/>
+    <feature_value id="Ceramic" id_feature="1" custom="0"/>
+    <feature_value id="Cotton" id_feature="1" custom="0"/>
+    <feature_value id="Recycled_Cardboard" id_feature="1" custom="0"/>
+    <feature_value id="Matt_Paper" id_feature="1" custom="0"/>
+    <feature_value id="Long_Sleeves" id_feature="2" custom="0"/>
+    <feature_value id="Short_Sleeves" id_feature="2" custom="0"/>
+    <feature_value id="Removable_Cover" id_feature="2" custom="0"/>
+    <feature_value id="120_Pages" id_feature="2" custom="0"/>
+  </entities>
+</entity_feature_value>

@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.hook.dispatcher:
+        class: 'PrestaShop\PrestaShop\Core\Hook\HookDispatcher'
+        arguments:
+            - '@prestashop.hook.dispatcher'

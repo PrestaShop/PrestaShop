@@ -1,0 +1,45 @@
+.content-div {
+  padding-left: $size-navbar-width + ($grid-gutter-width / 2);
+  padding-right: $grid-gutter-width / 2;
+  padding-top: $size-header-height + $size-header-toolbar-height + ($grid-gutter-width / 2);
+  padding-bottom: $grid-gutter-width / 2;
+
+  transition: padding .5s ease; // transition when collapsing the nav menu
+
+  // with hidden navbar
+  @include media-breakpoint-down(md) {
+    padding-left: $grid-gutter-width / 2;
+  }
+
+  @include media-breakpoint-down(sm) {
+    padding-top: 10.4rem;
+    padding-left: 0;
+    padding-right: 0;
+
+    // remove gutters (except on product page)
+    // @todo remove the :not() once the product page has been made responsive
+    body:not(.adminproducts) & .row {
+      margin-left: 0;
+      margin-right: 0;
+
+      [class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+  &.-notoolbar {
+    padding-top: $size-header-height + $grid-gutter-width / 2;
+  }
+
+  &.with-tabs {
+    padding-top: $size-header-height + $size-header-toolbar-height + $grid-gutter-width + 2.5rem;
+  }
+}
+
+.page-sidebar-closed:not(.mobile) {
+  .content-div {
+    padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
+  }
+}

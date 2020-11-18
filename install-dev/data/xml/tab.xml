@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_tab>
+    <fields id="name" ordersql="a.id_parent, a.position" image="t">
+        <field name="id_parent" relation="tab"/>
+        <field name="class_name"/>
+        <field name="active"/>
+        <field name="icon"/>
+    </fields>
+    <entities>
+
+        <tab id="Dashboard" id_parent="" active="1" hide_host_mode="0" icon="trending_up">
+            <class_name>AdminDashboard</class_name>
+        </tab>
+
+        <!--SELL-->
+        <tab id="SELL" id_parent="" active="1" hide_host_mode="0" icon="">
+            <class_name>SELL</class_name>
+        </tab>
+
+            <!--ORDERS-->
+            <tab id="Orders" id_parent="SELL" active="1" hide_host_mode="0" icon="shopping_basket">
+                <class_name>AdminParentOrders</class_name>
+            </tab>
+
+                <tab id="Orders_1" id_parent="Orders" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminOrders</class_name>
+                </tab>
+                <tab id="Invoices" id_parent="Orders" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminInvoices</class_name>
+                </tab>
+                <tab id="Credit_Slips" id_parent="Orders" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminSlip</class_name>
+                </tab>
+                <tab id="Delivery_Slips" id_parent="Orders" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminDeliverySlip</class_name>
+                </tab>
+                <tab id="Shopping_Carts" id_parent="Orders" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminCarts</class_name>
+                </tab>
+
+            <!--CATALOG-->
+            <tab id="Catalog" id_parent="SELL" active="1" hide_host_mode="0" icon="store">
+                <class_name>AdminCatalog</class_name>
+            </tab>
+
+                <tab id="Products" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminProducts</class_name>
+                </tab>
+                <tab id="Categories" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminCategories</class_name>
+                </tab>
+                <tab id="Monitoring" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminTracking</class_name>
+                </tab>
+                <tab id="Attributes_and_features" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentAttributesGroups</class_name>
+                </tab>
+
+                    <tab id="Attributes_and_Values" id_parent="Attributes_and_features" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminAttributesGroups</class_name>
+                    </tab>
+                    <tab id="Features" id_parent="Attributes_and_features" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminFeatures</class_name>
+                    </tab>
+
+                <tab id="Manufacturers_and_suppliers" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentManufacturers</class_name>
+                </tab>
+
+                    <tab id="Manufacturers" id_parent="Manufacturers_and_suppliers" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminManufacturers</class_name>
+                    </tab>
+                    <tab id="Suppliers" id_parent="Manufacturers_and_suppliers" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminSuppliers</class_name>
+                    </tab>
+
+                <tab id="Attachments" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminAttachments</class_name>
+                </tab>
+                <tab id="Price_Rules" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentCartRules</class_name>
+                </tab>
+
+                    <tab id="Cart_Rules" id_parent="Price_Rules" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminCartRules</class_name>
+                    </tab>
+                    <tab id="Catalog_Price_Rules" id_parent="Price_Rules" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminSpecificPriceRule</class_name>
+                    </tab>
+                <tab id="Stock" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminStockManagement</class_name>
+                </tab>
+
+            <!--CUSTOMERS-->
+            <tab id="Customers" id_parent="SELL" active="1" hide_host_mode="0" icon="account_circle">
+                <class_name>AdminParentCustomer</class_name>
+            </tab>
+
+                <tab id="Customers_2" id_parent="Customers" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminCustomers</class_name>
+                </tab>
+                <tab id="Addresses" id_parent="Customers" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminAddresses</class_name>
+                </tab>
+                <tab id="Outstanding" id_parent="Customers" active="0" hide_host_mode="0" icon="">
+                    <class_name>AdminOutstanding</class_name>
+                </tab>
+
+            <!--CUSTOMER SERVICE-->
+            <tab id="Customer_Service" id_parent="SELL" active="1" hide_host_mode="0" icon="chat">
+                <class_name>AdminParentCustomerThreads</class_name>
+            </tab>
+
+                <tab id="Customer_Service_2" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminCustomerThreads</class_name>
+                </tab>
+                <tab id="Order_Messages" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminOrderMessage</class_name>
+                </tab>
+                <tab id="Merchandise_Returns" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminReturn</class_name>
+                </tab>
+
+            <!--STATISTICS-->
+            <tab id="Stats" id_parent="SELL" active="1" hide_host_mode="0" icon="assessment">
+                <class_name>AdminStats</class_name>
+            </tab>
+
+            <!--ADVANCED STOCK MANAGEMENT-->
+            <tab id="Advanced_stock_management" id_parent="SELL" active="1" hide_host_mode="0" icon="store">
+                <class_name>AdminStock</class_name>
+            </tab>
+
+                <tab id="Warehouses" id_parent="Advanced_stock_management" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminWarehouses</class_name>
+                </tab>
+                <tab id="Stock_Management" id_parent="Advanced_stock_management" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentStockManagement</class_name>
+                </tab>
+
+                    <tab id="Stock_Management" id_parent="Stock_Management" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStockManagement</class_name>
+                    </tab>
+                    <tab id="Stock_Movement" id_parent="Stock_Management" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStockMvt</class_name>
+                    </tab>
+                    <tab id="Instant_Stock_Status" id_parent="Stock_Management" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStockInstantState</class_name>
+                    </tab>
+                    <tab id="Stock_Coverage" id_parent="Stock_Management" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStockCover</class_name>
+                    </tab>
+
+                <tab id="Supply_orders" id_parent="Advanced_stock_management" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminSupplyOrders</class_name>
+                </tab>
+                <tab id="Configuration" id_parent="Advanced_stock_management" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminStockConfiguration</class_name>
+                </tab>
+
+
+        <!--IMPROVE-->
+        <tab id="IMPROVE" id_parent="" active="1" hide_host_mode="0" icon="">
+            <class_name>IMPROVE</class_name>
+        </tab>
+
+            <!--MODULES-->
+            <tab id="Modules" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="extension">
+                <class_name>AdminParentModulesSf</class_name>
+            </tab>
+                <tab id="Module_Page" id_parent="Modules" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminModulesSf</class_name>
+                </tab>
+                    <tab id="Module_Page_Manage" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesManage</class_name>
+                    </tab>
+                    <tab id="Module_Page_Notifications" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesNotifications</class_name>
+                    </tab>
+                    <tab id="Module_Page_Updates" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesUpdates</class_name>
+                    </tab>
+                <tab id="Module_Catalog" id_parent="Modules" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentModulesCatalog</class_name>
+                </tab>
+                    <tab id="Module_Page_Catalog" id_parent="Module_Catalog" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesCatalog</class_name>
+                    </tab>
+                    <tab id="Marketing_tools" id_parent="Module_Catalog" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminAddonsCatalog</class_name>
+                    </tab>
+                <tab id="Module_Page_old" id_parent="Modules" active="0" hide_host_mode="0" icon="">
+                    <class_name>AdminModules</class_name>
+                </tab>
+
+            <!--LOOK & FEEL-->
+            <tab id="Look_feel" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="desktop_mac">
+                <class_name>AdminParentThemes</class_name>
+            </tab>
+
+                <tab id="Themes" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminThemes</class_name>
+                </tab>
+                <tab id="Themes_Catalog" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminThemesCatalog</class_name>
+                </tab>
+
+                <tab id="Mail_Theme_Parent" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
+                  <class_name>AdminParentMailTheme</class_name>
+                </tab>
+                    <tab id="Mail_Theme" id_parent="Mail_Theme_Parent" active="1" hide_host_mode="0" icon="">
+                      <class_name>AdminMailTheme</class_name>
+                    </tab>
+
+                <tab id="Pages" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminCmsContent</class_name>
+                </tab>
+                <tab id="Positions" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminModulesPositions</class_name>
+                </tab>
+                <tab id="Image_Settings" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminImages</class_name>
+                </tab>
+
+                <tab id="Shipping" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="local_shipping">
+                    <class_name>AdminParentShipping</class_name>
+                </tab>
+
+                    <tab id="Carriers" id_parent="Shipping" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminCarriers</class_name>
+                    </tab>
+                    <tab id="Shipping_1" id_parent="Shipping" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminShipping</class_name>
+                    </tab>
+
+                <tab id="Payment" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="payment">
+                    <class_name>AdminParentPayment</class_name>
+                </tab>
+
+                    <tab id="Payment_methods" id_parent="Payment" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminPayment</class_name>
+                    </tab>
+                    <tab id="Payment_preferences" id_parent="Payment" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminPaymentPreferences</class_name>
+                    </tab>
+
+            <!--INTERNATIONAL OK-->
+            <tab id="International" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="language">
+                <class_name>AdminInternational</class_name>
+            </tab>
+
+                <tab id="Localization" id_parent="International" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentLocalization</class_name>
+                </tab>
+
+                    <tab id="Localization_1" id_parent="Localization" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminLocalization</class_name>
+                    </tab>
+                    <tab id="Languages" id_parent="Localization" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminLanguages</class_name>
+                    </tab>
+                    <tab id="Currencies" id_parent="Localization" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminCurrencies</class_name>
+                    </tab>
+                    <tab id="Geolocation" id_parent="Localization" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminGeolocation</class_name>
+                    </tab>
+
+                <tab id="Locations" id_parent="International" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentCountries</class_name>
+                </tab>
+                    <tab id="Zones" id_parent="Locations" active="1" hide_host_mode="0" icon="">
+                      <class_name>AdminZones</class_name>
+                    </tab>
+                    <tab id="Countries" id_parent="Locations" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminCountries</class_name>
+                    </tab>
+                    <tab id="States" id_parent="Locations" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStates</class_name>
+                    </tab>
+
+                <tab id="Tax_Management" id_parent="International" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentTaxes</class_name>
+                </tab>
+
+                    <tab id="Taxes" id_parent="Tax_Management" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminTaxes</class_name>
+                    </tab>
+                    <tab id="Tax_Rules" id_parent="Tax_Management" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminTaxRulesGroup</class_name>
+                    </tab>
+
+                <tab id="Translations" id_parent="International" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminTranslations</class_name>
+                </tab>
+
+        <!--CONFIGURE-->
+        <tab id="CONFIGURE" id_parent="" active="1" hide_host_mode="0" icon="">
+            <class_name>CONFIGURE</class_name>
+        </tab>
+
+            <!--SHOP PARAMETERS-->
+            <tab id="Shop_parameters" id_parent="CONFIGURE" active="1" hide_host_mode="0" icon="settings">
+                <class_name>ShopParameters</class_name>
+            </tab>
+
+                <tab id="General" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentPreferences</class_name>
+                </tab>
+
+                    <tab id="General_1" id_parent="General" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminPreferences</class_name>
+                    </tab>
+                    <tab id="Maintenance" id_parent="General" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminMaintenance</class_name>
+                    </tab>
+
+                <tab id="Order_settings" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentOrderPreferences</class_name>
+                </tab>
+
+                    <tab id="Order_settings_2" id_parent="Order_settings" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminOrderPreferences</class_name>
+                    </tab>
+                    <tab id="Statuses" id_parent="Order_settings" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStatuses</class_name>
+                    </tab>
+
+                <tab id="Products_1" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminPPreferences</class_name>
+                </tab>
+                <tab id="Customer_settings" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentCustomerPreferences</class_name>
+                </tab>
+
+                    <tab id="Customers_2" id_parent="Customer_settings" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminCustomerPreferences</class_name>
+                    </tab>
+                    <tab id="Groups" id_parent="Customer_settings" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminGroups</class_name>
+                    </tab>
+                    <tab id="Titles" id_parent="Customer_settings" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminGenders</class_name>
+                    </tab>
+
+                <tab id="Contact" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentStores</class_name>
+                </tab>
+
+                    <tab id="Contacts" id_parent="Contact" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminContacts</class_name>
+                    </tab>
+                    <tab id="Store_Contacts" id_parent="Contact" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStores</class_name>
+                    </tab>
+
+                <tab id="Traffic" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentMeta</class_name>
+                </tab>
+
+                    <tab id="SEO_URLs" id_parent="Traffic" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminMeta</class_name>
+                    </tab>
+                    <tab id="Search_Engines" id_parent="Traffic" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminSearchEngines</class_name>
+                    </tab>
+                    <tab id="Referrers" id_parent="Traffic" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminReferrers</class_name>
+                    </tab>
+
+                <tab id="Search" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentSearchConf</class_name>
+                </tab>
+
+                    <tab id="Search_1" id_parent="Search" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminSearchConf</class_name>
+                    </tab>
+                    <tab id="Tags" id_parent="Search" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminTags</class_name>
+                    </tab>
+
+            <!--ADVANCED PARAMETERS-->
+            <tab id="Advanced_Parameters" id_parent="CONFIGURE" active="1" hide_host_mode="0" icon="settings_applications">
+                <class_name>AdminAdvancedParameters</class_name>
+            </tab>
+
+                <tab id="Information" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminInformation</class_name>
+                </tab>
+                <tab id="Performance" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminPerformance</class_name>
+                </tab>
+                <tab id="Administration" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminAdminPreferences</class_name>
+                </tab>
+                <tab id="E-mail" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminEmails</class_name>
+                </tab>
+                <tab id="CSV_Import" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminImport</class_name>
+                </tab>
+
+                <tab id="Employees" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentEmployees</class_name>
+                </tab>
+
+                    <tab id="Employees_1" id_parent="Employees" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminEmployees</class_name>
+                    </tab>
+                    <tab id="Profiles" id_parent="Employees" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminProfiles</class_name>
+                    </tab>
+                    <tab id="Permissions" id_parent="Employees" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminAccess</class_name>
+                    </tab>
+
+                <tab id="Database" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentRequestSql</class_name>
+                </tab>
+
+                    <tab id="SQL_Manager" id_parent="Database" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminRequestSql</class_name>
+                    </tab>
+                    <tab id="DB_Backup" id_parent="Database" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminBackup</class_name>
+                    </tab>
+
+                <tab id="Logs" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminLogs</class_name>
+                </tab>
+                <tab id="Webservice" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminWebservice</class_name>
+                </tab>
+                <tab id="Multistore" id_parent="Advanced_Parameters" active="0" hide_host_mode="0" icon="">
+                    <class_name>AdminShopGroup</class_name>
+                </tab>
+                <tab id="Multistore" id_parent="Advanced_Parameters" active="0" hide_host_mode="0" icon="">
+                    <class_name>AdminShopUrl</class_name>
+                </tab>
+
+      <!--QUICK ACCESS-->
+      <tab id="Quick_Access" id_parent="-1" active="1" hide_host_mode="0" icon="">
+        <class_name>AdminQuickAccesses</class_name>
+      </tab>
+
+      <!--DEFAULT-->
+      <tab id="DEFAULT" id_parent="" active="1" hide_host_mode="0" icon="">
+        <class_name>DEFAULT</class_name>
+      </tab>
+
+      <tab id="Patterns" id_parent="-1" active="1" hide_host_mode="0" icon="">
+        <class_name>AdminPatterns</class_name>
+      </tab>
+    </entities>
+</entity_tab>

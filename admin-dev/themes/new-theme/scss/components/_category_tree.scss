@@ -1,0 +1,99 @@
+ul.category-tree {
+  padding: 0;
+  .less,
+  .more {
+    background: none;
+    position: relative;
+    > .checkbox,
+    > .radio {
+      cursor: pointer;
+      &::before {
+        position: absolute;
+        font-family: 'Material Icons';
+        cursor: pointer;
+        font-size: 1.25rem;
+        color: $gray-medium;
+        top: -0.25rem;
+        left: -0.1rem;
+      }
+    }
+  }
+  .less {
+    > .checkbox,
+    > .radio {
+      &::before {
+        content: "\E313";
+      }
+    }
+  }
+  .more {
+    > .checkbox,
+    > .radio {
+      &::before {
+        content: "\E5CC";
+      }
+    }
+  }
+  .category-label {
+    display: block;
+    padding-left: 0;
+    position: relative;
+    .category {
+      cursor: pointer;
+      position: absolute;
+      top: .4em; // relative to the current font size, so "em" and not "rem"
+      right: .4em;
+    }
+  }
+  ul {
+    padding-left: 1.563rem;
+  }
+  li {
+    list-style: none;
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+    background-position: 0 3px;
+    .checkbox,
+    .radio {
+      padding-left: 20px;
+      padding-top: 0;
+    }
+  }
+}
+
+// category tree on the catalog page
+#tree-categories {
+  padding: 0.625rem;
+
+  .categories-tree-actions {
+    border-bottom: .063rem solid $gray-light;
+    margin-bottom: .625rem;
+    white-space: nowrap; // prevent buttons from collapsing
+
+    > a {
+      display: inline-block;
+
+      margin-bottom: .625rem;
+
+      + a {
+        margin-left: 0.9375rem;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      i.material-icons {
+        font-size: 1.25rem;
+        vertical-align: bottom;
+      }
+      color: $gray-medium;
+    }
+  }
+
+  #choice_tree {
+    .category-tree {
+      margin-bottom: 0;
+    }
+  }
+}

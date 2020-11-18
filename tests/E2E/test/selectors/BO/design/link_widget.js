@@ -1,0 +1,32 @@
+module.exports = {
+  LinkWidget: {
+    new_block_button: '#page-header-desc-configuration-add',
+    name_of_the_link_block_input: '#form_link_block_block_name_%lang',
+    name_of_the_link_block_lang_button: '#form_link_block_block_name',
+    name_of_the_link_block_lang_span: '[aria-labelledby="form_link_block_block_name"] span[data-locale="%lang"]',
+    hook_select: '#form_link_block_id_hook',
+    select_all_content_page: '(//*[@id="form_link_block_cms"]//label[not(contains(@class,"choice_category"))])[%POS]',
+    select_all_product_page: '(//*[@id="form_link_block_product"]//label[not(contains(@class,"choice_category"))])[%POS]',
+    select_all_static_content: '(//*[@id="form_link_block_static"]//label[not(contains(@class,"choice_category"))])[%POS]',
+    first_custom_content_name_input: '#form_link_block_custom_%POS_%lang_title',
+    first_custom_content_url_input: '#form_link_block_custom_%POS_%lang_url',
+    custom_content_lang_button: '#form_link_block_custom_%POS',
+    custom_content_lang_span: '[aria-labelledby="form_link_block_custom_%POS"] span[data-locale="%lang"]',
+    add_custom_content_button: '.card-text button.add-collection-btn',
+    second_custom_content_name_input: '//table[contains(@class,"js-custom-links-table-1")]//input[contains(@name,"custom[1][2][title]")]',
+    second_custom_content_url_input: '//table[contains(@class,"js-custom-links-table-1")]//input[contains(@name,"custom[1][2][url]")]',
+    save_button: '.card-footer button',
+    link_widget_table: '//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[2]',
+    link_widget_configuration_bloc: '//*[@id="configuration_form"]//h3',
+    hook_in_table:'//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[2]',
+    last_widget_name_block: '(//*[contains(text(),"%HOOK")]/../following-sibling::div//table/tbody/tr[last()]//td[3])[1]',
+    last_widget_drag_in_displayFooter_block: '//*[contains(text(),"%HOOK")]/../following-sibling::div//table/tbody/tr[last()]//td[1]',
+    first_widget_drag_in_displayFooter_block: '//*[contains(text(),"%HOOK")]/../following-sibling::div//table/tbody/tr[1]//td[1]',
+    second_widget_in_displayFooter_block: '//*[contains(text(),"%HOOK")]/../following-sibling::div//table/tbody/tr[2]//td[3]',
+    edit_display_footer_created_hook: '//*[contains(text(),"displayFooter")]/../following-sibling::div//table/tbody/tr[last()]/td[5]//a',
+    delete_display_footer_created_hook: '//*[contains(text(),"displayFooter")]/../following-sibling::div//table/tbody/tr[last()]/td[5]//a[@data-toggle="dropdown"]',
+    delete_button: '//*[contains(text(),"displayFooter")]/../following-sibling::div//table/tbody/tr[last()]/td[5]//div[contains(@class,"dropdown-menu")]/a',
+    success_panel: '.alert-success .alert-text p',
+  }
+};
+

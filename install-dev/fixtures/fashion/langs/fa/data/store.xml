@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_store>
+  <store id="Dade_County">
+    <name>دید کانتی</name>
+    <address1>3030 جنوب غربی 8ام خیابان میامی</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="E_Fort_Lauderdale" >
+    <name>ایفورت لادرداله</name>
+    <address1>1000 شمالشرقی 4ام خیابان لادرداله</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="Pembroke_Pines" >
+    <name>پمبروک پاینز</name>
+    <address1>11001 بلوار پاینز پمبروک پاینز</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="Coconut_Grove" >
+    <name>کوکونات گروو</name>
+    <address1>2999 جنوب غربی 32ام خیابان</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+  <store id="N_Miami_Biscayne">
+    <name>میامی شمالی/بیسکان</name>
+    <address1>12055 بلوار بیسکان</address1>
+    <address2/>
+    <hours> [["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["09:00AM - 07:00PM"],["10:00AM - 04:00PM"],["10:00AM - 04:00PM"]]</hours>
+    <note/>
+  </store>
+</entity_store>

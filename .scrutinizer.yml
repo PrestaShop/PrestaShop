@@ -1,0 +1,14 @@
+filter:
+    excluded_paths:
+        - 'vendor/*'
+        - 'tests/*'
+        - 'src/PrestaShopBundle/Tests/*'
+
+tools:
+    php_cs_fixer:
+        config:
+            level: symfony
+            fixers: { long_array_syntax: true }
+
+build_failure_conditions:
+    - 'issues.label("coding-style").new.exists'

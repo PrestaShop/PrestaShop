@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.group.provider.default_groups_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Group\Provider\DefaultGroupsProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

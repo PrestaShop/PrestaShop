@@ -1,0 +1,96 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<script>
+    $(document).ready(function() {
+        var sliderInput = $('#{{ input_name }}');
+
+        // parse and fix init value
+        var value = sliderInput.attr('sql');
+        if (value != '') {
+            value = value.replace('BETWEEN ', '');
+            value = value.replace(' AND ', ',');
+            value = value.replace('<', '{{ min|default('0') }},');
+            value = value.replace('>', '{{ max|default('10') }},');
+            value = value.split(',');
+            value[0] = parseInt(value[0]);
+            value[1] = parseInt(value[1]);
+        } else {
+            value = [{{ min|default('0') }},{{ max|default('10') }}];
+        }
+        value = value.sort(function sortNumber(a,b) {
+            return a - b;
+        });
+
+        sliderInput.bootstrapSlider({
+            formatter: function(values) {
+                if (typeof values[0] != 'undefined') {
+                    var slider = $('#{{ input_name }}');
+                    if (values[0] == {{ min|default('0') }} && values[1] == {{ max|default('10') }}) {
+                        slider.attr('sql', '');
+                        return "{{ 'Not filtered'|trans({}, 'Admin.Global') }}";
+                    }
+                    if (values[0] == values[1]) {
+                        slider.attr('sql', ''); //'='+values[0]);
+                        return "{{ 'Equals'|trans({}, 'Admin.Global') }} " + values[0];
+                    }
+                    if (values[0] == {{ min|default('0') }}) {
+                        slider.attr('sql', '<'+values[1]);
+                        return "{{ 'Below'|trans({}, 'Admin.Global') }} " + values[1];
+                    }
+                    if (values[1] == {{ max|default('10') }}) {
+                        slider.attr('sql', '>'+values[0]);
+                        return "{{ 'Above'|trans({}, 'Admin.Global') }} " + values[0];
+                    }
+                    slider.attr('sql', 'BETWEEN '+values[0]+' AND '+values[1]);
+                    return "{{ 'Inside range'|trans({}, 'Admin.Global') }} [" + values[0] + "~" + values[1] + "]";
+                }
+            },
+            min: {{ min|default('0') }},
+            max: {{ max|default('10') }},
+            step: {{ step|default('1') }},
+            //tooltip: 'always',
+            scale: '{{ scale|default('linear') }}', // or 'logarithmic'
+            value: value,
+            id: '{{ input_name }}Slider'
+        });
+        {% if on_change_func_name is defined %}
+            sliderInput.on('slideStop', function() {
+                {{ on_change_func_name|raw }}
+            });
+        {% endif %}
+    });
+</script>
+<style>
+    <!-- /* To remove once integrated in sass */
+    #{{ input_name }}Slider .slider-selection {
+        background: #aaaaaa;
+    }
+    #{{ input_name }}Slider .tooltip-inner {
+        padding: 0.4em;
+    }
+    -->
+</style>
+
+<input type="text" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />

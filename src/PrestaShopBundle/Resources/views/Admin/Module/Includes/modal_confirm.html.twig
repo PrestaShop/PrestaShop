@@ -1,0 +1,124 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% if module.attributes.urls|length >= 1 %}
+  {% for module_action, module_url in module.attributes.urls %}
+    {% if module_action in ['disable', 'uninstall', 'reset'] %}
+      <div id="module-modal-confirm-{{module.attributes.name}}-{{ module_action }}" class="modal modal-vcenter fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title module-modal-title">
+                {% if module_action == 'disable' %}
+                  {{ "Disable module?"|trans({}, 'Admin.Modules.Feature') }}
+                {% endif %}
+                {% if module_action == 'uninstall' %}
+                  {{ "Uninstall module?"|trans({}, 'Admin.Modules.Feature') }}
+                {% endif %}
+                {% if module_action == 'reset' %}
+                  {{ "Reset module?"|trans({}, 'Admin.Modules.Feature') }}
+                {% endif %}
+              </h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body row">
+              <div class="col-md-12">
+                <p>
+                  {% if module_action == 'disable' %}
+                    {{ "You are about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                    <br>
+                    <br>
+                    {{ "Your current settings will be saved, but the module will no longer be active."|trans({}, 'Admin.Modules.Notification') }}
+                  {% endif %}
+                  {% if module_action == 'uninstall' %}
+                    {{ "You are about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                    <br>
+                    {{ module.attributes.confirmUninstall }}
+                    <br>
+                    <br>
+                    {{ "This will disable the module and delete all its files. For good."|trans({}, 'Admin.Modules.Notification') }}
+                    <br>
+                    <label>
+                      <input type="checkbox" id="force_deletion" name="force_deletion" data-tech-name="{{module.attributes.name}}"> {{ "Optional: delete module folder after uninstall."|trans({}, 'Admin.Modules.Feature') }}
+                    </label>
+                    <br>
+                    <span class="italic red">
+                      {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
+                    </span>
+                  {% endif %}
+                  {% if module_action == 'reset' %}
+                    {{ "You're about to reset %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                    <br>
+                    <br>
+                    {{ "This will restore the defaults settings."|trans({}, 'Admin.Modules.Notification') }}
+                    <br>
+                    <span class="italic red">
+                      {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
+                    </span>
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="button" class="btn btn-outline-secondary" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />
+              {% if module_action == 'disable' %}
+                <a
+                  class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
+                  href="{{ module_url }}"
+                  data-dismiss="modal"
+                  data-tech-name="{{module.attributes.name}}"
+                >
+                  {{ "Yes, disable it"|trans({}, 'Admin.Modules.Feature') }}
+                </a>
+              {% endif %}
+              {% if module_action == 'uninstall' %}
+                <a
+                  class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
+                  href="{{ module_url }}"
+                  data-dismiss="modal"
+                  data-tech-name="{{module.attributes.name}}"
+                >
+                  {{ "Yes, uninstall it"|trans({}, 'Admin.Modules.Feature') }}
+                </a>
+              {% endif %}
+              {% if module_action == 'reset' %}
+                <a
+                  class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
+                  href="{{ module_url }}"
+                  data-dismiss="modal"
+                  data-tech-name="{{module.attributes.name}}"
+                >
+                  {{ "Yes, reset it"|trans({}, 'Admin.Modules.Feature') }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}

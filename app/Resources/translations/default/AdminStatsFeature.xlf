@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminStatsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bbe8aef37d99eeb6f34a17f939ffa6f0">
+        <source>%value%% of your Catalog</source>
+        <target>%value%% of your Catalog</target>
+        <note>Line: 768</note>
+      </trans-unit>
+      <trans-unit id="82ad4f0be97f8f36d31e2540aacb155d">
+        <source>No customers</source>
+        <target>No customers</target>
+        <note>Line: 785</note>
+      </trans-unit>
+      <trans-unit id="a0e9b94006c36be97ce9fa908fdff7d8">
+        <source>%percentage%% Female Customers</source>
+        <target>%percentage%% Female Customers</target>
+        <note>Line: 787</note>
+      </trans-unit>
+      <trans-unit id="7870d39845089cddec99f55bef4ca3bb">
+        <source>%percentage%% Male Customers</source>
+        <target>%percentage%% Male Customers</target>
+        <note>Line: 789</note>
+      </trans-unit>
+      <trans-unit id="70f3bf1ba6a40018f2b5139e4721bae1">
+        <source>%percentage%% Neutral Customers</source>
+        <target>%percentage%% Neutral Customers</target>
+        <note>Line: 791</note>
+      </trans-unit>
+      <trans-unit id="ac72cc56077f4fcf5c0fd3d6e0902264">
+        <source>%value% years</source>
+        <target>%value% years</target>
+        <note>Line: 803</note>
+      </trans-unit>
+      <trans-unit id="d48e7c1fd584c90dad7cd24e8f65be6d">
+        <source>%average% hours</source>
+        <target>%average% hours</target>
+        <note>Line: 820</note>
+      </trans-unit>
+      <trans-unit id="08cfa7751d1812e961560f623e082aba">
+        <source>No orders</source>
+        <target>No orders</target>
+        <note>Line: 905</note>
+      </trans-unit>
+      <trans-unit id="9aee5f7903fbed5f7d715e4011961b59">
+        <source>%d%% %s</source>
+        <target>%d%% %s</target>
+        <note>Line: 909</note>
+      </trans-unit>
+      <trans-unit id="d79de24a931cdfd25615c068f1f2765a">
+        <source>No category</source>
+        <target>No category</target>
+        <note>Line: 1010</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatsTabController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="452a7601dbc6f2c38aa89e68bda8b603">
+        <source>Stats</source>
+        <target>Stats</target>
+        <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

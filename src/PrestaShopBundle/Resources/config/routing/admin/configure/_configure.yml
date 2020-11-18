@@ -1,0 +1,16 @@
+_admin_advanced_parameters_routing:
+    resource: "advanced_parameters/_advanced_parameters.yml"
+    prefix: /advanced/
+
+_admin_shop_parameters_routing:
+    resource: "shop_parameters/_shop_parameters.yml"
+    prefix: /shop/
+
+admin_close_showcase_card:
+    path: /showcase-card/close
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShowcaseCard:closeShowcaseCard'
+    requirements:
+        close: \d+
+        name: \w+

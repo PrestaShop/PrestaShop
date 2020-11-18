@@ -1,0 +1,79 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block contact_form %}
+  {{ form_start(contactForm) }}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">mail_outline</i>
+        {{ 'Contacts'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          {{ form_errors(contactForm) }}
+
+          {{ ps.form_group_row(contactForm.title, {}, {
+            'label': 'Title'|trans({}, 'Admin.Global'),
+            'help': 'Contact name (e.g. Customer Support).'|trans({}, 'Admin.Shopparameters.Help')
+          }) }}
+
+          {{ ps.form_group_row(contactForm.email, {}, {
+            'label': 'Email address'|trans({}, 'Admin.Global'),
+            'help': 'Emails will be sent to this address.'|trans({}, 'Admin.Shopparameters.Help')
+          }) }}
+
+          {{ ps.form_group_row(contactForm.is_messages_saving_enabled, {}, {
+            'label': 'Save messages?'|trans({}, 'Admin.Shopparameters.Feature'),
+            'help': 'If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'|trans({}, 'Admin.Shopparameters.Help')
+          }) }}
+
+          {{ ps.form_group_row(contactForm.description, {}, {
+            'label': 'Description'|trans({}, 'Admin.Global')
+          }) }}
+
+          {% if contactForm.shop_association is defined %}
+            {{ ps.form_group_row(contactForm.shop_association, {}, {
+              'label': 'Shop association'|trans({}, 'Admin.Global')
+            }) }}
+          {% endif %}
+
+          {% block contact_form_rest %}
+            {{ form_rest(contactForm) }}
+          {% endblock %}
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{{ path('admin_contacts_index') }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+        <button class="btn btn-primary float-right">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  {{ form_end(contactForm) }}
+{% endblock %}

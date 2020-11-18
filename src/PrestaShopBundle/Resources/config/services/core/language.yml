@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.language.pack.loader.remote:
+        class: 'PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader'
+        arguments:
+            - '@prestashop.core.foundation.version'
+
+    prestashop.core.language.language_default_fonts_catalog:
+        class: 'PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog'
+        arguments:
+            -
+                'fa': 'Tahoma'
+                'ar': 'Tahoma'

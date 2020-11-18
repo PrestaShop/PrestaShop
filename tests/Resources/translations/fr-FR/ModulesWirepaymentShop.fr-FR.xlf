@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_wirepayment/views/templates/hook/payment.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5e1695822fc5af98f6b749ea3cbc9b4c" approved="yes">
+        <source>Pay by bank wire</source>
+        <target xml:lang="fr" state="translated">Payer par virement bancaire</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="4e1fb9f4b46556d64db55d50629ee301" approved="yes">
+        <source>(order processing will be longer)</source>
+        <target xml:lang="fr" state="translated">(le traitement de la commande sera plus long)</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/controllers/front/payment.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="763538d192c0e4a3a341c1c7d0db9240" approved="yes">
+        <source>%1$s (tax incl.)</source>
+        <target xml:lang="fr" state="translated">%1$s (TTC)</target>
+        <note>Context:
+File: modules/ps_wirepayment/controllers/front/payment.php:46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/controllers/front/validation.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156" approved="yes">
+        <source>This payment method is not available.</source>
+        <target xml:lang="fr" state="translated">Ce moyen de paiement n'est pas disponible.</target>
+        <note>Context:
+File: modules/ps_wirepayment/controllers/front/validation.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="b2f40690858b404ed10e62bdf422c704" approved="yes">
+        <source>Amount</source>
+        <target xml:lang="fr" state="translated">Montant</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="5ca0b1b910f393ed1f9f6fa99e414255" approved="yes">
+        <source>Name of account owner</source>
+        <target xml:lang="fr" state="translated">à l'ordre de</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="51f4741f4c53f0fe3ba1be9ac3a34f2f" approved="yes">
+        <source>Please include these details</source>
+        <target xml:lang="fr" state="translated">Veuillez inclure ces informations</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="984482eb9ff11e6310fef641d2268a2a" approved="yes">
+        <source>Bank name</source>
+        <target xml:lang="fr" state="translated">à cette banque</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/payment_return.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="88526efe38fd18179a127024aba8c1d7" approved="yes">
+        <source>Your order on %s is complete.</source>
+        <target xml:lang="fr" state="translated">Votre commande sur %s a bien été enregistrée.</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="1552c5916ccfe019f35d91fd8955755e" approved="yes">
+        <source>Please send us a bank wire with:</source>
+        <target xml:lang="fr" state="translated">Veuillez nous envoyer un virement bancaire :</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="c8ad6f14cf0f4c6de65b92737b096c37" approved="yes">
+        <source>Please transfer the invoice amount to our bank account. You will receive our order confirmation by email containing bank details and order number.</source>
+        <target xml:lang="fr" state="translated">Il vous faudra transférer le montant de la facture sur notre compte bancaire. Vous recevrez votre confirmation de commande par e-mail, comprenant nos coordonnées bancaires et le numéro de commande.</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="1a81e90b854883236a07009057635bcd" approved="yes">
+        <source>Goods will be reserved %s days for you and we'll process the order immediately after receiving the payment.</source>
+        <target xml:lang="fr" state="translated">Les biens seront mis de côté %s jours pour vous et nous traiterons votre commande dès la réception du paiement.</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="ab066b3292d8ab61ef3b5c77169cdd19" approved="yes">
+        <source>More information</source>
+        <target xml:lang="fr" state="translated">En savoir plus</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="35b4b09d5d0686ec5c2e2cc9f3d9039c" approved="yes">
+        <source>Bankwire</source>
+        <target xml:lang="fr" state="translated">Virement</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="ebcdf354e92daa6f6dee8a83a14e5c7a" approved="yes">
+        <source>Payment is made by transfer of the invoice amount to the following account:</source>
+        <target xml:lang="fr" state="translated">Le paiement est effectué par virement du montant de la facture vers le compte suivant :</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:45</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

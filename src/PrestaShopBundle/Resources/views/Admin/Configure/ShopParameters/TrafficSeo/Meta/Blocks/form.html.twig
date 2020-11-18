@@ -1,0 +1,105 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(metaForm) }}
+  <div class="card">
+    <div class="card-header">
+      {{ 'Meta tags'|trans({}, 'Admin.Shopparameters.Feature') }}
+    </div>
+    <div class="card-block row">
+      <div class="card-text">
+        {{ form_errors(metaForm) }}
+
+        {{ ps.form_group_row(metaForm.page_name, {
+          'attr': {
+            'class': 'js-meta-page-name',
+            'data-toggle': 'select2',
+            'data-minimumResultsForSearch': '7'
+          }
+        }, {
+          'label': 'Page name'|trans({}, 'Admin.Shopparameters.Feature'),
+          'help': 'Name of the related page.'|trans({}, 'Admin.Shopparameters.Help')
+        }) }}
+
+        {% set pageTitleHelpLabel %}
+          {{ 'Title of this page.'|trans({}, 'Admin.Shopparameters.Help') }}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ '  <>={}'}}
+        {% endset %}
+
+        {{ ps.form_group_row(metaForm.page_title, {}, {
+          'label': 'Page title'|trans({}, 'Admin.Shopparameters.Feature'),
+          'help': pageTitleHelpLabel
+        }) }}
+
+        {% set metaDescriptionHelpLabel %}
+          {{ 'A short description of your shop.'|trans({}, 'Admin.Shopparameters.Help') }}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' <>={}' }}
+        {% endset %}
+
+        {{ ps.form_group_row(metaForm.meta_description, {}, {
+          'label': 'Meta description'|trans({}, 'Admin.Global'),
+          'help': metaDescriptionHelpLabel
+        }) }}
+
+        {% set metaKeywordsHelpLabel %}
+          {{ 'List of keywords for search engines.'|trans({}, 'Admin.Shopparameters.Help') }}
+          {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
+          {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' <>={}' }}
+        {% endset %}
+
+        {{ ps.form_group_row(metaForm.meta_keywords, {}, {
+          'label': 'Meta keywords'|trans({}, 'Admin.Global'),
+          'help': metaKeywordsHelpLabel
+        }) }}
+
+        {% set rewriteUrlHelpLabel %}
+          {{ 'For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php'|trans({}, 'Admin.Shopparameters.Help') }}
+          {{ 'Only letters and hyphens are allowed.'|trans({}, 'Admin.Shopparameters.Help') }}
+        {% endset %}
+
+        {{ ps.form_group_row(metaForm.url_rewrite, {'attr': {'class': 'js-url-rewrite'}}, {
+          'label': 'Rewritten URL'|trans({}, 'Admin.Shopparameters.Feature'),
+          'help': rewriteUrlHelpLabel
+        }) }}
+
+        {% block meta_form_rest %}
+          {{ form_rest(metaForm) }}
+        {% endblock %}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-inline-flex">
+        <a href="{{ path('admin_metas_index') }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+      </div>
+      <div class="d-inline-flex float-right">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+{{ form_end(metaForm) }}

@@ -1,0 +1,30 @@
+<phpunit
+  backupGlobals               = "false"
+  backupStaticAttributes      = "false"
+  colors                      = "true"
+  convertErrorsToExceptions   = "true"
+  convertNoticesToExceptions  = "true"
+  convertWarningsToExceptions = "true"
+  processIsolation            = "true"
+  stopOnFailure               = "false"
+  syntaxCheck                 = "true"
+  bootstrap                   =" bootstrap-controllers.php"
+>
+  <php>
+    <server name="KERNEL_CLASS" value="AppKernel" />
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
+    <const name="_PS_IN_TEST_" value="1" />
+  </php>
+
+  <groups>
+    <include>
+      <group>controller</group>
+    </include>
+  </groups>
+
+  <testsuites>
+    <testsuite name="Legacy Controller tests">
+      <file>PrestaShopBundle/Controller/ControllerTest.php</file>
+    </testsuite>
+  </testsuites>
+</phpunit>

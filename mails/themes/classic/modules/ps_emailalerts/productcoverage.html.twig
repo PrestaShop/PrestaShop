@@ -1,0 +1,39 @@
+{% extends '@MailThemes/classic/components/layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span class="title">{{ 'Hi,'|trans({}, 'Emails.Body', locale)|raw }}</span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="box" style="border:1px solid #D6D4D4;">
+    <table class="table">
+      <tr>
+        <td width="10">&nbsp;</td>
+        <td>
+          <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ '{product} is almost out of stock.'|trans({}, 'Emails.Body', locale) }}
+              </p>
+            
+{% endif %}
+            <span>
+              {{ 'The stock cover is now less than the specified minimum of:'|trans({}, 'Emails.Body', locale)|raw }} <strong><span>{warning_coverage}.</span></strong><br/><br/>
+              <strong><span>{{ 'Current stock cover:'|trans({}, 'Emails.Body', locale)|raw }}</span></strong> {current_coverage}
+            </span>
+          </font>
+        </td>
+        <td width="10">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+{% endblock %}

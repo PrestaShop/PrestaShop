@@ -1,0 +1,108 @@
+.showcase-card, .helper-card {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.06);
+  max-width: 810px;
+  position: relative;
+  margin: auto;
+  margin-bottom: 17px;
+  display: flex;
+  flex-direction: row;
+
+  &__left, &__right {
+    height: 100%;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  &__team, &__customer {
+    background-image: url('img/helper-card/wave-shape-background.png');
+  }
+
+  &__category {
+    background-image: url('img/helper-card/seo-background@3x.png');
+  }
+
+  &__left {
+    width: 320px;
+    animation: showcase-img-appearance 1s;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
+
+    img {
+      animation: showcase-img-appearance 1.5s;
+      padding: 40px;
+      width: 100%;
+    }
+    &.shape-one {
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+  }
+
+  &__right {
+    width: 480px;
+    padding: 45px 55px 0 20px;
+    font-size: 14px;
+
+    @include media-breakpoint-down(md) {
+      padding: 3.438rem 1.25rem;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-family: 'Open Sans';
+      font-weight: 600;
+      color: #363a41;
+    }
+
+    p {
+      margin: 22px 0;
+      text-align: left;
+    }
+
+    > a {
+      &.btn-outline-secondary {
+        margin-right: .95rem;
+      }
+    }
+
+    button {
+      background-color: white;
+      border: 1px solid #899ea5;
+      padding: 7px 15px;
+      color: #576c72;
+      font-weight: 600;
+      outline: 0;
+    }
+
+    @include media-breakpoint-down(md) {
+      width: inherit;
+      text-align: center;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+}
+
+.showcase-list-card {
+  &__header {
+    color: #363a41;
+    opacity: 0.7;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  &__message {
+    max-width: 460px;
+    font-size: 14px;
+    line-height: 1.43;
+    color: #6c868e;
+  }
+}

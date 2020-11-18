@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_viewedproduct/ps_viewedproduct.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="859e85774d372c6084d62d02324a1cc3">
+        <source>Viewed products block</source>
+        <target>Viewed products block</target>
+        <note>Context:
+File: modules/ps_viewedproduct/ps_viewedproduct.php:58</note>
+      </trans-unit>
+      <trans-unit id="eaa362292272519b786c2046ab4b68d2">
+        <source>Adds a block displaying recently viewed products.</source>
+        <target>Adds a block displaying recently viewed products.</target>
+        <note>Context:
+File: modules/ps_viewedproduct/ps_viewedproduct.php:60</note>
+      </trans-unit>
+      <trans-unit id="4ace1851b4246cf521d3319e6e3947e8">
+        <source>You must fill in the 'Products displayed' field.</source>
+        <target>You must fill in the 'Products displayed' field.</target>
+        <note>Context:
+File: modules/ps_viewedproduct/ps_viewedproduct.php:97</note>
+      </trans-unit>
+      <trans-unit id="73293a024e644165e9bf48f270af63a0">
+        <source>Invalid number.</source>
+        <target>Invalid number.</target>
+        <note>Context:
+File: modules/ps_viewedproduct/ps_viewedproduct.php:102</note>
+      </trans-unit>
+      <trans-unit id="26986c3388870d4148b1b5375368a83d">
+        <source>Products to display</source>
+        <target>Products to display</target>
+        <note>Context:
+File: modules/ps_viewedproduct/ps_viewedproduct.php:130</note>
+      </trans-unit>
+      <trans-unit id="d36bbb6066e3744039d38e580f17a2cc">
+        <source>Define the number of products displayed in this block.</source>
+        <target>Define the number of products displayed in this block.</target>
+        <note>Context:
+File: modules/ps_viewedproduct/ps_viewedproduct.php:134</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

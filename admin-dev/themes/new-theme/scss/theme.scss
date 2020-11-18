@@ -1,0 +1,139 @@
+// Tools
+@import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+@import "mixins/single_line_block";
+@import "mixins/notification_container";
+@import "mixins/notification_counter";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "mixins/cards";
+@import "mixins/hover";
+@import "mixins/stars";
+// Settings
+@import "config/settings";
+@import "config/keyframes";
+
+// Components
+@import "components/layout/content_div";
+@import "components/layout/header_toolbar";
+@import "components/layout/kpi";
+@import "components/layout/main_header";
+@import "components/layout/nav_bar";
+@import "components/layout/non_responsive";
+@import "components/cards";
+@import "components/category_tree";
+@import "components/dropzone";
+@import "components/modulescards";
+@import "components/notifications";
+@import "components/datepicker";
+@import "components/help_box";
+@import "components/ps_dropdown";
+@import "components/ps_number";
+@import "components/ps_radio";
+@import "components/ps_spinner";
+@import "components/ps_tree";
+@import "components/translatable_input";
+@import "components/choice_table";
+@import "components/form";
+@import "components/grid";
+@import "components/showcase-card";
+@import "components/material_choice_tree";
+@import "components/button_groups";
+@import "components/cursor";
+@import "components/toggable_field";
+@import "components/form_popover_error";
+
+// Pages specifics SCSS files
+@import "pages/product_page";
+@import "pages/products_catalog";
+@import "pages/translation_page";
+@import "pages/stock_page";
+@import "pages/invoices";
+@import "pages/meta";
+@import "pages/import_data";
+@import "pages/currency";
+@import "pages/themes_logo";
+@import "pages/cms_page";
+@import "pages/employee";
+
+// Main Layout
+@import "pages/modules";
+
+// Other
+@import "components/tinymce";
+
+@import "../css/right-sidebar.css";
+@import "../css/module/drop.css";
+
+// Main Layout
+body {
+  direction: ltr;
+  background: $background-grey;
+}
+
+// To put into the PrestaKit
+._fullspace {
+  width: 100%;
+  height: 100%;
+}
+.bordered {
+  > .panel {
+    border: 0;
+  }
+  > .nav-item > .nav-link {
+    &.active {
+      border-bottom: 1px solid #FFFFFF;
+    }
+  }
+}
+#product_filter_column_active .select2 {
+  min-width: 4.375rem;
+}
+
+// Needed to override the default inline style of typeahead and take all the width
+span.twitter-typeahead {
+  display: block !important;
+  width: 100% !important;
+  input.tt-input {
+    width: 100% !important;
+  }
+}
+
+// text buttons
+.btn.btn-text {
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// setting dropdown button
+.dropdown-toggle.tool-button {
+  &:after {
+    content: "settings";
+    font-size: 1.375rem;
+    color: $medium-gray;
+  }
+}
+
+.translation-field {
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+}
+
+table.table {
+  font-size: 0.8rem;
+}
+
+// Needed to override the default inline style of modal header in translations-app
+.translations-app{
+  .modal-header{
+    display: initial;
+  }
+}

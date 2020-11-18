@@ -1,0 +1,148 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.grid.definition.factory.abstract_grid_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+        abstract: true
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
+        calls:
+            - [setTranslator, ['@translator']]
+
+    prestashop.core.grid.definition.factory.logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
+            - "@=service('router').generate('admin_logs_index')"
+        public: true
+
+    prestashop.core.grid.definition.factory.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
+            - "@=service('router').generate('admin_emails_index')"
+            - '@prestashop.core.form.choice_provider.language_by_id'
+        public: true
+
+    prestashop.core.grid.definition.factory.request_sql:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'sqlmanager', 'action': 'index'})"
+            - "@=service('router').generate('admin_sql_requests_index')"
+        public: true
+
+    prestashop.core.grid.definition.factory.backup:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BackupDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.webservice_key:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'webservice', 'action': 'index'})"
+            - "@=service('router').generate('admin_webservice_keys_index')"
+        public: true
+
+    prestashop.core.grid.definition.factory.meta:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.category:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'category', 'action': 'index'})"
+            - "@=service('router').generate('admin_categories_index')"
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
+        public: true
+
+    prestashop.core.grid.definition.factory.employee:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'employee', 'action': 'index'})"
+            - "@=service('router').generate('admin_employees_index')"
+        public: true
+
+    prestashop.core.grid.definition.factory.contacts:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'contacts', 'action': 'index'})"
+            - "@=service('router').generate('admin_contacts_index')"
+        public: true
+
+    prestashop.core.grid.definition.factory.customer:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
+        public: true
+
+    prestashop.core.grid.definition.factory.language:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.currency:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.supplier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.profile:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfileGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'profile', 'action': 'index'})"
+            - "@=service('router').generate('admin_profiles_index')"
+            - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
+        public: true
+
+    prestashop.core.grid.definition.factory.cms_page_category:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@request_stack'
+          - '@prestashop.adapter.shop.context'
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        public: true
+
+    prestashop.core.grid.definition.factory.tax:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.manufacturer:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.manufacturer_address:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.cms_page:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@prestashop.core.query_bus'
+          - '@request_stack'
+          - '@prestashop.adapter.shop.context'
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        public: true

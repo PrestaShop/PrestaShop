@@ -1,0 +1,42 @@
+_wdt:
+    resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"
+    prefix:   /_wdt
+
+_profiler:
+    resource: "@WebProfilerBundle/Resources/config/routing/profiler.xml"
+    prefix:   /_profiler
+
+_errors:
+    resource: "@TwigBundle/Resources/config/routing/errors.xml"
+    prefix:   /_error
+
+_main:
+    resource: routing.yml
+
+_admin_stock_hot_reload_json:
+    path:     /stock/{hash}.hot-update.json
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Stock:hashUpdateJson
+
+_admin_stock_hot_reload_js:
+    path:     /stock/{hash}.hot-update.js
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Stock:hashUpdateJs
+    requirements:
+        hash: .+
+
+_admin_translations_hot_reload_json:
+    path:     /international/{hash}.hot-update.json
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:hashUpdateJson
+
+_admin_translations_hot_reload_js:
+    path:     /international/{hash}.hot-update.js
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:hashUpdateJs
+    requirements:
+        hash: .+

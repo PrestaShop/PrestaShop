@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_image>
+  <fields id="legend" class="Image" image="p">
+    <field name="id_product" relation="product"/>
+    <field name="cover"/>
+  </fields>
+  <entities>
+    <image id="Hummingbird_printed_t-shirt" id_product="Hummingbird_printed_t-shirt" cover="1"/>
+    <image id="Hummingbird_printed_t-shirt_1" id_product="Hummingbird_printed_t-shirt" cover=""/>
+    <image id="The_best_is_yet_to_come_Framed_poster" id_product="The_best_is_yet_to_come_Framed_poster" cover="1"/>
+    <image id="The_adventure_begins_Framed_poster" id_product="The_adventure_begins_Framed_poster" cover="1"/>
+    <image id="Today_is_a_good_day_Framed_poster" id_product="Today_is_a_good_day_Framed_poster" cover="1"/>
+    <image id="Mug_The_best_is_yet_to_come" id_product="Mug_The_best_is_yet_to_come" cover="1"/>
+    <image id="Mug_The_adventure_begins" id_product="Mug_The_adventure_begins" cover="1"/>
+    <image id="Mug_Today_is_a_good_day" id_product="Mug_Today_is_a_good_day" cover="1"/>
+    <image id="Mountain_fox_cushion" id_product="Mountain_fox_cushion" cover="1"/>
+    <image id="Mountain_fox_cushion_1" id_product="Mountain_fox_cushion" cover=""/>
+    <image id="Brown_bear_cushion" id_product="Brown_bear_cushion" cover="1"/>
+    <image id="Brown_bear_cushion_1" id_product="Brown_bear_cushion" cover=""/>
+    <image id="Hummingbird_cushion" id_product="Hummingbird_cushion" cover="1"/>
+    <image id="Hummingbird_cushion_1" id_product="Hummingbird_cushion" cover=""/>
+    <image id="Mountain_fox_-_Vector_graphics" id_product="Mountain_fox_-_Vector_graphics" cover="1"/>
+    <image id="Brown_bear_-_Vector_graphics" id_product="Brown_bear_-_Vector_graphics" cover="1"/>
+    <image id="Hummingbird_-_Vector_graphics" id_product="Hummingbird_-_Vector_graphics" cover="1"/>
+    <image id="Mountain_fox_notebook" id_product="Mountain_fox_notebook" cover="1"/>
+    <image id="Mountain_fox_notebook_1" id_product="Brown_bear_notebook" cover="1"/>
+    <image id="Mountain_fox_notebook_2" id_product="Hummingbird_notebook" cover="1"/>
+    <image id="Brown_bear_printed_sweater" id_product="Hummingbird_printed_sweater" cover="1"/>
+    <image id="Customizable_mug" id_product="Customizable_mug" cover="1"/>
+    <image id="Pack_Mug_Framed_poster" id_product="Pack_Mug_Framed_poster" cover="1"/>
+  </entities>
+</entity_image>

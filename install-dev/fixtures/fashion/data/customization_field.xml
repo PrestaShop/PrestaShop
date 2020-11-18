@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<entity_customization_field>
+  <fields id="name" class="CustomizationField">
+    <field name="id_product" relation="product"/>
+    <field name="type"/>
+    <field name="required"/>
+    <field name="is_module"/>
+    <field name="is_deleted"/>
+  </fields>
+  <entities>
+    <customization_field id="Insert_text" id_product="Customizable_mug" type="1" required="1"/>
+  </entities>
+</entity_customization_field>

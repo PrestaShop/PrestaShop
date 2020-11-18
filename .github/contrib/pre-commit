@@ -1,0 +1,53 @@
+#!/bin/sh
+
+RED=`tput setaf 1`
+RESET=`tput sgr0`
+
+PHP_BINARY=`which php`
+STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep '\.php$'`
+PROJECT_PATH=$(cd "$( dirname "$0" )/../../" && pwd)
+CS_FIXER="./vendor/bin/php-cs-fixer fix"
+
+# Determine if a file list is passed
+if [ "$#" -eq 1 ]
+then
+  oIFS=$IFS
+  IFS='
+    '
+  SFILES="$1"
+  IFS=$oIFS
+fi
+SFILES=${SFILES:-$STAGED_FILES_CMD}
+
+if [ -n "$SFILES" ]
+then
+  echo "Checking PHP Lint..."
+  for FILE in $SFILES
+  do
+    $PHP_BINARY -l -d display_errors=0 $PROJECT_PATH/$FILE
+    if [ $? != 0 ]
+    then
+      echo "Error(s), please fix it before commit."
+      exit 1
+    fi
+  done
+
+  echo "Running PHP CS Fixer..."
+
+  $PHP_BINARY $CS_FIXER --dry-run
+
+  if [ $? != 0 ]
+  then
+    printf "\n${RED}Some files need to be fixed!${RESET}\n\n"
+    echo "Please run the following script to fix them. Afterwards, add the changed files and commit again:"
+    echo "
+
+    php $CS_FIXER
+
+    "
+    exit 2
+  fi
+
+else
+  echo "No modified PHP files to check."
+fi

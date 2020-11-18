@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statsregistrations/statsregistrations.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8b15fc6468c919d299f9a601b61b95fc">
+        <source>Customer accounts</source>
+        <target>Customer accounts</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="f14056d6fef225c8aafd5a99d4c70fa8">
+        <source>Adds a registration progress tab to the Stats dashboard.</source>
+        <target>Adds a registration progress tab to the Stats dashboard.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="247b3bdef50a59d5a83f23c4f1c8fa47">
+        <source>Number of visitors who stopped at the registering step:</source>
+        <target>Number of visitors who stopped at the registering step:</target>
+        <note>Line: 126</note>
+      </trans-unit>
+      <trans-unit id="479c1246d97709e234574e1d2921994d">
+        <source>Number of visitors who placed an order directly after registration:</source>
+        <target>Number of visitors who placed an order directly after registration:</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="a751e9cc4ed4c7585ecc0d97781cb48a">
+        <source>Total customer accounts:</source>
+        <target>Total customer accounts:</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="fba0e64541196123bbf8e3737bf9287b">
+        <source>Number of customer accounts created</source>
+        <target>Number of customer accounts created</target>
+        <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="76dcf557776c2b40d47b72ebcd9ac6b7">
+        <source>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track. You feel me?</source>
+        <target>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track. You feel me?</target>
+        <note>Line: 135</note>
+      </trans-unit>
+      <trans-unit id="f66b3e4b23c60dd713bee1aa7d90ff85">
+        <source>How to act on the registrations' evolution?</source>
+        <target>How to act on the registrations' evolution?</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="271ef73d55b8e3cc30963ca9413d4a52">
+        <source>If you let your shop run without changing anything, the number of customer registrations should stay stable or show a slight decline.</source>
+        <target>If you let your shop run without changing anything, the number of customer registrations should stay stable or show a slight decline.</target>
+        <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="bcabec23c8f36cecde037bd35ca4c709">
+        <source>A significant increase or decrease in customer registration shows that there has probably been a change to your shop. With that in mind, we suggest that you identify the cause, correct the issue and get back in the business of making money!</source>
+        <target>A significant increase or decrease in customer registration shows that there has probably been a change to your shop. With that in mind, we suggest that you identify the cause, correct the issue and get back in the business of making money!</target>
+        <note>Line: 140</note>
+      </trans-unit>
+      <trans-unit id="ded9c8756dc14fd26e3150c4718cd9d0">
+        <source>Here is a summary of what may affect the creation of customer accounts:</source>
+        <target>Here is a summary of what may affect the creation of customer accounts:</target>
+        <note>Line: 141</note>
+      </trans-unit>
+      <trans-unit id="318a7bb6dacd248bd7252286edeafc96">
+        <source>An advertising campaign can attract an increased number of visitors to your online store. This will likely be followed by an increase in customer accounts and profit margins, which will depend on customer "quality." Well-targeted advertising is typically more effective than large-scale advertising... and it's cheaper too!</source>
+        <target>An advertising campaign can attract an increased number of visitors to your online store. This will likely be followed by an increase in customer accounts and profit margins, which will depend on customer "quality." Well-targeted advertising is typically more effective than large-scale advertising... and it's cheaper too!</target>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="4a3ca0c74bdbe87ba210ed1bf598c314">
+        <source>Specials, sales, promotions and/or contests typically demand a shoppers' attentions. Offering such things will not only keep your business lively, it will also increase traffic, build customer loyalty and genuinely change your current e-commerce philosophy.</source>
+        <target>Specials, sales, promotions and/or contests typically demand a shoppers' attentions. Offering such things will not only keep your business lively, it will also increase traffic, build customer loyalty and genuinely change your current e-commerce philosophy.</target>
+        <note>Line: 144</note>
+      </trans-unit>
+      <trans-unit id="8cb5605d77d1d2f9eab6191c0e027747">
+        <source>Design and user-friendliness are more important than ever in the world of online sales. An ill-chosen or hard-to-follow graphical theme can keep shoppers at bay. This means that you should aspire to find the right balance between beauty and functionality for your online store.</source>
+        <target>Design and user-friendliness are more important than ever in the world of online sales. An ill-chosen or hard-to-follow graphical theme can keep shoppers at bay. This means that you should aspire to find the right balance between beauty and functionality for your online store.</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="998e4c5c80f27dec552e99dfed34889a">
+        <source>CSV Export</source>
+        <target>CSV Export</target>
+        <note>Line: 156</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

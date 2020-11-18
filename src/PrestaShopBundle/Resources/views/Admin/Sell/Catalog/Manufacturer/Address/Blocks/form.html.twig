@@ -1,0 +1,120 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(addressForm) }}
+<div class="card">
+  <div class="card-header">
+    {{ 'Addresses'|trans({}, 'Admin.Catalog.Feature') }}
+  </div>
+  <div class="card-block row">
+    <div class="card-text">
+      {{ form_errors(addressForm) }}
+
+      {{ ps.form_group_row(addressForm.id_manufacturer, {}, {
+        'label': 'Brand'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {% set nameHint = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:' %}
+
+      {{ ps.form_group_row(addressForm.last_name, {}, {
+        'label': 'Last name'|trans({}, 'Admin.Global'),
+        'help': nameHint
+      }) }}
+
+      {{ ps.form_group_row(addressForm.first_name, {}, {
+        'label': 'First name'|trans({}, 'Admin.Global'),
+        'help': nameHint
+      }) }}
+
+      {{ ps.form_group_row(addressForm.address, {}, {
+        'label': 'Address'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.address2, {}, {
+        'label': 'Address (2)'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.post_code, {}, {
+        'label': 'Zip/postal code'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.city, {}, {
+        'label': 'City'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.id_country, {'attr': {
+          'class': 'js-manufacturer-country-select',
+          'data-states-url': path('admin_country_states') }}, {
+          'label': 'Country'|trans({}, 'Admin.Global'),
+      }) }}
+
+      <div class="js-manufacturer-address-state">
+        {{ ps.form_group_row(addressForm.id_state, {}, {
+          'label': 'State'|trans({}, 'Admin.Global'),
+        }) }}
+      </div>
+
+      {{ ps.form_group_row(addressForm.dni, {}, {
+        'label': 'DNI'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.home_phone, {}, {
+        'label': 'Home phone'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.mobile_phone, {}, {
+        'label': 'Mobile phone'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {% set otherHint %}
+        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>{}' }}
+      {% endset %}
+
+      {{ ps.form_group_row(addressForm.other, {}, {
+        'label': 'Other'|trans({}, 'Admin.Global'),
+        'help': otherHint
+      }) }}
+
+      {% block manufacturer_address_form_rest %}
+        {{ form_rest(addressForm) }}
+      {% endblock %}
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="d-inline-flex">
+      <a href="{{ path('admin_manufacturers_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <div class="d-inline-flex float-right">
+      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    </div>
+  </div>
+
+</div>
+{{ form_end(addressForm) }}

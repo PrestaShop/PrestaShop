@@ -1,0 +1,10 @@
+@import "../config/settings";
+
+.dropdown-toggle {
+  &.dropdown-toggle-dots {
+    &::after {
+      color: $medium-gray;
+      content: "more_vert";
+    }
+  }
+}

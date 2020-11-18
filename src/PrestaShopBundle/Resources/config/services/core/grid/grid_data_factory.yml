@@ -1,0 +1,182 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.grid.data_factory.log:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.admin.log.repository'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'logs'
+
+    prestashop.core.grid.data_factory.email_logs:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.email_logs'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'email_logs'
+
+    prestashop.core.grid.data_factory.request_sql:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.admin.request_sql.repository'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'request_sql'
+
+    prestashop.core.grid.data_factory.webservice_key:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query.webservice_key'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'webservice_key'
+
+    prestashop.core.grid.data_provider.meta:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.meta'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'meta'
+
+    prestashop.core.grid.data.factory.category:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.category'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'category'
+
+    prestashop.core.grid.data.factory.category_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CategoryDataFactory'
+        arguments:
+            - '@prestashop.core.grid.data.factory.category'
+
+    prestashop.core.grid.data_provider.employee:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.employee'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'employee'
+
+    prestashop.core.grid.data_provider.contacts:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.contact'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'contact'
+
+    prestashop.core.grid.data_provider.customer:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.customer'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'customer'
+
+    prestashop.core.grid.data_provider.customer_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerGridDataFactoryDecorator'
+        arguments:
+            - '@prestashop.core.grid.data_provider.customer'
+            - '@=service("prestashop.core.localization.locale.repository").getLocale(service("prestashop.adapter.legacy.context").getContext().language.getLocale())'
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+
+    prestashop.core.grid.data.factory.language:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.quer_.builder.language'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'language'
+
+    prestashop.core.grid.factory.language_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\LanguageGridDataFactory'
+        arguments:
+            - '@prestashop.core.grid.data.factory.language'
+            - '@prestashop.adapter.language.language_flag_thumbnail_provider'
+
+    prestashop.core.grid.data_provider.currency:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.currency'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'currency'
+
+    prestashop.core.grid.data_provider.supplier:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.supplier'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'suppliers'
+
+    prestashop.core.grid.factory.supplier_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\SupplierGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data_provider.supplier'
+        - '@prestashop.adapter.supplier.provider.supplier_logo'
+
+    prestashop.core.grid.data_factory.profiles:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.profile'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'profile'
+
+    prestashop.core.grid.data_provider.cms_page_category:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.cms_page_category'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'cms_page_category'
+
+    prestashop.core.grid.data_factory.tax:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.tax'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'tax'
+
+    prestashop.core.grid.data.factory.manufacturer:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.manufacturer'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'manufacturer'
+
+    prestashop.core.grid.data.factory.manufacturer_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\ManufacturerGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data.factory.manufacturer'
+        - '@prestashop.adapter.manufacturer.manufacturer_logo_thumbnail_provider'
+
+    prestashop.core.grid.data.factory.manufacturer_address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.query_builder.manufacturer_address'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'manufacturer_address'
+
+    prestashop.core.grid.data.factory.manufacturer_address_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\ManufacturerAddressGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data.factory.manufacturer_address'
+
+    prestashop.core.grid.data_provider.cms_page:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.cms_page'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'cms_page'

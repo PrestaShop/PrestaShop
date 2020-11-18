@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/blockreassurance/blockreassurance.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="659e8e7501bea2ab8c35659fc321525d">
+        <source>Customer reassurance</source>
+        <target>Customer reassurance</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="7e7f70db3c75e428db8e2d0a1765c4e9">
+        <source>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</source>
+        <target>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="0366c7b2ea1bb228cd44aec7e3e26a3e">
+        <source>The block configuration has been updated.</source>
+        <target>The block configuration has been updated.</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="8363eee01f4da190a4cef9d26a36750c">
+        <source>New reassurance block</source>
+        <target>New reassurance block</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="23498d91b6017e5d7f4ddde70daba286">
+        <source>ID Shop</source>
+        <target>ID Shop</target>
+        <note>Line: 326</note>
+      </trans-unit>
+      <trans-unit id="338ff4d33d460df0bf7643c3e0a706bc">
+        <source>blockreassurance</source>
+        <target>blockreassurance</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="aaf4c38c28ee16f82b3084a836c5afb5">
+        <source>Connect with your customers and reassure them by highlighting your services: secure payment, free shipping, returns, etc.</source>
+        <target>Connect with your customers and reassure them by highlighting your services: secure payment, free shipping, returns, etc.</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Line: 92
+Comment: Confirm uninstall</note>
+      </trans-unit>
+      <trans-unit id="b910df7ea2e47820d60286ba15a8b9d0">
+        <source>There was an error during the installation. Please contact us through Addons website.</source>
+        <target>There was an error during the installation. Please contact us through Addons website.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="e9415612c1d72517733c98e6877a6b46">
+        <source>There was an error during the uninstallation. Please contact us through Addons website.</source>
+        <target>There was an error during the uninstallation. Please contact us through Addons website.</target>
+        <note>Line: 154</note>
+      </trans-unit>
+      <trans-unit id="a596edf2f0e5ae9c2372c93e1c8fcc24">
+        <source>Block updated</source>
+        <target>Block updated</target>
+        <note>Line: 268</note>
+      </trans-unit>
+      <trans-unit id="f2f5589389027c1c6d63d2cec51afde5">
+        <source>Oops... looks like an error occurred</source>
+        <target>Oops... looks like an error occurred</target>
+        <note>Line: 269</note>
+      </trans-unit>
+      <trans-unit id="da755c5b9609e21d2f7c0e542fa02cf0">
+        <source>Configuration updated successfully!</source>
+        <target>Configuration updated successfully!</target>
+        <note>Line: 270</note>
+      </trans-unit>
+      <trans-unit id="81f6a0f1aaedeb8d2c35617f53c90aaa">
+        <source>Position changed successfully!</source>
+        <target>Position changed successfully!</target>
+        <note>Line: 271</note>
+      </trans-unit>
+      <trans-unit id="939d7906a02e747900bc9a6e06109e06">
+        <source>An error occurred when switching position</source>
+        <target>An error occurred when switching position</target>
+        <note>Line: 272</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

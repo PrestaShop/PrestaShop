@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/trackingfront/trackingfront.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="10965b2740f42ad4887932c35cee26ab">
+        <source>Unique visitors</source>
+        <target>Unique visitors</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:186</note>
+      </trans-unit>
+      <trans-unit id="d3139f39f1ad6324c80a9ddd50cc7867">
+        <source>Pages viewed</source>
+        <target>Pages viewed</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:189</note>
+      </trans-unit>
+      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
+        <source>Registrations</source>
+        <target>Registrations</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:190</note>
+      </trans-unit>
+      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
+        <source>Orders</source>
+        <target>Orders</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:191</note>
+      </trans-unit>
+      <trans-unit id="2e27c4006a026eacfc1f85b41bf9bc4c">
+        <source>Base fee</source>
+        <target>Base fee</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:192</note>
+      </trans-unit>
+      <trans-unit id="86190054fc32554662ffbb12b717e8d0">
+        <source>Percent fee</source>
+        <target>Percent fee</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:193</note>
+      </trans-unit>
+      <trans-unit id="51d53cd2ecdae6b5dd3397875197e898">
+        <source>Click fee</source>
+        <target>Click fee</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:194</note>
+      </trans-unit>
+      <trans-unit id="da9cb586c6689202ca65cd77fd9b84ef">
+        <source>Average cart</source>
+        <target>Average cart</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:196</note>
+      </trans-unit>
+      <trans-unit id="200f5c9c419f0a53d5d361eff7b33abc">
+        <source>Registration rate</source>
+        <target>Registration rate</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:197</note>
+      </trans-unit>
+      <trans-unit id="89741aae300253f498b0993fa678fa18">
+        <source>Order rate</source>
+        <target>Order rate</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:198</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/trackingfront/views/templates/front/account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
+        <source>Visitors</source>
+        <target>Visitors</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
+        <source>Visits</source>
+        <target>Visits</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:71</note>
+      </trans-unit>
+      <trans-unit id="11ff9f68afb6b8b5b8eda218d7c83a65">
+        <source>Sales</source>
+        <target>Sales</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:75</note>
+      </trans-unit>
+      <trans-unit id="1dd1c5fb7f25cd41b291d43a89e3aefd">
+        <source>Today</source>
+        <target>Today</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="7cbb885aa1164b390a0bc050a64e1812">
+        <source>Month</source>
+        <target>Month</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="537c66b24ef5c83b7382cdc3f34885f2">
+        <source>Year</source>
+        <target>Year</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="1e6d57e813355689e9c77e947d73ad8f">
+        <source>From:</source>
+        <target>From:</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="33caa076f23f453dd4061726f3706325">
+        <source>To:</source>
+        <target>To:</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="5fa8aff419bb8e614b178cf1563ac13a">
+        <source>Show products details</source>
+        <target>Show products details</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
+        <source>ID</source>
+        <target>ID</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:69</note>
+      </trans-unit>
+      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
+        <source>Pages</source>
+        <target>Pages</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:72</note>
+      </trans-unit>
+      <trans-unit id="591411cc8927851db2002208676d8330">
+        <source>Reg.</source>
+        <target>Reg.</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:73</note>
+      </trans-unit>
+      <trans-unit id="a9841e29f2c8180709b16cd2a13c55fe">
+        <source>Ord.</source>
+        <target>Ord.</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:74</note>
+      </trans-unit>
+      <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
+        <source>Cart</source>
+        <target>Cart</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="43005b13d452a4ad6f2d8e29b499c55a">
+        <source>Reg. rate</source>
+        <target>Reg. rate</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:77</note>
+      </trans-unit>
+      <trans-unit id="e14c8640d236365d11a060832b219a11">
+        <source>Ord. rate</source>
+        <target>Ord. rate</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:78</note>
+      </trans-unit>
+      <trans-unit id="316853cc3718335f11c048e33b9be98a">
+        <source>Click</source>
+        <target>Click</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:79</note>
+      </trans-unit>
+      <trans-unit id="b450fdef2453e92c31263a70f14fbd7b">
+        <source>¤</source>
+        <target>¤</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:80</note>
+      </trans-unit>
+      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
+        <source>%</source>
+        <target>%</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/trackingfront/views/templates/front/login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bf15e68d25d8a2b7664950ba7385ed0a">
+        <source>Affiliation</source>
+        <target>Affiliation</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/login.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="8954e140059f7b2544469f40161ba507">
+        <source>Affiliation space</source>
+        <target>Affiliation space</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/login.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
+        <source>Sign in</source>
+        <target>Sign in</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/login.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="dc647eb65e6711e155375218212b3964">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/login.tpl:42</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,121 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.form.builder.form_builder_factory:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderFactory'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.form.builder.sql_request_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType'
+      - '@prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.customer_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType'
+      - '@prestashop.core.form.identifiable_object.data_provider.customer_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.language_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\Language\LanguageType'
+      - '@prestashop.core.form.identifiable_object.data_provider.language_form_data_provider'
+
+  prestashop.core.form.builder.currency_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
+      - '@prestashop.core.form.identifiable_object.data_provider.currency_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.webservice_key_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceKeyType'
+      - '@prestashop.core.form.identifiable_object.data_provider.webservice_key_form_data_provider'
+
+  prestashop.core.form.builder.meta_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
+      - '@prestashop.core.form.identifiable_object.data_provider.meta_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.category_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType'
+      - '@prestashop.core.form.identifiable_object.data_provider.category_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.root_category_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType'
+      - '@prestashop.core.form.identifiable_object.data_provider.category_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.contact_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
+      - '@prestashop.core.form.identifiable_object.data_provider.contact_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.cms_page_category_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType'
+      - '@prestashop.core.form.identifiable_object.data_provider.cms_page_category_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.tax_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
+      - '@prestashop.core.form.identifiable_object.data_provider.tax_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.manufacturer_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType'
+      - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.employee_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeType'
+      - '@prestashop.core.form.identifiable_object.data_provider.employee_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.profile_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType'
+      - '@prestashop.core.form.identifiable_object.data_provider.profile_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.cms_page_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+      - '@prestashop.core.form.identifiable_object.data_provider.cms_page_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.manufacturer_address_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
+      - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider'

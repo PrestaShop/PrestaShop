@@ -1,0 +1,69 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div class="module-top-menu">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="input-group" id="search-input-group">
+        <input type="text" id="module-search-bar" class="form-control">
+        <div class="input-group-append">
+          <button class="btn btn-primary float-right search-button" id="module-search-button">
+            <i class="material-icons">search</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 module-menu-item">
+    </div>
+  </div>
+
+  <div class="row">
+    {% if topMenuData is defined %}
+      <div class="col-md-4 module-top-menu-item">
+        <h3>{{ 'Category' | trans({}, 'Admin.Catalog.Feature') }}</h3>
+        {% include '@PrestaShop/Admin/Module/Includes/dropdown_categories.html.twig' with { 'topMenuData': topMenuData } %}
+      </div>
+    {% endif %}
+
+    {% if requireFilterStatus is defined and requireFilterStatus == true %}
+      <div class="col-md-4 module-top-menu-item">
+        <h3>{{ 'Status' | trans({}, 'Admin.Global') }}</h3>
+        {% include '@PrestaShop/Admin/Module/Includes/dropdown_status.html.twig' %}
+      </div>
+    {% endif %}
+
+    {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') and bulkActions is defined %}
+      <div class="col-md-4 module-top-menu-item disabled">
+        <h3>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</h3>
+        {% include '@PrestaShop/Admin/Module/Includes/dropdown_bulk.html.twig' %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<hr class="top-menu-separator"/>
+
+{% set js_translatable = {
+  "Search - placeholder": "Search modules: keyword, name, author..."|trans({}, 'Admin.Modules.Help'),
+  }|merge(js_translatable) %}

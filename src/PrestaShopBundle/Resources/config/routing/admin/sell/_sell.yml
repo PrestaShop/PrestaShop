@@ -1,0 +1,18 @@
+_catalog:
+    resource: "catalog/_catalog.yml"
+    prefix: /catalog/
+
+_customers:
+    resource: "customer/_customer.yml"
+
+#_customer_services:
+#    resource: "customer-services/*.yml"
+#    prefix: /customer-services/
+
+_orders:
+    resource: "orders/_orders.yml"
+    prefix: /orders/
+
+_stocks:
+    resource: "stocks.yml"
+    prefix: /stocks/

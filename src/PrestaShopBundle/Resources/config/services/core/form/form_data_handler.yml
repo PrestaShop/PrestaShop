@@ -1,0 +1,98 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.form.identifiable_object.sql_request_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SqlRequestFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.customer_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
+
+  prestashop.core.form.identifiable_object.data_handler.language_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\LanguageFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.meta_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\MetaFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.currency_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.webservice_key_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\WebserviceKeyFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+  prestashop.core.form.identifiable_object.data_handler.category_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CategoryFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
+
+  prestashop.core.form.identifiable_object.data_handler.root_category_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
+      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
+
+  prestashop.core.form.identifiable_object.data_handler.contact_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ContactFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.cms_page_category_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageCategoryFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.tax_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.manufacturer_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.image.uploader.manufacturer_image_uploader'
+
+  prestashop.core.form.identifiable_object.data_handler.employee_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\EmployeeFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+      - '@prestashop.adapter.employee.form_access_checker'
+      - '@prestashop.adapter.employee.data_provider'
+      - '@prestashop.core.crypto.hashing'
+
+  prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.cms_page_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CmsPageFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.manufacturer_address_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerAddressFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'

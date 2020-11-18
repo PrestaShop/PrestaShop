@@ -1,0 +1,149 @@
+admin_categories_index:
+    path: /{categoryId}
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:index
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories
+        _legacy_parameters:
+            id_category: categoryId
+        categoryId: null
+    requirements:
+        categoryId: '\d+'
+
+admin_categories_search:
+    path: /search
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Category:searchGrid
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:submitFiltercategory
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.category
+        redirectRoute: admin_categories_index
+        redirectQueryParamsToKeep:
+            - 'categoryId'
+
+admin_categories_bulk_enable_status:
+    path: /bulk-status-enable
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkEnableStatus
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:submitBulkenableSelectioncategory
+
+admin_categories_bulk_disable_status:
+    path: /bulk-status-disable
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkDisableStatus
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:submitBulkdisableSelectioncategory
+
+admin_categories_toggle_status:
+    path: /{categoryId}/toggle-status
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:toggleStatus
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:statuscategory
+        _legacy_parameters:
+            id_category: categoryId
+
+admin_categories_bulk_delete:
+    path: /bulk-delete
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:bulkDelete
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:submitBulkdeleteSelectioncategory
+
+admin_categories_delete:
+    path: /delete
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:delete
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:deletecategory
+
+admin_categories_export:
+    path: /export
+    methods: [GET]
+    defaults:
+      _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:export
+      _legacy_controller: AdminCategories
+      _legacy_link: AdminCategories:exportcategory
+
+admin_categories_create:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:create
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:addcategory
+
+admin_categories_create_root:
+    path: /new-root
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:createRoot
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:addcategoryroot
+        _legacy_parameters:
+            id_category: categoryId
+
+admin_categories_edit:
+    path: /{categoryId}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:edit
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:updatecategory
+        _legacy_parameters:
+            id_category: categoryId
+    requirements:
+        categoryId: \d+
+
+admin_categories_edit_root:
+    path: /{categoryId}/edit-root
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:editRoot
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:updatecategory
+        _legacy_parameters:
+            id_category: categoryId
+    requirements:
+        categoryId: \d+
+
+admin_categories_delete_cover_image:
+    path: /{categoryId}/delete-cover-image
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:deleteCoverImage
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:deleteImage
+        _legacy_parameters:
+            id_category: categoryId
+    requirements:
+        categoryId: \d+
+
+admin_categories_delete_menu_thumbnail:
+    path: /{categoryId}/menu-thumbnails/{menuThumbnailId}/delete
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:deleteMenuThumbnail
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:forceDeleteThumb
+        _legacy_parameters:
+            id_category: categoryId
+    requirements:
+        categoryId: \d+
+        menuThumbnailId: 0|1|2  menu thumbnails only have 3 fixed ids
+
+admin_categories_update_position:
+    path: /update-positions
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:updatePosition
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:updatePositions

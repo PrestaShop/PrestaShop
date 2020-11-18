@@ -1,0 +1,298 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% macro form_label_tooltip(name, tooltip, placement) %}
+    {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
+{% endmacro %}
+
+{% macro check(variable) %}
+  {{ variable is defined and variable|length > 0 ? variable : false }}
+{% endmacro %}
+
+{% macro tooltip(text, icon, position) %}
+  <span data-toggle="pstooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
+    <i class="material-icons">{{ icon }}</i>
+  </span>
+{% endmacro %}
+
+{% macro infotip(text)%}
+<div class="alert alert-info" role="alert">
+  <p class="alert-text">
+    {{ text }}
+  </p>
+</div>
+{% endmacro %}
+
+{% macro warningtip(text)%}
+<div class="alert alert-warning" role="alert">
+  <p class="alert-text">
+    {{ text }}
+  </p>
+</div>
+{% endmacro %}
+
+{% macro label_with_help(label, help, class = '', for = '', isRequired = false) %}
+<label{% if for is not empty %} for="{{ for }}"{% endif %} class="form-control-label {{ class }}">
+  {% if isRequired %}
+    <span class="text-danger">*</span>
+  {% endif %}
+
+  {{ label }}
+  <span
+    class="help-box"
+    data-toggle="popover"
+    data-content="{{ help }}">
+  </span>
+</label>
+<p class="sr-only">{{ help }}</p>
+{% endmacro %}
+
+{# Table column headers with sorting indicators #}
+{% macro sortable_column_header(title, sortColumnName, orderBy, sortOrder, prefix) %}
+  {% set sortOrder, orderBy, prefix = sortOrder|default(''), orderBy|default, prefix|default('') %}
+  <div
+      class="ps-sortable-column"
+      data-sort-col-name="{{ sortColumnName }}"
+      data-sort-prefix="{{ prefix }}"
+      {% if orderBy == sortColumnName %}
+        data-sort-is-current="true"
+        data-sort-direction="{{ sortOrder == 'desc' ? 'desc' : 'asc' }}"
+      {% endif %}
+    >
+      <span role="columnheader">{{ title }}</span>
+      <span role="button" class="ps-sort" aria-label="{{ 'Sort by'|trans({}, 'Admin.Actions') }}"></span>
+    </div>
+  </th>
+{% endmacro %}
+
+{# Show link to import file sample #}
+{% macro import_file_sample(label, filename) %}
+    <a class="list-group-item list-group-item-action" href="{{ path('admin_import_sample_download', {'sampleName': filename}) }}">
+        {{ label|trans({}, 'Admin.Advparameters.Feature') }}
+    </a>
+{% endmacro %}
+
+{#
+  Show form widget with errors rendered below it. It displays all nested errors for any form type.
+  If form type has error_by_locale parameter set then the error is being displayed with the specific locale assigned to it.
+  If form type has errors_by_locale parameter set then the errors are being assigned to the locales and are displayed
+  in the popover template.
+  If there are more then one error it also assigns all errors in the pop-up to appear.
+  On page load, user sees only the errors count but then user hovers over the element the popover
+  appears with the errors combined by language.
+#}
+{% macro form_widget_with_error(form, vars, extraVars) %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
+
+  {% set vars = vars|default({}) %}
+  {% set extraVars = extraVars|default({}) %}
+  {% set attr = vars.attr|default({}) %}
+  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '')} ) %}
+  {% set vars = vars|merge({'attr': attr}) %}
+
+  {{ form_widget(form, vars) }}
+
+  {% if extraVars.help is defined and extraVars.help%}
+      <small class="form-text">{{ extraVars.help }}</small>
+    {% elseif form.vars.help is defined and form.vars.help %}
+      <small class="form-text">{{ form.vars.help }}</small>
+  {% endif %}
+
+  {{ self.form_error_with_popover(form) }}
+
+{% endmacro %}
+
+{#
+  It displays all nested errors for any form type.
+  If form type has error_by_locale parameter set then the error is being displayed with the specific locale assigned to it.
+  If form type has errors_by_locale parameter set then the errors are being assigned to the locales and are displayed
+  in the popover template.
+  If there are more then one error it also assigns all errors in the pop-up to appear.
+  On page load, user sees only the errors count but then user hovers over the element the popover
+  appears with the errors combined by language.
+#}
+{% macro form_error_with_popover(form) %}
+  {% set errors = [] %}
+
+  {% if form.vars.valid is defined and not form.vars.valid  %}
+    {% for parentError in form.vars.errors %}
+      {% set errors = errors|merge([parentError.message]) %}
+    {% endfor %}
+
+    {#iterating over child errors because errors can be nested#}
+    {% for child in form.children %}
+      {% for error in child.vars.errors %}
+        {% set errors = errors|merge([error.message]) %}
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+
+  {% if errors|length > 0 %}
+    {# for form types which has locales and there are more then 1 error , additional errors are displaying inside popover #}
+    {% set errorPopover = null %}
+
+    {% if errors|length > 1 %}
+      {% set popoverContainer = 'popover-error-container-'~form.vars.id %}
+      <div class="{{ popoverContainer }}"></div>
+
+
+      {% if form.vars.errors_by_locale is defined %}
+          {% set popoverErrors = form.vars.errors_by_locale %}
+
+          {# collecting translatable errors - the ones which has locale name attached #}
+          {% set translatableErrors = [] %}
+          {% for translatableError in popoverErrors %}
+            {% set translatableErrors = translatableErrors|merge([translatableError.error_message]) %}
+          {% endfor %}
+
+          {# if an error found which does not exist in translatable errors array - it adds it to the popover error container #}
+          {% for error in errors %}
+            {% if error not in translatableErrors %}
+              {% set popoverErrors = popoverErrors|merge([error]) %}
+            {% endif %}
+          {% endfor %}
+
+        {% else %}
+          {% set popoverErrors = errors %}
+      {% endif %}
+
+      {% set errorMessages = [] %}
+      {% for popoverError in popoverErrors %}
+        {% set errorMessage = popoverError %}
+
+        {% if popoverError.error_message is defined and popoverError.locale_name is defined %}
+          {% set errorMessage = '%error_message% - Language: %language_name%'|trans({'%error_message%': popoverError.error_message, '%language_name%': popoverError.locale_name}, 'Admin.Notifications.Error') %}
+        {% endif %}
+
+        {% set errorMessages = errorMessages|merge([errorMessage]) %}
+      {% endfor %}
+
+      {% set popoverErrorContent %}
+        <div class="popover-error-list">
+          <ul>
+            {% for popoverError in errorMessages %}
+              <li class="text-danger">
+                {{ popoverError }}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endset %}
+
+      <template class="js-popover-error-content" data-id="{{ form.vars.id }}">
+        {{ popoverErrorContent }}
+      </template>
+
+      {% set errorPopover %}
+        <span
+          data-toggle="form-popover-error"
+          data-id="{{ form.vars.id }}"
+          data-placement="bottom"
+          data-template='<div class="popover form-popover-error" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+          data-trigger="hover"
+          data-container=".{{ popoverContainer }}"
+        >
+          <i class="material-icons form-error-icon">error_outline</i> <u>{{ '%count% errors'|transchoice(popoverErrors|length, {}, 'Admin.Global') }}</u>
+        </span>
+      {% endset %}
+
+    {% elseif form.vars.error_by_locale is defined %}
+      {% set errorByLocale = '%error_message% - Language: %language_name%'|trans({'%error_message%': form.vars.error_by_locale.error_message, '%language_name%': form.vars.error_by_locale.locale_name}, 'Admin.Notifications.Error') %}
+      {% set errors = [errorByLocale] %}
+    {% endif %}
+
+    <div class="invalid-feedback-container">
+      {% if errorPopover is not null %}
+        <div class="text-danger">
+          {{ errorPopover }}
+        </div>
+      {% else %}
+        <div class="d-inline-block text-danger align-top">
+          <i class="material-icons form-error-icon">error_outline</i>
+        </div>
+        <div class="d-inline-block">
+          {% for error in errors %}
+            <div class="text-danger">
+              {{ error }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+ {#
+  Helper function to render most common structure for single input
+  @param form - form view to render
+  @param vars - custom vars that are passed to form_widget
+  @param extraVars - parameters that are not related to form_widget, but are needed for input (label, help text & etc.)
+ #}
+{% macro form_group_row(form, vars, extraVars) %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
+
+  {% set class = extraVars.class|default('') %}
+
+  <div class="form-group row {{ class }}">
+    {% set extraVars = extraVars|default({}) %}
+
+    {% if extraVars.label is defined %}
+      {% set isRequired = form.vars.required|default(false) %}
+
+      {% if extraVars.required is defined %}
+        {% set isRequired = extraVars.required %}
+      {% endif %}
+
+      <label for="{{ form.vars.id }}" class="form-control-label">
+        {% if isRequired %}
+          <span class="text-danger">*</span>
+        {% endif %}
+        {{ extraVars.label }}
+      </label>
+    {% endif %}
+
+    <div class="col-sm">
+      {{ self.form_widget_with_error(form, vars, extraVars) }}
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro multistore_switch(form, extraVars) %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
+  {% if form.shop_restriction_switch is defined %}
+    {% set defaultLabel %}
+      <strong>{{ 'Check / Uncheck all'|trans({}, 'Admin.Actions') }}</strong> <br>
+      {{ 'You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'|trans({}, 'Admin.Design.Help') }} <br>
+      {{ 'If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.'|trans({}, 'Admin.Design.Help') }}
+    {% endset %}
+
+    {% if extraVars.help is not defined %}
+      {% set extraVars = extraVars|merge({'help': defaultLabel}) %}
+    {% endif %}
+
+    {% set vars = { 'attr': { 'class': 'js-multi-store-restriction-switch'}} %}
+
+    {{ self.form_group_row(form.shop_restriction_switch, vars, extraVars) }}
+  {% endif %}
+{% endmacro %}

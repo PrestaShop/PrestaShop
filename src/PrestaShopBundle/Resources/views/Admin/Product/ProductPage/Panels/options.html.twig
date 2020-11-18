@@ -1,0 +1,219 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div role="tabpanel" class="form-contenttab tab-pane" id="step6">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-md-12">
+
+            {{ renderhook('displayAdminProductsOptionsStepTop', { 'id_product': productId }) }}
+
+            <div class="row">
+              <div class="col-md-12">
+                <h2>{{ 'Visibility'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+                <p class="subtitle">{{ 'Where do you want your product to appear?'|trans({}, 'Admin.Catalog.Feature') }}</p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 form-group">
+                {{ form_errors(optionsForm.visibility) }}
+                {{ form_widget(optionsForm.visibility) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-7 form-group">
+                  {{ form_errors(optionsForm.display_options) }}
+                  <div class="row">
+                    <div class="col-md-4 js-available-for-order">
+                      {{ form_widget(optionsForm.display_options.available_for_order) }}
+                    </div>
+                    <div class="col-md-3 js-show-price">
+                      {{ form_widget(optionsForm.display_options.show_price) }}
+                    </div>
+                    <div class="col-md-5">
+                      {{ form_widget(optionsForm.display_options.online_only) }}
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-md-8">
+                <label class="form-control-label">{{ 'Tags'|trans({}, 'Admin.Catalog.Feature') }}</label>
+                {{ form_errors(optionsForm.tags) }}
+                {{ form_widget(optionsForm.tags) }}
+                <div class="alert expandable-alert alert-info mt-3" role="alert">
+                  <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#tagsInfo" aria-expanded="false" aria-controls="collapseDanger">
+                    {{ 'Read more'|trans({}, 'Admin.Actions')|raw }}
+                  </button>
+                  <p class="alert-text">{{ 'Tags are meant to help your customers find your products via the search bar.'|trans({}, 'Admin.Catalog.Help')|raw }}</p>
+                  <div class="alert-more collapse" id="tagsInfo">
+                    <p>
+                      {{ 'Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
+                      {{ 'You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.'|trans({}, 'Admin.Catalog.Help')|
+                      replace({
+                        '[1]' : '<a href="'~ getAdminLink("AdminSearchConf") ~'" target="_blank">',
+                        '[/1]' : '</a>'
+                      })|raw
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <h2>{{ 'Condition & References'|trans({}, 'Admin.Catalog.Feature')|raw }}</h2>
+              </div>
+            </div>
+
+            <div class="row">
+              <fieldset class="col-md-4 form-group">
+                <label class="form-control-label">
+                  {{ optionsForm.condition.vars.label }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </label>
+                {{ form_errors(optionsForm.condition) }}
+                {{ form_widget(optionsForm.condition) }}
+              </fieldset>
+              <fieldset class="col-md-4 form-group">
+                <label class="form-control-label">&nbsp;</label>
+                {{ form_widget(optionsForm.show_condition) }}
+              </fieldset>
+            </div>
+            <div class="row">
+              <fieldset class="col-md-4 form-group">
+                <label class="form-control-label">
+                  {{ optionsForm.isbn.vars.label }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "ISBN is used internationally to identify books and their various editions."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </label>
+                {{ form_errors(optionsForm.isbn) }}
+                {{ form_widget(optionsForm.isbn) }}
+              </fieldset>
+              <fieldset class="col-md-4 form-group">
+                <label class="form-control-label">
+                  {{ optionsForm.ean13.vars.label }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </label>
+                {{ form_errors(optionsForm.ean13) }}
+                {{ form_widget(optionsForm.ean13) }}
+              </fieldset>
+            </div>
+            <div class="row">
+              <fieldset class="col-md-4 form-group">
+                <label class="form-control-label">
+                  {{ optionsForm.upc.vars.label }}
+                  <span class="help-box" data-toggle="popover"
+                    data-content="{{ "This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </label>
+                {{ form_errors(optionsForm.upc) }}
+                {{ form_widget(optionsForm.upc) }}
+              </fieldset>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div id="custom_fields" class="mt-3">
+                  <h2>{{ optionsForm.custom_fields.vars.label }}</h2>
+                  <p class="subtitle">{{ 'Customers can personalize the product by entering some text or by providing custom image files.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+                  {{ form_errors(optionsForm.custom_fields) }}
+                  <ul class="customFieldCollection nostyle" data-prototype="
+                              {% filter escape %}
+                              {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': optionsForm.custom_fields.vars.prototype }) }}
+                              {% endfilter %}">
+                    {% for field in optionsForm.custom_fields %}
+                      <li>
+                        {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': field }) }}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  <a href="#" class="btn btn-outline-secondary add">
+                    <i class="material-icons">add_circle</i>
+                    {{ 'Add a customization field'|trans({}, 'Admin.Catalog.Feature') }}
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-8">
+                <h2>{{ 'Attached files'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+                <p class="subtitle">{{ 'Add files that customers can download directly on the product page (instructions, manual, recipe, etc.).'|trans({}, 'Admin.Catalog.Feature') }}</p>
+                {{ form_widget(optionsForm.attachments) }}
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-8">
+                <a
+                  class="btn btn-outline-secondary mb-3"
+                  href="#collapsedForm"
+                  data-toggle="collapse"
+                  aria-expanded="false"
+                  aria-controls="collapsedForm"
+                >
+                  <i class="material-icons">add_circle</i>
+                  {{ 'Attach a new file'|trans({}, 'Admin.Catalog.Feature') }}
+                </a>
+                <fieldset class="form-group collapse" id="collapsedForm">
+                  {{ form_errors(optionsForm.attachment_product) }}
+                  <div id="form_step6_attachment_product" data-action="{{ optionsForm.attachment_product.vars.attr['data-action'] }}">
+                    <div class="form-group">{{ form_widget(optionsForm.attachment_product.file) }}</div>
+                    <div class="form-group">{{ form_widget(optionsForm.attachment_product.name) }}</div>
+                    <div class="form-group">{{ form_widget(optionsForm.attachment_product.description) }}</div>
+                    <div class="form-group">
+                      {{ form_widget(optionsForm.attachment_product.add) }}
+                      {{ form_widget(optionsForm.attachment_product.cancel) }}
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-8" id="supplier_collection">
+                {{ include('@Product/ProductPage/Forms/form_supplier_choice.html.twig', { 'form': optionsForm }) }}
+              </div>
+            </div>
+            <div class="row">
+              <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form', { 'idProduct': productId, 'supplierIds': 1}) }}">
+                {{ include('@Product/ProductPage/Forms/form_supplier_combination.html.twig', { 'suppliers': optionsForm.suppliers.vars.value, 'form': optionsForm }) }}
+              </div>
+            </div>
+
+            {{ renderhook('displayAdminProductsOptionsStepBottom', { 'id_product': productId }) }}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+translations_admin_index:
+  path: translations
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\TranslationTest\Controller\Admin\ExempleController::indexAction'
+    _legacy_controller: 'AdminTranslationsIndexClass'
+    _legacy_link: AdminTranslationsIndexClass

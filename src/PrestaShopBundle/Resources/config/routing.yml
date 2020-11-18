@@ -1,0 +1,8 @@
+# Admin Back Office routing
+_admin_routing:
+    resource: "@PrestaShopBundle/Resources/config/routing/admin.yml"
+
+# Api-like Back Office routing
+_api_routing:
+    resource: "@PrestaShopBundle/Resources/config/routing/api.yml"
+    prefix: /api

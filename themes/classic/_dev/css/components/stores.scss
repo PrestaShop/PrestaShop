@@ -1,0 +1,104 @@
+#stores {
+  .page-stores {
+    .store-item {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+    width: 85%;
+    margin: 0 auto;
+    .store-picture {
+      img {
+        max-width: 100%;
+      }
+    }
+    .store-item-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: $large-space 0;
+      ul {
+        margin-bottom: 0;
+        font-size: $font-size-lg;
+      }
+      .divide-left {
+        border-left: $gray-light 1px solid;
+        tr {
+          height: 1.563rem;
+        }
+        td {
+          padding-left: 0.375rem;
+        }
+        th {
+          text-align: right;
+        }
+      }
+      .store-description{
+        font-size: $base-font-size;
+      }
+    }
+    .store-item-footer {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      display: flex;
+      justify-content: space-around;
+      &.divide-top {
+        border-top: $gray-light 1px solid;
+      }
+      div:first-child {
+        flex: 0 0 65%;
+      }
+      i.material-icons{
+        margin-right: $small-space;
+        color: $gray;
+        font-size: $base-font-size;
+      }
+      li{
+        margin-bottom: $small-space;
+      }
+    }
+  }
+}
+
+/*** Responsive part ***/
+@include media-breakpoint-down(sm) {
+  #stores {
+    .page-stores {
+      width: 100%;
+      .store-item-container {
+        padding: 1rem 0;
+      }
+    }
+  }
+}
+@include media-breakpoint-down(xs) {
+  #stores {
+    .page-stores {
+      .store-item-container {
+        display: block;
+        .divide-left {
+          border-left: none;
+        }
+        .store-description {
+          a {
+            margin-bottom: 0.5rem;
+          }
+          address {
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+      .store-item-footer {
+        display: block;
+        &.divide-top {
+          border-top: $gray-light 1px solid;
+        }
+        li{
+          margin-bottom: $small-space;
+        }
+        .card-block {
+          padding: 0.75rem 0.75rem 0;
+        }
+      }
+    }
+  }
+}

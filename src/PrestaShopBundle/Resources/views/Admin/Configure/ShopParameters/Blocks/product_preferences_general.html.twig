@@ -1,0 +1,102 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block product_preferences_general %}
+<div class="col-xl-10">
+  <div class="card" id="configuration_fieldset_products">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Products (general)'|trans }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          {{ ps.label_with_help(('Catalog mode'|trans), ('Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.catalog_mode) }}
+            {{ form_widget(generalForm.catalog_mode) }}
+            <small class="form-text">{{ 'Have specific needs? Edit particular groups to let them see prices or not.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+          </div>
+        </div>
+        <div class="form-group row catalog-mode-option">
+          {{ ps.label_with_help(('Show prices'|trans), ('Display product prices when in catalog mode.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.catalog_mode_with_prices) }}
+            {{ form_widget(generalForm.catalog_mode_with_prices) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Number of days for which the product is considered \'new\''|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(generalForm.new_days_number) }}
+            {{ form_widget(generalForm.new_days_number) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Max size of product summary'|trans), ('Set the maximum size of the summary of your product description (in characters).'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.short_description_limit) }}
+            {{ form_widget(generalForm.short_description_limit) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Quantity discounts based on'|trans), ('How to calculate quantity discounts.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.quantity_discount) }}
+            {{ form_widget(generalForm.quantity_discount) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Force update of friendly URL'|trans), ('When active, friendly URL will be updated on every save.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.force_friendly_url) }}
+            {{ form_widget(generalForm.force_friendly_url) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.default_status) }}
+            {{ form_widget(generalForm.default_status) }}
+          </div>
+        </div>
+
+        {% block product_general_preferences_form_rest %}
+          {{ form_rest(generalForm) }}
+        {% endblock %}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

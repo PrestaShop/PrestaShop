@@ -1,0 +1,106 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+<div class="card d-none js-files-history-block">
+    <div class="card-header">
+        {{ 'History of uploaded files'|trans({}, 'Admin.Advparameters.Feature') }}
+        <span class="badge badge-primary js-files-history-number">{{ importFileNames|length }}</span>
+        <a href="#" class="close js-close-files-history-block-btn" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </a>
+    </div>
+    <div class="card-content">
+        <table id="fileHistoryTable"
+               class="table mb-0"
+               data-delete-file-url="{{ path('admin_import_file_delete') }}"
+               data-download-file-url="{{ path('admin_import_file_download') }}"
+        >
+            <tbody>
+                <tr class="d-none">
+                    <td></td>
+                    <td>
+                        <div class="btn-group float-right" data-file="">
+                            <button type="button" class="btn btn-sm btn-outline-secondary js-use-file-btn">
+                                {{ 'Use'|trans({}, 'Admin.Actions') }}
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                            >
+                                <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+                            </button>
+                            <div class="dropdown-menu menu-sm">
+                                <a href="#" class="dropdown-item js-download-file-btn" target="_blank">
+                                    <i class="material-icons">file_download</i>
+                                    {{ 'Download'|trans }}
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item js-delete-file-btn">
+                                    <i class="material-icons">delete</i>
+                                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% for fileName in importFileNames %}
+                <tr>
+                    <td>{{ fileName }}</td>
+                    <td>
+                        <div class="btn-group float-right" data-file="{{ fileName }}">
+                            <button type="button" class="btn btn-sm btn-outline-secondary js-use-file-btn">
+                                {{ 'Use'|trans({}, 'Admin.Actions') }}
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                            >
+                                <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+                            </button>
+                            <div class="dropdown-menu menu-sm">
+                                <a href="{{ path('admin_import_file_download', {'filename': fileName}) }}" class="dropdown-item" target="_blank">
+                                    <i class="material-icons">file_download</i>
+                                    {{ 'Download'|trans }}
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ path('admin_import_file_delete', {'filename': fileName}) }}" class="dropdown-item">
+                                    <i class="material-icons">delete</i>
+                                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

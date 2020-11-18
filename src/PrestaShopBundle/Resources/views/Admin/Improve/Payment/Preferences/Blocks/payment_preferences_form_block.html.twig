@@ -1,0 +1,141 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% trans_default_domain 'Admin.Payment.Feature' %}
+
+{% block payment_preferences_form %}
+  {{ form_start(paymentPreferencesForm) }}
+  {% block payment_modules_currency_restrictions %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">euro_symbol</i>
+        {{ 'Currency restrictions'|trans({}, 'Admin.Payment.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p>
+          <small class="form-text">
+            {{ 'Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+          </small>
+        </p>
+
+        <div class="form-group">
+          {{ form_widget(paymentPreferencesForm.payment_module_preferences.currency_restrictions) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block payment_modules_group_restrictions %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">group</i>
+        {{ 'Group restrictions'|trans({}, 'Admin.Payment.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p>
+          <small class="form-text">
+            {{ 'Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+          </small>
+        </p>
+
+        <div class="form-group">
+          {{ form_widget(paymentPreferencesForm.payment_module_preferences.group_restrictions) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block payment_modules_country_restrictions %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">public</i>
+        {{ 'Country restrictions'|trans({}, 'Admin.Payment.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p>
+          <small class="form-text">
+            {{ 'Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+          </small>
+        </p>
+
+        <div class="form-group">
+          {{ form_widget(paymentPreferencesForm.payment_module_preferences.country_restrictions) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block payment_modules_carrier_restrictions %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">local_shipping</i>
+        {{ 'Carrier restrictions'|trans({}, 'Admin.Payment.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p>
+          <small class="form-text">
+            {{ 'Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+          </small>
+        </p>
+        <div class="form-group">
+          {{ form_widget(paymentPreferencesForm.payment_module_preferences.carrier_restrictions) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block payment_preferences_block_rest %}
+    {{ form_rest(paymentPreferencesForm) }}
+  {% endblock %}
+
+  {{ form_end(paymentPreferencesForm) }}
+{% endblock %}

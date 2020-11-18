@@ -1,0 +1,85 @@
+{% extends '@MailThemes/classic/components/layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="box" style="border:1px solid #D6D4D4;">
+    <table class="table">
+      <tr>
+        <td width="10">&nbsp;</td>
+        <td>
+          <div itemscope="" itemtype="https://schema.org/ParcelDelivery">
+            <div itemprop="deliveryAddress" itemscope="" itemtype="https://schema.org/PostalAddress">
+              <meta itemprop="streetAddress" content="{address1}"/>
+              <meta itemprop="addressLocality" content="{city}"/>
+              <meta itemprop="addressRegion" content="{city}"/>
+              <meta itemprop="addressCountry" content="{country}"/>
+              <meta itemprop="postalCode" content="{postcode}"/>
+            </div>
+
+            <link itemprop="trackingUrl" href="{followup}"/>
+            <div itemprop="carrier" itemscope="" itemtype="https://schema.org/Organization">
+              <meta itemprop="name" content="{carrier}"/>
+            </div>
+
+            {meta_products}
+
+            <div itemprop="partOfOrder" itemscope="" itemtype="https://schema.org/Order">
+              <meta itemprop="orderNumber" content="{order_name}"/>
+              <div itemprop="merchant" itemscope="" itemtype="https://schema.org/Organization">
+                <meta itemprop="name" content="{shop_name}"/>
+              </div>
+              <link itemprop="orderStatus" href="https://schema.org/OrderInTransit"/>
+            </div>
+          </div>
+
+          <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'In transit'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
+            <span>
+              {{ 'Your order with the reference [1]{order_name}[/1] is currently in transit.'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }} <br/><br/>
+              {{ 'You can track your package using the following link:'|trans({}, 'Emails.Body', locale)|raw }} <a href="{followup}">{{ '{followup}'|trans({}, 'Emails.Body', locale) }}</a>
+            </span>
+          </font>
+        </td>
+        <td width="10">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
+      </span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}?id_order={order_name}">"Guest Tracking"</a> section on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
+      </span>
+    </font>
+  </td>
+</tr>
+{% endblock %}

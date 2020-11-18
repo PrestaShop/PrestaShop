@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_feature>
+  <fields id="name" class="Feature">
+    <field name="position"/>
+  </fields>
+  <entities>
+    <feature id="Composition" position="0"/>
+    <feature id="Property" position="1"/>
+  </entities>
+</entity_feature>

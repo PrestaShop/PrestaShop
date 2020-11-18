@@ -1,0 +1,89 @@
+.logo-configuration-card-body {
+  padding: inherit;
+
+  .logo-card {
+    border-radius: 0;
+    border: 0;
+
+    .logo-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: -0.01875rem;
+      text-align: center;
+      color: #4a4a4a;
+    }
+
+    .nav-pills {
+      .nav-item {
+        padding-right: 1.25rem;
+      }
+
+      border-top: 0;
+      border-bottom: 0;
+
+      .nav-link {
+        &.active {
+          color: #363a41;
+          background-color: inherit;
+        }
+
+        color: #afbbbe;
+        height: 1.65rem;
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .tab-content {
+      padding: 0;
+
+      .input-in-tab {
+        margin-top: -2px;
+      }
+    }
+
+    .logo-card-description {
+      font-size: 0.75rem;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: -0.0125rem;
+      color: #6c868e;
+      margin-top: 20px;
+      height: 34px;
+    }
+
+    .logo-image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 6.625rem;
+      margin-top: 2rem;
+      margin-bottom: 1.6875rem;
+
+      .header-logo,
+      .email-logo,
+      .invoice-logo {
+        max-width: 6.25rem;
+        max-height: 6.625rem;
+      }
+
+      .favicon-logo {
+        width: 2.41875rem;
+        height: 2.41875rem;;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+        border: 1px solid transparent;
+      }
+    }
+  }
+
+  .logo-card:not(:last-child) {
+    border-right: 0.0625rem solid #dedede;
+  }
+
+}

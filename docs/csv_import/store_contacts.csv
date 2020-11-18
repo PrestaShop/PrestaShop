@@ -1,0 +1,6 @@
+Store ID;active;name;address1;address2;postcode;state;city;country;latitude;longitude;phone;fax;email;note;hours;image
+1;1;Dade County;3030 SW 8th St Miami;;33135;Florida;Miami;United States;25.76500500;-80.24379700;;;;;"09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,10:00 - 16:00,10:00 - 16:00";http://yourlinktotheimage.com/img1.jpg
+2;1;E Fort Lauderdale;1000 Northeast 4th Ave Fort Lauderdale;;33304;Florida;Miami;United States;26.13793600;-80.13943500;;;;;"09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,10:00 - 16:00,10:00 - 16:00";http://yourlinktotheimage.com/img2.jpg
+3;1;Pembroke Pines;11001 Pines Blvd Pembroke Pines;;33026;Florida;Miami;United States;26.00998700;-80.29447200;;;;;"09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,10:00 - 16:00,10:00 - 16:00";http://yourlinktotheimage.com/img3.jpg
+4;1;Coconut Grove;2999 SW 32nd Avenue;;33133;Florida;Miami;United States;25.73629600;-80.24479700;;;;;"09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,10:00 - 16:00,10:00 - 16:00";http://yourlinktotheimage.com/img4.jpg
+5;1;N Miami/Biscayne;12055 Biscayne Blvd;;33181;Florida;Miami;United States;25.88674000;-80.16329200;;;;;"09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,09:00 - 19:00,10:00 - 16:00,10:00 - 16:00";http://yourlinktotheimage.com/img5.jpg

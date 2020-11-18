@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b8760dae14ad4963c909f83424de3e7f">
+        <source>(E.g.: %date_format%)</source>
+        <target>(E.g.: %date_format%)</target>
+        <note>Line: 211</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bd9737bd1a3057cd059167a4a19fe6ca">
+        <source>Your password must be at least %min% characters long.</source>
+        <target>Your password must be at least %min% characters long.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="67135a14d3ac4f1369633dd006d6efec">
+        <source>your@email.com</source>
+        <target>your@email.com</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="863cf84b34def228394c03c156bff42c">
+        <source>Select reference</source>
+        <target>Select reference</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="d57c24f3fe52d16e7169b912dd647f0d">
+        <source>optional</source>
+        <target>optional</target>
+        <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="8307fac59310d028334df0306c7b29ad">
+        <source>How can we help?</source>
+        <target>How can we help?</target>
+        <note>Line: 106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2ba94226eab6f98a094a2accf82746c0">
+        <source>At least 5 characters long</source>
+        <target>At least 5 characters long</target>
+        <note>Line: 139</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
+        <source>250 char. max</source>
+        <target>250 char. max</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="20f4168399201bd498e52bafeb59b478">
+        <source>Don't forget to save your customization to be able to add to cart</source>
+        <target>Don't forget to save your customization to be able to add to cart</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="6ba73729cf3b0503435d54870d993e8d">
+        <source>Your message here</source>
+        <target>Your message here</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="9378eeabb3f4f2c5122659d50560a448">
+        <source>No selected file</source>
+        <target>No selected file</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="0da3c8b31e3e2d9d769a86cd3f31949c">
+        <source>.png .jpg .gif</source>
+        <target>.png .jpg .gif</target>
+        <note>Line: 56</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

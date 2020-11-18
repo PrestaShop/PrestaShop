@@ -1,0 +1,25 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.api.query_params_collection:
+        abstract: true
+        class: PrestaShopBundle\Api\QueryParamsCollection
+
+    prestashop.core.api.query_stock_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockParamsCollection
+        public: true
+
+    prestashop.core.api.query_stock_movement_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockMovementParamsCollection
+        public: true
+
+    prestashop.core.api.query_translation_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryTranslationParamsCollection
+        public: true
+
+    prestashop.core.api.stock.movements_collection:
+        class: PrestaShopBundle\Api\Stock\MovementsCollection

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<entity_attribute>
+  <attribute id="S">
+    <name>S</name>
+  </attribute>
+  <attribute id="M">
+    <name>M</name>
+  </attribute>
+  <attribute id="L">
+    <name>L</name>
+  </attribute>
+  <attribute id="XL">
+    <name>XL</name>
+  </attribute>
+  <attribute id="Grey">
+    <name>خاکستری</name>
+  </attribute>
+  <attribute id="Taupe">
+    <name>خاکستری قهوه ای</name>
+  </attribute>
+  <attribute id="Beige">
+    <name>بژ</name>
+  </attribute>
+  <attribute id="White">
+    <name>سفید</name>
+  </attribute>
+  <attribute id="Off_White">
+    <name>سفید خاکستری</name>
+  </attribute>
+  <attribute id="Red">
+    <name>قرمز</name>
+  </attribute>
+  <attribute id="Black">
+    <name>مشکی</name>
+  </attribute>
+  <attribute id="Camel">
+    <name>قهوه ای شتری</name>
+  </attribute>
+  <attribute id="Orange">
+    <name>نارنجی</name>
+  </attribute>
+  <attribute id="Blue">
+    <name>آبی</name>
+  </attribute>
+  <attribute id="Green">
+    <name>سبز</name>
+  </attribute>
+  <attribute id="Yellow">
+    <name>زرد</name>
+  </attribute>
+  <attribute id="Brown">
+    <name>قهوه ای</name>
+  </attribute>
+  <attribute id="Pink">
+    <name>صورتی</name>
+  </attribute>
+  <attribute id="40x60cm">
+    <name>40x60 سانتی متر</name>
+  </attribute>
+  <attribute id="60x90cm">
+    <name>60x90 سانتی متر</name>
+  </attribute>
+  <attribute id="80x120cm">
+    <name>80x120 سانتی متر</name>
+  </attribute>
+  <attribute id="Ruled">
+    <name>یکدست</name>
+  </attribute>
+  <attribute id="Plain">
+    <name>ساده</name>
+  </attribute>
+  <attribute id="Squarred">
+    <name>چهارگوش</name>
+  </attribute>
+  <attribute id="Doted">
+    <name>نقطه ای</name>
+  </attribute>
+</entity_attribute>

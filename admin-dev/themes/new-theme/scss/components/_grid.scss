@@ -1,0 +1,153 @@
+.grid-toggler-icon-valid {
+  color: #78d07d;
+  cursor: pointer;
+}
+
+.grid-toggler-icon-not-valid {
+  color: #c05c67;
+  cursor: pointer;
+}
+
+table.grid-ordering-column tr {
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+  &.hover {
+    background-color: $gray-soft;
+  }
+  &:hover {
+    .position-drag-handle {
+      visibility: visible;
+    }
+  }
+}
+
+table.grid-ordering-column tr.position-row-while-drag {
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  color: white;
+  transform: translate(5px,10px);
+  background: none;
+  td {
+    background-color: $medium-gray;
+  }
+  td:first-child { border-top-left-radius: 3px; }
+  td:first-child { border-bottom-left-radius: 3px; }
+  td:last-child { border-top-right-radius: 3px; }
+  td:last-child { border-bottom-right-radius: 3px; }
+
+  .position-drag-handle,
+  .position-drag-handle:hover,
+  .btn, .btn:after, .btn .material-icons {
+    color: white;
+  }
+}
+
+.js-drag-handle {
+  cursor: move;
+}
+
+.position-drag-handle {
+  color: $gray-medium;
+  visibility: hidden;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+.btn-group-action {
+  a.dropdown-toggle,
+  button.dropdown-toggle,
+  .dropdown-toggle {
+    color: $gray-medium;
+    &:after {
+      content: "more_vert";
+    }
+
+    &:hover {
+      color: $primary;
+    }
+  }
+}
+
+table .thead-default .column-headers th:last-child .grid-actions-header-text {
+  float: right;
+
+  span {
+    padding-right: 14px;
+  }
+}
+
+table .column-filters td:last-child .grid-search-button,
+table .column-filters td:last-child .grid-reset-button {
+  float: right;
+}
+
+.grid {
+  table.grid-table {
+    tbody {
+      tr {
+        $tr: &;
+
+        &:hover {
+          background: #fafbfc;
+        }
+
+        // styling for row that is being dragged
+        &.dragging-row {
+          background: #fafbfc;
+          cursor: move;
+
+          td {
+            background: #67868e;
+            color: white;
+            -webkit-transform: translate(5px, 10px);
+            transform: translate(5px, 10px);
+
+            // make all icons and links white
+            i.grid-toggler-icon-valid,
+            i.grid-toggler-icon-not-valid,
+            i.material-icons,
+            a,
+            a:after {
+              color: white;
+            }
+          }
+        }
+
+        // ---------------------------------
+        // Styling for specific column types
+        // ---------------------------------
+        td {
+          word-break: break-word;
+
+          &.draggable-type {
+            .draggable-column {
+              color: transparent;
+              cursor: move;
+            }
+
+            @at-root {
+              #{$tr}:hover .draggable-column {
+                color: #15b7d7 !important;
+              }
+            }
+          }
+
+          &.action-type {
+            .btn-group > .dropdown-item {
+              &:hover,
+              &:focus {
+                background-color: transparent;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .table-responsive .row {
+    margin: 0;
+  }
+}
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statssearch/statssearch.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8c3c245232744602822902b97e65d6f9">
+        <source>Shop search</source>
+        <target>Shop search</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="61e73a44bd33933e4d4f85ad339de086">
+        <source>Adds a tab to the Stats dashboard, showing which keywords have been searched by your store's visitors.</source>
+        <target>Adds a tab to the Stats dashboard, showing which keywords have been searched by your store's visitors.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="867343577fa1f33caa632a19543bd252">
+        <source>Keywords</source>
+        <target>Keywords</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="e52e6aa1a43a0187e44f048f658db5f9">
+        <source>Occurrences</source>
+        <target>Occurrences</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="fd69c5cf902969e6fb71d043085ddee6">
+        <source>Results</source>
+        <target>Results</target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="998e4c5c80f27dec552e99dfed34889a">
+        <source>CSV Export</source>
+        <target>CSV Export</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="710af2afb2786d5f79b2c9bd8a746b8b">
+        <source>Cannot find any keywords that have been searched for more than once.</source>
+        <target>Cannot find any keywords that have been searched for more than once.</target>
+        <note>Line: 140</note>
+      </trans-unit>
+      <trans-unit id="e15832aa200f342e8f4ab580b43a72a8">
+        <source>Top 10 keywords</source>
+        <target>Top 10 keywords</target>
+        <note>Line: 148</note>
+      </trans-unit>
+      <trans-unit id="52ef9633d88a7480b3a938ff9eaa2a25">
+        <source>Others</source>
+        <target>Others</target>
+        <note>Line: 165</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        public: true
+
+    form.type.extension.money:
+        class: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
+
+    form.type.extension.resizable_text:
+        class: 'PrestaShopBundle\Form\Admin\Type\ResizableTextType'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
+
+    form.extension.help_text:
+        class: 'PrestaShopBundle\Form\Admin\Extension\HelpTextExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }

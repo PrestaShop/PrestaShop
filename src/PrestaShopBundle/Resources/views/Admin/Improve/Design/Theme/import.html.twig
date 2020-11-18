@@ -1,0 +1,132 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': path('admin_themes_import'),
+    'desc': 'Add new theme'|trans({}, 'Admin.Design.Feature'),
+    'icon': 'add'
+  },
+  'export': {
+    'href': path('admin_themes_export_current'),
+    'desc': 'Export current theme'|trans({}, 'Admin.Design.Feature'),
+    'icon': 'cloud_download'
+  }
+} %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      {{ form_errors(importThemeForm) }}
+      {{ form_start(importThemeForm) }}
+        <div class="row justify-content-center">
+          <div class="col-xl-10">
+            <div class="card">
+              <h3 class="card-header">
+                <i class="material-icons">file_copy</i>
+                {{ 'Import from your computer'|trans({}, 'Admin.Design.Feature') }}
+              </h3>
+              <div class="card-block row">
+                <div class="card-text">
+                  {{ ps.form_group_row(importThemeForm.import_from_computer, {}, {
+                    label: 'Zip file'|trans({}, 'Admin.Design.Feature'),
+                    help: 'Browse your computer files and select the Zip file for your new theme.'|trans({}, 'Admin.Design.Help')
+                  }) }}
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-primary">
+                    <i class="material-icons">cloud_upload</i>
+                    {{ 'Save'|trans({}, 'Admin.Actions') }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-10">
+            <div class="card">
+              <h3 class="card-header">
+                <i class="material-icons">file_copy</i>
+                {{ 'Import from the web'|trans({}, 'Admin.Design.Feature') }}
+              </h3>
+              <div class="card-block row">
+                <div class="card-text">
+                  {{ ps.form_group_row(importThemeForm.import_from_web, {}, {
+                    label: 'Archive URL'|trans({}, 'Admin.Design.Feature'),
+                    help: 'Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".'|trans({}, 'Admin.Design.Help')
+                  }) }}
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-primary">
+                    <i class="material-icons">cloud_upload</i>
+                    {{ 'Save'|trans({}, 'Admin.Actions') }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-10">
+            <div class="card">
+              <h3 class="card-header">
+                <i class="material-icons">file_copy</i>
+                {{ 'Import from FTP'|trans({}, 'Admin.Design.Feature') }}
+              </h3>
+              <div class="card-block row">
+                <div class="card-text">
+                  {{ ps.form_group_row(importThemeForm.import_from_ftp, {}, {
+                    label: 'Select the archive'|trans({}, 'Admin.Design.Feature'),
+                    help: 'This selector lists the Zip files that you uploaded in the \'/themes\' folder.'|trans({}, 'Admin.Design.Help')
+                  }) }}
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-primary">
+                    <i class="material-icons">cloud_upload</i>
+                    {{ 'Save'|trans({}, 'Admin.Actions') }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% block import_theme_form_rest %}
+          {{ form_rest(importThemeForm) }}
+        {% endblock %}
+
+      {{ form_end(importThemeForm) }}
+    </div>
+  </div>
+{% endblock %}

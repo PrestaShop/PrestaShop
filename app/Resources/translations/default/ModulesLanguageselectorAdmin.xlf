@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_languageselector/ps_languageselector.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d33f69bfa67e20063a8905c923d9cf59">
+        <source>Language selector block</source>
+        <target>Language selector block</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="26519a08e607733fa050b88303bea070">
+        <source>Adds a block allowing customers to select a language for your store's content.</source>
+        <target>Adds a block allowing customers to select a language for your store's content.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

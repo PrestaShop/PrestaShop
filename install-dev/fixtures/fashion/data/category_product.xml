@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_category_product>
+  <fields primary="id_category, id_product">
+    <field name="id_category" relation="category"/>
+    <field name="id_product" relation="product"/>
+    <field name="position"/>
+  </fields>
+  <entities>
+    <category_product id="category_product_2_8" id_category="Home" id_product="Hummingbird_printed_t-shirt" position="1"/>
+    <category_product id="category_product_2_10" id_category="Home" id_product="Hummingbird_printed_sweater" position="2"/>
+    <category_product id="category_product_2_12" id_category="Home" id_product="The_best_is_yet_to_come_Framed_poster" position="3"/>
+    <category_product id="category_product_2_13" id_category="Home" id_product="The_adventure_begins_Framed_poster" position="4"/>
+    <category_product id="category_product_2_14" id_category="Home" id_product="Today_is_a_good_day_Framed_poster" position="5"/>
+    <category_product id="category_product_2_15" id_category="Home" id_product="Mug_The_best_is_yet_to_come" position="6"/>
+    <category_product id="category_product_2_16" id_category="Home" id_product="Mug_The_adventure_begins" position="7"/>
+    <category_product id="category_product_2_17" id_category="Home" id_product="Mug_Today_is_a_good_day" position="8"/>
+    <category_product id="category_product_2_18" id_category="Home" id_product="Mountain_fox_cushion" position="9"/>
+    <category_product id="category_product_2_19" id_category="Home" id_product="Brown_bear_cushion" position="10"/>
+    <category_product id="category_product_2_20" id_category="Home" id_product="Hummingbird_cushion" position="11"/>
+    <category_product id="category_product_2_21" id_category="Home" id_product="Mountain_fox_-_Vector_graphics" position="12"/>
+    <category_product id="category_product_2_22" id_category="Home" id_product="Brown_bear_-_Vector_graphics" position="13"/>
+    <category_product id="category_product_2_23" id_category="Home" id_product="Hummingbird_-_Vector_graphics" position="14"/>
+    <category_product id="category_product_2_24" id_category="Home" id_product="Pack_Mug_Framed_poster" position="15"/>
+    <category_product id="category_product_2_27" id_category="Home" id_product="Mountain_fox_notebook" position="16"/>
+    <category_product id="category_product_2_28" id_category="Home" id_product="Brown_bear_notebook" position="17"/>
+    <category_product id="category_product_2_29" id_category="Home" id_product="Hummingbird_notebook" position="18"/>
+    <category_product id="category_product_2_30" id_category="Home" id_product="Customizable_mug" position="19"/>
+    <category_product id="category_product_12_8" id_category="Clothes" id_product="Hummingbird_printed_t-shirt" position="1"/>
+    <category_product id="category_product_12_10" id_category="Clothes" id_product="Hummingbird_printed_sweater" position="2"/>
+    <category_product id="category_product_13_8" id_category="Men" id_product="Hummingbird_printed_t-shirt" position="1"/>
+    <category_product id="category_product_14_10" id_category="Women" id_product="Hummingbird_printed_sweater" position="1"/>
+    <category_product id="category_product_15_16" id_category="Accessories" id_product="Mug_The_adventure_begins" position="1"/>
+    <category_product id="category_product_15_15" id_category="Accessories" id_product="Mug_The_best_is_yet_to_come" position="2"/>
+    <category_product id="category_product_15_17" id_category="Accessories" id_product="Mug_Today_is_a_good_day" position="3"/>
+    <category_product id="category_product_15_19" id_category="Accessories" id_product="Brown_bear_cushion" position="4"/>
+    <category_product id="category_product_15_18" id_category="Accessories" id_product="Mountain_fox_cushion" position="5"/>
+    <category_product id="category_product_15_20" id_category="Accessories" id_product="Hummingbird_cushion" position="6"/>
+    <category_product id="category_product_15_24" id_category="Accessories" id_product="Pack_Mug_Framed_poster" position="7"/>
+    <category_product id="category_product_15_27" id_category="Accessories" id_product="Mountain_fox_notebook" position="8"/>
+    <category_product id="category_product_15_28" id_category="Accessories" id_product="Brown_bear_notebook" position="9"/>
+    <category_product id="category_product_15_29" id_category="Accessories" id_product="Hummingbird_notebook" position="10"/>
+    <category_product id="category_product_15_30" id_category="Accessories" id_product="Customizable_mug" position="11"/>
+    <category_product id="category_product_16_27" id_category="Stationery" id_product="Mountain_fox_notebook" position="1"/>
+    <category_product id="category_product_16_28" id_category="Stationery" id_product="Brown_bear_notebook" position="2"/>
+    <category_product id="category_product_16_29" id_category="Stationery" id_product="Hummingbird_notebook" position="3"/>
+    <category_product id="category_product_17_15" id_category="Home_Accessories" id_product="Mug_The_best_is_yet_to_come" position="1"/>
+    <category_product id="category_product_17_16" id_category="Home_Accessories" id_product="Mug_The_adventure_begins" position="2"/>
+    <category_product id="category_product_17_17" id_category="Home_Accessories" id_product="Mug_Today_is_a_good_day" position="3"/>
+    <category_product id="category_product_17_18" id_category="Home_Accessories" id_product="Mountain_fox_cushion" position="4"/>
+    <category_product id="category_product_17_19" id_category="Home_Accessories" id_product="Brown_bear_cushion" position="5"/>
+    <category_product id="category_product_17_20" id_category="Home_Accessories" id_product="Hummingbird_cushion" position="6"/>
+    <category_product id="category_product_17_24" id_category="Home_Accessories" id_product="Pack_Mug_Framed_poster" position="7"/>
+    <category_product id="category_product_17_30" id_category="Home_Accessories" id_product="Customizable_mug" position="8"/>
+    <category_product id="category_product_18_12" id_category="Art" id_product="The_best_is_yet_to_come_Framed_poster" position="1"/>
+    <category_product id="category_product_18_13" id_category="Art" id_product="The_adventure_begins_Framed_poster" position="2"/>
+    <category_product id="category_product_18_14" id_category="Art" id_product="Today_is_a_good_day_Framed_poster" position="3"/>
+    <category_product id="category_product_18_21" id_category="Art" id_product="Mountain_fox_-_Vector_graphics" position="4"/>
+    <category_product id="category_product_18_22" id_category="Art" id_product="Brown_bear_-_Vector_graphics" position="5"/>
+    <category_product id="category_product_18_23" id_category="Art" id_product="Hummingbird_-_Vector_graphics" position="6"/>
+    <category_product id="category_product_18_24" id_category="Art" id_product="Pack_Mug_Framed_poster" position="7"/>
+  </entities>
+</entity_category_product>

@@ -1,0 +1,73 @@
+/*!
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *
+ */
+
+.form-horizontal {
+
+  .card-block {
+    justify-content: center;
+    padding: 1.875rem $card-spacer-x;
+    &.row {
+      margin: 0; // used to override negative margins brought by .row
+    }
+  }
+
+  .card-text {
+    @extend .col-sm-10;
+  }
+
+  .form-group.row {
+    margin-bottom: 1.2rem;
+
+    // label column in forms
+    > .form-control-label:first-of-type {
+      @extend .col-sm-4;
+      @extend .col-form-label;
+
+      @include media-breakpoint-up('sm') {
+        text-align: right;
+        padding-right: 25px;
+      }
+    }
+  }
+
+  // make ps-switch align with label
+  .ps-switch:not(.ps-switch-lg) {
+    @include media-breakpoint-up('sm') {
+      margin-top: 5px;
+    }
+  }
+
+  // small size form controls
+  .size-small {
+    width: 150px;
+  }
+
+  .custom-file {
+    input {
+      outline: none;
+    }
+  }
+}

@@ -1,0 +1,141 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% set allowedNameChars = '0-9!<>,;?=+()@#"°{}_$%:' %}
+{% set isGuest = isGuest|default(false) %}
+
+{% block customer_form %}
+  {{ form_start(customerForm) }}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">person</i>
+        {{ 'Customer'|trans({}, 'Admin.Global') }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          {{ form_errors(customerForm) }}
+
+          {{ ps.form_group_row(customerForm.gender_id, {}, {
+            'label': 'Social title'|trans({}, 'Admin.Global')
+          }) }}
+
+          {{ ps.form_group_row(customerForm.first_name, {}, {
+            'label': 'First name'|trans({}, 'Admin.Global'),
+            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+          }) }}
+
+          {{ ps.form_group_row(customerForm.last_name, {}, {
+            'label': 'Last name'|trans({}, 'Admin.Global'),
+            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+          }) }}
+
+          {{ ps.form_group_row(customerForm.email, {}, {
+            'label': 'Email'|trans({}, 'Admin.Global')
+          }) }}
+
+          {{ ps.form_group_row(customerForm.password, {}, {
+            'label': 'Password'|trans({}, 'Admin.Global'),
+            'help': 'Password should be at least %length% characters long.'|trans({'%length%': minPasswordLength}, 'Admin.Notifications.Info'),
+            'class': isGuest ? 'd-none' : ''
+          }) }}
+
+          {{ ps.form_group_row(customerForm.birthday, {}, {
+            'label': 'Birthday'|trans({}, 'Admin.Orderscustomers.Feature')
+          }) }}
+
+          {{ ps.form_group_row(customerForm.is_enabled, {}, {
+            'label': 'Enabled'|trans({}, 'Admin.Global'),
+            'help': 'Enable or disable customer login.'|trans({}, 'Admin.Orderscustomers.Help')
+          }) }}
+
+          {{ ps.form_group_row(customerForm.is_partner_offers_subscribed, {}, {
+            'label': 'Partner offers'|trans({}, 'Admin.Orderscustomers.Feature'),
+            'help': 'This customer will receive your ads via email.'|trans({}, 'Admin.Orderscustomers.Help')
+          }) }}
+
+          {{ ps.form_group_row(customerForm.group_ids, {}, {
+            'label': 'Group access'|trans({}, 'Admin.Orderscustomers.Feature'),
+            'help': 'Select all the groups that you would like to apply to this customer.'|trans({}, 'Admin.Orderscustomers.Help')
+          }) }}
+
+          {{ ps.form_group_row(customerForm.default_group_id, {}, {
+            'label': 'Default customer group'|trans({}, 'Admin.Orderscustomers.Feature'),
+            'help': '%s %s'|format('This group will be the user\'s default group.'|trans({}, 'Admin.Orderscustomers.Help'), 'Only the discount for the selected group will be applied to this customer.'|trans({}, 'Admin.Orderscustomers.Help'))
+          }) }}
+
+          {% if isB2bFeatureActive %}
+            {{ ps.form_group_row(customerForm.company_name, {}, {
+              'label': 'Company'|trans({}, 'Admin.Global')
+            }) }}
+
+            {{ ps.form_group_row(customerForm.siret_code, {}, {
+              'label': 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature')
+            }) }}
+
+            {{ ps.form_group_row(customerForm.ape_code, {}, {
+              'label': 'APE'|trans({}, 'Admin.Orderscustomers.Feature')
+            }) }}
+
+            {{ ps.form_group_row(customerForm.website, {}, {
+              'label': 'Website'|trans({}, 'Admin.Orderscustomers.Feature')
+            }) }}
+
+            {{ ps.form_group_row(customerForm.allowed_outstanding_amount, {}, {
+              'label': 'Allowed outstanding amount'|trans({}, 'Admin.Orderscustomers.Feature'),
+              'help': '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help'))
+            }) }}
+
+            {{ ps.form_group_row(customerForm.max_payment_days, {}, {
+              'label': 'Maximum number of payment days'|trans({}, 'Admin.Orderscustomers.Feature'),
+              'help': '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help'))
+            }) }}
+
+            {{ ps.form_group_row(customerForm.risk_id, {}, {
+              'label': 'Risk rating'|trans({}, 'Admin.Orderscustomers.Feature')
+            }) }}
+          {% endif %}
+
+          {% block customer_form_rest %}
+            {{ form_rest(customerForm) }}
+          {% endblock %}
+        </div>
+      </div>
+      <div class="card-footer">
+        {% if (displayInIframe is defined and displayInIframe == true) %}
+          <a href="javascript:window.history.back();" class="btn btn-outline-secondary">
+        {% else %}
+          <a href="{{ pathWithBackUrl('admin_customers_index') }}" class="btn btn-outline-secondary">
+        {% endif %}
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+        <button class="btn btn-primary float-right">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  {{ form_end(customerForm) }}
+{% endblock %}

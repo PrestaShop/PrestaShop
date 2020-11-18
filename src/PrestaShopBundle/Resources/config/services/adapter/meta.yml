@@ -1,0 +1,46 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.meta.meta_eraser:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaEraser'
+
+    prestashop.adapter.meta.data_provider:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
+
+    # COMMAND HANDLERS
+
+    prestashop.adapter.meta.command_handler.save_meta:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\AddMetaHandler'
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
+            - '@validator'
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'
+
+    prestashop.adapter.meta.command_handler.edit_meta:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\EditMetaHandler'
+        arguments:
+          - '@validator'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'
+
+    # QUERY HANDLERS
+
+    prestashop.adapter.meta.query_handler.get_meta_for_editing:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\QueryHandler\GetMetaForEditingHandler'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing'
+
+
+    prestashop.adapter.meta.query_handler.get_pages_for_layout_customization_handler:
+      class: 'PrestaShop\PrestaShop\Adapter\Meta\QueryHandler\GetPagesForLayoutCustomizationHandler'
+      arguments:
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      tags:
+        - name: 'tactician.handler'
+          command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization'

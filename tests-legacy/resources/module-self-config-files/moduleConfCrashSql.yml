@@ -1,0 +1,2 @@
+sql:
+    - dest: "/module/path/docs/another_file.txt"

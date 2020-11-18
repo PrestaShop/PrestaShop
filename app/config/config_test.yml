@@ -1,0 +1,24 @@
+parameters:
+    AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
+    prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
+
+imports:
+    - { resource: config_dev.yml }
+
+framework:
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        collect: false
+
+web_profiler:
+    toolbar: '%use_debug_toolbar%'
+    intercept_redirects: true
+
+swiftmailer:
+    disable_delivery: true
+
+services:
+    prestashop.bundle.routing.converter.cache:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5e543256c480ac577d30f76f9120eb74">
+        <source>undefined</source>
+        <target>undefined</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="fb2ea703b13d059f6b7ea5da806021df">
+        <source>Format:</source>
+        <target>Format:</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="b908c2f34052b5276e0bf50f0e042211">
+        <source>Filesize:</source>
+        <target>Filesize:</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="2f972dbb48435d9b8087d7e3c22daa09">
+        <source>MB max.</source>
+        <target>MB max.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="c32587b909ccc2187659ca665dbb06be">
+        <source>Current size:</source>
+        <target>Current size:</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="401c8f6635d231c5360f31ce548c4462">
+        <source>Your online store needs to have a proper carrier registered in PrestaShop as soon as you start shipping your products. This means sending yours parcels using your local postal service, or having a contract with a private carrier which in turn will ship your parcels to your customers. In order to have PrestaShop suggest the most adequate carrier to your customers during their order checkout process, you need to register all the carriers with which you have chosen to work.</source>
+        <target>Your online store needs to have a proper carrier registered in PrestaShop as soon as you start shipping your products. This means sending yours parcels using your local postal service, or having a contract with a private carrier which in turn will ship your parcels to your customers. In order to have PrestaShop suggest the most adequate carrier to your customers during their order checkout process, you need to register all the carriers with which you have chosen to work.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="c751fd51e685dd8c071f8535be0d0d8f">
+        <source>PrestaShop comes with a number of carrier modules that you can activate. You can also buy carrier modules on the PrestaShop Addons marketplace. Recommended modules are listed below: install the module that matches your carrier, and configure it!</source>
+        <target>PrestaShop comes with a number of carrier modules that you can activate. You can also buy carrier modules on the PrestaShop Addons marketplace. Recommended modules are listed below: install the module that matches your carrier, and configure it!</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="5bacfd2dc472feddb875fc29134b03bb">
+        <source>If there is no existing module for your carrier, then you can register that carrier by hand using the information that it can provide you: shipping rates, regional zones, size and weight limits, etc. Click on the "Add new carrier" button below to open the Carrier Wizard, which will help you register a new carrier in a few steps.</source>
+        <target>If there is no existing module for your carrier, then you can register that carrier by hand using the information that it can provide you: shipping rates, regional zones, size and weight limits, etc. Click on the "Add new carrier" button below to open the Carrier Wizard, which will help you register a new carrier in a few steps.</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="12a118b904361ef7a25365b2ff29cfa9">
+        <source>Note: DO NOT register a new carrier if there already exists a module for it! Using a module will be much faster and more accurate!</source>
+        <target>Note: DO NOT register a new carrier if there already exists a module for it! Using a module will be much faster and more accurate!</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="95be6960ce35a5d972b7314203b312be">
+        <source>The carrier's name will be displayed during checkout.</source>
+        <target>The carrier's name will be displayed during checkout.</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="d2eee8992bbabe7e76562a015ecf0d7f">
+        <source>The delivery time will be displayed during checkout.</source>
+        <target>The delivery time will be displayed during checkout.</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="ff9058a791d671d3cb7ce3117b3f989d">
+        <source>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</source>
+        <target>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</target>
+        <note>Line: 219</note>
+      </trans-unit>
+      <trans-unit id="e4cb2dbfdc6b5b71c8aef1b781712b03">
+        <source>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</source>
+        <target>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="0668ec4bb8d6bcb27d283b2af9bc5888">
+        <source><![CDATA[Include the handling costs (as set in Shipping > Preferences) in the final carrier price.]]></source>
+        <target><![CDATA[Include the handling costs (as set in Shipping > Preferences) in the final carrier price.]]></target>
+        <note>Line: 277</note>
+      </trans-unit>
+      <trans-unit id="0d93d79832d9f31a18045afabb105de1">
+        <source>Out-of-range behavior occurs when no defined range matches the customer's cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges).</source>
+        <target>Out-of-range behavior occurs when no defined range matches the customer's cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges).</target>
+        <note>Line: 350</note>
+      </trans-unit>
+      <trans-unit id="2f79e7f703f8cd0258b0ef7e0237a4be">
+        <source>Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.</source>
+        <target>Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.</target>
+        <note>Line: 394</note>
+      </trans-unit>
+      <trans-unit id="497876c111e98a20564817545518f829">
+        <source>The value must be an integer.</source>
+        <target>The value must be an integer.</target>
+        <note>Line: 408</note>
+      </trans-unit>
+      <trans-unit id="5929a4e1d04d4653b6dbe2aac59d8a41">
+        <source>Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.</source>
+        <target>Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.</target>
+        <note>Line: 401</note>
+      </trans-unit>
+      <trans-unit id="aacaecfacce577935cf83eeb01bcac40">
+        <source>Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.</source>
+        <target>Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.</target>
+        <note>Line: 408</note>
+      </trans-unit>
+      <trans-unit id="82ef5a4b25d9debf587900797b0b9619">
+        <source>Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.</source>
+        <target>Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.</target>
+        <note>Line: 415</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="07b693f09040dc64d3c36b5daf95caae">
+        <source>Allowed characters: letters, spaces and "%special_chars%".</source>
+        <target>Allowed characters: letters, spaces and "%special_chars%".</target>
+        <note>Line: 175</note>
+      </trans-unit>
+      <trans-unit id="a788f81b3aa0ef9c9efcb1fb67708d82">
+        <source>For in-store pickup, enter 0 to replace the carrier name with your shop name.</source>
+        <target>For in-store pickup, enter 0 to replace the carrier name with your shop name.</target>
+        <note>Line: 177</note>
+      </trans-unit>
+      <trans-unit id="4ca4a355318f45dac9fb0ee632d8dc3c">
+        <source>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</source>
+        <target>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="d7049d8a068769eb32177e404639b8ce">
+        <source>Mark the groups that are allowed access to this carrier.</source>
+        <target>Mark the groups that are allowed access to this carrier.</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="1c6c9d089ce4b751673e3dd09e97b935">
+        <source>Enable the carrier in the front office.</source>
+        <target>Enable the carrier in the front office.</target>
+        <note>Line: 245</note>
+      </trans-unit>
+      <trans-unit id="3194ebe40c7a8c29c78ea79066b6e05c">
+        <source>Carrier name displayed during checkout</source>
+        <target>Carrier name displayed during checkout</target>
+        <note>Line: 176</note>
+      </trans-unit>
+      <trans-unit id="9e93aab109e30d26aa231a49385c99db">
+        <source>Upload a logo from your computer.</source>
+        <target>Upload a logo from your computer.</target>
+        <note>Line: 184</note>
+      </trans-unit>
+      <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
+        <source>or</source>
+        <target>or</target>
+        <note>Line: 184</note>
+      </trans-unit>
+      <trans-unit id="cdaa245d6e50b5647bfd9fcb77ac9a21">
+        <source>Estimated delivery time will be displayed during checkout.</source>
+        <target>Estimated delivery time will be displayed during checkout.</target>
+        <note>Line: 193</note>
+      </trans-unit>
+      <trans-unit id="7a753d72397847025d0a91c564fa0fdc">
+        <source>Delivery tracking URL: Type '@' where the tracking number should appear. It will then be automatically replaced by the tracking number.</source>
+        <target>Delivery tracking URL: Type '@' where the tracking number should appear. It will then be automatically replaced by the tracking number.</target>
+        <note>Line: 206</note>
+      </trans-unit>
+      <trans-unit id="f8af50e8f2eb39dc8581b4943d6ec59f">
+        <source>The zones in which this carrier will be used.</source>
+        <target>The zones in which this carrier will be used.</target>
+        <note>Line: 217</note>
+      </trans-unit>
+      <trans-unit id="920bd1fb6d54c93fca528ce941464225">
+        <source>Group access</source>
+        <target>Group access</target>
+        <note>Line: 221</note>
+      </trans-unit>
+      <trans-unit id="8a52ca34a90eb8486886815e62958ac1">
+        <source>Apply both regular shipping cost and product-specific shipping costs.</source>
+        <target>Apply both regular shipping cost and product-specific shipping costs.</target>
+        <note>Line: 265</note>
+      </trans-unit>
+      <trans-unit id="91aa2e3b1cd071ba7031bf4263e11821">
+        <source>Include the shipping and handling costs in the carrier price.</source>
+        <target>Include the shipping and handling costs in the carrier price.</target>
+        <note>Line: 300</note>
+      </trans-unit>
+      <trans-unit id="482836cce404046ca7dc34fb0a6fc526">
+        <source>Apply the cost of the highest defined range</source>
+        <target>Apply the cost of the highest defined range</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="b73438685f91ee3e3afbb725fb8f948a">
+        <source>Out-of-range behavior occurs when none is defined (e.g. when a customer's cart weight is greater than the highest range limit).</source>
+        <target>Out-of-range behavior occurs when none is defined (e.g. when a customer's cart weight is greater than the highest range limit).</target>
+        <note>Line: 345</note>
+      </trans-unit>
+      <trans-unit id="0687bb4ca6cc1c51d79684159f91ff11">
+        <source>Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
+        <target>Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
+        <note>Line: 352</note>
+      </trans-unit>
+      <trans-unit id="ff5e2cfc010955358f7ff264d9e58398">
+        <source>Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
+        <target>Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
+        <note>Line: 359</note>
+      </trans-unit>
+      <trans-unit id="049de64decc4aa8fa5aa89cf8b17470c">
+        <source>Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
+        <target>Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
+        <note>Line: 366</note>
+      </trans-unit>
+      <trans-unit id="a414ac63c6b29218661d1fa2c6e21b5b">
+        <source>Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
+        <target>Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
+        <note>Line: 373</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ece6bb2586fa84042edde479c6a6ce6b">
+        <source>Your shop's default carrier</source>
+        <target>Your shop's default carrier</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="4f309c91cb82ce5d20c15d015759a21e">
+        <source>This will only be visible in the front office.</source>
+        <target>This will only be visible in the front office.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2be1ec70444ccaf2b74bd55f3aabdead">
+        <source>If you set these parameters to 0, they will be disabled.</source>
+        <target>If you set these parameters to 0, they will be disabled.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="e99c83da35c2a39bf9dc72273d350272">
+        <source>Coupons are not taken into account when calculating free shipping.</source>
+        <target>Coupons are not taken into account when calculating free shipping.</target>
+        <note>Line: 44</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

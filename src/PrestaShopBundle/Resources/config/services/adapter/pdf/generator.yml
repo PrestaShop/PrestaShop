@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.pdf.generator.invoice:
+        class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+            - '@prestashop.adapter.pdf.type_provider.invoice'

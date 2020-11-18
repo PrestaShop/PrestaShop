@@ -1,0 +1,84 @@
+services:
+    _defaults:
+        public: true
+
+    # KPI implementations
+    prestashop.adapter.kpi.enabled_languages:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\EnabledLanguagesKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminLanguages")'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "enabled_languages"})'
+
+    prestashop.adapter.kpi.main_country:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\MainCountryKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "main_country"})'
+
+    prestashop.adapter.kpi.translations:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\TranslationsKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "frontoffice_translations"})'
+
+    prestashop.adapter.kpi.disabled_categories:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\DisabledCategoriesKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "disabled_categories"})'
+
+    prestashop.adapter.kpi.empty_categories:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\EmptyCategoriesKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "empty_categories"})'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminTracking")'
+
+    prestashop.adapter.kpi.top_category:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\TopCategoryKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "top_category"})'
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+
+    prestashop.adapter.kpi.average_products_in_category:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\AverageProductsInCategoryKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "products_per_category"})'
+
+    prestashop.adapter.kpi.most_common_customers_gender:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\MostCommonCustomersGenderKpi'
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "customer_main_gender"})'
+
+    prestashop.adapter.kpi.average_customer_age:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\AverageCustomerAgeKpi'
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "avg_customer_age"})'
+
+    prestashop.adapter.kpi.order_per_customer:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\OrdersPerCustomerKpi'
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "orders_per_customer"})'
+
+    prestashop.adapter.kpi.newsletter_registrations:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\NewsletterRegistrationsKpi'
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "newsletter_registrations"})'
