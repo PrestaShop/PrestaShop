@@ -31,7 +31,7 @@
     <input
       type="number"
       class="form-control"
-      :class="{ danger: danger }"
+      :class="{ danger }"
       :value="value"
       placeholder="0"
       @keyup="onKeyup($event)"
