@@ -29,11 +29,11 @@ class StockManagementOptionHandler {
   constructor() {
     this.handle();
 
-    $('input[name="form[stock][stock_management]"]').on('change', () => this.handle());
+    $('input[name="stock[stock_management]"]').on('change', () => this.handle());
   }
 
   handle() {
-    const stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
+    const stockManagementVal = $('input[name="stock[stock_management]"]:checked').val();
     const isStockManagementEnabled = parseInt(stockManagementVal, 10);
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
@@ -48,7 +48,7 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-    const allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
+    const allowOrderingOosRadios = $('input[name="stock[allow_ordering_oos]"]');
 
     if (isStockManagementEnabled) {
       allowOrderingOosRadios.removeAttr('disabled');
@@ -66,7 +66,7 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-    const displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
+    const displayQuantitiesRadio = $('input[name="page[display_quantities]"]');
 
     if (isStockManagementEnabled) {
       displayQuantitiesRadio.removeAttr('disabled');
