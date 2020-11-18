@@ -377,7 +377,7 @@ class MetaController extends FrameworkBundleAdminController
         FormInterface $shopUrlsForm,
         FormInterface $seoOptionsForm,
         ?FormInterface $urlSchemaForm = null
-    ) {
+    ): Response {
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
 
         $context = $this->get('prestashop.adapter.shop.context');
