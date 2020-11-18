@@ -54,19 +54,7 @@ class AdministrationController extends FrameworkBundleAdminController
         $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
         $notificationsForm = $this->getNotificationsFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'requireBulkActions' => false,
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
-            'requireFilterStatus' => false,
-            'generalForm' => $generalForm->createView(),
-            'uploadQuotaForm' => $uploadQuotaForm->createView(),
-            'notificationsForm' => $notificationsForm->createView(),
-        ]);
+        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
     }
 
     /**
@@ -143,9 +131,9 @@ class AdministrationController extends FrameworkBundleAdminController
      * @param FormInterface $uploadQuotaForm
      * @param FormInterface $notificationsForm
      *
-     * @return Response|null
+     * @return Response
      */
-    protected function renderForm(FormInterface $generalForm, FormInterface $uploadQuotaForm, FormInterface $notificationsForm)
+    protected function renderForm(FormInterface $generalForm, FormInterface $uploadQuotaForm, FormInterface $notificationsForm): Response
     {
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
