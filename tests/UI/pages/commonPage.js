@@ -369,4 +369,15 @@ module.exports = class CommonPage {
 
     return parseFloat(number);
   }
+
+  /**
+   * Get parent element from selector
+   * @param page
+   * @param selector
+   * @return {Promise<ElementHandle>}
+   */
+  getParentElement(page, selector) {
+    /* eslint-env browser */
+    return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
+  }
 };
