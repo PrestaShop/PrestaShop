@@ -42,12 +42,7 @@ class GetCartForOrderCreation
     /**
      * @var bool
      */
-    private $separateGiftProducts = false;
-
-    /**
-     * @var bool
-     */
-    private $separateGiftCartRules = false;
+    private $hideDiscounts = false;
 
     /**
      * @param int $cartId
@@ -70,45 +65,29 @@ class GetCartForOrderCreation
     /**
      * @return bool
      */
-    public function separateGiftProducts(): bool
+    public function hideDiscounts(): bool
     {
-        return $this->separateGiftProducts;
+        return $this->hideDiscounts;
     }
 
     /**
-     * When separateGiftProducts is set to TRUE, payed products lines are separated to gift products.
-     * Otherwise, we will have one line per product and the gifted quantity will be included to the product quantity in the cart.
+     * When hideDiscounts is set to TRUE,
+     * Payed products lines are separated to gift products
+     * Price of the gifted products are removed from the overall discounts
+     * Shipping is set to 0 if there is a free_shipping cart rule
      *
-     * @param bool $separateGiftProducts
+     * Otherwise,
+     * We will have one line per product and the gifted quantity will be included to the product quantity in the cart.
+     * The shipping will have his original value and a cart_rule with the shipping value will be added
+     * and the gift products price will be included to the discount
+     *
+     * @param bool $hideDiscounts
      *
      * @return GetCartForOrderCreation
      */
-    public function setSeparateGiftProducts(bool $separateGiftProducts): GetCartForOrderCreation
+    public function setHideDiscounts(bool $hideDiscounts): GetCartForOrderCreation
     {
-        $this->separateGiftProducts = $separateGiftProducts;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function separateGiftCartRules(): bool
-    {
-        return $this->separateGiftCartRules;
-    }
-
-    /**
-     * When separateGiftCartRules is set to TRUE, we will have a specific cart rule entry with the price of the gifted products.
-     * Otherwise, this price will be included to the overall discounts entry.
-     *
-     * @param bool $separateGiftCartRules
-     *
-     * @return GetCartForOrderCreation
-     */
-    public function setSeparateGiftCartRules(bool $separateGiftCartRules): GetCartForOrderCreation
-    {
-        $this->separateGiftCartRules = $separateGiftCartRules;
+        $this->hideDiscounts = $hideDiscounts;
 
         return $this;
     }

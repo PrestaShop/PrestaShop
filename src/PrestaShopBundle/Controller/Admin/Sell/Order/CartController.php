@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
@@ -112,8 +112,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $cartInfo = $this->getQueryBus()->handle(
                 (new GetCartForOrderCreation($cartId))
-                    ->setSeparateGiftProducts(true)
-                    ->setSeparateGiftCartRules(true)
+                    ->setHideDiscounts(true)
             );
 
             return $this->json($cartInfo);
@@ -503,16 +502,15 @@ class CartController extends FrameworkBundleAdminController
     /**
      * @param int $cartId
      *
-     * @return CartInformation
+     * @return CartForOrderCreation
      *
      * @throws CartConstraintException
      */
-    private function getCartInfo(int $cartId): CartInformation
+    private function getCartInfo(int $cartId): CartForOrderCreation
     {
         return $this->getQueryBus()->handle(
             (new GetCartForOrderCreation($cartId))
-                ->setSeparateGiftProducts(true)
-                ->setSeparateGiftCartRules(true)
+                ->setHideDiscounts(true)
         );
     }
 
@@ -634,6 +632,7 @@ class CartController extends FrameworkBundleAdminController
 
     /**
      * This method will be removed in the next patch version. We rely on Cart ObjectModel to simplify the code
+     * It returns the number of items of the specific product/attribute that are gift for the cart
      *
      * @param int $cartId
      * @param int $productId

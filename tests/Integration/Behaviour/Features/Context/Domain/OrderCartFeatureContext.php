@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -84,9 +84,9 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         $duplicatedCartId = SharedStorage::getStorage()->get($duplicatedCartReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
-        /** @var CartInformation $cartInformation */
+        /** @var CartForOrderCreation $cartInformation */
         $cartInformation = $this->getQueryBus()->handle(new GetCartForOrderCreation($cartId));
-        /** @var CartInformation $duplicatedCartInformation */
+        /** @var CartForOrderCreation $duplicatedCartInformation */
         $duplicatedCartInformation = $this->getQueryBus()->handle(new GetCartForOrderCreation($duplicatedCartId));
 
         Assert::assertNotSame($cartInformation->getCartId(), $duplicatedCartInformation->getCartId());

@@ -24,44 +24,80 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
 /**
- * Holds product customization data along with its custom fields data
+ * Holds cart rule (a.k.a voucher) data for cart information
  */
-class Customization
+class CartRule
 {
     /**
      * @var int
      */
-    private $customizationId;
+    private $cartRuleId;
 
     /**
-     * @var CustomizationFieldData[]
+     * @var string
      */
-    private $customizationFieldsData;
+    private $name;
 
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var string
+     */
+    private $value;
+
+    /**
+     * @param int $cartRuleId
+     * @param string $name
+     * @param string $description
+     * @param string $value
+     */
     public function __construct(
-        int $customizationId,
-        array $customizationFieldsData
+        int $cartRuleId,
+        string $name,
+        string $description,
+        string $value
     ) {
-        $this->customizationId = $customizationId;
-        $this->customizationFieldsData = $customizationFieldsData;
+        $this->cartRuleId = $cartRuleId;
+        $this->name = $name;
+        $this->description = $description;
+        $this->value = $value;
     }
 
     /**
      * @return int
      */
-    public function getCustomizationId(): int
+    public function getCartRuleId(): int
     {
-        return $this->customizationId;
+        return $this->cartRuleId;
     }
 
     /**
-     * @return CustomizationFieldData[]
+     * @return string
      */
-    public function getCustomizationFieldsData(): array
+    public function getName(): string
     {
-        return $this->customizationFieldsData;
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
     }
 }
