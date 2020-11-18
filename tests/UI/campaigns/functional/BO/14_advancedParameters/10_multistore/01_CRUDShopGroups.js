@@ -8,7 +8,7 @@ const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const generalPage = require('@page/BO/shopParameters');
+const generalPage = require('@pages/BO/shopParameters/general');
 const multiStorePage = require('@pages/BO/advancedParameters/multistore');
 const addShopGroupPage = require('@pages/BO/advancedParameters/multistore/add');
 
@@ -23,11 +23,11 @@ const baseContext = 'functional_BO_modules_advancedParameters_webservice_CRUDSho
 let browserContext;
 let page;
 
-let numberOfWebserviceKeys = 0;
+let numberOfShopGroups = 0;
 
 const createShopGroupData = new ShopGroupFaker({});
 
-// Create, Read, Update and Delete webservice key in BO
+// Create, Read, Update and Delete shop groups in BO
 describe('Create, Read, Update and Delete shop groups in BO', async () => {
   // before and after functions
   before(async function () {
@@ -43,7 +43,8 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Enable multi store', async () => {
+  // 1 : Enable multi store
+  describe('Enable multistore', async () => {
     it('should go to "Shop parameters > General" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
@@ -64,6 +65,50 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
 
       const result = await generalPage.setMultiStoreStatus(page, true);
       await expect(result).to.contains(generalPage.successfulUpdateMessage);
+    });
+  });
+
+  // 2 : Create shop group
+  describe('Create shop group', async () => {
+    it('should go to "Advanced parameters > Multi store" page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.multistoreLink,
+      );
+
+      await multiStorePage.closeSfToolBar(page);
+
+      const pageTitle = await multiStorePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
+    });
+
+    it('should reset all filters and get number of shop group', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
+
+      numberOfShopGroups = await multiStorePage.resetAndGetNumberOfLines(page);
+      await expect(numberOfShopGroups).to.be.above(0);
+    });
+
+    it('should go to add new multistore page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopGroupPage', baseContext);
+
+      await multiStorePage.goToNewShopGroupPage(page);
+
+      const pageTitle = await addShopGroupPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addShopGroupPage.pageTitleCreate);
+    });
+
+    it('should create shop group and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createShopGroup', baseContext);
+
+      const textResult = await addShopGroupPage.setShopGroup(page, createShopGroupData);
+      await expect(textResult).to.contains(addShopGroupPage.successfulCreationMessage);
+
+      const numberOfShopGroupsAfterCreation = await multiStorePage.getNumberOfElementInGrid(page);
+      await expect(numberOfShopGroupsAfterCreation).to.be.equal(numberOfShopGroups + 1);
     });
   });
 });
