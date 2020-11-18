@@ -104,7 +104,7 @@ services:
         arguments:
             - '@prestashop.core.util.number.number_extractor'
             - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.product_price_filler'
+            - '@prestashop.adapter.product.product_price_properties_filler'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
