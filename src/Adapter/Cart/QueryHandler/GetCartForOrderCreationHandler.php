@@ -271,7 +271,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         $products = [];
         $mergedGifts = $this->mergeGiftProducts($legacySummary['gift_products']);
 
-        foreach ($legacySummary['products'] as &$product) {
+        foreach ($legacySummary['products'] as $product) {
             $productKey = $this->generateUniqueProductKey($product);
 
             //decrease product quantity for each identical product which is marked as gift
@@ -300,7 +300,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $products = [];
-        foreach ($legacySummary['products'] as &$product) {
+        foreach ($legacySummary['products'] as $product) {
             $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
