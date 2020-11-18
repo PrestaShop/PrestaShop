@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\CommandBus\Parser;
 
 /**
  * Transfers commands and queries definition data
+ *
+ * @deprecated
+ * @see CommandHandlerDefinition
  */
 class CommandDefinition
 {
