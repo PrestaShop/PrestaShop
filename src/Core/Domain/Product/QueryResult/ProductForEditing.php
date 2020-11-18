@@ -84,9 +84,9 @@ class ProductForEditing
     private $associatedAttachmentIds;
 
     /**
-     * @var ProductStock
+     * @var ProductStockInformation
      */
-    private $stock;
+    private $stockInformation;
 
     /**
      * @param int $productId
@@ -99,7 +99,7 @@ class ProductForEditing
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
-     * @param ProductStock $stock
+     * @param ProductStockInformation $stockInformation
      */
     public function __construct(
         int $productId,
@@ -112,7 +112,7 @@ class ProductForEditing
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
-        ProductStock $stock
+        ProductStockInformation $stockInformation
     ) {
         $this->productId = $productId;
         $this->active = $active;
@@ -124,7 +124,7 @@ class ProductForEditing
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
-        $this->stock = $stock;
+        $this->stockInformation = $stockInformation;
     }
 
     /**
@@ -208,10 +208,10 @@ class ProductForEditing
     }
 
     /**
-     * @return ProductStock
+     * @return ProductStockInformation
      */
-    public function getStock(): ProductStock
+    public function getStockInformation(): ProductStockInformation
     {
-        return $this->stock;
+        return $this->stockInformation;
     }
 }

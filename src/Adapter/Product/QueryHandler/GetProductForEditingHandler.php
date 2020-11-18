@@ -46,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -100,7 +100,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
-            $this->getProductStock($product)
+            $this->getProductStockInformation($product)
         );
     }
 
@@ -287,19 +287,19 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     }
 
     /**
-     * Returns the product stock infos, it's important that the Product is fetched with full data
+     * Returns the product stock infos, it's important that the Product is fetched with stock data
      *
      * @param Product $product
      *
-     * @return ProductStock
+     * @return ProductStockInformation
      */
-    private function getProductStock(Product $product): ProductStock
+    private function getProductStockInformation(Product $product): ProductStockInformation
     {
         try {
             // Theoretically StockAvailable is created for each product when Product::add is called
             $stockAvailable = $this->stockAvailableRepository->get(new ProductId($product->id));
 
-            return new ProductStock(
+            return new ProductStockInformation(
                 (bool) $product->advanced_stock_management,
                 (bool) $stockAvailable->depends_on_stock,
                 (int) $product->pack_stock_type,
@@ -316,7 +316,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
         } catch (StockAvailableNotFoundException $e) {
             // In case StockAvailable does not exist we can still use the Product fields
 
-            return new ProductStock(
+            return new ProductStockInformation(
                 (bool) $product->advanced_stock_management,
                 (bool) $product->depends_on_stock,
                 (int) $product->pack_stock_type,
