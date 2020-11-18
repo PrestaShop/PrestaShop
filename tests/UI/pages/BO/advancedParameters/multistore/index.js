@@ -1,7 +1,7 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class ImageSettings extends BOBasePage {
+class multistoreSettings extends BOBasePage {
   constructor() {
     super();
 
@@ -18,7 +18,7 @@ class ImageSettings extends BOBasePage {
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
 
     // Table selectors
-    this.gridTable = '#table-image_type';
+    this.gridTable = '#table-shop_group';
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
@@ -55,13 +55,6 @@ class ImageSettings extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
-
-    // Bulk actions selectors
-    this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = '#bulk_action_menu_image_type';
-    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
-    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /* Header methods */
@@ -77,7 +70,7 @@ class ImageSettings extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of image types
+   * Get Number of elements
    * @param page
    * @return {Promise<number>}
    */
@@ -110,28 +103,13 @@ class ImageSettings extends BOBasePage {
   /**
    * Filter shop groups
    * @param page
-   * @param filterType
    * @param filterBy
    * @param value
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
-    switch (filterType) {
-      case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
-        break;
-
-      case 'select':
-        await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
-        ]);
-        break;
-
-      default:
-        throw new Error(`Filter ${filterBy} was not found`);
-    }
+  async filterTable(page, filterBy, value) {
+    await this.setValue(page, this.filterColumn(filterBy), value.toString());
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /* Column methods */
@@ -218,4 +196,4 @@ class ImageSettings extends BOBasePage {
   }
 }
 
-module.exports = new ImageSettings();
+module.exports = new multistoreSettings();

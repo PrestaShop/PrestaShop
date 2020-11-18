@@ -26,6 +26,7 @@ let page;
 let numberOfShopGroups = 0;
 
 const createShopGroupData = new ShopGroupFaker({});
+const updateShopGroupData = new ShopGroupFaker({});
 
 // Create, Read, Update and Delete shop groups in BO
 describe('Create, Read, Update and Delete shop groups in BO', async () => {
@@ -92,7 +93,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
       await expect(numberOfShopGroups).to.be.above(0);
     });
 
-    it('should go to add new multistore page', async function () {
+    it('should go to add new shop group page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopGroupPage', baseContext);
 
       await multiStorePage.goToNewShopGroupPage(page);
@@ -108,6 +109,29 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
       await expect(textResult).to.contains(addShopGroupPage.successfulCreationMessage);
 
       const numberOfShopGroupsAfterCreation = await multiStorePage.getNumberOfElementInGrid(page);
+      await expect(numberOfShopGroupsAfterCreation).to.be.equal(numberOfShopGroups + 1);
+    });
+  });
+
+  // 3 : Update shop group
+  describe('Create shop group', async () => {
+    it('should go to edit the created shop group page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditShopGroupPage', baseContext);
+      await multiStorePage.filterTable(page, 'a!name', createShopGroupData.name);
+
+      await multiStorePage.gotoEditShopGroupPage(page, 1);
+
+      const pageTitle = await addShopGroupPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addShopGroupPage.pageTitleEdit);
+    });
+
+    it('should edit shop group and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateShopGroup', baseContext);
+
+      const textResult = await addShopGroupPage.setShopGroup(page, updateShopGroupData);
+      await expect(textResult).to.contains(addShopGroupPage.successfulUpdateMessage);
+
+      const numberOfShopGroupsAfterCreation = await multiStorePage.resetAndGetNumberOfLines(page);
       await expect(numberOfShopGroupsAfterCreation).to.be.equal(numberOfShopGroups + 1);
     });
   });
