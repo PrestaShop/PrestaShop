@@ -13,9 +13,18 @@ Feature: Add basic product from Back Office (BO)
       | is_virtual | false                |
     Then product "product1" should be disabled
     And product "product1" type should be standard
-    And product "product1" should have following options information:
+    And product "product1" localized "name" should be "{en-US:bottle of beer}"
+    And product "product1" should be assigned to default category
+
+  Scenario: I add a product with basic information
+    When I add product "product1" with following information:
+      | name       | en-US:bottle of beer |
+      | is_virtual | true                 |
+    Then product "product1" should be disabled
+    Then product "product1" should have following options information:
       | condition        | new            |
-    And product "product1" localized "name" should be "en-US:bottle of beer"
+    And product "product1" type should be virtual
+    And product "product1" localized "name" should be "{en-US:bottle of beer}"
     And product "product1" should be assigned to default category
 
   Scenario: I add a product with invalid characters in name
@@ -28,4 +37,4 @@ Feature: Add basic product from Back Office (BO)
     When I add product "product3" with following information:
       | name       | en-US:Shirt - Dom & Jquery |
       | is_virtual | false             |
-    And product "product3" localized "name" should be "en-US:Shirt - Dom & Jquery"
+    And product "product3" localized "name" should be "{en-US:Shirt - Dom & Jquery}"
