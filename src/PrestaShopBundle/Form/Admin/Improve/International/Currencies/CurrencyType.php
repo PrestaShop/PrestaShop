@@ -252,7 +252,7 @@ class CurrencyType extends TranslatorAwareType
                     new LessThanOrEqual([
                         'value' => 20,
                         'message' => $this->trans(
-                            'This value should be less than or equal to %value%',
+                            'This value should be less than or equal to %value%.',
                             'Admin.Notifications.Error',
                             [
                                 '%value%' => 20,
