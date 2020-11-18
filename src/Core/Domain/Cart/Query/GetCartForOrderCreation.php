@@ -72,14 +72,13 @@ class GetCartForOrderCreation
 
     /**
      * When hideDiscounts is set to TRUE,
-     * Gifted products are in a separate line from other products which are charged for
-     * The price of any gifted products is not included in the overall discounts, total products and cart total
+     * Gift products are in a separate line from other products which are charged for
+     * The price of any gift products is not included in the overall discounts, total products and cart total
      * Shipping is set to 0 if there is a free_shipping cart rule
      *
      * Otherwise,
-     * There is one line per product type and the gifted quantity will be included to the product quantity in the cart.
+     * There is one line per product type, any gift products will be included in the quantity of charged products, but the price of gift products will appear as a discount
      * Shipping has its original price, and if it's free, the shipping value will be added as a discount
-     * Any gifted products' price will be included as a discount
      *
      * @param bool $hideDiscounts
      *
