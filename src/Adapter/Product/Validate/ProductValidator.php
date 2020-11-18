@@ -30,13 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
 use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
@@ -56,23 +53,15 @@ class ProductValidator extends AbstractObjectModelValidator
     private $defaultPackStockType;
 
     /**
-     * @var TaxRulesGroupRepository
-     */
-    private $taxRulesGroupRepository;
-
-    /**
      * @param bool $advancedStockEnabled
      * @param int $defaultPackStockType
-     * @param TaxRulesGroupRepository $taxRulesGroupRepository
      */
     public function __construct(
         bool $advancedStockEnabled,
-        int $defaultPackStockType,
-        TaxRulesGroupRepository $taxRulesGroupRepository
+        int $defaultPackStockType
     ) {
         $this->advancedStockEnabled = $advancedStockEnabled;
         $this->defaultPackStockType = $defaultPackStockType;
-        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
     }
 
     /**
@@ -182,11 +171,6 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validatePrices(Product $product): void
     {
-        $taxRulesGroupId = (int) $product->id_tax_rules_group;
-        if ($taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
-            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
-        }
-
         if ($product->unit_price < 0) {
             throw new ProductConstraintException(
                 sprintf('Invalid product unit_price. Got "%s"', $product->unit_price),

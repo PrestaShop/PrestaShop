@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
@@ -42,9 +43,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 use Product;
@@ -73,6 +76,11 @@ class ProductRepository extends AbstractObjectModelRepository
      * @var int
      */
     private $defaultCategoryId;
+
+    /**
+     * @var TaxRulesGroupRepository
+     */
+    private $taxRulesGroupRepository;
 
     /**
      * @param Connection $connection
@@ -275,6 +283,11 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {
+        $taxRulesGroupId = (int) $product->id_tax_rules_group;
+        if ($taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
+            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
+        }
+
         $this->productValidator->validate($product);
         $this->partiallyUpdateObjectModel(
             $product,

@@ -285,12 +285,8 @@ services:
     prestashop.adapter.product.validate.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
         arguments:
-<<<<<<< HEAD
             - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ADVANCED_STOCK_MANAGEMENT")'
             - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
-=======
-            - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
->>>>>>>  move taxRulesGroup assertion to corresponding repository & use in Validator. Adjust behats
 
     prestashop.adapter.product.repository.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
@@ -299,6 +295,7 @@ services:
             - '%database_prefix%'
             - '@prestashop.adapter.product.validate.product_validator'
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+            - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
 
     prestashop.adapter.product.product_price_properties_filler:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller
