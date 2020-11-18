@@ -139,26 +139,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I update product :productReference prices and apply non-existing tax rules group
-     *
-     * @param string $productReference
-     */
-    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
-    {
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        $command = new UpdateProductPricesCommand($productId);
-        // this id value does not exist, it is used on purpose.
-        $command->setTaxRulesGroupId(50000000);
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
      * @Then product :productReference type should be :productType
      *
      * @param string $productReference
