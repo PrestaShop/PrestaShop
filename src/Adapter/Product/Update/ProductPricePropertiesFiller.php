@@ -50,7 +50,7 @@ class ProductPricePropertiesFiller
     public function fillWithPrices(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice, ?DecimalNumber $wholesalePrice): array
     {
         if (null !== $wholesalePrice) {
-            $product->wholesale_price = (float) (string) $wholesalePrice;
+            $product->wholesale_price = (string) $wholesalePrice;
             $updatableProperties[] = 'wholesale_price';
         }
 
