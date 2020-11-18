@@ -87,17 +87,20 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
      * @param int $defaultCategoryId
+     * @param TaxRulesGroupRepository $taxRulesGroupRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
-        int $defaultCategoryId
+        int $defaultCategoryId,
+        TaxRulesGroupRepository $taxRulesGroupRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
         $this->defaultCategoryId = $defaultCategoryId;
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
     }
 
     /**
