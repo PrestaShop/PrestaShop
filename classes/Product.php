@@ -366,6 +366,9 @@ class ProductCore extends ObjectModel
     /** @var array */
     protected static $_incat = [];
 
+    /** @var array */
+    protected static $_combinations = [];
+
     /**
      * @deprecated Since 1.5.6.1
      *
@@ -950,21 +953,19 @@ class ProductCore extends ObjectModel
      */
     public static function getDefaultAttribute($id_product, $minimum_quantity = 0, $reset = false)
     {
-        static $combinations = [];
-
         if (!Combination::isFeatureActive()) {
             return 0;
         }
 
-        if ($reset && isset($combinations[$id_product])) {
-            unset($combinations[$id_product]);
+        if ($reset && isset(static::$_combinations[$id_product])) {
+            unset(static::$_combinations[$id_product]);
         }
 
-        if (!isset($combinations[$id_product])) {
-            $combinations[$id_product] = [];
+        if (!isset(static::$_combinations[$id_product])) {
+            static::$_combinations[$id_product] = [];
         }
-        if (isset($combinations[$id_product][$minimum_quantity])) {
-            return $combinations[$id_product][$minimum_quantity];
+        if (isset(static::$_combinations[$id_product][$minimum_quantity])) {
+            return static::$_combinations[$id_product][$minimum_quantity];
         }
 
         $sql = 'SELECT product_attribute_shop.id_product_attribute
@@ -974,7 +975,7 @@ class ProductCore extends ObjectModel
 
         $result_no_filter = Db::getInstance()->getValue($sql);
         if (!$result_no_filter) {
-            $combinations[$id_product][$minimum_quantity] = 0;
+            static::$_combinations[$id_product][$minimum_quantity] = 0;
 
             return 0;
         }
@@ -1013,7 +1014,7 @@ class ProductCore extends ObjectModel
             $result = $result_no_filter;
         }
 
-        $combinations[$id_product][$minimum_quantity] = $result;
+        static::$_combinations[$id_product][$minimum_quantity] = $result;
 
         return $result;
     }
@@ -1104,6 +1105,7 @@ class ProductCore extends ObjectModel
         static::$_prices = [];
         static::$_pricesLevel2 = [];
         static::$_incat = [];
+        static::$_combinations = [];
     }
 
     /**
