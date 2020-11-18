@@ -96,7 +96,6 @@ class EmailController extends FrameworkBundleAdminController
      * @param EmailLogsFilter $filters
      *
      * @return Response
-     *
      */
     public function saveOptionsAction(Request $request, EmailLogsFilter $filters)
     {
