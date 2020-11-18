@@ -28,15 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
 
 /**
- * Defines contract for UpdateProductTagsHandler
+ * Defines contract for UpdateProductStockInformationHandler
  */
-interface UpdateProductStockHandlerInterface
+interface UpdateProductStockInformationHandlerInterface
 {
     /**
-     * @param UpdateProductStockCommand $command
+     * @param UpdateProductStockInformationCommand $command
      */
-    public function handle(UpdateProductStockCommand $command): void;
+    public function handle(UpdateProductStockInformationCommand $command): void;
 }
