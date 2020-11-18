@@ -32,7 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use Pack;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
@@ -57,7 +57,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductStockCommand($productId);
+            $command = new UpdateProductStockInformationCommand($productId);
             $unhandledData = $this->setUpdateStockCommandData($data, $command);
             Assert::assertEmpty(
                 $unhandledData,
@@ -219,9 +219,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @param array $data
-     * @param UpdateProductStockCommand $command
+     * @param UpdateProductStockInformationCommand $command
      */
-    private function setUpdateStockCommandData(array $data, UpdateProductStockCommand $command): array
+    private function setUpdateStockCommandData(array $data, UpdateProductStockInformationCommand $command): array
     {
         if (isset($data['use_advanced_stock_management'])) {
             $command->setUseAdvancedStockManagement(PrimitiveUtils::castStringBooleanIntoBoolean($data['use_advanced_stock_management']));

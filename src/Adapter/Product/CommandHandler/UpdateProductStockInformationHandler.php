@@ -30,15 +30,15 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 
 /**
- * Handles @see UpdateProductStockCommand using legacy object model
+ * Handles @see UpdateProductStockInformationCommand using legacy object model
  */
-final class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
+final class UpdateProductStockInformationHandler implements UpdateProductStockInformationHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -65,7 +65,7 @@ final class UpdateProductStockHandler implements UpdateProductStockHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductStockCommand $command): void
+    public function handle(UpdateProductStockInformationCommand $command): void
     {
         $product = $this->productRepository->get($command->getProductId());
 
@@ -75,13 +75,13 @@ final class UpdateProductStockHandler implements UpdateProductStockHandlerInterf
 
     /**
      * @param Product $product
-     * @param UpdateProductStockCommand $command
+     * @param UpdateProductStockInformationCommand $command
      *
      * @return string[]|array<string, int[]>
      */
     private function fillUpdatableProperties(
         Product $product,
-        UpdateProductStockCommand $command
+        UpdateProductStockInformationCommand $command
     ): array {
         $updatableProperties = [];
 

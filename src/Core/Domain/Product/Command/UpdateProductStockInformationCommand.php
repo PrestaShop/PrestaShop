@@ -36,9 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Class UpdateProductStatusCommand update a given product stock
+ * Class UpdateProductStockInformationCommand update a given product stock
  */
-class UpdateProductStockCommand
+class UpdateProductStockInformationCommand
 {
     /**
      * @var ProductId
@@ -137,9 +137,9 @@ class UpdateProductStockCommand
     /**
      * @param bool $useAdvancedStockManagement
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setUseAdvancedStockManagement(bool $useAdvancedStockManagement): UpdateProductStockCommand
+    public function setUseAdvancedStockManagement(bool $useAdvancedStockManagement): UpdateProductStockInformationCommand
     {
         $this->useAdvancedStockManagement = $useAdvancedStockManagement;
 
@@ -157,9 +157,9 @@ class UpdateProductStockCommand
     /**
      * @param bool $dependsOnStock
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setDependsOnStock(bool $dependsOnStock): UpdateProductStockCommand
+    public function setDependsOnStock(bool $dependsOnStock): UpdateProductStockInformationCommand
     {
         $this->dependsOnStock = $dependsOnStock;
 
@@ -177,11 +177,11 @@ class UpdateProductStockCommand
     /**
      * @param int $packStockType
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      *
      * @throws ProductPackConstraintException
      */
-    public function setPackStockType(int $packStockType): UpdateProductStockCommand
+    public function setPackStockType(int $packStockType): UpdateProductStockInformationCommand
     {
         $this->packStockType = new PackStockType($packStockType);
 
@@ -199,9 +199,9 @@ class UpdateProductStockCommand
     /**
      * @param int $quantity
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setQuantity(int $quantity): UpdateProductStockCommand
+    public function setQuantity(int $quantity): UpdateProductStockInformationCommand
     {
         $this->quantity = $quantity;
 
@@ -223,7 +223,7 @@ class UpdateProductStockCommand
      *
      * @throws ProductStockConstraintException
      */
-    public function setOutOfStockType(int $outOfStockType): UpdateProductStockCommand
+    public function setOutOfStockType(int $outOfStockType): UpdateProductStockInformationCommand
     {
         $this->outOfStockType = new OutOfStockType($outOfStockType);
 
@@ -241,9 +241,9 @@ class UpdateProductStockCommand
     /**
      * @param int $minimalQuantity
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setMinimalQuantity(int $minimalQuantity): UpdateProductStockCommand
+    public function setMinimalQuantity(int $minimalQuantity): UpdateProductStockInformationCommand
     {
         $this->minimalQuantity = $minimalQuantity;
 
@@ -261,9 +261,9 @@ class UpdateProductStockCommand
     /**
      * @param string $location
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setLocation(string $location): UpdateProductStockCommand
+    public function setLocation(string $location): UpdateProductStockInformationCommand
     {
         $this->location = $location;
 
@@ -281,9 +281,9 @@ class UpdateProductStockCommand
     /**
      * @param int $lowStockThreshold
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setLowStockThreshold(int $lowStockThreshold): UpdateProductStockCommand
+    public function setLowStockThreshold(int $lowStockThreshold): UpdateProductStockInformationCommand
     {
         $this->lowStockThreshold = $lowStockThreshold;
 
@@ -301,9 +301,9 @@ class UpdateProductStockCommand
     /**
      * @param bool $lowStockAlert
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setLowStockAlert(bool $lowStockAlert): UpdateProductStockCommand
+    public function setLowStockAlert(bool $lowStockAlert): UpdateProductStockInformationCommand
     {
         $this->lowStockAlert = $lowStockAlert;
 
@@ -321,9 +321,9 @@ class UpdateProductStockCommand
     /**
      * @param string[] $localizedAvailableNowLabels
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setLocalizedAvailableNowLabels(array $localizedAvailableNowLabels): UpdateProductStockCommand
+    public function setLocalizedAvailableNowLabels(array $localizedAvailableNowLabels): UpdateProductStockInformationCommand
     {
         $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
 
@@ -341,9 +341,9 @@ class UpdateProductStockCommand
     /**
      * @param string[] $localizedAvailableLaterLabels
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setLocalizedAvailableLaterLabels(array $localizedAvailableLaterLabels): UpdateProductStockCommand
+    public function setLocalizedAvailableLaterLabels(array $localizedAvailableLaterLabels): UpdateProductStockInformationCommand
     {
         $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
 
@@ -361,9 +361,9 @@ class UpdateProductStockCommand
     /**
      * @param DateTime $availableDate
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setAvailableDate(DateTime $availableDate): UpdateProductStockCommand
+    public function setAvailableDate(DateTime $availableDate): UpdateProductStockInformationCommand
     {
         $this->availableDate = $availableDate;
 
@@ -381,9 +381,9 @@ class UpdateProductStockCommand
     /**
      * @param bool $addMovement
      *
-     * @return UpdateProductStockCommand
+     * @return UpdateProductStockInformationCommand
      */
-    public function setAddMovement(bool $addMovement): UpdateProductStockCommand
+    public function setAddMovement(bool $addMovement): UpdateProductStockInformationCommand
     {
         $this->addMovement = $addMovement;
 
