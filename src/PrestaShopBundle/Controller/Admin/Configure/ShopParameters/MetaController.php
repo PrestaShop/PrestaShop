@@ -370,6 +370,16 @@ class MetaController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_metas_index');
     }
 
+    /**
+     * @param Request $request
+     * @param MetaFilters $filters
+     * @param FormInterface $setUpUrlsForm
+     * @param FormInterface $shopUrlsForm
+     * @param FormInterface $seoOptionsForm
+     * @param FormInterface|null $urlSchemaForm
+     *
+     * @return  Response
+     */
     protected function renderForm(
         Request $request,
         MetaFilters $filters,
