@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
@@ -49,11 +48,6 @@ use StockAvailable;
 class ProductStockUpdater
 {
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @var StockManager
      */
     private $stockManager;
@@ -69,21 +63,26 @@ class ProductStockUpdater
     private $stockAvailableRepository;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var bool
+     */
+    private $advancedStockEnabled;
+
+    /**
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param bool $advancedStockEnabled
      */
     public function __construct(
-        ConfigurationInterface $configuration,
         StockManager $stockManager,
         ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        bool $advancedStockEnabled
     ) {
-        $this->configuration = $configuration;
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->advancedStockEnabled = $advancedStockEnabled;
     }
 
     /**
@@ -105,8 +104,7 @@ class ProductStockUpdater
         // It is very important to update StockAvailable after product, because the validation is performed in ProductRepository::partialUpdate
         $this->updateStockAvailable($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
-        $advancedStockEnabled = (bool) $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT');
-        if ($advancedStockEnabled && $product->depends_on_stock) {
+        if ($this->advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
         }
     }

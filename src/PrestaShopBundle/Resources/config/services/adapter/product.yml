@@ -458,7 +458,7 @@ services:
     prestashop.adapter.product.update.product_stock_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater
         arguments:
-            - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.stock.stock_manager'
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.repository.stock_available_repository'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"
