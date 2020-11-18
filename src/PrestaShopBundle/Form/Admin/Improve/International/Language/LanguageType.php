@@ -72,7 +72,7 @@ class LanguageType extends TranslatorAwareType
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new TypedRegex([
                         'type' => 'generic_name',
@@ -87,7 +87,7 @@ class LanguageType extends TranslatorAwareType
                 'help' => $this->trans('Two-letter ISO code (e.g. FR, EN, DE).', 'Admin.International.Help'),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new TypedRegex([
                         'type' => 'language_iso_code',
@@ -102,7 +102,7 @@ class LanguageType extends TranslatorAwareType
                 'help' => $this->trans('IETF language tag (e.g. en-US, pt-BR).', 'Admin.International.Help'),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new TypedRegex([
                         'type' => 'language_code',
@@ -114,14 +114,14 @@ class LanguageType extends TranslatorAwareType
                 'help' => $this->trans('Short date format (e.g., Y-m-d).', 'Admin.International.Help'),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Regex([
                         // We can't really check if this is valid or not,
                         // because this is a string and you can write whatever you want in it.
                         // That's why only < et > are forbidden (HTML).
                         'pattern' => '/^[^<>]+$/',
-                        'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
@@ -130,11 +130,11 @@ class LanguageType extends TranslatorAwareType
                 'help' => $this->trans('Full date format (e.g., Y-m-d H:i:s).', 'Admin.International.Help'),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Regex([
                         'pattern' => '/^[^<>]+$/',
-                        'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
@@ -147,22 +147,22 @@ class LanguageType extends TranslatorAwareType
                 'required' => !$options['is_for_editing'],
                 'constraints' => [
                     new Image([
-                        'mimeTypesMessage' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        'mimeTypesMessage' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
             ->add('no_picture_image', FileType::class, [
                 'label' => $this->trans('"No-picture" image', 'Admin.International.Feature'),
-                'help' => $this->trans('Image is displayed when "no picture is found".', 'Admin.International.Help'),
+                'help' => $this->trans('Image is displayed when no picture is found.', 'Admin.International.Help'),
                 'required' => !$options['is_for_editing'],
                 'constraints' => [
                     new Image([
-                        'mimeTypesMessage' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        'mimeTypesMessage' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
             ->add('is_rtl', SwitchType::class, [
-                'label' => $this->trans('Is RTL language', 'Admin.International.Feature'),
+                'label' => $this->trans('RTL language', 'Admin.International.Feature'),
                 'help' => $this->trans(
                     'Enable if this language is read from right to left.',
                     'Admin.International.Help'
@@ -185,7 +185,7 @@ class LanguageType extends TranslatorAwareType
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                 ],
             ]);
