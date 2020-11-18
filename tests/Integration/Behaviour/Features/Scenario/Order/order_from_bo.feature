@@ -546,3 +546,99 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Delete all products from order
+    Given there is a product in the catalog named "Test Added Product" with a price of 15.0 and 100 items in stock
+    And order with reference "bo_order1" does not contain product "Test Added Product"
+    And the available stock for product "Test Added Product" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Added Product |
+      | amount        | 2                  |
+      | price         | 15                 |
+    And I generate invoice for "bo_order1" order
+    Then order "bo_order1" should contain 2 products "Test Added Product"
+    And product "Test Added Product" in order "bo_order1" should have no specific price
+    And the available stock for product "Test Added Product" should be 98
+    And order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 1 invoice
+    And product "Test Added Product" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
+      | unit_price_tax_excl         | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | total_price_tax_excl        | 30.00 |
+      | total_price_tax_incl        | 31.80 |
+    And order "bo_order1" should have following details:
+      | total_products           | 53.80 |
+      | total_products_wt        | 57.03 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 60.80 |
+      | total_paid_tax_incl      | 64.45 |
+      | total_paid               | 64.45 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products          | 53.80 |
+      | total_products_wt       | 57.03 |
+      | total_discount_tax_excl | 0.0   |
+      | total_discount_tax_incl | 0.0   |
+      | total_paid_tax_excl     | 60.80 |
+      | total_paid_tax_incl     | 64.45 |
+      | total_shipping_tax_excl | 7.0   |
+      | total_shipping_tax_incl | 7.42  |
+    Then order "bo_order1" has status "Awaiting bank wire payment"
+    And order "bo_order1" has 1 status in history
+    When I remove product "Test Added Product" from order "bo_order1"
+    And order "bo_order1" should contain 0 product "Test Added Product"
+    And cart of order "bo_order1" should contain 0 product "Test Added Product"
+    And order "bo_order1" should have following details:
+      | total_products           | 23.80 |
+      | total_products_wt        | 25.23 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 30.80 |
+      | total_paid_tax_incl      | 32.65 |
+      | total_paid               | 32.65 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.80 |
+      | total_products_wt       | 25.23 |
+      | total_discount_tax_excl | 0.0   |
+      | total_discount_tax_incl | 0.0   |
+      | total_paid_tax_excl     | 30.80 |
+      | total_paid_tax_incl     | 32.65 |
+      | total_shipping_tax_excl | 7.0   |
+      | total_shipping_tax_incl | 7.42  |
+    When I remove product "Mug The best is yet to come" from order "bo_order1"
+    Then product "Test Added Product" in order "bo_order1" should have no specific price
+    And order "bo_order1" should have 0 products in total
+    And order "bo_order1" should contain 0 product "Mug The best is yet to come"
+    And cart of order "bo_order1" should contain 0 product "Mug The best is yet to come"
+    And the available stock for product "Test Added Product" should be 100
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000 |
+      | total_products_wt        | 0.000 |
+      | total_discounts_tax_excl | 0.0   |
+      | total_discounts_tax_incl | 0.0   |
+      | total_paid_tax_excl      | 0.000 |
+      | total_paid_tax_incl      | 0.000 |
+      | total_paid               | 0.000 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 0.000 |
+      | total_shipping_tax_incl  | 0.000 |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products          | 0.000 |
+      | total_products_wt       | 0.000 |
+      | total_discount_tax_excl | 0.0   |
+      | total_discount_tax_incl | 0.0   |
+      | total_paid_tax_excl     | 0.000 |
+      | total_paid_tax_incl     | 0.000 |
+      | total_shipping_tax_excl | 0.000 |
+      | total_shipping_tax_incl | 0.000 |
+    Then order "bo_order1" has status "Awaiting bank wire payment"
+    And order "bo_order1" has 1 status in history

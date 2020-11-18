@@ -723,6 +723,26 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference has :statusNb status(es) in history
+     *
+     * @param string $orderReference
+     * @param int $statusNb
+     *
+     * @throws RuntimeException
+     */
+    public function countOrderStatus(string $orderReference, int $statusNb)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $actualStatusNb = count($orderForViewing->getHistory()->getStatuses());
+        if ($statusNb !== $actualStatusNb) {
+            throw new RuntimeException(sprintf('Incorrect number of statuses in history expected %d but got %d instead', $statusNb, $actualStatusNb));
+        }
+    }
+
+    /**
      * @When I update order :orderReference status to :status
      *
      * @param string $orderReference
