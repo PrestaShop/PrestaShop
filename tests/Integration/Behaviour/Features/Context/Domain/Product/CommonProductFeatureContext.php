@@ -232,6 +232,9 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'location' => ProductConstraintException::INVALID_LOCATION,
             'available_now_labels' => ProductConstraintException::INVALID_AVAILABLE_NOW,
             'available_later_labels' => ProductConstraintException::INVALID_AVAILABLE_LATER,
+            'available_date' => ProductConstraintException::INVALID_AVAILABLE_DATE,
+            'low_stock_threshold' => ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD,
+            'low_stock_alert' => ProductConstraintException::INVALID_LOW_STOCK_ALERT,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

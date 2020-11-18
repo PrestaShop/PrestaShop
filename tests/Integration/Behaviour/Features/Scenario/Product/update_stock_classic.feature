@@ -176,6 +176,7 @@ Feature: Update product stock from Back Office (BO)
       | sign              | -1 |
 
   Scenario: I update product simple stock fields
+    Given language "french" with locale "fr-FR" exists
     Given I add product "product1" with following information:
       | name       | en-US:Presta camera |
       | is_virtual | false               |
@@ -185,8 +186,8 @@ Feature: Update product stock from Back Office (BO)
       | low_stock_threshold    | 0          |
       | low_stock_alert        | false      |
       | available_date         | 0000-00-00 |
-    And product "product1" localized "available_now_labels" should be "en-US:"
-    And product "product1" localized "available_later_labels" should be "en-US:"
+    And product "product1" localized "available_now_labels" should be "en-US:;fr-FR:"
+    And product "product1" localized "available_later_labels" should be "en-US:;fr-FR:"
     When I update product "product1" stock with following information:
       | minimal_quantity       | 12                 |
       | location               | dtc                |
@@ -201,8 +202,18 @@ Feature: Update product stock from Back Office (BO)
       | low_stock_threshold    | 42                 |
       | low_stock_alert        | true               |
       | available_date         | 1969-07-16         |
-    And product "product1" localized "available_now_labels" should be "en-US:get it now"
-    And product "product1" localized "available_later_labels" should be "en-US:too late bro"
+    And product "product1" localized "available_now_labels" should be "en-US:get it now;fr-FR:"
+    And product "product1" localized "available_later_labels" should be "en-US:too late bro;fr-FR:"
+    When I update product "product1" stock with following information:
+      | available_now_labels   | en-US:get it now;fr-FR:   |
+      | available_later_labels | en-US:too late bro;fr-FR: |
+    Then product "product1" localized "available_now_labels" should be "en-US:get it now;fr-FR:"
+    And product "product1" localized "available_later_labels" should be "en-US:too late bro;fr-FR:"
+    When I update product "product1" stock with following information:
+      | available_now_labels   | en-US:get it now;fr-FR:commande maintenant |
+      | available_later_labels | en-US:too late bro;fr-FR:trop tard mec     |
+    Then product "product1" localized "available_now_labels" should be "en-US:get it now;fr-FR:commande maintenant"
+    And product "product1" localized "available_later_labels" should be "en-US:too late bro;fr-FR:trop tard mec"
 
   Scenario: When I use invalid values update is not authorized
     Given I add product "product1" with following information:
