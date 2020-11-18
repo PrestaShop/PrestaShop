@@ -62,13 +62,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
@@ -94,13 +94,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
@@ -125,13 +125,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
