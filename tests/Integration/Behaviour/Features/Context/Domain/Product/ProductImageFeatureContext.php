@@ -59,7 +59,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function uploadImage(string $productReference, string $imageReference, string $fileName): void
     {
-        //@todo: behats database contains empty ImageType.
         $pathName = DummyFileUploader::upload($fileName);
 
         $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
