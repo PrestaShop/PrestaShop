@@ -310,11 +310,9 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ])
             ->setAssociatedColumn('reference')
             )
-            ->add((new Filter('new', YesAndNoChoiceType::class))
-            ->setTypeOptions([
-                'required' => false,
-            ])
-            ->setAssociatedColumn('new')
+            ->add(
+                (new Filter('new', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('new')
             )
             ->add((new Filter('customer', TextType::class))
             ->setTypeOptions([

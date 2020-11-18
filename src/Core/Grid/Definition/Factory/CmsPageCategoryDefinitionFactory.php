@@ -256,7 +256,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
             ->setAssociatedColumn('description')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+                ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions($actionsTypeOptions)

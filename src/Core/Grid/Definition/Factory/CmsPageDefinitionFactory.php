@@ -274,7 +274,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
             ->setAssociatedColumn('head_seo_title')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+                ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions($actionsTypeOptions)

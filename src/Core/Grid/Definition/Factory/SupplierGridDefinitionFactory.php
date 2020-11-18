@@ -192,11 +192,9 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 'required' => false,
             ])
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
-            ->setTypeOptions([
-                'required' => false,
-            ])
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')
