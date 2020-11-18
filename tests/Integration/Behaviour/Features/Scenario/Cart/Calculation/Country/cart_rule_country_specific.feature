@@ -6,7 +6,7 @@ Feature: Cart calculation with country specific cart rules
   As a customer
   I must be able to have correct cart total when selecting country
 
-  Scenario: Cart with a Product And adress restricted by cart rule
+  Scenario: Cart with a Product And address restricted by cart rule
     Given I have an empty default cart
       And there is a zone named "Europe"
       And there is a zone named "North America"
