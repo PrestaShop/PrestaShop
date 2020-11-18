@@ -29,6 +29,7 @@ import eventMap from '@pages/order/create/event-map';
 import {EventEmitter} from '@components/event-emitter';
 import ProductRenderer from '@pages/order/create/product-renderer';
 import Router from '@components/router';
+import _ from 'lodash';
 
 const $ = window.$;
 
@@ -139,10 +140,10 @@ export default class ProductManager {
    */
   _onProductQtyChange() {
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.productQtyChanged, _.debounce((cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
-    });
+    }, 300));
 
     // on failure
     EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
