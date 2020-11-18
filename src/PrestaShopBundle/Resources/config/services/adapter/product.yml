@@ -275,7 +275,7 @@ services:
             - '@prestashop.adapter.attachment.attachment_repository'
 
     prestashop.adapter.product.update.product_seo_properties_filler:
-        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoInfoFiller
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.category.repository.category_repository'
