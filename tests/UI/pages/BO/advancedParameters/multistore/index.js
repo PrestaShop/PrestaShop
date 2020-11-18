@@ -73,7 +73,6 @@ class MultiStoreSettings extends BOBasePage {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
 
   /**

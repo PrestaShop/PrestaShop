@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-module.exports = class SeoPage {
+module.exports = class ShopGroup {
   constructor(shopGroupToCreate) {
     this.name = shopGroupToCreate.name || `shop_${faker.lorem.word()}`;
     this.shareCustomer = shopGroupToCreate.shareCustomer === undefined ? true : shopGroupToCreate.shareCustomer;

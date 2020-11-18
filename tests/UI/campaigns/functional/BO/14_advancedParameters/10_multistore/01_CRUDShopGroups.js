@@ -86,10 +86,10 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
       await expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
-    it('should reset all filters and get number of shop group', async function () {
+    it('should get number of shop group', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
-      numberOfShopGroups = await multiStorePage.resetAndGetNumberOfLines(page);
+      numberOfShopGroups = await multiStorePage.getNumberOfElementInGrid(page);
       await expect(numberOfShopGroups).to.be.above(0);
     });
 
