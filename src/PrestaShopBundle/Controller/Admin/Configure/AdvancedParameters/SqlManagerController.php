@@ -49,6 +49,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -378,7 +379,8 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_requests_index');
         }
 
-        $response = new BinaryFileResponse($exportedFile->getPathname());
+        $stream = new Stream($exportedFile->getPathname());
+        $response = new BinaryFileResponse($stream);
         $response->setCharset($sqlRequestSettings->getFileEncoding());
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $exportedFile->getFilename());
 
