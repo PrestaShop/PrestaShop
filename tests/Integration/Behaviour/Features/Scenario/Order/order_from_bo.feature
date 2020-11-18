@@ -29,7 +29,7 @@ Feature: Order from Back Office (BO)
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     #    todo: find a way to create country without legacy object
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
-    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -39,7 +39,7 @@ Feature: Order from Back Office (BO)
   Scenario: Check customer message can be null
     When I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
-    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart2" to 2
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
     And I add order "bo_order2" with the following details:
       | cart                | dummy_cart2                 |
       | message             |                             |
@@ -50,7 +50,7 @@ Feature: Order from Back Office (BO)
   Scenario: Check customer message is saved when creating an order
     When I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
-    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart2" to 2
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
     And I add order "bo_order2" with the following details:
       | cart                | dummy_cart2                 |
       | message             | test                       |
@@ -423,7 +423,7 @@ Feature: Order from Back Office (BO)
   Scenario: Add gift order from Back Office without free shipping
     And I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
-    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart2" to 2
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
     And I set Free shipping to the cart "dummy_cart2"
     And I declare cart "dummy_cart2" is a gift with message "Some Xmas love"
     And I add order "bo_order2" with the following details:
@@ -439,7 +439,7 @@ Feature: Order from Back Office (BO)
   Scenario: Update multiple orders statuses using Bulk actions
     And I create an empty cart "dummy_cart3" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart3"
-    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart3" to 2
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart3"
     And I set Free shipping to the cart "dummy_cart3"
     And I add order "bo_order3" with the following details:
       | cart                | dummy_cart3         |

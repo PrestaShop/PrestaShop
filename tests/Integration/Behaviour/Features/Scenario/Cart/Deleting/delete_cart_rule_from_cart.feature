@@ -12,7 +12,7 @@ Feature: Delete cart rule from cart in Back Office (BO)
 
   @bo-delete-cart-rule
   Scenario: Delete cart rule with gift product
-    Given I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
+    Given I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And product "Mug The best is yet to come" quantity in cart "dummy_cart" should be 2 excluding gift products
     And I use a voucher "giftFoxNotebook" which provides a gift product "Mountain fox notebook" on the cart "dummy_cart"
     And gifted product "Mountain fox notebook" quantity in cart "dummy_cart" should be 1
@@ -22,7 +22,7 @@ Feature: Delete cart rule from cart in Back Office (BO)
   @bo-delete-cart-rule
   Scenario: Delete cart rule with gift product when same product as gift already exists in cart
     Given I create an empty cart "dummy_cart_2" for customer "testCustomer"
-    And I update quantity of product "Mountain fox notebook" in the cart "dummy_cart_2" to 3
+    And I add 3 products "Mountain fox notebook" to the cart "dummy_cart_2"
     And product "Mountain fox notebook" quantity in cart "dummy_cart_2" should be 3 excluding gift products
     And I use a voucher "giftFoxNotebook" which provides a gift product "Mountain fox notebook" on the cart "dummy_cart_2"
     And gifted product "Mountain fox notebook" quantity in cart "dummy_cart_2" should be 1

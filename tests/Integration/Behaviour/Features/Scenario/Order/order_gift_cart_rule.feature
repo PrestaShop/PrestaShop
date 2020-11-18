@@ -20,7 +20,7 @@ Feature: Order from Back Office (BO)
     And the available stock for product "Test Product Gifted" should be 100
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
-    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
 
   Scenario: Add discount with gift product to cart, and remove it in the order
     Given I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gifted" on the cart "dummy_cart"
@@ -71,7 +71,7 @@ Feature: Order from Back Office (BO)
     And the available stock for product "Test Product Gifted" should be 100
 
   Scenario: Add a product then add a discount with this product as a gift, and remove it from the order
-    Given I update quantity of product "Test Product Gifted" in the cart "dummy_cart" to 1
+    Given I add 1 products "Test Product Gifted" to the cart "dummy_cart"
     And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gifted" on the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
@@ -352,7 +352,7 @@ Feature: Order from Back Office (BO)
     And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
     And cart rule "MultiGiftAutoCartRule" offers free shipping
     And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
-    And I update quantity of product "Test Product With Auto Gift" in the cart "dummy_cart" to 1
+    And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -494,8 +494,8 @@ Feature: Order from Back Office (BO)
     And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
     And cart rule "MultiGiftAutoCartRule" offers free shipping
     And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
-    And I update quantity of product "Test Product Gifted" in the cart "dummy_cart" to 1
-    And I update quantity of product "Test Product With Auto Gift" in the cart "dummy_cart" to 1
+    And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
+    And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -565,7 +565,7 @@ Feature: Order from Back Office (BO)
     And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
     And cart rule "MultiGiftAutoCartRule" offers free shipping
     And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
-    And I update quantity of product "Test Product Gifted" in the cart "dummy_cart" to 1
+    And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -659,7 +659,7 @@ Feature: Order from Back Office (BO)
     And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
     And cart rule "MultiGiftAutoCartRule" offers free shipping
     And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
-    And I update quantity of product "Test Product With Auto Gift" in the cart "dummy_cart" to 1
+    And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -729,7 +729,7 @@ Feature: Order from Back Office (BO)
     And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
     And cart rule "MultiGiftAutoCartRule" offers free shipping
     And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
-    And I update quantity of product "Test Product With Auto Gift" in the cart "dummy_cart" to 1
+    And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -800,8 +800,8 @@ Feature: Order from Back Office (BO)
     And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
     And cart rule "MultiGiftAutoCartRule" offers free shipping
     And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
-    And I update quantity of product "Test Product Gifted" in the cart "dummy_cart" to 1
-    And I update quantity of product "Test Product With Auto Gift" in the cart "dummy_cart" to 1
+    And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
+    And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |

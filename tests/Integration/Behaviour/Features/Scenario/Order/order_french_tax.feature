@@ -25,7 +25,7 @@ Feature: Order from Back Office (BO)
     And customer "testCustomer" has address in "FR" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
-    And I update quantity of product "Mug The best is yet to come" in the cart "dummy_cart" to 2
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And a carrier "price_carrier" with name "My cheap carrier" exists
     And I enable carrier "price_carrier"
     And I associate the tax rule group "french-tax-group" to carrier "price_carrier"
