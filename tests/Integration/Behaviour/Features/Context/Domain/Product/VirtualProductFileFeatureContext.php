@@ -144,7 +144,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         unset($dataRows['download times limit']);
 
         $actualExpirationDate = $actualFile->getExpirationDate() ?
-            $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_FORMAT) :
+            $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) :
             DateTimeUtil::NULL_VALUE
         ;
         Assert::assertEquals($dataRows['expiration date'], $actualExpirationDate, 'Unexpected file expiration date');

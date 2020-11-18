@@ -80,7 +80,7 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
         $productDownload->nb_days_accessible = $command->getAccessDays() ?: 0;
         $productDownload->nb_downloadable = $command->getDownloadTimesLimit() ?: 0;
         $productDownload->date_expiration = $command->getExpirationDate() ?
-            $command->getExpirationDate()->format(DateTime::DEFAULT_FORMAT) :
+            $command->getExpirationDate()->format(DateTime::DEFAULT_DATETIME_FORMAT) :
             null
         ;
 
