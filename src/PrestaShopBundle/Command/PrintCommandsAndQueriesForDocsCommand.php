@@ -38,8 +38,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Twig\Loader\LoaderInterface;
 
 /**
  * Prints all existing commands and queries to .md file for documentation
@@ -59,19 +57,20 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     /**
      * @var Filesystem
      */
-    private $fs;
+    private $filesystem;
 
     /**
-     * @var LoaderInterface
+     * @var Environment
      */
-    private $twigLoader;
+    private $twigEnv;
 
-    public function __construct()
-    {
-        $this->fs = new Filesystem();
-        $this->twigLoader = new FilesystemLoader(__DIR__);
-
+    public function __construct(
+        Filesystem $filesystem,
+        Environment $twigEnv
+    ) {
         parent::__construct();
+        $this->filesystem = $filesystem;
+        $this->twigEnv = $twigEnv;
     }
 
     /**
@@ -98,8 +97,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        $filePath = $input->getOption(self::FILE_PATH_OPTION_NAME);
-        $this->validateFilePath($filePath);
+        $filePath = $this->getFilePath($input);
 
         if (!$this->confirmExistingFileWillBeLost($filePath, $input, $output)) {
             $output->writeln('<comment>Cancelled</comment>');
@@ -107,12 +105,12 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
             return null;
         }
 
-        $this->fs->remove($filePath);
-        $content = (new Environment($this->twigLoader))->render('views/cqrs-commands-list.md.twig', [
+        $this->filesystem->remove($filePath);
+        $content = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-list.md.twig', [
             'commandDefinitions' => $this->getCommandHandlerDefinitions(),
         ]);
 
-        $this->fs->dumpFile($filePath, $content);
+        $this->filesystem->dumpFile($filePath, $content);
         $output->writeln(sprintf('<info>dumped commands & queries to %s</info>', $filePath));
 
         return 0;
@@ -150,7 +148,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     private function confirmExistingFileWillBeLost(string $filePath, InputInterface $input, OutputInterface $output): bool
     {
-        if ($this->fs->exists($filePath) && filesize($filePath)) {
+        if ($this->filesystem->exists($filePath) && filesize($filePath)) {
             $helper = $this->getHelper('question');
             $confirmation = new ConfirmationQuestion(sprintf(
                 '<question>File "%s" is not empty. All data will be lost. Proceed?</question>',
@@ -164,15 +162,21 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param string $filePath
+     * @param InputInterface $input
+     *
+     * @return string
      */
-    private function validateFilePath(string $filePath): void
+    private function getFilePath(InputInterface $input): string
     {
-        if (!$filePath || !$this->fs->isAbsolutePath($filePath)) {
+        $filePath = $input->getOption(self::FILE_PATH_OPTION_NAME);
+
+        if (!$filePath || !$this->filesystem->isAbsolutePath($filePath)) {
             throw new InvalidOptionException(sprintf(
                 'Option --%s is required. It should contain absolute path to a destination file',
                 self::FILE_PATH_OPTION_NAME
             ));
         }
+
+        return $filePath;
     }
 }
