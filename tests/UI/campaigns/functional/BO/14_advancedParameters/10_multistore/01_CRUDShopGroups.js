@@ -18,7 +18,7 @@ const ShopGroupFaker = require('@data/faker/shopGroup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_advancedParameters_webservice_CRUDShopGroups';
+const baseContext = 'functional_BO_modules_advancedParameters_multistore_CRUDShopGroups';
 
 let browserContext;
 let page;
