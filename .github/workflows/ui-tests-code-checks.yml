@@ -42,4 +42,4 @@ jobs:
         continue-on-error: true
 
       - name: Checking doubles in steps identifiers
-        run: npm run step-idenfiers-checker
+        run: npm run step-identifiers-checker
