@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,23 +59,8 @@ class WebserviceController extends FrameworkBundleAdminController
     public function indexAction(WebserviceKeyFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
-        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
-        $grid = $gridWebserviceFactory->getGrid($filters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
-        $configurationWarnings = $this->lookForWarnings();
-
-        return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
-            [
-                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
-                'webserviceConfigurationForm' => $form->createView(),
-                'grid' => $presentedGrid,
-                'configurationWarnings' => $configurationWarnings,
-            ]
-        );
+        return $this->renderPage($request, $filters, $form);
     }
 
     /**
@@ -309,17 +295,18 @@ class WebserviceController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
+     * @param WebserviceKeyFilters $filters
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function saveSettingsAction(Request $request)
+    public function saveSettingsAction(Request $request, WebserviceKeyFilters $filters)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $this->getFormHandler()->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $saveErrors = $this->getFormHandler()->save($form->getData());
 
             if (0 === count($saveErrors)) {
@@ -329,7 +316,37 @@ class WebserviceController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_webservice_keys_index');
+        $form = $this->getFormHandler()->getForm();
+
+        return $this->renderPage($request, $filters, $form);
+    }
+
+    /**
+     * @param Request $request
+     * @param WebserviceKeyFilters $filters
+     * @param FormInterface $form
+     *
+     * @return Response
+     */
+    protected function renderPage(Request $request, WebserviceKeyFilters $filters, FormInterface $form): Response
+    {
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
+        $grid = $gridWebserviceFactory->getGrid($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+        $configurationWarnings = $this->lookForWarnings();
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
+            [
+                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
+                'webserviceConfigurationForm' => $form->createView(),
+                'grid' => $presentedGrid,
+                'configurationWarnings' => $configurationWarnings,
+            ]
+        );
     }
 
     /**
