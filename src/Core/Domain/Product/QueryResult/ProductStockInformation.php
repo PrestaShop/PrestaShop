@@ -95,6 +95,20 @@ class ProductStockInformation
      */
     private $availableDate;
 
+    /**
+     * @param bool $useAdvancedStockManagement
+     * @param bool $dependsOnStock
+     * @param int $packStockType
+     * @param int $outOfStockType
+     * @param int $quantity
+     * @param int $minimalQuantity
+     * @param string $location
+     * @param int $lowStockThreshold
+     * @param bool $lowStockAlert
+     * @param array $localizedAvailableNowLabels
+     * @param array $localizedAvailableLaterLabels
+     * @param DateTimeInterface $availableDate
+     */
     public function __construct(
         bool $useAdvancedStockManagement,
         bool $dependsOnStock,

@@ -75,7 +75,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertStockInformation(string $productReference, TableNode $table)
+    public function assertStockInformation(string $productReference, TableNode $table): void
     {
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
@@ -106,8 +106,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @Then product :productReference last stock movement has following details:
+     *
+     * @param string $productReference
+     * @param TableNode $table
      */
-    public function assertProductLastStockMovement(string $productReference, TableNode $table)
+    public function assertProductLastStockMovement(string $productReference, TableNode $table): void
     {
         $movementData = $table->getRowsHash();
         $productId = $this->getSharedStorage()->get($productReference);
@@ -140,8 +143,10 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @Then product :productReference has no stock movements
+     *
+     * @param string $productReference
      */
-    public function assertProductHasNoStockMovement(string $productReference)
+    public function assertProductHasNoStockMovement(string $productReference): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
 
@@ -299,7 +304,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             'default' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
             'available' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'not_available' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
-            'invalid' => 42,
+            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid stock type
         ];
 
         return $intValues[$outOfStock];
@@ -317,7 +322,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             'products_only' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
             'pack_only' => PackStockType::STOCK_TYPE_PACK_ONLY,
             'both' => PackStockType::STOCK_TYPE_BOTH,
-            'invalid' => 42,
+            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid pack stock type
         ];
 
         return $intValues[$outOfStock];
