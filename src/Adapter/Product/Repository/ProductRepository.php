@@ -226,7 +226,16 @@ class ProductRepository extends AbstractObjectModelRepository
             Product::class,
             ProductNotFoundException::class
         );
-        $product->loadStockData();
+
+        try {
+            $product->loadStockData();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to load Product stock #%d', $productId->getValue()),
+                0,
+                $e
+            );
+        }
 
         return $product;
     }

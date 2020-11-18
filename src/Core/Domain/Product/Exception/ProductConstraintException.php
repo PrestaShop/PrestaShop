@@ -205,4 +205,19 @@ class ProductConstraintException extends ProductException
      * When product available now labels are is invalid
      */
     const INVALID_AVAILABLE_NOW = 350;
+
+    /**
+     * When product available date is invalid
+     */
+    const INVALID_AVAILABLE_DATE = 360;
+
+    /**
+     * When product low stock alert is invalid
+     */
+    const INVALID_LOW_STOCK_ALERT = 370;
+
+    /**
+     * When product low stock threshold is invalid
+     */
+    const INVALID_LOW_STOCK_THRESHOLD = 380;
 }

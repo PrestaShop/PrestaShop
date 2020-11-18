@@ -137,7 +137,10 @@ class ProductStockUpdater
         }
 
         // Quantity is handled separately as it is also related to Stock movements
-        $stockUpdateRequired |= $this->updateQuantity($product, $stockAvailable, $propertiesToUpdate, $addMovement);
+        if (in_array('quantity', $propertiesToUpdate)) {
+            $this->updateQuantity($product, $stockAvailable, $propertiesToUpdate, $addMovement);
+            $stockUpdateRequired = true;
+        }
 
         if ($stockUpdateRequired) {
             $this->stockAvailableRepository->update($stockAvailable);
@@ -149,23 +152,15 @@ class ProductStockUpdater
      * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
      * @param bool $addMovement
-     *
-     * @return bool
      */
-    private function updateQuantity(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): bool
+    private function updateQuantity(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
-        if (!in_array('quantity', $propertiesToUpdate)) {
-            return false;
-        }
-
         $deltaQuantity = (int) $product->quantity - (int) $stockAvailable->quantity;
         $stockAvailable->quantity = (int) $product->quantity;
 
         if ($addMovement && 0 !== $deltaQuantity) {
             $this->stockManager->saveMovement($stockAvailable->id_product, $stockAvailable->id_product_attribute, $deltaQuantity);
         }
-
-        return true;
     }
 
     /**

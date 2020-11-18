@@ -14,6 +14,38 @@ Feature: Update product stock from Back Office (BO)
     And single shop shop1 context is loaded
     And shop configuration for "PS_ADVANCED_STOCK_MANAGEMENT" is set to 0
 
+  Scenario: I check default stock values
+    Given I add product "product1" with following information:
+      | name       | en-US:Presta camera |
+      | is_virtual | false               |
+    And product "product1" should have following stock information:
+      | use_advanced_stock_management | false      |
+      | depends_on_stock              | false      |
+      | pack_stock_type               | default    |
+      | out_of_stock_type             | default    |
+      | quantity                      | 0          |
+      | minimal_quantity              | 1          |
+      | location                      |            |
+      | low_stock_threshold           | 0          |
+      | low_stock_alert               | false      |
+      | available_date                | 0000-00-00 |
+
+  Scenario: I check default stock values for virtual product
+    Given I add product "product1" with following information:
+      | name       | en-US:Presta camera |
+      | is_virtual | true                |
+    And product "product1" should have following stock information:
+      | use_advanced_stock_management | false      |
+      | depends_on_stock              | false      |
+      | pack_stock_type               | default    |
+      | out_of_stock_type             | available  |
+      | quantity                      | 0          |
+      | minimal_quantity              | 1          |
+      | location                      |            |
+      | low_stock_threshold           | 0          |
+      | low_stock_alert               | false      |
+      | available_date                | 0000-00-00 |
+
   Scenario: I update product stock management
     Given I add product "product1" with following information:
       | name       | en-US:Presta camera |
