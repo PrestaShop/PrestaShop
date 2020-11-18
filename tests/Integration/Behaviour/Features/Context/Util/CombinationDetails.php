@@ -49,26 +49,15 @@ class CombinationDetails
     private $attributes;
 
     /**
-     * @var int|null
-     */
-    private $combinationId;
-
-    /**
      * @param string $reference
      * @param int $quantity
      * @param string[] $attributes
-     * @param int|null $combinationId to indicate update action instead of create
      */
-    public function __construct(
-        string $reference,
-        int $quantity,
-        array $attributes,
-        ?int $combinationId = null
-    ) {
+    public function __construct(string $reference, int $quantity, array $attributes)
+    {
         $this->reference = $reference;
         $this->quantity = $quantity;
         $this->attributes = $attributes;
-        $this->combinationId = $combinationId;
     }
 
     /**
@@ -93,13 +82,5 @@ class CombinationDetails
     public function getAttributes(): array
     {
         return $this->attributes;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCombinationId(): ?int
-    {
-        return $this->combinationId;
     }
 }

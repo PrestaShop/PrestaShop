@@ -54,11 +54,10 @@ class ProductCombinationFactory
         foreach ($combinationDetailsList as $combinationDetails) {
             $combinationName = $combinationDetails->getReference();
             $combination = new Combination();
-            $combination->id = $combinationDetails->getCombinationId();
             $combination->reference = $combinationName;
             $combination->id_product = $productId;
             $combination->quantity = $combinationDetails->getQuantity();
-            $combination->save();
+            $combination->add();
             StockAvailable::setQuantity($productId, $combination->id, (int) $combination->quantity);
             $combinations[] = $combination;
             $combinationAttributesIds = [];

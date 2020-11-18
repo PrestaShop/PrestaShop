@@ -29,8 +29,10 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
@@ -46,21 +48,20 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     public function addCombinationsToProduct(string $productReference, TableNode $tableNode)
     {
         $details = $tableNode->getColumnsHash();
-        $productId = $this->getSharedStorage()->get($productReference);
         $combinationsDetails = [];
 
         foreach ($details as $combination) {
-            $combinationReference = $combination['reference'];
-
             $combinationsDetails[] = new CombinationDetails(
-                $combinationReference,
+                $combination['reference'],
                 (int) $combination['quantity'],
-                explode(';', $combination['attributes']),
-                $this->getSharedStorage()->exists($combinationReference) ? $this->getSharedStorage()->get($combinationReference) : null
+                explode(';', $combination['attributes'])
             );
         }
 
-        $combinations = ProductCombinationFactory::makeCombinations($productId, $combinationsDetails);
+        $combinations = ProductCombinationFactory::makeCombinations(
+            $this->getSharedStorage()->get($productReference),
+            $combinationsDetails
+        );
 
         foreach ($combinations as $combination) {
             $this->getSharedStorage()->set($combination->reference, (int) $combination->id);
