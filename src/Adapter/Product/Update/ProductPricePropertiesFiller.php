@@ -32,21 +32,28 @@ use PrestaShop\Decimal\DecimalNumber;
 use Product;
 
 /**
- * Fills Product price values which needs specific handling for update
+ * Fills Product price properties which needs specific handling for update
  */
-class ProductPriceFiller
+class ProductPricePropertiesFiller
 {
     /**
-     * Fills Product price & unit_price & unit_price_ratio which are depending on each other
+     * Wraps following properties filling: price, unit_price, unit_price_ratio, wholesale_price
+     * as most of them (price, unit_price, unit_price_ratio) are highly coupled & depends on each other
      *
      * @param Product $product
      * @param DecimalNumber|null $price
      * @param DecimalNumber|null $unitPrice
+     * @param DecimalNumber|null $wholesalePrice
      *
      * @return string[] updatable properties
      */
-    public function fillPrices(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice): array
+    public function fillWithPrices(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice, ?DecimalNumber $wholesalePrice): array
     {
+        if (null !== $wholesalePrice) {
+            $product->wholesale_price = (float) (string) $wholesalePrice;
+            $updatableProperties[] = 'wholesale_price';
+        }
+
         if (null !== $price) {
             $product->price = (float) (string) $price;
             $updatableProperties[] = 'price';

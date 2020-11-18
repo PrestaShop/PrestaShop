@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPriceFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -53,23 +53,23 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     private $productRepository;
 
     /**
-     * @var ProductPriceFiller
+     * @var ProductPricePropertiesFiller
      */
-    private $productPriceFiller;
+    private $productPricePropertiesFiller;
 
     /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
-     * @param ProductPriceFiller $productPriceFiller
+     * @param ProductPricePropertiesFiller $productPricePropertiesFiller
      */
     public function __construct(
         NumberExtractor $numberExtractor,
         ProductRepository $productRepository,
-        ProductPriceFiller $productPriceFiller
+        ProductPricePropertiesFiller $productPricePropertiesFiller
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->productRepository = $productRepository;
-        $this->productPriceFiller = $productPriceFiller;
+        $this->productPricePropertiesFiller = $productPricePropertiesFiller;
     }
 
     /**
@@ -93,10 +93,11 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     private function fillUpdatableProperties(Product $product, UpdateProductPricesCommand $command): array
     {
-        $updatableProperties = $this->productPriceFiller->fillPrices(
+        $updatableProperties = $this->productPricePropertiesFiller->fillWithPrices(
             $product,
             $command->getPrice(),
-            $command->getUnitPrice()
+            $command->getUnitPrice(),
+            $command->getWholesalePrice()
         );
 
         if (null !== $command->getUnity()) {
@@ -119,11 +120,6 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
         if (null !== $command->isOnSale()) {
             $product->on_sale = $command->isOnSale();
             $updatableProperties[] = 'on_sale';
-        }
-
-        if (null !== $command->getWholesalePrice()) {
-            $product->wholesale_price = (float) (string) $command->getWholesalePrice();
-            $updatableProperties[] = 'wholesale_price';
         }
 
         return $updatableProperties;
