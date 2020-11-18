@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: true
+
+    PrestaShopBundle\Command\PrintCommandsAndQueriesForDocsCommand:
+        class: PrestaShopBundle\Command\PrintCommandsAndQueriesForDocsCommand
+        arguments:
+            - '@filesystem'
+            - '@prestashop.bundle.twig.native_filesystem_environment'
+        tags:
+            - console.command
