@@ -70,6 +70,7 @@ class MetaController extends FrameworkBundleAdminController
         if ($isRewriteSettingEnabled) {
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
+
         return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
@@ -249,7 +250,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-         return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
