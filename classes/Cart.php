@@ -3866,7 +3866,6 @@ class CartCore extends ObjectModel
             'invoice_state' => State::getNameById($invoice->id_state),
             'formattedAddresses' => $formatted_addresses,
             'products' => array_values($products),
-            'gift_products' => [],
             'discounts' => array_values($this->getCartRules()),
             'is_virtual_cart' => (int) $this->isVirtualCart(),
             'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
@@ -5075,9 +5074,8 @@ class CartCore extends ObjectModel
         $context = Context::getContext();
         $currency = new Currency($this->id_currency);
 
-        $products = $this->getProducts($refresh);
-
         $gift_products = [];
+        $products = $summary['products'];
         $cart_rules = $summary['discounts'];
         $total_shipping = $summary['total_shipping'];
         $total_discounts = $summary['total_discounts'];

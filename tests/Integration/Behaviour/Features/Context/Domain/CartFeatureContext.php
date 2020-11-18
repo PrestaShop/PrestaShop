@@ -52,7 +52,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -838,16 +838,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $cartReference
      *
-     * @return CartInformation
+     * @return CartForOrderCreation
      */
-    private function getCartInformationByReference(string $cartReference): CartInformation
+    private function getCartInformationByReference(string $cartReference): CartForOrderCreation
     {
         $cartId = $this->getSharedStorage()->get($cartReference);
 
         return $this->getQueryBus()->handle(
             (new GetCartForOrderCreation($cartId))
-            ->setSeparateGiftProducts(true)
-            ->setSeparateGiftCartRules(true)
+            ->setHideDiscounts(true)
         );
     }
 

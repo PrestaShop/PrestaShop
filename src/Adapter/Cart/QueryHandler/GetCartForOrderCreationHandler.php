@@ -43,13 +43,13 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForOrderCreationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartDeliveryOption;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\Customization;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartAddress;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartProduct;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartShipping;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartSummary;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\Customization;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CustomizationFieldData;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
@@ -109,13 +109,13 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     /**
      * @param GetCartForOrderCreation $query
      *
-     * @return CartInformation
+     * @return CartForOrderCreation
      *
      * @throws CartNotFoundException
      * @throws LocalizationException
      * @throws PrestaShopException
      */
-    public function handle(GetCartForOrderCreation $query): CartInformation
+    public function handle(GetCartForOrderCreation $query): CartForOrderCreation
     {
         $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
@@ -129,7 +129,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
 
         $addresses = $this->getAddresses($cart);
 
-        if ($query->separateGiftProducts()) {
+        if ($query->hideDiscounts()) {
             $legacySummary = $cart->getSummaryDetails($cart->id_lang, true);
             $products = $this->extractProductsWithGiftSplitFromLegacySummary($cart, $legacySummary, $currency);
         } else {
@@ -137,15 +137,15 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $products = $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency);
         }
 
-        $result = new CartInformation(
+        $result = new CartForOrderCreation(
             $cart->id,
             $products,
             (int) $currency->id,
             (int) $language->id,
-            $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency, $query->separateGiftCartRules()),
+            $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency, $query->hideDiscounts()),
             $addresses,
             $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
-            $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
+            $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary, $query->hideDiscounts()) : null
         );
 
         $this->contextStateManager->restorePreviousContext();
@@ -210,7 +210,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
      * @param Currency $currency
      * @param bool $separateGiftCartRules
      *
-     * @return CartInformation\CartRule[]
+     * @return CartForOrderCreation\CartRule[]
      */
     private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency, bool $separateGiftCartRules = false): array
     {
@@ -218,7 +218,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
 
         foreach ($legacySummary['discounts'] as $discount) {
             $cartRuleId = (int) $discount['id_cart_rule'];
-            $cartRules[$cartRuleId] = new CartInformation\CartRule(
+            $cartRules[$cartRuleId] = new CartForOrderCreation\CartRule(
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
@@ -234,12 +234,12 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
                 if (isset($cartRules[$giftRuleId])) {
                     // it is possible that one cart rule can have a gift product, but also have other conditions,
                     //so we need to sum their reduction values
-                    /** @var CartInformation\CartRule $cartRule */
+                    /** @var CartForOrderCreation\CartRule $cartRule */
                     $cartRule = $cartRules[$giftRuleId];
                     $finalValue = $finalValue->plus(new Number($cartRule->getValue()));
                 }
 
-                $cartRules[$giftRuleId] = new CartInformation\CartRule(
+                $cartRules[$giftRuleId] = new CartForOrderCreation\CartRule(
                     (int) $giftRule['id_cart_rule'],
                     $giftRule['name'],
                     $giftRule['description'],
@@ -344,10 +344,11 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     /**
      * @param Cart $cart
      * @param array $legacySummary
+     * @param bool $hideDiscounts
      *
      * @return CartShipping|null
      */
-    private function extractShippingFromLegacySummary(Cart $cart, array $legacySummary): ?CartShipping
+    private function extractShippingFromLegacySummary(Cart $cart, array $legacySummary, bool $hideDiscounts = true): ?CartShipping
     {
         $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
         $deliveryAddress = (int) $cart->id_address_delivery;
@@ -362,7 +363,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         $isFreeShipping = !empty($cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING));
 
         return new CartShipping(
-            $isFreeShipping ? '0' : (string) $legacySummary['total_shipping'],
+            $isFreeShipping && $hideDiscounts ? '0' : (string) $legacySummary['total_shipping'],
             $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
             (int) $carrier->id ?: null,
@@ -476,7 +477,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             return null;
         }
 
-        return new CartInformation\Customization($customizationId, $productCustomizedFieldsData);
+        return new CartForOrderCreation\Customization($customizationId, $productCustomizedFieldsData);
     }
 
     /**
