@@ -41,7 +41,7 @@ final class DateTime
     /**
      * Default format for date time string
      */
-    public const DEFAULT_FORMAT = 'Y-m-d H:i:s';
+    public const DEFAULT_DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * DateTime value which should be considered same as null
