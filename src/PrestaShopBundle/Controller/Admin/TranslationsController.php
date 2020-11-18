@@ -31,9 +31,11 @@ use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
@@ -89,34 +91,26 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Show translations settings page.
      *
-     * @Template("@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
-     * @return array
+     * @return Response
      */
     public function showSettingsAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
         $modifyTranslationsForm = $this->getModifyTranslationsFormHander()->getForm();
         $addUpdateLanguageForm = $this->getAddUpdateLanguageTranslationsFormHander()->getForm();
         $exportLanguageForm = $this->getExportLanguageTranslationsFormHander()->getForm();
         $copyLanguageForm = $this->getCopyLanguageTranslationsFormHander()->getForm();
 
-        return [
-            'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
-            'kpiRow' => $kpiRowFactory->build(),
-            'copyLanguageForm' => $copyLanguageForm->createView(),
-            'exportLanguageForm' => $exportLanguageForm->createView(),
-            'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
-            'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
-            'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
-        ];
+        return $this->renderForm(
+            $request,
+            $modifyTranslationsForm,
+            $addUpdateLanguageForm,
+            $exportLanguageForm,
+            $copyLanguageForm
+        );
     }
 
     /**
@@ -151,7 +145,7 @@ class TranslationsController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function addUpdateLanguageAction(Request $request)
     {
@@ -159,7 +153,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $addUpdateLanguageForm = $formHandler->getForm();
         $addUpdateLanguageForm->handleRequest($request);
 
-        if ($addUpdateLanguageForm->isSubmitted()) {
+        if ($addUpdateLanguageForm->isSubmitted() && $addUpdateLanguageForm->isValid()) {
             $data = $addUpdateLanguageForm->getData();
             $isoCode = $data['iso_localization_pack'];
 
@@ -180,7 +174,17 @@ class TranslationsController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_international_translations_show_settings');
+        $modifyTranslationsForm = $this->getModifyTranslationsFormHander()->getForm();
+        $exportLanguageForm = $this->getExportLanguageTranslationsFormHander()->getForm();
+        $copyLanguageForm = $this->getCopyLanguageTranslationsFormHander()->getForm();
+
+        return $this->renderForm(
+            $request,
+            $modifyTranslationsForm,
+            $addUpdateLanguageForm,
+            $exportLanguageForm,
+            $copyLanguageForm
+        );
     }
 
     /**
@@ -190,7 +194,7 @@ class TranslationsController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return BinaryFileResponse|RedirectResponse
+     * @return BinaryFileResponse|Response
      */
     public function exportThemeLanguageAction(Request $request)
     {
@@ -198,7 +202,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $exportThemeLanguageForm = $formHandler->getForm();
         $exportThemeLanguageForm->handleRequest($request);
 
-        if ($exportThemeLanguageForm->isSubmitted()) {
+        if ($exportThemeLanguageForm->isSubmitted() && $exportThemeLanguageForm->isValid()) {
             $data = $exportThemeLanguageForm->getData();
 
             $themeName = $data['theme_name'];
@@ -218,7 +222,17 @@ class TranslationsController extends FrameworkBundleAdminController
             return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         }
 
-        return $this->redirectToRoute('admin_international_translations_show_settings');
+        $modifyTranslationsForm = $this->getModifyTranslationsFormHander()->getForm();
+        $addUpdateLanguageForm = $this->getAddUpdateLanguageTranslationsFormHander()->getForm();
+        $copyLanguageForm = $this->getCopyLanguageTranslationsFormHander()->getForm();
+
+        return $this->renderForm(
+            $request,
+            $modifyTranslationsForm,
+            $addUpdateLanguageForm,
+            $exportThemeLanguageForm,
+            $copyLanguageForm
+        );
     }
 
     /**
@@ -228,17 +242,17 @@ class TranslationsController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function copyLanguageAction(Request $request)
     {
         $formHandler = $this->getCopyLanguageTranslationsFormHander();
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
+        $copyLanguageForm = $formHandler->getForm();
+        $copyLanguageForm->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($copyLanguageForm->isSubmitted() && $copyLanguageForm->isValid()) {
             $languageCopier = $this->get('prestashop.adapter.language.copier');
-            $data = $form->getData();
+            $data = $copyLanguageForm->getData();
             $languageCopierConfig = new LanguageCopierConfig(
                 $data['from_theme'],
                 $data['from_language'],
@@ -256,7 +270,50 @@ class TranslationsController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_international_translations_show_settings');
+        $modifyTranslationsForm = $this->getModifyTranslationsFormHander()->getForm();
+        $addUpdateLanguageForm = $this->getAddUpdateLanguageTranslationsFormHander()->getForm();
+        $exportLanguageForm = $this->getExportLanguageTranslationsFormHander()->getForm();
+
+        return $this->renderForm(
+            $request,
+            $modifyTranslationsForm,
+            $addUpdateLanguageForm,
+            $exportLanguageForm,
+            $copyLanguageForm
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param FormInterface $modifyTranslationsForm
+     * @param FormInterface $addUpdateLanguageForm
+     * @param FormInterface $exportLanguageForm
+     * @param FormInterface $copyLanguageForm
+     *
+     * @return Response
+     */
+    protected function renderForm(
+        Request $request,
+        FormInterface $modifyTranslationsForm,
+        FormInterface $addUpdateLanguageForm,
+        FormInterface $exportLanguageForm,
+        FormInterface $copyLanguageForm
+    ): Response {
+        $legacyController = $request->attributes->get('_legacy_controller');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig', [
+            'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'kpiRow' => $kpiRowFactory->build(),
+            'copyLanguageForm' => $copyLanguageForm->createView(),
+            'exportLanguageForm' => $exportLanguageForm->createView(),
+            'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
+            'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
+            'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
+        ]);
     }
 
     /**
