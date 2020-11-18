@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
+use Shop;
 
 /**
  * @internal
@@ -67,7 +68,10 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
     public function handle(UpdateProductQuantityInCartCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
-        $this->contextStateManager->setCart($cart);
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setShop(new Shop($cart->id_shop))
+        ;
 
         try {
             $this->updateProductQuantityInCart($cart, $command);

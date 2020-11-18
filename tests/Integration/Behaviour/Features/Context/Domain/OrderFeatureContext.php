@@ -67,7 +67,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopCollection;
 use Product;
 use RuntimeException;
@@ -1355,18 +1354,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $order = new Order($orderId);
 
-        $specificPriceId = SpecificPrice::exists(
-            $productId,
-            $combinationId,
-            0,
-            0,
-            0,
-            $order->id_currency,
-            $order->id_customer,
-            1,
-            DateTime::NULL_VALUE,
-            DateTime::NULL_VALUE
-        );
+        $specificPriceId = $order->getProductSpecificPriceId($productId, $combinationId);
 
         return $specificPriceId ? (int) $specificPriceId : null;
     }

@@ -112,6 +112,7 @@ class OrderProductQuantityUpdater
             ->setCustomer(new Customer($cart->id_customer))
             ->setLanguage(new Language($cart->id_lang))
             ->setCountry($cart->getTaxCountry())
+            ->setShop(new Shop($cart->id_shop))
         ;
 
         try {
@@ -287,7 +288,12 @@ class OrderProductQuantityUpdater
                 $orderDetail->product_id,
                 $orderDetail->product_attribute_id,
                 $deltaQuantity,
-                $cart->id_shop
+                $cart->id_shop,
+                true,
+                [
+                    'id_order' => $orderDetail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
+                ]
             );
         } else {
             // Decrease product quantity. Reinject quantity in stock

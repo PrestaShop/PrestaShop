@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
+use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -91,6 +92,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @param int $contextLangId
      * @param Link $contextLink
      * @param ContextStateManager $contextStateManager
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         LocaleInterface $locale,
@@ -125,23 +127,27 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             ->setCart($cart)
             ->setCurrency($currency)
             ->setLanguage($language)
-            ->setCustomer(new Customer($cart->id_customer));
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setShop(new Shop($cart->id_shop))
+        ;
 
-        $legacySummary = $cart->getSummaryDetails(null, true);
-        $addresses = $this->getAddresses($cart);
+        try {
+            $legacySummary = $cart->getSummaryDetails(null, true);
+            $addresses = $this->getAddresses($cart);
 
-        $result = new CartInformation(
-            $cart->id,
-            $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency),
-            (int) $currency->id,
-            (int) $language->id,
-            $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency),
-            $addresses,
-            $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
-            $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
-        );
-
-        $this->contextStateManager->restorePreviousContext();
+            $result = new CartInformation(
+                $cart->id,
+                $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency),
+                (int) $currency->id,
+                (int) $language->id,
+                $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency),
+                $addresses,
+                $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
+                $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
+            );
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
 
         return $result;
     }
