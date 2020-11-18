@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoInfoFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -47,20 +47,20 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
     private $productRepository;
 
     /**
-     * @var ProductSeoInfoFiller
+     * @var ProductSeoPropertiesFiller
      */
-    private $productSeoInfoFiller;
+    private $productSeoPropertiesFiller;
 
     /**
      * @param ProductRepository $productRepository
-     * @param ProductSeoInfoFiller $productSeoInfoFiller
+     * @param ProductSeoPropertiesFiller $productSeoPropertiesFiller
      */
     public function __construct(
         ProductRepository $productRepository,
-        ProductSeoInfoFiller $productSeoInfoFiller
+        ProductSeoPropertiesFiller $productSeoPropertiesFiller
     ) {
         $this->productRepository = $productRepository;
-        $this->productSeoInfoFiller = $productSeoInfoFiller;
+        $this->productSeoPropertiesFiller = $productSeoPropertiesFiller;
     }
 
     /**
@@ -87,7 +87,7 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
         if (null !== $command->getRedirectOption()) {
             $updatableProperties = array_merge(
                 $updatableProperties,
-                $this->productSeoInfoFiller->fillRedirectOption($product, $command->getRedirectOption())
+                $this->productSeoPropertiesFiller->fillWithRedirectOption($product, $command->getRedirectOption())
             );
         }
 

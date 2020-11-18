@@ -40,7 +40,7 @@ use Product;
 /**
  * Fills Product object model SEO information fields according to domain specifics
  */
-class ProductSeoInfoFiller
+class ProductSeoPropertiesFiller
 {
     /**
      * @var ProductRepository
@@ -73,7 +73,7 @@ class ProductSeoInfoFiller
      * @throws CategoryNotFoundException
      * @throws CoreException
      */
-    public function fillRedirectOption(Product $product, RedirectOption $redirectOption): array
+    public function fillWithRedirectOption(Product $product, RedirectOption $redirectOption): array
     {
         $redirectType = $redirectOption->getRedirectType();
         $redirectTarget = $redirectOption->getRedirectTarget();

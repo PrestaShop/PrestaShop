@@ -250,7 +250,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSeoHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.update.product_seo_info_filler'
+            - '@prestashop.adapter.product.update.product_seo_properties_filler'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
@@ -274,7 +274,7 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.attachment.attachment_repository'
 
-    prestashop.adapter.product.update.product_seo_info_filler:
+    prestashop.adapter.product.update.product_seo_properties_filler:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoInfoFiller
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
