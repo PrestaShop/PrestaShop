@@ -50,9 +50,14 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     protected static $defaultName = 'prestashop:print-docs:commands-and-queries';
 
     /**
-     * Command option name for providing destination file path
+     * Option name for providing destination file path
      */
     private const FILE_PATH_OPTION_NAME = 'file';
+
+    /**
+     * Option name for forcing command (remove all confirmations)
+     */
+    private const FORCE_OPTION_NAME = 'force';
 
     /**
      * @var Filesystem
@@ -85,6 +90,12 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Path to file into which all commands and queries should be printed'
+            )
+            ->addOption(
+                self::FORCE_OPTION_NAME,
+                null,
+                InputOption::VALUE_NONE,
+                'Forces command to be executed without confirmations'
             )
         ;
     }
@@ -148,17 +159,19 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     private function confirmExistingFileWillBeLost(string $filePath, InputInterface $input, OutputInterface $output): bool
     {
-        if ($this->filesystem->exists($filePath) && filesize($filePath)) {
-            $helper = $this->getHelper('question');
-            $confirmation = new ConfirmationQuestion(sprintf(
-                '<question>File "%s" is not empty. All data will be lost. Proceed?</question>',
-                $filePath
-            ));
+        $force = $input->getOption(self::FORCE_OPTION_NAME);
 
-            return (bool) $helper->ask($input, $output, $confirmation);
+        if ($force || !$this->filesystem->exists($filePath) || !filesize($filePath)) {
+            return true;
         }
 
-        return true;
+        $helper = $this->getHelper('question');
+        $confirmation = new ConfirmationQuestion(sprintf(
+            '<question>File "%s" is not empty. All data will be lost. Proceed?</question>',
+            $filePath
+        ));
+
+        return (bool) $helper->ask($input, $output, $confirmation);
     }
 
     /**
