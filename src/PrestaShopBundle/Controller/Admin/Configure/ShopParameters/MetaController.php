@@ -378,7 +378,7 @@ class MetaController extends FrameworkBundleAdminController
      * @param FormInterface $seoOptionsForm
      * @param FormInterface|null $urlSchemaForm
      *
-     * @return  Response
+     * @return Response
      */
     protected function renderForm(
         Request $request,
