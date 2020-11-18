@@ -13,12 +13,12 @@ const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 const addOrderReturnStatusPage = require('@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add');
 
 // Import data
-const OrderReturnStatusFaker = require('@data/faker/orderStatus');
+const OrderReturnStatusFaker = require('@data/faker/orderReturnStatus');
 
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_CRUDOrderReturnStatus';
+const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_CRUDOrderReturnStatus';
 
 // Import expect from chai
 const {expect} = require('chai');
