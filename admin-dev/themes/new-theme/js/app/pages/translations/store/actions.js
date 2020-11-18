@@ -31,28 +31,36 @@ Vue.use(VueResource);
 
 export const getTranslations = ({commit}) => {
   const url = window.data.translationUrl;
-  Vue.http.get(url).then((response) => {
-    commit(types.SET_TRANSLATIONS, response.body);
-    commit(types.APP_IS_READY);
-  }, (error) => {
-    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-  });
+  Vue.http.get(url).then(
+    (response) => {
+      commit(types.SET_TRANSLATIONS, response.body);
+      commit(types.APP_IS_READY);
+    },
+    (error) => {
+      showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+    },
+  );
 };
 
 export const getCatalog = ({commit}, payload) => {
   commit(types.PRINCIPAL_LOADING, true);
-  Vue.http.get(payload.url, {
-    params: {
-      page_size: payload.page_size,
-      page_index: payload.page_index,
-    },
-  }).then((response) => {
-    commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
-    commit(types.SET_CATALOG, response.body);
-    commit(types.PRINCIPAL_LOADING, false);
-  }, (error) => {
-    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-  });
+  Vue.http
+    .get(payload.url, {
+      params: {
+        page_size: payload.page_size,
+        page_index: payload.page_index,
+      },
+    })
+    .then(
+      (response) => {
+        commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
+        commit(types.SET_CATALOG, response.body);
+        commit(types.PRINCIPAL_LOADING, false);
+      },
+      (error) => {
+        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+      },
+    );
 };
 
 export const getDomainsTree = ({commit}, payload) => {
@@ -66,15 +74,20 @@ export const getDomainsTree = ({commit}, payload) => {
     params.search = payload.store.getters.searchTags;
   }
 
-  Vue.http.get(url, {
-    params,
-  }).then((response) => {
-    commit(types.SET_DOMAINS_TREE, response.body);
-    commit(types.SIDEBAR_LOADING, false);
-    commit(types.RESET_CURRENT_DOMAIN);
-  }, (error) => {
-    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-  });
+  Vue.http
+    .get(url, {
+      params,
+    })
+    .then(
+      (response) => {
+        commit(types.SET_DOMAINS_TREE, response.body);
+        commit(types.SIDEBAR_LOADING, false);
+        commit(types.RESET_CURRENT_DOMAIN);
+      },
+      (error) => {
+        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+      },
+    );
 };
 
 export const refreshCounts = ({commit}, payload) => {
@@ -85,32 +98,42 @@ export const refreshCounts = ({commit}, payload) => {
     params.search = payload.store.getters.searchTags;
   }
 
-  Vue.http.get(url, {
-    params,
-  }).then((response) => {
-    commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);
-    commit(types.SET_DOMAINS_TREE, response.body);
-  }, (error) => {
-    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-  });
+  Vue.http
+    .get(url, {
+      params,
+    })
+    .then(
+      (response) => {
+        commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);
+        commit(types.SET_DOMAINS_TREE, response.body);
+      },
+      (error) => {
+        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+      },
+    );
 };
 
 export const saveTranslations = ({commit}, payload) => {
   const {url} = payload;
   const {translations} = payload;
 
-  Vue.http.post(url, {
-    translations,
-  }).then(() => {
-    payload.store.dispatch('refreshCounts', {
-      successfullySaved: translations.length,
-      store: payload.store,
-    });
-    commit(types.RESET_MODIFIED_TRANSLATIONS);
-    return showGrowl('notice', 'Translations successfully updated');
-  }, (error) => {
-    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-  });
+  Vue.http
+    .post(url, {
+      translations,
+    })
+    .then(
+      () => {
+        payload.store.dispatch('refreshCounts', {
+          successfullySaved: translations.length,
+          store: payload.store,
+        });
+        commit(types.RESET_MODIFIED_TRANSLATIONS);
+        return showGrowl('success', 'Translations successfully updated');
+      },
+      (error) => {
+        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+      },
+    );
 };
 
 /* eslint-disable-next-line no-unused-vars */
@@ -118,13 +141,18 @@ export const resetTranslation = ({commit}, payload) => {
   const {url} = payload;
   const {translations} = payload;
 
-  Vue.http.post(url, {
-    translations,
-  }).then(() => {
-    showGrowl('notice', 'Translations successfully reset');
-  }, (error) => {
-    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
-  });
+  Vue.http
+    .post(url, {
+      translations,
+    })
+    .then(
+      () => {
+        showGrowl('success', 'Translations successfully reset');
+      },
+      (error) => {
+        showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+      },
+    );
 };
 
 export const updatePageIndex = ({commit}, pageIndex) => {
