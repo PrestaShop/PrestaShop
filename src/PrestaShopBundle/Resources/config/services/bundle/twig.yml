@@ -118,3 +118,13 @@ services:
       class: 'PrestaShopBundle\Twig\Extension\NumberExtension'
       tags:
         - { name: twig.extension }
+
+    prestashop.bundle.twig.filesystem_loader:
+        class: 'Twig\Loader\FilesystemLoader'
+        arguments:
+            - '%kernel.root_dir%/../'
+
+    prestashop.bundle.twig.native_filesystem_environment:
+        class: 'Twig\Environment'
+        arguments:
+            - '@prestashop.bundle.twig.filesystem_loader'
