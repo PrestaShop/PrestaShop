@@ -1,7 +1,7 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class multistoreSettings extends BOBasePage {
+class MultiStoreSettings extends BOBasePage {
   constructor() {
     super();
 
@@ -31,20 +31,6 @@ class multistoreSettings extends BOBasePage {
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
-
-    // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnWidth = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnHeight = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnStatus = (row, columnPos, status) => `${this.tableBodyColumn(row)}:nth-child(${columnPos})`
-      + ` span.action-${status}`;
-
-    this.tableColumnProducts = (row, status) => this.tableColumnStatus(row, 6, status);
-    this.tableColumnCategories = (row, status) => this.tableColumnStatus(row, 7, status);
-    this.tableColumnManufacturers = (row, status) => this.tableColumnStatus(row, 8, status);
-    this.tableColumnSuppliers = (row, status) => this.tableColumnStatus(row, 9, status);
-    this.tableColumnStores = (row, status) => this.tableColumnStatus(row, 10, status);
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -112,58 +98,6 @@ class multistoreSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
-  /* Column methods */
-
-  /**
-   * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
-   * @return {Promise<string>}
-   */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'id_image_type':
-        columnSelector = this.tableColumnId(row);
-        break;
-
-      case 'name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      case 'width':
-        columnSelector = this.tableColumnWidth(row);
-        break;
-
-      case 'height':
-        columnSelector = this.tableColumnHeight(row);
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
-    }
-
-    return this.getTextContent(page, columnSelector);
-  }
-
-  /**
-   * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
-   */
-  async getAllRowsColumnContent(page, columnName) {
-    const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
-    for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
-    }
-    return allRowsContentTable;
-  }
-
   /**
    * Go to edit shop group page
    * @param page
@@ -196,4 +130,4 @@ class multistoreSettings extends BOBasePage {
   }
 }
 
-module.exports = new multistoreSettings();
+module.exports = new MultiStoreSettings();

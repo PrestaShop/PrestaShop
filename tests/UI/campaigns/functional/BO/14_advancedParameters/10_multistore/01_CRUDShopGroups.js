@@ -139,7 +139,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
   // 4 : Delete shop group
   describe('Delete shop group', async () => {
     it('should delete shop group and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateShopGroup', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteShopGroup', baseContext);
 
       await multiStorePage.filterTable(page, 'a!name', updateShopGroupData.name);
 
