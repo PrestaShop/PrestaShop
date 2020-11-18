@@ -113,7 +113,7 @@ class WebserviceKeyType extends TranslatorAwareType
                 'empty_data' => '',
             ])
             ->add('status', SwitchType::class, [
-                'label' => $this->trans('Status', 'Admin.Global'),
+                'label' => $this->trans('Enable webservice key', 'Admin.Global'),
                 'required' => false,
             ])
             ->add('permissions', MaterialMultipleChoiceTableType::class, [
