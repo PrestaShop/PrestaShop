@@ -492,14 +492,15 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
+        $urls = $this->getTemplateVarUrls();
         $templateVars = [
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectPresenter->present($this->context->language),
             'page' => $this->getTemplateVarPage(),
-            'shop' => $this->getTemplateVarShop(),
-            'urls' => $this->getTemplateVarUrls(),
+            'shop' => $this->getTemplateVarShop($urls),
+            'urls' => $urls,
             'configuration' => $this->getTemplateVarConfiguration(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
             'breadcrumb' => $this->getBreadcrumb(),
@@ -739,9 +740,10 @@ class FrontControllerCore extends Controller
                 header('Retry-After: 3600');
 
                 $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
+                $urls = $this->getTemplateVarUrls();
                 $this->context->smarty->assign([
-                    'urls' => $this->getTemplateVarUrls(),
-                    'shop' => $this->getTemplateVarShop(),
+                    'urls' => $urls,
+                    'shop' => $this->getTemplateVarShop($urls),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', []),
                     'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int) $this->context->language->id),
                     'stylesheets' => $this->getStylesheets(),
@@ -761,9 +763,10 @@ class FrontControllerCore extends Controller
         header('HTTP/1.1 403 Forbidden');
 
         $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
+        $urls = $this->getTemplateVarUrls();
         $this->context->smarty->assign([
-            'urls' => $this->getTemplateVarUrls(),
-            'shop' => $this->getTemplateVarShop(),
+            'urls' => $urls,
+            'shop' => $this->getTemplateVarShop($urls),
             'stylesheets' => $this->getStylesheets(),
         ]);
         $this->smartyOutputContent('errors/restricted-country.tpl');
@@ -1608,9 +1611,11 @@ class FrontControllerCore extends Controller
         return $cust;
     }
 
-    public function getTemplateVarShop()
+    public function getTemplateVarShop(array $urls = [])
     {
         $address = $this->context->shop->getAddress();
+
+        $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
 
         $shop = [
             'name' => Configuration::get('PS_SHOP_NAME'),
@@ -1620,9 +1625,9 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => (Configuration::get('PS_LOGO')) ? Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? Configuration::get('PS_FAVICON') : '',
+            'logo' => Configuration::hasKey('PS_LOGO') ? $psImageUrl . Configuration::get('PS_LOGO') : '',
+            'stores_icon' => Configuration::hasKey('PS_STORES_ICON') ? $psImageUrl . Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => Configuration::hasKey('PS_FAVICON') ? $psImageUrl . Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => [
