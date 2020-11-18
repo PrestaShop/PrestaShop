@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartDeliveryOption;
-
 /**
  * Holds data for cart shipping information
  */

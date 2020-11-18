@@ -72,20 +72,20 @@ class GetCartForOrderCreation
 
     /**
      * When hideDiscounts is set to TRUE,
-     * Payed products lines are separated to gift products
-     * Price of the gifted products are removed from the overall discounts
+     * Gifted products are in a separate line from other products which are charged for
+     * The price of any gifted products is not included in the overall discounts, total products and cart total
      * Shipping is set to 0 if there is a free_shipping cart rule
      *
      * Otherwise,
-     * We will have one line per product and the gifted quantity will be included to the product quantity in the cart.
-     * The shipping will have his original value and a cart_rule with the shipping value will be added
-     * and the gift products price will be included to the discount
+     * There is one line per product type and the gifted quantity will be included to the product quantity in the cart.
+     * Shipping has its original price, and if it's free, the shipping value will be added as a discount
+     * Any gifted products' price will be included as a discount
      *
      * @param bool $hideDiscounts
      *
      * @return GetCartForOrderCreation
      */
-    public function setHideDiscounts(bool $hideDiscounts): GetCartForOrderCreation
+    public function setHideDiscounts(bool $hideDiscounts): self
     {
         $this->hideDiscounts = $hideDiscounts;
 

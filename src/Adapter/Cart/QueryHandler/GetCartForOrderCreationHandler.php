@@ -42,9 +42,9 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForOrderCreationHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartDeliveryOption;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartAddress;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartDeliveryOption;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartShipping;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CartSummary;
@@ -216,11 +216,11 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
      * @param Cart $cart
      * @param array $legacySummary
      * @param Currency $currency
-     * @param bool $separateGiftCartRules
+     * @param bool $hideDiscounts
      *
      * @return CartForOrderCreation\CartRule[]
      */
-    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency, bool $separateGiftCartRules = false): array
+    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency, bool $hideDiscounts = false): array
     {
         $cartRules = [];
 
@@ -234,7 +234,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             );
         }
 
-        if ($separateGiftCartRules) {
+        if ($hideDiscounts) {
             foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
                 $giftRuleId = (int) $giftRule['id_cart_rule'];
                 $finalValue = new Number((string) $giftRule['value_tax_exc']);

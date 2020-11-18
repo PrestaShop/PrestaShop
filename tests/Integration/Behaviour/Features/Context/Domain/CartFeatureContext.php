@@ -512,7 +512,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartContainsOnlyGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() !== $productId) {
@@ -533,7 +533,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleIsNotAppliedToCart(string $voucherCode, string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -551,7 +551,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleIsAppliedToCart(string $voucherCode, string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -616,7 +616,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertProductQuantity(string $cartReference, string $productName, int $quantity, bool $isGift)
     {
         $productId = $this->getProductIdByName($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $product) {
             if ($productId === $product->getProductId() && (bool) $product->isGift() === $isGift) {
@@ -639,11 +639,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartContainsGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $matchingProducts = [];
 
-        /** @var CartInformation\CartProduct $cartProduct */
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() !== $productId) {
                 continue;
@@ -653,7 +652,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (!empty($matchingProducts)) {
-            /** @var CartInformation\CartProduct $cartProduct */
+            /** @var CartForOrderCreation\CartProduct $cartProduct */
             foreach ($matchingProducts as $cartProduct) {
                 if ($cartProduct->isGift()) {
                     return;
@@ -677,11 +676,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartDoesNotContainGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $matchingProducts = [];
 
-        /** @var CartInformation\CartProduct $cartProduct */
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() === $productId) {
                 $matchingProducts[] = $cartProduct;
@@ -689,7 +687,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (!empty($matchingProducts)) {
-            /** @var CartInformation\CartProduct $cartProduct */
+            /** @var CartForOrderCreation\CartProduct $cartProduct */
             foreach ($matchingProducts as $cartProduct) {
                 if ($cartProduct->isGift()) {
                     throw new RuntimeException(sprintf(
@@ -706,7 +704,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartShippingIsFree(string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
         Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
     }
@@ -743,7 +741,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $cartReference,
         string $value
     ) {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -765,7 +763,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartNumberOfProducts(string $cartReference, int $quantity)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $cartProductsQuantity = \count($cartInfo->getProducts());
 
@@ -786,7 +784,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartNumberOfProductsExcludingGifts(string $cartReference, int $quantity)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $cartProductsQuantity = 0;
         foreach ($cartInfo->getProducts() as $product) {
@@ -824,7 +822,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     private function productIsInCart(string $cartReference, string $productName): bool
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() === $productId) {
@@ -840,7 +838,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      *
      * @return CartForOrderCreation
      */
-    private function getCartInformationByReference(string $cartReference): CartForOrderCreation
+    private function getCartForOrderCreationByReference(string $cartReference): CartForOrderCreation
     {
         $cartId = $this->getSharedStorage()->get($cartReference);
 
