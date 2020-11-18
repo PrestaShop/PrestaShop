@@ -31,6 +31,9 @@ use ReflectionException;
 
 /**
  * Parses commands and queries definitions
+ *
+ * @deprecated
+ * @see CommandHandlerDefinitionParser
  */
 final class CommandDefinitionParser
 {
