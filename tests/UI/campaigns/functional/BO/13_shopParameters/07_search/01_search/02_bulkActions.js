@@ -61,7 +61,7 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
     await expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
-  it('should reset all filters and get number of alias in BO', async function () {
+  it('should reset all filters and get number of aliases in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfSearch = await searchPage.resetAndGetNumberOfLines(page);
@@ -95,8 +95,8 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
     });
   });
 
-  // 3 - Delete alias by bulk actions
-  describe('Delete alias by bulk actions', async () => {
+  // 2- Enable/Disable aliases by bulk actions
+  describe('Enable/Disable the created aliases by bulk actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
@@ -108,7 +108,42 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
       await expect(textAlias).to.contains('todelete');
     });
 
-    it('should delete alias', async function () {
+    const tests = [
+      {args: {action: 'disable', value: false}, expected: 'Disabled'},
+      {args: {action: 'enable', value: true}, expected: 'Enabled'},
+    ];
+
+    tests.forEach((test) => {
+      it(`should ${test.args.action} with bulk actions and check Result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Aliases`, baseContext);
+
+        const textResult = await searchPage.enableDisableByBulkActions(page, test.args.value);
+        await expect(textResult).to.contains(searchPage.successfulUpdateStatusMessage);
+
+        const numberOfElementInGrid = await searchPage.getNumberOfElementInGrid(page);
+
+        for (let i = 1; i <= numberOfElementInGrid; i++) {
+          const textColumn = await searchPage.getTextColumn(page, i, 'active');
+          await expect(textColumn).to.contains(test.expected);
+        }
+      });
+    });
+  });
+
+  // 3 - Delete aliases by bulk actions
+  describe('Delete aliases by bulk actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+
+      await searchPage.resetFilter(page);
+
+      await searchPage.filterTable(page, 'input', 'alias', 'todelete');
+
+      const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
+      await expect(textAlias).to.contains('todelete');
+    });
+
+    it('should delete aliases', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAlias', baseContext);
 
       const textResult = await searchPage.bulkDeleteAliases(page);

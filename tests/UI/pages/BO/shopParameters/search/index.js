@@ -7,6 +7,7 @@ class Search extends BOBasePage {
 
     this.pageTitle = 'Search •';
     this.successfulCreationMessage = 'Creation successful';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
     // Header links
@@ -48,7 +49,7 @@ class Search extends BOBasePage {
     // Columns selectors
     this.tableColumnAliases = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnSearch = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -56,6 +57,8 @@ class Search extends BOBasePage {
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
+    this.bulkEnableButton = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableButton = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
   }
 
   /*
@@ -178,6 +181,10 @@ class Search extends BOBasePage {
         throw new Error(`Column ${columnName} was not found`);
     }
 
+    if (columnName === 'active') {
+      return this.getAttributeContent(page, columnSelector, 'title');
+    }
+
     return this.getTextContent(page, columnSelector);
   }
 
@@ -232,6 +239,27 @@ class Search extends BOBasePage {
 
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable / disable by Bulk Actions
+   * @param page
+   * @param enable
+   * @returns {Promise<string>}
+   */
+  async enableDisableByBulkActions(page, enable = true) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+
+    // Click on enable/Disable and wait for modal
+    await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableButton : this.bulkDisableButton);
+
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
