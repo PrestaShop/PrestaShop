@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Cart\Comparator;
+namespace PrestaShop\PrestaShop\Adapter\Cart\Comparator;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;

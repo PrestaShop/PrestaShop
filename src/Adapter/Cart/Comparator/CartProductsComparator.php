@@ -26,12 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Cart\Comparator;
+namespace PrestaShop\PrestaShop\Adapter\Cart\Comparator;
 
 use Cart;
 
 /**
- * This class snapshots a cart when it's created, you can then ask for the difference
+ * This class saves a cart's products when it's created, you can then ask for the difference
  * that happened on this cart.
  */
 class CartProductsComparator
