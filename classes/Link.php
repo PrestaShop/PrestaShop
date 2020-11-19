@@ -394,8 +394,8 @@ class LinkCore
     public function getCategoryObject($category, $idLang)
     {
         if (!is_object($category)) {
-            if (is_array($category) && isset($category['id_category'])) {
-                $category = new Category($category, $idLang);
+            if (isset($category['id_category'])) {
+                $category = new Category($category['id_category'], $idLang);
             } elseif ((int) $category) {
                 $category = new Category((int) $category, $idLang);
             } else {
@@ -436,11 +436,14 @@ class LinkCore
 
         // Set available keywords
         $params = [];
-
-        if (!is_object($category)) {
-            $params['id'] = $category;
-        } else {
+        if (Validate::isLoadedObject($category)) {
             $params['id'] = $category->id;
+        } elseif (isset($category['id_category'])) {
+            $params['id'] = $category['id_category'];
+        } elseif (is_int($category) or ctype_digit($category)) {
+            $params['id'] = (int) $category;
+        } else {
+            throw new \InvalidArgumentException('Invalid category parameter');
         }
 
         // Selected filters is used by the module ps_facetedsearch
