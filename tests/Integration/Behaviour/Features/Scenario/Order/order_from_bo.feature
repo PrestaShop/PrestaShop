@@ -642,3 +642,54 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl | 0.000 |
     Then order "bo_order1" has status "Awaiting bank wire payment"
     And order "bo_order1" has 1 status in history
+
+  Scenario: Delete all products from order then add product in the empty order
+    Given there is a product in the catalog named "Test Added Product" with a price of 15.0 and 100 items in stock
+    And order with reference "bo_order1" does not contain product "Test Added Product"
+    And the available stock for product "Test Added Product" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Added Product |
+      | amount        | 2                  |
+      | price         | 15                 |
+    # Remove products
+    When I remove product "Test Added Product" from order "bo_order1"
+    And I remove product "Mug The best is yet to come" from order "bo_order1"
+    Then order "bo_order1" should have 0 products in total
+    # Add again a product
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name   | Test Added Product |
+      | amount | 2                  |
+      | price  | 15                 |
+    And I generate invoice for "bo_order1" order
+    ## Assert totals
+    And product "Test Added Product" in order "bo_order1" has following details:
+      | product_quantity       | 2     |
+      | product_price          | 15.00 |
+      | original_product_price | 15.00 |
+      | unit_price_tax_excl    | 15.00 |
+      | unit_price_tax_incl    | 15.90 |
+      | total_price_tax_excl   | 30.00 |
+      | total_price_tax_incl   | 31.80 |
+    And order "bo_order1" should have following details:
+      | total_products           | 30.00 |
+      | total_products_wt        | 31.80 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products          | 30.00 |
+      | total_products_wt       | 31.80 |
+      | total_discount_tax_excl | 0.0   |
+      | total_discount_tax_incl | 0.0   |
+      | total_shipping_tax_excl | 7.0   |
+      | total_shipping_tax_incl | 7.42  |
+    And order "bo_order1" should have following tax details:
+      | unit_tax_base | total_tax_base | unit_amount | total_amount |
+      | 15.00         | 30.0           | 0.9         | 1.8          |
+    And the first invoice from order "bo_order1" should have following product tax details:
+      | total_price_tax_excl | rate | total_amount |
+      | 30.0                 | 6.00 | 1.8          |
+    And the first invoice from order "bo_order1" should have following shipping tax details:
+      | total_tax_excl | rate | total_amount |
+      | 7              | 6.00 | 0.42         |

@@ -381,6 +381,50 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then the :invoicePosition invoice from order :orderReference should have following product tax details:
+     *
+     * @param string $invoicePosition
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkInvoiceProductTaxDetails(string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $invoiceProductData = $table->getColumnsHash();
+
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+        $invoiceProductTaxDetails = array_values($orderInvoice->getProductTaxesBreakdown($order));
+
+        Assert::assertLessThanOrEqual(
+            count($invoiceProductTaxDetails),
+            count($invoiceProductData),
+            sprintf(
+                'Invalid number of product tax details, expected at least %d instead of %d',
+                count($invoiceProductData),
+                count($invoiceProductTaxDetails)
+            )
+        );
+
+        foreach ($invoiceProductData as $invoiceProductIndex => $invoiceProductDetails) {
+            $productTaxDetails = $invoiceProductTaxDetails[$invoiceProductIndex];
+            foreach ($invoiceProductDetails as $taxField => $taxValue) {
+                Assert::assertEquals(
+                    (float) $taxValue,
+                    (float) $productTaxDetails[$taxField],
+                    sprintf(
+                        'Invalid order tax field %s, expected %s instead of %s',
+                        $taxField,
+                        $taxValue,
+                        (float) $productTaxDetails[$taxField]
+                    )
+                );
+            }
+        }
+    }
+
+
+    /**
      * @Then order :orderReference should have :expectedCount cart rule(s)
      *
      * @param string$orderReference
