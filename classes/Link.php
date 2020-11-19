@@ -394,7 +394,7 @@ class LinkCore
     public function getCategoryObject($category, $idLang)
     {
         if (!is_object($category)) {
-            if (is_array($category) && isset($category['id_category'])) {
+            if (isset($category['id_category'])) {
                 $category = new Category($category['id_category'], $idLang);
             } elseif ((int) $category) {
                 $category = new Category((int) $category, $idLang);
@@ -438,11 +438,9 @@ class LinkCore
         $params = [];
         if (Validate::isLoadedObject($category)) {
             $params['id'] = $category->id;
-        } elseif (is_array($category) && isset($category['id_category'])) {
+        } elseif (isset($category['id_category'])) {
             $params['id'] = $category['id_category'];
-        } elseif (is_int($category)) {
-            $params['id'] = $category;
-        } elseif (ctype_digit($category)) {
+        } elseif (is_int($category) or ctype_digit($category)) {
             $params['id'] = (int) $category;
         } else {
             throw new \InvalidArgumentException('Invalid category parameter');
