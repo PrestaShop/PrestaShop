@@ -361,8 +361,6 @@ class CommonController extends FrameworkBundleAdminController
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
 
