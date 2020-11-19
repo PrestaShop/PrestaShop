@@ -37,15 +37,15 @@ use Language;
 class StringToLocalizedArrayTransformContext implements Context
 {
     /**
-     * @Transform /((\"[a-z]{2})-([A-Z]{2}:.+?\"))/
+     * @Transform /((\{[a-z]{2})-([A-Z]{2}:.*?\}))/
      *
-     * @param string $string expected string e.g. "en-US:test;fr-FR:test2"
+     * @param string $string expected string e.g. {en-US:test;fr-FR:test2}
      *
      * @return array<int, string> [langId => value]
      */
     public function transformStringToLocalizedArray(string $string): array
     {
-        $string = str_replace(['"'], '', $string);
+        $string = str_replace(['{', '}'], '', $string);
         $arrayValues = array_map('trim', explode(';', $string));
         $localizedArray = [];
         foreach ($arrayValues as $arrayValue) {
