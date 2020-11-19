@@ -392,10 +392,6 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
 
-        if ($order->total_products <= 0) {
-            return true;
-        }
-
         $shipping_tax_amount = 0;
 
         foreach ($order->getCartRules() as $cart_rule) {
@@ -406,7 +402,8 @@ class OrderDetailCore extends ObjectModel
             }
         }
 
-        $ratio = $this->unit_price_tax_excl / $order->total_products;
+        $ratio = ($order->total_products > 0) ? ($this->unit_price_tax_excl / $order->total_products) : 1;
+
         $order_reduction_amount = ($order->total_discounts_tax_excl - $shipping_tax_amount) * $ratio;
         $discounted_price_tax_excl = $this->unit_price_tax_excl - $order_reduction_amount;
 
