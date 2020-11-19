@@ -32,6 +32,8 @@ use Db;
 use Order;
 use OrderCartRule;
 use OrderDetail;
+use PrestaShop\PrestaShop\Core\Cart\Comparator\CartProductsComparator;
+use PrestaShop\PrestaShop\Core\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
@@ -102,7 +104,13 @@ class OrderProductRemover
      */
     private function updateCart(Cart $cart, OrderDetail $orderDetail): array
     {
-        $oldProducts = $cart->getProducts(true);
+        $cartComparator = new CartProductsComparator($cart);
+        $cartComparator->addKnownUpdate(new CartProductUpdate(
+            $orderDetail->product_id,
+            $orderDetail->product_attribute_id,
+            -$orderDetail->product_quantity
+        ));
+
         $cart->updateQty(
             $orderDetail->product_quantity,
             $orderDetail->product_id,
@@ -110,60 +118,23 @@ class OrderProductRemover
             false,
             'down'
         );
-        $newProducts = $cart->getProducts(true);
 
-        return $this->getUpdatedProducts($orderDetail, $newProducts, $oldProducts);
+        return $this->formatUpdatedProducts($cartComparator->getUpdatedProducts());
     }
 
     /**
-     * Compares the cart products before and after the update to detect which one have had their
-     * quantity changed due to another product removal (to detect changes related to a CartRule)
-     *
-     * @param OrderDetail $orderDetail
-     * @param array $newProducts
-     * @param array $oldProducts
+     * @param CartProductUpdate[] $cartProductUpdates
      *
      * @return array
      */
-    private function getUpdatedProducts(OrderDetail $orderDetail, array $newProducts, array $oldProducts): array
+    private function formatUpdatedProducts(array $cartProductUpdates): array
     {
-        $updatedProducts = [];
-        foreach ($oldProducts as $oldProduct) {
-            // The current OrderDetail has already been updated
-            $productMatch = $oldProduct['id_product'] == $orderDetail->product_id;
-            $combinationMatch = $oldProduct['id_product_attribute'] == $orderDetail->product_attribute_id;
-            if ($productMatch && $combinationMatch) {
-                continue;
-            }
-
-            // Then try and find the product in new products
-            $newProduct = array_reduce($newProducts, function ($carry, $item) use ($oldProduct) {
-                if (null !== $carry) {
-                    return $carry;
-                }
-
-                $productMatch = $item['id_product'] == $oldProduct['id_product'];
-                $combinationMatch = $item['id_product_attribute'] == $oldProduct['id_product_attribute'];
-
-                return $productMatch && $combinationMatch ? $item : null;
-            });
-
-            if (null === $newProduct) {
-                $deltaQuantity = -(int) $oldProduct['cart_quantity'];
-            } else {
-                $deltaQuantity = (int) $newProduct['cart_quantity'] - (int) $oldProduct['cart_quantity'];
-            }
-
-            if ($deltaQuantity) {
-                $updatedProducts[] = [
-                    'id_product' => (int) $oldProduct['id_product'],
-                    'id_product_attribute' => (int) $oldProduct['id_product_attribute'],
-                    'delta_quantity' => $deltaQuantity,
-                ];
-            }
+        $formattedUpdates = [];
+        foreach ($cartProductUpdates as $cartProductUpdate) {
+            $formattedUpdates[] = $cartProductUpdate->toArray();
         }
 
-        return $updatedProducts;
+        return $formattedUpdates;
     }
 
     /**
