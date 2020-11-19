@@ -8,19 +8,19 @@ Feature: Update product related products from Back Office (BO)
 
   Scenario: I set related products
     Given I add product "product1" with following information:
-      | name       | en-US:book of law |
+      | name       | {"en-US":"book of law"} |
       | is_virtual | false             |
     And I add product "product2" with following information:
-      | name       | en-US:book of love |
+      | name       | {"en-US":"book of love"} |
       | is_virtual | false              |
     And I add product "product3" with following information:
-      | name       | en-US:lovely books package |
+      | name       | {"en-US":"lovely books package"} |
       | is_virtual | false                      |
     And I update pack "product3" with following product quantities:
       | product  | quantity |
       | product2 | 5        |
     And I add product "product4" with following information:
-      | name       | en-US:Reading glasses |
+      | name       | {"en-US":"Reading glasses"} |
       | is_virtual | false                 |
     And product "product4" has following combinations:
       | reference   | quantity | attributes  |
