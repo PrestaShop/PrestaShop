@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
 use Cart;
@@ -100,14 +102,14 @@ class OrderProductRemover
      * @param Cart $cart
      * @param OrderDetail $orderDetail
      *
-     * @return array
+     * @return CartProductUpdate[]
      */
     private function updateCart(Cart $cart, OrderDetail $orderDetail): array
     {
         $cartComparator = new CartProductsComparator($cart);
         $cartComparator->addKnownUpdate(new CartProductUpdate(
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
+            (int) $orderDetail->product_id,
+            (int) $orderDetail->product_attribute_id,
             -$orderDetail->product_quantity
         ));
 
@@ -119,22 +121,7 @@ class OrderProductRemover
             'down'
         );
 
-        return $this->formatUpdatedProducts($cartComparator->getUpdatedProducts());
-    }
-
-    /**
-     * @param CartProductUpdate[] $cartProductUpdates
-     *
-     * @return array
-     */
-    private function formatUpdatedProducts(array $cartProductUpdates): array
-    {
-        $formattedUpdates = [];
-        foreach ($cartProductUpdates as $cartProductUpdate) {
-            $formattedUpdates[] = $cartProductUpdate->toArray();
-        }
-
-        return $formattedUpdates;
+        return $cartComparator->getUpdatedProducts();
     }
 
     /**
