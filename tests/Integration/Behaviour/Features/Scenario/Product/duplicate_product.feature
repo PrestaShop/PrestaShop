@@ -105,9 +105,18 @@ Feature: Duplicate product from Back Office (BO).
     When I duplicate product product1 to a copy_of_product1
     And product "copy_of_product1" should be disabled
     And product "copy_of_product1" type should be standard
-    And product "copy_of_product1" localized "name" should be "en-US:copy of smart sunglasses; fr-FR:copy of lunettes de soleil"
-    And product "copy_of_product1" localized "description" should be "en-US:nice sunglasses; fr-FR:belles lunettes"
-    And product "copy_of_product1" localized "description_short" should be "en-US:Simple & nice sunglasses; fr-FR:lunettes simples et belles"
+    And product "copy_of_product1" localized "name" should be:
+      | locale | value                      |
+      | en-US  | copy of smart sunglasses   |
+      | fr-FR  | copy of lunettes de soleil |
+    And product "copy_of_product1" localized "description" should be:
+      | locale | value           |
+      | en-US  | nice sunglasses |
+      | fr-FR  | belles lunettes |
+    And product "copy_of_product1" localized "description_short" should be:
+      | locale | value                      |
+      | en-US  | Simple & nice sunglasses   |
+      | fr-FR  | lunettes simples et belles |
     And product copy_of_product1 should be assigned to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
@@ -123,7 +132,10 @@ Feature: Duplicate product from Back Office (BO).
       | mpn                 | mpn1              |
       | reference           | ref1              |
     And manufacturer "studioDesign" should be assigned to product copy_of_product1
-    And product "copy_of_product1" localized "tags" should be "en-US:smart,glasses,sunglasses,men ;fr-FR:lunettes,bien,soleil"
+    And product "copy_of_product1" localized "tags" should be:
+      | locale | value                        |
+      | en-US  | smart,glasses,sunglasses,men |
+      | fr-FR  | lunettes,bien,soleil         |
     And product copy_of_product1 should have following suppliers:
       | product supplier reference     | currency | price tax excluded |
       | my first supplier for product1 | USD      | 10                 |
@@ -137,9 +149,17 @@ Feature: Duplicate product from Back Office (BO).
       | unit_price       | 500             |
       | unity            | bag of ten      |
       | unit_price_ratio | 0.2             |
-    And product "copy_of_product1" localized "meta_title" should be "en-US:SUNGLASSES meta title"
-    And product "copy_of_product1" localized "meta_description" should be "en-US:Its so smart, almost magical ;fr-FR:lel joke"
-    And product "copy_of_product1" localized "link_rewrite" should be "en-US:smart-sunglasses ;fr-FR:lunettes-de-soleil"
+    And product "copy_of_product1" localized "meta_title" should be:
+      | locale | value                 |
+      | en-US  | SUNGLASSES meta title |
+    And product "copy_of_product1" localized "meta_description" should be:
+      | locale | value                        |
+      | en-US  | Its so smart, almost magical |
+      | fr-FR  | lel joke                     |
+    And product "copy_of_product1" localized "link_rewrite" should be:
+      | locale | value              |
+      | en-US  | smart-sunglasses   |
+      | fr-FR  | lunettes-de-soleil |
     And product copy_of_product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
