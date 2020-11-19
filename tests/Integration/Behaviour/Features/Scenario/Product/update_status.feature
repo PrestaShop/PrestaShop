@@ -7,7 +7,7 @@ Feature: Update product status from BO (Back Office)
 
   Scenario: I update standard product status
     Given I add product "product1" with following information:
-      | name       | en-US:Values list poster nr. 1 (paper) |
+      | name       | {"en-US":"Values list poster nr. 1 (paper)"} |
       | is_virtual | false                                  |
     And product product1 type should be standard
     And product "product1" should be disabled
@@ -18,7 +18,7 @@ Feature: Update product status from BO (Back Office)
 
   Scenario: I update virtual product status
     And I add product "product2" with following information:
-      | name       | en-US:Values list poster nr. 2 (virtual) |
+      | name       | {"en-US":"Values list poster nr. 2 (virtual)"} |
       | is_virtual | true                                     |
     And product product2 type should be virtual
     And product "product2" should be disabled
@@ -29,7 +29,7 @@ Feature: Update product status from BO (Back Office)
 
   Scenario: I update combination product status
     And I add product "product3" with following information:
-      | name       | en-US:T-Shirt with listed values |
+      | name       | {"en-US":"T-Shirt with listed values"} |
       | is_virtual | false                            |
     And product "product3" has following combinations:
       | reference | quantity | attributes         |
