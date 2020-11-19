@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
-use Tests\Integration\Behaviour\Features\Transform\StringToLocalizedArrayTransformContext;
+use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -72,10 +72,12 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" localized "(.+)" should be "(.*)"$/
-     * @Given /^product "(.+)" localized "(.+)" is "(.*)"$/
+     * @Then /^product "(.+)" localized "(.+)" should be:$/
+     * @Given /^product "(.+)" localized "(.+)" is:$/
      *
-     * localizedValues transformation handled by @see StringToLocalizedArrayTransformContext
+     * localizedValues transformation handled by
+     *
+     * @see LocalizedArrayTransformContext
      *
      * @param string $productReference
      * @param string $fieldName
