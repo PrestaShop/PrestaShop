@@ -983,4 +983,4 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 0.00 |
       | total_shipping_tax_incl  | 0.00 |
     And the available stock for product "Test Product Gifted" should be 100
-    Then order "bo_order1" has status "Canceled"
+    Then order "bo_order1" has status "Awaiting bank wire payment"
