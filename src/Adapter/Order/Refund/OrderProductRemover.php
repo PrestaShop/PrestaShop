@@ -28,12 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
 use Cart;
 use CartRule;
-use Configuration;
 use Db;
 use Order;
 use OrderCartRule;
 use OrderDetail;
-use OrderHistory;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
@@ -182,21 +180,6 @@ class OrderProductRemover
     ) {
         if (!$orderDetail->delete()) {
             throw new DeleteProductFromOrderException('Could not delete order detail');
-        }
-        if (count($order->getProductsDetail()) == 0) {
-            $history = new OrderHistory();
-            $history->id_order = (int) $order->id;
-            $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $order);
-            if (!$history->addWithemail()) {
-                // email failure must not block order update process
-                $this->logger->warning(
-                    $this->translator->trans(
-                        'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.',
-                        [],
-                        'Admin.Orderscustomers.Notification'
-                    )
-                );
-            }
         }
 
         $order->update();
