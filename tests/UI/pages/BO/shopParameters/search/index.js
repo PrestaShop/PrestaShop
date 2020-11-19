@@ -49,6 +49,13 @@ class Search extends BOBasePage {
     this.tableColumnAliases = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnSearch = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_alias';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
   /*
@@ -174,7 +181,6 @@ class Search extends BOBasePage {
     return this.getTextContent(page, columnSelector);
   }
 
-
   /**
    * Delete alias from row
    * @param page
@@ -193,6 +199,39 @@ class Search extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Delete by bulk action
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteAliases(page) {
+    this.dialogListener(page, true);
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+    // Click on delete
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
