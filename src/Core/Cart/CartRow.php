@@ -482,10 +482,15 @@ class CartRow
         $quantity = (int) $rowData['cart_quantity'];
         $taxIncluded = $this->finalTotalPrice->getTaxIncluded();
         $taxExcluded = $this->finalTotalPrice->getTaxExcluded();
-        $this->finalUnitPrice = new AmountImmutable(
-            $taxIncluded / $quantity,
-            $taxExcluded / $quantity
-        );
+        // Avoid division by zero
+        if (0 === $quantity) {
+            $this->finalUnitPrice = new AmountImmutable(0, 0);
+        } else {
+            $this->finalUnitPrice = new AmountImmutable(
+                $taxIncluded / $quantity,
+                $taxExcluded / $quantity
+            );
+        }
     }
 
     /**
