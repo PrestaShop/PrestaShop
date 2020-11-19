@@ -188,11 +188,8 @@ class LogoUploader
     private function getLogoName($logoPrefix, $fileExtension)
     {
         $shopId = $this->shop->id;
-        $shopName = $this->shop->name;
 
-        $logoName = Tools::link_rewrite($shopName)
-            . '-'
-            . $logoPrefix
+        $logoName = $logoPrefix
             . '-'
             . (int) Configuration::get('PS_IMG_UPDATE_TIME')
             . (int) $shopId . $fileExtension;
@@ -201,9 +198,7 @@ class LogoUploader
             || $shopId == 0
             || Shop::isFeatureActive() == false
         ) {
-            $logoName = Tools::link_rewrite($shopName)
-                . '-'
-                . $logoPrefix . '-' . (int) Configuration::get('PS_IMG_UPDATE_TIME') . $fileExtension;
+            $logoName = $logoPrefix . '-' . (int) Configuration::get('PS_IMG_UPDATE_TIME') . $fileExtension;
         }
 
         return $logoName;
