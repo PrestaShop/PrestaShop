@@ -24,7 +24,9 @@ Feature: Update product options from Back Office (BO)
       | ean13                |                    |
       | mpn                  |                    |
       | reference            |                    |
-    And product "product1" localized "tags" should be "en-US:"
+    And product "product1" localized "tags" should be:
+      | locale | value |
+      | en-US  |       |
     And product product1 should have no manufacturer assigned
     When I update product "product1" options with following information:
       | visibility           | catalog            |
