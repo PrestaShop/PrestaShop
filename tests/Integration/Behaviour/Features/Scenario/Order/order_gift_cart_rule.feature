@@ -930,3 +930,57 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 0 product "Test Product Gifted"
     And the available stock for product "Test Product Gifted" should be 100
     And the available stock for product "Test Product With Auto Gift" should be 99
+
+  Scenario: I have a cart rule that automatically adds a gift product, I add this product to cart and then I decrease it
+    And there is a cart rule named "AutoGiftCartRule" that applies an amount discount of 0.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "AutoGiftCartRule" has no discount code
+    And cart rule "AutoGiftCartRule" offers a gift product "Test Product Gifted"
+    And I delete product "Mug The best is yet to come" from cart "dummy_cart"
+    And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 30.00 |
+      | total_products_wt        | 31.80 |
+      | total_discounts_tax_excl | 15.00 |
+      | total_discounts_tax_incl | 15.90 |
+      | total_paid_tax_excl      | 22.00 |
+      | total_paid_tax_incl      | 23.32 |
+      | total_paid               | 23.32 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+    And product "Test Product Gifted" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 31.80 |
+      | total_price_tax_excl        | 30.00 |
+    And order "bo_order1" should have cart rule "AutoGiftCartRule" with amount "$15.00"
+    And the available stock for product "Test Product Gifted" should be 98
+    When I edit product "Test Product Gifted" to order "bo_order1" with following products details:
+      | amount        | 1     |
+      | price         | 15.00 |
+    Then order "bo_order1" should have 0 products in total
+    Then order "bo_order1" should contain 0 product "Test Product Gifted"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 0.00 |
+      | total_products_wt        | 0.00 |
+      | total_discounts_tax_excl | 0.00 |
+      | total_discounts_tax_incl | 0.00 |
+      | total_paid_tax_excl      | 0.00 |
+      | total_paid_tax_incl      | 0.00 |
+      | total_paid               | 0.00 |
+      | total_paid_real          | 0.00 |
+      | total_shipping_tax_excl  | 0.00 |
+      | total_shipping_tax_incl  | 0.00 |
+    And the available stock for product "Test Product Gifted" should be 100
+    Then order "bo_order1" has status "Canceled"
