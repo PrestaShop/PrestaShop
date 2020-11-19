@@ -17,7 +17,7 @@ const SearchFaker = require('@data/faker/search');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_search_search_CRUDSearch';
+const baseContext = 'functional_BO_shopParameters_search_search_bulkActions';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -96,9 +96,9 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
   });
 
   // 2- Enable/Disable aliases by bulk actions
-  describe('Enable/Disable the created aliases by bulk actions', async () => {
+  describe('Enable/Disable the status by bulk actions', async () => {
     it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToEnableDisable', baseContext);
 
       await searchPage.resetFilter(page);
 
@@ -115,7 +115,7 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
 
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Aliases`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Status`, baseContext);
 
         const textResult = await searchPage.enableDisableByBulkActions(page, test.args.value);
         await expect(textResult).to.contains(searchPage.successfulUpdateStatusMessage);
@@ -144,7 +144,7 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
     });
 
     it('should delete aliases', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteAlias', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAliases', baseContext);
 
       const textResult = await searchPage.bulkDeleteAliases(page);
       await expect(textResult).to.contains(searchPage.successfulMultiDeleteMessage);
