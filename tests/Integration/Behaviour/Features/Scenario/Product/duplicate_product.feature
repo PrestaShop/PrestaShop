@@ -19,14 +19,14 @@ Feature: Duplicate product from Back Office (BO).
     And carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
     Given I add product "product1" with following information:
-      | name       | en-US:smart sunglasses ;fr-FR:lunettes de soleil |
+      | name       | {"en-US":"smart sunglasses","fr-FR":"lunettes de soleil"} |
       | is_virtual | false                                            |
     And I add product "product2" with following information:
-      | name       | en-US:Reading glasses ;fr-FR:lunettes |
+      | name       | {"en-US":"Reading glasses","fr-FR":"lunettes"} |
       | is_virtual | false                                 |
     And I update product "product1" basic information with following values:
-      | description       | en-US:nice sunglasses ;fr-FR:belles lunettes                    |
-      | description_short | en-US:Simple & nice sunglasses;fr-FR:lunettes simples et belles |
+      | description       | {"en-US":"nice sunglasses","fr-FR":"belles lunettes"}                    |
+      | description_short | {"en-US":"Simple & nice sunglasses","fr-FR":"lunettes simples et belles"} |
     And I assign product product1 to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
@@ -43,7 +43,7 @@ Feature: Duplicate product from Back Office (BO).
       | reference           | ref1              |
       | manufacturer        | studioDesign      |
     And I update product "product1" tags with following values:
-      | tags | en-US:smart,glasses,sunglasses,men ;fr-FR:lunettes,bien,soleil |
+      | tags | {"en-US":"smart,glasses,sunglasses,men","fr-FR":"lunettes,bien,soleil"} |
     And I update product "product1" prices with following information:
       | price           | 100.00          |
       | ecotax          | 0               |
@@ -53,9 +53,9 @@ Feature: Duplicate product from Back Office (BO).
       | unit_price      | 500             |
       | unity           | bag of ten      |
     And I update product product1 SEO information with following values:
-      | meta_title       | en-US:SUNGLASSES meta title                        |
-      | meta_description | en-US:Its so smart, almost magical ;fr-FR:lel joke |
-      | link_rewrite     | en-US:smart-sunglasses ;fr-FR:lunettes-de-soleil   |
+      | meta_title       | {"en-US":"SUNGLASSES meta title"}                        |
+      | meta_description | {"en-US":"Its so smart, almost magical","fr-FR":"lel joke"} |
+      | link_rewrite     | {"en-US":"smart-sunglasses","fr-FR":"lunettes-de-soleil"}   |
       | redirect_type    | 301-product                                        |
       | redirect_target  | product2                                           |
     And I update product product1 shipping information with following values:
@@ -65,8 +65,8 @@ Feature: Duplicate product from Back Office (BO).
       | weight                           | 0.5                                                   |
       | additional_shipping_cost         | 12                                                    |
       | delivery time notes type         | specific                                              |
-      | delivery time in stock notes     | en-US:product in stock ;fr-FR:en stock                |
-      | delivery time out of stock notes | en-US:product out of stock ;fr-FR:En rupture de stock |
+      | delivery time in stock notes     | {"en-US":"product in stock","fr-FR":"en stock"}                |
+      | delivery time out of stock notes | {"en-US":"product out of stock","fr-FR":"En rupture de stock"} |
       | carriers                         | [carrier1,carrier2]                                   |
     And I add new supplier supplier1 with following properties:
       | name             | my supplier 1            |
@@ -74,10 +74,10 @@ Feature: Duplicate product from Back Office (BO).
       | city             | Kaunas                   |
       | country          | Lithuania                |
       | enabled          | true                     |
-      | description      | en-US:just a supplier    |
-      | meta title       | en-US:my supplier nr one |
-      | meta description | en-US:                   |
-      | meta keywords    | en-US:sup,1              |
+      | description      | {"en-US":"just a supplier"}    |
+      | meta title       | {"en-US":"my supplier nr one"} |
+      | meta description | {"en-US":""}                   |
+      | meta keywords    | {"en-US":"sup,1"}              |
       | shops            | [shop1]                  |
     And I set product product1 default supplier to supplier1 and following suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
@@ -86,10 +86,10 @@ Feature: Duplicate product from Back Office (BO).
       | product2 |
     And I update product product1 with following customization fields:
       | reference    | type | name                                                                       | is required |
-      | customField1 | text | en-US:text on top of left lense ;fr-FR:texte en haut de la lentille gauche | true        |
+      | customField1 | text | {"en-US":"text on top of left lense","fr-FR":"texte en haut de la lentille gauche"} | true        |
     And I add new attachment "att1" with following properties:
-      | description | en-US:puffin photo nr1 ;fr-FR:macareux |
-      | name        | en-US:puffin ;fr-FR:macareux           |
+      | description | {"en-US":"puffin photo nr1","fr-FR":"macareux"} |
+      | name        | {"en-US":"puffin","fr-FR":"macareux"}           |
       | file_name   | app_icon.png                           |
     And I associate attachment "att1" with product product1
     And I enable product "product1"
@@ -170,8 +170,8 @@ Feature: Duplicate product from Back Office (BO).
       | weight                           | 0.5                                                   |
       | additional_shipping_cost         | 12                                                    |
       | delivery time notes type         | specific                                              |
-      | delivery time in stock notes     | en-US:product in stock ;fr-FR:en stock                |
-      | delivery time out of stock notes | en-US:product out of stock ;fr-FR:En rupture de stock |
+      | delivery time in stock notes     | {"en-US":"product in stock","fr-FR":"en stock"}                |
+      | delivery time out of stock notes | {"en-US":"product out of stock","fr-FR":"En rupture de stock"} |
       | carriers                         | [carrier1,carrier2]                                   |
     And product copy_of_product1 should have following related products:
       | product2 |
