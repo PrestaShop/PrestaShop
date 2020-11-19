@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Transform;
 
 use Behat\Behat\Context\Context;
-use Tests\Integration\Behaviour\Features\Context\Util\LocalizedArrayParser;
+use Language;
 
 /**
  * Contains methods to transform string array into localized array
@@ -45,9 +45,20 @@ class StringToLocalizedArrayTransformContext implements Context
      */
     public function transformStringToLocalizedArray(string $string): array
     {
-        $parser = new LocalizedArrayParser();
         $string = str_replace(['"'], '', $string);
+        $arrayValues = array_map('trim', explode(';', $string));
+        $localizedArray = [];
+        foreach ($arrayValues as $arrayValue) {
+            $data = explode(':', $arrayValue);
+            $langKey = $data[0];
+            $langValue = $data[1];
+            if (ctype_digit($langKey)) {
+                $localizedArray[$langKey] = $langValue;
+            } else {
+                $localizedArray[(int) Language::getIdByLocale($langKey, true)] = $langValue;
+            }
+        }
 
-        return $parser->parseStringToArray($string);
+        return $localizedArray;
     }
 }

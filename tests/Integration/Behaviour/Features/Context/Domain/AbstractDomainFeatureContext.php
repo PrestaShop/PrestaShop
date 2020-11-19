@@ -39,7 +39,6 @@ use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\LocalizedArrayParser;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
@@ -158,15 +157,26 @@ abstract class AbstractDomainFeatureContext implements Context
      *   1:valueFr;2:valueEn:{langId}:{localeValue}
      * and will be converted into an array indexed by language id
      *
-     * @param string $localizedValuesString
+     * @param string $parsedArray
      *
      * @return array
      */
-    protected function parseLocalizedArray(string $localizedValuesString): array
+    protected function parseLocalizedArray(string $parsedArray): array
     {
-        $parser = new LocalizedArrayParser();
+        $arrayValues = array_map('trim', explode(';', $parsedArray));
+        $localizedArray = [];
+        foreach ($arrayValues as $arrayValue) {
+            $data = explode(':', $arrayValue);
+            $langKey = $data[0];
+            $langValue = $data[1];
+            if (ctype_digit($langKey)) {
+                $localizedArray[$langKey] = $langValue;
+            } else {
+                $localizedArray[Language::getIdByLocale($langKey, true)] = $langValue;
+            }
+        }
 
-        return $parser->parseStringToArray($localizedValuesString);
+        return $localizedArray;
     }
 
     /**
