@@ -4300,9 +4300,9 @@ class ProductCore extends ObjectModel
      *
      * @return array|false
      */
-    public static function getAttributesColorList(array $products, $have_stock = null)
+    public static function getAttributesColorList(array $products, $have_stock = true)
     {
-        if ($have_stock !== null) {
+        if ($have_stock !== true) {
             Tools::displayParameterAsDeprecated('have_stock');
         }
 
