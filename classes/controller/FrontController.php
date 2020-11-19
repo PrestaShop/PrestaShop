@@ -170,6 +170,11 @@ class FrontControllerCore extends Controller
     protected $cccReducer;
 
     /**
+     * @var array Contains the result of getTemplateVarUrls method
+     */
+    protected $urls;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -1469,67 +1474,71 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarUrls()
     {
-        $http = Tools::getCurrentUrlProtocolPrefix();
-        $base_url = $this->context->shop->getBaseURL(true, true);
+        if ($this->urls === null) {
+            $http = Tools::getCurrentUrlProtocolPrefix();
+            $base_url = $this->context->shop->getBaseURL(true, true);
 
-        $urls = [
-            'base_url' => $base_url,
-            'current_url' => $this->context->shop->getBaseURL(true, false) . $_SERVER['REQUEST_URI'],
-            'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
-        ];
+            $urls = [
+                'base_url' => $base_url,
+                'current_url' => $this->context->shop->getBaseURL(true, false) . $_SERVER['REQUEST_URI'],
+                'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
+            ];
 
-        $assign_array = [
-            'img_ps_url' => _PS_IMG_,
-            'img_cat_url' => _THEME_CAT_DIR_,
-            'img_lang_url' => _THEME_LANG_DIR_,
-            'img_prod_url' => _THEME_PROD_DIR_,
-            'img_manu_url' => _THEME_MANU_DIR_,
-            'img_sup_url' => _THEME_SUP_DIR_,
-            'img_ship_url' => _THEME_SHIP_DIR_,
-            'img_store_url' => _THEME_STORE_DIR_,
-            'img_col_url' => _THEME_COL_DIR_,
-            'img_url' => _THEME_IMG_DIR_,
-            'css_url' => _THEME_CSS_DIR_,
-            'js_url' => _THEME_JS_DIR_,
-            'pic_url' => _THEME_PROD_PIC_DIR_,
-        ];
+            $assign_array = [
+                'img_ps_url' => _PS_IMG_,
+                'img_cat_url' => _THEME_CAT_DIR_,
+                'img_lang_url' => _THEME_LANG_DIR_,
+                'img_prod_url' => _THEME_PROD_DIR_,
+                'img_manu_url' => _THEME_MANU_DIR_,
+                'img_sup_url' => _THEME_SUP_DIR_,
+                'img_ship_url' => _THEME_SHIP_DIR_,
+                'img_store_url' => _THEME_STORE_DIR_,
+                'img_col_url' => _THEME_COL_DIR_,
+                'img_url' => _THEME_IMG_DIR_,
+                'css_url' => _THEME_CSS_DIR_,
+                'js_url' => _THEME_JS_DIR_,
+                'pic_url' => _THEME_PROD_PIC_DIR_,
+            ];
 
-        foreach ($assign_array as $assign_key => $assign_value) {
-            if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
-                $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
-            } else {
-                $urls[$assign_key] = $assign_value;
+            foreach ($assign_array as $assign_key => $assign_value) {
+                if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
+                    $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
+                } else {
+                    $urls[$assign_key] = $assign_value;
+                }
             }
+
+            $pages = [];
+            $p = [
+                'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
+                'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
+                'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
+                'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
+                'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier',
+            ];
+            foreach ($p as $page_name) {
+                $index = str_replace('-', '_', $page_name);
+                $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
+            }
+            $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
+            $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
+            $urls['pages'] = $pages;
+
+            $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
+
+            $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
+
+            $urls['actions'] = [
+                'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
+            ];
+
+            $imageRetriever = new ImageRetriever($this->context->link);
+            $urls['no_picture_image'] = $imageRetriever->getNoPictureImage($this->context->language);
+
+            $this->urls = $urls;
         }
 
-        $pages = [];
-        $p = [
-            'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
-            'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
-            'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
-            'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
-            'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier',
-        ];
-        foreach ($p as $page_name) {
-            $index = str_replace('-', '_', $page_name);
-            $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
-        }
-        $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
-        $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
-        $urls['pages'] = $pages;
-
-        $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
-
-        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
-
-        $urls['actions'] = [
-            'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
-        ];
-
-        $imageRetriever = new ImageRetriever($this->context->link);
-        $urls['no_picture_image'] = $imageRetriever->getNoPictureImage($this->context->language);
-
-        return $urls;
+        return $this->urls;
     }
 
     public function getTemplateVarConfiguration()
@@ -1612,6 +1621,9 @@ class FrontControllerCore extends Controller
     {
         $address = $this->context->shop->getAddress();
 
+        $urls = $this->getTemplateVarUrls();
+        $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
+
         $shop = [
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
@@ -1620,9 +1632,9 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => (Configuration::get('PS_LOGO')) ? Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? Configuration::get('PS_FAVICON') : '',
+            'logo' => Configuration::hasKey('PS_LOGO') ? $psImageUrl . Configuration::get('PS_LOGO') : '',
+            'stores_icon' => Configuration::hasKey('PS_STORES_ICON') ? $psImageUrl . Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => Configuration::hasKey('PS_FAVICON') ? $psImageUrl . Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => [
