@@ -8,7 +8,7 @@ Feature: Update product basic information from Back Office (BO)
   Scenario: I update product basic information
     Given I add product "product1" with following information:
       | name       | {"en-US":"funny mug"} |
-      | is_virtual | false           |
+      | is_virtual | false                 |
     And product "product1" type should be standard
     And product "product1" localized "name" should be:
       | locale | value     |
@@ -16,7 +16,7 @@ Feature: Update product basic information from Back Office (BO)
     And product product1 should have no manufacturer assigned
     When I update product "product1" basic information with following values:
       | name              | {"en-US":"photo of funny mug"} |
-      | is_virtual        | true                     |
+      | is_virtual        | true                           |
       | description       | {"en-US":"nice mug"}           |
       | description_short | {"en-US":"Just a nice mug"}    |
     Then product "product1" type should be virtual
