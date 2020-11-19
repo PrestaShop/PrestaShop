@@ -27,8 +27,7 @@
       box-shadow: none;
 
       &.tags-input:not(.search-with-icon) {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
+        @include border-right-radius(0);
       }
     }
 
