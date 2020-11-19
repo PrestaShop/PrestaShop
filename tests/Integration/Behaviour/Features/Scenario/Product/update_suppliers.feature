@@ -14,48 +14,48 @@ Feature: Update product suppliers from Back Office (BO)
 
   Scenario: Update standard product suppliers
     And I add new supplier supplier1 with following properties:
-      | name                 | my supplier 1                   |
-      | address              | Donelaicio st. 1                |
-      | city                 | Kaunas                          |
-      | country              | Lithuania                       |
-      | enabled              | true                            |
-      | description          | en-US:just a supplier           |
-      | meta title           | en-US:my supplier nr one        |
-      | meta description     | en-US:                          |
-      | meta keywords        | en-US:sup,1                     |
-      | shops                | [shop1]                         |
+      | name                    | my supplier 1      |
+      | address                 | Donelaicio st. 1   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | meta title[en-US]       | my supplier nr one |
+      | meta description[en-US] |                    |
+      | meta keywords[en-US]    | sup,1              |
+      | shops                   | [shop1]            |
     And I add new supplier supplier2 with following properties:
-      | name                 | my supplier 2                   |
-      | address              | Donelaicio st. 2                |
-      | city                 | Kaunas                          |
-      | country              | Lithuania                       |
-      | enabled              | true                            |
-      | description          | en-US:just a supplier           |
-      | meta title           | en-US:my supplier nr two        |
-      | meta description     | en-US:                          |
-      | meta keywords        | en-US:sup,2                     |
-      | shops                | [shop1]                         |
+      | name                    | my supplier 2      |
+      | address                 | Donelaicio st. 2   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | meta title[en-US]       | my supplier nr two |
+      | meta description[en-US] |                    |
+      | meta keywords[en-US]    | sup,2              |
+      | shops                   | [shop1]            |
     Given I add product "product1" with following information:
-      | name       | en-US:magic staff                         |
-      | is_virtual | false                                     |
+      | name[en-US] | magic staff |
+      | is_virtual  | false       |
     And product product1 type should be standard
     And product product1 should not have any suppliers assigned
     When I set product product1 default supplier to supplier1 and following suppliers:
-      | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded |
-      | product1supplier1 | supplier1             | my first supplier for product1 | USD           | 10                 |
+      | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
+      | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
     Then product product1 should have following suppliers:
-      | product supplier reference     | currency      | price tax excluded |
-      | my first supplier for product1 | USD           | 10                 |
+      | product supplier reference     | currency | price tax excluded |
+      | my first supplier for product1 | USD      | 10                 |
     And product product1 should have following supplier values:
-      | default supplier           | supplier1                      |
+      | default supplier | supplier1 |
     When I set product product1 default supplier to supplier2 and following suppliers:
-      | reference         | supplier reference    | product supplier reference      | currency      | price tax excluded |
-      | product1supplier1 | supplier1             | my first supplier for product1  | USD           | 10                 |
-      | product1supplier2 | supplier2             | my second supplier for product1 | EUR           | 11                 |
+      | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
+      | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
+      | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
     Then product product1 should have following suppliers:
-      | product supplier reference      | currency      | price tax excluded |
-      | my first supplier for product1  | USD           | 10                 |
-      | my second supplier for product1 | EUR           | 11                 |
+      | product supplier reference      | currency | price tax excluded |
+      | my first supplier for product1  | USD      | 10                 |
+      | my second supplier for product1 | EUR      | 11                 |
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
@@ -63,9 +63,9 @@ Feature: Update product suppliers from Back Office (BO)
   Scenario: Remove product suppliers
     Given product product1 type should be standard
     And product product1 should have following suppliers:
-      | product supplier reference      | currency      | price tax excluded |
-      | my first supplier for product1  | USD           | 10                 |
-      | my second supplier for product1 | EUR           | 11                 |
+      | product supplier reference      | currency | price tax excluded |
+      | my first supplier for product1  | USD      | 10                 |
+      | my second supplier for product1 | EUR      | 11                 |
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
@@ -78,8 +78,8 @@ Feature: Update product suppliers from Back Office (BO)
     Given product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
     When I set product product1 default supplier to supplier2 and following suppliers:
-      | reference           | supplier reference    | product supplier reference      | currency      | price tax excluded |
-      | product1supplier1-1 | supplier1             | my first supplier for product1  | USD           | 10                 |
+      | reference           | supplier reference | product supplier reference     | currency | price tax excluded |
+      | product1supplier1-1 | supplier1          | my first supplier for product1 | USD      | 10                 |
     Then I should get error that supplier is not associated with product
     And product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
@@ -87,8 +87,8 @@ Feature: Update product suppliers from Back Office (BO)
 
   Scenario: Update combination product suppliers
     Given I add product "product2" with following information:
-      | name       | en-US:regular T-shirt        |
-      | is_virtual | false                        |
+      | name[en-US] | regular T-shirt |
+      | is_virtual  | false           |
     And product "product2" has following combinations:
       | reference | quantity | attributes         |
       | whiteM    | 15       | Size:M;Color:White |
@@ -97,11 +97,11 @@ Feature: Update product suppliers from Back Office (BO)
     And product product2 should not have any suppliers assigned
     And product product2 default supplier reference should be empty
     When I set product product2 default supplier to supplier1 and following suppliers:
-      | reference      | supplier reference    | product supplier reference        | currency      | price tax excluded | combination |
-      | product2whiteM | supplier1             | sup white shirt M 1               | USD           | 5                  | whiteM      |
-      | product2whiteL | supplier1             | sup white shirt L 2               | USD           | 3                  | whiteL      |
+      | reference      | supplier reference | product supplier reference | currency | price tax excluded | combination |
+      | product2whiteM | supplier1          | sup white shirt M 1        | USD      | 5                  | whiteM      |
+      | product2whiteL | supplier1          | sup white shirt L 2        | USD      | 3                  | whiteL      |
     Then product product2 should have following suppliers:
-      | product supplier reference        | currency      | price tax excluded | combination |
-      | sup white shirt M 1               | USD           | 5                  | whiteM      |
-      | sup white shirt L 2               | USD           | 3                  | whiteL      |
+      | product supplier reference | currency | price tax excluded | combination |
+      | sup white shirt M 1        | USD      | 5                  | whiteM      |
+      | sup white shirt L 2        | USD      | 3                  | whiteL      |
     Then product product2 default supplier reference should be empty

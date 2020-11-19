@@ -45,14 +45,14 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
      */
     public function addAttachment(string $reference, TableNode $tableNode): void
     {
-        $data = $tableNode->getRowsHash();
+        $data = $this->localizeByRows($tableNode);
         $fileName = $data['file_name'];
 
         $destination = $this->uploadDummyFile($fileName);
 
         $attachment = new Attachment();
-        $attachment->description = $this->parseLocalizedArray($data['description']);
-        $attachment->name = $this->parseLocalizedArray($data['name']);
+        $attachment->description = $data['description'];
+        $attachment->name = $data['name'];
         $attachment->file_name = $fileName;
         $attachment->mime = mime_content_type($destination);
         $attachment->file = pathinfo($destination, PATHINFO_BASENAME);
@@ -71,10 +71,10 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     public function assertAttachmentProperties(string $reference, TableNode $tableNode): void
     {
         $attachment = $this->getAttachment($reference);
-        $data = $tableNode->getRowsHash();
+        $data = $this->localizeByRows($tableNode);
 
-        Assert::assertEquals($this->parseLocalizedArray($data['description']), $attachment->description);
-        Assert::assertEquals($this->parseLocalizedArray($data['name']), $attachment->name);
+        Assert::assertEquals($data['description'], $attachment->description);
+        Assert::assertEquals($data['name'], $attachment->name);
         Assert::assertEquals($data['file_name'], $attachment->file_name);
         Assert::assertEquals($data['mime'], $attachment->mime);
         Assert::assertEquals($data['size'], $attachment->file_size);

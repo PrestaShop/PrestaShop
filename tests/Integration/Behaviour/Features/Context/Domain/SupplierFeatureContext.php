@@ -48,7 +48,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      */
     public function createSupplier(string $supplierReference, TableNode $table)
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         try {
             /** @var SupplierId $supplierId */
@@ -58,10 +58,10 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
                 $data['city'],
                 $this->getCountryIdByName($data['country']),
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
-                $this->parseLocalizedArray($data['description']),
-                $this->parseLocalizedArray($data['meta title']),
-                $this->parseLocalizedArray($data['meta description']),
-                $this->parseLocalizedArray($data['meta keywords']),
+                $data['description'],
+                $data['meta title'],
+                $data['meta description'],
+                $data['meta keywords'],
                 $this->getShopIdsByReferences($data['shops']),
                 $data['address2'] ?? null,
                 $data['post code'] ?? null,

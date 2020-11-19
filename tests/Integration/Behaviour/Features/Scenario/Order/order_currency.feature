@@ -19,8 +19,8 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | iso_code         | EUR                              |
       | exchange_rate    | 10.00                            |
       | name             | My Euros                         |
-      | symbols          | en-US:€;fr-FR:€                  |
-      | patterns         | en-US:¤#,##0.00;fr-FR:#,##0.00 ¤ |
+      | symbols          | {"en-US":"€","fr-FR":"€"}                  |
+      | patterns         | {"en-US":"¤#,##0.00","fr-FR":"#,##0.00 ¤"} |
       | is_enabled       | 1                                |
       | is_unofficial    | 0                                |
       | shop_association | shop1                            |

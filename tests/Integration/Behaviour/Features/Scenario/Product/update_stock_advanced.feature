@@ -16,8 +16,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I check default stock values
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | use_advanced_stock_management | false      |
       | depends_on_stock              | false      |
@@ -32,8 +32,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I check default stock values for virtual product
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | true                |
+      | name[en-US] | Presta camera |
+      | is_virtual  | true          |
     And product "product1" should have following stock information:
       | use_advanced_stock_management | false      |
       | depends_on_stock              | false      |
@@ -48,55 +48,55 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product stock management
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
-      | use_advanced_stock_management | false       |
+      | use_advanced_stock_management | false |
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | true        |
+      | use_advanced_stock_management | true |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | true        |
+      | use_advanced_stock_management | true |
 
   Scenario: I update product depends on stock (also check automatic update when disabling advanced stock on product)
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
-      | use_advanced_stock_management | false       |
-      | depends_on_stock              | false       |
+      | use_advanced_stock_management | false |
+      | depends_on_stock              | false |
     When I update product "product1" stock with following information:
-      | depends_on_stock | true        |
+      | depends_on_stock | true |
     And I should get error that stock management is disabled on product
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | false       |
-      | depends_on_stock              | true        |
+      | use_advanced_stock_management | false |
+      | depends_on_stock              | true  |
     And I should get error that stock management is disabled on product
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | true        |
-      | depends_on_stock              | true        |
+      | use_advanced_stock_management | true |
+      | depends_on_stock              | true |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | true        |
-      | depends_on_stock              | true        |
+      | use_advanced_stock_management | true |
+      | depends_on_stock              | true |
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | false       |
+      | use_advanced_stock_management | false |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | false       |
-      | depends_on_stock              | false       |
+      | use_advanced_stock_management | false |
+      | depends_on_stock              | false |
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | true        |
-      | depends_on_stock              | false       |
+      | use_advanced_stock_management | true  |
+      | depends_on_stock              | false |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | true        |
-      | depends_on_stock              | false       |
+      | use_advanced_stock_management | true  |
+      | depends_on_stock              | false |
 
   Scenario: I update pack stock type
     Given I add product "productPack1" with following information:
-      | name       | en-US: weird sunglasses box |
-      | is_virtual | false                       |
+      | name[en-US] | weird sunglasses box |
+      | is_virtual  | false                |
     And product "productPack1" type should be standard
     And I add product "product2" with following information:
-      | name       | en-US: shady sunglasses     |
-      | is_virtual | false                       |
+      | name[en-US] | weird sunglasses box |
+      | is_virtual  | false                |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -127,16 +127,16 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product pack stock type which depends on stock
     Given I add product "productPack1" with following information:
-      | name       | en-US: weird sunglasses box |
-      | is_virtual | false                       |
+      | name[en-US] | weird sunglasses box |
+      | is_virtual  | false                |
     And product "productPack1" type should be standard
     And I add product "product2" with following information:
-      | name       | en-US: shady sunglasses     |
-      | is_virtual | false                       |
+      | name[en-US] | shady sunglasses |
+      | is_virtual  | false            |
     And product "product2" type should be standard
     And I add product "product3" with following information:
-      | name       | en-US: unicorn boc case     |
-      | is_virtual | false                       |
+      | name[en-US] | unicorn boc case |
+      | is_virtual  | false            |
     And product "product3" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -146,63 +146,63 @@ Feature: Update product stock from Back Office (BO)
     # Can not depends on stock since default config depends on product
     Given shop configuration for "PS_PACK_STOCK_TYPE" is set to 1
     When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | true        |
-      | depends_on_stock              | true        |
+      | use_advanced_stock_management | true |
+      | depends_on_stock              | true |
     And I should get error that pack stock type is incompatible
     # Can not depends on stock since default config depends on both
     Given shop configuration for "PS_PACK_STOCK_TYPE" is set to 2
     When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | true        |
-      | depends_on_stock              | true        |
+      | use_advanced_stock_management | true |
+      | depends_on_stock              | true |
     And I should get error that pack stock type is incompatible
     # Let's ignore default configuration If it depends on pack stock only it is compatible with depends on stock
     When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | true                 |
-      | depends_on_stock              | true                 |
+      | use_advanced_stock_management | true      |
+      | depends_on_stock              | true      |
       | pack_stock_type               | pack_only |
     Then product "productPack1" should have following stock information:
-      | use_advanced_stock_management | true                 |
-      | depends_on_stock              | true                 |
+      | use_advanced_stock_management | true      |
+      | depends_on_stock              | true      |
       | pack_stock_type               | pack_only |
     # If pack depends on product or both it is still not possible
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | products_only |
+      | pack_stock_type | products_only |
     And I should get error that pack stock type is incompatible
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | both |
+      | pack_stock_type | both |
     And I should get error that pack stock type is incompatible
     # Unless all the pack's products have advanced stock management
     When I update product "product2" stock with following information:
-      | use_advanced_stock_management | true                 |
+      | use_advanced_stock_management | true |
     Then product "product2" should have following stock information:
-      | use_advanced_stock_management | true                 |
+      | use_advanced_stock_management | true |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | products_only |
+      | pack_stock_type | products_only |
     And I should get error that pack stock type is incompatible
     # I said ALL of them
     When I update product "product3" stock with following information:
-      | use_advanced_stock_management | true                 |
+      | use_advanced_stock_management | true |
     Then product "product3" should have following stock information:
-      | use_advanced_stock_management | true                 |
+      | use_advanced_stock_management | true |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | products_only |
+      | pack_stock_type | products_only |
     Then product "productPack1" should have following stock information:
       | pack_stock_type | products_only |
     # Of course stock type on both works as well
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | both |
+      | pack_stock_type | both |
     Then product "productPack1" should have following stock information:
       | pack_stock_type | both |
     # We can even switch back to default configuration
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | default |
+      | pack_stock_type | default |
     Then product "productPack1" should have following stock information:
       | pack_stock_type | default |
 
   Scenario: I update product out of stock
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | out_of_stock_type | default |
     When I update product "product1" stock with following information:
@@ -223,15 +223,15 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: Virtual product is available out of stock by default
     Given I add product "product1" with following information:
-      | name       | en-US:eBook |
-      | is_virtual | true        |
+      | name[en-US] | eBook |
+      | is_virtual  | true  |
     Then product "product1" should have following stock information:
       | out_of_stock_type | available |
 
   Scenario: I update product quantity
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | quantity | 0 |
     When I update product "product1" stock with following information:
@@ -247,10 +247,10 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product quantity specifying if movement must be added or not
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
-      | quantity     | 0 |
+      | quantity | 0 |
     When I update product "product1" stock with following information:
       | quantity     | 51    |
       | add_movement | false |
@@ -265,56 +265,88 @@ Feature: Update product stock from Back Office (BO)
   Scenario: I update product simple stock fields
     Given language "french" with locale "fr-FR" exists
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
-      | minimal_quantity       | 1          |
-      | location               |            |
-      | low_stock_threshold    | 0          |
-      | low_stock_alert        | false      |
-      | available_date         | 0000-00-00 |
-    And product "product1" localized "available_now_labels" should be "en-US:;fr-FR:"
-    And product "product1" localized "available_later_labels" should be "en-US:;fr-FR:"
+      | minimal_quantity    | 1          |
+      | location            |            |
+      | low_stock_threshold | 0          |
+      | low_stock_alert     | false      |
+      | available_date      | 0000-00-00 |
+    And product "product1" localized "available_now_labels" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
     When I update product "product1" stock with following information:
-      | minimal_quantity       | 12                 |
-      | location               | dtc                |
-      | low_stock_threshold    | 42                 |
-      | low_stock_alert        | true               |
-      | available_now_labels   | en-US:get it now   |
-      | available_later_labels | en-US:too late bro |
-      | available_date         | 1969-07-16         |
+      | minimal_quantity              | 12           |
+      | location                      | dtc          |
+      | low_stock_threshold           | 42           |
+      | low_stock_alert               | true         |
+      | available_now_labels[en-US]   | get it now   |
+      | available_later_labels[en-US] | too late bro |
+      | available_date                | 1969-07-16   |
     And product "product1" should have following stock information:
-      | minimal_quantity       | 12                 |
-      | location               | dtc                |
-      | low_stock_threshold    | 42                 |
-      | low_stock_alert        | true               |
-      | available_date         | 1969-07-16         |
-    And product "product1" localized "available_now_labels" should be "en-US:get it now;fr-FR:"
-    And product "product1" localized "available_later_labels" should be "en-US:too late bro;fr-FR:"
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
     When I update product "product1" stock with following information:
-      | available_now_labels   | en-US:get it now;fr-FR:   |
-      | available_later_labels | en-US:too late bro;fr-FR: |
-    Then product "product1" localized "available_now_labels" should be "en-US:get it now;fr-FR:"
-    And product "product1" localized "available_later_labels" should be "en-US:too late bro;fr-FR:"
+      | available_now_labels[en-US]   | get it now   |
+      | available_now_labels[fr-FR]   |              |
+      | available_later_labels[en-US] | too late bro |
+      | available_later_labels[fr-FR] |              |
+    Then product "product1" localized "available_now_labels" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
     When I update product "product1" stock with following information:
-      | available_now_labels   | en-US:get it now;fr-FR:commande maintenant |
-      | available_later_labels | en-US:too late bro;fr-FR:trop tard mec     |
-    Then product "product1" localized "available_now_labels" should be "en-US:get it now;fr-FR:commande maintenant"
-    And product "product1" localized "available_later_labels" should be "en-US:too late bro;fr-FR:trop tard mec"
+      | available_now_labels[en-US]   | get it now          |
+      | available_now_labels[fr-FR]   | commande maintenant |
+      | available_later_labels[en-US] | too late bro        |
+      | available_later_labels[fr-FR] | trop tard mec       |
+    Then product "product1" localized "available_now_labels" should be:
+      | locale | value               |
+      | en-US  | get it now          |
+      | fr-FR  | commande maintenant |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value         |
+      | en-US  | too late bro  |
+      | fr-FR  | trop tard mec |
 
   Scenario: When I use invalid values update is not authorized
     Given I add product "product1" with following information:
-      | name       | en-US:Presta camera |
-      | is_virtual | false               |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
-      | quantity                      | 0          |
-      | minimal_quantity              | 1          |
-      | location                      |            |
-      | low_stock_threshold           | 0          |
-      | low_stock_alert               | false      |
-      | available_date                | 0000-00-00 |
-    And product "product1" localized "available_now_labels" should be "en-US:"
-    And product "product1" localized "available_later_labels" should be "en-US:"
+      | quantity            | 0          |
+      | minimal_quantity    | 1          |
+      | location            |            |
+      | low_stock_threshold | 0          |
+      | low_stock_alert     | false      |
+      | available_date      | 0000-00-00 |
+    And product "product1" localized "available_now_labels" should be:
+      | locale | value |
+      | en-US  |       |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value |
+      | en-US  |       |
     When I update product "product1" stock with following information:
       | minimal_quantity | -1 |
     Then I should get error that product minimal_quantity is invalid
@@ -322,17 +354,21 @@ Feature: Update product stock from Back Office (BO)
       | location | ssf> |
     Then I should get error that product location is invalid
     When I update product "product1" stock with following information:
-      | available_now_labels | en-US:get it now <3 |
+      | available_now_labels[en-US] | get it now <3 |
     Then I should get error that product available_now_labels is invalid
     When I update product "product1" stock with following information:
-      | available_later_labels | en-US:too late bro<3 |
+      | available_later_labels[en-US] | too late bro<3 |
     Then I should get error that product available_later_labels is invalid
     And product "product1" should have following stock information:
-      | quantity                      | 0          |
-      | minimal_quantity              | 1          |
-      | location                      |            |
-      | low_stock_threshold           | 0          |
-      | low_stock_alert               | false      |
-      | available_date                | 0000-00-00 |
-    And product "product1" localized "available_now_labels" should be "en-US:"
-    And product "product1" localized "available_later_labels" should be "en-US:"
+      | quantity            | 0          |
+      | minimal_quantity    | 1          |
+      | location            |            |
+      | low_stock_threshold | 0          |
+      | low_stock_alert     | false      |
+      | available_date      | 0000-00-00 |
+    And product "product1" localized "available_now_labels" should be:
+      | locale | value |
+      | en-US  |       |
+    And product "product1" localized "available_later_labels" should be:
+      | locale | value |
+      | en-US  |       |

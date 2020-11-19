@@ -162,7 +162,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductImages(string $productReference, TableNode $tableNode): void
     {
         $images = $this->getProductImages($productReference);
-        $dataRows = $tableNode->getColumnsHash();
+        $dataRows = $this->localizeByColumns($tableNode);
 
         Assert::assertEquals(
             count($images),
@@ -179,7 +179,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 'Unexpected cover image'
             );
             Assert::assertEquals(
-                $this->parseLocalizedArray($dataRow['legend']),
+                $dataRow['legend'],
                 $actualImage->getLocalizedLegends(),
                 'Unexpected image legend'
             );

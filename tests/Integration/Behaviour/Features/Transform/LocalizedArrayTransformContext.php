@@ -64,7 +64,7 @@ class LocalizedArrayTransformContext implements Context
      */
     private function getIdByLocale(string $locale): int
     {
-        $id = Language::getIdByLocale($locale);
+        $id = (int) Language::getIdByLocale($locale, true);
 
         if (!$id) {
             throw new RuntimeException(sprintf('Language by locale "%s" does not exist', $locale));

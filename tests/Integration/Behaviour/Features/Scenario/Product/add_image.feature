@@ -15,19 +15,19 @@ Feature: Add product image from Back Office (BO)
       | mediumDefault | medium_default | 452   | 452    |
       | smallDefault  | small_default  | 98    | 98     |
     And I add product "product1" with following information:
-      | name       | en-US:bottle of beer |
-      | is_virtual | false                |
+      | name[en-US] | bottle of beer |
+      | is_virtual  | false          |
     And product "product1" type should be standard
     And product "product1" should have no images
     When I add new image "image1" named "app_icon.png" to product "product1"
     Then product "product1" should have following images:
-      | image reference | is cover | legend | position |
-      | image1          | true     | en-US: | 1        |
+      | image reference | is cover | legend[en-US] | position |
+      | image1          | true     |               | 1        |
     When I add new image "image2" named "logo.jpg" to product "product1"
     Then product "product1" should have following images:
-      | image reference | is cover | legend | position |
-      | image1          | true     | en-US: | 1        |
-      | image2          | false    | en-US: | 2        |
+      | image reference | is cover | legend[en-US] | position |
+      | image1          | true     |               | 1        |
+      | image2          | false    |               | 2        |
     And images "[image1, image2]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |

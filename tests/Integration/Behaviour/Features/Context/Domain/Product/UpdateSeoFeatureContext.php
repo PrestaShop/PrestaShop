@@ -46,7 +46,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
      */
     public function updateSeo(string $productReference, TableNode $tableNode): void
     {
-        $dataRows = $tableNode->getRowsHash();
+        $dataRows = $this->localizeByRows($tableNode);
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
@@ -158,17 +158,17 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
     private function fillUpdateSeoCommand(array $dataRows, UpdateProductSeoCommand $command): array
     {
         if (isset($dataRows['meta_title'])) {
-            $command->setLocalizedMetaTitles($this->parseLocalizedArray($dataRows['meta_title']));
+            $command->setLocalizedMetaTitles($dataRows['meta_title']);
             unset($dataRows['meta_title']);
         }
 
         if (isset($dataRows['meta_description'])) {
-            $command->setLocalizedMetaDescriptions($this->parseLocalizedArray($dataRows['meta_description']));
+            $command->setLocalizedMetaDescriptions($dataRows['meta_description']);
             unset($dataRows['meta_description']);
         }
 
         if (isset($dataRows['link_rewrite'])) {
-            $command->setLocalizedLinkRewrites($this->parseLocalizedArray($dataRows['link_rewrite']));
+            $command->setLocalizedLinkRewrites($dataRows['link_rewrite']);
             unset($dataRows['link_rewrite']);
         }
 

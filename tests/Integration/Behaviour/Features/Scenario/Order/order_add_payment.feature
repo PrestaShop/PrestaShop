@@ -18,8 +18,8 @@ Feature: Add payment to Order from Back Office (BO)
       | iso_code         | EUR                              |
       | exchange_rate    | 0.88                             |
       | name             | My Euros                         |
-      | symbols          | en-US:€;fr-FR:€                  |
-      | patterns         | en-US:¤#,##0.00;fr-FR:#,##0.00 ¤ |
+      | symbols          | {"en-US":"€","fr-FR":"€"}                  |
+      | patterns         | {"en-US":"¤#,##0.00","fr-FR":"#,##0.00 ¤"} |
       | is_enabled       | 1                                |
       | is_unofficial    | 0                                |
       | shop_association | shop1                            |
@@ -27,8 +27,8 @@ Feature: Add payment to Order from Back Office (BO)
       | iso_code         | JPY                                   |
       | exchange_rate    | 107.52                                |
       | name             | My Japanese Yen                       |
-      | symbols          | en-US:¥;fr-FR:¥                       |
-      | patterns         | en-US:¤#,##0.00;fr-FR:#,##0.00 ¤      |
+      | symbols          | {"en-US":"¥","fr-FR":"¥"}                       |
+      | patterns         | {"en-US":"¤#,##0.00","fr-FR":"#,##0.00 ¤"}      |
       | is_enabled       | 1                                     |
       | is_unofficial    | 0                                     |
       | shop_association | shop1                                 |
