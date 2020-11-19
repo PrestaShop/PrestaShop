@@ -157,23 +157,16 @@ abstract class AbstractDomainFeatureContext implements Context
      *   1:valueFr;2:valueEn:{langId}:{localeValue}
      * and will be converted into an array indexed by language id
      *
-     * @param string $parsedArray
+     * @param string $localizedString
      *
      * @return array
      */
-    protected function parseLocalizedArray(string $parsedArray): array
+    protected function parseLocalizedArray(string $localizedString): array
     {
-        $arrayValues = array_map('trim', explode(';', $parsedArray));
+        $valuesByLocale = json_decode($localizedString, true);
         $localizedArray = [];
-        foreach ($arrayValues as $arrayValue) {
-            $data = explode(':', $arrayValue);
-            $langKey = $data[0];
-            $langValue = $data[1];
-            if (ctype_digit($langKey)) {
-                $localizedArray[$langKey] = $langValue;
-            } else {
-                $localizedArray[Language::getIdByLocale($langKey, true)] = $langValue;
-            }
+        foreach ($valuesByLocale as $locale => $value) {
+            $localizedArray[(int) Language::getIdByLocale($locale, true)] = $value;
         }
 
         return $localizedArray;
