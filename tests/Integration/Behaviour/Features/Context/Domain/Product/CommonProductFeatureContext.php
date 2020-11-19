@@ -70,8 +70,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" localized "(.+)" should be "(.*)"$/
-     * @Given /^product "(.+)" localized "(.+)" is "(.*)"$/
+     * @Then /^product "(.+)" localized "(.+)" should be {.*}$/
+     * @Given /^product "(.+)" localized "(.+)" is {.*}$/
      *
      * localizedValues transformation handled by @see StringToLocalizedArrayTransformContext
      *
