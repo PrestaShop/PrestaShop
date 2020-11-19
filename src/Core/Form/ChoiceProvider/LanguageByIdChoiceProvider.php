@@ -40,11 +40,20 @@ final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
     private $languageDataProvider;
 
     /**
-     * @param LanguageDataProvider $languageDataProvider
+     * @var int
      */
-    public function __construct(LanguageDataProvider $languageDataProvider)
+    private $shopId;
+
+    /**
+     * LanguageByIdChoiceProvider constructor.
+     *
+     * @param LanguageDataProvider $languageDataProvider
+     * @param int $shopId
+     */
+    public function __construct(LanguageDataProvider $languageDataProvider, int $shopId)
     {
         $this->languageDataProvider = $languageDataProvider;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -56,7 +65,7 @@ final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
     {
         $choices = [];
 
-        foreach ($this->languageDataProvider->getLanguages() as $language) {
+        foreach ($this->languageDataProvider->getLanguages(true, $this->shopId) as $language) {
             $choices[$language['name']] = $language['id_lang'];
         }
 
