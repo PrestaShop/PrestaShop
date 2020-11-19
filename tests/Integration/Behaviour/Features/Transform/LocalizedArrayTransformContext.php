@@ -29,36 +29,47 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Transform;
 
 use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\TableNode;
 use Language;
+use RuntimeException;
 
 /**
  * Contains methods to transform string array into localized array
  */
-class StringToLocalizedArrayTransformContext implements Context
+class LocalizedArrayTransformContext implements Context
 {
     /**
-     * @Transform /((\{[a-z]{2})-([A-Z]{2}:.*?\}))/
+     * @Transform table:locale,value
      *
-     * @param string $string expected string e.g. {en-US:test;fr-FR:test2}
+     * @param TableNode $tableNode
      *
      * @return array<int, string> [langId => value]
      */
-    public function transformStringToLocalizedArray(string $string): array
+    public function transformTableToLocalizedArray(TableNode $tableNode): array
     {
-        $string = str_replace(['{', '}'], '', $string);
-        $arrayValues = array_map('trim', explode(';', $string));
-        $localizedArray = [];
-        foreach ($arrayValues as $arrayValue) {
-            $data = explode(':', $arrayValue);
-            $langKey = $data[0];
-            $langValue = $data[1];
-            if (ctype_digit($langKey)) {
-                $localizedArray[$langKey] = $langValue;
-            } else {
-                $localizedArray[(int) Language::getIdByLocale($langKey, true)] = $langValue;
-            }
+        $tableRows = $tableNode->getColumnsHash();
+
+        $localizedValues = [];
+        foreach ($tableRows as $row) {
+            $localizedValues[$this->getIdByLocale($row['locale'])] = $row['value'];
         }
 
-        return $localizedArray;
+        return $localizedValues;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return int
+     */
+    private function getIdByLocale(string $locale): int
+    {
+        $id = Language::getIdByLocale($locale);
+
+        if (!$id) {
+            throw new RuntimeException(sprintf('Language by locale "%s" does not exist', $locale));
+        }
+
+        return $id;
     }
 }
