@@ -8,11 +8,11 @@ Feature: Update product SEO options from Back Office (BO)
 
   Scenario: I update product SEO
     Given I add product "product1" with following information:
-      | name       | en-US: just boots |
-      | is_virtual | false             |
+      | name       | {"en-US":"just boots"} |
+      | is_virtual | false                  |
     Given I add product "product2" with following information:
-      | name       | en-US: just boots |
-      | is_virtual | false             |
+      | name       | {"en-US":"just boots"} |
+      | is_virtual | false                  |
     And product product2 should have following seo options:
       | redirect_type | 404 |
     And product product2 should not have a redirect target
@@ -26,11 +26,11 @@ Feature: Update product SEO options from Back Office (BO)
       | locale | value |
       | en-US  |       |
     When I update product product2 SEO information with following values:
-      | meta_title       | en-US:product2 meta title       |
-      | meta_description | en-US:product2 meta description |
-      | link_rewrite     | en-US:waterproof-boots          |
-      | redirect_type    | 301-product                     |
-      | redirect_target  | product1                        |
+      | meta_title       | {"en-US":"product2 meta title"}       |
+      | meta_description | {"en-US":"product2 meta description"} |
+      | link_rewrite     | {"en-US":"waterproof-boots"}          |
+      | redirect_type    | 301-product                           |
+      | redirect_target  | product1                              |
     Then product "product2" localized "meta_title" should be:
       | locale | value               |
       | en-US  | product2 meta title |
@@ -194,9 +194,9 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  | waterproof-boots |
       | fr-FR  | waterproof-boots |
     When I update product product2 SEO information with following values:
-      | meta_title       | en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1           |
-      | meta_description | en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1 |
-      | link_rewrite     | en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr           |
+      | meta_title       | {"en-US":"metatitl prod1","fr-FR":"toolazytofindFRtrans meta title1"}           |
+      | meta_description | {"en-US":"product2 meta description","fr-FR":"toolazytofindFRtrans meta desc1"} |
+      | link_rewrite     | {"en-US":"waterproof-boots","fr-FR":"toolazytofindFRtrans-link-rewr"}           |
     Then product "product2" localized "meta_title" should be:
       | locale | value                            |
       | en-US  | metatitl prod1                   |
@@ -224,13 +224,13 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  | waterproof-boots               |
       | fr-FR  | toolazytofindFRtrans-link-rewr |
     When I update product product2 SEO information with following values:
-      | meta_title | en-US:#{ |
+      | meta_title | {"en-US":"#{"} |
     Then I should get error that product meta_title is invalid
     When I update product product2 SEO information with following values:
-      | meta_description | en-US:#{ |
+      | meta_description | {"en-US":"#{"} |
     Then I should get error that product meta_description is invalid
     When I update product product2 SEO information with following values:
-      | link_rewrite | en-US:#{&_ |
+      | link_rewrite | {"en-US":"#{&_"} |
     Then I should get error that product link_rewrite is invalid
     When I update product product2 localized SEO field meta_title with a value of 256 symbols length
     Then I should get error that product meta_title is invalid
