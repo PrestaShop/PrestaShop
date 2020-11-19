@@ -119,17 +119,7 @@ class CartProductsComparator
         $updatedProducts = [];
         foreach ($this->savedProducts as $oldProduct) {
             // Then try and find the product in new products
-            $newProduct = array_reduce($newProducts, function ($carry, $item) use ($oldProduct) {
-                if (null !== $carry) {
-                    return $carry;
-                }
-
-                $productMatch = $item['id_product'] == $oldProduct['id_product'];
-                $combinationMatch = $item['id_product_attribute'] == $oldProduct['id_product_attribute'];
-
-                return $productMatch && $combinationMatch ? $item : null;
-            });
-
+            $newProduct = $this->getMatchingProduct($newProducts, $oldProduct);
             if (null === $newProduct) {
                 $deltaQuantity = -(int) $oldProduct['cart_quantity'];
             } else {
@@ -145,6 +135,38 @@ class CartProductsComparator
             }
         }
 
+        foreach ($newProducts as $newProduct) {
+            // Then try and find the product in new products
+            $oldProduct = $this->getMatchingProduct($this->savedProducts, $newProduct);
+            if (null === $oldProduct) {
+                $updatedProducts[] = new CartProductUpdate(
+                    (int) $newProduct['id_product'],
+                    (int) $newProduct['id_product_attribute'],
+                    (int) $newProduct['cart_quantity']
+                );
+            }
+        }
+
         return $updatedProducts;
+    }
+
+    /**
+     * @param array $products
+     * @param array $searchedProduct
+     *
+     * @return array|null
+     */
+    private function getMatchingProduct(array $products, array $searchedProduct): ?array
+    {
+        return array_reduce($products, function ($carry, $item) use ($searchedProduct) {
+            if (null !== $carry) {
+                return $carry;
+            }
+
+            $productMatch = $item['id_product'] == $searchedProduct['id_product'];
+            $combinationMatch = $item['id_product_attribute'] == $searchedProduct['id_product_attribute'];
+
+            return $productMatch && $combinationMatch ? $item : null;
+        });
     }
 }
