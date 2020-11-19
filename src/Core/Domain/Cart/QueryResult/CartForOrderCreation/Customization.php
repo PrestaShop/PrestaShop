@@ -24,61 +24,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
 /**
- * Holds data of cart delivery option
+ * Holds product customization data along with its custom fields data
  */
-class CartDeliveryOption
+class Customization
 {
     /**
      * @var int
      */
-    private $carrierId;
+    private $customizationId;
 
     /**
-     * @var string
+     * @var CustomizationFieldData[]
      */
-    private $carrierName;
+    private $customizationFieldsData;
 
-    /**
-     * @var string
-     */
-    private $carrierDelay;
-
-    /**
-     * @param $carrierId
-     * @param $carrierName
-     * @param $carrierDelay
-     */
-    public function __construct(int $carrierId, string $carrierName, string $carrierDelay)
-    {
-        $this->carrierId = $carrierId;
-        $this->carrierName = $carrierName;
-        $this->carrierDelay = $carrierDelay;
+    public function __construct(
+        int $customizationId,
+        array $customizationFieldsData
+    ) {
+        $this->customizationId = $customizationId;
+        $this->customizationFieldsData = $customizationFieldsData;
     }
 
     /**
      * @return int
      */
-    public function getCarrierId(): int
+    public function getCustomizationId(): int
     {
-        return $this->carrierId;
+        return $this->customizationId;
     }
 
     /**
-     * @return string
+     * @return CustomizationFieldData[]
      */
-    public function getCarrierName(): string
+    public function getCustomizationFieldsData(): array
     {
-        return $this->carrierName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierDelay(): string
-    {
-        return $this->carrierDelay;
+        return $this->customizationFieldsData;
     }
 }

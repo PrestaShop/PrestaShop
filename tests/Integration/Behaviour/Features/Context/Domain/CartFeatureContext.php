@@ -39,6 +39,7 @@ use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
@@ -50,8 +51,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -144,6 +145,35 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      * @param string $cartReference
      */
     public function addProductsToCart(int $quantity, string $productName, string $cartReference)
+    {
+        $productId = $this->getProductIdByName($productName);
+
+        $this->lastException = null;
+        try {
+            $this->getCommandBus()->handle(
+                new AddProductToCartCommand(
+                    SharedStorage::getStorage()->get($cartReference),
+                    $productId,
+                    $quantity
+                )
+            );
+            SharedStorage::getStorage()->set($productName, $productId);
+
+            // Clear cart static cache or it will have no products in next calls
+            Cart::resetStaticCache();
+        } catch (MinimalQuantityException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I update quantity of product :productName in the cart :cartReference to :quantity
+     *
+     * @param int $quantity
+     * @param string $productName
+     * @param string $cartReference
+     */
+    public function updateProductQuantityInCart(int $quantity, string $productName, string $cartReference)
     {
         $productId = $this->getProductIdByName($productName);
 
@@ -482,7 +512,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartContainsOnlyGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() !== $productId) {
@@ -491,7 +521,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
             if (!$cartProduct->isGift()) {
                 throw new RuntimeException(sprintf(
-                    'Cart contains product #%s, but it is not a gift',
+                    'Cart contains product "%s", but it is not a gift',
                     $productName
                 ));
             }
@@ -503,7 +533,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleIsNotAppliedToCart(string $voucherCode, string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -521,7 +551,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleIsAppliedToCart(string $voucherCode, string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -586,7 +616,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertProductQuantity(string $cartReference, string $productName, int $quantity, bool $isGift)
     {
         $productId = $this->getProductIdByName($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $product) {
             if ($productId === $product->getProductId() && (bool) $product->isGift() === $isGift) {
@@ -609,11 +639,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartContainsGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $matchingProducts = [];
 
-        /** @var CartInformation\CartProduct $cartProduct */
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() !== $productId) {
                 continue;
@@ -623,7 +652,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (!empty($matchingProducts)) {
-            /** @var CartInformation\CartProduct $cartProduct */
+            /** @var CartForOrderCreation\CartProduct $cartProduct */
             foreach ($matchingProducts as $cartProduct) {
                 if ($cartProduct->isGift()) {
                     return;
@@ -647,11 +676,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function assertCartDoesNotContainGiftProduct(string $cartReference, string $productName)
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         $matchingProducts = [];
 
-        /** @var CartInformation\CartProduct $cartProduct */
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() === $productId) {
                 $matchingProducts[] = $cartProduct;
@@ -659,7 +687,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (!empty($matchingProducts)) {
-            /** @var CartInformation\CartProduct $cartProduct */
+            /** @var CartForOrderCreation\CartProduct $cartProduct */
             foreach ($matchingProducts as $cartProduct) {
                 if ($cartProduct->isGift()) {
                     throw new RuntimeException(sprintf(
@@ -676,7 +704,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartShippingIsFree(string $cartReference)
     {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
         Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
     }
@@ -713,7 +741,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $cartReference,
         string $value
     ) {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
         $cartRuleId = $this->getSharedStorage()->get($voucherCode);
 
         foreach ($cartInfo->getCartRules() as $cartRule) {
@@ -725,6 +753,53 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new RuntimeException(sprintf('Voucher was %s not found in cart', $voucherCode));
+    }
+
+    /**
+     * @Then cart :cartReference should contain :quantity products
+     *
+     * @param string $cartReference
+     * @param int $quantity
+     */
+    public function assertCartNumberOfProducts(string $cartReference, int $quantity)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+
+        $cartProductsQuantity = \count($cartInfo->getProducts());
+
+        if ($quantity !== $cartProductsQuantity) {
+            throw new RuntimeException(sprintf(
+                'Cart contains %d products instead of %d',
+                $cartProductsQuantity,
+                $quantity
+            ));
+        }
+    }
+
+    /**
+     * @Then cart :cartReference should contain :quantity products excluding gifts
+     *
+     * @param string $cartReference
+     * @param int $quantity
+     */
+    public function assertCartNumberOfProductsExcludingGifts(string $cartReference, int $quantity)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+
+        $cartProductsQuantity = 0;
+        foreach ($cartInfo->getProducts() as $product) {
+            if (false === (bool) $product->isGift()) {
+                ++$cartProductsQuantity;
+            }
+        }
+
+        if ($quantity !== $cartProductsQuantity) {
+            throw new RuntimeException(sprintf(
+                'Cart contains %d products instead of %d',
+                $cartProductsQuantity,
+                $quantity
+            ));
+        }
     }
 
     /**
@@ -747,7 +822,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     private function productIsInCart(string $cartReference, string $productName): bool
     {
         $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $cartProduct) {
             if ($cartProduct->getProductId() === $productId) {
@@ -761,13 +836,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $cartReference
      *
-     * @return CartInformation
+     * @return CartForOrderCreation
      */
-    private function getCartInformationByReference(string $cartReference): CartInformation
+    private function getCartForOrderCreationByReference(string $cartReference): CartForOrderCreation
     {
         $cartId = $this->getSharedStorage()->get($cartReference);
 
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        return $this->getQueryBus()->handle(
+            (new GetCartForOrderCreation($cartId))
+            ->setHideDiscounts(true)
+        );
     }
 
     /**

@@ -24,17 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
 /**
- * Holds cart rule (a.k.a voucher) data for cart information
+ * Holds product customized data of customization field
  */
-class CartRule
+class CustomizationFieldData
 {
     /**
      * @var int
      */
-    private $cartRuleId;
+    private $type;
 
     /**
      * @var string
@@ -44,37 +44,24 @@ class CartRule
     /**
      * @var string
      */
-    private $description;
-
-    /**
-     * @var string
-     */
     private $value;
 
-    /**
-     * @param int $cartRuleId
-     * @param string $name
-     * @param string $description
-     * @param string $value
-     */
     public function __construct(
-        int $cartRuleId,
+        int $type,
         string $name,
-        string $description,
         string $value
     ) {
-        $this->cartRuleId = $cartRuleId;
+        $this->type = $type;
         $this->name = $name;
-        $this->description = $description;
         $this->value = $value;
     }
 
     /**
      * @return int
      */
-    public function getCartRuleId(): int
+    public function getType(): int
     {
-        return $this->cartRuleId;
+        return $this->type;
     }
 
     /**
@@ -83,14 +70,6 @@ class CartRule
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
     }
 
     /**

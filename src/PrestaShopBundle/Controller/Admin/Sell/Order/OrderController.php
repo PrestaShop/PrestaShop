@@ -30,7 +30,7 @@ use Currency;
 use Exception;
 use InvalidArgumentException;
 use PrestaShop\Decimal\Number;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -1167,7 +1167,10 @@ class OrderController extends FrameworkBundleAdminController
         $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
 
         return $this->json(
-            $this->getQueryBus()->handle(new GetCartInformation($cartId))
+            $this->getQueryBus()->handle(
+                (new GetCartForOrderCreation($cartId))
+                ->setHideDiscounts(true)
+            )
         );
     }
 

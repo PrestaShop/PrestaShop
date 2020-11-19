@@ -42,9 +42,9 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
@@ -110,7 +110,10 @@ class CartController extends FrameworkBundleAdminController
     public function getInfoAction(int $cartId)
     {
         try {
-            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+            $cartInfo = $this->getQueryBus()->handle(
+                (new GetCartForOrderCreation($cartId))
+                    ->setHideDiscounts(true)
+            );
 
             return $this->json($cartInfo);
         } catch (Exception $e) {
@@ -438,12 +441,15 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $newQty = $request->request->getInt('newQty');
+            $attributeId = $request->request->getInt('attributeId');
+
+            $giftedQuantity = $this->getProductGiftedQuantity($cartId, $productId, $attributeId);
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
-                $newQty,
-                $request->request->getInt('attributeId') ?: null,
+                $newQty + $giftedQuantity,
+                $attributeId ?: null,
                 $request->request->getInt('customizationId') ?: null
             ));
 
@@ -496,13 +502,16 @@ class CartController extends FrameworkBundleAdminController
     /**
      * @param int $cartId
      *
-     * @return CartInformation
+     * @return CartForOrderCreation
      *
      * @throws CartConstraintException
      */
-    private function getCartInfo(int $cartId): CartInformation
+    private function getCartInfo(int $cartId): CartForOrderCreation
     {
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        return $this->getQueryBus()->handle(
+            (new GetCartForOrderCreation($cartId))
+                ->setHideDiscounts(true)
+        );
     }
 
     /**
@@ -619,5 +628,36 @@ class CartController extends FrameworkBundleAdminController
         }
 
         return Response::HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    /**
+     * This method will be removed in the next patch version. We rely on Cart ObjectModel to simplify the code
+     * It returns the number of items of the specific product/attribute that are gift for the cart
+     *
+     * @param int $cartId
+     * @param int $productId
+     * @param int|null $attributeId
+     *
+     * @return int
+     */
+    private function getProductGiftedQuantity(int $cartId, int $productId, ?int $attributeId): int
+    {
+        $cart = new \Cart($cartId);
+        $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
+        if (count($giftCartRules) <= 0) {
+            return 0;
+        }
+
+        $giftedQuantity = 0;
+        foreach ($giftCartRules as $giftCartRule) {
+            if (
+                $productId == $giftCartRule['gift_product'] &&
+                (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
+            ) {
+                ++$giftedQuantity;
+            }
+        }
+
+        return $giftedQuantity;
     }
 }

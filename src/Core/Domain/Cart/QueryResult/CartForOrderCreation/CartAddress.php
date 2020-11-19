@@ -24,59 +24,96 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
 /**
- * Holds product customized data of customization field
+ * Holds address data for cart information
  */
-class CustomizationFieldData
+class CartAddress
 {
     /**
      * @var int
      */
-    private $type;
+    private $addressId;
 
     /**
      * @var string
      */
-    private $name;
+    private $alias;
 
     /**
      * @var string
      */
-    private $value;
+    private $formattedAddress;
 
+    /**
+     * @var bool is it used as delivery address
+     */
+    private $delivery;
+
+    /**
+     * @var bool is it used as invoice address
+     */
+    private $invoice;
+
+    /**
+     * @param int $addressId
+     * @param string $alias
+     * @param string $formattedAddress
+     * @param bool $delivery
+     * @param bool $invoice
+     */
     public function __construct(
-        int $type,
-        string $name,
-        string $value
+        int $addressId,
+        string $alias,
+        string $formattedAddress,
+        bool $delivery,
+        bool $invoice
     ) {
-        $this->type = $type;
-        $this->name = $name;
-        $this->value = $value;
+        $this->addressId = $addressId;
+        $this->alias = $alias;
+        $this->formattedAddress = $formattedAddress;
+        $this->delivery = $delivery;
+        $this->invoice = $invoice;
     }
 
     /**
      * @return int
      */
-    public function getType(): int
+    public function getAddressId(): int
     {
-        return $this->type;
+        return $this->addressId;
     }
 
     /**
      * @return string
      */
-    public function getName(): string
+    public function getAlias(): string
     {
-        return $this->name;
+        return $this->alias;
     }
 
     /**
      * @return string
      */
-    public function getValue(): string
+    public function getFormattedAddress(): string
     {
-        return $this->value;
+        return $this->formattedAddress;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDelivery(): bool
+    {
+        return $this->delivery;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInvoice(): bool
+    {
+        return $this->invoice;
     }
 }
