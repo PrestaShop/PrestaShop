@@ -118,7 +118,7 @@ describe('Sort and pagination emails', async () => {
     });
 
     it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
       await orderConfirmationPage.logout(page);
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
