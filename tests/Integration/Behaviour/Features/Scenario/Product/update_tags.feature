@@ -10,8 +10,8 @@ Feature: Update product tags from Back Office (BO)
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
     And I add product "product3" with following information:
-      | name       | en-US:Mechanical watch; fr-FR:montre mécanique |
-      | is_virtual | false                                          |
+      | name       | {"en-US":"Mechanical watch","fr-FR":"montre mécanique"} |
+      | is_virtual | false                                                   |
     And product "product3" localized "name" should be:
       | locale | value            |
       | en-US  | Mechanical watch |
@@ -21,19 +21,19 @@ Feature: Update product tags from Back Office (BO)
       | en-US  |       |
       | fr-FR  |       |
     When I update product "product3" tags with following values:
-      | tags | en-US:mechanic,watch; fr-FR:montre,mécanique |
+      | tags | {"en-US":"mechanic,watch","fr-FR":"montre,mécanique"} |
     And product "product3" localized "tags" should be:
       | locale | value            |
       | en-US  | mechanic,watch   |
       | fr-FR  | montre,mécanique |
     When I update product "product3" tags with following values:
-      | tags | en-US:mechanic,watch; fr-FR: |
+      | tags | {"en-US":"mechanic,watch","fr-FR":""} |
     And product "product3" localized "tags" should be:
-      | locale | value    |
+      | locale | value          |
       | en-US  | mechanic,watch |
-      | fr-FR  |          |
+      | fr-FR  |                |
     When I update product "product3" tags with following values:
-      | tags | fr-FR:montre |
+      | tags | {"fr-FR":"montre"} |
     And product "product3" localized "tags" should be:
       | locale | value          |
       | en-US  | mechanic,watch |
@@ -45,7 +45,7 @@ Feature: Update product tags from Back Office (BO)
       | en-US  | mechanic,watch |
       | fr-FR  | montre         |
     When I update product "product3" tags with following values:
-      | tags | en-US:#<{ |
+      | tags | {"en-US":"#<{"} |
     Then I should get error that product tag is invalid
     And product "product3" localized "tags" should be:
       | locale | value          |
