@@ -25,7 +25,6 @@
 
 import Routing from 'fos-routing';
 import routes from '@js/fos_js_routes.json';
-import {EventEmitter} from '@components/event-emitter';
 
 const {$} = window;
 
@@ -44,11 +43,9 @@ const {$} = window;
  */
 export default class Router {
   constructor() {
-    const addRoutes = (customRoutes) => {
-      Object.assign(routes.routes, customRoutes);
-    };
-
-    EventEmitter.emit('beforeRoutes', addRoutes);
+    if (window.prestashop && window.prestashop.customRoutes) {
+      Object.assign(routes.routes, window.prestashop.customRoutes);
+    }
 
     Routing.setData(routes);
     Routing.setBaseUrl(
