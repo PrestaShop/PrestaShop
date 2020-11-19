@@ -239,10 +239,10 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
         $idCartRule = (int) $this->cartRules[$cartRuleName]->id;
         $idCountry = (int) $this->countryFeatureContext->getCountryWithIsoCode($country);
-        Db::getInstance()->execute('
-          INSERT INTO ' . _DB_PREFIX_ . "cart_rule_country(`id_cart_rule`, `id_country`)
-          VALUES('" . $idCartRule . "', '" . $idCountry . "')
-        ");
+        Db::getInstance()->execute(
+            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_country(`id_cart_rule`, `id_country`) ' .
+            'VALUES(' . $idCartRule . ', ' . $idCountry . ')'
+        );
         Cache::clear();
     }
 
