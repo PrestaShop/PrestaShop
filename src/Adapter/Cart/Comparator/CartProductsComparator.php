@@ -47,11 +47,6 @@ class CartProductsComparator
     private $savedProducts;
 
     /**
-     * @var CartProductUpdate[]
-     */
-    private $knownUpdates = [];
-
-    /**
      * @param Cart $cart
      */
     public function __construct(Cart $cart)
@@ -61,61 +56,88 @@ class CartProductsComparator
     }
 
     /**
-     * You can add a known update so that it won't be counted in the report
+     * Returns a list of products that were strictly updated (not created) compared to the state of the cart
+     * when this object was created, it removes the already known modified products provided as argument.
      *
-     * @param CartProductUpdate $cartProductUpdate
-     */
-    public function addKnownUpdate(CartProductUpdate $cartProductUpdate): void
-    {
-        foreach ($this->knownUpdates as $knownUpdate) {
-            if ($knownUpdate->productMatches($cartProductUpdate)) {
-                $knownUpdate->setDeltaQuantity(
-                    $knownUpdate->getDeltaQuantity() + $cartProductUpdate->getDeltaQuantity()
-                );
-
-                return;
-            }
-        }
-
-        $this->knownUpdates[] = $cartProductUpdate;
-    }
-
-    /**
-     * Returns a list of products that were updated compared to the creation of this object
-     * except it removes the already known updated products.
+     * @param CartProductUpdate[] $knownUpdates
      *
      * @return CartProductUpdate[]
      */
-    public function getUpdatedProducts(): array
+    public function getUpdatedProducts(array $knownUpdates = []): array
     {
-        $filteredUpdates = [];
-        $allUpdateProducts = $this->getAllUpdatedProducts();
-        foreach ($allUpdateProducts as $updateProduct) {
-            foreach ($this->knownUpdates as $knownUpdate) {
-                if ($knownUpdate->productMatches($updateProduct)) {
-                    $updateProduct->setDeltaQuantity(
-                        $updateProduct->getDeltaQuantity() - $knownUpdate->getDeltaQuantity()
-                    );
+        $newProducts = $this->cart->getProducts(true);
+        $allUpdateProducts = $this->getAllUpdatedProducts($newProducts);
 
-                    break;
-                }
-            }
-            if (0 !== $updateProduct->getDeltaQuantity()) {
-                $filteredUpdates[] = $updateProduct;
+        return $this->filterKnownUpdates($allUpdateProducts, $knownUpdates);
+    }
+
+    /**
+     * Returns a list of products that were strictly created (not updated) compared to the state of the cart
+     * when this object was created, it removes the already known modified products provided as argument.
+     *
+     * @param CartProductUpdate[] $knownUpdates
+     *
+     * @return CartProductUpdate[]
+     */
+    public function getAdditionalProducts(array $knownUpdates = []): array
+    {
+        $newProducts = $this->cart->getProducts(true);
+        $allAdditionalProducts = $this->getAllAdditionalProducts($newProducts);
+
+        return $this->filterKnownUpdates($allAdditionalProducts, $knownUpdates);
+    }
+
+    /**
+     * Returns a list of products that were modified (created and/or updated) compared to the state of the cart
+     * when this object was created, it removes the already known modified products provided as argument.
+     *
+     * @param CartProductUpdate[] $knownUpdates
+     *
+     * @return CartProductUpdate[]
+     */
+    public function getModifiedProducts(array $knownUpdates = []): array
+    {
+        $newProducts = $this->cart->getProducts(true);
+        $modifiedProducts = array_merge($this->getAllUpdatedProducts($newProducts), $this->getAllAdditionalProducts($newProducts));
+
+        return $this->filterKnownUpdates($modifiedProducts, $knownUpdates);
+    }
+
+    /**
+     * Returns the list of updates for products that were not in the cart previously
+     *
+     * @param array[] $newProducts
+     *
+     * @return array
+     */
+    private function getAllAdditionalProducts(array $newProducts): array
+    {
+        $additionalProducts = [];
+        foreach ($newProducts as $newProduct) {
+            // Then try and find the product in new products
+            $oldProduct = $this->getMatchingProduct($this->savedProducts, $newProduct);
+            if (null === $oldProduct) {
+                $additionalProducts[] = new CartProductUpdate(
+                    (int) $newProduct['id_product'],
+                    (int) $newProduct['id_product_attribute'],
+                    (int) $newProduct['cart_quantity'],
+                    true
+                );
             }
         }
 
-        return $filteredUpdates;
+        return $additionalProducts;
     }
 
     /**
      * Returns a list of all products that were updated compared to the creation of this object.
      *
+     * @param array[] $newProducts
+     *
      * @return CartProductUpdate[]
      */
-    public function getAllUpdatedProducts(): array
+    private function getAllUpdatedProducts(array $newProducts): array
     {
-        $newProducts = $this->cart->getProducts(true);
         $updatedProducts = [];
         foreach ($this->savedProducts as $oldProduct) {
             // Then try and find the product in new products
@@ -130,24 +152,40 @@ class CartProductsComparator
                 $updatedProducts[] = new CartProductUpdate(
                     (int) $oldProduct['id_product'],
                     (int) $oldProduct['id_product_attribute'],
-                    $deltaQuantity
-                );
-            }
-        }
-
-        foreach ($newProducts as $newProduct) {
-            // Then try and find the product in new products
-            $oldProduct = $this->getMatchingProduct($this->savedProducts, $newProduct);
-            if (null === $oldProduct) {
-                $updatedProducts[] = new CartProductUpdate(
-                    (int) $newProduct['id_product'],
-                    (int) $newProduct['id_product_attribute'],
-                    (int) $newProduct['cart_quantity']
+                    $deltaQuantity,
+                    false
                 );
             }
         }
 
         return $updatedProducts;
+    }
+
+    /**
+     * @param CartProductUpdate[] $updates
+     * @param CartProductUpdate[] $knownUpdates
+     *
+     * @return CartProductUpdate[]
+     */
+    private function filterKnownUpdates(array $updates, array $knownUpdates): array
+    {
+        $filteredUpdates = [];
+        foreach ($updates as $updateProduct) {
+            foreach ($knownUpdates as $knownUpdate) {
+                if ($knownUpdate->productMatches($updateProduct)) {
+                    $updateProduct->setDeltaQuantity(
+                        $updateProduct->getDeltaQuantity() - $knownUpdate->getDeltaQuantity()
+                    );
+
+                    break;
+                }
+            }
+            if (0 !== $updateProduct->getDeltaQuantity()) {
+                $filteredUpdates[] = $updateProduct;
+            }
+        }
+
+        return $filteredUpdates;
     }
 
     /**

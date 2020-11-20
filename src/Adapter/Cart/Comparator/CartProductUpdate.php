@@ -49,15 +49,22 @@ class CartProductUpdate
     private $deltaQuantity;
 
     /**
+     * @var bool
+     */
+    private $created;
+
+    /**
      * @param int $productId
      * @param int $combinationId
      * @param int $deltaQuantity
+     * @param bool $created
      */
-    public function __construct(int $productId, int $combinationId, int $deltaQuantity)
+    public function __construct(int $productId, int $combinationId, int $deltaQuantity, bool $created)
     {
         $this->productId = new ProductId($productId);
         $this->combinationId = $combinationId > 0 ? new CombinationId($combinationId) : null;
         $this->deltaQuantity = $deltaQuantity;
+        $this->created = $created;
     }
 
     /**
@@ -113,6 +120,14 @@ class CartProductUpdate
     }
 
     /**
+     * @return bool
+     */
+    public function isCreated(): bool
+    {
+        return $this->created;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
@@ -121,6 +136,7 @@ class CartProductUpdate
             'id_product' => $this->productId->getValue(),
             'id_product_attribute' => null !== $this->combinationId ? $this->combinationId->getValue() : 0,
             'delta_quantity' => $this->deltaQuantity,
+            'created' => $this->created,
         ];
     }
 }

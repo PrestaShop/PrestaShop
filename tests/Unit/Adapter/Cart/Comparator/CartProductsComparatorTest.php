@@ -37,196 +37,298 @@ use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 class CartProductsComparatorTest extends TestCase
 {
     /**
-     * @dataProvider getTestAllProducts
+     * @dataProvider getExpectedModifiedProducts
+     *
+     * @param array $initialProducts
+     * @param array $newProducts
+     * @param array $knownUpdatedProducts
+     * @param array $expectedModifiedProducts
      */
-    public function testGetAllUpdatedProducts(
+    public function testGetModifiedProducts(
         array $initialProducts,
         array $newProducts,
-        array $expectedUpdatedProducts,
-        array $knownUpdatedProducts
+        array $knownUpdatedProducts,
+        array $expectedModifiedProducts
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
-        foreach ($knownUpdatedProducts as $knownUpdatedProduct) {
-            $comparator->addKnownUpdate($knownUpdatedProduct);
-        }
 
-        $updatedProducts = $comparator->getAllUpdatedProducts();
-        Assert::assertEquals($expectedUpdatedProducts, $updatedProducts);
+        $modifiedProducts = $comparator->getModifiedProducts($knownUpdatedProducts);
+        Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 
-    public function getCommonTestProducts()
+    public function getExpectedModifiedProducts()
     {
         yield [
+            // Previous products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
                 ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
             ],
+            // New products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
             ],
+            // Known updates
             [
-                new CartProductUpdate(2, 0, -1),
             ],
+            // Expected updates
+            [
+                new CartProductUpdate(2, 0, -1, false),
+            ],
+        ];
+
+        yield [
+            // Previous products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+            ],
+            // New products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+            ],
+            // Known updates
+            [
+            ],
+            // Expected updates
             [
             ],
         ];
 
         yield [
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-            ],
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-            ],
-            [
-            ],
-            [
-            ],
-        ];
-
-        yield [
+            // Previous products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 3],
                 ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
             ],
+            // New products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
                 ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
             ],
+            // Known updates
             [
-                new CartProductUpdate(1, 0, -2),
-                new CartProductUpdate(2, 0, 1),
             ],
+            // Expected updates
             [
+                new CartProductUpdate(1, 0, -2, false),
+                new CartProductUpdate(2, 0, 1, false),
             ],
         ];
 
         yield [
+            // Previous products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 3],
                 ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
             ],
+            // New products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
                 ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
                 ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 2],
             ],
+            // Known updates
             [
-                new CartProductUpdate(1, 0, -2),
-                new CartProductUpdate(2, 0, 1),
-                new CartProductUpdate(3, 0, 2),
             ],
+            // Expected updates
             [
+                new CartProductUpdate(1, 0, -2, false),
+                new CartProductUpdate(2, 0, 1, false),
+                new CartProductUpdate(3, 0, 2, true),
             ],
         ];
-    }
-
-    public function getTestAllProducts()
-    {
-        foreach ($this->getCommonTestProducts() as $commonTestProduct) {
-            yield $commonTestProduct;
-        }
 
         yield [
+            // Previous products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 3],
                 ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
             ],
+            // New products
             [
                 ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
                 ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
                 ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 2],
             ],
+            // Known updates
             [
-                new CartProductUpdate(1, 0, -2),
-                new CartProductUpdate(2, 0, 1),
-                new CartProductUpdate(3, 0, 2),
+                new CartProductUpdate(1, 0, -2, false),
             ],
+            // Expected updates
             [
-                new CartProductUpdate(1, 0, -2),
+                new CartProductUpdate(2, 0, 1, false),
+                new CartProductUpdate(3, 0, 2, true),
+            ],
+        ];
+
+        yield [
+            // Previous products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 3],
+            ],
+            // New products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+            ],
+            // Known updates
+            [
+                new CartProductUpdate(2, 0, -1, false),
+            ],
+            // Expected updates
+            [
+            ],
+        ];
+
+        yield [
+            // Previous products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+            ],
+            // New products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 3],
+            ],
+            // Known updates
+            [
+                new CartProductUpdate(2, 0, -1, false),
+            ],
+            // Expected updates
+            [
+                new CartProductUpdate(2, 0, 2, false),
+            ],
+        ];
+
+        yield [
+            // Previous products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+            ],
+            // New products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+            ],
+            // Known updates
+            [
+                new CartProductUpdate(3, 0, 1, true),
+            ],
+            // Expected updates
+            [
+            ],
+        ];
+
+        yield [
+            // Previous products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+            ],
+            // New products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+            ],
+            // Known updates
+            [
+                new CartProductUpdate(3, 0, 1, true),
+            ],
+            // Expected updates
+            [
+                new CartProductUpdate(3, 0, 1, true),
             ],
         ];
     }
 
     /**
-     * @dataProvider getTestProducts
+     * @dataProvider getExpectedAdditionalProducts
+     *
+     * @param array $initialProducts
+     * @param array $newProducts
+     * @param array $knownUpdatedProducts
+     * @param array $expectedModifiedProducts
+     */
+    public function testGetAdditionalProducts(
+        array $initialProducts,
+        array $newProducts,
+        array $knownUpdatedProducts,
+        array $expectedModifiedProducts
+    ) {
+        $cart = $this->mockCart($initialProducts, $newProducts);
+        $comparator = new CartProductsComparator($cart);
+
+        $modifiedProducts = $comparator->getAdditionalProducts($knownUpdatedProducts);
+        Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
+    }
+
+    public function getExpectedAdditionalProducts()
+    {
+        $modifiedProducts = $this->getExpectedModifiedProducts();
+        foreach ($modifiedProducts as $modifiedProduct) {
+            $expectedUpdates = $modifiedProduct[3];
+
+            // Filter update modifications
+            $filteredExpectedUpdates = [];
+            /** @var CartProductUpdate $expectedUpdate */
+            foreach ($expectedUpdates as $expectedUpdate) {
+                if ($expectedUpdate->isCreated()) {
+                    $filteredExpectedUpdates[] = $expectedUpdate;
+                }
+            }
+            $modifiedProduct[3] = $filteredExpectedUpdates;
+
+            yield $modifiedProduct;
+        }
+    }
+
+    /**
+     * @dataProvider getExpectedUpdatedProducts
+     *
+     * @param array $initialProducts
+     * @param array $newProducts
+     * @param array $knownUpdatedProducts
+     * @param array $expectedModifiedProducts
      */
     public function testGetUpdatedProducts(
         array $initialProducts,
         array $newProducts,
-        array $expectedUpdatedProducts,
-        array $knownUpdatedProducts
+        array $knownUpdatedProducts,
+        array $expectedModifiedProducts
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
-        foreach ($knownUpdatedProducts as $knownUpdatedProduct) {
-            $comparator->addKnownUpdate($knownUpdatedProduct);
-        }
 
-        $updatedProducts = $comparator->getUpdatedProducts();
-        Assert::assertEquals($expectedUpdatedProducts, $updatedProducts);
+        $modifiedProducts = $comparator->getUpdatedProducts($knownUpdatedProducts);
+        Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 
-    public function getTestProducts()
+    public function getExpectedUpdatedProducts()
     {
-        foreach ($this->getCommonTestProducts() as $commonTestProduct) {
-            yield $commonTestProduct;
+        $modifiedProducts = $this->getExpectedModifiedProducts();
+        foreach ($modifiedProducts as $modifiedProduct) {
+            $expectedUpdates = $modifiedProduct[3];
+
+            // Filter update modifications
+            $filteredExpectedUpdates = [];
+            /** @var CartProductUpdate $expectedUpdate */
+            foreach ($expectedUpdates as $expectedUpdate) {
+                if (!$expectedUpdate->isCreated()) {
+                    $filteredExpectedUpdates[] = $expectedUpdate;
+                }
+            }
+            $modifiedProduct[3] = $filteredExpectedUpdates;
+
+            yield $modifiedProduct;
         }
-
-        yield [
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 3],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-            ],
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-                ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-            ],
-            [
-                new CartProductUpdate(2, 0, 1),
-                new CartProductUpdate(3, 0, 2),
-            ],
-            [
-                new CartProductUpdate(1, 0, -2),
-            ],
-        ];
-
-        yield [
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 3],
-            ],
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-            ],
-            [
-            ],
-            [
-                new CartProductUpdate(2, 0, -1),
-            ],
-        ];
-
-        yield [
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-            ],
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 3],
-            ],
-            [
-                new CartProductUpdate(2, 0, 2),
-            ],
-            [
-                new CartProductUpdate(2, 0, -1),
-            ],
-        ];
     }
 
     /**
