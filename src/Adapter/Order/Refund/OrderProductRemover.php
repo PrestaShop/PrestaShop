@@ -107,21 +107,29 @@ class OrderProductRemover
     private function updateCart(Cart $cart, OrderDetail $orderDetail): array
     {
         $cartComparator = new CartProductsComparator($cart);
-        $cartComparator->addKnownUpdate(new CartProductUpdate(
-            (int) $orderDetail->product_id,
-            (int) $orderDetail->product_attribute_id,
-            -$orderDetail->product_quantity
-        ));
+        $knownUpdates = [
+            new CartProductUpdate(
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                -$orderDetail->product_quantity,
+                false
+            ),
+        ];
 
         $cart->updateQty(
             $orderDetail->product_quantity,
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
             false,
-            'down'
+            'down',
+            0,
+            null,
+            true,
+            false,
+            false // Do not preserve git removal
         );
 
-        return $cartComparator->getUpdatedProducts();
+        return $cartComparator->getUpdatedProducts($knownUpdates);
     }
 
     /**
