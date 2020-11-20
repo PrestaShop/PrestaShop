@@ -24,11 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 /**
- * Class ImageOptimizationException is thrown when resizing, cutting or optimizing image fails.
+ * Defines contract to handle @see AddProductImageCommand
  */
-class ImageOptimizationException extends \Exception
+interface AddProductImageHandlerInterface
 {
+    /**
+     * @param AddProductImageCommand $command
+     *
+     * @return ImageId
+     */
+    public function handle(AddProductImageCommand $command): ImageId;
 }

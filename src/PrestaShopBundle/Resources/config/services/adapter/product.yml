@@ -408,3 +408,34 @@ services:
             - '@prestashop.adapter.shop.context'
             - '@translator'
             - '@prestashop.core.util.string.string_modifier'
+
+    prestashop.adapter.product.command_handler.add_product_image_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductImageHandler
+        arguments:
+            - '@prestashop.adapter.image.uploader.product_image_uploader'
+            - '@prestashop.adapter.product.repository.product_image_repository'
+            - "@prestashop.adapter.image.image_validator"
+            - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand
+
+    prestashop.adapter.product.repository.product_image_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.adapter.product.product_image_path_factory:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
+            - !php/const _PS_TMP_IMG_DIR_
+
+    prestashop.adapter.product.query_handler.get_product_images_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductImagesHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_image_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages

@@ -42,6 +42,7 @@ use Pack;
 use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use TaxManagerFactory;
+use Tests\Resources\ResourceResetter;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -107,20 +108,19 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @AfterFeature @clear-downloads-after-feature
+     * @AfterFeature @reset-downloads-after-feature
      */
-    public static function clearDownloads(): void
+    public static function resetDownloads(): void
     {
-        $filesToSkip = [
-            _PS_DOWNLOAD_DIR_ . 'index.php',
-            _PS_DOWNLOAD_DIR_ . '.htaccess',
-        ];
+        (new ResourceResetter())->resetDownloads();
+    }
 
-        foreach (glob(_PS_DOWNLOAD_DIR_ . '*') as $file) {
-            if (is_file($file) && !in_array($file, $filesToSkip)) {
-                unlink($file);
-            }
-        }
+    /**
+     * @AfterFeature @reset-img-after-feature
+     */
+    public static function resetImgDir(): void
+    {
+        (new ResourceResetter())->resetImages();
     }
 
     /**
