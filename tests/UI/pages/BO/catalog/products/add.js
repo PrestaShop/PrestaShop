@@ -125,8 +125,11 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page) {
-    await page.click(this.saveProductButton);
-    const growlTextMessage = await this.getGrowlMessageContent(page);
+    const [growlTextMessage] = await Promise.all([
+      this.getGrowlMessageContent(page),
+      page.click(this.saveProductButton),
+    ]);
+
     await this.closeGrowlMessage(page);
 
     return growlTextMessage;
@@ -395,12 +398,14 @@ class AddProduct extends BOBasePage {
     await this.setValue(page, this.startingAtInput, specificPriceData.startingAt.toString());
     await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount.toString());
     await this.selectByVisibleText(page, this.reductionType, specificPriceData.reductionType);
+
     // Apply specific price
-    await Promise.all([
-      this.scrollTo(page, this.applyButton),
+    await this.scrollTo(page, this.applyButton);
+    const [growlMessageText] = await Promise.all([
+      this.getGrowlMessageContent(page),
       page.click(this.applyButton),
     ]);
-    const growlMessageText = await this.getGrowlMessageContent(page);
+
     await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);
     return growlMessageText;
