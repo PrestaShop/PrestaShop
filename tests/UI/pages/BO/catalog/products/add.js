@@ -126,7 +126,10 @@ class AddProduct extends BOBasePage {
    */
   async saveProduct(page) {
     await page.click(this.saveProductButton);
-    return this.closeGrowlMessage(page);
+    const growlTextMessage = await this.getGrowlMessageContent(page);
+    await this.closeGrowlMessage(page);
+
+    return growlTextMessage;
   }
 
   /**
@@ -397,7 +400,8 @@ class AddProduct extends BOBasePage {
       this.scrollTo(page, this.applyButton),
       page.click(this.applyButton),
     ]);
-    const growlMessageText = await this.closeGrowlMessage(page);
+    const growlMessageText = await this.getGrowlMessageContent(page);
+    await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);
     return growlMessageText;
   }
