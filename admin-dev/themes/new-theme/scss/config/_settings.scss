@@ -26,7 +26,6 @@ $header-mobile-padding-y: 0.625rem;
 // Imported from bootstrap
 
 $grid-gutter-width: 1.875rem;
-$border-radius: 0;
 $enable-transitions: true;
 
 //UI Kit variables - to be removed
@@ -66,7 +65,7 @@ $spacing-widths: (
   xs: $spacing-base / 3,
   s: $spacing-base / 2,
   n: $spacing-base,
-  l: $spacing-base * 2
+  l: $spacing-base * 2,
 );
 $grid-breakpoints: (
   xs: 0,
@@ -74,7 +73,7 @@ $grid-breakpoints: (
   md: 768px,
   lg: 1024px,
   xl: 1300px,
-  xxl: 1600px // PS custom
+  xxl: 1600px, // PS custom
 );
 
 $card-border-color: #dbe6e9 !default;

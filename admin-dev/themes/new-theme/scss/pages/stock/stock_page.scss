@@ -22,10 +22,15 @@
       min-height: 35px;
       background-color: #fff;
       border: $gray-light 1px solid;
-      @include border-radius(0);
+      @include border-radius(4px);
       outline: none;
       box-shadow: none;
+
+      &.tags-input:not(.search-with-icon) {
+        @include border-right-radius(0);
+      }
     }
+
     .alert-box {
       position: fixed;
       top: 40px;
@@ -57,6 +62,7 @@
     .filter-container {
       padding: 10px;
       border: $gray-light 1px solid;
+      @include border-radius(4px);
 
       &.filter-suppliers {
         .item {
@@ -80,8 +86,12 @@
     width: 150%;
     background: #fff;
     border: solid 1px #b9cdd2;
-    @include border-radius(2px);
     box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
+    @include border-radius(4px);
+
+    select.form-control {
+      @include border-radius(4px);
+    }
 
     .row {
       padding: 0.625rem; // 10px
@@ -154,6 +164,8 @@
       padding: 2px 5px;
       color: #fff;
       background-color: $gray-dark;
+      @include border-radius(4px);
+
       &.is-positive {
         background-color: $brand-primary;
       }
