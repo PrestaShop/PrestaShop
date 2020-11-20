@@ -56,6 +56,9 @@ class RedirectTypeTest extends TestCase
         Assert::assertEquals($isTypeNotFound, $redirectType->isTypeNotFound());
     }
 
+    /**
+     * @return Generator
+     */
     public function getValidDataForCreation(): Generator
     {
         yield ['404', false, false, true];
@@ -63,5 +66,28 @@ class RedirectTypeTest extends TestCase
         yield ['302-category', false, true, false];
         yield ['301-product', true, false, false];
         yield ['302-product', true, false, false];
+    }
+
+    /**
+     * @dataProvider getInvalidDataForCreation
+     *
+     * @param string $type
+     *
+     * @throws ProductConstraintException
+     */
+    public function testItThrowsExceptionWhenInvalidTypeIsProvided(string $type): void
+    {
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_REDIRECT_TYPE);
+
+        new RedirectType($type);
+    }
+
+    public function getInvalidDataForCreation(): Generator
+    {
+        yield ['500'];
+        yield ['303-category'];
+        yield ['301-pro'];
+        yield [''];
     }
 }
