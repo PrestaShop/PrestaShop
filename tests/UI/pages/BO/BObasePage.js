@@ -328,7 +328,7 @@ module.exports = class BOBasePage extends CommonPage {
   async closeGrowlMessage(page) {
     // Close growl message if exist
     try {
-      await page.$eval(this.growlCloseButton, e => e.click());
+      await page.click(this.growlCloseButton);
       await page.waitForSelector(this.growlMessageBlock, {state: 'hidden'});
     } catch (e) {
       // If element does not exist it's already not visible
