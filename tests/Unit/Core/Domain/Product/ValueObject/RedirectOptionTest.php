@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 
 class RedirectOptionTest extends TestCase
 {
@@ -48,6 +49,14 @@ class RedirectOptionTest extends TestCase
 
         Assert::assertSame($redirectType, $redirectOption->getRedirectType()->getValue());
         Assert::assertSame($redirectTarget, $redirectOption->getRedirectTarget()->getValue());
+    }
+
+    public function testItForcesNoRedirectTargetWhenRedirectType404IsProvided(): void
+    {
+        $redirectOption = new RedirectOption('404', 5);
+
+        Assert::assertEquals(RedirectTarget::NO_TARGET, $redirectOption->getRedirectTarget()->getValue());
+        Assert::assertTrue($redirectOption->getRedirectTarget()->isNoTarget());
     }
 
     /**
