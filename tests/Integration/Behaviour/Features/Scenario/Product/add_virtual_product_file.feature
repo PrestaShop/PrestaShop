@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags virtual-product-file
 @reset-database-before-feature
 @virtual-product-file
-@clear-downloads-after-feature
+@reset-downloads-after-feature
 Feature: Add virtual product file from BO (Back Office).
   As an employee I want to be able to add file of virtual product.
 
