@@ -35,7 +35,7 @@
         <div class="card-text">
           {{ form_row(emailConfigurationForm.send_emails_to) }}
           {{ form_row(emailConfigurationForm.mail_method) }}
-          <div class="js-smtp-configuration {% if emailConfigurationForm.mail_method.vars.value != smtpMailMethod %}d-none{% endif %}">
+          <div class="js-smtp-configuration{% if emailConfigurationForm.mail_method.vars.value != smtpMailMethod %} d-none{% endif %}">
             {{ form_widget(emailConfigurationForm.smtp_config) }}
           </div>
           {{ form_rest(emailConfigurationForm) }}
