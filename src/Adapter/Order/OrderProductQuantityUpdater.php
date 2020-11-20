@@ -160,7 +160,8 @@ class OrderProductQuantityUpdater
             $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $updatedProducts);
         } else {
             $this->assertValidProductQuantity($orderDetail, $newQuantity);
-            if (null !== $orderInvoice && 0 === (int) $orderDetail->id_order_invoice) {
+            // It's important to override the invoice, this is what allows to switch an OrderDetail from an invoice to another
+            if (null !== $orderInvoice) {
                 $orderDetail->id_order_invoice = $orderInvoice->id;
             }
 
