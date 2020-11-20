@@ -238,16 +238,12 @@ Feature: Update product stock from Back Office (BO)
       | quantity | 51 |
     Then product "product1" should have following stock information:
       | quantity | 51 |
-    And product "product1" last stock movement has following details:
-      | physical_quantity | 51 |
-      | sign              | +  |
+    And product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
       | quantity | 42 |
     Then product "product1" should have following stock information:
       | quantity | 42 |
-    And product "product1" last stock movement has following details:
-      | physical_quantity | 9 |
-      | sign              | - |
+    And product "product1" last stock movement decreased by 9
 
   Scenario: I update product quantity specifying if movement must be added or not
     Given I add product "product1" with following information:
@@ -264,9 +260,7 @@ Feature: Update product stock from Back Office (BO)
       | add_movement | true |
     Then product "product1" should have following stock information:
       | quantity | 42 |
-    And product "product1" last stock movement has following details:
-      | physical_quantity | 9 |
-      | sign              | - |
+    And product "product1" last stock movement decreased by 9
 
   Scenario: I update product simple stock fields
     Given language "french" with locale "fr-FR" exists

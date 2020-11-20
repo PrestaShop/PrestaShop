@@ -106,15 +106,13 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference last stock movement has following details:
+     * @Then /^product "(.*)" last stock movement (increased|decreased) by (\d+)$/
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertProductLastStockMovement(string $productReference, TableNode $table): void
+    public function assertProductLastStockMovement(string $productReference, string $movementType, int $movementQuantity): void
     {
-        $movementData = $table->getRowsHash();
-        $movementData['sign'] = (int) ($movementData['sign'] . '1');
         $productId = $this->getSharedStorage()->get($productReference);
 
         /** @var StockMovementRepository $stockMovementRepository */
@@ -129,18 +127,27 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         }
 
         $lastMovement = $movements[0];
-        foreach ($movementData as $movementField => $movementValue) {
-            Assert::assertEquals(
-                $movementValue,
-                $lastMovement[$movementField],
-                sprintf(
-                    'Invalid stock movement field %s, expected %s instead of %s',
-                    $movementField,
-                    $movementValue,
-                    $lastMovement[$movementField]
-                )
-            );
-        }
+
+        $lastMovementType = (int) $lastMovement['sign'] < 0 ? 'decreased' : 'increased';
+        Assert::assertEquals(
+            $movementType,
+            $lastMovementType,
+            sprintf(
+                'Invalid stock movement type, expected %s instead of %s',
+                $movementType,
+                $lastMovementType
+            )
+        );
+
+        Assert::assertEquals(
+            $movementQuantity,
+            $lastMovement['physical_quantity'],
+            sprintf(
+                'Invalid stock movement quantity, expected %d instead of %d',
+                $movementQuantity,
+                $lastMovement['physical_quantity']
+            )
+        );
     }
 
     /**
