@@ -56,7 +56,7 @@ class CurrencyExchangeRateType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        $isCronModuleInstalled,
+        bool $isCronModuleInstalled,
         Router $router
     ) {
         parent::__construct($translator, $locales);
