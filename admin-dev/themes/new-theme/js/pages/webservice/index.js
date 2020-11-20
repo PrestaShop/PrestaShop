@@ -54,14 +54,10 @@ $(() => {
   webserviceGrid.addExtension(new LinkRowActionExtension());
 
   // needed for shop association input in form
-  new ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();
-
-  // needed for permissions input in form
-  new MultipleChoiceTable();
-
+  new window.prestashop.component.ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();
+  window.prestashop.component.initComponents(['MultipleChoiceTable', 'GeneratableInput']);
   // needed for key input in form
-  const generatableInput = new GeneratableInput();
-  generatableInput.attachOn('.js-generator-btn');
+  window.prestashop.instance.generatableInput.attachOn('.js-generator-btn');
 
   new PermissionsRowSelector();
 });
