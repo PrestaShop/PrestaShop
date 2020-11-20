@@ -68,6 +68,10 @@ Feature: Update product stock from Back Office (BO)
       | depends_on_stock | true        |
     And I should get error that stock management is disabled on product
     When I update product "product1" stock with following information:
+      | use_advanced_stock_management | false       |
+      | depends_on_stock              | true        |
+    And I should get error that stock management is disabled on product
+    When I update product "product1" stock with following information:
       | use_advanced_stock_management | true        |
       | depends_on_stock              | true        |
     Then product "product1" should have following stock information:
@@ -77,6 +81,12 @@ Feature: Update product stock from Back Office (BO)
       | use_advanced_stock_management | false       |
     Then product "product1" should have following stock information:
       | use_advanced_stock_management | false       |
+      | depends_on_stock              | false       |
+    When I update product "product1" stock with following information:
+      | use_advanced_stock_management | true        |
+      | depends_on_stock              | false       |
+    Then product "product1" should have following stock information:
+      | use_advanced_stock_management | true        |
       | depends_on_stock              | false       |
 
   Scenario: I update pack stock type

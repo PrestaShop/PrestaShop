@@ -98,6 +98,14 @@ class ProductStockUpdater
      */
     public function update(Product $product, array $propertiesToUpdate, bool $addMovement = true): void
     {
+        // When advanced stock is disabled depend_on_stock must be disabled automatically
+        if (in_array('advanced_stock_management', $propertiesToUpdate)
+            && !in_array('depends_on_stock', $propertiesToUpdate)
+            && false === (bool) $product->advanced_stock_management) {
+            $product->depends_on_stock = false;
+            $propertiesToUpdate[] = 'depends_on_stock';
+        }
+
         $stockAvailable = $this->getStockAvailable($product);
         $this->productRepository->partialUpdate($product, $propertiesToUpdate, CannotUpdateProductException::FAILED_UPDATE_STOCK);
 

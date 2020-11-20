@@ -136,11 +136,6 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
         if (null !== $command->useAdvancedStockManagement()) {
             $product->advanced_stock_management = $command->useAdvancedStockManagement();
             $updatableProperties[] = 'advanced_stock_management';
-            // When advanced stock is disabled depend_on_stock must be disabled automatically
-            if (!$product->advanced_stock_management && !in_array('depends_on_stock', $updatableProperties)) {
-                $product->depends_on_stock = false;
-                $updatableProperties[] = 'depends_on_stock';
-            }
         }
 
         return $updatableProperties;

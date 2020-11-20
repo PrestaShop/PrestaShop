@@ -56,6 +56,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $data = $table->getRowsHash();
         $productId = $this->getSharedStorage()->get($productReference);
 
+        $this->cleanLastException();
         try {
             $command = new UpdateProductStockInformationCommand($productId);
             $unhandledData = $this->setUpdateStockCommandData($data, $command);
