@@ -952,6 +952,11 @@ class OrderController extends FrameworkBundleAdminController
             return $item->getOrderDetailId() == $orderDetailId ? $item : $result;
         });
 
+        // The whole product row has been removed so we return an empty response
+        if (null === $product) {
+            return new Response('');
+        }
+
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
