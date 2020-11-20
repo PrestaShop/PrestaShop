@@ -160,7 +160,7 @@ class OrderProductQuantityUpdater
             $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $updatedProducts);
         } else {
             $this->assertValidProductQuantity($orderDetail, $newQuantity);
-            if (null !== $orderInvoice) {
+            if (null !== $orderInvoice && 0 === (int) $orderDetail->id_order_invoice) {
                 $orderDetail->id_order_invoice = $orderInvoice->id;
             }
 
@@ -247,11 +247,14 @@ class OrderProductQuantityUpdater
         }
 
         $cartComparator = new CartProductsComparator($cart);
-        $cartComparator->addKnownUpdate(new CartProductUpdate(
-            (int) $orderDetail->product_id,
-            (int) $orderDetail->product_attribute_id,
-            $deltaQuantity
-        ));
+        $knownUpdates = [
+            new CartProductUpdate(
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                $deltaQuantity,
+                false
+            ),
+        ];
 
         /**
          * Here we update product and customization in the cart.
@@ -284,7 +287,7 @@ class OrderProductQuantityUpdater
             throw new \LogicException('Something went wrong');
         }
 
-        return $cartComparator->getUpdatedProducts();
+        return $cartComparator->getUpdatedProducts($knownUpdates);
     }
 
     /**
