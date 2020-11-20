@@ -115,6 +115,8 @@ tests/Resources/img/c/*
 !tests/Resources/img/c/.gitkeep
 tests/Resources/img/tmp/*
 tests/Resources/img/tmp/.gitkeep
+!tests/Resources/download/.gitkeep
+tests/Resources/download/*
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
