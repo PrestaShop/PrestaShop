@@ -423,7 +423,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
     }
 
-
     /**
      * @Then order :orderReference should have :expectedCount cart rule(s)
      *
