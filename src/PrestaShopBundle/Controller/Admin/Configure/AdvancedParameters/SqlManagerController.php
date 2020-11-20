@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -81,9 +82,6 @@ class SqlManagerController extends FrameworkBundleAdminController
         $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
         $grid = $gridLogFactory->getGrid($filters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
@@ -99,11 +97,13 @@ class SqlManagerController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),
-            'requestSqlGrid' => $presentedGrid,
+            'requestSqlGrid' => $this->presentGrid($grid),
         ]);
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
@@ -113,20 +113,14 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.request_sql');
-        $emailLogsDefinition = $definitionFactory->getDefinition();
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
-        $filtersForm->handleRequest($request);
-
-        $filters = [];
-
-        if ($filtersForm->isSubmitted()) {
-            $filters = $filtersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_sql_requests_index', ['filters' => $filters]);
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.request_sql'),
+            $request,
+            RequestSqlGridDefinitionFactory::GRID_ID,
+            'admin_sql_requests_index'
+        );
     }
 
     /**

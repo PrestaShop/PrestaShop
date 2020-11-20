@@ -48,6 +48,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    public const GRID_ID = 'logs';
+
     /**
      * @var string the URL to reset Grid filters
      */
@@ -80,7 +82,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'logs';
+        return self::GRID_ID;
     }
 
     /**
@@ -239,10 +241,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_logs_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

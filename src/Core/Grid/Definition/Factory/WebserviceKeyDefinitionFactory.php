@@ -49,6 +49,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    public const GRID_ID = 'webservice_key';
+
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
@@ -92,7 +94,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'webservice_key';
+        return self::GRID_ID;
     }
 
     /**
@@ -205,10 +207,11 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_webservice_keys_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

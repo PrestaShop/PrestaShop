@@ -47,6 +47,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    public const GRID_ID = 'sql_request';
+
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
@@ -80,7 +82,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getId()
     {
-        return 'sql_request';
+        return self::GRID_ID;
     }
 
     /**
@@ -201,10 +203,11 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetSearchUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_sql_requests_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

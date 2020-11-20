@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -83,22 +84,16 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.logs');
-        $logsDefinition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($logsDefinition);
-
-        $searchParametersForm->handleRequest($request);
-        $filters = [];
-
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        return $this->redirectToRoute('admin_logs_index', ['filters' => $filters]);
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.logs'),
+            $request,
+            LogGridDefinitionFactory::GRID_ID,
+            'admin_logs_index'
+        );
     }
 
     /**

@@ -26,5 +26,8 @@ admin_logs_search:
     path: /
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:search'
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.logs
+        redirectRoute: admin_logs_index
         _legacy_controller: AdminLogs
+        _legacy_link: AdminLogs:search

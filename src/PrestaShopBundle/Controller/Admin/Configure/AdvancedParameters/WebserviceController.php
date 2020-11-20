@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -59,8 +60,23 @@ class WebserviceController extends FrameworkBundleAdminController
     public function indexAction(WebserviceKeyFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
+        $grid = $gridWebserviceFactory->getGrid($filters);
 
-        return $this->renderPage($request, $filters, $form);
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+        $configurationWarnings = $this->lookForWarnings();
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
+            [
+                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
+                'webserviceConfigurationForm' => $form->createView(),
+                'grid' => $presentedGrid,
+                'configurationWarnings' => $configurationWarnings,
+            ]
+        );
     }
 
     /**
@@ -149,20 +165,14 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice_key');
-        $webserviceDefinition = $definitionFactory->getDefinition();
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($webserviceDefinition);
-
-        $searchParametersForm->handleRequest($request);
-        $filters = [];
-
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_webservice_keys_index', ['filters' => $filters]);
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.webservice_key'),
+            $request,
+            WebserviceKeyDefinitionFactory::GRID_ID,
+            'admin_webservice_keys_index'
+        );
     }
 
     /**

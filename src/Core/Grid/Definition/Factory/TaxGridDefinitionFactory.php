@@ -184,14 +184,14 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_taxes_index',
-                ])
-                ->setAssociatedColumn('actions')
+                    ->setTypeOptions([
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
+                        ],
+                        'redirect_route' => 'admin_taxes_index',
+                    ])
+                    ->setAssociatedColumn('actions')
             );
     }
 
