@@ -58,7 +58,7 @@
           {/block}
         </div>
 
-        <div id="js-product-list-bottom">
+        <div>
           {block name='product_list_bottom'}
             {include file='catalog/_partials/products-bottom.tpl' listing=$listing}
           {/block}
