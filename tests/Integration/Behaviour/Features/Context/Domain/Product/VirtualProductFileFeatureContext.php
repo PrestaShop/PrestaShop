@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\Virtu
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
+use Tests\Resources\DummyFileUploader;
 
 class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
 {
@@ -61,7 +62,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     public function addFile(string $fileReference, string $productReference, TableNode $dataTable): void
     {
         $dataRows = $dataTable->getRowsHash();
-        $filePath = $this->uploadDummyFile($dataRows['file name']);
+        $filePath = DummyFileUploader::upload($dataRows['file name']);
         $command = new AddVirtualProductFileCommand(
             $this->getSharedStorage()->get($productReference),
             $filePath,
@@ -153,14 +154,5 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         if (!empty($dataRows)) {
             throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_dump($dataRows)));
         }
-    }
-
-    //@todo: use dummyFileUploader from PR https://github.com/PrestaShop/PrestaShop/pull/21510
-    private function uploadDummyFile(string $dummyFileName): string
-    {
-        $destination = tempnam(sys_get_temp_dir(), 'TEST_PS_');
-        copy(_PS_ROOT_DIR_ . '/tests/Resources/dummyFile/' . $dummyFileName, tempnam(sys_get_temp_dir(), 'TEST_PS_'));
-
-        return $destination;
     }
 }
