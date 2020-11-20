@@ -150,4 +150,29 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
       await expect(numberOfShopGroupsAfterDelete).to.be.equal(numberOfShopGroups);
     });
   });
+
+  // 5 : Disable multi store
+  describe('Disable multistore', async () => {
+    it('should go to "Shop parameters > General" page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.shopParametersParentLink,
+        dashboardPage.shopParametersGeneralLink,
+      );
+
+      await generalPage.closeSfToolBar(page);
+
+      const pageTitle = await generalPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(generalPage.pageTitle);
+    });
+
+    it('should disable "Multi store"', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
+
+      const result = await generalPage.setMultiStoreStatus(page, false);
+      await expect(result).to.contains(generalPage.successfulUpdateMessage);
+    });
+  });
 });
