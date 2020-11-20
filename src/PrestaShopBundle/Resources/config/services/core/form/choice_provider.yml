@@ -6,7 +6,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
     arguments:
       - '@prestashop.adapter.data_provider.language'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
 
   prestashop.core.form.choice_provider.all_languages:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider'
