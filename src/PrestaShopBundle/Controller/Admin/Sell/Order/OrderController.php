@@ -232,7 +232,11 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         $summaryForm = $this->createForm(CartSummaryType::class);
-        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
+        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices(
+            [
+                'shop_id' => $shopContextChecker->getContextShopID(),
+            ]
+        );
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
