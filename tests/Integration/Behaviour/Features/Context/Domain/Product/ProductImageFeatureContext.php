@@ -51,25 +51,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I add new product :productReference image :imageReference named :fileName
-     *
-     * @param string $productReference
-     * @param string $imageReference
-     * @param string $fileName
-     */
-    public function uploadImage(string $productReference, string $imageReference, string $fileName): void
-    {
-        $pathName = DummyFileUploader::upload($fileName);
-
-        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
-            $this->getSharedStorage()->get($productReference),
-            $pathName
-        ));
-
-        $this->getSharedStorage()->set($imageReference, $imageId->getValue());
-    }
-
-    /**
      * @Given following image types should be applicable to products:
      */
     public function assertProductsImageTypesExists(TableNode $tableNode)
@@ -91,6 +72,25 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
             $this->getSharedStorage()->set($expectedType['reference'], (int) $actualType->id);
         }
+    }
+
+    /**
+     * @When I add new image :imageReference named :fileName to product :productReference
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     */
+    public function uploadImage(string $imageReference, string $fileName, string $productReference): void
+    {
+        $pathName = DummyFileUploader::upload($fileName);
+
+        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
+            $this->getSharedStorage()->get($productReference),
+            $pathName
+        ));
+
+        $this->getSharedStorage()->set($imageReference, $imageId->getValue());
     }
 
     /**
