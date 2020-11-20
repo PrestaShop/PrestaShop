@@ -34,16 +34,14 @@ function ps_1771_update_customer_note()
         WHERE note IS NOT NULL AND note != ""'
     );
 
+    $result = true;
     foreach ($notes as $note) {
-        $result = Db::getInstance()->execute(
+        $result &= Db::getInstance()->execute(
             'UPDATE ' . _DB_PREFIX_ . 'customer
             SET note = "' . html_entity_decode($note['note']) . '"
             WHERE id_customer = ' . $note['id_customer']
         );
-        if (false === $result) {
-            return false;
-        }
     }
 
-    return true;
+    return (bool) $result;
 }
