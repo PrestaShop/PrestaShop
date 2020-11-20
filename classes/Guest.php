@@ -213,9 +213,9 @@ class GuestCore extends ObjectModel
     public function mergeWithCustomer($idGuest, $idCustomer)
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
-        Db::getInstance()->update('connections', array(
-            'id_guest' => (int) $idGuest,
-        ), 'id_guest = ' . (int) $this->id);
+        Db::getInstance()->update('connections', [
+           'id_guest' => (int) $idGuest,
+        ], 'id_guest = ' . (int) $this->id);
 
         // The current guest is removed from the database
         $this->delete();
