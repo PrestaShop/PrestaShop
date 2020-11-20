@@ -114,6 +114,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     public function assertProductLastStockMovement(string $productReference, TableNode $table): void
     {
         $movementData = $table->getRowsHash();
+        $movementData['sign'] = (int) ($movementData['sign'] . '1');
         $productId = $this->getSharedStorage()->get($productReference);
 
         /** @var StockMovementRepository $stockMovementRepository */
