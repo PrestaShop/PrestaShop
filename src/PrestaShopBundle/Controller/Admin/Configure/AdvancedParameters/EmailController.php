@@ -259,7 +259,7 @@ class EmailController extends FrameworkBundleAdminController
             'send_email_to' => $configuration->get('PS_SHOP_EMAIL'),
         ]);
 
-        $isEmailLogsEnabled = $configuration->get('PS_LOG_EMAILS');
+        $isEmailLogsEnabled = $configuration->getBoolean('PS_LOG_EMAILS');
 
         $presentedEmailLogsGrid = null;
 
