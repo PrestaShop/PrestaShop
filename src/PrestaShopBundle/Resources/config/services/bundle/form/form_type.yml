@@ -1171,8 +1171,8 @@ services:
 
     prestashop.bundle.form.admin.sell.attachment.attachment:
         class: 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
+        public: true
+        parent: form.type.translatable.aware
         tags:
             - { name: form.type }
 
