@@ -619,7 +619,7 @@ class LocalizationPackCore
         return $this->_errors;
     }
 
-    private function getSoftDeletedByIsoCodeOrCreate(string $isoCode)
+    private function getSoftDeletedByIsoCodeOrCreate(string $isoCode): Currency
     {
         $currencies = Currency::findAllInstalled();
         foreach ($currencies as $currency) {
