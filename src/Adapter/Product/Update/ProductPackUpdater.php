@@ -109,14 +109,14 @@ class ProductPackUpdater
 
         if ((bool) $product->cache_is_pack) {
             throw new ProductPackConstraintException(
-                sprintf('Product #%d is a pack itself. It cannot be packed', $productId),
+                sprintf('Product #%d is a pack itself. It cannot be packed', $product->id),
                 ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
             );
         }
 
         if ((bool) $product->is_virtual) {
             throw new ProductPackConstraintException(
-                sprintf('Product #%d is virtual. Virtual products cannot be packed', $productId),
+                sprintf('Product #%d is virtual. Virtual products cannot be packed', $product->id),
                 ProductPackConstraintException::CANNOT_ADD_VIRTUAL_PRODUCT_INTO_PACK
             );
         }

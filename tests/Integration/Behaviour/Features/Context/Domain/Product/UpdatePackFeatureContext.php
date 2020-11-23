@@ -251,6 +251,17 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then I should get error that I cannot add virtual product into a pack
+     */
+    public function assertAddingVirtualProductToPackError()
+    {
+        $this->assertLastErrorIs(
+            ProductPackConstraintException::class,
+            ProductPackConstraintException::CANNOT_ADD_VIRTUAL_PRODUCT_INTO_PACK
+        );
+    }
+
+    /**
      * @return ProductForPacking[]
      */
     private function getSearchResults(): array
