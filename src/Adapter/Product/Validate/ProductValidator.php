@@ -164,7 +164,6 @@ class ProductValidator extends AbstractObjectModelValidator
      * @param Product $product
      *
      * @throws ProductConstraintException
-     *
      * @throws ProductPackConstraintException
      * @throws ProductStockConstraintException
      */
