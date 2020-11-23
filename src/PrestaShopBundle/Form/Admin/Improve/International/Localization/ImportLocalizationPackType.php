@@ -74,8 +74,8 @@ class ImportLocalizationPackType extends TranslatorAwareType
                 'choice_translation_domain' => false,
                 'attr' => [
                     'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2'
-                ]
+                    'data-toggle' => 'select2',
+                ],
             ])
             ->add('content_to_import', ChoiceType::class, [
                 'label' => $this->trans(
