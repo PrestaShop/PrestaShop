@@ -39,18 +39,23 @@ class ProductPackConstraintException extends ProductPackException
     const CANNOT_ADD_PACK_INTO_PACK = 10;
 
     /**
+     * When trying to pack a virtual product
+     */
+    const CANNOT_ADD_VIRTUAL_PRODUCT_INTO_PACK = 20;
+
+    /**
      * When product for packing quantity is invalid
      */
-    const INVALID_QUANTITY = 20;
+    const INVALID_QUANTITY = 30;
 
     /**
      * When invalid pack stock type is used
      */
-    const INVALID_STOCK_TYPE = 30;
+    const INVALID_STOCK_TYPE = 40;
 
     /**
      * Code is used when trying to link a pack stock with its product and one of them
      * has no advanced stock
      */
-    const INCOMPATIBLE_STOCK_TYPE = 40;
+    const INCOMPATIBLE_STOCK_TYPE = 50;
 }

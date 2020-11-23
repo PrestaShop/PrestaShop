@@ -48,20 +48,21 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     public function addCombinationsToProduct(string $productReference, TableNode $tableNode)
     {
         $details = $tableNode->getColumnsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
         $combinationsDetails = [];
 
         foreach ($details as $combination) {
+            $combinationReference = $combination['reference'];
+
             $combinationsDetails[] = new CombinationDetails(
-                $combination['reference'],
+                $combinationReference,
                 (int) $combination['quantity'],
-                explode(';', $combination['attributes'])
+                explode(';', $combination['attributes']),
+                $this->getSharedStorage()->exists($combinationReference) ? $this->getSharedStorage()->get($combinationReference) : null
             );
         }
 
-        $combinations = ProductCombinationFactory::makeCombinations(
-            $this->getSharedStorage()->get($productReference),
-            $combinationsDetails
-        );
+        $combinations = ProductCombinationFactory::makeCombinations($productId, $combinationsDetails);
 
         foreach ($combinations as $combination) {
             $this->getSharedStorage()->set($combination->reference, (int) $combination->id);

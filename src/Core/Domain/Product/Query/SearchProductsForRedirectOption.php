@@ -26,80 +26,87 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Util;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
- * Transfers combination details data
+ * Searches products to add as a redirect target
  */
-class CombinationDetails
+class SearchProductsForRedirectOption
 {
+    /**
+     * Default search results limit
+     */
+    const LIMIT_DEFAULT = 10;
+
     /**
      * @var string
      */
-    private $reference;
+    private $phrase;
+
+    /**
+     * @var LanguageId
+     */
+    private $languageId;
 
     /**
      * @var int
      */
-    private $quantity;
+    private $limit;
 
     /**
-     * @var array
+     * @var int
      */
-    private $attributes;
+    private $offset;
 
     /**
-     * @var int|null
-     */
-    private $combinationId;
-
-    /**
-     * @param string $reference
-     * @param int $quantity
-     * @param string[] $attributes
-     * @param int|null $combinationId to indicate update action instead of create
+     * @param string $phrase
+     * @param int $languageId
+     * @param int $limit
+     * @param int $offset
      */
     public function __construct(
-        string $reference,
-        int $quantity,
-        array $attributes,
-        ?int $combinationId = null
+        string $phrase,
+        int $languageId,
+        int $limit = self::LIMIT_DEFAULT,
+        int $offset = 0
     ) {
-        $this->reference = $reference;
-        $this->quantity = $quantity;
-        $this->attributes = $attributes;
-        $this->combinationId = $combinationId;
+        $this->phrase = $phrase;
+        $this->languageId = new LanguageId($languageId);
+        $this->limit = $limit;
+        $this->offset = $offset;
     }
 
     /**
      * @return string
      */
-    public function getReference(): string
+    public function getPhrase(): string
     {
-        return $this->reference;
+        return $this->phrase;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 
     /**
      * @return int
      */
-    public function getQuantity(): int
+    public function getLimit(): int
     {
-        return $this->quantity;
+        return $this->limit;
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getAttributes(): array
+    public function getOffset(): int
     {
-        return $this->attributes;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCombinationId(): ?int
-    {
-        return $this->combinationId;
+        return $this->offset;
     }
 }

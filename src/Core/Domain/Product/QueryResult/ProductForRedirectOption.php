@@ -26,49 +26,65 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Util;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * Transfers combination details data
+ * Transfers product data when searched to add a redirect target
  */
-class CombinationDetails
+class ProductForRedirectOption
 {
+    /**
+     * @var int
+     */
+    private $productId;
+
+    /**
+     * @var string
+     */
+    private $name;
+
     /**
      * @var string
      */
     private $reference;
 
     /**
-     * @var int
+     * @var string
      */
-    private $quantity;
+    private $coverImage;
 
     /**
-     * @var array
-     */
-    private $attributes;
-
-    /**
-     * @var int|null
-     */
-    private $combinationId;
-
-    /**
+     * @param int $productId
+     * @param string $name
      * @param string $reference
-     * @param int $quantity
-     * @param string[] $attributes
-     * @param int|null $combinationId to indicate update action instead of create
+     * @param string $coverImage
      */
     public function __construct(
+        int $productId,
+        string $name,
         string $reference,
-        int $quantity,
-        array $attributes,
-        ?int $combinationId = null
+        string $coverImage
     ) {
+        $this->productId = $productId;
+        $this->name = $name;
         $this->reference = $reference;
-        $this->quantity = $quantity;
-        $this->attributes = $attributes;
-        $this->combinationId = $combinationId;
+        $this->coverImage = $coverImage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -80,26 +96,10 @@ class CombinationDetails
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getQuantity(): int
+    public function getCoverImage(): string
     {
-        return $this->quantity;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCombinationId(): ?int
-    {
-        return $this->combinationId;
+        return $this->coverImage;
     }
 }

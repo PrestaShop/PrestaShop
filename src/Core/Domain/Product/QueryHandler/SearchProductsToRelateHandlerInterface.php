@@ -24,39 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPackUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsToRelate;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductToRelate;
 
 /**
- * Handles @see SetPackProductsCommand using legacy object model
+ * Defines contract to handle @see SearchProductsToRelate query
  */
-final class SetPackProductsHandler extends AbstractProductHandler implements SetPackProductsHandlerInterface
+interface SearchProductsToRelateHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param SearchProductsToRelate $query
+     *
+     * @return ProductToRelate[]
      */
-    private $productPackUpdater;
-
-    /**
-     * @param ProductPackUpdater $productPackUpdater
-     */
-    public function __construct(
-        ProductPackUpdater $productPackUpdater
-    ) {
-        $this->productPackUpdater = $productPackUpdater;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(SetPackProductsCommand $command): void
-    {
-        $this->productPackUpdater->setPackProducts($command->getPackId(), $command->getProducts());
-    }
+    public function handle(SearchProductsToRelate $query): array;
 }

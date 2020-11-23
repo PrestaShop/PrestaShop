@@ -167,7 +167,7 @@ class ProductConstraintException extends ProductException
     const INVALID_REDIRECT_TYPE = 270;
 
     /**
-     * When product redirect target
+     * When product redirect target is invalid
      */
     const INVALID_REDIRECT_TARGET = 280;
 

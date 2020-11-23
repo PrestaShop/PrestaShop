@@ -173,12 +173,10 @@ class ProductRepository extends AbstractObjectModelRepository
         $results = $qb->execute()->fetch();
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
-            throw new ProductNotFoundException(
-                    sprintf(
-                        'Some of these products do not exist: %s',
-                        implode(',', $ids)
-                    )
-                );
+            throw new ProductNotFoundException(sprintf(
+                'Some of these products does not exist: %s',
+                implode(',', $ids)
+            ));
         }
     }
 
@@ -318,5 +316,180 @@ class ProductRepository extends AbstractObjectModelRepository
             $failedIds,
             sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
         );
+    }
+
+    /**
+     * @param string $query
+     * @param LanguageId $languageId
+     * @param bool $includePacks include product packs in results
+     * @param bool $includeVirtualProducts include virtual products in results
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return array<int, array<string, mixed>>
+     *
+     * @todo: or should dedicated methods be implemented for each case? (related products, for packing, for seo)?
+     * @todo: decide how to refactor this. Should this be some "search" method with filters etc (maybe moved out to service then)
+     */
+    public function searchByNameAndReference(
+        string $query,
+        LanguageId $languageId,
+        bool $includePacks = true,
+        //@todo: virtual products seems to be not supported to add in a pack
+        bool $includeVirtualProducts = true,
+        ?int $limit = null,
+        ?int $offset = null
+    ): array {
+        if ('' === $query) {
+            return [];
+        }
+
+        //@todo: shop association not handled
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('p.id_product, p.reference, pl.name, pl.link_rewrite, i.id_image, p.cache_default_attribute, p.cache_is_pack, p.is_virtual')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_lang',
+                'pl',
+                'p.id_product = pl.id_product AND pl.id_lang = :langId'
+            )->leftJoin(
+                'p',
+                $this->dbPrefix . 'image',
+                'i',
+                'p.id_product = i.id_product AND i.cover = 1'
+            )
+            ->setParameter('langId', $languageId->getValue())
+            ->where('pl.name LIKE :searchQuery')
+            ->orWhere('p.reference LIKE :searchQuery')
+            ->setParameter('searchQuery', '%' . $query . '%')
+        ;
+
+        if (!$includePacks) {
+            $qb->andWhere('p.cache_is_pack = 0');
+        }
+
+        if (!$includeVirtualProducts) {
+            $qb->andWhere('p.is_virtual = 0');
+        }
+
+        $results = $qb->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->execute()
+            ->fetchAll()
+        ;
+
+        if (!$results) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public function getCombinations(ProductId $productId, LanguageId $languageId, ?int $limit = null, ?int $offset = null): array
+    {
+        //@todo; multistore not considered
+        $combinationIds = $this->getCombinationIds($productId, $languageId, $limit, $offset);
+
+        if (!$combinationIds) {
+            return [];
+        }
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pa.id_product_attribute, pa.reference, ag.id_attribute_group, pai.id_image, agl.name AS group_name, al.name AS attribute_name, a.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->setParameter('langId', $languageId->getValue())
+            ->setParameter('productId', $productId->getValue())
+            ->leftJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            )->leftJoin(
+                'pac',
+                $this->dbPrefix . 'attribute',
+                'a',
+                'a.id_attribute = pac.id_attribute'
+            )->leftJoin(
+                'a',
+                $this->dbPrefix . 'attribute_group',
+                'ag',
+                'ag.id_attribute_group = a.id_attribute_group'
+            )->leftJoin(
+                'ag',
+                $this->dbPrefix . 'attribute_lang',
+                'al',
+                'a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = :langId'
+            )->leftJoin(
+                'al',
+                $this->dbPrefix . 'attribute_group_lang',
+                'agl',
+                'ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = :langId'
+            )->leftJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_image',
+                'pai',
+                'pai.id_product_attribute = pa.id_product_attribute'
+            )->where('pa.id_product = :productId')
+            ->where('pa.id_product_attribute IN (:combinationIds)')
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            ->groupBy('pa.id_product_attribute', 'ag.id_attribute_group')
+            ->orderBy('pa.id_product_attribute')
+        ;
+
+        $combinations = [];
+        foreach ($qb->execute()->fetchAll() as $result) {
+            $combinationId = (int) $result['id_product_attribute'];
+            $combinations[$combinationId]['id_product_attribute'] = $combinationId;
+            $combinations[$combinationId]['id_image'] = (int) $result['id_image'];
+            $combinations[$combinationId]['reference'] = $result['reference'];
+            $combinations[$combinationId]['attributes'][] = [
+                'id_attribute_group' => (int) $result['id_attribute_group'],
+                'group_name' => $result['group_name'],
+                'id_attribute' => (int) $result['id_attribute'],
+                'attribute_name' => $result['attribute_name'],
+            ];
+        }
+
+        return $combinations;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return int[]
+     */
+    private function getCombinationIds(ProductId $productId, LanguageId $languageId, ?int $limit = null, ?int $offset = null): array
+    {
+        //@todo: shop association not handled
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->setParameter('langId', $languageId->getValue())
+            ->setParameter('productId', $productId->getValue())
+            ->where('pa.id_product = :productId')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
+        $combinationIds = $qb->execute()->fetchAll();
+
+        if (empty($combinationIds)) {
+            return [];
+        }
+
+        return array_map(function (array $result): int {
+            return (int) $result['id_product_attribute'];
+        }, $combinationIds);
     }
 }

@@ -26,27 +26,32 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Util;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * Transfers combination details data
+ * Transfers searched for packing product data
  */
-class CombinationDetails
+class ProductForPacking
 {
+    /**
+     * @var int
+     */
+    private $productId;
+
+    /**
+     * @var string
+     */
+    private $name;
+
     /**
      * @var string
      */
     private $reference;
 
     /**
-     * @var int
+     * @var string
      */
-    private $quantity;
-
-    /**
-     * @var array
-     */
-    private $attributes;
+    private $coverImage;
 
     /**
      * @var int|null
@@ -54,21 +59,40 @@ class CombinationDetails
     private $combinationId;
 
     /**
+     * @param int $productId
+     * @param string $name
      * @param string $reference
-     * @param int $quantity
-     * @param string[] $attributes
-     * @param int|null $combinationId to indicate update action instead of create
+     * @param string $coverImage
+     * @param int|null $combinationId
      */
     public function __construct(
+        int $productId,
+        string $name,
         string $reference,
-        int $quantity,
-        array $attributes,
+        string $coverImage,
         ?int $combinationId = null
     ) {
+        $this->productId = $productId;
+        $this->name = $name;
         $this->reference = $reference;
-        $this->quantity = $quantity;
-        $this->attributes = $attributes;
+        $this->coverImage = $coverImage;
         $this->combinationId = $combinationId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -80,19 +104,11 @@ class CombinationDetails
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getQuantity(): int
+    public function getCoverImage(): string
     {
-        return $this->quantity;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
+        return $this->coverImage;
     }
 
     /**
