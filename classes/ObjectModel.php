@@ -2155,7 +2155,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * @return array|null
+     * @return array<string, bool|array<int, bool>>|null
      */
     public function getFieldsToUpdate(): ?array
     {

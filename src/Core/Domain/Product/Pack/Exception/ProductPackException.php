@@ -26,10 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
- * Thrown when some product packing actions fails
+ * Thrown when some product packing actions fails, also base exception of Product/Pack subdomain
  */
 class ProductPackException extends ProductException
 {
@@ -42,14 +44,4 @@ class ProductPackException extends ProductException
      * When fails to delete products from a pack
      */
     const FAILED_DELETING_PRODUCTS_FROM_PACK = 20;
-
-    /**
-     * When trying to pack a product which is already a pack itself
-     */
-    const CANNOT_ADD_PACK_INTO_PACK = 30;
-
-    /**
-     * When product for packing quantity is invalid
-     */
-    const INVALID_QUANTITY = 40;
 }

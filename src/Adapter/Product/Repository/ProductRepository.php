@@ -41,6 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -225,6 +227,16 @@ class ProductRepository extends AbstractObjectModelRepository
             ProductNotFoundException::class
         );
 
+        try {
+            $product->loadStockData();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to load Product stock #%d', $productId->getValue()),
+                0,
+                $e
+            );
+        }
+
         return $product;
     }
 
@@ -257,6 +269,9 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param int $errorCode
      *
      * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {

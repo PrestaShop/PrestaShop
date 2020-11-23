@@ -26,38 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Tax;
-
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShopException;
-use Tax;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
 /**
- * Provides reusable methods for tax command/query handlers.
+ * Thrown when product stock constraints are violated
  */
-abstract class AbstractTaxHandler
+class ProductStockConstraintException extends ProductStockException
 {
     /**
-     * Gets legacy Tax
-     *
-     * @param TaxId $taxId
-     *
-     * @return Tax
+     * Code is used when an advanced stock action is performed while
+     * advanced stock managed is disabled
      */
-    protected function getTax(TaxId $taxId)
-    {
-        try {
-            $tax = new Tax($taxId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new TaxException('Failed to create new tax', 0, $e);
-        }
+    const ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED = 10;
 
-        if ($tax->id !== $taxId->getValue()) {
-            throw new TaxNotFoundException(sprintf('Tax with id "%s" was not found.', $taxId->getValue()));
-        }
+    /**
+     * Code is used when an advanced stock action is performed while
+     * advanced stock managed is disabled on the product
+     */
+    const ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED = 20;
 
-        return $tax;
-    }
+    /**
+     * Code is sent when invalid out of stock type is used
+     */
+    const INVALID_OUT_OF_STOCK_TYPE = 30;
 }

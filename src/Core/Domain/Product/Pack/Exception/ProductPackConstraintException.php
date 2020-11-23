@@ -26,38 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Tax;
-
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShopException;
-use Tax;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception;
 
 /**
- * Provides reusable methods for tax command/query handlers.
+ * Thrown when product packing constraints are violated
  */
-abstract class AbstractTaxHandler
+class ProductPackConstraintException extends ProductPackException
 {
     /**
-     * Gets legacy Tax
-     *
-     * @param TaxId $taxId
-     *
-     * @return Tax
+     * When trying to pack a product which is already a pack itself
      */
-    protected function getTax(TaxId $taxId)
-    {
-        try {
-            $tax = new Tax($taxId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new TaxException('Failed to create new tax', 0, $e);
-        }
+    const CANNOT_ADD_PACK_INTO_PACK = 10;
 
-        if ($tax->id !== $taxId->getValue()) {
-            throw new TaxNotFoundException(sprintf('Tax with id "%s" was not found.', $taxId->getValue()));
-        }
+    /**
+     * When product for packing quantity is invalid
+     */
+    const INVALID_QUANTITY = 20;
 
-        return $tax;
-    }
+    /**
+     * When invalid pack stock type is used
+     */
+    const INVALID_STOCK_TYPE = 30;
+
+    /**
+     * Code is used when trying to link a pack stock with its product and one of them
+     * has no advanced stock
+     */
+    const INCOMPATIBLE_STOCK_TYPE = 40;
 }

@@ -70,6 +70,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
         arguments:
             - '@prestashop.core.util.number.number_extractor'
+            - '@prestashop.adapter.product.repository.stock_available_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
@@ -272,6 +273,9 @@ services:
 
     prestashop.adapter.product.validate.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ADVANCED_STOCK_MANAGEMENT")'
+            - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
 
     prestashop.adapter.product.repository.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
@@ -329,6 +333,14 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand
 
+    prestashop.adapter.product.command_handler.update_product_stock_information_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockInformationHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.update.product_stock_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand
 
     prestashop.adapter.product.validate.product_supplier_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator
@@ -439,3 +451,14 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages
+
+    prestashop.adapter.product.repository.stock_available_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository
+
+    prestashop.adapter.product.update.product_stock_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater
+        arguments:
+            - '@prestashop.core.stock.stock_manager'
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.repository.stock_available_repository'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"

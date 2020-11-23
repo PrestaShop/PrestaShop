@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Context;
+use DateTimeInterface;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -98,13 +100,17 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     {
         if (isset($data[$propertyName])) {
             $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
+            // Don't cast on purpose, the value should already be typed as bool
             $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
-            Assert::assertEquals(
+
+            // Use assertSame (not assertEquals) to check value AND type
+            Assert::assertSame(
                 $expectedValue,
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
 
+            // Unset the checked field from array so we can validate they havel all been asserted
             unset($data[$propertyName]);
         }
     }
@@ -118,14 +124,90 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     {
         if (isset($data[$propertyName])) {
             $expectedValue = $data[$propertyName];
+            // Don't cast on purpose, the value should already be typed as string
             $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
 
-            Assert::assertEquals(
+            // Use assertSame (not assertEquals) to check value AND type
+            Assert::assertSame(
                 $expectedValue,
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
 
+            // Unset the checked field from array so we can validate they havel all been asserted
+            unset($data[$propertyName]);
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    protected function assertNumberProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = new DecimalNumber((string) $data[$propertyName]);
+            // Don't cast on purpose, the value should already be typed as DecimalNumber
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+            Assert::assertTrue(
+                $expectedValue->equals($actualValue),
+                sprintf('Expected %s %s. Got %s.', $propertyName, (string) $expectedValue, (string) $actualValue)
+            );
+
+            // Unset the checked field from array so we can validate they havel all been asserted
+            unset($data[$propertyName]);
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    protected function assertIntegerProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = (int) $data[$propertyName];
+            // Don't cast on purpose, the value should already be typed as int
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+            // Use assertSame (not assertEquals) to check value AND type
+            Assert::assertSame(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+
+            // Unset the checked field from array so we can validate they havel all been asserted
+            unset($data[$propertyName]);
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    protected function assertDateProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = PrimitiveUtils::castElementInType($data[$propertyName], PrimitiveUtils::TYPE_DATETIME);
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+            if (!($actualValue instanceof DateTimeInterface)) {
+                throw new RuntimeException(sprintf('Unexpected type %s, expected DateTimeInterface', get_class($actualValue)));
+            }
+
+            $formattedExpectedDate = $expectedValue->format('Y-m-d');
+            $formattedActualDate = $actualValue->format('Y-m-d');
+            Assert::assertSame(
+                $formattedExpectedDate,
+                $formattedActualDate,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
+            );
+
+            // Unset the checked field from array so we can validate they havel all been asserted
             unset($data[$propertyName]);
         }
     }
@@ -161,6 +243,18 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'link_rewrite' => 'productSeoOptions.localizedLinkRewrites',
             'redirect_type' => 'productSeoOptions.redirectType',
             'redirect_target' => 'productSeoOptions.redirectTarget',
+            'use_advanced_stock_management' => 'stockInformation.useAdvancedStockManagement',
+            'depends_on_stock' => 'stockInformation.dependsOnStock',
+            'pack_stock_type' => 'stockInformation.packStockType',
+            'out_of_stock_type' => 'stockInformation.outOfStockType',
+            'quantity' => 'stockInformation.quantity',
+            'minimal_quantity' => 'stockInformation.minimalQuantity',
+            'location' => 'stockInformation.location',
+            'low_stock_threshold' => 'stockInformation.lowStockThreshold',
+            'low_stock_alert' => 'stockInformation.lowStockAlert',
+            'available_now_labels' => 'stockInformation.localizedAvailableNowLabels',
+            'available_later_labels' => 'stockInformation.localizedAvailableLaterLabels',
+            'available_date' => 'stockInformation.availableDate',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();

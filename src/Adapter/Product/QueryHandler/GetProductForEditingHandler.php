@@ -24,11 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
+use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -42,7 +46,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
@@ -59,12 +66,20 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $numberExtractor;
 
     /**
+     * @var StockAvailableRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param StockAvailableRepository $stockAvailableRepository
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -84,7 +99,8 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getOptions($product),
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
-            $product->getAssociatedAttachmentIds()
+            $product->getAssociatedAttachmentIds(),
+            $this->getProductStockInformation($product)
         );
     }
 
@@ -268,5 +284,52 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $product->redirect_type,
             (int) $product->id_type_redirected
         );
+    }
+
+    /**
+     * Returns the product stock infos, it's important that the Product is fetched with stock data
+     *
+     * @param Product $product
+     *
+     * @return ProductStockInformation
+     */
+    private function getProductStockInformation(Product $product): ProductStockInformation
+    {
+        try {
+            // Theoretically StockAvailable is created for each product when Product::add is called
+            $stockAvailable = $this->stockAvailableRepository->get(new ProductId($product->id));
+
+            return new ProductStockInformation(
+                (bool) $product->advanced_stock_management,
+                (bool) $stockAvailable->depends_on_stock,
+                (int) $product->pack_stock_type,
+                (int) $stockAvailable->out_of_stock,
+                (int) $stockAvailable->quantity,
+                (int) $product->minimal_quantity,
+                $stockAvailable->location,
+                (int) $product->low_stock_threshold,
+                (bool) $product->low_stock_alert,
+                $product->available_now,
+                $product->available_later,
+                new DateTime($product->available_date)
+            );
+        } catch (StockAvailableNotFoundException $e) {
+            // In case StockAvailable does not exist we can still use the Product fields
+
+            return new ProductStockInformation(
+                (bool) $product->advanced_stock_management,
+                (bool) $product->depends_on_stock,
+                (int) $product->pack_stock_type,
+                (int) $product->out_of_stock,
+                (int) $product->quantity,
+                (int) $product->minimal_quantity,
+                $product->location,
+                (int) $product->low_stock_threshold,
+                (bool) $product->low_stock_alert,
+                $product->available_now,
+                $product->available_later,
+                new DateTime($product->available_date)
+            );
+        }
     }
 }

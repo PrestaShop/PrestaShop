@@ -28,13 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
 use RuntimeException;
 
 /**
  * Sets products of product pack
+ *
+ * @todo this should be moved into a new PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command namespace
  */
 class SetPackProductsCommand
 {
@@ -102,14 +104,14 @@ class SetPackProductsCommand
     /**
      * @param int $quantity
      *
-     * @throws ProductPackException
+     * @throws ProductPackConstraintException
      */
     private function assertQuantity(int $quantity): void
     {
         if ($quantity < 0) {
-            throw new ProductPackException(
+            throw new ProductPackConstraintException(
                 sprintf('Pack product quantity cannot be negative. Got "%s"', $quantity),
-            ProductPackException::INVALID_QUANTITY
+                ProductPackConstraintException::INVALID_QUANTITY
             );
         }
     }

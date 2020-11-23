@@ -95,4 +95,9 @@ class CannotUpdateProductException extends ProductException
      * When search indexation update for product fails
      */
     const FAILED_UPDATE_SEARCH_INDEXATION = 130;
+
+    /**
+     * When stock update fails
+     */
+    const FAILED_UPDATE_STOCK = 140;
 }
