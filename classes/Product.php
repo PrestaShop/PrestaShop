@@ -2633,7 +2633,10 @@ class ProductCore extends ObjectModel
                 GROUP BY pac.id_product_attribute');
 
         foreach ($lang as $k => $row) {
-            $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
+            $key = array_search((int)$row['id_product_attribute'], $product_attributes);
+            if ($key !== false) {
+                $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
+            }
         }
 
         //Get quantity of each variations
