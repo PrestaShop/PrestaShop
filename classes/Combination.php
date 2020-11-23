@@ -408,9 +408,9 @@ class CombinationCore extends ObjectModel
 
     /**
      * For a given product_attribute reference, returns the corresponding id.
-     * if idProduct is empty|0 search is done in all combinations
+     * if idProduct is empty(0/null) search is done in all combinations
      *
-     * @param int $idProduct
+     * @param int|null $idProduct
      * @param string $reference
      *
      * @return int id
