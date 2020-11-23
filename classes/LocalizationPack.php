@@ -619,6 +619,16 @@ class LocalizationPackCore
         return $this->_errors;
     }
 
+    /**
+     * Return a currency (that can be soft deleted) if presents in the DB
+     * or a new one if not.
+     *
+     * @param string $isoCode
+     *
+     * @return Currency
+     *
+     * @throws PrestaShopDatabaseException
+     */
     private function getSoftDeletedByIsoCodeOrCreate(string $isoCode): Currency
     {
         $currencies = Currency::findAllInstalled();
