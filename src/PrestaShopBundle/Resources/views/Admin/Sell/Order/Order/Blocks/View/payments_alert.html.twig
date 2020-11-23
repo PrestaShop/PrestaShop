@@ -1,0 +1,24 @@
+{% if payments.amountToPay and payments.paidAmount %}
+    <div class="alert alert-danger mb-0 js-view-order-payments-alert" role="alert">
+        <p class="alert-text">
+            {{ 'Warning'|trans({}, 'Admin.Global') }}
+            <strong>{{ payments.paidAmount }}</strong>
+            {{ 'paid instead of'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            <strong>{{ payments.amountToPay }}</strong>
+
+            {% if linkedOrders.linkedOrders is not empty %}
+                {% if linkedOrders.linkedOrders|length == 1 %}
+                    <br/>{{ 'This warning also concerns order:'|trans({}, 'Admin.Orderscustomers.Notification') }}
+                {% else %}
+                    <br/>{{ 'This warning also concerns the following orders:'|trans({}, 'Admin.Orderscustomers.Notification') }}
+                {% endif %}
+
+                {% for linkedOrder in linkedOrders.linkedOrders %}
+                    <a target="_blank" rel="noopener noreferrer" href="{{ path('admin_orders_view', {'orderId': linkedOrder.orderId}) }}">
+                        #{{ linkedOrder.orderId }}
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
