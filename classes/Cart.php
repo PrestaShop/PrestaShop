@@ -1319,6 +1319,7 @@ class CartCore extends ObjectModel
      * @param Shop|null $shop
      * @param bool $auto_add_cart_rule
      * @param bool $skipAvailabilityCheckOutOfStock
+     * @param bool $preserveGiftRemoval
      *
      * @return bool Whether the quantity has been successfully updated
      */
@@ -1331,7 +1332,8 @@ class CartCore extends ObjectModel
         $id_address_delivery = 0,
         Shop $shop = null,
         $auto_add_cart_rule = true,
-        $skipAvailabilityCheckOutOfStock = false
+        $skipAvailabilityCheckOutOfStock = false,
+        bool $preserveGiftRemoval = true
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1402,7 +1404,7 @@ class CartCore extends ObjectModel
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
-            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization);
+            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
         }
 
         if (!$product->available_for_order
@@ -1445,7 +1447,7 @@ class CartCore extends ObjectModel
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
-                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization);
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
                 }
             } else {
                 return false;
@@ -1706,6 +1708,7 @@ class CartCore extends ObjectModel
      * @param int $id_product_attribute Attribute ID if needed
      * @param int $id_customization Customization id
      * @param int $id_address_delivery Delivery Address id
+     * @param bool $preserveGiftsRemoval If true gift are not removed so product is still in cart
      *
      * @return bool Whether the product has been successfully deleted
      */
@@ -1713,7 +1716,8 @@ class CartCore extends ObjectModel
         $id_product,
         $id_product_attribute = 0,
         $id_customization = 0,
-        $id_address_delivery = 0
+        $id_address_delivery = 0,
+        bool $preserveGiftsRemoval = true
     ) {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -1754,15 +1758,18 @@ class CartCore extends ObjectModel
             );
         }
 
-        $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-        if ($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
-            return Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
-                WHERE `id_cart` = ' . (int) $this->id . '
-                AND `id_product` = ' . (int) $id_product .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
-            );
+        if ($preserveGiftsRemoval) {
+            $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
+            if (isset($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute])
+                && $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
+                return Db::getInstance()->execute(
+                    'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                    SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
+                    WHERE `id_cart` = ' . (int) $this->id . '
+                    AND `id_product` = ' . (int) $id_product .
+                    ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                );
+            }
         }
 
         /* Product deletion */
