@@ -1417,7 +1417,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @param int $orderId
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function getDiscountsAction(int $orderId): Response
     {
@@ -1450,6 +1450,24 @@ class OrderController extends FrameworkBundleAdminController
             'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
             'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function getPaymentsAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig', [
+            'payments' => $orderForViewing->getPayments(),
+            'linkedOrders' => $orderForViewing->getLinkedOrders(),
         ]);
     }
 
