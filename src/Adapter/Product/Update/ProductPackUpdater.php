@@ -36,8 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 
 /**
  * Provides methods related to Product Pack update
@@ -76,12 +76,11 @@ class ProductPackUpdater
      */
     public function setPackProducts(PackId $packId, array $productsForPacking): void
     {
-        //@todo: virtual products seems to be not supported to add in a pack. Implement constraints after PR #21103 (it introduces ProductPackConstraintException)
         $pack = $this->productRepository->get($packId);
 
         // validate if provided products are available for packing before emptying the pack
         foreach ($productsForPacking as $productForPacking) {
-            $this->assertProductIsAvailableForPacking($productForPacking->getProductId()->getValue());
+            $this->assertProductIsAvailableForPacking($productForPacking->getProductId());
         }
 
         $this->productPackRepository->removeAllProductsFromPack($packId);
@@ -99,25 +98,26 @@ class ProductPackUpdater
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      *
      * @throws CoreException
      * @throws ProductPackConstraintException
      */
-    private function assertProductIsAvailableForPacking(int $productId): void
+    private function assertProductIsAvailableForPacking(ProductId $productId): void
     {
-        try {
-            if (Pack::isPack($productId)) {
-                throw new ProductPackConstraintException(
-                    sprintf('Product #%d is a pack itself. It cannot be packed', $productId),
-                    ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when asserting if product #%d is pack', $productId),
-                0,
-                $e
+        $product = $this->productRepository->get($productId);
+
+        if ((bool) $product->cache_is_pack) {
+            throw new ProductPackConstraintException(
+                sprintf('Product #%d is a pack itself. It cannot be packed', $productId),
+                ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
+            );
+        }
+
+        if ((bool) $product->is_virtual) {
+            throw new ProductPackConstraintException(
+                sprintf('Product #%d is virtual. Virtual products cannot be packed', $productId),
+                ProductPackConstraintException::CANNOT_ADD_VIRTUAL_PRODUCT_INTO_PACK
             );
         }
     }
