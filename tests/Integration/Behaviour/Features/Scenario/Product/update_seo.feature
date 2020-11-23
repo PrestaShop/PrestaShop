@@ -37,24 +37,19 @@ Feature: Update product SEO options from Back Office (BO)
     And product "product2" localized "meta_description" should be "en-US:product2 meta description"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
     And product product2 should have following seo options:
-      | redirect_type | 301-product |
+      | redirect_type   | 301-product |
+      | redirect_target | product1    |
     When I update product product2 SEO information with following values:
       | redirect_type   | 302-product |
       | redirect_target |             |
     Then I should get error that product redirect_target is invalid
-    And product "product2" localized "meta_title" should be "en-US:product2 meta title"
-    And product "product2" localized "meta_description" should be "en-US:product2 meta description"
-    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
     And product product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |
     When I update product product2 SEO information with following values:
       | redirect_type   | 301-category |
       | redirect_target |              |
-    Then product "product2" localized "meta_title" should be "en-US:product2 meta title"
-    And product "product2" localized "meta_description" should be "en-US:product2 meta description"
-    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
-    And product product2 should have following seo options:
+    Then product product2 should have following seo options:
       | redirect_type | 301-category |
     And product product2 should not have a redirect target
     When I update product product2 SEO information with following values:
@@ -69,6 +64,9 @@ Feature: Update product SEO options from Back Office (BO)
     Then product product2 should have following seo options:
       | redirect_type | 404 |
     And product product2 should not have a redirect target
+    And product "product2" localized "meta_title" should be "en-US:product2 meta title"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description"
+    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
 
   Scenario: I update product seo information providing invalid redirect type
     And category "men" in default language named "Men" exists
@@ -203,10 +201,10 @@ Feature: Update product SEO options from Back Office (BO)
     When I search products for SEO redirect option in "en" language by phrase "nic" and limit 10
     When I search products for SEO redirect option in "en" language by phrase "nic" and limit 3
     Then search results for product SEO redirect option should be the following:
-      | product  | name         | reference |
-      | product3 | nice boots   | 1234567   |
-      | product4 | nice pants   | 1334567   |
-      | product5 | nice hat     | 1344567   |
+      | product  | name       | reference |
+      | product3 | nice boots | 1234567   |
+      | product4 | nice pants | 1334567   |
+      | product5 | nice hat   | 1344567   |
 
   Scenario: I search product for seo redirect option by reference
     Given product "product3" localized "name" should be "en-US:nice boots"
