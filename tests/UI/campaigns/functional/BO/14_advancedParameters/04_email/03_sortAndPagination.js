@@ -49,6 +49,34 @@ describe('Sort and pagination emails', async () => {
     await loginCommon.loginBO(this, page);
   });
 
+  //  Erase list of mails
+  describe('Erase emails', async () => {
+    it('should go to \'Advanced parameters > E-mail\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPageToEraseEmails', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.emailLink,
+      );
+
+      await dashboardPage.closeSfToolBar(page);
+
+      const pageTitle = await emailPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(emailPage.pageTitle);
+    });
+
+    it('should erase all emails', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'eraseEmails', baseContext);
+
+      const textResult = await emailPage.eraseAllEmails(page);
+      await expect(textResult).to.equal(emailPage.successfulDeleteMessage);
+
+      const numberOfLines = await emailPage.getNumberOfElementInGrid(page);
+      await expect(numberOfLines).to.be.equal(0);
+    });
+  });
+
   // 1 - Create 6 orders to have 12 emails in the list
   describe('Create 6 orders to have email logs', async () => {
     it('should go to FO page', async function () {
