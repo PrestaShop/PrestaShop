@@ -172,7 +172,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 // Now we check if the update is about the currently added product This is important for multi invoice orders, in case
                 // the added product was already in previous invoices
                 $cartCombinationId = null !== $cartProductUpdate->getCombinationId() ? $cartProductUpdate->getCombinationId()->getValue() : 0;
-                $combinationId = null !== $combination ? $combination->id : 0;
+                $combinationId = null !== $combination ? (int) $combination->id : 0;
                 if ($cartProductUpdate->getProductId()->getValue() === (int) $product->id && $cartCombinationId === $combinationId) {
                     $creationModifications[] = $cartProductUpdate;
                 } else {

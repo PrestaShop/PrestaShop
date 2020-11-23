@@ -126,7 +126,7 @@ class OrderProductRemover
             null,
             true,
             false,
-            false // Do not preserve git removal
+            false // Do not preserve gift removal
         );
 
         return $cartComparator->getUpdatedProducts($knownUpdates);

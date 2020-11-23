@@ -1333,7 +1333,7 @@ class CartCore extends ObjectModel
         Shop $shop = null,
         $auto_add_cart_rule = true,
         $skipAvailabilityCheckOutOfStock = false,
-        $preserveGiftRemoval = true
+        bool $preserveGiftRemoval = true
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1404,7 +1404,7 @@ class CartCore extends ObjectModel
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
-            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, (bool) $preserveGiftRemoval);
+            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
         }
 
         if (!$product->available_for_order
@@ -1447,7 +1447,7 @@ class CartCore extends ObjectModel
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
-                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, (bool) $preserveGiftRemoval);
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
                 }
             } else {
                 return false;
@@ -1760,7 +1760,8 @@ class CartCore extends ObjectModel
 
         if ($preserveGiftsRemoval) {
             $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-            if ($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
+            if (isset($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute])
+                && $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
                 return Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                     SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
