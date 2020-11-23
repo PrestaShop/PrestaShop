@@ -14,32 +14,32 @@
       <trans-unit id="26474f5707c33bcb467e9012ea7dbc55">
         <source>You need to be [1]logged in[/1] or [2]create an account[/2] to post your review.</source>
         <target>You need to be [1]logged in[/1] or [2]create an account[/2] to post your review.</target>
-        <note>Line: 40</note>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="dd7164fb6342eb2622b10568c0240bbf">
         <source>You are not allowed to post a review at the moment, please try again later.</source>
         <target>You are not allowed to post a review at the moment, please try again later.</target>
-        <note>Line: 66</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="95ba76c5c7b555be8efe6a3da26f0e4e">
         <source>Title cannot be empty</source>
         <target>Title cannot be empty</target>
-        <note>Line: 144</note>
+        <note>Line: 169</note>
       </trans-unit>
       <trans-unit id="6860ebb8b4811bad4d66ee12171d9919">
         <source>Title cannot be more than %s characters</source>
         <target>Title cannot be more than %s characters</target>
-        <note>Line: 146</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="eb51e9ce995a1a8ca09f3a4369bb8720">
         <source>Customer name cannot be empty</source>
         <target>Customer name cannot be empty</target>
-        <note>Line: 151</note>
+        <note>Line: 176</note>
       </trans-unit>
       <trans-unit id="8928e4374410046ab21285fc9090ee19">
         <source>Customer name cannot be more than %s characters</source>
         <target>Customer name cannot be more than %s characters</target>
-        <note>Line: 153</note>
+        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>
@@ -48,12 +48,12 @@
       <trans-unit id="4b6a3b2fdf3c89e9f83dfb44b34336fb">
         <source>You need to be logged in to report a review.</source>
         <target>You need to be logged in to report a review.</target>
-        <note>Line: 38</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="95a184e3d0444294153577d952e9791f">
         <source>You already reported this review as abusive.</source>
         <target>You already reported this review as abusive.</target>
-        <note>Line: 69</note>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -62,17 +62,17 @@
       <trans-unit id="198645056f217f726ff1dc6e65ccc322">
         <source>Cannot find the requested product review.</source>
         <target>Cannot find the requested product review.</target>
-        <note>Line: 74</note>
+        <note>Line: 86</note>
       </trans-unit>
       <trans-unit id="4ab403bbf7563d87b327f2a9b2e04baa">
         <source>This feature is not enabled.</source>
         <target>This feature is not enabled.</target>
-        <note>Line: 38</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="9104797eca16236af6aaf8d857728a3d">
         <source>You need to be [1]logged in[/1] or [2]create an account[/2] to give your appreciation of a review.</source>
         <target>You need to be [1]logged in[/1] or [2]create an account[/2] to give your appreciation of a review.</target>
-        <note>Line: 49</note>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
