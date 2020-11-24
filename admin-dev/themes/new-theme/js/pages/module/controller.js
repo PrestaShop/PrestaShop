@@ -415,7 +415,9 @@ class AdminModuleController {
       }
 
       container.show();
-      container.find(`${self.seeMoreSelector}, ${self.seeLessSelector}`).toggle(nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES);
+      container
+        .find(`${self.seeMoreSelector}, ${self.seeLessSelector}`)
+        .toggle(nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES);
     });
   }
 
