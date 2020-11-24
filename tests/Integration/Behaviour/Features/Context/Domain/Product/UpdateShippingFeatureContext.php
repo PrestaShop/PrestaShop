@@ -59,7 +59,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
 
             Assert::assertEmpty(
                 $unhandledData,
-                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData))
+                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData, true))
             );
 
             $this->getCommandBus()->handle($command);
