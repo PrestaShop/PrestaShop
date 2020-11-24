@@ -70,6 +70,8 @@ services:
 
   prestashop.adapter.command_handler.remove_product_from_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\RemoveProductFromCartHandler'
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand'
