@@ -48,12 +48,10 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
     public function updateProductTags(string $productReference, TableNode $table): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
-        $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
         $localizedTagsList = [];
-
-        foreach ($localizedTagStrings as $langId => $localizedTagString) {
+        foreach ($data['tags'] as $langId => $localizedTagString) {
             $localizedTagsList[$langId] = explode(',', $localizedTagString);
         }
 

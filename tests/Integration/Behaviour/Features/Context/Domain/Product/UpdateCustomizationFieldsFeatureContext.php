@@ -51,7 +51,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      */
     public function updateCustomizationFields(string $productReference, TableNode $table)
     {
-        $customizationFields = $table->getColumnsHash();
+        $customizationFields = $this->localizeByColumns($table);
         $fieldsForUpdate = [];
         $fieldReferences = [];
 
