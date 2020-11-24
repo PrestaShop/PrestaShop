@@ -851,7 +851,7 @@ Feature: Order from Back Office (BO)
       | total_tax_excl | rate | total_amount |
       | 5.0            | 0.00 | 0.00         |
 
-  Scenario: In rounding per item mode, I use and address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
+  Scenario: In rounding per item mode, I use an address without taxes (no order_detail_tax created), then I change to a country with taxes all is correctly computed
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
     Given specific shop configuration for "rounding type" is set to round each article
     And I enable carrier "price_carrier"
