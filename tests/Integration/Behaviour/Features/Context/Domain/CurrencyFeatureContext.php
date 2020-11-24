@@ -117,7 +117,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     {
         $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
 
-        $data = $node->getRowsHash();
+        $data = $this->localizeByRows($node);
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
 
@@ -155,7 +155,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['transformations'])) {
-            $command->setLocalizedTransformations($this->parseLocalizedArray($data['transformations']));
+            $command->setLocalizedTransformations($data['transformations']);
         }
 
         try {
