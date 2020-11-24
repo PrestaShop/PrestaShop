@@ -58,8 +58,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         foreach ($customizationFields as $customizationField) {
             $addedByModule = isset($customizationField['added by module']) ?
                 PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
-                false
-            ;
+                false;
             $fieldReference = $customizationField['reference'];
             $id = $this->getSharedStorage()->exists($fieldReference) ? $this->getSharedStorage()->get($fieldReference) : null;
 
@@ -90,7 +89,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     {
         $fieldsForUpdate = [];
         foreach (Language::getIDs() as $langId) {
-            $langId = (int) $langId;
+            $langId = (int)$langId;
             $fieldsForUpdate[] = [
                 'id' => null,
                 'type' => CustomizationFieldType::TYPE_TEXT,
@@ -170,7 +169,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      */
     public function assertCustomizationFields(string $productReference, TableNode $table)
     {
-        $data = $table->getColumnsHash();
+        $data = $this->localizeByColumns($table);
         /** @var CustomizationField[] $actualFields */
         $actualFields = $this->getProductCustomizationFields($productReference);
         $notFoundExpectedFields = [];
@@ -183,11 +182,10 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                 if ($expectedId === $actualField->getCustomizationFieldId()) {
                     $foundExpectedField = true;
                     $expectedType = $expectedField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT;
-                    $expectedLocalizedNames = $this->parseLocalizedArray($expectedField['name']);
                     $expectedRequired = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['is required']);
                     Assert::assertEquals($expectedType, $actualField->getType(), 'Unexpected customization type');
                     Assert::assertEquals(
-                        $expectedLocalizedNames,
+                        $expectedField['name'],
                         $actualField->getLocalizedNames(),
                         sprintf('Unexpected product "%s" customization field name', $productReference)
                     );
