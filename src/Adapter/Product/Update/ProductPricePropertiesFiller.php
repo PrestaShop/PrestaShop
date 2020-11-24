@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
 /**
@@ -36,6 +37,20 @@ use Product;
  */
 class ProductPricePropertiesFiller
 {
+    /**
+     * @var NumberExtractor
+     */
+    private $numberExtractor;
+
+    /**
+     * @param NumberExtractor $numberExtractor
+     */
+    public function __construct(
+        NumberExtractor $numberExtractor
+    ) {
+        $this->numberExtractor = $numberExtractor;
+    }
+
     /**
      * Wraps following properties filling: price, unit_price, unit_price_ratio, wholesale_price
      * as most of them (price, unit_price, unit_price_ratio) are highly coupled & depends on each other
@@ -58,7 +73,7 @@ class ProductPricePropertiesFiller
             $product->price = (float) (string) $price;
             $updatableProperties[] = 'price';
         } else {
-            $price = new DecimalNumber((string) $product->price);
+            $price = $this->numberExtractor->extract($product, 'price');
         }
 
         $this->fillUnitPriceRatio($product, $price, $unitPrice);
@@ -82,7 +97,7 @@ class ProductPricePropertiesFiller
         }
 
         if (null === $unitPrice) {
-            $unitPrice = new DecimalNumber((string) $product->unit_price);
+            $unitPrice = $this->numberExtractor->extract($product, 'unit_price');
         }
 
         // if price was not reset then allow setting new unit_price and unit_price_ratio

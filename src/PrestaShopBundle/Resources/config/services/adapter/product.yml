@@ -298,6 +298,8 @@ services:
 
     prestashop.adapter.product.product_price_properties_filler:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller
+        arguments:
+            - '@prestashop.core.util.number.number_extractor'
 
     prestashop.adapter.product.validate.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\CustomizationFieldValidator
