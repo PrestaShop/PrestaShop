@@ -174,24 +174,34 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
+     * @param array $rows
+     *
+     * @return array
+     */
+    protected function localizeByRows(TableNode $tableNode): array
+    {
+        $parsedRows = [];
+        foreach ($tableNode->getRowsHash() as $rowName => $value) {
+            $parsedRow = $this->parseLocalizedRow($rowName, $value);
+            $parsedRows[$parsedRow['key']] = $parsedRow['value'];
+        }
+
+        return $parsedRows;
+    }
+
+    /**
      * @param TableNode $table
      *
      * @return array
      */
-    protected function parseLocalizedRows(TableNode $table): array
+    protected function localizeByColumns(TableNode $table): array
     {
         $parsedRows = [];
-        foreach ($table->getRowsHash() as $rowName => $value) {
-            $localeMatch = preg_match('/\[.*?\]/', $rowName, $matches) ? reset($matches) : null;
-
-            if (!$localeMatch) {
-                $parsedRows[$rowName] = $value;
-                continue;
+        foreach ($table->getColumnsHash() as $key => $column) {
+            foreach ($column as $columnName => $value) {
+                $parsedRow = $this->parseLocalizedRow($columnName, $value);
+                $parsedRows[$key][$parsedRow['key']] = $parsedRow['value'];
             }
-
-            $propertyName = str_replace($localeMatch, '', $rowName);
-            $locale = str_replace(['[', ']'], '', $localeMatch);
-            $parsedRows[$propertyName][Language::getIdByLocale($locale)] = $value;
         }
 
         return $parsedRows;
@@ -203,5 +213,33 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getDefaultLangId(): int
     {
         return (int) Configuration::get('PS_LANG_DEFAULT');
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     *
+     * @return array|string[]
+     */
+    private function parseLocalizedRow(string $key, string $value): array
+    {
+        $localeMatch = preg_match('/\[.*?\]/', $key, $matches) ? reset($matches) : null;
+
+        if (!$localeMatch) {
+            return [
+                'key' => $key,
+                'value' => $value,
+            ];
+        }
+
+        $propertyName = str_replace($localeMatch, '', $key);
+        $locale = str_replace(['[', ']'], '', $localeMatch);
+
+        return [
+            'key' => $propertyName,
+            'value' => [
+                Language::getIdByLocale($locale) => $value,
+            ],
+        ];
     }
 }

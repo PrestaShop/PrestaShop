@@ -44,7 +44,7 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
      */
     public function addProduct(string $productReference, TableNode $table): void
     {
-        $data = $this->parseLocalizedRows($table);
+        $data = $this->localizeByRows($table);
 
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
