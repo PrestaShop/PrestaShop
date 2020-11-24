@@ -104,7 +104,7 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
       const $productRow = $(OrderViewPageMap.productsTableRow(event.orderDetailId));
-      if ('' === event.newRow) {
+      if (event.newRow === '') {
         $productRow.remove();
       } else {
         this.orderProductRenderer.addOrUpdateProductToList(
