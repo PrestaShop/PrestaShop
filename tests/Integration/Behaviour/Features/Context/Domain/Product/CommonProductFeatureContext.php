@@ -29,9 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
@@ -139,26 +137,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I update product :productReference prices and apply non-existing tax rules group
-     *
-     * @param string $productReference
-     */
-    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
-    {
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        $command = new UpdateProductPricesCommand($productId);
-        // this id value does not exist, it is used on purpose.
-        $command->setTaxRulesGroupId(50000000);
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
      * @Then product :productReference type should be :productType
      *
      * @param string $productReference
@@ -214,7 +192,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
-            'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
             'tag' => ProductConstraintException::INVALID_TAG,
             'width' => ProductConstraintException::INVALID_WIDTH,
             'height' => ProductConstraintException::INVALID_HEIGHT,

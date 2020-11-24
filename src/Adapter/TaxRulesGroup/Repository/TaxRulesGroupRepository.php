@@ -26,46 +26,29 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain;
+namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository;
 
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
-use RuntimeException;
-use TaxRulesGroup;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
+/**
+ * Provides access to TaxRulesGroup data source
+ */
+class TaxRulesGroupRepository extends AbstractObjectModelRepository
 {
     /**
-     * @param string $name
+     * @param TaxRulesGroupId $taxRulesGroupId
      *
-     * @return int
+     * @throws CoreException
      */
-    public static function getTaxRulesGroupByName(string $name): TaxRulesGroup
+    public function assertTaxRulesGroupExists(TaxRulesGroupId $taxRulesGroupId): void
     {
-        $taxRulesGroupId = (int) TaxRulesGroup::getIdByName($name);
-        $taxRulesGroup = new TaxRulesGroup($taxRulesGroupId);
-
-        if ($taxRulesGroupId !== (int) $taxRulesGroup->id) {
-            throw new RuntimeException(sprintf('Tax rules group "%s" not found', $name));
-        }
-
-        return $taxRulesGroup;
-    }
-
-    /**
-     * @Given tax rules group named :name exists
-     *
-     * @param string $name
-     */
-    public function assertTaxRuleGroupExists(string $name)
-    {
-        self::getTaxRulesGroupByName($name);
-    }
-
-    /**
-     * @Then I should get error that tax rules group does not exist
-     */
-    public function assertLastErrorIsTaxRulesGroupNotFound(): void
-    {
-        $this->assertLastErrorIs(TaxRulesGroupNotFoundException::class);
+        $this->assertObjectModelExists(
+            $taxRulesGroupId->getValue(),
+            'tax_rules_group',
+            TaxRulesGroupNotFoundException::class
+        );
     }
 }

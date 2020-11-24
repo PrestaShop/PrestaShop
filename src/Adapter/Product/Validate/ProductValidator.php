@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -88,6 +89,8 @@ class ProductValidator extends AbstractObjectModelValidator
      * @throws ProductConstraintException
      * @throws ProductPackConstraintException
      * @throws ProductStockConstraintException
+     * @throws ProductConstraintException
+     * @throws ProductException
      */
     public function validate(Product $product): void
     {
@@ -97,6 +100,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateShipping($product);
         $this->validateStock($product);
         $this->validateSeo($product);
+        $this->validatePrices($product);
     }
 
     /**
@@ -158,6 +162,26 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'additional_delivery_times');
         $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
         $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validatePrices(Product $product): void
+    {
+        if ($product->unit_price < 0) {
+            throw new ProductConstraintException(
+                sprintf('Invalid product unit_price. Got "%s"', $product->unit_price),
+                ProductConstraintException::INVALID_UNIT_PRICE
+            );
+        }
+
+        $this->validateProductProperty($product, 'price', ProductConstraintException::INVALID_PRICE);
+        $this->validateProductProperty($product, 'unity', ProductConstraintException::INVALID_UNITY);
+        $this->validateProductProperty($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
+        $this->validateProductProperty($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
     }
 
     /**

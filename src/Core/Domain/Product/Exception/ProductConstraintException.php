@@ -67,14 +67,14 @@ class ProductConstraintException extends ProductException
     const INVALID_PRICE = 70;
 
     /**
-     * When invalid product ecotax is supplied
+     * When invalid product unity value is supplied
      */
-    const INVALID_ECOTAX = 80;
+    const INVALID_UNITY = 80;
 
     /**
-     * When invalid product tax rules group id is supplied
+     * When invalid product ecotax is supplied
      */
-    const INVALID_TAX_RULES_GROUP_ID = 90;
+    const INVALID_ECOTAX = 90;
 
     /**
      * When invalid product unit price is supplied
