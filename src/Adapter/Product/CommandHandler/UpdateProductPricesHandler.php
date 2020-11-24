@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
 /**
@@ -42,11 +41,6 @@ use Product;
  */
 final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInterface
 {
-    /**
-     * @var NumberExtractor
-     */
-    private $numberExtractor;
-
     /**
      * @var ProductRepository
      */
@@ -58,16 +52,13 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     private $productPricePropertiesFiller;
 
     /**
-     * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
      * @param ProductPricePropertiesFiller $productPricePropertiesFiller
      */
     public function __construct(
-        NumberExtractor $numberExtractor,
         ProductRepository $productRepository,
         ProductPricePropertiesFiller $productPricePropertiesFiller
     ) {
-        $this->numberExtractor = $numberExtractor;
         $this->productRepository = $productRepository;
         $this->productPricePropertiesFiller = $productPricePropertiesFiller;
     }
