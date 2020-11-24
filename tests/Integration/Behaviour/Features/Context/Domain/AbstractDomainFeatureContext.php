@@ -153,27 +153,6 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * Parse a localized string into a localized array, the expected format can be:
-     *   fr-FR:valueFr;en-EN:valueEn:{localeCode}:{localeValue}
-     *   1:valueFr;2:valueEn:{langId}:{localeValue}
-     * and will be converted into an array indexed by language id
-     *
-     * @param string $localizedString
-     *
-     * @return array
-     */
-    protected function parseLocalizedArray(string $localizedString): array
-    {
-        $valuesByLocale = json_decode($localizedString, true);
-        $localizedArray = [];
-        foreach ($valuesByLocale as $locale => $value) {
-            $localizedArray[(int) Language::getIdByLocale($locale, true)] = $value;
-        }
-
-        return $localizedArray;
-    }
-
-    /**
      * @param TableNode $tableNode
      *
      * @return array
