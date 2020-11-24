@@ -133,6 +133,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.databaseLink = '#subtab-AdminParentRequestSql';
     // Webservice
     this.webserviceLink = '#subtab-AdminWebservice';
+    // Logs
+    this.logsLink = '#subtab-AdminLogs';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
 
