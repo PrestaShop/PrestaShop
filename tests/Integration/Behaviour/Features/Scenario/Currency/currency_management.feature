@@ -74,14 +74,14 @@ Feature: Currency Management
 
   Scenario: Deleting non default currency should be allowed
     When I add new currency "currency4" with following properties:
-      | iso_code         | GBP                          |
-      | exchange_rate    | 0.88                         |
-      | name             | Pound                        |
-      | symbol           | ££                           |
-      | is_enabled       | 1                            |
-      | is_unofficial    | 0                            |
-      | shop_association | shop1                        |
-      | transformations  | {"fr-FR":"leftWithoutSpace"} |
+      | iso_code               | GBP              |
+      | exchange_rate          | 0.88             |
+      | name                   | Pound            |
+      | symbol                 | ££               |
+      | is_enabled             | 1                |
+      | is_unofficial          | 0                |
+      | shop_association       | shop1            |
+      | transformations[fr-FR] | leftWithoutSpace |
     And database contains 1 rows of currency "GBP"
     And currency "currency4" should have pattern "¤#,##0.00" for language "fr-FR"
     And currency "currency4" should have modified true
@@ -286,12 +286,12 @@ Feature: Currency Management
 
   Scenario: Adding and edit official currency with custom pattern
     When I add new currency "currency16" with following properties:
-      | iso_code         | JPY                       |
-      | exchange_rate    | 0.08                      |
-      | is_enabled       | 1                         |
-      | is_unofficial    | 0                         |
-      | shop_association | shop1                     |
-      | transformations  | {"fr-FR":"leftWithSpace"} |
+      | iso_code               | JPY           |
+      | exchange_rate          | 0.08          |
+      | is_enabled             | 1             |
+      | is_unofficial          | 0             |
+      | shop_association       | shop1         |
+      | transformations[fr-FR] | leftWithSpace |
     Then I should get no currency error
     And currency "currency16" should be "JPY"
     And currency "currency16" exchange rate should be 0.08
@@ -307,12 +307,12 @@ Feature: Currency Management
     And currency "currency16" should have pattern empty for language "en-EN"
     And database contains 1 rows of currency "JPY"
     When I edit currency "currency16" with following properties:
-      | iso_code         | JPY                        |
-      | exchange_rate    | 0.08                       |
-      | is_enabled       | 1                          |
-      | is_unofficial    | 0                          |
-      | shop_association | shop1                      |
-      | transformations  | {"en-US":"rightWithSpace"} |
+      | iso_code               | JPY            |
+      | exchange_rate          | 0.08           |
+      | is_enabled             | 1              |
+      | is_unofficial          | 0              |
+      | shop_association       | shop1          |
+      | transformations[en-US] | rightWithSpace |
     And currency "currency16" should be "JPY"
     And currency "currency16" exchange rate should be 0.08
     And currency "currency16" numeric iso code should be 392
@@ -328,14 +328,14 @@ Feature: Currency Management
 
   Scenario: Adding and edit unofficial currency with custom pattern
     When I add new currency "currency17" with following properties:
-      | iso_code         | JPP                          |
-      | name             | Japan Private Yen            |
-      | symbol           | Yen                          |
-      | exchange_rate    | 0.8                          |
-      | is_enabled       | 1                            |
-      | is_unofficial    | 1                            |
-      | shop_association | shop1                        |
-      | transformations  | {"fr-FR":"leftWithoutSpace"} |
+      | iso_code               | JPP               |
+      | name                   | Japan Private Yen |
+      | symbol                 | Yen               |
+      | exchange_rate          | 0.8               |
+      | is_enabled             | 1                 |
+      | is_unofficial          | 1                 |
+      | shop_association       | shop1             |
+      | transformations[fr-FR] | leftWithoutSpace  |
     Then I should get no currency error
     And currency "currency17" should be "JPP"
     And currency "currency17" exchange rate should be 0.8
@@ -351,12 +351,12 @@ Feature: Currency Management
     And currency "currency17" should have pattern empty for language "en-EN"
     And database contains 1 rows of currency "JPP"
     When I edit currency "currency17" with following properties:
-      | iso_code         | JPP                           |
-      | exchange_rate    | 0.8                           |
-      | is_enabled       | 1                             |
-      | is_unofficial    | 1                             |
-      | shop_association | shop1                         |
-      | transformations  | {"en-US":"rightWithoutSpace"} |
+      | iso_code               | JPP               |
+      | exchange_rate          | 0.8               |
+      | is_enabled             | 1                 |
+      | is_unofficial          | 1                 |
+      | shop_association       | shop1             |
+      | transformations[en-US] | rightWithoutSpace |
     And currency "currency17" should be "JPP"
     And currency "currency17" exchange rate should be 0.8
     And currency "currency17" numeric iso code should be null

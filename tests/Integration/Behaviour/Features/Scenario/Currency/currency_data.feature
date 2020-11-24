@@ -15,45 +15,51 @@ Feature: Currency Data
     When I request reference data for "EUR"
     Then I should get no currency error
     And I should get currency data:
-      | iso_code         | EUR                                        |
-      | numeric_iso_code | 978                                        |
-      | precision        | 2                                          |
-      | names            | {"en-US":"Euro","fr-FR":"euro"}            |
-      | symbols          | {"en-US":"€","fr-FR":"€"}                  |
-      | patterns         | {"en-US":"¤#,##0.00","fr-FR":"#,##0.00 ¤"} |
+      | iso_code         | EUR        |
+      | numeric_iso_code | 978        |
+      | precision        | 2          |
+      | names[en-US]     | Euro       |
+      | names[fr-FR]     | euro       |
+      | symbols[en-US]   | €          |
+      | symbols[fr-FR]   | €          |
+      | patterns[en-US]  | ¤#,##0.00  |
+      | patterns[fr-FR]  | #,##0.00 ¤ |
 
   @currency-data
   Scenario: Get data from an unofficial currency
     When I request reference data for "BTC"
     Then I should get error that currency was not found
     When I add new currency "currency1" with following properties:
-      | iso_code         | BTC                   |
-      | name             | Bitcoin               |
-      | symbol           | ₿                     |
-      | exchange_rate    | 0.42                  |
-      | is_enabled       | 1                     |
-      | is_unofficial    | 1                     |
-      | shop_association | shop1                 |
-      | patterns         | {"fr-FR":"¤#,##0.00"} |
+      | iso_code         | BTC       |
+      | name             | Bitcoin   |
+      | symbol           | ₿         |
+      | exchange_rate    | 0.42      |
+      | is_enabled       | 1         |
+      | is_unofficial    | 1         |
+      | shop_association | shop1     |
+      | patterns[fr-FR]  | ¤#,##0.00 |
     When I request reference data for "BTC"
     Then I should get error that currency was not found
 
   @currency-data
   Scenario: Get data from a customized currency
     When I add new currency "currency1" with following properties:
-      | iso_code         | JPY                    |
-      | name             | Custom Yen             |
-      | symbol           | YY                     |
-      | exchange_rate    | 0.08                   |
-      | is_enabled       | 1                      |
-      | is_unofficial    | 0                      |
-      | shop_association | shop1                  |
-      | patterns         | {"fr-FR":"¤ #,##0.00"} |
+      | iso_code         | JPY        |
+      | name             | Custom Yen |
+      | symbol           | YY         |
+      | exchange_rate    | 0.08       |
+      | is_enabled       | 1          |
+      | is_unofficial    | 0          |
+      | shop_association | shop1      |
+      | patterns[fr-FR]  | ¤ #,##0.00 |
     When I request reference data for "JPY"
     Then I should get currency data:
-      | iso_code         | JPY                                           |
-      | numeric_iso_code | 392                                           |
-      | precision        | 0                                             |
-      | names            | {"en-US":"Japanese Yen","fr-FR":"yen japonais"} |
-      | symbols          | {"en-US":"¥","fr-FR":"¥"}                     |
-      | patterns         | {"en-US":"¤#,##0.00","fr-FR":"#,##0.00 ¤"}    |
+      | iso_code         | JPY          |
+      | numeric_iso_code | 392          |
+      | precision        | 0            |
+      | names[en-US]     | Japanese Yen |
+      | names[fr-FR]     | yen japonais |
+      | symbols[en-US]   | ¥            |
+      | symbols[fr-FR]   | ¥            |
+      | patterns[en-US]  | ¤#,##0.00    |
+      | patterns[fr-FR]  | #,##0.00 ¤   |

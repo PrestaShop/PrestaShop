@@ -11,25 +11,30 @@ Feature: Supplier management
 
   Scenario: Adding new supplier
     When I add new supplier supplier1 with following properties:
-      | name             | my supplier 1                                        |
-      | address          | Donelaicio st. 1                                     |
-      | city             | Kaunas                                               |
-      | country          | Lithuania                                            |
-      | enabled          | true                                                 |
-      | description      | {"en-US":"just a supplier","fr-FR":"la supplier :D"} |
-      | meta title       | {"en-US":"my supplier nr one"}                       |
-      | meta description | {"en-US":""}                                         |
-      | meta keywords    | {"en-US":"sup,1"}                                    |
-      | shops            | [shop1]                                              |
+      | name                    | my supplier 1      |
+      | address                 | Donelaicio st. 1   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | description[fr-FR]      | la supplier :D     |
+      | meta title[en-US]       | my supplier nr one |
+      | meta description[en-US] |                    |
+      | meta keywords[en-US]    | sup,1              |
+      | shops                   | [shop1]            |
     Then supplier supplier1 should have following properties:
-      | name             | my supplier 1                                        |
-      | address          | Donelaicio st. 1                                     |
-      | city             | Kaunas                                               |
-      | country          | Lithuania                                            |
-      | enabled          | true                                                 |
-      | description      | {"en-US":"just a supplier","fr-FR":"la supplier :D"} |
-      | meta title       | {"en-US":"my supplier nr one","fr-FR":""}            |
-      | meta description | {"en-US":"","fr-FR":""}                              |
-      | meta keywords    | {"en-US":"sup,1","fr-FR":""}                         |
-      | shops            | [shop1]                                              |
+      | name                    | my supplier 1      |
+      | address                 | Donelaicio st. 1   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | description[fr-FR]      | la supplier :D     |
+      | meta title[en-US]       | my supplier nr one |
+      | meta title[fr-FR]       |                    |
+      | meta description[en-US] |                    |
+      | meta description[fr-FR] |                    |
+      | meta keywords[en-US]    | sup,1              |
+      | meta keywords[fr-FR]    |                    |
+      | shops                   | [shop1]            |
 #@todo: finish up create with optional params too, different cases + update and delete scenarios.
