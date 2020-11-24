@@ -4,6 +4,13 @@
   .block-contact-title {
     color: $gray-darker;
   }
+
+  @include media-breakpoint-down(sm) {
+    #contact-infos {
+      padding: 0.625rem;
+      padding-top: 0;
+    }
+  }
 }
 
 .linklist {
