@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags specific-price-priorities
 @reset-database-before-feature
+@clear-cache-before-feature
 @specific-price-priorities
 Feature: Set Specific Price priorities from Back Office (BO).
   As an employee I want to be able to set specific price priorities to single product and to all products
