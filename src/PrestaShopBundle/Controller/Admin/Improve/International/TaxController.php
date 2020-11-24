@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -126,14 +125,19 @@ class TaxController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.tax');
+        $definitionFactory = $definitionFactory->getDefinition();
 
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.tax'),
-            $request,
-            TaxGridDefinitionFactory::GRID_ID,
-            'admin_taxes_index'
-        );
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
+        $searchParametersForm->handleRequest($request);
+
+        $filters = [];
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
     }
 
     /**

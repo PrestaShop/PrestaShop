@@ -44,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -113,14 +112,20 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.request_sql');
+        $emailLogsDefinition = $definitionFactory->getDefinition();
 
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.request_sql'),
-            $request,
-            RequestSqlGridDefinitionFactory::GRID_ID,
-            'admin_sql_requests_index'
-        );
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
+        $filtersForm->handleRequest($request);
+
+        $filters = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $filters = $filtersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_sql_requests_index', ['filters' => $filters]);
     }
 
     /**

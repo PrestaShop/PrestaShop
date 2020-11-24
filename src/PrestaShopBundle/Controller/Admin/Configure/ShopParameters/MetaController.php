@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MetaGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -89,14 +88,19 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.meta');
+        $definitionFactory = $definitionFactory->getDefinition();
 
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.meta'),
-            $request,
-            MetaGridDefinitionFactory::GRID_ID,
-            'admin_metas_index'
-        );
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
+        $searchParametersForm->handleRequest($request);
+
+        $filters = [];
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_metas_index', ['filters' => $filters]);
     }
 
     /**

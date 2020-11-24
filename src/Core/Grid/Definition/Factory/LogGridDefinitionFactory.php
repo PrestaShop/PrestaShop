@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarC
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -49,33 +48,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     public const GRID_ID = 'logs';
-
-    /**
-     * @var string the URL to reset Grid filters
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string the URL for redirection
-     */
-    private $redirectionUrl;
-
-    /**
-     * LogGridDefinitionFactory constructor.
-     *
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
-    }
 
     /**
      * {@inheritdoc}

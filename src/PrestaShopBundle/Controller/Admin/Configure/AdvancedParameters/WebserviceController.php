@@ -30,7 +30,6 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -155,6 +154,8 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Searches for specific records.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -165,14 +166,20 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice_key');
+        $webserviceDefinition = $definitionFactory->getDefinition();
 
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.webservice_key'),
-            $request,
-            WebserviceKeyDefinitionFactory::GRID_ID,
-            'admin_webservice_keys_index'
-        );
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($webserviceDefinition);
+
+        $searchParametersForm->handleRequest($request);
+        $filters = [];
+
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_webservice_keys_index', ['filters' => $filters]);
     }
 
     /**
