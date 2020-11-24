@@ -26,9 +26,9 @@
 {% trans_default_domain "Admin.Design.Feature" %}
 
 {% block content %}
-  <div class="row">
+  <div class="row m-0">
     {% if not canMove %}
-      <p class="alert alert-warning">
+      <p class="alert alert-warning alert-can-move">
         {{ 'If you want to order/move the following data, please select a shop from the shop list.' | trans({}, 'Admin.Design.Notification') }}
       </p>
     {% endif %}
