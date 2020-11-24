@@ -839,7 +839,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         return $this->getQueryBus()->handle(
             (new GetCartForOrderCreation($cartId))
-            ->setHideDiscounts(true)
+                ->setHideDiscounts(true)
         );
     }
 

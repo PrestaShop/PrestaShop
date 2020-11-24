@@ -1180,7 +1180,7 @@ class OrderController extends FrameworkBundleAdminController
         return $this->json(
             $this->getQueryBus()->handle(
                 (new GetCartForOrderCreation($cartId))
-                ->setHideDiscounts(true)
+                    ->setHideDiscounts(true)
             )
         );
     }
