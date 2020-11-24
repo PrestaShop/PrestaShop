@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% set isAvailableQuantityDisplayed = isAvailableQuantityDisplayed|default(true) %}
 {% set isColumnLocationDisplayed = false %}
 {% set isColumnRefundedDisplayed = false %}
 {% for product in orderForViewing.products.products|slice(0, paginationNum) %}
@@ -71,7 +72,7 @@
         <th class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
           <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
         </th>
-        <th>
+        <th {% if not isAvailableQuantityDisplayed %}class="d-none"{% endif %}>
           <p>{{ 'Available'|trans({}, 'Admin.Global') }}</p>
         </th>
         <th>
@@ -100,7 +101,8 @@
           'productIndex': loop.index,
           'paginationNum': paginationNum,
           'isColumnLocationDisplayed': isColumnLocationDisplayed,
-          'isColumnRefundedDisplayed': isColumnRefundedDisplayed
+          'isColumnRefundedDisplayed': isColumnRefundedDisplayed,
+          'isAvailableQuantityDisplayed': isAvailableQuantityDisplayed
         } %}
       {% endfor %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
