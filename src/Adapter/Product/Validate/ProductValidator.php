@@ -179,7 +179,7 @@ class ProductValidator extends AbstractObjectModelValidator
         }
 
         $this->validateProductProperty($product, 'price', ProductConstraintException::INVALID_PRICE);
-        $this->validateProductProperty($product, 'unity');
+        $this->validateProductProperty($product, 'unity', ProductConstraintException::INVALID_UNITY);
         $this->validateProductProperty($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
         $this->validateProductProperty($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
     }
