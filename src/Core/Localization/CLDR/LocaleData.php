@@ -109,9 +109,9 @@ class LocaleData
     /**
      * All territories, by ISO code.
      *
-     * @var TerritoryData[]
+     * @var TerritoryData[]|null
      */
-    protected $territories = [];
+    protected $territories;
 
     /**
      * Override this object's data with another LocaleData object.
@@ -178,7 +178,10 @@ class LocaleData
         }
 
         if (null !== $localeData->getTerritories()) {
-            $this->territories = array_merge($this->territories, $localeData->getTerritories());
+            if (null === $this->territories) {
+                $this->territories = [];
+            }
+            $this->setTerritories(array_merge($this->territories, $localeData->getTerritories()));
         }
 
         return $this;
@@ -381,9 +384,9 @@ class LocaleData
     }
 
     /**
-     * @return TerritoryData[]
+     * @return TerritoryData[]|null
      */
-    public function getTerritories(): array
+    public function getTerritories(): ?array
     {
         return $this->territories;
     }

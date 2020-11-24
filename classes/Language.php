@@ -1456,7 +1456,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
             $territoryData = $territories[$country['iso_code']];
             $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
-                    SET `name` = "' . pSQL(ucwords($territoryData->getName())) . '"
+                    SET `name` = "' . pSQL(mb_ucwords($territoryData->getName())) . '"
                     WHERE `id_country` = "' . (int) $country['id_country'] . '"
                     AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
             Db::getInstance()->execute($sql);

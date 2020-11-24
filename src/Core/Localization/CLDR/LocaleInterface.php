@@ -151,5 +151,5 @@ interface LocaleInterface
      *
      * @return TerritoryData[] Data of all territories
      */
-    public function getAllTerritories();
+    public function getAllTerritories(): array;
 }

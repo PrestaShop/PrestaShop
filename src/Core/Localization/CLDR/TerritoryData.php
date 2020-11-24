@@ -37,14 +37,14 @@ class TerritoryData
     /**
      * Alphabetic ISO 4217 territory code.
      *
-     * @var string
+     * @var string|null
      */
     protected $isoCode;
 
     /**
      * Territory code.
      *
-     * @var string
+     * @var string|null
      */
     protected $name;
 
@@ -69,9 +69,9 @@ class TerritoryData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIsoCode(): string
+    public function getIsoCode(): ?string
     {
         return $this->isoCode;
     }
@@ -89,9 +89,9 @@ class TerritoryData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

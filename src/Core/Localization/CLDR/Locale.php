@@ -125,7 +125,7 @@ final class Locale implements LocaleInterface
         $this->percentPatterns = $localeData->getPercentPatterns();
         $this->currencyPatterns = $localeData->getCurrencyPatterns();
         $this->currencies = $localeData->getCurrencies();
-        $this->territories = $localeData->getTerritories();
+        $this->territories = $localeData->getTerritories() ?: [];
     }
 
     /**
