@@ -14,30 +14,30 @@ Feature: Update product suppliers from Back Office (BO)
 
   Scenario: Update standard product suppliers
     And I add new supplier supplier1 with following properties:
-      | name             | my supplier 1                  |
-      | address          | Donelaicio st. 1               |
-      | city             | Kaunas                         |
-      | country          | Lithuania                      |
-      | enabled          | true                           |
-      | description      | {"en-US":"just a supplier"}    |
-      | meta title       | {"en-US":"my supplier nr one"} |
-      | meta description | {"en-US":""}                   |
-      | meta keywords    | {"en-US":"sup,1"}              |
-      | shops            | [shop1]                        |
+      | name                    | my supplier 1      |
+      | address                 | Donelaicio st. 1   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | meta title[en-US]       | my supplier nr one |
+      | meta description[en-US] |                    |
+      | meta keywords[en-US]    | sup,1              |
+      | shops                   | [shop1]            |
     And I add new supplier supplier2 with following properties:
-      | name             | my supplier 2                  |
-      | address          | Donelaicio st. 2               |
-      | city             | Kaunas                         |
-      | country          | Lithuania                      |
-      | enabled          | true                           |
-      | description      | {"en-US":"just a supplier"}    |
-      | meta title       | {"en-US":"my supplier nr two"} |
-      | meta description | {"en-US":""}                   |
-      | meta keywords    | {"en-US":"sup,2"}              |
-      | shops            | [shop1]                        |
+      | name                    | my supplier 2      |
+      | address                 | Donelaicio st. 2   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | meta title[en-US]       | my supplier nr two |
+      | meta description[en-US] |                    |
+      | meta keywords[en-US]    | sup,2              |
+      | shops                   | [shop1]            |
     Given I add product "product1" with following information:
-      | name       | {"en-US":"magic staff"} |
-      | is_virtual | false                   |
+      | name[en-US] | magic staff |
+      | is_virtual  | false       |
     And product product1 type should be standard
     And product product1 should not have any suppliers assigned
     When I set product product1 default supplier to supplier1 and following suppliers:
@@ -87,8 +87,8 @@ Feature: Update product suppliers from Back Office (BO)
 
   Scenario: Update combination product suppliers
     Given I add product "product2" with following information:
-      | name       | {"en-US":"regular T-shirt"} |
-      | is_virtual | false                       |
+      | name[en-US] | regular T-shirt |
+      | is_virtual  | false           |
     And product "product2" has following combinations:
       | reference | quantity | attributes         |
       | whiteM    | 15       | Size:M;Color:White |
