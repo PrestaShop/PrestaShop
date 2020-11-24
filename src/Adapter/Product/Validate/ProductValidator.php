@@ -96,7 +96,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateOptions($product);
         $this->validateShipping($product);
         $this->validateStock($product);
-        //@todo; more properties when refactoring other handlers to use updater/validator
+        $this->validateSeo($product);
     }
 
     /**
@@ -252,6 +252,18 @@ class ProductValidator extends AbstractObjectModelValidator
             'You cannot link your pack to product stock because one of them has no advanced stock enabled',
             ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
         );
+    }
+
+    /**
+     * @param Product $product
+     */
+    private function validateSeo(Product $product): void
+    {
+        $this->validateProductProperty($product, 'redirect_type', ProductConstraintException::INVALID_REDIRECT_TYPE);
+        $this->validateProductProperty($product, 'id_type_redirected', ProductConstraintException::INVALID_REDIRECT_TARGET);
+        $this->validateProductLocalizedProperty($product, 'meta_description', ProductConstraintException::INVALID_META_DESCRIPTION);
+        $this->validateProductLocalizedProperty($product, 'meta_title', ProductConstraintException::INVALID_META_TITLE);
+        $this->validateProductLocalizedProperty($product, 'link_rewrite', ProductConstraintException::INVALID_LINK_REWRITE);
     }
 
     /**

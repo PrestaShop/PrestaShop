@@ -248,6 +248,9 @@ services:
 
     prestashop.adapter.product.command_handler.update_product_seo_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSeoHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.update.product_seo_properties_filler'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
@@ -270,6 +273,12 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.attachment.attachment_repository'
+
+    prestashop.adapter.product.update.product_seo_properties_filler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.category.repository.category_repository'
 
     prestashop.adapter.product.validate.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
