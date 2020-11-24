@@ -24,61 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
 /**
- * Holds data of cart delivery option
+ * Interface for handling GetCartForOrderCreation query
  */
-class CartDeliveryOption
+interface GetCartForOrderCreationHandlerInterface
 {
-    /**
-     * @var int
-     */
-    private $carrierId;
-
-    /**
-     * @var string
-     */
-    private $carrierName;
-
-    /**
-     * @var string
-     */
-    private $carrierDelay;
-
-    /**
-     * @param int $carrierId
-     * @param string $carrierName
-     * @param string $carrierDelay
-     */
-    public function __construct(int $carrierId, string $carrierName, string $carrierDelay)
-    {
-        $this->carrierId = $carrierId;
-        $this->carrierName = $carrierName;
-        $this->carrierDelay = $carrierDelay;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCarrierId(): int
-    {
-        return $this->carrierId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierName(): string
-    {
-        return $this->carrierName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierDelay(): string
-    {
-        return $this->carrierDelay;
-    }
+    public function handle(GetCartForOrderCreation $query): CartForOrderCreation;
 }

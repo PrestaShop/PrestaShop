@@ -392,10 +392,6 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
 
-        if ($order->total_products <= 0) {
-            return true;
-        }
-
         $shipping_tax_amount = 0;
 
         foreach ($order->getCartRules() as $cart_rule) {
@@ -406,7 +402,8 @@ class OrderDetailCore extends ObjectModel
             }
         }
 
-        $ratio = $this->unit_price_tax_excl / $order->total_products;
+        $ratio = ($order->total_products > 0) ? ($this->unit_price_tax_excl / $order->total_products) : 1;
+
         $order_reduction_amount = ($order->total_discounts_tax_excl - $shipping_tax_amount) * $ratio;
         $discounted_price_tax_excl = $this->unit_price_tax_excl - $order_reduction_amount;
 
@@ -537,7 +534,7 @@ class OrderDetailCore extends ObjectModel
         if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR')) {
             $update_quantity = true;
             if (!StockAvailable::dependsOnStock($product['id_product'])) {
-                $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int) $product['cart_quantity']);
+                $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int) $product['cart_quantity'], $product['id_shop'], true);
             }
 
             if ($update_quantity) {

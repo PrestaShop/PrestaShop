@@ -102,7 +102,7 @@ services:
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart'
 
   prestashop.adapter.query_handler.get_cart_information_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartInformationHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartForOrderCreationHandler'
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
@@ -111,7 +111,7 @@ services:
       - '@translator'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation'
 
   prestashop.adapter.command_handler.add_customization_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCustomizationHandler'

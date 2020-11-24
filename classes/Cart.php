@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Cart\Calculator;
 use PrestaShop\PrestaShop\Core\Cart\CartRow;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CartCore extends ObjectModel
 {
@@ -1325,6 +1326,7 @@ class CartCore extends ObjectModel
      * @param Shop|null $shop
      * @param bool $auto_add_cart_rule
      * @param bool $skipAvailabilityCheckOutOfStock
+     * @param bool $preserveGiftRemoval
      *
      * @return bool Whether the quantity has been successfully updated
      */
@@ -1337,7 +1339,8 @@ class CartCore extends ObjectModel
         $id_address_delivery = 0,
         Shop $shop = null,
         $auto_add_cart_rule = true,
-        $skipAvailabilityCheckOutOfStock = false
+        $skipAvailabilityCheckOutOfStock = false,
+        bool $preserveGiftRemoval = true
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1408,7 +1411,7 @@ class CartCore extends ObjectModel
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
-            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization);
+            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
         }
 
         if (!$product->available_for_order
@@ -1451,7 +1454,7 @@ class CartCore extends ObjectModel
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
-                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization);
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
                 }
             } else {
                 return false;
@@ -1712,6 +1715,7 @@ class CartCore extends ObjectModel
      * @param int $id_product_attribute Attribute ID if needed
      * @param int $id_customization Customization id
      * @param int $id_address_delivery Delivery Address id
+     * @param bool $preserveGiftsRemoval If true gift are not removed so product is still in cart
      *
      * @return bool Whether the product has been successfully deleted
      */
@@ -1719,7 +1723,8 @@ class CartCore extends ObjectModel
         $id_product,
         $id_product_attribute = 0,
         $id_customization = 0,
-        $id_address_delivery = 0
+        $id_address_delivery = 0,
+        bool $preserveGiftsRemoval = true
     ) {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -1760,15 +1765,18 @@ class CartCore extends ObjectModel
             );
         }
 
-        $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-        if ($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
-            return Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
-                WHERE `id_cart` = ' . (int) $this->id . '
-                AND `id_product` = ' . (int) $id_product .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
-            );
+        if ($preserveGiftsRemoval) {
+            $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
+            if (isset($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute])
+                && $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
+                return Db::getInstance()->execute(
+                    'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                    SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
+                    WHERE `id_cart` = ' . (int) $this->id . '
+                    AND `id_product` = ' . (int) $id_product .
+                    ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                );
+            }
         }
 
         /* Product deletion */
@@ -3784,16 +3792,38 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Return useful information about the cart.
+     * Return useful information about the cart for display purpose.
+     * Products are splitted between paid ones and gift
+     * Gift price and shipping (if shipping is free) are removed from Discounts
+     * Any cart data modification for display purpose is made here.
      *
      * @return array Cart details
      */
     public function getSummaryDetails($id_lang = null, $refresh = false)
     {
-        $context = Context::getContext();
         if (!$id_lang) {
-            $id_lang = $context->language->id;
+            $id_lang = Context::getContext()->language->id;
         }
+        $summary = $this->getRawSummaryDetails($id_lang, (bool) $refresh);
+
+        return $this->alterSummaryForDisplay($summary, (bool) $refresh);
+    }
+
+    /**
+     * Returns useful raw information about the cart.
+     * Products, Discounts, Prices ... are returned in an array without any modification.
+     *
+     * @param int $id_lang
+     * @param bool $refresh
+     *
+     * @return array Cart details
+     *
+     * @throws PrestaShopException
+     * @throws LocalizationException
+     */
+    public function getRawSummaryDetails(int $id_lang, bool $refresh = false): array
+    {
+        $context = Context::getContext();
 
         $delivery = new Address((int) $this->id_address_delivery);
         $invoice = new Address((int) $this->id_address_invoice);
@@ -3812,8 +3842,6 @@ class CartCore extends ObjectModel
         if ($total_tax < 0) {
             $total_tax = 0;
         }
-
-        $currency = new Currency($this->id_currency);
 
         $products = $this->getProducts($refresh);
 
@@ -3834,80 +3862,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $gift_products = [];
-        $cart_rules = $this->getCartRules();
         $total_shipping = $this->getTotalShippingCost();
-        $total_shipping_tax_exc = $this->getTotalShippingCost(null, false);
-        $total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-        $total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $total_discounts = $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
-        $total_discounts_tax_exc = $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
-
-        // The cart content is altered for display
-        foreach ($cart_rules as &$cart_rule) {
-            // If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
-            if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
-                $cart_rule['value_real'] -= $total_shipping;
-                $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                if ($total_discounts > $cart_rule['value_real']) {
-                    $total_discounts -= $total_shipping;
-                }
-                if ($total_discounts_tax_exc > $cart_rule['value_tax_exc']) {
-                    $total_discounts_tax_exc -= $total_shipping_tax_exc;
-                }
-
-                // Update total shipping
-                $total_shipping = 0;
-                $total_shipping_tax_exc = 0;
-            }
-
-            if ($cart_rule['gift_product']) {
-                foreach ($products as $key => &$product) {
-                    if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
-                        // Update total products
-                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-
-                        // Update total discounts
-                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-
-                        // Update cart rule value
-                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-
-                        // Update product quantity
-                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
-                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
-                        --$product['cart_quantity'];
-
-                        if (!$product['cart_quantity']) {
-                            unset($products[$key]);
-                        }
-
-                        // Add a new product line
-                        $gift_product = $product;
-                        $gift_product['cart_quantity'] = 1;
-                        $gift_product['price'] = 0;
-                        $gift_product['price_wt'] = 0;
-                        $gift_product['total_wt'] = 0;
-                        $gift_product['total'] = 0;
-                        $gift_product['is_gift'] = true;
-                        $gift_products[] = $gift_product;
-
-                        break; // One gift product per cart rule
-                    }
-                }
-            }
-        }
-
-        foreach ($cart_rules as $key => &$cart_rule) {
-            if (((float) $cart_rule['value_real'] == 0 && (int) $cart_rule['free_shipping'] == 0)) {
-                unset($cart_rules[$key]);
-            }
-        }
 
         $summary = [
             'delivery' => $delivery,
@@ -3916,17 +3871,16 @@ class CartCore extends ObjectModel
             'invoice_state' => State::getNameById($invoice->id_state),
             'formattedAddresses' => $formatted_addresses,
             'products' => array_values($products),
-            'gift_products' => $gift_products,
-            'discounts' => array_values($cart_rules),
+            'discounts' => array_values($this->getCartRules()),
             'is_virtual_cart' => (int) $this->isVirtualCart(),
-            'total_discounts' => $total_discounts,
-            'total_discounts_tax_exc' => $total_discounts_tax_exc,
+            'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
+            'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
             'total_wrapping' => $this->getOrderTotal(true, Cart::ONLY_WRAPPING),
             'total_wrapping_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_WRAPPING),
             'total_shipping' => $total_shipping,
-            'total_shipping_tax_exc' => $total_shipping_tax_exc,
-            'total_products_wt' => $total_products_wt,
-            'total_products' => $total_products,
+            'total_shipping_tax_exc' => $this->getTotalShippingCost(null, false),
+            'total_products_wt' => $this->getOrderTotal(true, Cart::ONLY_PRODUCTS),
+            'total_products' => $this->getOrderTotal(false, Cart::ONLY_PRODUCTS),
             'total_price' => $base_total_tax_inc,
             'total_tax' => $total_tax,
             'total_price_without_tax' => $base_total_tax_exc,
@@ -5111,5 +5065,107 @@ class CartCore extends ObjectModel
         $taxAddress = new Address($taxAddressId);
 
         return new Country($taxAddress->id_country);
+    }
+
+    /**
+     * Alter raw cart details to adapt to display use case.
+     *
+     * @param array $summary
+     * @param bool $refresh
+     *
+     * @return array
+     */
+    private function alterSummaryForDisplay(array $summary, bool $refresh = false): array
+    {
+        $context = Context::getContext();
+        $currency = new Currency($this->id_currency);
+
+        $gift_products = [];
+        $products = $summary['products'];
+        $cart_rules = $summary['discounts'];
+        $total_shipping = $summary['total_shipping'];
+        $total_discounts = $summary['total_discounts'];
+        $total_discounts_tax_exc = $summary['total_discounts_tax_exc'];
+        $total_shipping_tax_exc = $summary['total_shipping_tax_exc'];
+        $total_products = $summary['total_products'];
+        $total_products_wt = $summary['total_products_wt'];
+
+        // The cart content is altered for display
+        foreach ($cart_rules as &$cart_rule) {
+            // If the cart rule is automatic (without any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
+            if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
+                $cart_rule['value_real'] -= $total_shipping;
+                $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
+                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                if ($total_discounts > $cart_rule['value_real']) {
+                    $total_discounts -= $total_shipping;
+                }
+                if ($total_discounts_tax_exc > $cart_rule['value_tax_exc']) {
+                    $total_discounts_tax_exc -= $total_shipping_tax_exc;
+                }
+
+                // Update total shipping
+                $total_shipping = 0;
+                $total_shipping_tax_exc = 0;
+            }
+
+            if ($cart_rule['gift_product']) {
+                foreach ($products as $key => &$product) {
+                    if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
+                        // Update total products
+                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+
+                        // Update total discounts
+                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+
+                        // Update cart rule value
+                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+
+                        // Update product quantity
+                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        --$product['cart_quantity'];
+
+                        if (!$product['cart_quantity']) {
+                            unset($products[$key]);
+                        }
+
+                        // Add a new product line
+                        $gift_product = $product;
+                        $gift_product['cart_quantity'] = 1;
+                        $gift_product['price'] = 0;
+                        $gift_product['price_wt'] = 0;
+                        $gift_product['total_wt'] = 0;
+                        $gift_product['total'] = 0;
+                        $gift_product['is_gift'] = true;
+                        $gift_products[] = $gift_product;
+
+                        break; // One gift product per cart rule
+                    }
+                }
+            }
+        }
+
+        foreach ($cart_rules as $key => &$cart_rule) {
+            if (((float) $cart_rule['value_real'] == 0 && (int) $cart_rule['free_shipping'] == 0)) {
+                unset($cart_rules[$key]);
+            }
+        }
+
+        $summary['discounts'] = $cart_rules;
+        $summary['total_shipping'] = $total_shipping;
+        $summary['total_discounts'] = $total_discounts;
+        $summary['total_discounts_tax_exc'] = $total_discounts_tax_exc;
+        $summary['total_shipping_tax_exc'] = $total_shipping_tax_exc;
+        $summary['total_products'] = $total_products;
+        $summary['total_products_wt'] = $total_products_wt;
+        $summary['products'] = $products;
+        $summary['gift_products'] = $gift_products;
+
+        return $summary;
     }
 }

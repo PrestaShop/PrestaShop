@@ -1100,7 +1100,7 @@ Best regards,</target>
       <trans-unit id="e49701f123af735cf327227e8ab09bac">
         <source>Manual order -- Employee:</source>
         <target>Manual order -- Employee:</target>
-        <note>Line: 98</note>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -1206,12 +1206,12 @@ Best regards,</target>
       <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
         <source>Add new order</source>
         <target>Add new order</target>
-        <note>Line: 167</note>
+        <note>Line: 166</note>
       </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>Line: 509</note>
+        <note>Line: 508</note>
       </trans-unit>
     </body>
   </file>
