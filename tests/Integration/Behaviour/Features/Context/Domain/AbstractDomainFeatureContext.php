@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Testwork\Tester\Result\TestResult;
 use Configuration;
@@ -170,6 +171,30 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $localizedArray;
+    }
+
+    /**
+     * @param TableNode $table
+     *
+     * @return array
+     */
+    protected function parseLocalizedRows(TableNode $table): array
+    {
+        $parsedRows = [];
+        foreach ($table->getRowsHash() as $rowName => $value) {
+            $localeMatch = preg_match('/\[.*?\]/', $rowName, $matches) ? reset($matches) : null;
+
+            if (!$localeMatch) {
+                $parsedRows[$rowName] = $value;
+                continue;
+            }
+
+            $propertyName = str_replace($localeMatch, '', $rowName);
+            $locale = str_replace(['[', ']'], '', $localeMatch);
+            $parsedRows[$propertyName][Language::getIdByLocale($locale)] = $value;
+        }
+
+        return $parsedRows;
     }
 
     /**
