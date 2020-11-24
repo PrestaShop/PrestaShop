@@ -53,7 +53,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductStock(string $productReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
 
         $this->cleanLastException();
@@ -285,12 +285,12 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['available_now_labels'])) {
-            $command->setLocalizedAvailableNowLabels($this->parseLocalizedArray($data['available_now_labels']));
+            $command->setLocalizedAvailableNowLabels($data['available_now_labels']);
             unset($data['available_now_labels']);
         }
 
         if (isset($data['available_later_labels'])) {
-            $command->setLocalizedAvailableLaterLabels($this->parseLocalizedArray($data['available_later_labels']));
+            $command->setLocalizedAvailableLaterLabels($data['available_later_labels']);
             unset($data['available_later_labels']);
         }
 

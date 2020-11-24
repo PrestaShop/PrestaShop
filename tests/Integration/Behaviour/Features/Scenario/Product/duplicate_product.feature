@@ -192,3 +192,4 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
+#@todo: assert stock info

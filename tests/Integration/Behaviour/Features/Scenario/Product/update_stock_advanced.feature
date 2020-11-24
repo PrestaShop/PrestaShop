@@ -16,8 +16,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I check default stock values
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | use_advanced_stock_management | false      |
       | depends_on_stock              | false      |
@@ -32,8 +32,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I check default stock values for virtual product
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | true                      |
+      | name[en-US] | Presta camera |
+      | is_virtual  | true          |
     And product "product1" should have following stock information:
       | use_advanced_stock_management | false      |
       | depends_on_stock              | false      |
@@ -48,8 +48,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product stock management
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | use_advanced_stock_management | false |
     When I update product "product1" stock with following information:
@@ -59,8 +59,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product depends on stock (also check automatic update when disabling advanced stock on product)
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | use_advanced_stock_management | false |
       | depends_on_stock              | false |
@@ -91,12 +91,12 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update pack stock type
     Given I add product "productPack1" with following information:
-      | name       | {"en-US":"weird sunglasses box"} |
-      | is_virtual | false                            |
+      | name[en-US] | weird sunglasses box |
+      | is_virtual  | false                |
     And product "productPack1" type should be standard
     And I add product "product2" with following information:
-      | name       | {"en-US":"shady sunglasses"} |
-      | is_virtual | false                        |
+      | name[en-US] | weird sunglasses box |
+      | is_virtual  | false                |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -127,16 +127,16 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product pack stock type which depends on stock
     Given I add product "productPack1" with following information:
-      | name       | {"en-US":"weird sunglasses box"} |
-      | is_virtual | false                            |
+      | name[en-US] | weird sunglasses box |
+      | is_virtual  | false                |
     And product "productPack1" type should be standard
     And I add product "product2" with following information:
-      | name       | {"en-US":"shady sunglasses"} |
-      | is_virtual | false                        |
+      | name[en-US] | shady sunglasses |
+      | is_virtual  | false            |
     And product "product2" type should be standard
     And I add product "product3" with following information:
-      | name       | {"en-US":"unicorn boc case"} |
-      | is_virtual | false                        |
+      | name[en-US] | unicorn boc case |
+      | is_virtual  | false            |
     And product "product3" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -201,8 +201,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product out of stock
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | out_of_stock_type | default |
     When I update product "product1" stock with following information:
@@ -223,15 +223,15 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: Virtual product is available out of stock by default
     Given I add product "product1" with following information:
-      | name       | {"en-US":"eBook"} |
-      | is_virtual | true              |
+      | name[en-US] | eBook |
+      | is_virtual  | true  |
     Then product "product1" should have following stock information:
       | out_of_stock_type | available |
 
   Scenario: I update product quantity
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | quantity | 0 |
     When I update product "product1" stock with following information:
@@ -247,8 +247,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: I update product quantity specifying if movement must be added or not
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | quantity | 0 |
     When I update product "product1" stock with following information:
@@ -265,8 +265,8 @@ Feature: Update product stock from Back Office (BO)
   Scenario: I update product simple stock fields
     Given language "french" with locale "fr-FR" exists
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | minimal_quantity    | 1          |
       | location            |            |
@@ -282,13 +282,13 @@ Feature: Update product stock from Back Office (BO)
       | en-US  |       |
       | fr-FR  |       |
     When I update product "product1" stock with following information:
-      | minimal_quantity       | 12                       |
-      | location               | dtc                      |
-      | low_stock_threshold    | 42                       |
-      | low_stock_alert        | true                     |
-      | available_now_labels   | {"en-US":"get it now"}   |
-      | available_later_labels | {"en-US":"too late bro"} |
-      | available_date         | 1969-07-16               |
+      | minimal_quantity              | 12           |
+      | location                      | dtc          |
+      | low_stock_threshold           | 42           |
+      | low_stock_alert               | true         |
+      | available_now_labels[en-US]   | get it now   |
+      | available_later_labels[en-US] | too late bro |
+      | available_date                | 1969-07-16   |
     And product "product1" should have following stock information:
       | minimal_quantity    | 12         |
       | location            | dtc        |
@@ -304,8 +304,10 @@ Feature: Update product stock from Back Office (BO)
       | en-US  | too late bro |
       | fr-FR  |              |
     When I update product "product1" stock with following information:
-      | available_now_labels   | {"en-US":"get it now","fr-FR":""}   |
-      | available_later_labels | {"en-US":"too late bro","fr-FR":""} |
+      | available_now_labels[en-US]   | get it now   |
+      | available_now_labels[fr-FR]   |              |
+      | available_later_labels[en-US] | too late bro |
+      | available_later_labels[fr-FR] |              |
     Then product "product1" localized "available_now_labels" should be:
       | locale | value      |
       | en-US  | get it now |
@@ -315,8 +317,10 @@ Feature: Update product stock from Back Office (BO)
       | en-US  | too late bro |
       | fr-FR  |              |
     When I update product "product1" stock with following information:
-      | available_now_labels   | {"en-US":"get it now","fr-FR":"commande maintenant"} |
-      | available_later_labels | {"en-US":"too late bro","fr-FR":"trop tard mec"}     |
+      | available_now_labels[en-US]   | get it now          |
+      | available_now_labels[fr-FR]   | commande maintenant |
+      | available_later_labels[en-US] | too late bro        |
+      | available_later_labels[fr-FR] | trop tard mec       |
     Then product "product1" localized "available_now_labels" should be:
       | locale | value               |
       | en-US  | get it now          |
@@ -328,8 +332,8 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: When I use invalid values update is not authorized
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     And product "product1" should have following stock information:
       | quantity            | 0          |
       | minimal_quantity    | 1          |
@@ -350,10 +354,10 @@ Feature: Update product stock from Back Office (BO)
       | location | ssf> |
     Then I should get error that product location is invalid
     When I update product "product1" stock with following information:
-      | available_now_labels | {"en-US":"get it now <3"} |
+      | available_now_labels[en-US] | get it now <3 |
     Then I should get error that product available_now_labels is invalid
     When I update product "product1" stock with following information:
-      | available_later_labels | {"en-US":"too late bro<3"} |
+      | available_later_labels[en-US] | too late bro<3 |
     Then I should get error that product available_later_labels is invalid
     And product "product1" should have following stock information:
       | quantity            | 0          |
