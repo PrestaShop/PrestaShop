@@ -649,6 +649,9 @@
       text-align: center;
       background: $brand-secondary;
     }
+    &.out-of-stock {
+      background: $brand-danger;
+    }
   }
 }
 
