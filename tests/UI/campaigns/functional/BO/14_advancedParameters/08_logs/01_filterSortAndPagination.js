@@ -46,11 +46,14 @@ describe('Filter, sort and pagination logs', async () => {
     await expect(pageTitle).to.contains(logsPage.pageTitle);
   });
 
-  it('should reset all filters and get number of logs', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
+  it('should erase all logs', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'eraseLogs', baseContext);
 
-    numberOfLogs = await logsPage.resetAndGetNumberOfLines(page);
-    if (numberOfLogs !== 0) await expect(numberOfLogs).to.be.above(0);
+    const textResult = await logsPage.eraseAllLogs(page);
+    await expect(textResult).to.equal(logsPage.successfulUpdateMessage);
+
+    numberOfLogs = await logsPage.getNumberOfElementInGrid(page);
+    await expect(numberOfLogs).to.be.equal(0);
   });
 
   // 1 - Filter logs

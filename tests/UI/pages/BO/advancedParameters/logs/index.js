@@ -7,12 +7,14 @@ class LogsSettings extends BOBasePage {
 
     this.pageTitle = 'Logs •';
 
-    // List of customers
+    // List of logs
     this.gridPanel = '#logs_grid_panel';
     this.gridTitle = `${this.gridPanel} h3.card-header-title`;
     this.listForm = '#logs_grid';
     this.listTableRow = row => `${this.listForm} tbody tr:nth-child(${row})`;
     this.listTableColumn = (row, column) => `${this.listTableRow(row)} td.column-${column}`;
+    this.gridActionButton = '#logs-grid-actions-button';
+    this.eraseAllButton = '#logs_grid_action_delete_all_email_logs';
 
     // Filters
     this.filterColumnInput = filterBy => `${this.listForm} #logs_${filterBy}`;
@@ -89,6 +91,21 @@ class LogsSettings extends BOBasePage {
    */
   async getTextColumn(page, row, column) {
     return this.getTextContent(page, this.listTableColumn(row, column));
+  }
+
+  /**
+   * Erase all logs
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async eraseAllLogs(page) {
+    // Add listener to dialog to accept erase
+    this.dialogListener(page);
+
+    await page.click(this.gridActionButton);
+    await this.waitForSelectorAndClick(page, this.eraseAllButton);
+
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
