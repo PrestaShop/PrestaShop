@@ -174,19 +174,13 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * @param array $rows
+     * @param TableNode $tableNode
      *
      * @return array
      */
     protected function localizeByRows(TableNode $tableNode): array
     {
-        $parsedRows = [];
-        foreach ($tableNode->getRowsHash() as $rowName => $value) {
-            $parsedRow = $this->parseLocalizedRow($rowName, $value);
-            $parsedRows[$parsedRow['key']] = $parsedRow['value'];
-        }
-
-        return $parsedRows;
+        return $this->parseLocalizedRows($tableNode->getRowsHash());
     }
 
     /**
@@ -196,15 +190,14 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function localizeByColumns(TableNode $table): array
     {
-        $parsedRows = [];
+        $rows = [];
         foreach ($table->getColumnsHash() as $key => $column) {
             foreach ($column as $columnName => $value) {
-                $parsedRow = $this->parseLocalizedRow($columnName, $value);
-                $parsedRows[$key][$parsedRow['key']] = $parsedRow['value'];
+                $rows[$key][$columnName] = $value;
             }
         }
 
-        return $parsedRows;
+        return $this->parseLocalizedRows($rows);
     }
 
     /**
@@ -216,30 +209,33 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * @param string $key
-     * @param string $value
+     * @param array $rows
      *
-     * @return array|string[]
+     * @return array
      */
-    private function parseLocalizedRow(string $key, string $value): array
+    private function parseLocalizedRows(array $rows): array
     {
-        $localeMatch = preg_match('/\[.*?\]/', $key, $matches) ? reset($matches) : null;
+        $parsedRows = [];
+        foreach ($rows as $key => $value) {
+            $localeMatch = preg_match('/\[.*?\]/', $key, $matches) ? reset($matches) : null;
 
-        if (!$localeMatch) {
-            return [
-                'key' => $key,
-                'value' => $value,
-            ];
+            if (!$localeMatch) {
+                $parsedRows[$key] = $value;
+                continue;
+            }
+
+            $propertyName = str_replace($localeMatch, '', $key);
+            $locale = str_replace(['[', ']'], '', $localeMatch);
+
+            $langId = (int) Language::getIdByLocale($locale, true);
+
+            if (!$langId) {
+                throw new RuntimeException(sprintf('Language by locale "%s" was not found', $locale));
+            }
+
+            $parsedRows[$propertyName][$langId] = $value;
         }
 
-        $propertyName = str_replace($localeMatch, '', $key);
-        $locale = str_replace(['[', ']'], '', $localeMatch);
-
-        return [
-            'key' => $propertyName,
-            'value' => [
-                Language::getIdByLocale($locale) => $value,
-            ],
-        ];
+        return $parsedRows;
     }
 }
