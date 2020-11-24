@@ -6,8 +6,8 @@ Feature: Update product price fields from Back Office (BO).
 
   Background:
     Given I add product "product1" with following information:
-      | name       | en-US:magic staff |
-      | is_virtual | false             |
+      | name[en-US] | magic staff |
+      | is_virtual  | false       |
     And product product1 should have following prices information:
       | price            | 0     |
       | ecotax           | 0     |
@@ -142,26 +142,26 @@ Feature: Update product price fields from Back Office (BO).
 
   Scenario: I update product unit price along with product price
     When I update product "product1" prices with following information:
-      | price            | 20           |
-      | unit_price       | 500          |
+      | price      | 20  |
+      | unit_price | 500 |
     Then product product1 should have following prices information:
-      | price            | 20           |
-      | unit_price       | 500          |
-      | unit_price_ratio | 0.04         |
+      | price            | 20   |
+      | unit_price       | 500  |
+      | unit_price_ratio | 0.04 |
     When I update product "product1" prices with following information:
-      | price            | 0            |
-      | unit_price       | 500          |
+      | price      | 0   |
+      | unit_price | 500 |
     Then product product1 should have following prices information:
-      | price            | 0            |
-      | unit_price       | 0            |
-      | unit_price_ratio | 0            |
+      | price            | 0 |
+      | unit_price       | 0 |
+      | unit_price_ratio | 0 |
 
   Scenario: I update product prices providing non-existing tax rules group
     Given I update product "product1" prices with following information:
       | tax rules group | US-AL Rate (4%) |
     And product product1 should have following prices information:
-      | tax rules group  | US-AL Rate (4%) |
+      | tax rules group | US-AL Rate (4%) |
     When I update product "product1" prices and apply non-existing tax rules group
     Then I should get error that tax rules group does not exist
     And product product1 should have following prices information:
-      | tax rules group  | US-AL Rate (4%) |
+      | tax rules group | US-AL Rate (4%) |
