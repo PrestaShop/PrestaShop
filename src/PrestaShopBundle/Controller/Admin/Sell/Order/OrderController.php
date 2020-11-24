@@ -1462,13 +1462,20 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function getPaymentsAction(int $orderId): Response
     {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        try {
+            /** @var OrderForViewing $orderForViewing */
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig', [
-            'payments' => $orderForViewing->getPayments(),
-            'linkedOrders' => $orderForViewing->getLinkedOrders(),
-        ]);
+            return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig', [
+                'payments' => $orderForViewing->getPayments(),
+                'linkedOrders' => $orderForViewing->getLinkedOrders(),
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**

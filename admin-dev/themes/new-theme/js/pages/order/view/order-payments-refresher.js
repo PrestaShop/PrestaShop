@@ -34,9 +34,17 @@ export default class OrderPaymentsRefresher {
   }
 
   refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_payments', {orderId})).then(response => {
-      $(OrderViewPageMap.viewOrderPaymentsAlert).remove();
-      $(`${OrderViewPageMap.viewOrderPaymentsBlock} .card-body`).prepend(response);
-    });
+    $.ajax(this.router.generate('admin_orders_get_payments', {orderId}))
+        .then(
+        response => {
+            $(OrderViewPageMap.viewOrderPaymentsAlert).remove();
+            $(`${OrderViewPageMap.viewOrderPaymentsBlock} .card-body`).prepend(response);
+          },
+          response => {
+            if (response.responseJSON && response.responseJSON.message) {
+              $.growl.error({message: response.responseJSON.message});
+            }
+          }
+        );
   }
 }
