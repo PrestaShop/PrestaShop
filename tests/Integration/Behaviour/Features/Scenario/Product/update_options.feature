@@ -11,8 +11,8 @@ Feature: Update product options from Back Office (BO)
 
   Scenario: I update product options
     Given I add product "product1" with following information:
-      | name       | {"en-US":"Presta camera"} |
-      | is_virtual | false                     |
+      | name[en-US] | Presta camera |
+      | is_virtual  | false         |
     Then product "product1" should have following options information:
       | visibility          | both  |
       | available_for_order | true  |
@@ -101,8 +101,8 @@ Feature: Update product options from Back Office (BO)
 
   Scenario: I update product options providing invalid values
     Given I add product "product2" with following information:
-      | name       | {"en-US":"The truth is out there' wallpaper"} |
-      | is_virtual | true                                          |
+      | name[en-US] | 'The truth is out there' wallpaper |
+      | is_virtual  | true                               |
     When I update product "product2" options with following information:
       | visibility | show it to me plz |
     Then I should get error that product visibility is invalid

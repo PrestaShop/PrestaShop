@@ -89,7 +89,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     {
         $fieldsForUpdate = [];
         foreach (Language::getIDs() as $langId) {
-            $langId = (int)$langId;
+            $langId = (int) $langId;
             $fieldsForUpdate[] = [
                 'id' => null,
                 'type' => CustomizationFieldType::TYPE_TEXT,
