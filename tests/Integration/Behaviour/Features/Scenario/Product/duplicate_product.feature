@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product
 @reset-database-before-feature
 @duplicate-product
-@clear-downloads-after-feature
+@reset-downloads-after-feature
 @clear-cache-after-feature
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
@@ -27,8 +27,8 @@ Feature: Duplicate product from Back Office (BO).
       | name[fr-FR] | lunettes        |
       | is_virtual  | false           |
     And I update product "product1" basic information with following values:
-      | name[en-US]              | nice sunglasses            |
-      | name[fr-FR]              | belles lunettes            |
+      | description[en-US]              | nice sunglasses            |
+      | description[fr-FR]              | belles lunettes            |
       | description_short[en-US] | Simple & nice sunglasses   |
       | description_short[fr-FR] | lunettes simples et belles |
     And I assign product product1 to following categories:
@@ -94,10 +94,10 @@ Feature: Duplicate product from Back Office (BO).
     And I set following related products to product product1:
       | product2 |
     And I update product product1 with following customization fields:
-      | reference    | type | name[en-US]               | name[fr-FR]                         | is_required |
+      | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
       | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
     And I add new attachment "att1" with following properties:
-      | description[en-US] | puffin photo nr1","fr-FR":"macareux"} |
+      | description[en-US] | puffin photo nr1 |
       | description[fr-FR] | macareux                              |
       | name[en-US]        | puffin                                |
       | name[fr-FR]        | macareux                              |
@@ -165,7 +165,7 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | SUNGLASSES meta title |
     And product "copy_of_product1" localized "meta_description" should be:
       | locale | value                        |
-      | en-US  | Its so smart, almost magical |
+      | en-US  | Its so smart |
       | fr-FR  | lel joke                     |
     And product "copy_of_product1" localized "link_rewrite" should be:
       | locale | value              |

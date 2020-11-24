@@ -180,7 +180,7 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function localizeByRows(TableNode $tableNode): array
     {
-        return $this->parseLocalizedRows($tableNode->getRowsHash());
+        return $this->parseLocalizedRow($tableNode->getRowsHash());
     }
 
     /**
@@ -192,12 +192,15 @@ abstract class AbstractDomainFeatureContext implements Context
     {
         $rows = [];
         foreach ($table->getColumnsHash() as $key => $column) {
+            $row = [];
             foreach ($column as $columnName => $value) {
-                $rows[$key][$columnName] = $value;
+                $row[$columnName] = $value;
             }
+
+            $rows[] = $this->parseLocalizedRow($row);
         }
 
-        return $this->parseLocalizedRows($rows);
+        return $rows;
     }
 
     /**
@@ -209,18 +212,18 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * @param array $rows
+     * @param array $row
      *
      * @return array
      */
-    private function parseLocalizedRows(array $rows): array
+    private function parseLocalizedRow(array $row): array
     {
-        $parsedRows = [];
-        foreach ($rows as $key => $value) {
+        $parsedRow = [];
+        foreach ($row as $key => $value) {
             $localeMatch = preg_match('/\[.*?\]/', $key, $matches) ? reset($matches) : null;
 
             if (!$localeMatch) {
-                $parsedRows[$key] = $value;
+                $parsedRow[$key] = $value;
                 continue;
             }
 
@@ -233,9 +236,9 @@ abstract class AbstractDomainFeatureContext implements Context
                 throw new RuntimeException(sprintf('Language by locale "%s" was not found', $locale));
             }
 
-            $parsedRows[$propertyName][$langId] = $value;
+            $parsedRow[$propertyName][$langId] = $value;
         }
 
-        return $parsedRows;
+        return $parsedRow;
     }
 }

@@ -67,7 +67,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             $fieldsForUpdate[] = [
                 'id' => $id,
                 'type' => $customizationField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT,
-                'localized_names' => $this->parseLocalizedArray($customizationField['name']),
+                'localized_names' => $customizationField['name'],
                 'is_required' => PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['is required']),
                 'added_by_module' => $addedByModule,
             ];
