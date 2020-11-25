@@ -86,15 +86,24 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
      */
     public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable): void
     {
-        $limitKey = $this->getCombinationLimitKey($productReference);
+        $limit = $this->getLimit($productReference);
+        $offset = $this->countOffset($page, $limit);
 
-        if (!$this->getSharedStorage()->exists($limitKey)) {
-            throw new RuntimeException('Set limit of results first to be able to test pagination');
-        }
-
-        $limit = $this->getSharedStorage()->get($limitKey);
-        $offset = (1 === $page) ? 0 : ($page - 1) * $limit;
         $this->assertCombinations($productReference, $dataTable->getColumnsHash(), $limit, $offset);
+    }
+
+    /**
+     * @Then there should be no combinations of :productReference in page :page
+     *
+     * @param string $productReference
+     * @param int $page
+     */
+    public function assertNoCombinationsInPage(string $productReference, int $page): void
+    {
+        $limit = $this->getLimit($productReference);
+        $offset = $this->countOffset($page, $limit);
+
+        $this->assertCombinations($productReference, [], $limit, $offset);
     }
 
     /**
@@ -106,6 +115,33 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     public function assertAllProductCombinations(string $productReference, TableNode $table): void
     {
         $this->assertCombinations($productReference, $table->getColumnsHash());
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     *
+     * @return int
+     */
+    private function countOffset(int $page, int $limit): int
+    {
+        return (1 === $page) ? 0 : ($page - 1) * $limit;
+    }
+
+    /**
+     * @param string $productReference
+     *
+     * @return int
+     */
+    private function getLimit(string $productReference): int
+    {
+        $limitKey = $this->getCombinationLimitKey($productReference);
+
+        if (!$this->getSharedStorage()->exists($limitKey)) {
+            throw new RuntimeException('Set limit of results first to be able to test pagination');
+        }
+
+        return $this->getSharedStorage()->get($limitKey);
     }
 
     /**
@@ -125,8 +161,8 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
         ));
 
         Assert::assertEquals(
-            count($combinationsForEditing->getCombinations()),
             count($dataRows),
+            count($combinationsForEditing->getCombinations()),
             'Unexpected combinations count'
         );
 

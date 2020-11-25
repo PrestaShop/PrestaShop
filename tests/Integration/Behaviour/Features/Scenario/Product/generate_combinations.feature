@@ -57,3 +57,4 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | combination name        | attributes           |
       | Size - M, Color - Black | [Size:M,Color:Black] |
       | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
+    And there should be no combinations of product1 in page 4
