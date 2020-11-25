@@ -20,6 +20,11 @@ class LogsSettings extends BOBasePage {
     this.filterColumnInput = filterBy => `${this.listForm} #logs_${filterBy}`;
     this.filterSearchButton = `${this.listForm} .grid-search-button`;
     this.filterResetButton = `${this.listForm} .grid-reset-button`;
+
+    // Sort Selectors
+    this.tableHead = `${this.listForm} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -106,6 +111,46 @@ class LogsSettings extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.eraseAllButton);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await page.hover(this.sortColumnDiv(sortBy));
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 
