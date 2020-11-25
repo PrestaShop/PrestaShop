@@ -24,46 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * This class builds a collection of product commands based on the form data and a list of ProductCommandBuilderInterface
+ * This interface is used by ProductCommandsBuilder each object which implements must build
+ * a product command based on the input form data.
  */
-class ProductCommandsBuilder
+interface ProductCommandBuilderInterface
 {
-    /**
-     * @var ProductCommandBuilderInterface[]
-     */
-    private $commandBuilders;
-
-    /**
-     * @param ProductCommandBuilderInterface[] $commandBuilders
-     */
-    public function __construct(array $commandBuilders)
-    {
-        $this->commandBuilders = $commandBuilders;
-    }
-
     /**
      * @param ProductId $productId
      * @param array $formData
      *
-     * @return ProductCommandCollection
+     * @return mixed|null Returns null if the required data for the command is absent
      */
-    public function buildCommands(ProductId $productId, array $formData): ProductCommandCollection
-    {
-        $commands = new ProductCommandCollection();
-        foreach ($this->commandBuilders as $commandBuilder) {
-            $command = $commandBuilder->buildCommand($productId, $formData);
-            if (null !== $command) {
-                $commands->add($command);
-            }
-        }
-
-        return $commands;
-    }
+    public function buildCommand(ProductId $productId, array $formData);
 }
