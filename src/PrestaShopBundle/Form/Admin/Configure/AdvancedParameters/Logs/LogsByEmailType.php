@@ -45,7 +45,7 @@ final class LogsByEmailType extends TranslatorAwareType
         $builder
             ->add('logs_by_email', LogSeverityChoiceType::class, [
                 'placeholder' => $this->trans(
-                    '---',
+                    'None',
                     'Admin.Global'
                 ),
                 'label' => $this->trans(
@@ -53,7 +53,7 @@ final class LogsByEmailType extends TranslatorAwareType
                     'Admin.Advparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Leave empty to disable log alerts by email or enter the recipients of these emails in the following field.',
+                    'Click on "None" to disable log alerts by email or enter the recipients of these emails in the following field.',
                     'Admin.Advparameters.Help'
                 ),
             ])
