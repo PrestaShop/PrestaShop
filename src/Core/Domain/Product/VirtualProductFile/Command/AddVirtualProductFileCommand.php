@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Adds downloadable file for virtual product
- *
- * @todo: is VirtualProductFile name correct for Core/Domain? or should I use ProductDownload everywhere
  */
 class AddVirtualProductFileCommand
 {

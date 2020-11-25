@@ -34,11 +34,15 @@ use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
 
 /**
  * Validates virtual product file
- *
- * @todo: homogenize - add file validator interface ?
  */
 class VirtualProductFileValidator
 {
+    /**
+     * 1kb squared equals 1MB. (1kb = 1024 bytes)
+     * 1024^2 = 1048576
+     */
+    private const MEGABYTE_TO_BYTE_MULTIPLIER = '1048576';
+
     /**
      * @var DecimalNumber
      */
@@ -62,7 +66,7 @@ class VirtualProductFileValidator
     {
         $this->assertIsFile($filePath);
 
-        $megabyteToByteMultiplier = new DecimalNumber('1048576');
+        $megabyteToByteMultiplier = new DecimalNumber(self::MEGABYTE_TO_BYTE_MULTIPLIER);
         $maxFileSizeInBytes = $this->maxFileSizeInMegabytes->times($megabyteToByteMultiplier);
         $actualSizeInBytes = new DecimalNumber((string) filesize($filePath));
 
