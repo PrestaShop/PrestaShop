@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
@@ -34,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
+use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -67,17 +70,20 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
-     * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/
+     * @Then /^product "(.+)" localized "(.+)" should be:$/
+     * @Given /^product "(.+)" localized "(.+)" is:$/
+     *
+     * localizedValues transformation handled by
+     *
+     * @see LocalizedArrayTransformContext
      *
      * @param string $productReference
      * @param string $fieldName
-     * @param string $localizedValues
+     * @param array $expectedLocalizedValues
      */
-    public function assertLocalizedProperty(string $productReference, string $fieldName, string $localizedValues)
+    public function assertLocalizedProperty(string $productReference, string $fieldName, array $expectedLocalizedValues)
     {
         $productForEditing = $this->getProductForEditing($productReference);
-        $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
         if ('tags' === $fieldName) {
             UpdateTagsFeatureContext::assertLocalizedTags(

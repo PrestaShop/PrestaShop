@@ -8,12 +8,12 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: I add standard product to a pack
     Given I add product "productPack1" with following information:
-      | name       | en-US: weird sunglasses box |
-      | is_virtual | false                       |
+      | name[en-US] | weird sunglasses box |
+      | is_virtual  | false                |
     And product "productPack1" type should be standard
     And I add product "product2" with following information:
-      | name       | en-US: shady sunglasses |
-      | is_virtual | false                   |
+      | name[en-US] | shady sunglasses |
+      | is_virtual  | false            |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -25,15 +25,15 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: I add virtual products to a pack
     Given I add product "productPack2" with following information:
-      | name       | en-US: street photos |
-      | is_virtual | false                |
+      | name[en-US] | street photos |
+      | is_virtual  | false         |
     And product "productPack2" type should be standard
     And I add product "product3" with following information:
-      | name       | en-US: summerstreet |
-      | is_virtual | true                |
+      | name[en-US] | summerstreet |
+      | is_virtual  | true         |
     And I add product "product4" with following information:
-      | name       | en-US: winterstreet |
-      | is_virtual | true                |
+      | name[en-US] | winterstreet |
+      | is_virtual  | true         |
     And product "product3" type should be virtual
     When I update pack "productPack2" with following product quantities:
       | product  | quantity |
@@ -67,8 +67,8 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: I add virtual and standard product to the same pack
     Given I add product productPack4 with following information:
-      | name       | en-US: mixed pack |
-      | is_virtual | false             |
+      | name[en-US] | mixed pack |
+      | is_virtual  | false      |
     Given product "product2" type should be standard
     And product "product3" type should be virtual
     When I update pack productPack4 with following product quantities:
@@ -101,8 +101,8 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: Add combination product to a pack
     Given I add product "productSkirt1" with following information:
-      | name       | en-US:regular skirt |
-      | is_virtual | false               |
+      | name[en-US] | regular skirt |
+      | is_virtual  | false         |
     And product "productSkirt1" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |

@@ -44,11 +44,11 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
      */
     public function addProduct(string $productReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
-                $this->parseLocalizedArray($data['name']),
+                $data['name'],
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual'])
             ));
 
