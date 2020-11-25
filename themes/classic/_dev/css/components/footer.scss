@@ -5,6 +5,10 @@
     color: $gray-darker;
   }
 
+  .navbar-toggler .material-icons {
+    color: $gray-darker;
+  }
+
   @include media-breakpoint-down(sm) {
     #contact-infos {
       padding: 0.625rem;
