@@ -316,6 +316,16 @@
     .table {
       display: block;
     }
+
+    #view_order_payments_block {
+      .table {
+        &-head {
+          &-invoice {
+            min-width: auto;
+          }
+        }
+      }
+    }
   }
 }
 
