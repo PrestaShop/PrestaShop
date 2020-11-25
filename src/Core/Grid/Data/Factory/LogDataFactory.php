@@ -62,7 +62,7 @@ final class LogDataFactory implements GridDataFactoryInterface
     ) {
         $this->dataFactory = $dataFactory;
         $this->translator = $translator;
-        $this->defaultEmptyData = $this->translator->trans('---', [], 'Admin.Global');
+        $this->defaultEmptyData = '---';
     }
 
     /**
