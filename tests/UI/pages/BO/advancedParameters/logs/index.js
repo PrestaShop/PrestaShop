@@ -205,6 +205,20 @@ class LogsSettings extends BOBasePage {
 
     return this.getPaginationLabel(page);
   }
+
+  /**
+   * Filter logs by date
+   * @param page
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async filterLogsByDate(page, dateFrom, dateTo) {
+    await page.type(this.filterColumnInput('date_add_from'), dateFrom);
+    await page.type(this.filterColumnInput('date_add_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
 }
 
 module.exports = new LogsSettings();

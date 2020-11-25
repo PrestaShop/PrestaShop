@@ -29,6 +29,19 @@ let browserContext;
 let page;
 
 let numberOfLogs = 0;
+
+const today = new Date();
+
+// Current day
+const day = (`0${today.getDate()}`).slice(-2);
+// Current month
+const month = (`0${today.getMonth() + 1}`).slice(-2);
+// Current year
+const year = today.getFullYear();
+
+// Date today (yyy-mm-dd)
+const dateToday = `${year}-${month}-${day}`;
+
 /*
 Erase all logs
 Login and logout 6 times
@@ -287,6 +300,20 @@ describe('Filter, sort and pagination logs', async () => {
         const numberOfLogsAfterReset = await logsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfLogsAfterReset).to.equal(numberOfLogs + 11);
       });
+    });
+
+    it('should filter logs by date sent \'From\' and \'To\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
+
+      await logsPage.filterLogsByDate(page, dateToday, dateToday);
+
+      const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
+      await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
+
+      for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
+        const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
+        await expect(textColumn).to.contains(dateToday);
+      }
     });
   });
 
