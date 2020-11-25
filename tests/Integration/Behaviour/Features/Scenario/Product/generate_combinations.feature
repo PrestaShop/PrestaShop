@@ -20,8 +20,8 @@ Feature: Generate attribute combinations for product in Back Office (BO)
 
   Scenario: Generate product combinations
     When I add product "product1" with following information:
-      | name       | en-US:universal T-shirt |
-      | is_virtual | false                   |
+      | name[en-US] | universal T-shirt |
+      | is_virtual  | false             |
     Then product product1 type should be standard
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
