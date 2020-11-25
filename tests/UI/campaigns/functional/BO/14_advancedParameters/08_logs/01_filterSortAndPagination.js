@@ -29,6 +29,13 @@ let browserContext;
 let page;
 
 let numberOfLogs = 0;
+/*
+Erase all logs
+Login and logout 6 times
+Create 6 orders
+Filter logs table by : Id, Employee, Severity, Message, Object type, Object ID, Error code, Date
+Sort logs table by : Id, Employee, Severity, Message, Object type, Object ID, Error code, Date
+ */
 
 describe('Filter, sort and pagination logs', async () => {
   // before and after functions
@@ -283,7 +290,7 @@ describe('Filter, sort and pagination logs', async () => {
     });
   });
 
-  // 3 : Sort logs
+  // 2 : Sort logs
   const tests = [
     {
       args:
@@ -404,6 +411,37 @@ describe('Filter, sort and pagination logs', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
+    });
+  });
+
+  // 3 : Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await logsPage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await logsPage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 });
