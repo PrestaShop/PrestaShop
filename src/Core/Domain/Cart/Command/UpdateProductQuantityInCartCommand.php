@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Updates product quantity in cart
+ * Quantity given must include gift product
  */
 class UpdateProductQuantityInCartCommand
 {

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Address;
 use Configuration;
+use Currency;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationFi
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use Product;
+use Shop;
 
 /**
  * Handles products search using legacy object model
@@ -105,7 +107,33 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
     public function handle(SearchProducts $query): array
     {
         $currency = $this->currencyDataProvider->getCurrencyByIsoCode($query->getAlphaIsoCode()->getValue());
-        $this->contextStateManager->setCurrency($currency);
+        $this->contextStateManager
+            ->setCurrency($currency)
+        ;
+        if (null !== $query->getOrderId()) {
+            $order = $this->getOrder($query->getOrderId());
+            $this->contextStateManager
+                ->setShop(new Shop($order->id_shop))
+            ;
+        }
+
+        try {
+            $foundProducts = $this->searchProducts($query, $currency);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+
+        return $foundProducts;
+    }
+
+    /**
+     * @param SearchProducts $query
+     * @param Currency $currency
+     *
+     * @return array
+     */
+    private function searchProducts(SearchProducts $query, Currency $currency): array
+    {
         $computingPrecision = new ComputingPrecision();
         $currencyPrecision = $computingPrecision->getPrecision((int) $currency->precision);
 
@@ -136,8 +164,6 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
                 $foundProducts[] = $foundProduct;
             }
         }
-
-        $this->contextStateManager->restorePreviousContext();
 
         return $foundProducts;
     }

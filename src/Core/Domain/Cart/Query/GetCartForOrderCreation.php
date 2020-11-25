@@ -32,12 +32,17 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 /**
  * Query for getting cart information
  */
-class GetCartInformation
+class GetCartForOrderCreation
 {
     /**
      * @var CartId
      */
     private $cartId;
+
+    /**
+     * @var bool
+     */
+    private $hideDiscounts = false;
 
     /**
      * @param int $cartId
@@ -55,5 +60,34 @@ class GetCartInformation
     public function getCartId(): CartId
     {
         return $this->cartId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hideDiscounts(): bool
+    {
+        return $this->hideDiscounts;
+    }
+
+    /**
+     * When hideDiscounts is set to TRUE,
+     * Gift products are in a separate line from other products which are charged for
+     * The price of any gift products is not included in the overall discounts, total products and cart total
+     * Shipping is set to 0 if there is a free_shipping cart rule
+     *
+     * Otherwise,
+     * There is one line per product type, any gift products will be included in the quantity of charged products, but the price of gift products will appear as a discount
+     * Shipping has its original price, and if it's free, the shipping value will be added as a discount
+     *
+     * @param bool $hideDiscounts
+     *
+     * @return GetCartForOrderCreation
+     */
+    public function setHideDiscounts(bool $hideDiscounts): self
+    {
+        $this->hideDiscounts = $hideDiscounts;
+
+        return $this;
     }
 }

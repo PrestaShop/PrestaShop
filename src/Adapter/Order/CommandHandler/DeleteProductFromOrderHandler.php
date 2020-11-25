@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\DeleteProductFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use Shop;
 use Validate;
 
 /**
@@ -64,6 +65,8 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
 
     /**
      * @param ContextStateManager $contextStateManager
+     * @param OrderAmountUpdater $orderAmountUpdater
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      */
     public function __construct(
         ContextStateManager $contextStateManager,
@@ -90,7 +93,9 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         $this->contextStateManager
             ->setCart($cart)
             ->setCurrency(new Currency($order->id_currency))
-            ->setCustomer(new Customer($order->id_customer));
+            ->setCustomer(new Customer($order->id_customer))
+            ->setShop(new Shop($order->id_shop))
+        ;
 
         try {
             $order = $this->orderProductQuantityUpdater->update(

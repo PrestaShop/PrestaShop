@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
+use Shop;
 use Tools;
 use Validate;
 
@@ -104,6 +105,7 @@ class OrderAmountUpdater
             ->setCustomer(new Customer($cart->id_customer))
             ->setLanguage(new Language($cart->id_lang))
             ->setCountry($cart->getTaxCountry())
+            ->setShop(new Shop($cart->id_shop))
         ;
 
         try {
@@ -423,9 +425,6 @@ class OrderAmountUpdater
             if (!empty($orderProduct['id_order_invoice'])) {
                 $invoiceProducts[$orderProduct['id_order_invoice']][] = $orderProduct;
             }
-        }
-        if (empty($invoiceProducts)) {
-            return;
         }
 
         $invoiceCollection = $order->getInvoicesCollection();

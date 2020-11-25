@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Currency;
 use Exception;
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -958,6 +958,11 @@ class OrderController extends FrameworkBundleAdminController
             return $item->getOrderDetailId() == $orderDetailId ? $item : $result;
         });
 
+        // The whole product row has been removed so we return an empty response
+        if (null === $product) {
+            return new Response('');
+        }
+
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
@@ -1173,7 +1178,10 @@ class OrderController extends FrameworkBundleAdminController
         $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
 
         return $this->json(
-            $this->getQueryBus()->handle(new GetCartInformation($cartId))
+            $this->getQueryBus()->handle(
+                (new GetCartForOrderCreation($cartId))
+                    ->setHideDiscounts(true)
+            )
         );
     }
 

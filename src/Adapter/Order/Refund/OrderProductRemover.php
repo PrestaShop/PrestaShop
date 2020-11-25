@@ -24,16 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
 use Cart;
 use CartRule;
-use Configuration;
 use Db;
 use Order;
 use OrderCartRule;
 use OrderDetail;
-use OrderHistory;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
@@ -100,72 +102,34 @@ class OrderProductRemover
      * @param Cart $cart
      * @param OrderDetail $orderDetail
      *
-     * @return array
+     * @return CartProductUpdate[]
      */
     private function updateCart(Cart $cart, OrderDetail $orderDetail): array
     {
-        $oldProducts = $cart->getProducts(true);
+        $cartComparator = new CartProductsComparator($cart);
+        $knownUpdates = [
+            new CartProductUpdate(
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                -$orderDetail->product_quantity,
+                false
+            ),
+        ];
+
         $cart->updateQty(
             $orderDetail->product_quantity,
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
             false,
-            'down'
+            'down',
+            0,
+            null,
+            true,
+            false,
+            false // Do not preserve gift removal
         );
-        $newProducts = $cart->getProducts(true);
 
-        return $this->getUpdatedProducts($orderDetail, $newProducts, $oldProducts);
-    }
-
-    /**
-     * Compares the cart products before and after the update to detect which one have had their
-     * quantity changed due to another product removal (to detect changes related to a CartRule)
-     *
-     * @param OrderDetail $orderDetail
-     * @param array $newProducts
-     * @param array $oldProducts
-     *
-     * @return array
-     */
-    private function getUpdatedProducts(OrderDetail $orderDetail, array $newProducts, array $oldProducts): array
-    {
-        $updatedProducts = [];
-        foreach ($oldProducts as $oldProduct) {
-            // The current OrderDetail has already been updated
-            $productMatch = $oldProduct['id_product'] == $orderDetail->product_id;
-            $combinationMatch = $oldProduct['id_product_attribute'] == $orderDetail->product_attribute_id;
-            if ($productMatch && $combinationMatch) {
-                continue;
-            }
-
-            // Then try and find the product in new products
-            $newProduct = array_reduce($newProducts, function ($carry, $item) use ($oldProduct) {
-                if (null !== $carry) {
-                    return $carry;
-                }
-
-                $productMatch = $item['id_product'] == $oldProduct['id_product'];
-                $combinationMatch = $item['id_product_attribute'] == $oldProduct['id_product_attribute'];
-
-                return $productMatch && $combinationMatch ? $item : null;
-            });
-
-            if (null === $newProduct) {
-                $deltaQuantity = -(int) $oldProduct['cart_quantity'];
-            } else {
-                $deltaQuantity = (int) $newProduct['cart_quantity'] - (int) $oldProduct['cart_quantity'];
-            }
-
-            if ($deltaQuantity) {
-                $updatedProducts[] = [
-                    'id_product' => (int) $oldProduct['id_product'],
-                    'id_product_attribute' => (int) $oldProduct['id_product_attribute'],
-                    'delta_quantity' => $deltaQuantity,
-                ];
-            }
-        }
-
-        return $updatedProducts;
+        return $cartComparator->getUpdatedProducts($knownUpdates);
     }
 
     /**
@@ -182,21 +146,6 @@ class OrderProductRemover
     ) {
         if (!$orderDetail->delete()) {
             throw new DeleteProductFromOrderException('Could not delete order detail');
-        }
-        if (count($order->getProductsDetail()) == 0) {
-            $history = new OrderHistory();
-            $history->id_order = (int) $order->id;
-            $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $order);
-            if (!$history->addWithemail()) {
-                // email failure must not block order update process
-                $this->logger->warning(
-                    $this->translator->trans(
-                        'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.',
-                        [],
-                        'Admin.Orderscustomers.Notification'
-                    )
-                );
-            }
         }
 
         $order->update();

@@ -2689,6 +2689,30 @@ class OrderCore extends ObjectModel
     }
 
     /**
+     * @param int $productId
+     * @param int $productAttributeId
+     *
+     * @return int|null
+     */
+    public function getProductSpecificPriceId(int $productId, int $productAttributeId): ?int
+    {
+        return SpecificPrice::exists(
+            $productId,
+            $productAttributeId,
+            0,
+            0,
+            0,
+            $this->id_currency,
+            $this->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $this->id_cart
+        );
+    }
+
+    /**
      * Re calculate shipping cost.
      *
      * @return object $order
