@@ -188,7 +188,7 @@ class AdminPdfControllerCore extends AdminController
         }
 
         $order_invoice_list = $order->getInvoicesCollection();
-        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
+        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => &$order_invoice_list]);
         $this->generatePDF($order_invoice_list, PDF::TEMPLATE_INVOICE);
     }
 
@@ -199,7 +199,7 @@ class AdminPdfControllerCore extends AdminController
             die($this->trans('The order invoice cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
 
-        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [$order_invoice]]);
+        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [&$order_invoice]]);
         $this->generatePDF($order_invoice, PDF::TEMPLATE_INVOICE);
     }
 
