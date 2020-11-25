@@ -81,7 +81,6 @@ class AddVirtualProductFileCommand
         ?int $accessDays = null,
         ?int $downloadTimesLimit = null,
         ?DateTimeInterface $expirationDate = null
-        //@todo: is_shareable & active? - there is no input in Product page for that. Is it still usable?
     ) {
         $this->productId = new ProductId($productId);
         $this->filePath = $filePath;
