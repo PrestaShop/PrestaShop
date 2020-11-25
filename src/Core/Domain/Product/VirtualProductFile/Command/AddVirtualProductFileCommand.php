@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Adds downloadable file for virtual product
- *
- * @todo: is VirtualProductFile name correct for Core/Domain? or should I use ProductDownload everywhere
  */
 class AddVirtualProductFileCommand
 {
@@ -83,7 +81,6 @@ class AddVirtualProductFileCommand
         ?int $accessDays = null,
         ?int $downloadTimesLimit = null,
         ?DateTimeInterface $expirationDate = null
-        //@todo: is_shareable & active? - there is no input in Product page for that. Is it still usable?
     ) {
         $this->productId = new ProductId($productId);
         $this->filePath = $filePath;
