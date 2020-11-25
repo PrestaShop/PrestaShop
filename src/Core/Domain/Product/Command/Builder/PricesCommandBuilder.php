@@ -28,42 +28,30 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * This class builds a collection of product commands based on the form data and a list of ProductCommandBuilderInterface
+ * Builder used to build UpdateProductPricesCommand
  */
-class ProductCommandsBuilder
+class PricesCommandBuilder implements ProductCommandBuilderInterface
 {
     /**
-     * @var ProductCommandBuilderInterface[]
+     * {@inheritdoc}
      */
-    private $commandBuilders;
-
-    /**
-     * @param ProductCommandBuilderInterface[] $commandBuilders
-     */
-    public function __construct(array $commandBuilders)
+    public function buildCommand(ProductId $productId, array $formData)
     {
-        $this->commandBuilders = $commandBuilders;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param array $formData
-     *
-     * @return ProductCommandCollection
-     */
-    public function buildCommands(ProductId $productId, array $formData): ProductCommandCollection
-    {
-        $commands = new ProductCommandCollection();
-        foreach ($this->commandBuilders as $commandBuilder) {
-            $command = $commandBuilder->buildCommand($productId, $formData);
-            if (null !== $command) {
-                $commands->add($command);
-            }
+        if (!isset($formData['price'])) {
+            return null;
         }
 
-        return $commands;
+        $priceData = $formData['price'];
+        $command = new UpdateProductPricesCommand($productId->getValue());
+
+        if (isset($priceData['price_tax_excluded'])) {
+            $command->setPrice((string) $priceData['price_tax_excluded']);
+        }
+
+        return $command;
     }
 }
