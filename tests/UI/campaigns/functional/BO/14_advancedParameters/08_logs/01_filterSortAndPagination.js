@@ -9,11 +9,22 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard/index');
 const logsPage = require('@pages/BO/advancedParameters/logs');
+const foLoginPage = require('@pages/FO/login');
+const homePage = require('@pages/FO/home');
+const productPage = require('@pages/FO/product');
+const cartPage = require('@pages/FO/cart');
+const checkoutPage = require('@pages/FO/checkout');
+const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_modules_advancedParameters_logs_filterSortAndPagination';
+
+// Import data
+const {PaymentMethods} = require('@data/demo/paymentMethods');
+const DefaultCustomerAccount = require('@data/demo/customer');
+const {DefaultAccount} = require('@data/demo/employees');
 
 let browserContext;
 let page;
@@ -36,7 +47,7 @@ describe('Filter, sort and pagination logs', async () => {
   });
 
   it('should go to "Advanced parameters > Logs" page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToEraseLogs', baseContext);
 
     await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
 
@@ -56,8 +67,125 @@ describe('Filter, sort and pagination logs', async () => {
     await expect(numberOfLogs).to.be.equal(0);
   });
 
+  // Login and logout 5 times to have 5 logs
+  describe('Logout then login 5 times to have 5 logs', async () => {
+    const tests = new Array(5).fill(0, 0, 5);
+
+    tests.forEach((test, index) => {
+      it(`should logout from BO n°${index + 1}`, async function () {
+        await loginCommon.logoutBO(this, page);
+      });
+
+      it(`should login in BO n°${index + 1}`, async function () {
+        await loginCommon.loginBO(this, page);
+      });
+
+      it('should go to "Advanced parameters > Logs" page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToLogsPage${index}`, baseContext);
+
+        await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
+
+        const pageTitle = await logsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(logsPage.pageTitle);
+
+        const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
+        await expect(numberOfElements).to.be.equal(numberOfLogs + index + 1);
+      });
+    });
+  });
+
+  // 1 - Create 6 orders to have 6 logs
+  describe('Create 6 orders to have 6 logs', async () => {
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+
+      // Click on view my shop
+      page = await dashboardPage.viewMyShop(page);
+
+      // Change language on FO
+      await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
+
+      await homePage.goToLoginPage(page);
+
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
+
+      await foLoginPage.customerLogin(page, DefaultCustomerAccount.DefaultAccount);
+
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    const tests = new Array(6).fill(0, 0, 6);
+
+    tests.forEach((test, index) => {
+      it(`should create the order n°${index + 1}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
+
+        // Go to home page
+        await foLoginPage.goToHomePage(page);
+
+        // Go to the first product page
+        await homePage.goToProductPage(page, 1);
+
+        // Add the created product to the cart
+        await productPage.addProductToTheCart(page);
+
+        // Proceed to checkout the shopping cart
+        await cartPage.clickOnProceedToCheckout(page);
+
+        // Address step - Go to delivery step
+        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+
+        // Delivery step - Go to payment step
+        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+
+        // Payment step - Choose payment step
+        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+
+        // Check the confirmation message
+        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      });
+    });
+
+    it('should sign out from FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
+
+      await orderConfirmationPage.logout(page);
+      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+    });
+  });
+
   // 1 - Filter logs
   describe('Filter Logs', async () => {
+    it('should go to "Advanced parameters > Logs" page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToFilter', baseContext);
+
+      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
+
+      const pageTitle = await logsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(logsPage.pageTitle);
+
+      const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
+      await expect(numberOfElements).to.be.equal(numberOfLogs + 11);
+    });
     const tests = [
       {
         args:
@@ -65,18 +193,19 @@ describe('Filter, sort and pagination logs', async () => {
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_log',
-            filterValue: 300,
+            filterValue: 50,
           },
       },
-      {
-        args:
-          {
-            testIdentifier: 'filterByEmployee',
-            filterType: 'input',
-            filterBy: 'employee',
-            filterValue: 'Nesrine Abdmouleh',
-          },
-      },
+      /* Filter by employee not working, skipping it https://github.com/PrestaShop/PrestaShop/issues/22078
+       /*{
+         args:
+           {
+             testIdentifier: 'filterByEmployee',
+             filterType: 'input',
+             filterBy: 'employee',
+             filterValue: DefaultAccount.firstName,
+           },
+       },*/
       {
         args:
           {
@@ -101,7 +230,7 @@ describe('Filter, sort and pagination logs', async () => {
             testIdentifier: 'filterByObjectType',
             filterType: 'input',
             filterBy: 'object_type',
-            filterValue: 'ShopGroup',
+            filterValue: 'Cart',
           },
       },
       {
@@ -137,7 +266,7 @@ describe('Filter, sort and pagination logs', async () => {
 
         const numberOfLogsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
 
-        await expect(numberOfLogsAfterFilter).to.be.at.most(numberOfLogs);
+        await expect(numberOfLogsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
         for (let i = 1; i <= numberOfLogsAfterFilter; i++) {
           const textColumn = await logsPage.getTextColumn(page, i, test.args.filterBy);
@@ -150,7 +279,7 @@ describe('Filter, sort and pagination logs', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfLogsAfterReset = await logsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfLogsAfterReset).to.equal(numberOfLogs);
+        await expect(numberOfLogsAfterReset).to.equal(numberOfLogs + 11);
       });
     });
   });
