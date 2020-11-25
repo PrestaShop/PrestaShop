@@ -81,7 +81,8 @@ class CombinationCreator
      * @param GroupedAttributeIds[] $groupedAttributeIdsList
      *
      * @return CombinationId[]
-     *@todo: multistore
+     *
+     * @todo: multistore
      */
     public function createCombinations(ProductId $productId, array $groupedAttributeIdsList): array
     {
@@ -132,11 +133,7 @@ class CombinationCreator
 
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
-            if ($product->productAttributeExists($generatedCombination, false, null, true)) {
-                continue;
-            }
-
-            $addedCombinationIds[] = $this->addCombination((int) $product->id, $generatedCombination);
+            $addedCombinationIds[] = $this->persistCombination((int) $product->id, $generatedCombination);
         }
 
         return $addedCombinationIds;
@@ -148,17 +145,16 @@ class CombinationCreator
      *
      * @return CombinationId
      */
-    private function addCombination(int $productId, array $generatedCombination): CombinationId
+    private function persistCombination(int $productId, array $generatedCombination): CombinationId
     {
-        $newCombination = new Combination();
-        $newCombination->id_product = $productId;
-        $newCombination->default_on = 0;
-        $combinationId = $this->combinationRepository->add($newCombination);
+        $combination = $this->combinationRepository->create(new ProductId($productId));
+        $combinationId = new CombinationId((int) $combination->id);
 
+        //@todo: Use DB transaction instead if they are accepted (PR #21740)
         try {
             $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (CoreException $e) {
-            $this->combinationRepository->delete($newCombination);
+            $this->combinationRepository->delete($combination);
             throw $e;
         }
 

@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -80,19 +79,21 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param Combination $combination
+     * @param ProductId $productId
      *
-     * @return CombinationId
+     * @return Combination
      *
-     * @throws CombinationConstraintException
      * @throws CoreException
      */
-    public function add(Combination $combination): CombinationId
+    public function create(ProductId $productId): Combination
     {
-        //@todo: validation?
-        $id = $this->addObjectModel($combination, CannotAddCombinationException::class);
+        $combination = new Combination();
+        $combination->id_product = $productId->getValue();
+        $combination->default_on = 0;
 
-        return new CombinationId($id);
+        $this->addObjectModel($combination, CannotAddCombinationException::class);
+
+        return $combination;
     }
 
     /**
