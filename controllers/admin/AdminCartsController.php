@@ -67,7 +67,6 @@ class AdminCartsControllerCore extends AdminController
             FROM `' . _DB_PREFIX_ . 'connections`
             WHERE
                 TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < 1800
-            LIMIT 1
        ) AS co ON co.`id_guest` = a.`id_guest`';
 
         if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts') {
