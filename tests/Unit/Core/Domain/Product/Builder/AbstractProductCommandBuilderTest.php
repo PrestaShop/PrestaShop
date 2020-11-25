@@ -26,44 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder;
+namespace Tests\Unit\Core\Domain\Product\Builder;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * This class builds a collection of product commands based on the form data and a list of ProductCommandBuilderInterface
+ * Base class to test a product command builder
  */
-class ProductCommandsBuilder
+abstract class AbstractProductCommandBuilderTest extends TestCase
 {
     /**
-     * @var ProductCommandBuilderInterface[]
+     * @var ProductId
      */
-    private $commandBuilders;
+    private $productId;
 
     /**
-     * @param ProductCommandBuilderInterface[] $commandBuilders
+     * @return ProductId
      */
-    public function __construct(array $commandBuilders)
+    protected function getProductId(): ProductId
     {
-        $this->commandBuilders = $commandBuilders;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param array $formData
-     *
-     * @return ProductCommandCollection
-     */
-    public function buildCommands(ProductId $productId, array $formData): ProductCommandCollection
-    {
-        $commands = new ProductCommandCollection();
-        foreach ($this->commandBuilders as $commandBuilder) {
-            $command = $commandBuilder->buildCommand($productId, $formData);
-            if (null !== $command) {
-                $commands->add($command);
-            }
+        if (null === $this->productId) {
+            $this->productId = new ProductId(42);
         }
 
-        return $commands;
+        return $this->productId;
     }
 }

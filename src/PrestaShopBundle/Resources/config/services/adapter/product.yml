@@ -589,3 +589,9 @@ services:
 
     prestashop.adapter.product.command.builder:
         class: PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\ProductCommandsBuilder
+        arguments:
+            -
+                - '@prestashop.adapter.product.command.builder.prices'
+
+    prestashop.adapter.product.command.builder.prices:
+        class: PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\PricesCommandBuilder
