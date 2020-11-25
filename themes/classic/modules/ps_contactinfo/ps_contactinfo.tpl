@@ -28,8 +28,8 @@
     <span class="h3">{l s='Store information' d='Shop.Theme.Global'}</span>
     <span class="float-xs-right">
       <span class="navbar-toggler collapse-icons">
-        <i class="material-icons add"></i>
-        <i class="material-icons remove"></i>
+        <i class="material-icons add">keyboard_arrow_down</i>
+        <i class="material-icons remove">keyboard_arrow_up</i>
       </span>
     </span>
   </div>
