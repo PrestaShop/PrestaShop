@@ -33,6 +33,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
+use Tests\Resources\DummyFileUploader;
 
 class VirtualProductFileValidatorTest extends TestCase
 {
@@ -54,7 +55,7 @@ class VirtualProductFileValidatorTest extends TestCase
         $this->expectExceptionCode(InvalidFileException::INVALID_SIZE);
 
         $validator = new VirtualProductFileValidator('0.000019');
-        $validator->validate(__DIR__ . '/../../../../Resources/dummyFile/app_icon.png');
+        $validator->validate(DummyFileUploader::getDummyFilesPath() . 'app_icon.png');
     }
 
     /**

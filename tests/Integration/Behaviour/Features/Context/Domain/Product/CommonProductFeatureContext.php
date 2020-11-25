@@ -46,7 +46,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function addCombinationsToProduct(string $productReference, TableNode $tableNode)
+    public function addCombinationsToProduct(string $productReference, TableNode $tableNode): void
     {
         $details = $tableNode->getColumnsHash();
         $combinationsDetails = [];
@@ -73,15 +73,13 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @Then /^product "(.+)" localized "(.+)" should be:$/
      * @Given /^product "(.+)" localized "(.+)" is:$/
      *
-     * localizedValues transformation handled by
-     *
-     * @see LocalizedArrayTransformContext
+     * localizedValues transformation handled by @see LocalizedArrayTransformContext
      *
      * @param string $productReference
      * @param string $fieldName
      * @param array $expectedLocalizedValues
      */
-    public function assertLocalizedProperty(string $productReference, string $fieldName, array $expectedLocalizedValues)
+    public function assertLocalizedProperty(string $productReference, string $fieldName, array $expectedLocalizedValues): void
     {
         $productForEditing = $this->getProductForEditing($productReference);
 
@@ -132,7 +130,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $reference
      */
-    public function assertProductDoesNotExistAnymore(string $reference)
+    public function assertProductDoesNotExistAnymore(string $reference): void
     {
         try {
             $this->getProductForEditing($reference);
@@ -148,7 +146,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param string $productTypeName
      */
-    public function assertProductType(string $productReference, string $productTypeName)
+    public function assertProductType(string $productReference, string $productTypeName): void
     {
         $editableProduct = $this->getProductForEditing($productReference);
         Assert::assertEquals(
