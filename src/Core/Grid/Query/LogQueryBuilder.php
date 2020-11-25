@@ -222,9 +222,9 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @return string
      */
-    private function getEmployeeField(bool $includeFirstname = true): string
+    private function getEmployeeField(bool $includeFullFirstname = true): string
     {
-        if ($includeFirstname) {
+        if ($includeFullFirstname) {
             return 'CONCAT(e.`firstname`, \' \', e.`lastname`)';
         }
 
