@@ -212,6 +212,7 @@ default:
         product:
             paths:
                 - %paths.base%/Features/Scenario/Product
+                - %paths.base%/Features/Scenario/Product/Combination
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
