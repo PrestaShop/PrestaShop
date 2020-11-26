@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -54,6 +56,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ProductController extends FrameworkBundleAdminController
 {
+    /**
+     * Used to validate connected user authorizations.
+     */
+    private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
+
     /**
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
@@ -79,9 +86,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
-            'productForm' => $productForm->createView(),
-        ]);
+        return $this->renderProductForm($productForm);
     }
 
     /**
@@ -110,8 +115,30 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
+        return $this->renderProductForm($productForm, $productId);
+    }
+
+    /**
+     * @param FormInterface $productForm
+     * @param int|null $productId
+     *
+     * @return Response
+     */
+    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
+    {
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
+
+        $statsLink = null !== $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null;
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
+            'showContentHeader' => false,
             'productForm' => $productForm->createView(),
+            'productId' => $productId,
+            'statsLink' => $statsLink,
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+            'isMultiShopContext' => $isMultiShopContext,
+            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
     }
 
