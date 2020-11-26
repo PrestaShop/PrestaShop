@@ -28,10 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ProductType extends AbstractType
+class ProductType extends TranslatorAwareType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -40,7 +41,15 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('price', ProductPriceType::class)
+            ->add('basic', BasicInformationType::class)
+            ->add('price', PriceType::class)
+            ->add('save', SubmitType::class, [
+                'label' => $this->trans('Save', 'Admin.Actions'),
+                'attr' => [
+                    'data-toggle' => 'pstooltip',
+                    'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
+                ],
+            ])
         ;
     }
 }
