@@ -150,7 +150,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
         $context = Context::getContext();
 
-        if ($idEmployee === null && isset($context->employee) && Validate::isLoadedObject($context->employee)) {
+        if ($idEmployee === null && isset($context->employee->id)) {
             $idEmployee = $context->employee->id;
         }
 
