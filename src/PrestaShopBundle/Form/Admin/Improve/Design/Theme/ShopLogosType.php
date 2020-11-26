@@ -81,13 +81,14 @@ class ShopLogosType extends AbstractType
     {
         $shopLogoSettings = new ShopLogoSettings();
 
+        $availableHeaderLogoFileTypes = implode(',', $shopLogoSettings->getHeaderLogoImageExtensionsWithDot());
         $availableLogoFileTypes = implode(',', $shopLogoSettings->getLogoImageExtensionsWithDot());
 
         $builder
             ->add('header_logo', FileType::class, [
                 'required' => false,
                 'attr' => [
-                    'accept' => $availableLogoFileTypes,
+                    'accept' => $availableHeaderLogoFileTypes,
                 ],
             ])
             ->add('mail_logo', FileType::class, [

@@ -2805,7 +2805,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $image_uploader = new HelperImageUploader($inputFileName);
-        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg'])->setMaxSize($this->max_image_size);
+        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg', 'webp'])->setMaxSize($this->max_image_size);
         $files = $image_uploader->process();
 
         foreach ($files as &$file) {

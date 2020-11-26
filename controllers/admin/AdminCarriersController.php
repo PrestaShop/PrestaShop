@@ -181,7 +181,9 @@ class AdminCarriersControllerCore extends AdminController
                     'type' => 'file',
                     'label' => $this->trans('Logo', [], 'Admin.Global'),
                     'name' => 'logo',
-                    'hint' => $this->trans('Upload a logo from your computer.', [], 'Admin.Shipping.Help') . ' (.gif, .jpg, .jpeg ' . $this->trans('or', [], 'Admin.Shipping.Help') . ' .png)',
+                    'hint' => $this->trans('Upload a logo from your computer.', [], 'Admin.Shipping.Help') .
+                        ' (.gif, .jpg, .jpeg, .webp ' .
+                        $this->trans('or', [], 'Admin.Shipping.Help') . ' .png)',
                 ],
                 [
                     'type' => 'text',

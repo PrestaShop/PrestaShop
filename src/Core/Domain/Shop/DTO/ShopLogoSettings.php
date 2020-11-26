@@ -40,7 +40,12 @@ class ShopLogoSettings
     public const FAVICON_FILE_NAME = 'PS_FAVICON';
 
     /**
-     * @var array - a list of available image mime types
+     * @var array<int, string> List of available image mime types
+     */
+    public const AVAILABLE_HEADER_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp'];
+
+    /**
+     * @var array<int, string> List of available image mime types
      */
     public const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
 
@@ -52,12 +57,27 @@ class ShopLogoSettings
     /**
      * Gets the list of available extensions with dot attached to the front of the extension
      *
-     * @return array
+     * @return array<int, string>
      */
-    public function getLogoImageExtensionsWithDot()
+    public function getHeaderLogoImageExtensionsWithDot()
     {
         $mimeTypes = [];
-        foreach (self::AVAILABLE_LOGO_IMAGE_EXTENSIONS as $imageExtension) {
+        foreach (static::AVAILABLE_HEADER_LOGO_IMAGE_EXTENSIONS as $imageExtension) {
+            $mimeTypes[] = '.' . $imageExtension;
+        }
+
+        return $mimeTypes;
+    }
+
+    /**
+     * Gets the list of available extensions with dot attached to the front of the extension
+     *
+     * @return array<int, string>
+     */
+    public function getLogoImageExtensionsWithDot(): array
+    {
+        $mimeTypes = [];
+        foreach (static::AVAILABLE_LOGO_IMAGE_EXTENSIONS as $imageExtension) {
             $mimeTypes[] = '.' . $imageExtension;
         }
 
@@ -71,6 +91,6 @@ class ShopLogoSettings
      */
     public function getIconImageExtensionWithDot()
     {
-        return '.' . self::AVAILABLE_ICON_IMAGE_EXTENSION;
+        return '.' . static::AVAILABLE_ICON_IMAGE_EXTENSION;
     }
 }
