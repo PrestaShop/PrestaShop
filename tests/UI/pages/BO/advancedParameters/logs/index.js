@@ -63,6 +63,7 @@ class LogsSettings extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
@@ -130,7 +131,10 @@ class LogsSettings extends BOBasePage {
     const allRowsContentTable = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(page, i, column);
+      let rowContent = await this.getTextColumn(page, i, column);
+      if (column === 'employee' && rowContent === 'N/A') {
+        rowContent = '';
+      }
       await allRowsContentTable.push(rowContent);
     }
 

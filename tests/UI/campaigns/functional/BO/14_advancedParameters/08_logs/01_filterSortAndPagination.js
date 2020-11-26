@@ -19,7 +19,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_advancedParameters_logs_filterSortAndPagination';
+const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -46,6 +46,7 @@ const dateToday = `${year}-${month}-${day}`;
 Erase all logs
 Login and logout 6 times
 Create 6 orders
+Pagination next and previous
 Filter logs table by : Id, Employee, Severity, Message, Object type, Object ID, Error code, Date
 Sort logs table by : Id, Employee, Severity, Message, Object type, Object ID, Error code, Date
  */
@@ -113,7 +114,7 @@ describe('Filter, sort and pagination logs', async () => {
     });
   });
 
-  // 1 - Create 6 orders to have 6 logs
+  // Create 6 orders to have 6 logs
   describe('Create 6 orders to have 6 logs', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
@@ -190,8 +191,8 @@ describe('Filter, sort and pagination logs', async () => {
     });
   });
 
-  // 1 - Filter logs
-  describe('Filter Logs', async () => {
+  // 1 - Pagination
+  describe('Pagination next and previous', async () => {
     it('should go to "Advanced parameters > Logs" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToFilter', baseContext);
 
@@ -302,6 +303,37 @@ describe('Filter, sort and pagination logs', async () => {
       });
     });
 
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await logsPage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await logsPage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 2 - Filter logs
+  describe('Filter Logs', async () => {
     it('should filter logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
@@ -315,9 +347,16 @@ describe('Filter, sort and pagination logs', async () => {
         await expect(textColumn).to.contains(dateToday);
       }
     });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterFilterByDate', baseContext);
+
+      const numberOfLogsAfterReset = await logsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfLogsAfterReset).to.equal(numberOfLogs + 11);
+    });
   });
 
-  // 2 : Sort logs
+  // 3 : Sort logs
   const tests = [
     {
       args:
@@ -438,37 +477,6 @@ describe('Filter, sort and pagination logs', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
-    });
-  });
-
-  // 3 : Pagination
-  describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
-
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
-      expect(paginationNumber).to.contains('(page 1 / 2)');
-    });
-
-    it('should click on next', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
-
-      const paginationNumber = await logsPage.paginationNext(page);
-      expect(paginationNumber).to.contains('(page 2 / 2)');
-    });
-
-    it('should click on previous', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
-
-      const paginationNumber = await logsPage.paginationPrevious(page);
-      expect(paginationNumber).to.contains('(page 1 / 2)');
-    });
-
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
-
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
-      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 });
