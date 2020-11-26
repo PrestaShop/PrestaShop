@@ -43,6 +43,7 @@ class ImageManagerCore
         'image/pjpeg',
         'image/png',
         'image/x-png',
+        'image/webp',
     ];
 
     /**
@@ -233,6 +234,14 @@ class ImageManagerCore
         if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
             || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType) {
             $fileType = 'png';
+        }
+
+        // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
+        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+        // because JPG reencoding by GD, even with max quality setting, degrades the image.
+        if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType) {
+            $fileType = 'webp';
         }
 
         if (!$sourceWidth) {
@@ -444,7 +453,7 @@ class ImageManagerCore
     {
         // Filter on file extension
         if ($authorizedExtensions === null) {
-            $authorizedExtensions = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
+            $authorizedExtensions = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp'];
         }
         $nameExplode = explode('.', $filename);
         if (count($nameExplode) >= 2) {
@@ -558,26 +567,20 @@ class ImageManagerCore
      * @param string $type
      * @param string $filename
      *
-     * @return resource
+     * @return false|resource
      */
     public static function create($type, $filename)
     {
         switch ($type) {
             case IMAGETYPE_GIF:
                 return imagecreatefromgif($filename);
-
-                break;
-
             case IMAGETYPE_PNG:
                 return imagecreatefrompng($filename);
-
-                break;
-
+            case IMAGETYPE_WEBP:
+                return imagecreatefromwebp($filename);
             case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
-
-                break;
         }
     }
 
@@ -611,6 +614,7 @@ class ImageManagerCore
     {
         static $psPngQuality = null;
         static $psJpegQuality = null;
+        static $psWebpQuality = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -618,6 +622,10 @@ class ImageManagerCore
 
         if ($psJpegQuality === null) {
             $psJpegQuality = Configuration::get('PS_JPEG_QUALITY');
+        }
+
+        if ($psWebpQuality === null) {
+            $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
         }
 
         switch ($type) {
@@ -629,6 +637,12 @@ class ImageManagerCore
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
                 $success = imagepng($resource, $filename, (int) $quality);
+
+                break;
+
+            case 'webp':
+                $quality = ($psWebpQuality === false ? 80 : $psWebpQuality);
+                $success = imagewebp($resource, $filename, (int) $quality);
 
                 break;
 
@@ -660,6 +674,7 @@ class ImageManagerCore
             'image/gif' => ['gif'],
             'image/jpeg' => ['jpg', 'jpeg'],
             'image/png' => ['png'],
+            'image/webp' => ['webp'],
         ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 

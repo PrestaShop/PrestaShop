@@ -729,14 +729,15 @@ class AdminCarrierWizardControllerCore extends AdminController
             die('<return result="error" message="' . $this->trans('You do not have permission to use this wizard.', [], 'Admin.Shipping.Notification') . '" />');
         }
 
-        $allowedExtensions = ['jpeg', 'gif', 'png', 'jpg'];
-
-        $logo = (isset($_FILES['carrier_logo_input']) ? $_FILES['carrier_logo_input'] : false);
-        if ($logo && !empty($logo['tmp_name']) && $logo['tmp_name'] != 'none'
+        $logo = ($_FILES['carrier_logo_input'] ?? false);
+        if ($logo
+            && !empty($logo['tmp_name'])
+            && $logo['tmp_name'] != 'none'
             && (!isset($logo['error']) || !$logo['error'])
-            && preg_match('/\.(jpe?g|gif|png)$/', $logo['name'])
+            && ImageManager::isCorrectImageFileExt($logo['name'])
             && is_uploaded_file($logo['tmp_name'])
-            && ImageManager::isRealImage($logo['tmp_name'], $logo['type'])) {
+            && ImageManager::isRealImage($logo['tmp_name'], $logo['type'])
+        ) {
             $file = $logo['tmp_name'];
             do {
                 $tmp_name = uniqid() . '.jpg';
@@ -746,9 +747,9 @@ class AdminCarrierWizardControllerCore extends AdminController
             }
             @unlink($file);
             die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" />');
-        } else {
-            die('<return result="error" message="Cannot upload file" />');
         }
+
+        die('<return result="error" message="Cannot upload file" />');
     }
 
     public function ajaxProcessFinishStep()

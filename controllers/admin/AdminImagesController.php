@@ -93,7 +93,13 @@ class AdminImagesControllerCore extends AdminController
                         'show' => true,
                         'required' => true,
                         'type' => 'radio',
-                        'choices' => ['jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'), 'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'), 'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature')],
+                        'choices' => [
+                            'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
+                            'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
+                            'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
+                            'webp' => $this->trans('Use WebP only if the base image is in WebP format.', [], 'Admin.Design.Feature'),
+                            'webp_all' => $this->trans('Use WebP for all images.', [], 'Admin.Design.Feature'),
+                        ],
                     ],
                     'PS_JPEG_QUALITY' => [
                         'title' => $this->trans('JPEG compression', [], 'Admin.Design.Feature'),
@@ -106,6 +112,20 @@ class AdminImagesControllerCore extends AdminController
                     'PS_PNG_QUALITY' => [
                         'title' => $this->trans('PNG compression', [], 'Admin.Design.Feature'),
                         'hint' => $this->trans('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.', [], 'Admin.Design.Help') . ' ' . $this->trans('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 7.', [], 'Admin.Design.Help'),
+                        'validation' => 'isUnsignedId',
+                        'required' => true,
+                        'cast' => 'intval',
+                        'type' => 'text',
+                    ],
+                    'PS_WEBP_QUALITY' => [
+                        'title' => $this->trans('WebP compression', [], 'Admin.Design.Feature'),
+                        'hint' => $this->trans(
+                                'Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).',
+                                [],
+                                'Admin.Design.Help'
+                            ) .
+                            ' ' .
+                            $this->trans('Recommended: %d.', [80], 'Admin.Design.Help'),
                         'validation' => 'isUnsignedId',
                         'required' => true,
                         'cast' => 'intval',
@@ -362,9 +382,13 @@ class AdminImagesControllerCore extends AdminController
                 } elseif ((int) Tools::getValue('PS_PNG_QUALITY') < 0
                     || (int) Tools::getValue('PS_PNG_QUALITY') > 9) {
                     $this->errors[] = $this->trans('Incorrect value for the selected PNG image compression.', [], 'Admin.Design.Notification');
+                } elseif ((int) Tools::getValue('PS_WEBP_QUALITY') < 0
+                    || (int) Tools::getValue('PS_WEBP_QUALITY') > 100) {
+                    $this->errors[] = $this->trans('Incorrect value for the selected WebP image compression.', [], 'Admin.Design.Notification');
                 } elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
                     || !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
-                    || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))) {
+                    || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))
+                    || !Configuration::updateValue('PS_WEBP_QUALITY', Tools::getValue('PS_WEBP_QUALITY'))) {
                     $this->errors[] = $this->trans('Unknown error.', [], 'Admin.Notifications.Error');
                 } else {
                     $this->confirmations[] = $this->_conf[6];

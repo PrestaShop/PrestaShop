@@ -73,7 +73,7 @@ class UploadLogosCommand
      */
     public function setUploadedHeaderLogo(UploadedFile $uploadedHeaderLogo)
     {
-        $this->assertIsValidLogoImageExtension($uploadedHeaderLogo);
+        $this->assertIsValidHeaderLogoImageExtension($uploadedHeaderLogo);
         $this->assertNativeFileValidationDoesNotFail($uploadedHeaderLogo);
 
         $this->uploadedHeaderLogo = $uploadedHeaderLogo;
@@ -153,7 +153,24 @@ class UploadLogosCommand
      *
      * @throws NotSupportedLogoImageExtensionException
      */
-    private function assertIsValidLogoImageExtension(UploadedFile $uploadedFile)
+    private function assertIsValidHeaderLogoImageExtension(UploadedFile $uploadedFile): void
+    {
+        $extension = $uploadedFile->getClientOriginalExtension();
+        if (!in_array($extension, ShopLogoSettings::AVAILABLE_HEADER_LOGO_IMAGE_EXTENSIONS, true)) {
+            throw new NotSupportedLogoImageExtensionException(sprintf(
+                'Not supported "%s" image logo extension. Supported extensions are "%s"',
+                $extension,
+                implode(',', ShopLogoSettings::AVAILABLE_HEADER_LOGO_IMAGE_EXTENSIONS)
+            ));
+        }
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @throws NotSupportedLogoImageExtensionException
+     */
+    private function assertIsValidLogoImageExtension(UploadedFile $uploadedFile): void
     {
         $extension = $uploadedFile->getClientOriginalExtension();
         if (!in_array($extension, ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS, true)) {
@@ -168,7 +185,7 @@ class UploadLogosCommand
      *
      * @throws FileUploadException
      */
-    private function assertNativeFileValidationDoesNotFail(UploadedFile $uploadedFile)
+    private function assertNativeFileValidationDoesNotFail(UploadedFile $uploadedFile): void
     {
         $errorCode = $uploadedFile->getError();
 
