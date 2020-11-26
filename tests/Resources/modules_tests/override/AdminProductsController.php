@@ -3619,7 +3619,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $files[0]['error'] = Tools::displayError('Cannot add image because product creation failed.');
         }
         $image_uploader = new HelperImageUploader('file');
-        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg'])->setMaxSize($this->max_image_size);
+        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg', 'webp'])->setMaxSize($this->max_image_size);
         $files = $image_uploader->process();
         foreach ($files as &$file) {
             $image = new Image();
