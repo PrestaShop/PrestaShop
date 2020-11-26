@@ -729,8 +729,6 @@ class AdminCarrierWizardControllerCore extends AdminController
             die('<return result="error" message="' . $this->trans('You do not have permission to use this wizard.', [], 'Admin.Shipping.Notification') . '" />');
         }
 
-        $allowedExtensions = ['jpeg', 'gif', 'png', 'jpg'];
-
         $logo = (isset($_FILES['carrier_logo_input']) ? $_FILES['carrier_logo_input'] : false);
         if ($logo && !empty($logo['tmp_name']) && $logo['tmp_name'] != 'none'
             && (!isset($logo['error']) || !$logo['error'])
