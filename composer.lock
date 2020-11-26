@@ -1988,7 +1988,7 @@
         },
         {
             "name": "guzzlehttp/log-subscriber",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/log-subscriber.git",
@@ -2039,7 +2039,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/log-subscriber/issues",
-                "source": "https://github.com/guzzle/log-subscriber/tree/1.0.1"
+                "source": "https://github.com/guzzle/log-subscriber/tree/master"
             },
             "abandoned": true,
             "time": "2014-10-13T03:31:43+00:00"
