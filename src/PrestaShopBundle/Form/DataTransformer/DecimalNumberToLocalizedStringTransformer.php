@@ -34,14 +34,23 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStrin
 
 class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringTransformer
 {
+    /**
+     * @var int|null
+     */
     private $scale;
+
+    /**
+     * @var string
+     */
+    private $emptyData;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct($scale = null, $grouping = false, $roundingMode = self::ROUND_HALF_UP)
+    public function __construct($scale = null, $grouping = false, $roundingMode = self::ROUND_HALF_UP, $emptyData = '')
     {
         $this->scale = $scale;
+        $this->emptyData = $emptyData;
         parent::__construct($scale, $grouping, $roundingMode);
     }
 
@@ -50,6 +59,10 @@ class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringT
      */
     public function transform($value)
     {
+        if (null === $value) {
+            $value = new DecimalNumber($this->emptyData);
+        }
+
         if (!($value instanceof DecimalNumber)) {
             throw new TransformationFailedException(sprintf('Expected a %s.', DecimalNumber::class));
         }

@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\DataTransformer\DecimalNumberToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DecimalNumberType extends NumberType
 {
@@ -60,13 +61,28 @@ class DecimalNumberType extends NumberType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $scale = !empty($options['scale']) ? $options['scale'] : $this->getCurrencyPrecision();
-
         $builder->addViewTransformer(new DecimalNumberToLocalizedStringTransformer(
-            $scale,
+            $options['scale'],
             $options['grouping'],
-            $options['rounding_mode']
+            $options['rounding_mode'],
+            $options['empty_data']
         ), true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $scale = !empty($options['scale']) ? $options['scale'] : $this->getCurrencyPrecision();
+        $resolver->setDefaults([
+            'empty_data' => '0.0',
+            'scale' => $scale,
+        ]);
+
+        $resolver->setAllowedTypes('empty_data', ['null', 'string']);
     }
 
     /**
