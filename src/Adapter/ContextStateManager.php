@@ -93,6 +93,7 @@ final class ContextStateManager
     {
         $this->saveContextField('cart');
         $this->context->cart = $cart;
+        Context::getContext()->cart = $cart;
 
         return $this;
     }

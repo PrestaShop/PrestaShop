@@ -256,6 +256,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             new CartRule($cartRuleId->getValue())
         );
 
+        if ($properties['code']) {
+            SharedStorage::getStorage()->set(
+                $properties['code'],
+                $cartRuleId->getValue()
+            );
+        }
+
         SharedStorage::getStorage()->clear($this->cartRuleStorageProperty);
     }
 
