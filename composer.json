@@ -5,17 +5,17 @@
     "require": {
         "php": ">=7.1.3",
         "ext-curl": "*",
-        "ext-fileinfo": "*",
-        "ext-intl": "*",
-        "ext-zip": "*",
-        "ext-iconv": "*",
-        "ext-json": "*",
-        "ext-gd": "*",
         "ext-dom": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-zip": "*",
         "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
-        "csa/guzzle-bundle": "1.3",
+        "csa/guzzle-bundle": "dev-compat-php",
         "cssjanus/cssjanus": "dev-patch-1",
         "curl/curl": "^1.2.1",
         "defuse/php-encryption": "~2.0.1",
@@ -124,11 +124,13 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/prestashop/php-cssjanus"
+            "url": "https://github.com/PrestaShop/php-cssjanus",
+            "canonical": false
         },
         {
             "type": "vcs",
-            "url": "https://github.com/prestashop/CsaGuzzleBundle"
+            "url": "https://github.com/PrestaShop/CsaGuzzleBundle",
+            "canonical": false
         }
     ],
     "require-dev": {
@@ -154,7 +156,10 @@
             "PrestaShop\\PrestaShop\\": "src/",
             "PrestaShopBundle\\": "src/PrestaShopBundle/"
         },
-        "classmap": ["app/AppKernel.php", "app/AppCache.php"]
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
     },
     "scripts": {
         "post-install-cmd": [
@@ -231,7 +236,7 @@
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-          "file": "app/config/parameters.yml"
+            "file": "app/config/parameters.yml"
         },
         "symfony": {
             "require": "~3.4"
@@ -247,5 +252,6 @@
             "homepage": "http://contributors.prestashop.com/"
         }
     ],
-    "license": "OSL-3.0"
+    "license": "OSL-3.0",
+    "minimum-stability": "dev"
 }
