@@ -1202,14 +1202,28 @@ services:
       tags:
         - { name: form.type }
 
+    form.type.sell.catalog.product.product_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.catalog.product.product_price_type:
-      class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType'
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\PriceType'
       public: true
       arguments:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
       tags:
         - { name: form.type }
+
+    form.type.sell.catalog.product.product_basic_information_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\BasicInformationType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+          - { name: form.type }
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
