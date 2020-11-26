@@ -164,7 +164,7 @@ class PrestaShopLoggerCore extends ObjectModel
         }
 
         $log->id_lang = (int) $context->language->id ?? null;
-        $log->in_all_shops = (Shop::getContext() == Shop::CONTEXT_ALL) ?? false;
+        $log->in_all_shops = Shop::getContext() == Shop::CONTEXT_ALL;
         $log->id_shop = (Shop::getContext() == Shop::CONTEXT_SHOP) ? (int) $context->shop->getContextualShopId() : null;
         $log->id_shop_group = (Shop::getContext() == Shop::CONTEXT_GROUP) ? (int) $context->shop->getContextShopGroupID() : null;
 
