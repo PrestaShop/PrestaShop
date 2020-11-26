@@ -325,6 +325,7 @@ export default class OrderViewPage {
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = $tablePagination.data('numPerPage');
     const initialNumProducts = $(OrderViewPageMap.productsTableRows).length;
+    let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
 
     $.ajax(this.router.generate('admin_orders_get_products', {orderId}))
         .done((response) => {
@@ -336,7 +337,6 @@ export default class OrderViewPage {
           $(OrderViewPageMap.refreshProductsListLoadingSpinner).hide();
 
           const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
-          const initialPagesNum = Math.max(Math.ceil(initialNumProducts / numRowsPerPage), 1);
           const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
 
           this.orderProductRenderer.updateNumProducts(newNumProducts);
