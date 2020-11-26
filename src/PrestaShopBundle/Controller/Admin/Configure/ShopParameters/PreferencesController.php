@@ -26,11 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
@@ -85,16 +83,13 @@ class PreferencesController extends FrameworkBundleAdminController
             $saveErrors = $this->get('prestashop.adapter.preferences.form_handler')->save($data);
 
             if (0 === count($saveErrors)) {
-                /** @var EntityManager $em */
-                $em = $this->get('doctrine.orm.entity_manager');
-
-                /** @var TabRepository $tabRepository */
-                $tabRepository = $em->getRepository(Tab::class);
-
-                $tabRepository->changeStatusByClassName(
-                    'AdminShopGroup',
-                    (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')
+                $this->getCommandBus()->handle(
+                    new UpdateTabStatusByClassNameCommand(
+                        'AdminShopGroup',
+                        $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')
+                    )
                 );
+
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
