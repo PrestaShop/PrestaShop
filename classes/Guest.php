@@ -214,7 +214,7 @@ class GuestCore extends ObjectModel
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->update('connections', [
-           'id_guest' => (int) $idGuest,
+            'id_guest' => (int) $idGuest,
         ], 'id_guest = ' . (int) $this->id);
 
         // The current guest is removed from the database
@@ -226,6 +226,7 @@ class GuestCore extends ObjectModel
 
         // $this is now the old guest but filled with the most up to date values
         $this->force_id = true;
+
         return $this->add();
     }
 
