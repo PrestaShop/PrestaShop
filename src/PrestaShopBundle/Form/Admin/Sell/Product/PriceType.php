@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  * This is the parent product form type (for now it only contains example fields
  * but it will soon be improved with more accurate sub forms).
  */
-class ProductPriceType extends AbstractType
+class PriceType extends AbstractType
 {
     /**
      * @var array
@@ -74,11 +74,11 @@ class ProductPriceType extends AbstractType
                     'class' => 'product-price-tax-excl',
                 ],
             ])
-            /*->add('price_tax_included', NumberType::class, [
+            ->add('price_tax_included', NumberType::class, [
                 'attr' => [
                     'class' => 'product-price-tax-incl',
                 ],
-            ])*/
+            ])
             ->add('tax_rule_group', ChoiceType::class, [
                 'attr' => [
                     'class' => 'product-tax-rule-group-selection',
