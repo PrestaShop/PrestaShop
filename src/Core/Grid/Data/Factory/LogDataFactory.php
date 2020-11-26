@@ -51,7 +51,7 @@ final class LogDataFactory implements GridDataFactoryInterface
     /**
      * @var string
      */
-    private $defaultEmptyData;
+    private const DEFAULT_EMPTY_DATA = '---';
 
     /**
      * @param GridDataFactoryInterface $dataFactory
@@ -62,7 +62,6 @@ final class LogDataFactory implements GridDataFactoryInterface
     ) {
         $this->dataFactory = $dataFactory;
         $this->translator = $translator;
-        $this->defaultEmptyData = '---';
     }
 
     /**
@@ -125,6 +124,6 @@ final class LogDataFactory implements GridDataFactoryInterface
             return $shop_name;
         }
 
-        return $this->defaultEmptyData;
+        return self::DEFAULT_EMPTY_DATA;
     }
 }
