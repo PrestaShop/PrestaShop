@@ -41,12 +41,19 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
     private $invoiceOptionsConfiguration;
 
     /**
+     * @var int
+     */
+    private $nextInvoiceNumber;
+
+    /**
      * @param DataConfigurationInterface $invoiceOptionsConfiguration
      */
     public function __construct(
-        DataConfigurationInterface $invoiceOptionsConfiguration
+        DataConfigurationInterface $invoiceOptionsConfiguration,
+        $nextInvoiceNumber
     ) {
         $this->invoiceOptionsConfiguration = $invoiceOptionsConfiguration;
+        $this->nextInvoiceNumber = $nextInvoiceNumber;
     }
 
     /**
