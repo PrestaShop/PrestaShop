@@ -57,6 +57,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'id' => $id,
+            'basic' => [
+                'name' => $result->getBasicInformation()->getLocalizedNames(),
+                'type' => $result->getBasicInformation()->getType()->getValue(),
+                'description' => $result->getBasicInformation()->getLocalizedDescriptions(),
+                'description_short' => $result->getBasicInformation()->getLocalizedShortDescriptions(),
+            ],
             'price' => [
                 'price_tax_excluded' => $result->getPricesInformation()->getPrice(),
             ],
