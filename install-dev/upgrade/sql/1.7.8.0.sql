@@ -32,8 +32,6 @@ ALTER TABLE `PREFIX_orders` ADD COLUMN `note` TEXT AFTER `date_upd`;
 ALTER TABLE `PREFIX_currency` CHANGE `numeric_iso_code` `numeric_iso_code` varchar(3) NULL DEFAULT NULL;
 
 UPDATE `PREFIX_configuration` SET `value` = '4' WHERE `name` = 'PS_LOGS_BY_EMAIL' AND `value` = '5';
-
-
 ALTER TABLE `PREFIX_log`
   ADD `id_shop` INT(10) NULL DEFAULT NULL after `object_id`,
   ADD `id_shop_group` INT(10) NULL DEFAULT NULL after `id_shop`,
