@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -47,9 +48,9 @@ class BasicInformationType extends TranslatorAwareType
         $builder
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Standard product', 'Admin.Catalog.Feature') => 0,
-                    $this->trans('Pack of products', 'Admin.Catalog.Feature') => 1,
-                    $this->trans('Virtual product', 'Admin.Catalog.Feature') => 2,
+                    $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
+                    $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
+                    $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
                 ],
                 'choice_translation_domain' => 'Admin.Catalog.Feature',
                 'attr' => [
@@ -70,17 +71,11 @@ class BasicInformationType extends TranslatorAwareType
             ->add('description_short', TranslatableType::class, [
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => TextareaType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
             ])
             // This should be FormattedTextAreaType, waiting for #21115
             ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => TextareaType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
             ])
         ;
     }
