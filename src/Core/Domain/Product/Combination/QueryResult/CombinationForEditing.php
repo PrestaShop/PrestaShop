@@ -24,61 +24,67 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
 /**
- * Provides attribute group identification data
+ * Transfers combination data
  */
-final class AttributeGroupId
+class CombinationForEditing
 {
     /**
      * @var int
      */
-    private $attributeGroupId;
+    private $combinationId;
 
     /**
-     * @param int $attributeGroupId
-     *
-     * @throws AttributeGroupConstraintException
+     * @var CombinationAttributeInformation[]
      */
-    public function __construct($attributeGroupId)
-    {
-        $this->assertIsIntegerGreaterThanZero($attributeGroupId);
-        $this->attributeGroupId = $attributeGroupId;
+    private $attributesInformation;
+
+    /**
+     * @var string
+     */
+    private $combinationName;
+
+    /**
+     * @param int $combinationId
+     * @param string $combinationName
+     * @param CombinationAttributeInformation[] $attributesInformation
+     * @todo: add additional properties when needed (for update command)
+     */
+    public function __construct(
+        int $combinationId,
+        string $combinationName,
+        array $attributesInformation
+    ) {
+        $this->combinationId = $combinationId;
+        $this->attributesInformation = $attributesInformation;
+        $this->combinationName = $combinationName;
     }
 
     /**
-     * @deprecated
-     * @see getValue()
-     *
      * @return int
      */
-    public function getAttributeGroupId()
+    public function getCombinationId(): int
     {
-        return $this->attributeGroupId;
+        return $this->combinationId;
     }
 
     /**
-     * @return int
+     * @return CombinationAttributeInformation[]
      */
-    public function getValue()
+    public function getAttributesInformation(): array
     {
-        return $this->attributeGroupId;
+        return $this->attributesInformation;
     }
 
     /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param int $value
-     *
-     * @throws AttributeGroupConstraintException
+     * @return string
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    public function getCombinationName(): string
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttributeGroupConstraintException(sprintf('Invalid attribute group id "%s".', var_export($value, true)), AttributeGroupConstraintException::INVALID_ID);
-        }
+        return $this->combinationName;
     }
 }

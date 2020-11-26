@@ -228,6 +228,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateSeoFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
@@ -247,3 +248,5 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductImageFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext

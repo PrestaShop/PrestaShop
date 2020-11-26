@@ -13,3 +13,9 @@ services:
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand'
+
+    prestashop.adapter.attribute.repository.attribute_repository:
+        class: 'PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
