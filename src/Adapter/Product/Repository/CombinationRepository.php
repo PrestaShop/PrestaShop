@@ -89,7 +89,7 @@ class CombinationRepository extends AbstractObjectModelRepository
     {
         $combination = new Combination();
         $combination->id_product = $productId->getValue();
-        $combination->default_on = 0;
+        $combination->default_on = false;
 
         $this->addObjectModel($combination, CannotAddCombinationException::class);
 
