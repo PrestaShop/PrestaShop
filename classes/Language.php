@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
+use Symfony\Component\Intl\Intl;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
@@ -1439,34 +1440,36 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         Hook::exec('actionUpdateLangAfter', ['lang' => $language]);
     }
 
+    /**
+     * @param Language $lang
+     *
+     * @throws PrestaShopDatabaseException
+     */
     public static function updateMultilangFromCldr($lang)
     {
-        $cldrLocale = $lang->getLocale();
-        $cldrFile = _PS_TRANSLATIONS_DIR_ . 'cldr/datas/main/' . $cldrLocale . '/territories.json';
+        // Fetch all countries from DB in specified locale
+        $sql = 'SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
+                INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
+                WHERE cl.`id_lang` = "' . (int) $lang->id . '" ';
+        $translatableCountries = Db::getInstance()->executeS($sql, true, false);
 
-        if (file_exists($cldrFile)) {
-            $cldrContent = json_decode(file_get_contents($cldrFile), true);
+        if (empty($translatableCountries)) {
+            return;
+        }
 
-            if (!empty($cldrContent)) {
-                $translatableCountries = Db::getInstance()->executeS('SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
-                    INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
-                    WHERE cl.`id_lang` = "' . (int) $lang->id . '" ', true, false);
-
-                if (!empty($translatableCountries)) {
-                    $cldrLanguages = $cldrContent['main'][$cldrLocale]['localeDisplayNames']['territories'];
-
-                    foreach ($translatableCountries as $country) {
-                        if (isset($cldrLanguages[$country['iso_code']]) &&
-                            !empty($cldrLanguages[$country['iso_code']])
-                        ) {
-                            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
-                                SET `name` = "' . pSQL(ucwords($cldrLanguages[$country['iso_code']])) . '"
-                                WHERE `id_country` = "' . (int) $country['id_country'] . '" AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
-                            Db::getInstance()->execute($sql);
-                        }
-                    }
-                }
+        // Fetch all countries from Intl in specified locale
+        $countries_lang = (new self())->getCountries($lang->locale);
+        foreach ($translatableCountries as $country) {
+            $isoCode = strtolower($country['iso_code']);
+            if (empty($countries_lang[$isoCode])) {
+                continue;
             }
+            // Translate the country name
+            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
+                    SET `name` = "' . pSQL($countries_lang[$isoCode]) . '"
+                    WHERE `id_country` = "' . (int) $country['id_country'] . '"
+                    AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
+            Db::getInstance()->execute($sql);
         }
     }
 
@@ -1658,5 +1661,19 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public function isRTL()
     {
         return $this->is_rtl;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return array<string, string>
+     */
+    private function getCountries(string $locale): array
+    {
+        Locale::setDefault($locale);
+        $countries = Intl::getRegionBundle()->getCountryNames();
+        $countries = array_change_key_case($countries, CASE_LOWER);
+
+        return $countries;
     }
 }
