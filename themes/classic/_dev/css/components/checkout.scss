@@ -66,10 +66,10 @@ body#checkout {
 
     span {
       position: absolute;
-      top: 0;
+      top: 0.025rem;
       left: 0;
       flex: 0 0 15px;
-      margin-top: 0.2rem;
+      margin-top: 0.1rem;
     }
   }
 
@@ -262,7 +262,7 @@ body#checkout {
       }
 
       .custom-radio {
-        margin-right: $medium-space;
+        margin-right: 0.5rem;
       }
 
       .payment-option {
@@ -450,8 +450,8 @@ body#checkout {
   }
 
   .condition-label {
+    padding-left: 1.625rem;
     margin-top: 0.625rem;
-    margin-left: 2.5rem;
 
     label {
       text-align: inherit;

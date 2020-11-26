@@ -37,9 +37,10 @@ p {
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
   display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
   margin: 0.3125rem;
+  margin-right: 0.5rem;
   cursor: pointer;
   background-size: contain;
   border: 1px solid $radio-border-color;
@@ -383,9 +384,10 @@ form {
 .custom-radio {
   position: relative;
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 1.25rem;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.1rem;
+  margin-right: 0.5rem;
   vertical-align: middle;
   cursor: pointer;
   background: #fff;
@@ -398,8 +400,8 @@ form {
 
     &:checked + span {
       position: absolute;
-      top: 0.2rem;
-      left: 0.2rem;
+      top: 0.125rem;
+      left: 0.125rem;
       display: block;
       width: 12px;
       height: 12px;
@@ -418,23 +420,26 @@ form {
 
   input[type="checkbox"] {
     position: absolute;
+    width: 18px;
+    height: 18px;
     margin-top: 0.25rem;
     cursor: pointer;
     opacity: 0;
 
     + span {
       display: inline-block;
-      width: 0.9375rem;
-      height: 0.9375rem;
+      width: 1.125rem;
+      height: 1.125rem;
       margin-right: 0.5rem;
       vertical-align: middle;
+      pointer-events: none;
       cursor: pointer;
       border: 1px $radio-border-color solid;
 
       .checkbox-checked {
         display: none;
         margin: -0.125rem;
-        font-size: 1.1rem;
+        font-size: 1.25rem;
         color: $gray-darker;
       }
     }
@@ -513,6 +518,7 @@ form {
 .btn.disabled:hover {
   color: $btn-disabled-color;
   background: $btn-disabled-background;
+  opacity: 1;
 }
 
 .alert-warning {
