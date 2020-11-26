@@ -91,7 +91,7 @@ final class LogDataFactory implements GridDataFactoryInterface
     {
         foreach ($records as $key => $record) {
             $records[$key]['shop_name'] = $this->ShopContextFormatted($record);
-            $records[$key]['language'] = $records[$key]['language'] ?? $this->defaultEmptyData;
+            $records[$key]['language'] = $records[$key]['language'] ?? self::DEFAULT_EMPTY_DATA;
         }
 
         return $records;
