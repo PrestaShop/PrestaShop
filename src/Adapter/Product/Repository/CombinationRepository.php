@@ -79,6 +79,25 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param CombinationId $combinationId
+     *
+     * @return Combination
+     *
+     * @throws CombinationNotFoundException
+     */
+    public function get(CombinationId $combinationId): Combination
+    {
+        /** @var Combination $combination */
+        $combination = $this->getObjectModel(
+            $combinationId->getValue(),
+            Combination::class,
+            CombinationNotFoundException::class
+        );
+
+        return $combination;
+    }
+
+    /**
      * @param ProductId $productId
      *
      * @return Combination
@@ -94,6 +113,16 @@ class CombinationRepository extends AbstractObjectModelRepository
         $this->addObjectModel($combination, CannotAddCombinationException::class);
 
         return $combination;
+    }
+
+    public function partialUpdate(Combination $combination, array $updatableProperties, int $errorCode): void
+    {
+        $this->partiallyUpdateObjectModel(
+            $combination,
+            $updatableProperties,
+            CannotAddCombinationException::class,
+            $errorCode
+        );
     }
 
     /**
