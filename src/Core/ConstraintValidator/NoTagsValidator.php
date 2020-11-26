@@ -41,9 +41,19 @@ class NoTagsValidator extends ConstraintValidator
         if (!$constraint instanceof NoTags) {
             throw new UnexpectedTypeException($constraint, NoTags::class);
         }
-        if (null !== $value && $value !== strip_tags($value)) {
+
+        if (!$value) {
+            return;
+        }
+
+        if (!is_string($value)) {
+            throw new UnexpectedTypeException($value, 'string');
+        }
+
+        if ($value !== strip_tags($value)) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
+                ->setParameter('%s', $this->formatValue($value))
                 ->addViolation()
             ;
         }
