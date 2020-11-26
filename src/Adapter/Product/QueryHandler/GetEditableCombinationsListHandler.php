@@ -28,19 +28,23 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
+use Product;
 
 /**
- * Handles @see GetProductCombinationsForEditing using legacy object model
+ * Handles @see GetEditableCombinationsList using legacy object model
  */
-final class GetProductCombinationsForEditingHandler extends AbstractProductHandler implements GetProductCombinationsForEditingHandlerInterface
+final class GetEditableCombinationsListHandler extends AbstractProductHandler implements GetProductCombinationsForEditingHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -53,24 +57,32 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     private $productRepository;
 
     /**
+     * @var NumberExtractor
+     */
+    private $numberExtractor;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param ProductRepository $productRepository
+     * @param NumberExtractor $numberExtractor
      */
     public function __construct(
         CombinationRepository $combinationRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        NumberExtractor $numberExtractor
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
+        $this->numberExtractor = $numberExtractor;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(GetProductCombinationsForEditing $query): CombinationListForEditing
+    public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
         $productId = $query->getProductId();
-        $this->productRepository->assertProductExists($productId);
+        $product = $this->productRepository->get($productId);
         $combinations = $this->combinationRepository->getProductCombinations($productId, $query->getLimit(), $query->getOffset());
 
         $combinationIds = array_map(function ($combination): int {
@@ -82,7 +94,8 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
             $query->getLanguageId()
         );
 
-        return $this->formatCombinationsForEditing(
+        return $this->formatEditableCombinationsForListing(
+            $product,
             $combinations,
             $attributesInformation,
             $this->combinationRepository->getTotalCombinationsCount($productId)
@@ -90,13 +103,15 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     }
 
     /**
+     * @param Product $product
      * @param array $combinations
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
      *
      * @return CombinationListForEditing
      */
-    private function formatCombinationsForEditing(
+    private function formatEditableCombinationsForListing(
+        Product $product,
         array $combinations,
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount
@@ -118,14 +133,34 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
                 }
             }
 
-            $combinationsForEditing[] = new CombinationForEditing(
+            $impactOnPrice = new DecimalNumber($combination['price']);
+            $combinationsForEditing[] = new EditableCombinationForListing(
                 $combinationId,
                 $this->buildCombinationName($combinationAttributesInformation),
-                $combinationAttributesInformation
+                $combinationAttributesInformation,
+                (bool) $combination['default_on'],
+                $impactOnPrice,
+                $this->calculateFinalPrice($product, $impactOnPrice),
+                (int) $combination['quantity']
             );
         }
 
         return new CombinationListForEditing($totalCombinationsCount, $combinationsForEditing);
+    }
+
+    /**
+     * @param Product $product
+     * @param DecimalNumber $impactOnPrice
+     *
+     * @return DecimalNumber
+     *
+     * @throws NumberExtractorException
+     */
+    private function calculateFinalPrice(Product $product, DecimalNumber $impactOnPrice): DecimalNumber
+    {
+        $productPrice = $this->numberExtractor->extract($product, 'price');
+
+        return $productPrice->plus($impactOnPrice);
     }
 
     /**

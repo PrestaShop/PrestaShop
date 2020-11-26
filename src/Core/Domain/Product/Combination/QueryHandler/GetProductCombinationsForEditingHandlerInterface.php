@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 
 /**
- * Defines contract to handle @see GetProductCombinationsForEditing query
+ * Defines contract to handle @see GetEditableCombinationsList query
  */
 interface GetProductCombinationsForEditingHandlerInterface
 {
     /**
-     * @param GetProductCombinationsForEditing $query
+     * @param GetEditableCombinationsList $query
      *
      * @return CombinationListForEditing
      */
-    public function handle(GetProductCombinationsForEditing $query): CombinationListForEditing;
+    public function handle(GetEditableCombinationsList $query): CombinationListForEditing;
 }

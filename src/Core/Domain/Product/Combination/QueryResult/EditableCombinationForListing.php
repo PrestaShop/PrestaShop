@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
+use PrestaShop\Decimal\DecimalNumber;
+
 /**
- * Transfers combination data
+ * Transfers combination data for listing
  */
-class CombinationForEditing
+class EditableCombinationForListing
 {
     /**
      * @var int
@@ -49,19 +51,51 @@ class CombinationForEditing
     private $combinationName;
 
     /**
+     * @var bool
+     */
+    private $default;
+
+    /**
+     * @var DecimalNumber
+     */
+    private $impactOnPrice;
+
+    /**
+     * @var DecimalNumber
+     */
+    private $finalPrice;
+
+    /**
+     * @var int
+     */
+    private $quantity;
+
+    /**
      * @param int $combinationId
      * @param string $combinationName
      * @param CombinationAttributeInformation[] $attributesInformation
+     * @param bool $default
+     * @param DecimalNumber $impactOnPrice
+     * @param DecimalNumber $finalPrice
+     * @param int $quantity
      * @todo: add additional properties when needed (for update command)
      */
     public function __construct(
         int $combinationId,
         string $combinationName,
-        array $attributesInformation
+        array $attributesInformation,
+        bool $default,
+        DecimalNumber $impactOnPrice,
+        DecimalNumber $finalPrice,
+        int $quantity
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
         $this->combinationName = $combinationName;
+        $this->default = $default;
+        $this->impactOnPrice = $impactOnPrice;
+        $this->finalPrice = $finalPrice;
+        $this->quantity = $quantity;
     }
 
     /**
@@ -86,5 +120,37 @@ class CombinationForEditing
     public function getCombinationName(): string
     {
         return $this->combinationName;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault(): bool
+    {
+        return $this->default;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getImpactOnPrice(): DecimalNumber
+    {
+        return $this->impactOnPrice;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getFinalPrice(): DecimalNumber
+    {
+        return $this->finalPrice;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->quantity;
     }
 }

@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Retrieves product combinations
  */
-class GetProductCombinationsForEditing
+class GetEditableCombinationsList
 {
     /**
      * @var ProductId
