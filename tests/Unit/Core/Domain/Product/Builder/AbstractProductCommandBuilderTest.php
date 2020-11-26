@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Domain\Product\Builder;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 
 /**
  * Base class to test a product command builder
@@ -40,6 +41,13 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
      * @var ProductId
      */
     private $productId;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $factory = ComparatorFactory::getInstance();
+        $factory->register(new ProductCommandComparator());
+    }
 
     /**
      * @return ProductId
