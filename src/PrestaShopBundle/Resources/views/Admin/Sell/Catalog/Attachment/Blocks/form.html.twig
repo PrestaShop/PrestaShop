@@ -35,10 +35,7 @@
       <div class="card-block row">
         <div class="card-text">
           {{ form_errors(attachmentForm) }}
-
-          {% block attachment_form_widget %}
-            {{ form_widget(attachmentForm) }}
-          {% endblock %}
+          {{ form_widget(attachmentForm) }}
 
           {% if attachmentId is defined %}
             <div class="form-group row">
@@ -50,10 +47,6 @@
               </div>
             </div>
           {% endif %}
-
-          {% block attachment_form_rest %}
-            {{ form_rest(attachmentForm) }}
-          {% endblock %}
         </div>
       </div>
       <div class="card-footer">
