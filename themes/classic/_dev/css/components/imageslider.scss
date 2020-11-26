@@ -26,12 +26,21 @@
       max-width: 340px;
       color: #fff;
 
-      .caption-description p {
-        color: #fff;
+      .caption-description {
+        p {
+          font-size: 1rem;
+          color: #fff;
+        }
+
+        h3 {
+          font-size: 1.25rem;
+          font-weight: 600;
+        }
       }
 
       .display-1 {
         font-size: 3rem;
+        font-weight: 700;
       }
     }
 

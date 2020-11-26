@@ -42,7 +42,7 @@ p {
   margin: 0.3125rem;
   cursor: pointer;
   background-size: contain;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid $radio-border-color;
   @include box-shadow-light();
 
   &.active,
@@ -55,7 +55,7 @@ p {
   &.active,
   &:hover {
     .custom-checkbox span.color {
-      border: 2px solid $gray-darker;
+      border: 1px solid $radio-border-color;
     }
   }
 }
@@ -389,7 +389,7 @@ form {
   vertical-align: middle;
   cursor: pointer;
   background: #fff;
-  border: $gray 2px solid;
+  border: $radio-border-color 1px solid;
   border-radius: 50%;
 
   input[type="radio"] {
@@ -398,8 +398,8 @@ form {
 
     &:checked + span {
       position: absolute;
-      top: 0.125rem;
-      left: 0.125rem;
+      top: 0.2rem;
+      left: 0.2rem;
       display: block;
       width: 12px;
       height: 12px;
@@ -429,11 +429,11 @@ form {
       margin-right: 0.5rem;
       vertical-align: middle;
       cursor: pointer;
-      border: 1px $border-gray solid;
+      border: 1px $radio-border-color solid;
 
       .checkbox-checked {
         display: none;
-        margin: -0.25rem -0.125rem;
+        margin: -0.125rem;
         font-size: 1.1rem;
         color: $gray-darker;
       }
@@ -511,7 +511,8 @@ form {
 
 .btn.disabled,
 .btn.disabled:hover {
-  background: $gray;
+  color: $btn-disabled-color;
+  background: $btn-disabled-background;
 }
 
 .alert-warning {

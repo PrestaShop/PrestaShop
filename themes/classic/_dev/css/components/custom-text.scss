@@ -6,20 +6,21 @@
   border-radius: 2px;
 
   h2 {
-    font-size: 1.563rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 500;
     color: $gray-darker;
     text-transform: uppercase;
   }
 
   p {
-    font-size: 1.1em;
+    font-size: 0.875rem;
     font-weight: 400;
     color: $gray-darker;
 
     .dark {
-      font-weight: 400;
-      color: $gray;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: $gray-darker;
     }
   }
 

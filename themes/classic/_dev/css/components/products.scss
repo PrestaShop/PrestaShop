@@ -182,7 +182,7 @@
 
     .delivery-information {
       padding: 0 0 0 2px;
-      font-weight: bold;
+      font-weight: 700;
 
       &::before {
         padding: 0 2px 0 0;
@@ -651,7 +651,8 @@
   left: 0;
   z-index: 2;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   width: 100%;
   pointer-events: none;
 

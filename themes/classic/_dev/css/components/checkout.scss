@@ -60,9 +60,16 @@ body#checkout {
   .custom-checkbox {
     display: flex;
 
+    > label {
+      padding-left: 1.5rem;
+    }
+
     span {
+      position: absolute;
+      top: 0;
+      left: 0;
       flex: 0 0 15px;
-      margin-top: -0.125rem;
+      margin-top: 0.2rem;
     }
   }
 

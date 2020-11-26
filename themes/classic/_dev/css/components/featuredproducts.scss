@@ -34,16 +34,16 @@ $product-description-height: 70px;
     &:hover,
     &:focus {
       .highlighted-informations {
-        bottom: 5.5rem;
         top: calc(250px - 4.4rem);
+        bottom: 5.5rem;
 
         &::after {
           opacity: 1;
         }
 
         &.no-variants {
-          bottom: 4.2rem;
           top: calc(250px - 3.125rem);
+          bottom: 4.2rem;
         }
       }
 
@@ -109,6 +109,7 @@ $product-description-height: 70px;
 
   .highlighted-informations {
     position: absolute;
+    top: $thumbnail-size;
     bottom: 1.25rem;
     z-index: 2;
     width: $thumbnail-size;
@@ -117,7 +118,6 @@ $product-description-height: 70px;
     text-align: center;
     background: #fff;
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
-    top: $thumbnail-size;
     transition: top 0.3s, bottom 0.3s;
 
     .quick-view {
@@ -132,13 +132,13 @@ $product-description-height: 70px;
 
   .product-description {
     position: relative;
-    overflow: hidden;
     bottom: 0;
     z-index: 3;
     width: $thumbnail-size;
     height: auto;
-    background: #fff;
     padding-bottom: .7rem;
+    overflow: hidden;
+    background: #fff;
   }
 
   .product-miniature {
