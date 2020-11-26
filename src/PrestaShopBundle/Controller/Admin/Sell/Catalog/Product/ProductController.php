@@ -55,6 +55,36 @@ use Symfony\Component\HttpFoundation\Response;
 class ProductController extends FrameworkBundleAdminController
 {
     /**
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request): Response
+    {
+        $productForm = $this->getProductFormBuilder()->getForm();
+
+        try {
+            $productForm->handleRequest($request);
+
+            $result = $this->getProductFormHandler()->handle($productForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $result->getIdentifiableObjectId()]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
+            'productForm' => $productForm->createView(),
+        ]);
+    }
+
+    /**
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
@@ -64,7 +94,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
-        $productForm = $this->getCurrencyFormBuilder()->getFormFor($productId);
+        $productForm = $this->getProductFormBuilder()->getFormFor($productId);
 
         try {
             $productForm->handleRequest($request);
@@ -90,7 +120,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return FormBuilderInterface
      */
-    private function getCurrencyFormBuilder()
+    private function getProductFormBuilder()
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.product_form_builder');
     }
