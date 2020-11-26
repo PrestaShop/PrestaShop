@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShopBundle\Form\Admin\Type\DecimalNumberType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -74,7 +73,7 @@ class PriceType extends AbstractType
                     'class' => 'product-price-tax-excl',
                 ],
             ])
-            ->add('price_tax_included', NumberType::class, [
+            ->add('price_tax_included', DecimalNumberType::class, [
                 'attr' => [
                     'class' => 'product-price-tax-incl',
                 ],
