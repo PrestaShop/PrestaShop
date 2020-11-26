@@ -73,7 +73,7 @@ class UploadLogosCommand
      */
     public function setUploadedHeaderLogo(UploadedFile $uploadedHeaderLogo)
     {
-        $this->assertIsValidLogoImageExtension($uploadedHeaderLogo);
+        $this->assertIsValidHeaderLogoImageExtension($uploadedHeaderLogo);
         $this->assertNativeFileValidationDoesNotFail($uploadedHeaderLogo);
 
         $this->uploadedHeaderLogo = $uploadedHeaderLogo;
@@ -146,6 +146,23 @@ class UploadLogosCommand
         $this->assertNativeFileValidationDoesNotFail($uploadedFavicon);
 
         $this->uploadedFavicon = $uploadedFavicon;
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @throws NotSupportedLogoImageExtensionException
+     */
+    private function assertIsValidHeaderLogoImageExtension(UploadedFile $uploadedFile)
+    {
+        $extension = $uploadedFile->getClientOriginalExtension();
+        if (!in_array($extension, ShopLogoSettings::AVAILABLE_HEADER_LOGO_IMAGE_EXTENSIONS, true)) {
+            throw new NotSupportedLogoImageExtensionException(sprintf(
+                'Not supported "%s" image logo extension. Supported extensions are "%s"',
+                $extension,
+                implode(',', ShopLogoSettings::AVAILABLE_HEADER_LOGO_IMAGE_EXTENSIONS)
+            ));
+        }
     }
 
     /**
