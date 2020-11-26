@@ -88,7 +88,7 @@ class AttachmentType extends TranslatorAwareType
                 ],
             ])
             ->add('file', FileType::class, [
-                'required' => true,
+                'required' => false,
                 'label' => $this->trans('File', 'Admin.Global'),
             ])
         ;
