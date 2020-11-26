@@ -70,6 +70,8 @@ class ProductFormDataHandler implements FormDataHandlerInterface
         /** @var ProductId $productId */
         $productId = $this->bus->handle($createCommand);
         $this->update($productId->getValue(), $data);
+
+        return $productId->getValue();
     }
 
     /**

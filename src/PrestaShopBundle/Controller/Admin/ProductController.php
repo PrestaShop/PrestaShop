@@ -371,6 +371,11 @@ class ProductController extends FrameworkBundleAdminController
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
         ];
+        $toolbarButtons['add_v2'] = [
+            'href' => $this->generateUrl('admin_products_v2_create'),
+            'desc' => $this->trans('New product v2', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+        ];
 
         return $toolbarButtons;
     }
