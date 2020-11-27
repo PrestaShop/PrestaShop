@@ -29,9 +29,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\DataTransformer;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShopBundle\Form\Admin\Type\DecimalNumberType;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 
+/**
+ * This transformer allows to use DecimalNumber as input in a form straight away @see DecimalNumberType
+ */
 class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringTransformer
 {
     /**
@@ -55,6 +59,7 @@ class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringT
     }
 
     /**
+     * @phpstan-ignore-next-line
      * @param DecimalNumber $value The value in the original representation
      *
      * @return string The value in the transformed representation
@@ -73,7 +78,8 @@ class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringT
     }
 
     /**
-     * @param mixed $value The value in the transformed representation
+     * @phpstan-ignore-next-line
+     * @param string|float|int $value The value in the transformed representation
      *
      * @return DecimalNumber The value in the original representation
      */
