@@ -217,6 +217,10 @@ class GuestCore extends ObjectModel
             'id_guest' => (int) $idGuest,
         ], 'id_guest = ' . (int) $this->id);
 
+        // The existing guest is removed from the database
+        $existingGuest = new Guest((int) $idGuest);
+        $existingGuest->delete();
+
         // The current guest is removed from the database
         $this->delete();
 
