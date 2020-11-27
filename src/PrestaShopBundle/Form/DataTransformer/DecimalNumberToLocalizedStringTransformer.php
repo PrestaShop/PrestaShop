@@ -55,7 +55,9 @@ class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringT
     }
 
     /**
-     * {@inheritdoc}
+     * @param DecimalNumber $value The value in the original representation
+     *
+     * @return string The value in the transformed representation
      */
     public function transform($value)
     {
@@ -71,7 +73,9 @@ class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringT
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value The value in the transformed representation
+     *
+     * @return DecimalNumber The value in the original representation
      */
     public function reverseTransform($value)
     {

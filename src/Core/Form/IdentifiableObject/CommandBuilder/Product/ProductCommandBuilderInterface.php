@@ -24,40 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-namespace Tests\Unit\Core\Domain\Product\Builder;
-
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 
 /**
- * Base class to test a product command builder
+ * This interface is used by ProductCommandsBuilder each object which implements must build
+ * a product command based on the input form data.
  */
-abstract class AbstractProductCommandBuilderTest extends TestCase
+interface ProductCommandBuilderInterface
 {
     /**
-     * @var ProductId
+     * @param ProductId $productId
+     * @param array $formData
+     *
+     * @return mixed|null Returns null if the required data for the command is absent
      */
-    private $productId;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $factory = ComparatorFactory::getInstance();
-        $factory->register(new ProductCommandComparator());
-    }
-
-    /**
-     * @return ProductId
-     */
-    protected function getProductId(): ProductId
-    {
-        if (null === $this->productId) {
-            $this->productId = new ProductId(42);
-        }
-
-        return $this->productId;
-    }
+    public function buildCommand(ProductId $productId, array $formData);
 }

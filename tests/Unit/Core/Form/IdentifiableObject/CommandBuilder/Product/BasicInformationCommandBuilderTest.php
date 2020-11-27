@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Product\Builder;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\BasicInformationCommandBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandBuilder;
 
 class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
