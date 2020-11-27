@@ -100,7 +100,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
     tests.forEach((test, index) => {
       const createShopGroupData = new ShopGroupFaker({name: `group${index}`});
       it('should go to add new shop group page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopGroupPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopGroupPage${index}`, baseContext);
 
         await multiStorePage.goToNewShopGroupPage(page);
 
@@ -109,7 +109,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
       });
 
       it('should create shop group and check result', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createShopGroup', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createShopGroup${index}`, baseContext);
 
         const textResult = await addShopGroupPage.setShopGroup(page, createShopGroupData);
         await expect(textResult).to.contains(addShopGroupPage.successfulCreationMessage);
