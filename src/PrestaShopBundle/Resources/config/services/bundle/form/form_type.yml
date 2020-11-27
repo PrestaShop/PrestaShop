@@ -1211,10 +1211,12 @@ services:
 
     form.type.sell.catalog.product.product_price_type:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\PriceType'
+      parent: 'form.type.translatable.aware'
       public: true
       arguments:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+        - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       tags:
         - { name: form.type }
 
