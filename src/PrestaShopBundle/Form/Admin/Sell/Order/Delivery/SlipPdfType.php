@@ -48,7 +48,6 @@ class SlipPdfType extends TranslatorAwareType
                 'date_from',
                 DatePickerType::class,
                 [
-                    'required' => false,
                     'attr' => ['placeholder' => 'YYYY-MM-DD'],
                     'data' => $now,
                     'empty_data' => $now,
@@ -60,7 +59,6 @@ class SlipPdfType extends TranslatorAwareType
                 'date_to',
                 DatePickerType::class,
                 [
-                    'required' => false,
                     'attr' => ['placeholder' => 'YYYY-MM-DD'],
                     'data' => $now,
                     'empty_data' => $now,
