@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Product\Builder;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use ReflectionClass;
 use ReflectionException;

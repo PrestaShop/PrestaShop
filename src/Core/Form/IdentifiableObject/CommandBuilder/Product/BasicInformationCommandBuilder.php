@@ -26,30 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Builder used to build UpdateProductPricesCommand
+ * Builder used to build UpdateProductBasicInformationCommand
  */
-class PricesCommandBuilder implements ProductCommandBuilderInterface
+class BasicInformationCommandBuilder implements ProductCommandBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
     public function buildCommand(ProductId $productId, array $formData)
     {
-        if (!isset($formData['price'])) {
+        if (!isset($formData['basic'])) {
             return null;
         }
 
-        $priceData = $formData['price'];
-        $command = new UpdateProductPricesCommand($productId->getValue());
+        $basicData = $formData['basic'];
+        $command = new UpdateProductBasicInformationCommand($productId->getValue());
 
-        if (isset($priceData['price_tax_excluded'])) {
-            $command->setPrice((string) $priceData['price_tax_excluded']);
+        if (isset($basicData['name'])) {
+            $command->setLocalizedNames($basicData['name']);
+        }
+        if (isset($basicData['type'])) {
+            $command->setVirtual($basicData['type'] === ProductType::TYPE_VIRTUAL);
+        }
+        if (isset($basicData['description'])) {
+            $command->setLocalizedDescriptions($basicData['description']);
+        }
+        if (isset($basicData['description_short'])) {
+            $command->setLocalizedShortDescriptions($basicData['description_short']);
         }
 
         return $command;

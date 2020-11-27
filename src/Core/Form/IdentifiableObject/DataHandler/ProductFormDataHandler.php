@@ -30,10 +30,13 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\ProductCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandHandler\Product\ProductCommandsBuilder;
 
+/**
+ * Handles data posted from product form
+ */
 class ProductFormDataHandler implements FormDataHandlerInterface
 {
     /**

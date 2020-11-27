@@ -26,10 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * List of product command
+ */
 class ProductCommandCollection extends ArrayCollection
 {
 }
