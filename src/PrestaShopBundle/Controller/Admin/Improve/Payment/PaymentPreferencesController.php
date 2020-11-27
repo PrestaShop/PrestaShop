@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -53,10 +52,10 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
-        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
-        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
-        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+        $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
 
         return $this->renderForm($request, $carrierRestrictionsForm, $countryRestrictionsForm, $currencyRestrictionsForm, $groupRestrictionsForm);
     }
@@ -86,10 +85,10 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
 
         $paymentModulesCount = 0;
         if (!$isSingleShopContext) {
-             $paymentCarrierRestrictionsForm = null;
-             $paymentCountryRestrictionsForm = null;
-             $paymentCurrencyRestrictionsForm = null;
-             $paymentGroupRestrictionsForm = null;
+            $paymentCarrierRestrictionsForm = null;
+            $paymentCountryRestrictionsForm = null;
+            $paymentCurrencyRestrictionsForm = null;
+            $paymentGroupRestrictionsForm = null;
         }
 
         if ($isSingleShopContext) {
@@ -121,7 +120,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return Response
-     *
      */
     public function processPaymentCarrierRestrictionsFormAction(Request $request): Response
     {
@@ -141,9 +139,9 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
-        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
-        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+        $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
 
         return $this->renderForm(
             $request,
@@ -166,7 +164,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return Response
-     *
      */
     public function processPaymentCountryRestrictionsFormAction(Request $request): Response
     {
@@ -186,9 +183,9 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
-        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
-        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+        $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
 
         return $this->renderForm(
             $request,
@@ -211,7 +208,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return Response
-     *
      */
     public function processPaymentCurrencyRestrictionsFormAction(Request $request): Response
     {
@@ -231,9 +227,9 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
-        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
-        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+        $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
 
         return $this->renderForm(
             $request,
@@ -256,7 +252,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return Response
-     *
      */
     public function processPaymentGroupRestrictionsFormAction(Request $request): Response
     {
@@ -276,9 +271,9 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
-        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
-        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+        $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
 
         return $this->renderForm(
             $request,
@@ -288,7 +283,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $groupRestrictionsForm
         );
     }
-
 
     /**
      * @return FormHandlerInterface
