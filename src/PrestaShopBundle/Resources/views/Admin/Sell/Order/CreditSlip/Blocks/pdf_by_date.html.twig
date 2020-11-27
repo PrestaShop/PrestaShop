@@ -38,7 +38,9 @@
 
   <div class="card-block row">
     <div class="card-text">
-      {{ form_widget(pdfByDateForm) }}
+      {% block credit_slip_pdf_by_date_form %}
+        {{ form_widget(pdfByDateForm) }}
+      {% endblock %}
     </div>
   </div>
 
