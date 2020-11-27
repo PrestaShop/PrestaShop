@@ -938,4 +938,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             ));
         }
     }
+
+    /**
+     * @Then cart :cartReference total with tax included should be :expectedTotal
+     */
+    public function totalCartWithTaxShouldBe(string $cartReference, string $expectedTotal)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+        $cartTotal = $cartInfo->getSummary()->getTotalPriceWithTaxes();
+        if ($cartTotal !== $expectedTotal) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
+        }
+    }
 }

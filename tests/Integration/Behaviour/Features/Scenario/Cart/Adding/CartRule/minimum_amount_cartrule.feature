@@ -38,8 +38,8 @@ Feature: Add cart rule in cart
     And cart "dummy_custom_cart" should contain 2 products
     When I use a voucher "CART_RULE_MIN_AMOUNT" on the cart "dummy_custom_cart"
     And reduction value of voucher "CART_RULE_MIN_AMOUNT" in cart "dummy_custom_cart" should be "2"
-    And my cart total should be precisely 53.38 tax included
+    And cart "dummy_custom_cart" total with tax included should be "$53.38"
     When I delete product "product1" from cart "dummy_custom_cart"
     And cart "dummy_custom_cart" should contain 1 products
-    And my cart total should be precisely 35.57 tax included
+    And cart "dummy_custom_cart" total with tax included should be "$35.57"
     Then voucher "CART_RULE_MIN_AMOUNT" should not be applied to cart "dummy_custom_cart"
