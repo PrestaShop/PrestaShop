@@ -84,6 +84,91 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                 'price' => [
                     'not_handled' => 0,
                     'price_tax_excluded' => '45.56',
+                    'price_tax_included' => '65.56', // Price tax included is ignored
+                ],
+            ],
+            $command,
+        ];
+
+        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command->setEcotax('45.56');
+        yield [
+            [
+                'price' => [
+                    'not_handled' => 0,
+                    'ecotax' => '45.56',
+                ],
+            ],
+            $command,
+        ];
+
+        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command->setTaxRulesGroupId(42);
+        yield [
+            [
+                'price' => [
+                    'not_handled' => 0,
+                    'tax_rules_group_id' => '42',
+                ],
+            ],
+            $command,
+        ];
+
+        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command->setOnSale(true);
+        yield [
+            [
+                'price' => [
+                    'not_handled' => 0,
+                    'on_sale' => '42',
+                ],
+            ],
+            $command,
+        ];
+
+        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command->setOnSale(false);
+        yield [
+            [
+                'price' => [
+                    'not_handled' => 0,
+                    'on_sale' => '0',
+                ],
+            ],
+            $command,
+        ];
+
+        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command->setWholesalePrice('45.56');
+        yield [
+            [
+                'price' => [
+                    'not_handled' => 0,
+                    'wholesale_price' => '45.56',
+                ],
+            ],
+            $command,
+        ];
+
+        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command->setUnitPrice('45.56');
+        yield [
+            [
+                'price' => [
+                    'not_handled' => 0,
+                    'unit_price' => '45.56',
+                ],
+            ],
+            $command,
+        ];
+
+        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command->setUnity('kg');
+        yield [
+            [
+                'price' => [
+                    'not_handled' => 0,
+                    'unity' => 'kg',
                 ],
             ],
             $command,
