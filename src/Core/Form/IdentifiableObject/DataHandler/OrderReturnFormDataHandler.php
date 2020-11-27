@@ -55,7 +55,7 @@ final class OrderReturnFormDataHandler implements FormDataHandlerInterface
      */
     public function update($orderReturnId, array $data): void
     {
-        $orderReturnStateId = new OrderReturnStateId((int) $data['order_return_state']);
+        $orderReturnStateId = (int) $data['order_return_state'];
 
         $this->bus->handle(new UpdateOrderReturnStateCommand($orderReturnId, $orderReturnStateId));
     }
