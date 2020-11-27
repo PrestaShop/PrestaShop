@@ -3,14 +3,14 @@ services:
         public: true
 
     prestashop.core.form.command_builder.product_commands_builder:
-        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandHandler\Product\ProductCommandsBuilder
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder
         arguments:
             -
                 - '@prestashop.core.form.command_builder.product.basic_information'
                 - '@prestashop.core.form.command_builder.product.prices'
 
     prestashop.core.form.command_builder.product.basic_information:
-        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandHandler\Product\BasicInformationCommandBuilder
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandBuilder
 
     prestashop.core.form.command_builder.product.prices:
-        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandHandler\Product\PricesCommandBuilder
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandBuilder

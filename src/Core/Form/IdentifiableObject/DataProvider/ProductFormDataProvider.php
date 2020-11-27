@@ -64,7 +64,14 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'description_short' => $result->getBasicInformation()->getLocalizedShortDescriptions(),
             ],
             'price' => [
-                'price_tax_excluded' => $result->getPricesInformation()->getPrice(),
+                'price_tax_excluded' => (float) (string) $result->getPricesInformation()->getPrice(),
+                'price_tax_included' => (float) (string) $result->getPricesInformation()->getPrice(),
+                'ecotax' => (float) (string) $result->getPricesInformation()->getEcotax(),
+                'tax_rules_group_id' => $result->getPricesInformation()->getTaxRulesGroupId(),
+                'on_sale' => $result->getPricesInformation()->isOnSale(),
+                'wholesale_price' => (float) (string) $result->getPricesInformation()->getWholesalePrice(),
+                'unit_price' => (float) (string) $result->getPricesInformation()->getUnitPrice(),
+                'unity' => $result->getPricesInformation()->getUnity(),
             ],
         ];
     }
