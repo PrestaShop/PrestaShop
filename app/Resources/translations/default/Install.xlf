@@ -497,8 +497,8 @@ Comment: We fill the process step used for Ajax queries</note>
         <note>Line: 30</note>
       </trans-unit>
       <trans-unit id="74987401b3b33cc9542cd8585c08de98">
-        <source><![CDATA[To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store's data-related activities.]]></source>
-        <target><![CDATA[To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store's data-related activities.]]></target>
+        <source><![CDATA[To use PrestaShop, you must <a href="https://devdocs.prestashop.com/1.7/basics/installation/localhost/#creating-a-database-for-your-shop" target="_blank">create a database</a> to collect all of your store's data-related activities.]]></source>
+        <target><![CDATA[To use PrestaShop, you must <a href="https://devdocs.prestashop.com/1.7/basics/installation/localhost/#creating-a-database-for-your-shop" target="_blank">create a database</a> to collect all of your store's data-related activities.]]></target>
         <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="3b4db494bf9473e98bf8106d3fb381a7">
