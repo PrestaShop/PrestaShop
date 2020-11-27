@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\DataTransformer;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShopBundle\Form\Admin\Type\DecimalNumberType;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
@@ -38,6 +39,16 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStrin
  */
 class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringTransformer
 {
+    private const ROUNDING_MAP = [
+        self::ROUND_HALF_UP => Rounding::ROUND_HALF_UP,
+        self::ROUND_HALF_EVEN => Rounding::ROUND_HALF_EVEN,
+        self::ROUND_HALF_DOWN => Rounding::ROUND_HALF_DOWN,
+        self::ROUND_FLOOR => Rounding::ROUND_FLOOR,
+        self::ROUND_CEILING => Rounding::ROUND_CEIL,
+        self::ROUND_DOWN => Rounding::ROUND_HALF_DOWN,
+        self::ROUND_UP => Rounding::ROUND_HALF_UP,
+    ];
+
     /**
      * @var int|null
      */
@@ -54,12 +65,13 @@ class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringT
     public function __construct($scale = null, $grouping = false, $roundingMode = self::ROUND_HALF_UP, $emptyData = '')
     {
         $this->scale = $scale;
-        $this->emptyData = $emptyData;
+        $this->emptyData = $emptyData ?: '0.0';
         parent::__construct($scale, $grouping, $roundingMode);
     }
 
     /**
      * @phpstan-ignore-next-line
+     *
      * @param DecimalNumber $value The value in the original representation
      *
      * @return string The value in the transformed representation
@@ -74,17 +86,36 @@ class DecimalNumberToLocalizedStringTransformer extends NumberToLocalizedStringT
             throw new TransformationFailedException(sprintf('Expected a %s.', DecimalNumber::class));
         }
 
-        return parent::transform($value->toPrecision($this->scale));
+        return parent::transform($value->toPrecision($this->scale, $this->getRounding($this->roundingMode)));
     }
 
     /**
      * @phpstan-ignore-next-line
-     * @param string|float|int $value The value in the transformed representation
+     *
+     * @param string $value The value in the transformed representation
      *
      * @return DecimalNumber The value in the original representation
      */
     public function reverseTransform($value)
     {
-        return new DecimalNumber((string) $value);
+        $value = $value ?: $this->emptyData;
+        // We use parent method to apply rounding
+        $transformedValue = parent::reverseTransform($value);
+
+        return new DecimalNumber((string) $transformedValue);
+    }
+
+    /**
+     * @param int $roundingMode
+     *
+     * @return string
+     */
+    private function getRounding(int $roundingMode): string
+    {
+        if (!isset(self::ROUNDING_MAP[$roundingMode])) {
+            return Rounding::ROUND_TRUNCATE;
+        }
+
+        return self::ROUNDING_MAP[$roundingMode];
     }
 }
