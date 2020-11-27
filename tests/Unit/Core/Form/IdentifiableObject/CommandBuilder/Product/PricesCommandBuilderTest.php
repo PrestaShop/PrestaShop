@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Product\Builder;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\PricesCommandBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandBuilder;
 
 class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
 {

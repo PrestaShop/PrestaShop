@@ -586,16 +586,3 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
-
-    prestashop.adapter.product.command.builder:
-        class: PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\ProductCommandsBuilder
-        arguments:
-            -
-                - '@prestashop.adapter.product.command.builder.basic_information'
-                - '@prestashop.adapter.product.command.builder.prices'
-
-    prestashop.adapter.product.command.builder.basic_information:
-        class: PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\BasicInformationCommandBuilder
-
-    prestashop.adapter.product.command.builder.prices:
-        class: PrestaShop\PrestaShop\Core\Domain\Product\Command\Builder\PricesCommandBuilder
