@@ -1785,11 +1785,8 @@ class CartCore extends ObjectModel
             $return = $this->update();
             // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
-            $context = Context::getContext()->cloneContext();
-            $context->cart = $this;
-            Cache::clean('getContextualValue_*');
-            CartRule::autoRemoveFromCart($context);
-            CartRule::autoAddToCart($context);
+            CartRule::autoRemoveFromCart();
+            CartRule::autoAddToCart();
 
             return $return;
         }
