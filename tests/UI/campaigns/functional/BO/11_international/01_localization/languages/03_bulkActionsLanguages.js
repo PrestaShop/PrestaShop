@@ -38,6 +38,14 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    await Promise.all([
+      files.generateImage(firstLanguageData.flag),
+      files.generateImage(firstLanguageData.noPicture),
+      files.generateImage(secondLanguageData.flag),
+      files.generateImage(secondLanguageData.noPicture),
+    ]);
   });
 
   after(async () => {

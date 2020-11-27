@@ -1,5 +1,6 @@
 const fs = require('fs');
 const pdfJs = require('pdfjs-dist/es5/build/pdf.js');
+const imgGen = require('js-image-generator');
 
 module.exports = {
   /**
@@ -136,5 +137,19 @@ module.exports = {
       curDate.getHours()}-${
       curDate.getMinutes()}-${
       curDate.getSeconds()}`;
+  },
+
+  /**
+   * Generate image
+   * @param imageName
+   * @param width
+   * @param height
+   * @param quality
+   * @return {Promise<void>}
+   */
+  async generateImage(imageName, width = 200, height = 200, quality = 1) {
+    await imgGen.generateImage(width, height, quality, (err, image) => {
+      fs.writeFileSync(imageName, image.data);
+    });
   },
 };

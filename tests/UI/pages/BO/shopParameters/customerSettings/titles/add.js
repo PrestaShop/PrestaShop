@@ -62,7 +62,7 @@ class AddTitle extends BOBasePage {
     await page.click(this.genderInput(titleData.gender.toLowerCase()));
 
     // Upload image
-    await this.generateAndUploadImage(page, this.imageInput, titleData.imageName);
+    await this.uploadFile(page, this.imageInput, titleData.imageName);
 
     await this.setValue(page, this.imageWidthInput, titleData.imageWidth.toString());
     await this.setValue(page, this.imageHeightInput, titleData.imageHeight.toString());

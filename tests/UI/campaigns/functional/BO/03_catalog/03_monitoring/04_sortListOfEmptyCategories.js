@@ -37,6 +37,13 @@ describe('Sort list of empty categories', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create categories images
+    await Promise.all([
+      files.generateImage(`${firstCreateCategoryData.name}.jpg`),
+      files.generateImage(`${secondCreateCategoryData.name}.jpg`),
+      files.generateImage(`${thirdCreateCategoryData.name}.jpg`),
+    ]);
   });
 
   after(async () => {
