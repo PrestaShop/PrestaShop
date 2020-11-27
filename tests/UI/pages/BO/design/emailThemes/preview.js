@@ -12,7 +12,7 @@ class PreviewEmailTheme extends BOBasePage {
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.tableRow = row => `${this.tableRows}:nth-child(${row}`;
+    this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
     this.tableColumns = row => `${this.tableRow(row)} td`;
     this.tableActionColumn = row => `${this.tableColumns(row)}.action-type`;
     this.tableActionColumnDropDownLink = row => `${this.tableActionColumn(row)} .dropdown-toggle`;
