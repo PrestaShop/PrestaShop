@@ -157,7 +157,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
     it('should create shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createShop', baseContext);
 
-      const textResult = await addShopPage.setShopGroup(page, shopData);
+      const textResult = await addShopPage.setShop(page, shopData);
       await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
     });
   });
