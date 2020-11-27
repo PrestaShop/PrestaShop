@@ -28,16 +28,22 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShopBundle\Form\Admin\Type\DecimalNumberType;
-use Symfony\Component\Form\AbstractType;
+use Currency;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * This is the parent product form type (for now it only contains example fields
  * but it will soon be improved with more accurate sub forms).
  */
-class PriceType extends AbstractType
+class PriceType extends TranslatorAwareType
 {
     /**
      * @var array
@@ -50,15 +56,28 @@ class PriceType extends AbstractType
     private $taxRuleGroupChoicesAttributes;
 
     /**
+     * @var Currency
+     */
+    private $defaultCurrency;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $taxRuleGroupChoices
      * @param array $taxRuleGroupChoicesAttributes
+     * @param Currency $defaultCurrency
      */
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         array $taxRuleGroupChoices,
-        array $taxRuleGroupChoicesAttributes
+        array $taxRuleGroupChoicesAttributes,
+        Currency $defaultCurrency
     ) {
+        parent::__construct($translator, $locales);
         $this->taxRuleGroupChoices = $taxRuleGroupChoices;
         $this->taxRuleGroupChoicesAttributes = $taxRuleGroupChoicesAttributes;
+        $this->defaultCurrency = $defaultCurrency;
     }
 
     /**
@@ -68,22 +87,60 @@ class PriceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('price_tax_excluded', DecimalNumberType::class, [
-                'attr' => [
-                    'class' => 'product-price-tax-excl',
+            ->add('price_tax_excluded', MoneyType::class, [
+                'required' => true,
+                'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
                 ],
+                'empty_data' => 0,
             ])
-            ->add('price_tax_included', DecimalNumberType::class, [
-                'attr' => [
-                    'class' => 'product-price-tax-incl',
+            ->add('price_tax_included', MoneyType::class, [
+                'required' => true,
+                'label' => $this->trans('Retail price (tax incl.)', 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
                 ],
+                'empty_data' => 0,
             ])
-            ->add('tax_rule_group', ChoiceType::class, [
-                'attr' => [
-                    'class' => 'product-tax-rule-group-selection',
-                ],
+            ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoices,
+                'required' => true,
                 'choice_attr' => $this->taxRuleGroupChoicesAttributes,
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
+                'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
+            ])
+            ->add('on_sale', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans(
+                    'Display the "On sale!" flag on the product page, and on product listings.',
+                    'Admin.Catalog.Feature'
+                ),
+            ])
+            ->add('wholesale_price', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
+            ])
+            ->add('unit_price', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
+            ])
+            ->add('unity', TextType::class, [
+                'required' => false,
+                'attr' => ['placeholder' => $this->trans('Per kilo, per litre', 'Admin.Catalog.Help')],
             ])
         ;
     }
