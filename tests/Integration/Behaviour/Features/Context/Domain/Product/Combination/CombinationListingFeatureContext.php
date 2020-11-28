@@ -26,41 +26,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class ProductCombinationFeatureContext extends AbstractProductFeatureContext
+class CombinationListingFeatureContext extends AbstractProductFeatureContext
 {
-    /**
-     * @When I generate combinations for product :productReference using following attributes:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function generateCombinations(string $productReference, TableNode $table): void
-    {
-        $tableData = $table->getRowsHash();
-        $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
-
-        try {
-            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
-                $this->getSharedStorage()->get($productReference),
-                $groupedAttributeIds
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
     /**
      * @Then I should see following combinations of product :productReference in page :page limited to maximum :limit per page:
      *
@@ -266,25 +244,5 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
         }
 
         return $combinationAttributesInfo;
-    }
-
-    /**
-     * @param array $groupedReferences
-     *
-     * @return array
-     */
-    private function parseGroupedAttributeIds(array $groupedReferences): array
-    {
-        $groupedAttributeIds = [];
-        foreach ($groupedReferences as $attributeGroupReference => $attributeReferences) {
-            $attributeIds = [];
-            foreach (PrimitiveUtils::castStringArrayIntoArray($attributeReferences) as $attributeReference) {
-                $attributeIds[] = $this->getSharedStorage()->get($attributeReference);
-            }
-
-            $groupedAttributeIds[$this->getSharedStorage()->get($attributeGroupReference)] = $attributeIds;
-        }
-
-        return $groupedAttributeIds;
     }
 }
