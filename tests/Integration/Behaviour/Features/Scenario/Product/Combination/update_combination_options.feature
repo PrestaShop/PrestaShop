@@ -34,16 +34,13 @@ Feature: Update product combinations in Back Office (BO)
       | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-    And combination "product1SWhite" should have following attributes information:
-      | attribute group | attribute |
-      | Size            | S         |
-      | Color           | White     |
     And combination "product1SWhite" should have following options:
-      | ean13     |  |
-      | isbn      |  |
-      | mpn       |  |
-      | reference |  |
-      | upc       |  |
+      | combination option | value |
+      | ean13              |       |
+      | isbn               |       |
+      | mpn                |       |
+      | reference          |       |
+      | upc                |       |
     When I update combination "product1SWhite" options with following details:
       | ean13     | 978020137962      |
       | isbn      | 978-3-16-148410-0 |
@@ -51,8 +48,35 @@ Feature: Update product combinations in Back Office (BO)
       | reference | ref1              |
       | upc       | 72527273070       |
     Then combination "product1SWhite" should have following options:
+      | combination option | value             |
+      | ean13              | 978020137962      |
+      | isbn               | 978-3-16-148410-0 |
+      | mpn                | mpn1              |
+      | reference          | ref1              |
+      | upc                | 72527273070       |
+    When I update combination "product1SWhite" options with following details:
       | ean13     | 978020137962      |
       | isbn      | 978-3-16-148410-0 |
-      | mpn       | mpn1              |
+      | mpn       |                   |
       | reference | ref1              |
-      | upc       | 72527273070       |
+      | upc       |                   |
+    Then combination "product1SWhite" should have following options:
+      | combination option | value             |
+      | ean13              | 978020137962      |
+      | isbn               | 978-3-16-148410-0 |
+      | mpn                |                   |
+      | reference          | ref1              |
+      | upc                |                   |
+    When I update combination "product1SWhite" options with following details:
+      | ean13     |  |
+      | isbn      |  |
+      | mpn       |  |
+      | reference |  |
+      | upc       |  |
+    Then combination "product1SWhite" should have following options:
+      | combination option | value |
+      | ean13              |       |
+      | isbn               |       |
+      | mpn                |       |
+      | reference          |       |
+      | upc                |       |

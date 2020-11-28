@@ -30,14 +30,11 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class CombinationListingFeatureContext extends AbstractProductFeatureContext
+class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
      * @Then I should see following combinations of product :productReference in page :page limited to maximum :limit per page:
@@ -122,23 +119,6 @@ class CombinationListingFeatureContext extends AbstractProductFeatureContext
         );
 
         $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
-    }
-
-    /**
-     * @param string $productReference
-     * @param int|null $limit
-     * @param int|null $offset
-     *
-     * @return CombinationListForEditing
-     */
-    private function getCombinationsList(string $productReference, ?int $limit = null, ?int $offset = null): CombinationListForEditing
-    {
-        return $this->getQueryBus()->handle(new GetEditableCombinationsList(
-            $this->getSharedStorage()->get($productReference),
-            $this->getDefaultLangId(),
-            $limit,
-            $offset
-        ));
     }
 
     /**

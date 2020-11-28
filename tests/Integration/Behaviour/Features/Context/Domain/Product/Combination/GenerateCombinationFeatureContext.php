@@ -31,10 +31,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class GenerateCombinationFeatureContext extends AbstractProductFeatureContext
+class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
      * @When I generate combinations for product :productReference using following attributes:
