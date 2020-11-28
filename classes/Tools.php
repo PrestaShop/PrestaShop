@@ -4127,7 +4127,7 @@ exit;
             return '0';
         }
         $base = log($size) / log(1024);
-        $suffixes = ['', 'k', 'M', 'G', 'T'];
+        $suffixes = ['o', 'ko', 'Mo', 'Go', 'To'];
 
         return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)];
     }
