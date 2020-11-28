@@ -83,6 +83,7 @@
             <th>
               <input type="checkbox" id="toggle-all-combinations" >
             </th>
+            <th>{{ 'ID'|trans({}, 'Admin.Catalog.Global') }}</th>
             <th></th>
             <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
             <th>{{ 'Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -97,6 +98,9 @@
           {% if has_combinations %}
             <tr class="combination loading timeline-wrapper" id="loading-attribute">
               <td class="timeline-item" width="1%">
+              </td>
+              <td class="attribute-id">
+                <div class="animated-background"></div>
               </td>
               <td class="timeline-item img">
                 <div class="animated-background"></div>
