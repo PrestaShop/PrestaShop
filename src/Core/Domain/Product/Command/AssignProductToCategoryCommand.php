@@ -54,7 +54,7 @@ class AssignProductToCategoryCommand
      *
      * @throws CategoryConstraintException
      * @throws ProductConstraintException */
-    public function __construct($categoryId, $productId)
+    public function __construct(int $categoryId, int $productId)
     {
         $this->setCategoryId($categoryId);
         $this->setProductId($productId);
