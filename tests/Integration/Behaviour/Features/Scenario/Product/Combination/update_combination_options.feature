@@ -80,3 +80,4 @@ Feature: Update product combinations in Back Office (BO)
       | mpn                |       |
       | reference          |       |
       | upc                |       |
+
