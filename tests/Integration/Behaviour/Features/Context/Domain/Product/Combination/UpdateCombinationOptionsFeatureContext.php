@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -47,12 +46,8 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
         $dataRows = $tableNode->getRowsHash();
         $command = new UpdateCombinationOptionsCommand($this->getSharedStorage()->get($combinationReference));
 
-        try {
-            $this->fillCommand($dataRows, $command);
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+        $this->fillCommand($dataRows, $command);
+        $this->getCommandBus()->handle($command);
     }
 
     /**
