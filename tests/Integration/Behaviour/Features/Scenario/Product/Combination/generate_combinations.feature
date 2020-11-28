@@ -26,35 +26,40 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product product1 should have following combinations:
-      | combination name        | attributes           |
-      | Size - S, Color - White | [Size:S,Color:White] |
-      | Size - S, Color - Black | [Size:S,Color:Black] |
-      | Size - S, Color - Blue  | [Size:S,Color:Blue]  |
-      | Size - M, Color - White | [Size:M,Color:White] |
-      | Size - M, Color - Black | [Size:M,Color:Black] |
-      | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
+    Then product product1 should have following list of combinations:
+      | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | false      |
+      | product1SBlack | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
+      | product1Blue   | Size - S, Color - Blue  | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
 
   Scenario: Product combinations pagination returns correct results
-    Given product product1 should have following combinations:
-      | combination name        | attributes           |
-      | Size - S, Color - White | [Size:S,Color:White] |
-      | Size - S, Color - Black | [Size:S,Color:Black] |
-      | Size - S, Color - Blue  | [Size:S,Color:Blue]  |
-      | Size - M, Color - White | [Size:M,Color:White] |
-      | Size - M, Color - Black | [Size:M,Color:Black] |
-      | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
-    When I limit product product1 combinations per page to 2
-    Then I should see following combinations of product product1 in page 1:
-      | combination name        | attributes           |
-      | Size - S, Color - White | [Size:S,Color:White] |
-      | Size - S, Color - Black | [Size:S,Color:Black] |
-    And I should see following combinations of product product1 in page 2:
-      | combination name        | attributes           |
-      | Size - S, Color - Blue  | [Size:S,Color:Blue]  |
-      | Size - M, Color - White | [Size:M,Color:White] |
-    And I should see following combinations of product product1 in page 3:
-      | combination name        | attributes           |
-      | Size - M, Color - Black | [Size:M,Color:Black] |
-      | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
-    And there should be no combinations of product1 in page 4
+    Given product product1 should have following list of combinations:
+      | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | false      |
+      | product1SBlack | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
+      | product1Blue   | Size - S, Color - Blue  | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    Then I should see following combinations of product product1 in page 1 limited to maximum 2 per page:
+      | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | false      |
+      | product1SBlack | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
+    And I should see following combinations of product product1 in page 2 limited to maximum 2 per page:
+      | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
+      | product1Blue   | Size - S, Color - Blue  | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+    And I should see following combinations of product product1 in page 3 limited to maximum 2 per page:
+      | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
+      | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    And there should be no combinations of product1 in page 4 when limited to maximum 2 per page
+    And I should see following combinations of product product1 in page 2 limited to maximum 3 per page:
+      | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
+      | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    And there should be no combinations of product1 in page 3 when limited to maximum 3 per page

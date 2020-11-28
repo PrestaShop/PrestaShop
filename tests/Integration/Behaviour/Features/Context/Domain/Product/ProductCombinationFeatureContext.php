@@ -34,17 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ProductCombinationFeatureContext extends AbstractProductFeatureContext
 {
-    /**
-     * Pattern for saving product combinations limit in shared storage
-     */
-    const COMBINATION_LIMIT_KEY_PATTERN = 'product_%s_combinations_limit';
-
     /**
      * @When I generate combinations for product :productReference using following attributes:
      *
@@ -67,54 +62,58 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I limit product :productReference combinations per page to :limit
-     *
-     * @param string $productReference
-     * @param int $limit
-     */
-    public function setCombinationsPerPageLimit(string $productReference, int $limit): void
-    {
-        $this->getSharedStorage()->set($this->getCombinationLimitKey($productReference), $limit);
-    }
-
-    /**
-     * @Then I should see following combinations of product :productReference in page :page:
+     * @Then I should see following combinations of product :productReference in page :page limited to maximum :limit per page:
      *
      * @param string $productReference
      * @param int $page
      * @param TableNode $dataTable
+     * @param int $limit
      */
-    public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable): void
+    public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable, int $limit): void
     {
-        $limit = $this->getLimit($productReference);
         $offset = $this->countOffset($page, $limit);
 
-        $this->assertCombinations($productReference, $dataTable->getColumnsHash(), $limit, $offset);
+        $this->assertPaginatedCombinationList($productReference, $dataTable->getColumnsHash(), $limit, $offset);
     }
 
     /**
-     * @Then there should be no combinations of :productReference in page :page
+     * @Then there should be no combinations of :productReference in page :page when limited to maximum :limit per page
      *
      * @param string $productReference
      * @param int $page
+     * @param int $limit
      */
-    public function assertNoCombinationsInPage(string $productReference, int $page): void
+    public function assertNoCombinationsInPage(string $productReference, int $page, int $limit): void
     {
-        $limit = $this->getLimit($productReference);
         $offset = $this->countOffset($page, $limit);
 
-        $this->assertCombinations($productReference, [], $limit, $offset);
+        $this->assertPaginatedCombinationList($productReference, [], $limit, $offset);
     }
 
     /**
-     * @Then product :productReference should have following combinations:
+     * Asserts expected product combinations and sets combination references in shared storage
+     *
+     * @Then product :productReference should have following list of combinations:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertAllProductCombinations(string $productReference, TableNode $table): void
+    public function assertWholeCombinationsList(string $productReference, TableNode $table): void
     {
-        $this->assertCombinations($productReference, $table->getColumnsHash());
+        $combinationsList = $this->getCombinationsList($productReference);
+        $dataRows = $table->getColumnsHash();
+
+        Assert::assertEquals(
+            count($dataRows),
+            $combinationsList->getTotalCombinationsCount(),
+            'Unexpected combinations count'
+        );
+
+        $idsByReference = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
+
+        foreach ($idsByReference as $reference => $id) {
+            $this->getSharedStorage()->set($reference, $id);
+        }
     }
 
     /**
@@ -130,91 +129,121 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @param string $productReference
-     *
-     * @return int
-     */
-    private function getLimit(string $productReference): int
-    {
-        $limitKey = $this->getCombinationLimitKey($productReference);
-
-        if (!$this->getSharedStorage()->exists($limitKey)) {
-            throw new RuntimeException('Set limit of results first to be able to test pagination');
-        }
-
-        return $this->getSharedStorage()->get($limitKey);
-    }
-
-    /**
-     * @param string $productReference
      * @param array $dataRows
      * @param int|null $limit
      * @param int|null $offset
      */
-    private function assertCombinations(string $productReference, array $dataRows, ?int $limit = null, ?int $offset = null): void
+    private function assertPaginatedCombinationList(string $productReference, array $dataRows, ?int $limit = null, ?int $offset = null): void
     {
-        /** @var CombinationListForEditing $combinationsForEditing */
-        $combinationsForEditing = $this->getQueryBus()->handle(new GetEditableCombinationsList(
+        $combinationsList = $this->getCombinationsList($productReference, $limit, $offset);
+
+        Assert::assertEquals(
+            count($dataRows),
+            count($combinationsList->getCombinations()),
+            'Unexpected combinations count'
+        );
+
+        $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
+    }
+
+    /**
+     * @param string $productReference
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return CombinationListForEditing
+     */
+    private function getCombinationsList(string $productReference, ?int $limit = null, ?int $offset = null): CombinationListForEditing
+    {
+        return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
             $limit,
             $offset
         ));
-
-        Assert::assertEquals(
-            count($dataRows),
-            count($combinationsForEditing->getCombinations()),
-            'Unexpected combinations count'
-        );
-
-        foreach ($combinationsForEditing->getCombinations() as $key => $combinationForEditing) {
-            Assert::assertEquals(
-                $dataRows[$key]['combination name'],
-                $combinationForEditing->getCombinationName(),
-                'Unexpected combination'
-            );
-
-            $expectedAttributesInfo = $this->parseAttributesInfo($dataRows[$key]['attributes']);
-            Assert::assertEquals(
-                count($expectedAttributesInfo),
-                count($combinationForEditing->getAttributesInformation()),
-                'Unexpected attributes count in combination'
-            );
-
-            foreach ($combinationForEditing->getAttributesInformation() as $index => $actualAttributesInfo) {
-                Assert::assertEquals(
-                    $actualAttributesInfo->getAttributeGroupId(),
-                    $expectedAttributesInfo[$index]->getAttributeGroupId(),
-                    'Unexpected attribute group id'
-                );
-                Assert::assertEquals(
-                    $actualAttributesInfo->getAttributeGroupName(),
-                    $expectedAttributesInfo[$index]->getAttributeGroupName(),
-                    'Unexpected attribute group name'
-                );
-                Assert::assertEquals(
-                    $actualAttributesInfo->getAttributeId(),
-                    $expectedAttributesInfo[$index]->getAttributeId(),
-                    'Unexpected attribute id'
-                );
-                Assert::assertEquals(
-                    $actualAttributesInfo->getAttributeName(),
-                    $expectedAttributesInfo[$index]->getAttributeName(),
-                    'Unexpected attribute name'
-                );
-            }
-        }
     }
 
     /**
-     * Builds key for shared storage to save/retrieve current limit of combinations results
+     * @param array $expectedDataRows
+     * @param EditableCombinationForListing[] $listCombinations
      *
-     * @param string $productReference
-     *
-     * @return string
+     * @return array<string, int> combinations [reference => id] list
      */
-    private function getCombinationLimitKey(string $productReference): string
+    private function assertListedCombinationsProperties(array $expectedDataRows, array $listCombinations): array
     {
-        return sprintf(self::COMBINATION_LIMIT_KEY_PATTERN, $productReference);
+        $idsByReference = [];
+        foreach ($listCombinations as $key => $editableCombinationForListing) {
+            $expectedCombination = $expectedDataRows[$key];
+
+            Assert::assertSame(
+                $expectedCombination['combination name'],
+                $editableCombinationForListing->getCombinationName(),
+                'Unexpected combination'
+            );
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedCombination['is default']),
+                $editableCombinationForListing->isDefault(),
+                'Unexpected default combination'
+            );
+            Assert::assertEquals(
+                $expectedCombination['impact on price'],
+                (string) $editableCombinationForListing->getImpactOnPrice(),
+                'Unexpected combination impact on price'
+            );
+            Assert::assertEquals(
+                $expectedCombination['final price'],
+                (string) $editableCombinationForListing->getFinalPrice(),
+                'Unexpected combination final price'
+            );
+            Assert::assertSame(
+                (int) $expectedCombination['quantity'],
+                $editableCombinationForListing->getQuantity(),
+                'Unexpected combination quantity'
+            );
+
+            $expectedAttributesInfo = $this->parseAttributesInfo($expectedCombination['attributes']);
+            Assert::assertSame(
+                count($expectedAttributesInfo),
+                count($editableCombinationForListing->getAttributesInformation()),
+                'Unexpected attributes count in combination'
+            );
+
+            $this->assertAttributesInfo($expectedAttributesInfo, $editableCombinationForListing->getAttributesInformation());
+
+            $idsByReference[$expectedCombination['reference']] = $editableCombinationForListing->getCombinationId();
+        }
+
+        return $idsByReference;
+    }
+
+    /**
+     * @param CombinationAttributeInformation[] $expectedAttributesInfo
+     * @param CombinationAttributeInformation[] $attributesInfo
+     */
+    private function assertAttributesInfo(array $expectedAttributesInfo, array $attributesInfo): void
+    {
+        foreach ($attributesInfo as $index => $actualAttributesInfo) {
+            Assert::assertSame(
+                $actualAttributesInfo->getAttributeGroupId(),
+                $expectedAttributesInfo[$index]->getAttributeGroupId(),
+                'Unexpected attribute group id'
+            );
+            Assert::assertSame(
+                $actualAttributesInfo->getAttributeGroupName(),
+                $expectedAttributesInfo[$index]->getAttributeGroupName(),
+                'Unexpected attribute group name'
+            );
+            Assert::assertSame(
+                $actualAttributesInfo->getAttributeId(),
+                $expectedAttributesInfo[$index]->getAttributeId(),
+                'Unexpected attribute id'
+            );
+            Assert::assertSame(
+                $actualAttributesInfo->getAttributeName(),
+                $expectedAttributesInfo[$index]->getAttributeName(),
+                'Unexpected attribute name'
+            );
+        }
     }
 
     /**
