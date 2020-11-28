@@ -4127,9 +4127,10 @@ exit;
             return '0';
         }
         $base = log($size) / log(1024);
-        $suffixes = ['o', 'ko', 'Mo', 'Go', 'To'];
+        $baseUnity = Context::getContext()->getTranslator()->trans('bytes', [], 'Admin.Global');
+        $suffixes = ['', 'k', 'M', 'G', 'T'];
 
-        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)];
+        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)] . $baseUnity;
     }
 
     public static function boolVal($value)
