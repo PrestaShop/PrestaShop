@@ -36,10 +36,21 @@
           <div class="col-md-5 divide-right">
             <div class="row">
               <div class="col-md-6">
-                {if $product.cover}
-                  <img class="product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" loading="lazy">
+                {if $product.default_image}
+                  <img
+                    src="{$product.default_image.medium.url}"
+                    data-full-size-image-url="{$product.default_image.large.url}"
+                    title="{$product.default_image.legend}"
+                    alt="{$product.default_image.legend}"
+                    itemprop="image"
+                    loading="lazy"
+                    class="product-image"
+                  >
                 {else}
-                  <img src="{$urls.no_picture_image.bySize.medium_default.url}" loading="lazy" />
+                  <img
+                    src="{$urls.no_picture_image.medium.url}"
+                    class="product-image"
+                  />
                 {/if}
               </div>
               <div class="col-md-6">
