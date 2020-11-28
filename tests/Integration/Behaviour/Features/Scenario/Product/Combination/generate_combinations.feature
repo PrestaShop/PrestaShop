@@ -28,7 +28,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | Color | [White,Black,Blue] |
     Then product product1 should have following list of combinations:
       | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | false      |
+      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | true       |
       | product1SBlack | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
       | product1Blue   | Size - S, Color - Blue  | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
       | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
@@ -38,7 +38,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
   Scenario: Product combinations pagination returns correct results
     Given product product1 should have following list of combinations:
       | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | false      |
+      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | true       |
       | product1SBlack | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
       | product1Blue   | Size - S, Color - Blue  | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
       | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
@@ -46,7 +46,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
     Then I should see following combinations of product product1 in page 1 limited to maximum 2 per page:
       | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | false      |
+      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | true       |
       | product1SBlack | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
     And I should see following combinations of product product1 in page 2 limited to maximum 2 per page:
       | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |

@@ -99,16 +99,17 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param bool $isDefault
      *
      * @return Combination
      *
      * @throws CoreException
      */
-    public function create(ProductId $productId): Combination
+    public function create(ProductId $productId, bool $isDefault): Combination
     {
         $combination = new Combination();
         $combination->id_product = $productId->getValue();
-        $combination->default_on = false;
+        $combination->default_on = $isDefault;
 
         $this->addObjectModel($combination, CannotAddCombinationException::class);
 
@@ -152,7 +153,7 @@ class CombinationRepository extends AbstractObjectModelRepository
             ->setMaxResults($limit)
         ;
 
-        return  $qb->execute()->fetchAll();
+        return $qb->execute()->fetchAll();
     }
 
     /**
@@ -310,6 +311,7 @@ class CombinationRepository extends AbstractObjectModelRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
             ->where('pa.id_product = :productId')
+            ->orderBy('id_product_attribute', 'asc')
             ->setParameter('productId', $productId->getValue())
         ;
 
