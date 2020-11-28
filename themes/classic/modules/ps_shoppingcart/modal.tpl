@@ -48,7 +48,8 @@
                   >
                 {else}
                   <img
-                    src="{$urls.no_picture_image.medium.url}"
+                    src="{$urls.no_picture_image.bySize.medium_default.url}"
+                    loading="lazy"
                     class="product-image"
                   />
                 {/if}
