@@ -90,6 +90,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then The category of product :productName has no reduction
+     */
+    public function theCategoryOfProductHasNoReductionForCustomer(string $productName)
+    {
+        $productId = $this->getProductIdByName($productName);
+
+        GroupReduction::deleteProductReduction($productId);
+
+        $product = new Product($productId);
+
+        GroupReduction::deleteCategory($product->id_category_default);
+
+        GroupReduction::resetStaticCache();
+    }
+
+    /**
      * @param string $productName
      *
      * @return int
