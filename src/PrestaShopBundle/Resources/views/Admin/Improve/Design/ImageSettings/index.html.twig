@@ -36,6 +36,14 @@
 {% block content %}
   {% include "@PrestaShop/Admin/Improve/Design/ImageSettings/Blocks/alert.html.twig" %}
 
+  {% if showDuplicatesAlert %}
+    <div class="alert alert-warning">
+      <div class="alert-text">
+        {{ 'Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.'|trans({"%folder%": duplicatesFolder}, 'Admin.Design.Notification') }}
+      </div>
+    </div>
+  {% endif %}
+
   <div class="row">
     <div class="col">
       {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': imageTypeGrid} %}
@@ -45,6 +53,12 @@
   <div class="row">
     <div class="col">
       {% include "@PrestaShop/Admin/Improve/Design/ImageSettings/Blocks/generation_settings_form.html.twig" %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      {% include "@PrestaShop/Admin/Improve/Design/ImageSettings/Blocks/move_form.html.twig" %}
     </div>
   </div>
 
