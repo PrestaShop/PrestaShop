@@ -137,7 +137,7 @@ class CombinationCreator
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
             $addedCombinationIds[] = $this->persistCombination($productId, $generatedCombination, !$hasDefault);
-            $hasDefault = false;
+            $hasDefault = true;
         }
 
         return $addedCombinationIds;

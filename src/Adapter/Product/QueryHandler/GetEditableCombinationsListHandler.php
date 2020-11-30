@@ -151,7 +151,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 $productPrice->plus($impactOnPrice),
-                $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity
+                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity
             );
         }
 
