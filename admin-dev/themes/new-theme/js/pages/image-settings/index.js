@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from "@components/grid/grid";
+import Grid from '@components/grid/grid';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
@@ -37,8 +37,8 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 const {$} = window;
 
 $(() => {
-  $(".second-select").addClass('d-none');
-  $(".format_" + $("#thumbnail_regeneration_image_category").val()).removeClass("d-none");
+  $('.second-select').addClass('d-none');
+  $(`.format_${$('#thumbnail_regeneration_image_category').val()}`).removeClass('d-none');
 
   const grid = new Grid('image_type');
 
@@ -52,8 +52,8 @@ $(() => {
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new LinkRowActionExtension());
 
-  $("#thumbnail_regeneration_image_category").change(() => {
-    $(".second-select").addClass('d-none');
-    $(".format_" + $("#thumbnail_regeneration_image_category").val()).removeClass("d-none");
+  $('#thumbnail_regeneration_image_category').change(() => {
+    $('.second-select').addClass('d-none');
+    $(`.format_${$('#thumbnail_regeneration_image_category').val()}`).removeClass('d-none');
   });
 });

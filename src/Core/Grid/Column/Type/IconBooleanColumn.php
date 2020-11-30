@@ -51,7 +51,7 @@ final class IconBooleanColumn extends AbstractColumn
     {
         $resolver
             ->setRequired([
-                'field'
+                'field',
             ])
             ->setDefaults([
                 'clickable' => false,

@@ -36,7 +36,6 @@ use ImageType;
 use Language;
 use Module;
 use PrestaShop\PrestaShop\Core\ImageType\ImageGeneratorInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ImageGenerator implements ImageGeneratorInterface

@@ -57,14 +57,14 @@ class ImageTypeType extends TranslatorAwareType
                             'The %s field is required.',
                             'Admin.Notification.Error',
                             [
-                                '%s' => sprintf('"%s"', $this->trans('Name', 'Admin.Global'))
+                                '%s' => sprintf('"%s"', $this->trans('Name', 'Admin.Global')),
                             ]
-                        )
+                        ),
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-z0-9_-]*$/'
+                        'pattern' => '/^[a-z0-9_-]*$/',
                     ]),
-                ]
+                ],
             ])
             ->add('width', TextWithUnitType::class, [
                 'label' => $this->trans('Width', 'Admin.Global'),
@@ -76,9 +76,9 @@ class ImageTypeType extends TranslatorAwareType
                             'The %s field is required.',
                             'Admin.Notification.Error',
                             [
-                                '%s' => sprintf('"%s"', $this->trans('Width', 'Admin.Global'))
+                                '%s' => sprintf('"%s"', $this->trans('Width', 'Admin.Global')),
                             ]
-                        )
+                        ),
                     ]),
                     new Type([
                         'type' => 'numeric',
@@ -87,7 +87,7 @@ class ImageTypeType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                ]
+                ],
             ])
             ->add('height', TextWithUnitType::class, [
                 'label' => $this->trans('Height', 'Admin.Global'),
@@ -99,9 +99,9 @@ class ImageTypeType extends TranslatorAwareType
                             'The %s field is required.',
                             'Admin.Notification.Error',
                             [
-                                '%s' => sprintf('"%s"', $this->trans('Height', 'Admin.Global'))
+                                '%s' => sprintf('"%s"', $this->trans('Height', 'Admin.Global')),
                             ]
-                        )
+                        ),
                     ]),
                     new Type([
                         'type' => 'numeric',
@@ -110,7 +110,7 @@ class ImageTypeType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                ]
+                ],
             ])
             ->add('products', SwitchType::class, [
                 'label' => $this->trans('Products', 'Admin.Global'),
