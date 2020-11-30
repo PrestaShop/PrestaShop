@@ -118,7 +118,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async fillInformationForm(page) {
-    await page.type(this.shopNameInput, global.INSTALL.SHOPNAME);
+    await page.type(this.shopNameInput, global.INSTALL.SHOP_NAME);
     await page.selectOption(this.countrySelect, global.INSTALL.COUNTRY);
     await page.type(this.firstNameInput, global.BO.FIRSTNAME);
     await page.type(this.lastNameInput, global.BO.LASTNAME);
