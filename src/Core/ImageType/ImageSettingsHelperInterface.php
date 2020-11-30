@@ -53,4 +53,11 @@ interface ImageSettingsHelperInterface
      * @return bool
      */
     public function showMovingForm(): bool;
+
+    /**
+     * Returns product images directory.
+     *
+     * @return string
+     */
+    public function getProductImagesDir(): string;
 }

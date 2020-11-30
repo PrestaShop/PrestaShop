@@ -115,4 +115,12 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
 
         return $displayMove;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getProductImagesDir(): string
+    {
+        return _PS_PROD_IMG_DIR_;
+    }
 }
