@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationOptions;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -58,33 +59,17 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
      */
     public function assertOptions(string $combinationReference, CombinationOptions $expectedOptions): void
     {
-        $actualOptions = $this->getCombinationForEditing($combinationReference)->getOptions();
+        $combinationForEditing = $this->getCombinationForEditing($combinationReference);
+        $optionPropertyNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        Assert::assertSame(
-            $expectedOptions->getEan13(),
-            $actualOptions->getEan13(),
-            sprintf('Unexpected ean13 of "%s"', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedOptions->getIsbn(),
-            $actualOptions->getIsbn(),
-            sprintf('Unexpected isbn of "%s"', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedOptions->getMpn(),
-            $actualOptions->getMpn(),
-            sprintf('Unexpected mpn of "%s"', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedOptions->getReference(),
-            $actualOptions->getReference(),
-            sprintf('Unexpected reference of "%s"', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedOptions->getUpc(),
-            $actualOptions->getUpc(),
-            sprintf('Unexpected upc of "%s"', $combinationReference)
-        );
+        foreach ($optionPropertyNames as $propertyName) {
+            Assert::assertSame(
+                $propertyAccessor->getValue($expectedOptions, $propertyName),
+                $this->extractValueFromCombinationForEditing($combinationForEditing, $propertyName),
+                sprintf('Unexpected %s of "%s"', $propertyName, $combinationReference)
+            );
+        }
     }
 
     /**
