@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 
 final class ProductFormDataProvider implements FormDataProviderInterface
 {
@@ -81,6 +82,16 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [];
+        return [
+            'basic' => [
+                'type' => ProductType::TYPE_STANDARD,
+            ],
+            'price' => [
+                'price_tax_excluded' => 0,
+                'price_tax_included' => 0,
+                'wholesale_price' => 0,
+                'unit_price' => 0,
+            ],
+        ];
     }
 }
