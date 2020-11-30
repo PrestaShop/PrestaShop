@@ -30,6 +30,14 @@ admin_image_settings_regenerate_thumbnails:
         _legacy_controller: AdminImages
         _legacy_link: AdminImages:submitRegenerateimage_type
 
+admin_image_settings_move_images:
+    path: /move-images
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:moveImages'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages:submitMoveImagesimage_type
+
 admin_image_settings_create:
     path: /new
     methods: [GET, POST]
