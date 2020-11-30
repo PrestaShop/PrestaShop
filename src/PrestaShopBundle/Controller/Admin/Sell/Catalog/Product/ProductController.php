@@ -99,7 +99,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
-        $productForm = $this->getProductFormBuilder()->getFormFor($productId);
+        $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], ['product_id' => $productId]);
 
         try {
             $productForm->handleRequest($request);
