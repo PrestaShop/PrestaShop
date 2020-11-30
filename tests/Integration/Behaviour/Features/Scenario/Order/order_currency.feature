@@ -264,6 +264,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
+    And the category of product "Mug The best is yet to come" has no reduction
 
   Scenario: Check invoice for an order with secondary currency and discount
     Given I add discount to order "bo_order1" with following details:
