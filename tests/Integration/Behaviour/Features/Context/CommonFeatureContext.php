@@ -36,6 +36,7 @@ use Category;
 use Context;
 use Currency;
 use Employee;
+use GroupReduction;
 use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Pack;
@@ -204,5 +205,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Language::resetCache();
         Currency::resetStaticCache();
         TaxManagerFactory::resetStaticCache();
+        GroupReduction::resetStaticCache();
     }
 }

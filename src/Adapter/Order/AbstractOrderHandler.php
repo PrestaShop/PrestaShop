@@ -311,6 +311,7 @@ abstract class AbstractOrderHandler
         Order $order,
         ?Combination $combination
     ): Number {
+        $specificPriceOutput = null;
         // Get price via getPriceStatic so that the catalog price rules are applied
 
         return new Number((string) Product::getPriceStatic(
@@ -325,7 +326,10 @@ abstract class AbstractOrderHandler
             false,
             $order->id_customer, // We still use the customer ID in case this customer has some special prices
             null, // But we keep the cart null as we don't want this order overridden price
-            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
+            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)},
+            $specificPriceOutput,
+            true,
+            false
         ));
     }
 
