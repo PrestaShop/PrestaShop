@@ -319,6 +319,8 @@
 
     #view_order_payments_block {
       .table {
+        overflow: scroll;
+
         &-head {
           &-invoice {
             min-width: auto;
