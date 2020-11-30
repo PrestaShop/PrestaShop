@@ -59,6 +59,7 @@ class ImageTypeFormatsDataProvider implements ImageTypeFormatsDataProviderInterf
         foreach ($this->imageTypeCategoriesDataProvider->getImageTypeCategories() as $value) {
             $formats[$value] = ImageType::getImagesTypes($value);
         }
+
         return $formats;
     }
 }

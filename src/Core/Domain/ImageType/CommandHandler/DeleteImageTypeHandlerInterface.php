@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ImageType\CommandHandler;
 
-
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Command\DeleteImageTypeCommand;
 
 /**
