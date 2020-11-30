@@ -246,6 +246,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $imageTypeForm = $imageTypeFormBuilder->getFormFor($imageTypeId);
         } catch (Exception $exception) {
             $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+
             return $this->redirectToRoute('admin_image_settings_index');
         }
 
@@ -255,6 +256,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
 
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
                 return $this->redirectToRoute('admin_image_settings_index');
             }
         } catch (Exception $exception) {
