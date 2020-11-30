@@ -6,6 +6,7 @@ class TaxRules extends BOBasePage {
     super();
 
     this.pageTitle = 'Tax Rules •';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
     // HEADER buttons
@@ -32,6 +33,7 @@ class TaxRules extends BOBasePage {
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
     this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
 
     // Bulk actions selectors
@@ -333,6 +335,35 @@ class TaxRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
     /* Successful message is not visible, skipping it */
     // return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Get Value of columns enabled
+   * @param page
+   * @param row, row in table
+   * @return {Promise<boolean>}
+   */
+  async getToggleColumnValue(page, row) {
+    await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
+    return this.elementVisible(page, this.tableColumnCheckIcon(row), 100);
+  }
+
+  /**
+   * Quick edit toggle column value
+   * @param page
+   * @param row, row in table
+   * @param valueWanted, Value wanted in column
+   * @return {Promise<boolean>}, return true if action is done, false otherwise
+   */
+  async updateToggleColumnValue(page, row, valueWanted = true) {
+    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+      await Promise.all([
+        page.$eval(`${this.tableColumnActive(row)} i`, el => el.click()),
+        page.waitForNavigation({waitUntil: 'networkidle'}),
+      ]);
+      return true;
+    }
+    return false;
   }
 }
 

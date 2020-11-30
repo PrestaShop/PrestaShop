@@ -42,8 +42,8 @@ class WebService extends BOBasePage {
     this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.webserviceListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_selection`;
-    this.bulkActionsEnableButton = `#webservice_key_grid_bulk_action_webservice_enable_selection`;
-    this.bulkActionsDisableButton = `#webservice_key_grid_bulk_action_webservice_disable_selection`;
+    this.bulkActionsEnableButton = '#webservice_key_grid_bulk_action_webservice_enable_selection';
+    this.bulkActionsDisableButton = '#webservice_key_grid_bulk_action_webservice_disable_selection';
 
     // Modal Dialog
     this.deleteModal = '#webservice_key-grid-confirm-modal.show';
@@ -240,7 +240,6 @@ class WebService extends BOBasePage {
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
   }
-
 
 
   /**
