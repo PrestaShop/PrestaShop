@@ -122,7 +122,7 @@ class Taxes extends BOBasePage {
    * @param column
    * @return {Promise<string>}
    */
-  async getToggleColumnValue(page, row, column) {
+  async getStatus(page, row, column) {
     return this.elementVisible(page, this.toggleColumnValidIcon(row, column), 100);
   }
 
@@ -133,12 +133,13 @@ class Taxes extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row, valueWanted = true) {
+  async setStatus(page, row, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.taxesGridColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row, 'active') !== valueWanted) {
+    if (await this.getStatus(page, row, 'active') !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.taxesGridColumn(row, 'active'));
       return true;
     }
+
     return false;
   }
 
@@ -213,7 +214,7 @@ class Taxes extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeTaxesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllLabel, el => el.click()),

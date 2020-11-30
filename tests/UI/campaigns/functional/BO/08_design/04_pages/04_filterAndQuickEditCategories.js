@@ -145,7 +145,6 @@ describe('Filter And Quick Edit Categories', async () => {
               filterBy: 'active',
               filterValue: secondCategoryData.displayed,
             },
-          expected: 'check',
         },
       ];
 
@@ -169,15 +168,16 @@ describe('Filter And Quick Edit Categories', async () => {
           await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
           for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-            const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
-              page,
-              i,
-              test.args.filterBy,
-            );
-
-            if (test.expected !== undefined) {
-              await expect(textColumn).to.contains(test.expected);
+            if (test.args.filterBy === 'active') {
+              const categoryStatus = await pagesPage.getStatus(page, 'cms_page_category', i);
+              await expect(categoryStatus).to.equal(test.args.filterValue);
             } else {
+              const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
+                page,
+                i,
+                test.args.filterBy,
+              );
+
               await expect(textColumn).to.contains(test.args.filterValue);
             }
           }
@@ -234,7 +234,7 @@ describe('Filter And Quick Edit Categories', async () => {
         it(`should ${categoryStatus.args.status} the category`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `bulk${categoryStatus.args.status}`, baseContext);
 
-          const isActionPerformed = await pagesPage.updateToggleColumnValue(
+          const isActionPerformed = await pagesPage.setStatus(
             page,
             'cms_page_category',
             1,
@@ -249,7 +249,7 @@ describe('Filter And Quick Edit Categories', async () => {
             await expect(resultMessage).to.contains(pagesPage.successfulUpdateStatusMessage);
           }
 
-          const currentStatus = await pagesPage.getToggleColumnValue(page, 'cms_page_category', 1);
+          const currentStatus = await pagesPage.getStatus(page, 'cms_page_category', 1);
           await expect(currentStatus).to.be.equal(categoryStatus.args.enable);
         });
 

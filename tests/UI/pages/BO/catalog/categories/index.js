@@ -133,7 +133,7 @@ class Categories extends BOBasePage {
    * @param column, column to check
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row, column) {
+  async getStatus(page, row, column) {
     return this.elementVisible(page, this.categoriesListColumnValidIcon(row, column), 100);
   }
 
@@ -145,9 +145,9 @@ class Categories extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, column, valueWanted = true) {
+  async setStatus(page, row, column, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.categoriesListTableColumn(row, column), 2000);
-    if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
+    if (await this.getStatus(page, row, column) !== valueWanted) {
       await page.click(`${this.categoriesListTableColumn(row, column)} i`);
       await this.waitForVisibleSelector(
         page,
@@ -158,8 +158,10 @@ class Categories extends BOBasePage {
         ),
         15000,
       );
+
       return true;
     }
+
     return false;
   }
 
@@ -186,7 +188,7 @@ class Categories extends BOBasePage {
       name: await this.getTextColumnFromTableCategories(page, row, 'name'),
       description: await this.getTextColumnFromTableCategories(page, row, 'description'),
       position: parseFloat(await this.getTextColumnFromTableCategories(page, row, 'position')),
-      status: await this.getToggleColumnValue(page, row, 'active'),
+      status: await this.getStatus(page, row, 'active'),
     };
   }
 
@@ -281,7 +283,7 @@ class Categories extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeCategoriesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),

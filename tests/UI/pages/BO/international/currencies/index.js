@@ -139,7 +139,7 @@ class Currencies extends LocalizationBasePage {
       symbol: await this.getTextColumnFromTableCurrency(page, row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(page, row, 'iso_code'),
       exchangeRate: await this.getExchangeRateValue(page, row),
-      enabled: await this.getToggleColumnValue(page, row),
+      enabled: await this.getStatus(page, row),
     };
   }
 
@@ -147,9 +147,9 @@ class Currencies extends LocalizationBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row = 1) {
+  async getStatus(page, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
   }
 
@@ -160,12 +160,13 @@ class Currencies extends LocalizationBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row = 1, valueWanted = true) {
+  async setStatus(page, row = 1, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+    if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.enableColumn(row));
       return true;
     }
+
     return false;
   }
 

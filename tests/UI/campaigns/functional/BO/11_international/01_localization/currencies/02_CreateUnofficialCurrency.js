@@ -160,7 +160,7 @@ describe('Create unofficial currency and check it in FO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'disableCurrency', baseContext);
 
 
-      const isActionPerformed = await currenciesPage.updateEnabledValue(page, 1, false);
+      const isActionPerformed = await currenciesPage.setStatus(page, 1, false);
 
       if (isActionPerformed) {
         const resultMessage = await currenciesPage.getTextContent(
@@ -172,7 +172,7 @@ describe('Create unofficial currency and check it in FO', async () => {
       }
 
       // Check currency disabled
-      const currencyStatus = await currenciesPage.getToggleColumnValue(page, 1);
+      const currencyStatus = await currenciesPage.getStatus(page, 1);
       await expect(currencyStatus).to.be.equal(false);
     });
 

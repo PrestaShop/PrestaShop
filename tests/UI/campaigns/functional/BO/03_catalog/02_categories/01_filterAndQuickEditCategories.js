@@ -108,7 +108,6 @@ describe('Filter And Quick Edit Categories', async () => {
             filterBy: 'active',
             filterValue: Categories.accessories.displayed,
           },
-        expected: 'check',
       },
     ];
 
@@ -130,15 +129,16 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(numberOfCategoriesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await categoriesPage.getTextColumnFromTableCategories(
-            page,
-            i,
-            test.args.filterBy,
-          );
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const categoryStatus = await categoriesPage.getStatus(page, i);
+            await expect(categoryStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await categoriesPage.getTextColumnFromTableCategories(
+              page,
+              i,
+              test.args.filterBy,
+            );
+
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }

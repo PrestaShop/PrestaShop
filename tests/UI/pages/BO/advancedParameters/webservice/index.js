@@ -140,7 +140,7 @@ class WebService extends BOBasePage {
    * @param row, row in table
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
+  async getStatus(page, row) {
     return this.elementVisible(page, this.webserviceListColumnValidIcon(row), 100);
   }
 
@@ -151,9 +151,9 @@ class WebService extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
+  async setStatus(page, row, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.webserviceListTableColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+    if (await this.getStatus(page, row) !== valueWanted) {
       await page.click(this.webserviceListTableColumn(row, 'active'));
       await this.waitForVisibleSelector(
         page,
@@ -224,7 +224,7 @@ class WebService extends BOBasePage {
    * @param enable
    * @returns {Promise<void>}
    */
-  async enableDisableByColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),

@@ -143,7 +143,7 @@ class Employees extends BOBasePage {
    * @param row, row in table
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
+  async getStatus(page, row) {
     return this.elementVisible(page, this.employeesListColumnValidIcon(row), 100);
   }
 
@@ -154,9 +154,9 @@ class Employees extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
+  async setStatus(page, row, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.employeesListTableColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+    if (await this.getStatus(page, row) !== valueWanted) {
       page.click(this.employeesListTableColumn(row, 'active'));
       await this.waitForVisibleSelector(
         page,
@@ -194,7 +194,7 @@ class Employees extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -245,7 +245,7 @@ class Employees extends BOBasePage {
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.employeesListTableColumn(i, column));
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
+        rowContent = await this.getStatus(page, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
