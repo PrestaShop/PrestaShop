@@ -97,7 +97,7 @@ abstract class AbstractObjectModelRepository
         try {
             if (!$objectModel->add()) {
                 throw new $exceptionClass(
-                    sprintf('Failed to add %s #%d', get_class($objectModel), $objectModel->id),
+                    sprintf('Failed to add %s', get_class($objectModel)),
                     $errorCode
                 );
             }
@@ -105,7 +105,7 @@ abstract class AbstractObjectModelRepository
             return (int) $objectModel->id;
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to add %s #%d', get_class($objectModel), $objectModel->id),
+                sprintf('Error occurred when trying to add %s', get_class($objectModel)),
                 0,
                 $e
             );
