@@ -147,7 +147,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return FormBuilderInterface
      */
-    private function getProductFormBuilder()
+    private function getProductFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.product_form_builder');
     }
@@ -155,7 +155,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getProductFormHandler()
+    private function getProductFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.product_form_handler');
     }
@@ -167,7 +167,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(Exception $e)
+    private function getErrorMessages(Exception $e): array
     {
         return [
             ProductConstraintException::class => [
