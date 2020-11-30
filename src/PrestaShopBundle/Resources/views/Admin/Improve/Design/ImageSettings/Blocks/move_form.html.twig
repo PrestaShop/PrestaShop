@@ -1,0 +1,57 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% if showMoveForm %}
+  <form action="{{ path('admin_image_settings_move_images') }}" method="post" class="form-horizontal">
+    <div class="card">
+      <div class="card-header">
+        <i class="material-icons">image</i>
+        {{ 'Move images'|trans({}, 'Admin.Design.Feature') }}
+      </div>
+
+      <div class="card-block">
+        <div class="alert alert-warning">
+          <div class="alert-text">
+            {{ 'You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.'|trans({}, 'Admin.Design.Notification') }}
+            {{ 'You can also decide to move your images to the new storage system. In this case, click on the "%move_images_label%" button below. Please be patient. This can take several minutes.'|trans({'%move_images_label%': 'Move images'|trans({}, 'Admin.Design.Feature')}, 'Admin.Design.Notification') }}
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <div class="alert-text">
+            {{ 'After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.'|trans({}, 'Admin.Design.Notification') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary" onclick="return confirm('{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}');">
+            <i class="material-icons">settings</i> {{ 'Move images'|trans({}, 'Admin.Design.Feature') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+{% endif %}
