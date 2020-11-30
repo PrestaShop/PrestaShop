@@ -23,23 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '../product-map';
-import ProductPartialUpdater from './product-partial-updater';
-
-const {$} = window;
-
-$(() => {
-  window.prestashop.component.initComponents(
-    [
-      'TranslatableField',
-      'TinyMCEEditor',
-      'TranslatableInput',
-    ],
-  );
-
-  const productForm = $(ProductMap.productForm);
-  const partialUpdater = new ProductPartialUpdater();
-  if (productForm.data('productId')) {
-    partialUpdater.watch(productForm);
-  }
-});
+export default {
+  productForm: 'form[name=product]',
+};
