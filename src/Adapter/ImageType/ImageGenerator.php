@@ -40,7 +40,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ImageGenerator implements ImageGeneratorInterface
 {
-    const PROCESS_DIRS = [
+    public const PROCESS_DIRS = [
         ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
         ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
         ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
