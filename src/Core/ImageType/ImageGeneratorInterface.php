@@ -44,6 +44,7 @@ interface ImageGeneratorInterface
      * @param string $dir
      * @param array $type
      * @param bool $productsImages
+     *
      * @return bool|array|string
      */
     public function regenerateNewImages(string $dir, array $type, bool $productsImages = false);
@@ -58,12 +59,14 @@ interface ImageGeneratorInterface
     /**
      * @param string $dir
      * @param array|null $type
+     *
      * @return string|null
      */
     public function regenerateWatermark(string $dir, ?array $type = null);
 
     /**
      * @param array $data
+     *
      * @return array
      */
     public function regenerateThumbnails(array $data): array;
