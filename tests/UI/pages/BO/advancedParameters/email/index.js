@@ -8,6 +8,7 @@ class Email extends BOBasePage {
     this.pageTitle = 'E-mail •';
     this.sendTestEmailSuccessfulMessage = 'A test email has been sent to the email address you provided.';
     this.successfulUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulDeleteMessage = 'Successful deletion';
 
     // Selectors
     // List of emails
@@ -19,6 +20,8 @@ class Email extends BOBasePage {
     this.emailFilterColumnInput = filterBy => `#email_logs_${filterBy}`;
     this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
     this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
+    this.gridActionButton = '#email_logs-grid-actions-button';
+    this.eraseAllButton = '#email_logs_grid_action_delete_all_email_logs';
 
     // Table rows and columns
     this.tableBody = `${this.emailsListForm} tbody`;
@@ -299,6 +302,21 @@ class Email extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /**
+   * Erase all emails
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async eraseAllEmails(page) {
+    // Add listener to dialog to accept erase
+    this.dialogListener(page);
+
+    await page.click(this.gridActionButton);
+    await this.waitForSelectorAndClick(page, this.eraseAllButton);
+
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
