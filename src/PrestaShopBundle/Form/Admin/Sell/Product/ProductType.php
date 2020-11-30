@@ -31,6 +31,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends TranslatorAwareType
 {
@@ -51,5 +54,32 @@ class ProductType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        if (!empty($options['product_id'])) {
+            $view->vars = array_replace($view->vars, [
+                'attr' => [
+                    'data-product-id' => $options['product_id'],
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'product_id' => null,
+        ]);
+        $resolver->setAllowedTypes('product_id', ['null', 'int']);
     }
 }
