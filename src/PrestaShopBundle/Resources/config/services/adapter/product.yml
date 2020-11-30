@@ -470,6 +470,8 @@ services:
 
     prestashop.adapter.product.repository.stock_available_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository
+        arguments:
+            - '@prestashop.adapter.product.repository.combination_repository'
 
     prestashop.adapter.product.update.product_stock_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater

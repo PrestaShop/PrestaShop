@@ -297,7 +297,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     {
         try {
             // Theoretically StockAvailable is created for each product when Product::add is called
-            $stockAvailable = $this->stockAvailableRepository->get(new ProductId($product->id));
+            $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id));
 
             return new ProductStockInformation(
                 (bool) $product->advanced_stock_management,

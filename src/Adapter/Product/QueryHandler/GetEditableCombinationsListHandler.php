@@ -32,11 +32,13 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
@@ -61,18 +63,26 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $numberExtractor;
 
     /**
+     * @var StockAvailableRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param ProductRepository $productRepository
      * @param NumberExtractor $numberExtractor
+     * @param StockAvailableRepository $stockAvailableRepository
      */
     public function __construct(
         CombinationRepository $combinationRepository,
         ProductRepository $productRepository,
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
         $this->numberExtractor = $numberExtractor;
+        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -141,7 +151,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 $productPrice->plus($impactOnPrice),
-                (int) $combination['quantity']
+                $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity
             );
         }
 
