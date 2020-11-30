@@ -85,7 +85,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                     $this->trans('Use JPEG.', 'Admin.Design.Feature') => 'jpg',
                     $this->trans('Use PNG only if the base image is in PNG format.', 'Admin.Design.Feature') => 'png',
                     $this->trans('Use PNG for all images.', 'Admin.Design.Feature') => 'png_all',
-                ]
+                ],
             ])
             ->add('jpeg_quality', TextType::class, [
                 'label' => $this->trans('JPEG compression', 'Admin.Design.Feature'),
@@ -99,7 +99,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                     new Range([
                         'min' => 0,
                         'max' => 100,
-                    ])
+                    ]),
                 ],
             ])
             ->add('png_quality', TextType::class, [
@@ -119,7 +119,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                     new Range([
                         'min' => 0,
                         'max' => 9,
-                    ])
+                    ]),
                 ],
             ]);
 
@@ -131,7 +131,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                         $this->trans('Automatic (longest side)', 'Admin.Design.Feature') => 0,
                         $this->trans('Width', 'Admin.Global') => 1,
                         $this->trans('Height', 'Admin.Global') => 2,
-                    ]
+                    ],
                 ])
                 ->add('product_picture_max_size', TextWithUnitType::class, [
                     'label' => $this->trans('Maximum file size of product customization pictures', 'Admin.Design.Feature'),
@@ -144,7 +144,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                                 'This field is invalid, it must contain numeric values',
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                     'unit' => $this->trans('bytes', 'Admin.Design.Feature'),
                 ])
@@ -159,7 +159,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                                 'This field is invalid, it must contain numeric values',
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                     'unit' => $this->trans('pixels', 'Admin.Design.Feature'),
                 ])
@@ -174,7 +174,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                                 'This field is invalid, it must contain numeric values',
                                 'Admin.Notifications.Error'
                             ),
-                        ])
+                        ]),
                     ],
                     'unit' => $this->trans('pixels', 'Admin.Design.Feature'),
                 ])
@@ -186,7 +186,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                         ) . ' ' . $this->trans(
                             'Enable to optimize the display of your images on high pixel density screens.',
                             'Admin.Design.Help'
-                        )
+                        ),
                 ]);
         }
     }
