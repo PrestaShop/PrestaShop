@@ -313,6 +313,8 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             'admin_search_engines_index' => ['Search Engines', 'admin_search_engines_index'],
             'admin_search_engines_create' => ['Add new', 'admin_search_engines_create'],
             'admin_outstanding_index' => ['Outstanding', 'admin_outstanding_index'],
+            'admin_image_settings_index' => ['Image settings', 'admin_image_settings_index'],
+            'admin_image_settings_create' => ['Add new', 'admin_image_settings_create'],
         ];
     }
 
