@@ -62,7 +62,7 @@ class ImageTypeCategoryChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         return [
-            $this->translator->trans('All', [], 'Admin.Global') => 'all'
-            ] + $this->imageTypeDataProvider->getImageTypeCategories();
+            $this->translator->trans('All', [], 'Admin.Global') => 'all',
+        ] + $this->imageTypeDataProvider->getImageTypeCategories();
     }
 }

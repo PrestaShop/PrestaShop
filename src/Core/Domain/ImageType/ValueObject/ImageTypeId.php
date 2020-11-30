@@ -42,7 +42,7 @@ class ImageTypeId
 
     /**
      * @param int $imageTypeId
-     * 
+     *
      * @throws ImageTypeConstraintException
      */
     public function __construct(int $imageTypeId)

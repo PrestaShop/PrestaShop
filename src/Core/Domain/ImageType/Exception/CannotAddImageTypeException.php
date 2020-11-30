@@ -33,5 +33,4 @@ namespace PrestaShop\PrestaShop\Core\Domain\ImageType\Exception;
  */
 class CannotAddImageTypeException extends ImageTypeException
 {
-
 }
