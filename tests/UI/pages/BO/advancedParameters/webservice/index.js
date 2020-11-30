@@ -11,6 +11,7 @@ class WebService extends BOBasePage {
     // Selectors
     // Header links
     this.addNewWebserviceLink = '#page-header-desc-configuration-add[title=\'Add new webservice key\']';
+
     // List of webservices
     this.webserviceGridPanel = '#webservice_key_grid_panel';
     this.webserviceGridTitle = `${this.webserviceGridPanel} h3.card-header-title`;
@@ -26,10 +27,31 @@ class WebService extends BOBasePage {
     } i.grid-toggler-icon-valid`;
     this.webserviceListColumnNotValidIcon = row => `${this.webserviceListTableColumn(row, 'active')
     } i.grid-toggler-icon-not-valid`;
+
     // Filters
     this.webserviceFilterInput = filterBy => `${this.webserviceListForm} #webservice_key_${filterBy}`;
     this.filterSearchButton = `${this.webserviceListForm} button[name='webservice_key[actions][search]']`;
     this.filterResetButton = `${this.webserviceListForm} button[name='webservice_key[actions][reset]']`;
+
+    // Sort Selectors
+    this.tableHead = `${this.webserviceListForm} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Bulk Actions
+    this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = `${this.webserviceListForm} button.dropdown-toggle`;
+    this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_selection`;
+
+    // Modal Dialog
+    this.deleteModal = '#webservice_key-grid-confirm-modal.show';
+    this.modalDeleteButton = `${this.deleteModal} button.btn-confirm-submit`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.webserviceGridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.webserviceGridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.webserviceGridPanel} [aria-label='Previous']`;
   }
 
   /*
@@ -168,6 +190,115 @@ class WebService extends BOBasePage {
    */
   getValidationMessage(page) {
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete all sql queries with Bulk Actions
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async deleteWithBulkActions(page) {
+    this.dialogListener(page);
+    // Click on Select All
+    await Promise.all([
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+
+    // Click on Button Bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTable(page, i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 
