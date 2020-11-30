@@ -35,6 +35,30 @@ use PrestaShopBundle\Form\DataTransformer\DecimalNumberToLocalizedStringTransfor
 class DecimalNumberToLocalizedStringTransformerTest extends TestCase
 {
     /**
+     * @var string
+     */
+    private static $defaultLocale;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        static::$defaultLocale = \Locale::getDefault();
+        \Locale::setDefault('en');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        \Locale::setDefault(static::$defaultLocale);
+    }
+
+    /**
      * @dataProvider getTransformations
      *
      * @param int|null $scale
