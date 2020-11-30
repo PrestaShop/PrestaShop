@@ -45,6 +45,7 @@ describe('Create, update and delete title in BO', async () => {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
+    // Create images
     await Promise.all([
       files.generateImage(createTitleData.imageName),
       files.generateImage(editTitleData.imageName),
