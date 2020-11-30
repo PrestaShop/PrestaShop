@@ -69,6 +69,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
         $generationSettingsForm = $this->get('prestashop.admin.image_settings.image_generation_options.form_handler')->getForm();
 
         $thumbnailRegenerationForm = $this->createForm(ThumbnailRegenerationType::class);
+        $helper = $this->get('prestashop.adapter.image_settings.helper');
 
         return $this->render('@PrestaShop/Admin/Improve/Design/ImageSettings/index.html.twig', [
             'imageTypeGrid' => $this->presentGrid($grid),
@@ -76,6 +77,9 @@ class ImageSettingsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'generationSettingsForm' => $generationSettingsForm->createView(),
             'thumbnailRegenerationForm' => $thumbnailRegenerationForm->createView(),
+            'showMoveForm' => $helper->showMovingForm(),
+            'showDuplicatesAlert' => $helper->showDuplicatesAlert(),
+            'duplicatesFolder' => $helper->getProductImagesDir() . 'duplicates/',
         ]);
     }
 
@@ -159,6 +163,26 @@ class ImageSettingsController extends FrameworkBundleAdminController
             if (!empty($errors)) {
                 $this->flashErrors($errors);
             }
+        }
+
+        return $this->redirectToRoute('admin_image_settings_index');
+    }
+
+    /**
+     * Moves images from old file system to new.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_image_settings_index"
+     * )
+     *
+     * @return RedirectResponse
+     */
+    public function moveImagesAction(): RedirectResponse
+    {
+        $errors = $this->get('prestashop.adapter.image_settings.helper')->moveImagesToNewFileSystem();
+        if (count($errors)) {
+            $this->flashErrors($errors);
         }
 
         return $this->redirectToRoute('admin_image_settings_index');
