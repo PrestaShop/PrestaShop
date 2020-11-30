@@ -33,18 +33,17 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
-use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
 
 /**
  * Handles @see GetEditableCombinationsList using legacy object model
  */
-final class GetEditableCombinationsListHandler extends AbstractProductHandler implements GetProductCombinationsForEditingHandlerInterface
+final class GetEditableCombinationsListHandler extends AbstractProductHandler implements GetEditableCombinationsListHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -116,6 +115,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount
     ): CombinationListForEditing {
+        $productPrice = $this->numberExtractor->extract($product, 'price');
         $combinationsForEditing = [];
 
         foreach ($combinations as $combination) {
@@ -140,27 +140,12 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 $combinationAttributesInformation,
                 (bool) $combination['default_on'],
                 $impactOnPrice,
-                $this->calculateFinalPrice($product, $impactOnPrice),
+                $productPrice->plus($impactOnPrice),
                 (int) $combination['quantity']
             );
         }
 
         return new CombinationListForEditing($totalCombinationsCount, $combinationsForEditing);
-    }
-
-    /**
-     * @param Product $product
-     * @param DecimalNumber $impactOnPrice
-     *
-     * @return DecimalNumber
-     *
-     * @throws NumberExtractorException
-     */
-    private function calculateFinalPrice(Product $product, DecimalNumber $impactOnPrice): DecimalNumber
-    {
-        $productPrice = $this->numberExtractor->extract($product, 'price');
-
-        return $productPrice->plus($impactOnPrice);
     }
 
     /**

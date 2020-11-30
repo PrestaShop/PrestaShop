@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 /**
  * Defines contract to handle @see GetEditableCombinationsList query
  */
-interface GetProductCombinationsForEditingHandlerInterface
+interface GetEditableCombinationsListHandlerInterface
 {
     /**
      * @param GetEditableCombinationsList $query

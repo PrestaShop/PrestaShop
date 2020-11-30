@@ -132,12 +132,12 @@ class CombinationCreator
     {
         $product->setAvailableDate();
         $productId = (int) $product->id;
-        $setDefault = $this->getDefaultCombinationId($productId) ? false : true;
+        $hasDefault = (bool) $this->getDefaultCombinationId($productId);
 
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
-            $addedCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $setDefault);
-            $setDefault = false;
+            $addedCombinationIds[] = $this->persistCombination($productId, $generatedCombination, !$hasDefault);
+            $hasDefault = false;
         }
 
         return $addedCombinationIds;
