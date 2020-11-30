@@ -3527,7 +3527,7 @@ class ProductCore extends ObjectModel
         }
 
         // Group reduction
-        if ($use_group_reduction) {
+        if (!$specific_price && $use_group_reduction) {
             $reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
             if ($reduction_from_category !== false) {
                 $group_reduction = $price * (float) $reduction_from_category;

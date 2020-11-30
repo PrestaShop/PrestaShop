@@ -218,6 +218,53 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
 
+  Scenario: Update product quantity in order with secondary currency when its category has discount
+    Given the category of product "Mug The best is yet to come" has reduction of 50.00% for the customer "testCustomer"
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 11.90                   |
+    Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 3     |
+      | product_price               | 59.50 |
+      | unit_price_tax_incl         | 63.07 |
+      | unit_price_tax_excl         | 59.50 |
+      | total_price_tax_incl        | 189.21 |
+      | total_price_tax_excl        | 178.50 |
+    And order "bo_order1" should have following details:
+      | total_products           | 178.50 |
+      | total_products_wt        | 189.21 |
+      | total_discounts_tax_excl | 0.00   |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 248.50 |
+      | total_paid_tax_incl      | 263.41 |
+      | total_paid               | 263.41 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 20.00                   |
+    Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 3     |
+      | product_price               | 20.00 |
+      | unit_price_tax_incl         | 21.20 |
+      | unit_price_tax_excl         | 20.00 |
+      | total_price_tax_incl        | 63.60 |
+      | total_price_tax_excl        | 60.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 60.00 |
+      | total_products_wt        | 63.60 |
+      | total_discounts_tax_excl | 0.00   |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 130.00 |
+      | total_paid_tax_incl      | 137.80 |
+      | total_paid               | 137.80 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+
   Scenario: Check invoice for an order with secondary currency and discount
     Given I add discount to order "bo_order1" with following details:
       | name      | discount ten-euros    |
