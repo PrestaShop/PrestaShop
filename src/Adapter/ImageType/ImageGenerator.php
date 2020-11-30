@@ -212,7 +212,7 @@ class ImageGenerator implements ImageGeneratorInterface
                         'Admin.Design.Notification'
                     );
                 }
-                if (time() - $this->startTime > $this->maxExecutionTime - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+                if (time() - $this->startTime > $this->maxExecutionTime - 4) { // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
                     return 'timeout';
                 }
             }
