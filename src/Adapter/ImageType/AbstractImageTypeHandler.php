@@ -41,9 +41,9 @@ abstract class AbstractImageTypeHandler
 {
     /**
      * Gets legacy image type.
-     * 
+     *
      * @param ImageTypeId $imageTypeId
-     * 
+     *
      * @return ImageType
      */
     protected function getImageType(ImageTypeId $imageTypeId)
