@@ -34,6 +34,14 @@ export default class OrderProductRenderer {
     this.router = new Router();
   }
 
+  addOrUpdateProductToList($productRow, newRow) {
+    if ($productRow.length > 0) {
+      $productRow.html($(newRow).html());
+    } else {
+      $(OrderViewPageMap.productAddRow).before($(newRow).hide().fadeIn());
+    }
+  }
+
   updateNumProducts(numProducts) {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
