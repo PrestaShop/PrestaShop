@@ -96,7 +96,6 @@ class PriceType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
-                'empty_data' => 0,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => true,
@@ -107,7 +106,6 @@ class PriceType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
-                'empty_data' => 0,
             ])
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoices,
