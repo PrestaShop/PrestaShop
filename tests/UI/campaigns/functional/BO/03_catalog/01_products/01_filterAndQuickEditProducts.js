@@ -127,7 +127,6 @@ describe('Filter Products', async () => {
             filterBy: 'active',
             filterValue: Products.demo_1.status,
           },
-        expected: 'check',
       },
     ];
 

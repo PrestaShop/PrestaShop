@@ -178,10 +178,9 @@ describe('Filter And Quick Edit Categories', async () => {
       it(`should ${test.args.action} first Category`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
 
-        const isActionPerformed = await categoriesPage.updateToggleColumnValue(
+        const isActionPerformed = await categoriesPage.setStatus(
           page,
           1,
-          'active',
           test.args.enabledValue,
         );
 
@@ -194,7 +193,7 @@ describe('Filter And Quick Edit Categories', async () => {
           await expect(resultMessage).to.contains(categoriesPage.successfulUpdateStatusMessage);
         }
 
-        const categoryStatus = await categoriesPage.getToggleColumnValue(page, 1, 'active');
+        const categoryStatus = await categoriesPage.getStatus(page, 1);
         await expect(categoryStatus).to.be.equal(test.args.enabledValue);
       });
     });

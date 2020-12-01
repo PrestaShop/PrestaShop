@@ -39,9 +39,9 @@ class WebService extends BOBasePage {
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk Actions
-    this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
+    this.selectAllRowsDiv = `${this.webserviceListForm} #webservice_key_grid_bulk_action_select_all + i`;
     this.bulkActionsToggleButton = `${this.webserviceListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_selection`;
+    this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_webservice`;
     this.bulkActionsEnableButton = '#webservice_key_grid_bulk_action_webservice_enable_selection';
     this.bulkActionsDisableButton = '#webservice_key_grid_bulk_action_webservice_disable_selection';
 

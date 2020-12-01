@@ -86,7 +86,7 @@ module.exports = class BOBasePage extends CommonPage {
     // Shipping
     this.shippingLink = '#subtab-AdminParentShipping';
     this.carriersLink = '#subtab-AdminCarriers';
-    this.carriersLink = '#subtab-AdminCarriers';
+    this.shippingPreferencesLink = '#subtab-AdminShipping';
 
     // Payment
     this.paymentParentLink = '#subtab-AdminParentPayment';
@@ -118,6 +118,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.contactLink = '#subtab-AdminParentStores';
     // traffic and SEO
     this.trafficAndSeoLink = '#subtab-AdminParentMeta';
+    // Search
+    this.searchLink = '#subtab-AdminParentSearchConf';
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';

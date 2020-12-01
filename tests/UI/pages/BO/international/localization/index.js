@@ -24,7 +24,7 @@ class Localization extends LocalizationBasePage {
     this.defaultLanguageSelector = '#form_configuration_default_language';
     this.languageFromBrowserLabel = toggle => `label[for='form_configuration_detect_language_from_browser_${toggle}']`;
     this.defaultCurrencySelect = '#form_configuration_default_currency';
-    this.defaultCountrySelect = '#form_default_country';
+    this.defaultCountrySelect = '#form_configuration_default_country';
     this.saveConfigurationFormButton = '#main-div form[name=\'form\'] .card-footer button';
   }
 

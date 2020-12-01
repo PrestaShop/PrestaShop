@@ -132,14 +132,14 @@ describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async
       it(`should ${test.args.action} tax rule`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
 
-        const isActionPerformed = await taxRulesPage.updateToggleColumnValue(page, 1, test.args.enabledValue);
+        const isActionPerformed = await taxRulesPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
           const resultMessage = await taxRulesPage.getTextContent(page, taxRulesPage.alertSuccessBlock);
           await expect(resultMessage).to.contains(taxRulesPage.successfulUpdateStatusMessage);
         }
 
-        const status = await taxRulesPage.getToggleColumnValue(page, 1);
+        const status = await taxRulesPage.getStatus(page, 1);
         await expect(status).to.be.equal(test.args.enabledValue);
       });
     });
@@ -155,8 +155,8 @@ describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async
   // 3 : Enable/Disable by bulk actions
   describe('Enable and Disable Tax rules by Bulk Actions', async () => {
     const tests = [
-      {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}, expected: 'Disabled'},
-      {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}, expected: 'Enabled'},
+      {args: {taxRule: firstTaxRuleData.name, action: 'disable', enabledValue: false}},
+      {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}},
     ];
 
     tests.forEach((test, index) => {
@@ -178,16 +178,16 @@ describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
         /* Successful message is not visible, skipping it */
-        await taxRulesPage.changeEnabledColumnBulkActions(page, test.args.enabledValue);
-        // const textResult = await taxRulesPage.changeEnabledColumnBulkActions(page, test.args.enabledValue);
+        await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
+        // const textResult = await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
 
         // await expect(textResult).to.be.equal(taxRulesPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await taxRulesPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementInGrid; i++) {
-          const textColumn = await taxRulesPage.getTextColumnFromTable(page, 1, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const textColumn = await taxRulesPage.getStatus(page, i);
+          await expect(textColumn).to.equal(test.args.enabledValue);
         }
       });
     });

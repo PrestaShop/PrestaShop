@@ -35,7 +35,8 @@ class Taxes extends BOBasePage {
     this.taxesGridColumnEditLink = row => `${this.taxesGridActionsColumn(row)} a[data-original-title='Edit']`;
     this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
     this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a[data-url*='delete']`;
-    this.toggleColumnValidIcon = (row, column) => `${this.taxesGridColumn(row, column)} i.grid-toggler-icon-valid`;
+    this.taxesGridStatusColumn = row => this.taxesGridColumn(row, 'active');
+    this.toggleColumnValidIcon = row => `${this.taxesGridStatusColumn(row)} i.grid-toggler-icon-valid`;
 
     // Form Taxes Options
     this.enabledTaxSwitchLabel = id => `label[for='form_options_enable_tax_${id}']`;
@@ -119,11 +120,10 @@ class Taxes extends BOBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @param column
    * @return {Promise<string>}
    */
-  async getStatus(page, row, column) {
-    return this.elementVisible(page, this.toggleColumnValidIcon(row, column), 100);
+  async getStatus(page, row) {
+    return this.elementVisible(page, this.toggleColumnValidIcon(row), 100);
   }
 
   /**
@@ -134,9 +134,9 @@ class Taxes extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.taxesGridColumn(row, 'active'), 2000);
-    if (await this.getStatus(page, row, 'active') !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.taxesGridColumn(row, 'active'));
+    await this.waitForVisibleSelector(page, this.taxesGridStatusColumn(row), 2000);
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.taxesGridStatusColumn(row));
       return true;
     }
 

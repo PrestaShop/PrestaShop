@@ -127,7 +127,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       it(`should ${test.args.action} brands`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Brand`, baseContext);
 
-        const textResult = await brandsPage.changeBrandsEnabledColumnBulkActions(
+        const textResult = await brandsPage.bulkSetBrandsStatus(
           page,
           test.args.enabledValue,
         );

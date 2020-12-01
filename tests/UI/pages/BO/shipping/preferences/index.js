@@ -10,7 +10,7 @@ class Preferences extends BOBasePage {
 
     // Carrier options selectors
     this.carrierOptionForm = '#configuration_form';
-    this.defaultCarrierSelect = '#carrier-options_default_carrier';
+    this.defaultCarrierSelect = '#form_carrier_options_default_carrier';
     this.saveCarrierOptionsButton = `${this.carrierOptionForm} .card-footer button`;
   }
 
