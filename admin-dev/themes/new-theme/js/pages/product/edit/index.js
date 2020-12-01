@@ -38,11 +38,10 @@ $(() => {
   );
 
   const $productForm = $(ProductMap.productForm);
-  const partialUpdater = new ProductPartialUpdater();
 
   // Form has productId data means that we are in edtion/update mode
   if ($productForm.data('productId')) {
     const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
-    partialUpdater.watch($productForm, $productFormSubmitButton);
+    new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
   }
 });
