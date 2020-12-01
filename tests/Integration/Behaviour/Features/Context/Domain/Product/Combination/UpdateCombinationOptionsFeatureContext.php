@@ -44,10 +44,9 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
      */
     public function updateOptions(string $combinationReference, TableNode $tableNode): void
     {
-        $dataRows = $tableNode->getRowsHash();
         $command = new UpdateCombinationOptionsCommand($this->getSharedStorage()->get($combinationReference));
 
-        $this->fillCommand($dataRows, $command);
+        $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
     }
 
@@ -59,14 +58,14 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
      */
     public function assertOptions(string $combinationReference, CombinationOptions $expectedOptions): void
     {
-        $combinationForEditing = $this->getCombinationForEditing($combinationReference);
         $optionPropertyNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
+        $actualOptions = $this->getCombinationForEditing($combinationReference)->getOptions();
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($optionPropertyNames as $propertyName) {
             Assert::assertSame(
                 $propertyAccessor->getValue($expectedOptions, $propertyName),
-                $this->extractValueFromCombinationForEditing($combinationForEditing, $propertyName),
+                $propertyAccessor->getValue($actualOptions, $propertyName),
                 sprintf('Unexpected %s of "%s"', $propertyName, $combinationReference)
             );
         }
@@ -93,10 +92,10 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
     }
 
     /**
-     * @param array $dataRows
      * @param UpdateCombinationOptionsCommand $command
+     * @param array $dataRows
      */
-    private function fillCommand(array $dataRows, UpdateCombinationOptionsCommand $command): void
+    private function fillCommand(UpdateCombinationOptionsCommand $command, array $dataRows): void
     {
         if (isset($dataRows['ean13'])) {
             $command->setEan13($dataRows['ean13']);

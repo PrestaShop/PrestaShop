@@ -1,10 +1,11 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-options
 @reset-database-before-feature
 @clear-cache-before-feature
 @update-combination
-Feature: Update product combinations in Back Office (BO)
+@update-combination-options
+Feature: Update product combination options in Back Office (BO)
   As an employee
-  I need to be able to update product combinations from BO
+  I need to be able to update product combination options from BO
 
   Background:
     Given language with iso code "en" is the default one
