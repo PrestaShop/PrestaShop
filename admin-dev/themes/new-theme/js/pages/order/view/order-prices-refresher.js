@@ -40,6 +40,7 @@ export default class OrderPricesRefresher {
       $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
       $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
       $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
+      $(OrderViewPageMap.orderShippingTotalContainer).toggleClass('d-none', !response.shippingTotalDisplayed);
       $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
     });
   }
