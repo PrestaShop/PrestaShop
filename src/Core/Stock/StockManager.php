@@ -311,6 +311,9 @@ class StockManager
         // send email to every employee who have permission for this
         foreach (Employee::getEmployees() as $employeeData) {
             $employee = new Employee($employeeData['id_employee']);
+            if (!in_array($idShop, $employee->getAssociatedShops())) {
+                continue;
+            }
 
             if (Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ', $employee->id_profile)) {
                 $templateVars['{firstname}'] = $employee->firstname;
