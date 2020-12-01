@@ -25,4 +25,5 @@
 
 export default {
   productForm: 'form[name=product]',
+  productFormSubmitButton: 'button[name="product[save]"]',
 };

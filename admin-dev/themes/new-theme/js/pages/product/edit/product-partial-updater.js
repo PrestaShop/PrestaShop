@@ -26,10 +26,13 @@
 const {$} = window;
 
 export default class ProductPartialUpdater {
-  watch($productForm) {
+  watch($productForm, $productFormSubmitButton) {
     this.$productForm = $productForm;
+    this.$productFormSubmitButton = $productFormSubmitButton;
+    this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit((e) => this.updatePartialForm(e));
+    this.$productForm.on('change', ':input', () => this.updateSubmitState());
   }
 
   updatePartialForm(event) {
@@ -46,8 +49,10 @@ export default class ProductPartialUpdater {
   }
 
   postUpdatedData(updatedData) {
+    this.$productFormSubmitButton.prop('disabled', true);
     const $updatedForm = this.$productForm.clone();
     $updatedForm.empty();
+    $updatedForm.prop('class', '');
     Object.keys(updatedData).forEach((fieldName) => {
       $('<input>').attr({
         name: fieldName,
@@ -58,6 +63,11 @@ export default class ProductPartialUpdater {
 
     $updatedForm.appendTo('body');
     $updatedForm.submit();
+  }
+
+  updateSubmitState() {
+    const updatedData = this.getUpdatedFormData();
+    this.$productFormSubmitButton.prop('disabled', updatedData === null);
   }
 
   getUpdatedFormData() {

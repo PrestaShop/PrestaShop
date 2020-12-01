@@ -43,12 +43,14 @@ class ProductType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $editing = !empty($options['product_id']);
         $builder
             ->add('basic', BasicInformationType::class)
             ->add('price', PriceType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
+                    'disabled' => $editing,
                     'data-toggle' => 'pstooltip',
                     'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
                 ],
