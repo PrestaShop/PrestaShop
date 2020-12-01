@@ -31,6 +31,8 @@ npm install
 
 ### Playwright parameters
 
+| Parameter           | Description                                          |
+|---------------------|----------------------------------------------------- |
 | BROWSER             | Specific browser to launch for tests (default to **`chromium`**) |
 | HEADLESS            | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
 | SLOW_MO             | Integer to slow down Playwright operations by the specified amount of milliseconds (default to 5 milliseconds) |
@@ -104,10 +106,12 @@ npm run linkchecker
 ```
 
 ## Upgrade test
-This test will upgrade Prestashop version with the Autoupgrade module
+
+This test will upgrade PrestaShop version with the Autoupgrade module
 
 ### Launch script
-Before testing it, you should install Prestashop version to upgrade from
+Before testing it, you should install Prestashop version to upgrade from.
+
 If you want to run this test, you can use command **specific-test**
 
 #### With default values
