@@ -46,7 +46,9 @@
 
   <div class="col-xxl-10">
     {% block product_tabs_container %}
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig') }}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
+        'productForm': productForm
+      }) }}
     {% endblock %}
 
     <div id="form_content" class="tab-content">
