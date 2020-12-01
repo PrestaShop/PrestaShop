@@ -6,17 +6,17 @@ Feature: Add cart rule in cart
   I must be able to correctly add cart rules in my cart
 
   Background:
-    And there is customer "testCustomer" with email "pub@prestashop.com"
+    Given there is customer "testCustomer" with email "pub@prestashop.com"
     And country "US" is enabled
 
   Scenario: cart rule with minimum amount doesn't apply if cart total is lower
     Given I am logged in as "test@prestashop.com" employee
-    Given there is customer "customer1" with email "pub@prestashop.com"
-    Given I create an empty cart "dummy_custom_cart" for customer "customer1"
-    Given email sending is disabled
-    Given shipping handling fees are set to 2.0
-    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
+    And there is customer "customer1" with email "pub@prestashop.com"
+    And I create an empty cart "dummy_custom_cart" for customer "customer1"
+    And email sending is disabled
+    And shipping handling fees are set to 2.0
+    And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
     Given I want to create a new cart rule
     And I specify its name in default language as "CartRule with minimum amount"
     And I specify its "description" as "CartRule with minimum amount"
@@ -34,12 +34,12 @@ Feature: Add cart rule in cart
     And it gives a reduction amount of "2" in currency "USD" which is tax included and applies to order without shipping
     And I save it
     When I add 1 products "product1" to the cart "dummy_custom_cart"
-    When I add 1 products "product4" to the cart "dummy_custom_cart"
-    And cart "dummy_custom_cart" should contain 2 products
+    And I add 1 products "product4" to the cart "dummy_custom_cart"
+    Then cart "dummy_custom_cart" should contain 2 products
     When I use a voucher "CART_RULE_MIN_AMOUNT" on the cart "dummy_custom_cart"
-    And reduction value of voucher "CART_RULE_MIN_AMOUNT" in cart "dummy_custom_cart" should be "2"
+    Then reduction value of voucher "CART_RULE_MIN_AMOUNT" in cart "dummy_custom_cart" should be "2"
     And cart "dummy_custom_cart" total with tax included should be "$53.38"
     When I delete product "product1" from cart "dummy_custom_cart"
-    And cart "dummy_custom_cart" should contain 1 products
+    Then cart "dummy_custom_cart" should contain 1 products
     And cart "dummy_custom_cart" total with tax included should be "$35.57"
-    Then voucher "CART_RULE_MIN_AMOUNT" should not be applied to cart "dummy_custom_cart"
+    And voucher "CART_RULE_MIN_AMOUNT" should not be applied to cart "dummy_custom_cart"
