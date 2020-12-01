@@ -60,7 +60,7 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
     ObjectModel::enableCache();
 }
 
-function refreshLocalizedCurrencyData($currency, $languages, $localeRepoCLDR)
+function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
 {
     foreach ($languages as $languageData) {
         $language = new Language($languageData['id_lang']);
