@@ -36,7 +36,7 @@ export default class ProductPartialUpdater {
     event.stopImmediatePropagation();
 
     const updatedData = this.getUpdatedFormData();
-    if (null !== updatedData) {
+    if (updatedData !== null) {
       this.postUpdatedData(updatedData);
     } else {
       alert('no fields updated');
@@ -49,10 +49,10 @@ export default class ProductPartialUpdater {
     const $updatedForm = this.$productForm.clone();
     $updatedForm.empty();
     Object.keys(updatedData).forEach((fieldName) => {
-      $("<input>").attr({
+      $('<input>').attr({
         name: fieldName,
-        type: "hidden",
-        value: updatedData[fieldName]
+        type: 'hidden',
+        value: updatedData[fieldName],
       }).appendTo($updatedForm);
     });
 
@@ -61,7 +61,7 @@ export default class ProductPartialUpdater {
   }
 
   getUpdatedFormData() {
-    let currentData = this.getFormDataAsObject();
+    const currentData = this.getFormDataAsObject();
     // Loop through current form data and remove the one that did not change
     // This way only updated AND new values remain
     Object.keys(this.initialData).forEach((fieldName) => {
@@ -83,7 +83,7 @@ export default class ProductPartialUpdater {
       '_method',
     ];
     permanentParameters.forEach((permanentParameter) => {
-      if (this.initialData.hasOwnProperty(permanentParameter)) {
+      if (Object.prototype.hasOwnProperty.call(this.initialData, permanentParameter)) {
         currentData[permanentParameter] = this.initialData[permanentParameter];
       }
     });
@@ -93,7 +93,7 @@ export default class ProductPartialUpdater {
 
   getFormDataAsObject() {
     const formArray = this.$productForm.serializeArray();
-    let serializedForm = {};
+    const serializedForm = {};
     formArray.forEach((formField) => {
       serializedForm[formField.name] = formField.value;
     });
