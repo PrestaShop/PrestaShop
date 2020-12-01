@@ -26,9 +26,12 @@
 const {$} = window;
 
 export default class ProductPartialUpdater {
-  watch($productForm, $productFormSubmitButton) {
+  constructor($productForm, $productFormSubmitButton) {
     this.$productForm = $productForm;
     this.$productFormSubmitButton = $productFormSubmitButton;
+  }
+
+  watch() {
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit((e) => this.updatePartialForm(e));
