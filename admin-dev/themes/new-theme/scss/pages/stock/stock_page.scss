@@ -118,17 +118,19 @@
 
     .check-button {
       position: absolute;
-      top: 1px;
+      top: 0;
       right: 1px;
       z-index: 2;
       width: 33px;
-      height: 33px;
+      height: 100%;
       padding: 0;
       cursor: pointer;
       background: $brand-primary;
       border: none;
       outline: none;
       opacity: 0;
+      @include border-right-radius(4px);
+
       .material-icons {
         color: #fff;
         vertical-align: middle;

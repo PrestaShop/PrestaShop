@@ -82,9 +82,9 @@
       getQuantity() {
         if (!this.product.qty) {
           this.isEnabled = false;
-          this.value = '';
+          this.value = 0;
         }
-        return parseInt(this.product.qty, 10);
+        return parseInt(this.value, 10);
       },
       onChange(val) {
         this.value = val;
@@ -111,14 +111,20 @@
       },
       focusOut(event) {
         const value = parseInt(this.value, 10);
-        if (!$(event.target).hasClass('ps-number') && (Number.isNaN(value) || value === 0)) {
+        if (
+          !$(event.target).hasClass('ps-number')
+          && (Number.isNaN(value) || value === 0)
+        ) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
       sendQty() {
         const postUrl = this.product.edit_url;
-        if (parseInt(this.product.qty, 10) !== 0 && !Number.isNaN(parseInt(this.value, 10))) {
+        if (
+          parseInt(this.product.qty, 10) !== 0
+          && !Number.isNaN(parseInt(this.value, 10))
+        ) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value,
@@ -147,15 +153,16 @@
 </script>
 
 <style lang="scss" type="text/scss" scoped>
-  @import "~jquery-ui-dist/jquery-ui.css";
-  * {
-    outline: none;
-  }
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.2s ease;
-  }
-  .fade-enter, .fade-leave-to {
-    opacity: 0
-  }
-
+@import "~jquery-ui-dist/jquery-ui.css";
+* {
+  outline: none;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
