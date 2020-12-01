@@ -22,15 +22,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+{% set isBasicTabValid = productForm.basic.description.vars.valid and productForm.basic.description_short.vars.valid %}
+{% set isPriceTabValid = productForm.price.vars.valid %}
+
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">
     <i class="material-icons hide">chevron_left</i>
   </div>
 
   <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
-    <li id="basic-tab-nav" class="nav-item"><a href="#basic-tab" role="tab" data-toggle="tab" class="nav-link active">{{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-    <li id="pricing-tab-nav" class="nav-item"><a href="#pricing-tab" role="tab" data-toggle="tab" class="nav-link">{{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+    <li id="basic-tab-nav" class="nav-item{% if not isBasicTabValid %} has-error{% endif %}">
+      <a href="#basic-tab" role="tab" data-toggle="tab" class="nav-link active">
+        {{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+    <li id="pricing-tab-nav" class="nav-item{% if not isPriceTabValid %} has-error{% endif %}">
+      <a href="#pricing-tab" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
   </ul>
+
   <div class="arrow d-xl-none js-arrow right-arrow visible float-right">
     <i class="material-icons hide">chevron_right</i>
   </div>
