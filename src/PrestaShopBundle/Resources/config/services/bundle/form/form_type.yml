@@ -1226,3 +1226,11 @@ services:
       public: true
       tags:
         - { name: form.type }
+
+    form.type.decimal_number:
+        class: PrestaShopBundle\Form\Admin\Type\DecimalNumberType
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.adapter.data_provider.currency'
+        tags:
+            - { name: form.type }
