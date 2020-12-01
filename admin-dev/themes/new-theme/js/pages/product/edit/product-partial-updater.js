@@ -39,7 +39,7 @@ export default class ProductPartialUpdater {
     if (null !== updatedData) {
       this.postUpdatedData(updatedData);
     } else {
-      console.log('no update');
+      alert('no fields updated');
     }
 
     return false;
@@ -75,8 +75,18 @@ export default class ProductPartialUpdater {
       return null;
     }
 
-    // We still need the token
-    currentData['product[_token]'] = this.initialData['product[_token]'];
+    // Some parameters are always needed
+    const permanentParameters = [
+      // We need the form CSRF token
+      'product[_token]',
+      // If method is not POST or GET a hidden type input is used to simulate it (like PATCH)
+      '_method',
+    ];
+    permanentParameters.forEach((permanentParameter) => {
+      if (this.initialData.hasOwnProperty(permanentParameter)) {
+        currentData[permanentParameter] = this.initialData[permanentParameter];
+      }
+    });
 
     return currentData;
   }
