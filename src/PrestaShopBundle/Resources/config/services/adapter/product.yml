@@ -537,3 +537,6 @@ services:
             - '@prestashop.adapter.product.repository.combination_repository'
         tags:
             - name: tactician.handler
+
+    prestashop.adapter.product.validate.combination_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Validate\CombinationValidator

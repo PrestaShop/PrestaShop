@@ -30,10 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
+/**
+ * Validates Combination properties using legacy object model
+ */
 class CombinationValidator extends AbstractObjectModelValidator
 {
     /**
@@ -41,7 +43,23 @@ class CombinationValidator extends AbstractObjectModelValidator
      */
     public function validate(Combination $combination): void
     {
+        $this->validateOptions($combination);
         $this->validatePrices($combination);
+    }
+
+    /**
+     * @param Combination $combination
+     *
+     * @throws CoreException
+     * @throws ProductConstraintException
+     */
+    private function validateOptions(Combination $combination): void
+    {
+        $this->validateCombinationProperty($combination, 'ean13', ProductConstraintException::INVALID_EAN_13);
+        $this->validateCombinationProperty($combination, 'isbn', ProductConstraintException::INVALID_ISBN);
+        $this->validateCombinationProperty($combination, 'mpn', ProductConstraintException::INVALID_MPN);
+        $this->validateCombinationProperty($combination, 'reference', ProductConstraintException::INVALID_REFERENCE);
+        $this->validateCombinationProperty($combination, 'upc', ProductConstraintException::INVALID_UPC);
     }
 
     /**
@@ -52,9 +70,9 @@ class CombinationValidator extends AbstractObjectModelValidator
      */
     private function validatePrices(Combination $combination)
     {
-        $this->validateCombinationProperty($combination, 'price', CombinationConstraintException::INVALID_PRICE);
-        $this->validateCombinationProperty($combination, 'ecotax', CombinationConstraintException::INVALID_ECOTAX);
-        $this->validateCombinationProperty($combination, 'unit_price_impact', CombinationConstraintException::INVALID_UNIT_PRICE);
+        $this->validateCombinationProperty($combination, 'price', ProductConstraintException::INVALID_PRICE);
+        $this->validateCombinationProperty($combination, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
+        $this->validateCombinationProperty($combination, 'unit_price_impact', ProductConstraintException::INVALID_UNIT_PRICE);
     }
 
     /**
@@ -67,6 +85,6 @@ class CombinationValidator extends AbstractObjectModelValidator
      */
     private function validateCombinationProperty(Combination $combination, string $property, int $errorCode): void
     {
-        $this->validateObjectModelProperty($combination, $property, CombinationConstraintException::class, $errorCode);
+        $this->validateObjectModelProperty($combination, $property, ProductConstraintException::class, $errorCode);
     }
 }
