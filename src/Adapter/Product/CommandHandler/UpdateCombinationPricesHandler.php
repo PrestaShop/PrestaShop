@@ -54,10 +54,8 @@ final class UpdateCombinationPricesHandler implements UpdateCombinationPricesHan
      */
     public function handle(UpdateCombinationPricesCommand $command): void
     {
-        //@todo: get() should appear after merge of #22132
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
-        //@todo: partialUpdate and CannotUpdateCombinationException should appear after merge of #22132
         $this->combinationRepository->partialUpdate($combination, $updatableProperties, CannotUpdateCombinationException::FAILED_UPDATE_PRICES);
     }
 

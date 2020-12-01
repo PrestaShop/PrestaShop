@@ -34,6 +34,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
@@ -64,18 +65,26 @@ class CombinationRepository extends AbstractObjectModelRepository
     private $attributeRepository;
 
     /**
+     * @var CombinationValidator
+     */
+    private $combinationValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param AttributeRepository $attributeRepository
+     * @param CombinationValidator $combinationValidator
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        AttributeRepository $attributeRepository
+        AttributeRepository $attributeRepository,
+        CombinationValidator $combinationValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->attributeRepository = $attributeRepository;
+        $this->combinationValidator = $combinationValidator;
     }
 
     /**
@@ -116,8 +125,17 @@ class CombinationRepository extends AbstractObjectModelRepository
         return $combination;
     }
 
+    /**
+     * @param Combination $combination
+     * @param array $updatableProperties
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     * @throws CannotAddCombinationException
+     */
     public function partialUpdate(Combination $combination, array $updatableProperties, int $errorCode): void
     {
+        $this->combinationValidator->validate($combination);
         $this->partiallyUpdateObjectModel(
             $combination,
             $updatableProperties,
