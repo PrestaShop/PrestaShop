@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityI
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
@@ -205,12 +206,15 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      * @param Product $product
      * @param UpdateProductQuantityInCartCommand $command
      *
-     * @throws ProductException
+     * @throws ProductCustomizationNotFoundException
      */
     private function assertProductCustomization(Product $product, UpdateProductQuantityInCartCommand $command)
     {
         if (null === $command->getCustomizationId() && !$product->hasAllRequiredCustomizableFields()) {
-            throw new ProductException(sprintf('Missing customization for product with id "%s"', $product->id));
+            throw new ProductCustomizationNotFoundException(sprintf(
+                'Missing customization for product with id "%s"',
+                $product->id
+            ));
         }
     }
 

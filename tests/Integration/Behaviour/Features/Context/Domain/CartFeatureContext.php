@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
@@ -196,15 +197,21 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity customized products with reference :productReference to the cart :reference
+     * @When I add :quantity customized products with its customization with reference :productReference to the cart :reference
      */
-    public function addCustomizedProductToCarts(int $quantity, $productReference, $reference)
-    {
+    public function addCustomizedProductToCartsWithCustomization(
+        int $quantity,
+        string $productReference,
+        string $reference
+    ) {
         $productId = (int) Product::getIdByReference($productReference);
         $product = new Product($productId);
-        $customizationFields = $product->getCustomizationFieldIds();
+        $customizationsFields = $product->getCustomizationFields();
+        if (empty($customizationsFields)) {
+            throw new Exception('The product has no customizables fields');
+        }
         $customizations = [];
-        foreach ($customizationFields as $customizationField) {
+        foreach ($product->getCustomizationFieldIds() as $customizationField) {
             $customizationFieldId = (int) $customizationField['id_customization_field'];
             if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
                 $customizations[$customizationFieldId] = 'Toto';
@@ -229,6 +236,45 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $customizationId->getValue()
             )
         );
+    }
+
+    /**
+     * @When I add :quantity customized products without its customization with reference :productReference to the cart :reference
+     */
+    public function addCustomizedProductToCartsWithoutCustomization(
+        int $quantity,
+        string $productReference,
+        string $reference
+    ) {
+        $productId = (int) Product::getIdByReference($productReference);
+        $product = new Product($productId);
+        $customizationsFields = $product->getCustomizationFields();
+        if (empty($customizationsFields)) {
+            throw new Exception('The product has no customizables fields');
+        }
+        $cartId = (int) SharedStorage::getStorage()->get($reference);
+
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    $cartId,
+                    $productId,
+                    $quantity,
+                    null,
+                    null
+                )
+            );
+        } catch (Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then I should get error that the product is customizable and the customization is not provided
+     */
+    public function assertLastErrorIsProductCustomizationNotFoundException()
+    {
+        $this->assertLastErrorIs(ProductCustomizationNotFoundException::class);
     }
 
     /**
