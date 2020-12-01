@@ -19,7 +19,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 5 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add 3 products "Mug Today is a good day" to the cart "dummy_cart"
-    And I add 2 customized products with reference "demo_14" to the cart "dummy_cart"
+    And add 2 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart"
     And I watch the stock of product "Mug The best is yet to come"
     And I watch the stock of product "Mug Today is a good day"
     And I watch the stock of product "Customizable mug"
