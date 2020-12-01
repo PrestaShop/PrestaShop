@@ -28,46 +28,64 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
+use PrestaShop\Decimal\DecimalNumber;
+
 /**
- * Transfers combination data for editing
+ * Holds information of combination prices
  */
-class CombinationForEditing
+class CombinationPrices
 {
     /**
-     * @var CombinationOptions
+     * @var DecimalNumber
      */
-    private $options;
+    private $ecoTax;
 
     /**
-     * @var CombinationPrices
+     * @var DecimalNumber
      */
-    private $prices;
+    private $impactOnPrice;
 
     /**
-     * @param CombinationOptions $options
-     * @param CombinationPrices $prices
+     * @var DecimalNumber
+     */
+    private $unitPriceImpact;
+
+    /**
+     * @param DecimalNumber $ecoTax
+     * @param DecimalNumber $impactOnPrice
+     * @param DecimalNumber $unitPriceImpact
      */
     public function __construct(
-        CombinationOptions $options,
-        CombinationPrices $prices
+        DecimalNumber $ecoTax,
+        DecimalNumber $impactOnPrice,
+        DecimalNumber $unitPriceImpact
     ) {
-        $this->options = $options;
-        $this->prices = $prices;
+        $this->ecoTax = $ecoTax;
+        $this->impactOnPrice = $impactOnPrice;
+        $this->unitPriceImpact = $unitPriceImpact;
     }
 
     /**
-     * @return CombinationOptions
+     * @return DecimalNumber
      */
-    public function getOptions(): CombinationOptions
+    public function getEcoTax(): DecimalNumber
     {
-        return $this->options;
+        return $this->ecoTax;
     }
 
     /**
-     * @return CombinationPrices
+     * @return DecimalNumber
      */
-    public function getPrices(): CombinationPrices
+    public function getImpactOnPrice(): DecimalNumber
     {
-        return $this->prices;
+        return $this->impactOnPrice;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getUnitPriceImpact(): DecimalNumber
+    {
+        return $this->unitPriceImpact;
     }
 }
