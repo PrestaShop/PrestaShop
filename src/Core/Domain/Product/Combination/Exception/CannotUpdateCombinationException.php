@@ -26,32 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 
 /**
- * Transfers combination data for editing
+ * Is thrown when combination update fails
  */
-class CombinationForEditing
+class CannotUpdateCombinationException extends CombinationException
 {
     /**
-     * @var CombinationOptions
+     * When fails to update stock information of single combination
      */
-    private $options;
-
-    /**
-     * @param CombinationOptions $options
-     */
-    public function __construct(
-        CombinationOptions $options
-    ) {
-        $this->options = $options;
-    }
-
-    /**
-     * @return CombinationOptions
-     */
-    public function getOptions(): CombinationOptions
-    {
-        return $this->options;
-    }
+    const FAILED_UPDATE_OPTIONS = 10;
 }

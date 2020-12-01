@@ -79,21 +79,51 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param CombinationId $combinationId
+     *
+     * @return Combination
+     *
+     * @throws CombinationNotFoundException
+     */
+    public function get(CombinationId $combinationId): Combination
+    {
+        /** @var Combination $combination */
+        $combination = $this->getObjectModel(
+            $combinationId->getValue(),
+            Combination::class,
+            CombinationNotFoundException::class
+        );
+
+        return $combination;
+    }
+
+    /**
      * @param ProductId $productId
+     * @param bool $isDefault
      *
      * @return Combination
      *
      * @throws CoreException
      */
-    public function create(ProductId $productId): Combination
+    public function create(ProductId $productId, bool $isDefault): Combination
     {
         $combination = new Combination();
         $combination->id_product = $productId->getValue();
-        $combination->default_on = false;
+        $combination->default_on = $isDefault;
 
         $this->addObjectModel($combination, CannotAddCombinationException::class);
 
         return $combination;
+    }
+
+    public function partialUpdate(Combination $combination, array $updatableProperties, int $errorCode): void
+    {
+        $this->partiallyUpdateObjectModel(
+            $combination,
+            $updatableProperties,
+            CannotAddCombinationException::class,
+            $errorCode
+        );
     }
 
     /**
@@ -123,7 +153,7 @@ class CombinationRepository extends AbstractObjectModelRepository
             ->setMaxResults($limit)
         ;
 
-        return  $qb->execute()->fetchAll();
+        return $qb->execute()->fetchAll();
     }
 
     /**
@@ -281,6 +311,7 @@ class CombinationRepository extends AbstractObjectModelRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
             ->where('pa.id_product = :productId')
+            ->orderBy('id_product_attribute', 'asc')
             ->setParameter('productId', $productId->getValue())
         ;
 

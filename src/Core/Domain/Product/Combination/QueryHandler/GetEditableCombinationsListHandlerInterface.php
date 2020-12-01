@@ -24,34 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 
 /**
- * Transfers combination data for editing
+ * Defines contract to handle @see GetEditableCombinationsList query
  */
-class CombinationForEditing
+interface GetEditableCombinationsListHandlerInterface
 {
     /**
-     * @var CombinationOptions
+     * @param GetEditableCombinationsList $query
+     *
+     * @return CombinationListForEditing
      */
-    private $options;
-
-    /**
-     * @param CombinationOptions $options
-     */
-    public function __construct(
-        CombinationOptions $options
-    ) {
-        $this->options = $options;
-    }
-
-    /**
-     * @return CombinationOptions
-     */
-    public function getOptions(): CombinationOptions
-    {
-        return $this->options;
-    }
+    public function handle(GetEditableCombinationsList $query): CombinationListForEditing;
 }

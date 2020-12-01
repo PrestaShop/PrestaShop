@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags delete
 @reset-database-before-feature
-@clear-cache-after-feature
+@clear-cache-before-feature
 @delete
 Feature: Delete products from Back Office (BO)
   As an employee

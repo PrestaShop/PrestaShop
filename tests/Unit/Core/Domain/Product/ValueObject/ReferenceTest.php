@@ -26,32 +26,46 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
-/**
- * Transfers combination data for editing
- */
-class CombinationForEditing
+use Generator;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+
+class ReferenceTest extends TestCase
 {
-    /**
-     * @var CombinationOptions
-     */
-    private $options;
-
-    /**
-     * @param CombinationOptions $options
-     */
-    public function __construct(
-        CombinationOptions $options
-    ) {
-        $this->options = $options;
+    public function testItIsSuccessfullyConstructed(): void
+    {
+        $reference = new Reference('ref5-01');
+        Assert::assertSame('ref5-01', $reference->getValue());
     }
 
     /**
-     * @return CombinationOptions
+     * @dataProvider getInvalidValues
+     *
+     * @param string $value
      */
-    public function getOptions(): CombinationOptions
+    public function testItThrowsExceptionWhenInvalidValueIsProvided(string $value): void
     {
-        return $this->options;
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_REFERENCE);
+
+        new Reference($value);
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidValues(): Generator
+    {
+        yield ['123456789012345678901234567890123456789012345678901234567890---65'];
+        yield ['='];
+        yield ['{'];
+        yield ['}'];
+        yield ['<'];
+        yield ['>'];
+        yield [';'];
     }
 }

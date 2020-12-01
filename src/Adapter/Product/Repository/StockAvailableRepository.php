@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
@@ -42,6 +44,28 @@ use StockAvailable;
  */
 class StockAvailableRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
     /**
      * @param StockAvailable $stockAvailable
      *
@@ -60,25 +84,49 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function get(ProductId $productId): StockAvailable
+    public function getForProduct(ProductId $productId): StockAvailable
     {
         $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
         if ($stockAvailableId <= 0) {
             throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for product %d',
+                    'Cannot find StockAvailable for product #%d',
                     $productId->getValue()
                 )
             );
         }
 
-        /** @var StockAvailable $stockAvailable */
-        $stockAvailable = $this->getObjectModel(
-            $stockAvailableId,
-            StockAvailable::class,
-            StockAvailableNotFoundException::class
-        );
+        return $this->getStockAvailable($stockAvailableId);
+    }
 
-        return $stockAvailable;
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function getForCombination(CombinationId $combinationId): StockAvailable
+    {
+        //@todo: multishop not handled
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('id_stock_available')
+            ->from($this->dbPrefix . 'stock_available')
+            ->where('id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (!$result) {
+            throw new StockAvailableNotFoundException(sprintf(
+                    'Cannot find StockAvailable for combination #%d',
+                    $combinationId->getValue()
+                )
+            );
+        }
+
+        return $this->getStockAvailable((int) $result['id_stock_available']);
     }
 
     /**
@@ -107,6 +155,26 @@ class StockAvailableRepository extends AbstractObjectModelRepository
         $stockAvailable->id_shop = $shopParams['id_shop'] ?? 0;
         $stockAvailable->id_shop_group = $shopParams['id_shop_group'] ?? 0;
         $this->addObjectModel($stockAvailable, CannotAddStockAvailableException::class);
+
+        return $stockAvailable;
+    }
+
+    /**
+     * @param int $stockAvailableId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    private function getStockAvailable(int $stockAvailableId): StockAvailable
+    {
+        /** @var StockAvailable $stockAvailable */
+        $stockAvailable = $this->getObjectModel(
+            $stockAvailableId,
+            StockAvailable::class,
+            StockAvailableNotFoundException::class
+        );
 
         return $stockAvailable;
     }

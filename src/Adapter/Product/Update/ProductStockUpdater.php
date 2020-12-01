@@ -181,7 +181,7 @@ class ProductStockUpdater
     {
         $productId = new ProductId($product->id);
         try {
-            return $this->stockAvailableRepository->get($productId);
+            return $this->stockAvailableRepository->getForProduct($productId);
         } catch (StockAvailableNotFoundException $e) {
             return $this->stockAvailableRepository->create($productId);
         }

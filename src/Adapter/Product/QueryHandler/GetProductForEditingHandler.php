@@ -48,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
@@ -295,41 +294,24 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getProductStockInformation(Product $product): ProductStockInformation
     {
-        try {
-            // Theoretically StockAvailable is created for each product when Product::add is called
-            $stockAvailable = $this->stockAvailableRepository->get(new ProductId($product->id));
+        //@todo: In theory StockAvailable is created for each product when Product::add is called,
+        //  but we should explore some multishop edgecases
+        //  (like shop ids might be missing and foreach loop won't start resulting in a missing StockAvailable for product)
+        $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id));
 
-            return new ProductStockInformation(
-                (bool) $product->advanced_stock_management,
-                (bool) $stockAvailable->depends_on_stock,
-                (int) $product->pack_stock_type,
-                (int) $stockAvailable->out_of_stock,
-                (int) $stockAvailable->quantity,
-                (int) $product->minimal_quantity,
-                $stockAvailable->location,
-                (int) $product->low_stock_threshold,
-                (bool) $product->low_stock_alert,
-                $product->available_now,
-                $product->available_later,
-                new DateTime($product->available_date)
-            );
-        } catch (StockAvailableNotFoundException $e) {
-            // In case StockAvailable does not exist we can still use the Product fields
-
-            return new ProductStockInformation(
-                (bool) $product->advanced_stock_management,
-                (bool) $product->depends_on_stock,
-                (int) $product->pack_stock_type,
-                (int) $product->out_of_stock,
-                (int) $product->quantity,
-                (int) $product->minimal_quantity,
-                $product->location,
-                (int) $product->low_stock_threshold,
-                (bool) $product->low_stock_alert,
-                $product->available_now,
-                $product->available_later,
-                new DateTime($product->available_date)
-            );
-        }
+        return new ProductStockInformation(
+            (bool) $product->advanced_stock_management,
+            (bool) $stockAvailable->depends_on_stock,
+            (int) $product->pack_stock_type,
+            (int) $stockAvailable->out_of_stock,
+            (int) $stockAvailable->quantity,
+            (int) $product->minimal_quantity,
+            $stockAvailable->location,
+            (int) $product->low_stock_threshold,
+            (bool) $product->low_stock_alert,
+            $product->available_now,
+            $product->available_later,
+            new DateTime($product->available_date)
+        );
     }
 }

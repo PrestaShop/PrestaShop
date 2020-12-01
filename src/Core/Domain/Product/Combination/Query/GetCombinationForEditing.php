@@ -26,32 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 /**
- * Transfers combination data for editing
+ * Query which provides combination for editing
  */
-class CombinationForEditing
+class GetCombinationForEditing
 {
     /**
-     * @var CombinationOptions
+     * @var CombinationId
      */
-    private $options;
+    private $combinationId;
 
     /**
-     * @param CombinationOptions $options
+     * @param int $combinationId
+     *
+     * @throws CombinationConstraintException
      */
     public function __construct(
-        CombinationOptions $options
+        int $combinationId
     ) {
-        $this->options = $options;
+        $this->combinationId = new CombinationId($combinationId);
     }
 
     /**
-     * @return CombinationOptions
+     * @return CombinationId
      */
-    public function getOptions(): CombinationOptions
+    public function getCombinationId(): CombinationId
     {
-        return $this->options;
+        return $this->combinationId;
     }
 }

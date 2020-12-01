@@ -34,7 +34,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 class CombinationListForEditing
 {
     /**
-     * @var CombinationForEditing[]
+     * @var EditableCombinationForListing[]
      */
     private $combinations;
 
@@ -45,7 +45,7 @@ class CombinationListForEditing
 
     /**
      * @param int $totalCombinationsCount
-     * @param CombinationForEditing[] $combinations
+     * @param EditableCombinationForListing[] $combinations
      */
     public function __construct(int $totalCombinationsCount, array $combinations)
     {
@@ -54,7 +54,7 @@ class CombinationListForEditing
     }
 
     /**
-     * @return CombinationForEditing[]
+     * @return EditableCombinationForListing[]
      */
     public function getCombinations(): array
     {

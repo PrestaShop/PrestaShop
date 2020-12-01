@@ -31,12 +31,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Create;
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
+use PrestaShopException;
 use Product;
 use SpecificPriceRule;
 use Traversable;
@@ -90,14 +91,13 @@ class CombinationCreator
         $generatedCombinations = $this->combinationGenerator->generate($this->formatScalarValues($groupedAttributeIdsList));
 
         // avoid applying specificPrice on each combination.
-        SpecificPriceRule::disableAnyApplication();
+        $this->disableSpecificPriceRulesApplication();
 
         $combinationIds = $this->addCombinations($product, $generatedCombinations);
+        $this->updateProductDefaultCombination($productId);
 
-        Product::updateDefaultAttribute($product->id);
-        SpecificPriceRule::enableAnyApplication();
         // apply all specific price rules at once after all the combinations are generated
-        SpecificPriceRule::applyAllRules([$product->id]);
+        $this->applySpecificPriceRules($productId);
 
         return $combinationIds;
     }
@@ -125,15 +125,19 @@ class CombinationCreator
      *
      * @return CombinationId[]
      *
-     * @throws CombinationException
+     * @throws CombinationConstraintException
+     * @throws CoreException
      */
     private function addCombinations(Product $product, Traversable $generatedCombinations): array
     {
         $product->setAvailableDate();
+        $productId = (int) $product->id;
+        $hasDefault = (bool) $this->getDefaultCombinationId($productId);
 
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
-            $addedCombinationIds[] = $this->persistCombination((int) $product->id, $generatedCombination);
+            $addedCombinationIds[] = $this->persistCombination($productId, $generatedCombination, !$hasDefault);
+            $hasDefault = true;
         }
 
         return $addedCombinationIds;
@@ -142,12 +146,16 @@ class CombinationCreator
     /**
      * @param int $productId
      * @param int[] $generatedCombination
+     * @param bool $isDefault
      *
      * @return CombinationId
+     *
+     * @throws CoreException
+     * @throws CombinationConstraintException
      */
-    private function persistCombination(int $productId, array $generatedCombination): CombinationId
+    private function persistCombination(int $productId, array $generatedCombination, bool $isDefault): CombinationId
     {
-        $combination = $this->combinationRepository->create(new ProductId($productId));
+        $combination = $this->combinationRepository->create(new ProductId($productId), $isDefault);
         $combinationId = new CombinationId((int) $combination->id);
 
         //@todo: Use DB transaction instead if they are accepted (PR #21740)
@@ -159,5 +167,62 @@ class CombinationCreator
         }
 
         return $combinationId;
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return int
+     *
+     * @throws CoreException
+     */
+    private function getDefaultCombinationId(int $productId): int
+    {
+        try {
+            return (int) Product::getDefaultAttribute($productId, 0, true);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws CoreException
+     */
+    private function updateProductDefaultCombination(ProductId $productId): void
+    {
+        try {
+            Product::updateDefaultAttribute($productId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to update product default combination', 0, $e);
+        }
+    }
+
+    /**
+     * @throws CoreException
+     */
+    private function disableSpecificPriceRulesApplication(): void
+    {
+        try {
+            SpecificPriceRule::disableAnyApplication();
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when trying to disable specific price rules application', 0, $e);
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws CoreException
+     */
+    private function applySpecificPriceRules(ProductId $productId): void
+    {
+        try {
+            SpecificPriceRule::enableAnyApplication();
+            SpecificPriceRule::applyAllRules([$productId->getValue()]);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when trying to apply specific prices rules', 0, $e);
+        }
     }
 }

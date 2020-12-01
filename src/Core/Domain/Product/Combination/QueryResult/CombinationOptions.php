@@ -26,83 +26,96 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
 /**
- * Retrieves product combinations
+ * Transfers combination options information
  */
-class GetProductCombinationsForEditing
+class CombinationOptions
 {
     /**
-     * @var ProductId
+     * @var string
      */
-    private $productId;
+    private $ean13;
 
     /**
-     * @var LanguageId
+     * @var string
      */
-    private $languageId;
+    private $isbn;
 
     /**
-     * @var int|null
+     * @var string
      */
-    private $limit;
+    private $mpn;
 
     /**
-     * @var int|null
+     * @var string
      */
-    private $offset;
+    private $reference;
 
     /**
-     * @param int $productId
-     * @param int $languageId
-     * @param int $limit
-     * @param int $offset
+     * @var string
+     */
+    private $upc;
+
+    /**
+     * @param string $ean13
+     * @param string $isbn
+     * @param string $mpn
+     * @param string $reference
+     * @param string $upc
      */
     public function __construct(
-        int $productId,
-        int $languageId,
-        ?int $limit = null,
-        ?int $offset = null
+        string $ean13,
+        string $isbn,
+        string $mpn,
+        string $reference,
+        string $upc
     ) {
-        $this->productId = new ProductId($productId);
-        $this->languageId = new LanguageId($languageId);
-        $this->limit = $limit;
-        $this->offset = $offset;
+        $this->ean13 = $ean13;
+        $this->isbn = $isbn;
+        $this->mpn = $mpn;
+        $this->reference = $reference;
+        $this->upc = $upc;
     }
 
     /**
-     * @return ProductId
+     * @return string
      */
-    public function getProductId(): ProductId
+    public function getEan13(): string
     {
-        return $this->productId;
+        return $this->ean13;
     }
 
     /**
-     * @return LanguageId
+     * @return string
      */
-    public function getLanguageId(): LanguageId
+    public function getIsbn(): string
     {
-        return $this->languageId;
+        return $this->isbn;
     }
 
     /**
-     * @return int|null
+     * @return string
      */
-    public function getLimit(): ?int
+    public function getMpn(): string
     {
-        return $this->limit;
+        return $this->mpn;
     }
 
     /**
-     * @return int|null
+     * @return string
      */
-    public function getOffset(): ?int
+    public function getReference(): string
     {
-        return $this->offset;
+        return $this->reference;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpc(): string
+    {
+        return $this->upc;
     }
 }

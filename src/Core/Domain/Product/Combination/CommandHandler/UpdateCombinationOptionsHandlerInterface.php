@@ -24,34 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationOptionsCommand;
 
 /**
- * Transfers combination data for editing
+ * Defines contract to handle @see UpdateCombinationOptionsCommand
  */
-class CombinationForEditing
+interface UpdateCombinationOptionsHandlerInterface
 {
     /**
-     * @var CombinationOptions
+     * @param UpdateCombinationOptionsCommand $command
      */
-    private $options;
-
-    /**
-     * @param CombinationOptions $options
-     */
-    public function __construct(
-        CombinationOptions $options
-    ) {
-        $this->options = $options;
-    }
-
-    /**
-     * @return CombinationOptions
-     */
-    public function getOptions(): CombinationOptions
-    {
-        return $this->options;
-    }
+    public function handle(UpdateCombinationOptionsCommand $command): void;
 }
