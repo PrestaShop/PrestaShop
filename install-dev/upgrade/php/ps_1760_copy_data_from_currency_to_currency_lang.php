@@ -78,15 +78,13 @@ function refreshLocalizedCurrencyData($currency, $languages, $localeRepoCLDR)
             continue;
         }
 
-        $symbol = (string) $cldrCurrency->getSymbol() ?: $currency->iso_code;
-        $name = $cldrCurrency->getDisplayName();
         $fields = [
-            'name' => $name,
-            'symbol' => $symbol
+            'name' => $cldrCurrency->getDisplayName(),
+            'symbol' => (string) $cldrCurrency->getSymbol() ?: $currency->iso_code
         ];
 
         $where = 'id_currency = ' . (int) $currency->id
             . ' AND id_lang = ' . (int) $language->id;
-        Db::getInstance()->update( 'currency_lang', $fields, $where);
+        Db::getInstance()->update('currency_lang', $fields, $where);
     }
 }
