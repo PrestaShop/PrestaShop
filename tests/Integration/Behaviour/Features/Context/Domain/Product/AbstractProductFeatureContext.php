@@ -28,15 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
-use Context;
 use DateTimeInterface;
 use PHPUnit\Framework\Assert;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -69,26 +65,6 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         return $this->getQueryBus()->handle(new GetProductCustomizationFields(
             $this->getSharedStorage()->get($productReference)
         ));
-    }
-
-    /**
-     * @param string $productName
-     *
-     * @return int
-     */
-    protected function getProductIdByName(string $productName): int
-    {
-        /** @var FoundProduct[] */
-        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-
-        if (empty($products)) {
-            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
-        }
-
-        /** @var FoundProduct $product */
-        $product = reset($products);
-
-        return $product->getProductId();
     }
 
     /**
@@ -132,28 +108,6 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
                 $expectedValue,
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
-            );
-
-            // Unset the checked field from array so we can validate they havel all been asserted
-            unset($data[$propertyName]);
-        }
-    }
-
-    /**
-     * @param ProductForEditing $productForEditing
-     * @param array $data
-     * @param string $propertyName
-     */
-    protected function assertNumberProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
-    {
-        if (isset($data[$propertyName])) {
-            $expectedValue = new DecimalNumber((string) $data[$propertyName]);
-            // Don't cast on purpose, the value should already be typed as DecimalNumber
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
-
-            Assert::assertTrue(
-                $expectedValue->equals($actualValue),
-                sprintf('Expected %s %s. Got %s.', $propertyName, (string) $expectedValue, (string) $actualValue)
             );
 
             // Unset the checked field from array so we can validate they havel all been asserted

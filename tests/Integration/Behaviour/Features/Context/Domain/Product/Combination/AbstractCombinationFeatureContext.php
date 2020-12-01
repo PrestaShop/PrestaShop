@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
@@ -59,8 +58,6 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      * @param string $combinationReference
      *
      * @return CombinationForEditing
-     *
-     * @throws CombinationConstraintException
      */
     protected function getCombinationForEditing(string $combinationReference): CombinationForEditing
     {

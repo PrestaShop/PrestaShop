@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 /**
@@ -43,8 +42,6 @@ class GetCombinationForEditing
 
     /**
      * @param int $combinationId
-     *
-     * @throws CombinationConstraintException
      */
     public function __construct(
         int $combinationId
