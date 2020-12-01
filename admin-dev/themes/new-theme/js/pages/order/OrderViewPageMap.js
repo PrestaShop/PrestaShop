@@ -149,6 +149,7 @@ export default {
   orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
+  orderShippingTotalContainer: '#order-shipping-total-container',
   orderShippingTotal: '#orderShippingTotal',
   orderTaxesTotal: '#orderTaxesTotal',
   orderTotal: '#orderTotal',

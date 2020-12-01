@@ -35,11 +35,15 @@ export default class OrderPricesRefresher {
 
   refresh(orderId) {
     $.ajax(this.router.generate('admin_orders_get_prices', {orderId})).then(response => {
+      console.log(response);
+      console.log(OrderViewPageMap.orderShippingTotalContainer);
+      console.log($(OrderViewPageMap.orderShippingTotalContainer));
       $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
       $(OrderViewPageMap.orderDiscountsTotal).text(`-${response.discountsAmountFormatted}`);
       $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
       $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
       $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
+      $(OrderViewPageMap.orderShippingTotalContainer).toggleClass('d-none', response.shippingAmountDisplayed);
       $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
     });
   }
