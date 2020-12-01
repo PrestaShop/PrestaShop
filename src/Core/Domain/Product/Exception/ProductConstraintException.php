@@ -34,190 +34,190 @@ class ProductConstraintException extends ProductException
     /**
      * Code is used when invalid id is supplied.
      */
-    const INVALID_ID = 10;
+    public const INVALID_ID = 10;
 
     /**
      * When invalid product type is supplied.
      */
-    const INVALID_PRODUCT_TYPE = 20;
+    public const INVALID_PRODUCT_TYPE = 20;
 
     /**
      * When invalid product name in one or another language is supplied
      */
-    const INVALID_NAME = 30;
+    public const INVALID_NAME = 30;
 
     /**
      * When invalid product condition is supplied
      */
-    const INVALID_CONDITION = 40;
+    public const INVALID_CONDITION = 40;
 
     /**
      * When invalid product description is supplied
      */
-    const INVALID_DESCRIPTION = 50;
+    public const INVALID_DESCRIPTION = 50;
 
     /**
      * When invalid product short description is supplied
      */
-    const INVALID_SHORT_DESCRIPTION = 60;
+    public const INVALID_SHORT_DESCRIPTION = 60;
 
     /**
      * When invalid product price is supplied
      */
-    const INVALID_PRICE = 70;
+    public const INVALID_PRICE = 70;
 
     /**
      * When invalid product unity value is supplied
      */
-    const INVALID_UNITY = 80;
+    public const INVALID_UNITY = 80;
 
     /**
      * When invalid product ecotax is supplied
      */
-    const INVALID_ECOTAX = 90;
+    public const INVALID_ECOTAX = 90;
 
     /**
      * When invalid product unit price is supplied
      */
-    const INVALID_UNIT_PRICE = 100;
+    public const INVALID_UNIT_PRICE = 100;
 
     /**
      * When invalid product wholesale_price is supplied
      */
-    const INVALID_WHOLESALE_PRICE = 110;
+    public const INVALID_WHOLESALE_PRICE = 110;
 
     /**
      * When product visibility value is invalid
      */
-    const INVALID_VISIBILITY = 120;
+    public const INVALID_VISIBILITY = 120;
 
     /**
      * When product Ean13 code value is invalid
      */
-    const INVALID_EAN_13 = 130;
+    public const INVALID_EAN_13 = 130;
 
     /**
      * When product ISBN code value is invalid
      */
-    const INVALID_ISBN = 140;
+    public const INVALID_ISBN = 140;
 
     /**
      * When product mpn code value is invalid
      */
-    const INVALID_MPN = 150;
+    public const INVALID_MPN = 150;
 
     /**
      * When product upc code value is invalid
      */
-    const INVALID_UPC = 160;
+    public const INVALID_UPC = 160;
 
     /**
      * When product reference value is invalid
      */
-    const INVALID_REFERENCE = 170;
+    public const INVALID_REFERENCE = 170;
 
     /**
      * When product tag value is invalid
      */
-    const INVALID_TAG = 180;
+    public const INVALID_TAG = 180;
 
     /**
      * When product additional time notes type is invalid
      */
-    const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 190;
+    public const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 190;
 
     /**
      * When product width is invalid
      */
-    const INVALID_WIDTH = 200;
+    public const INVALID_WIDTH = 200;
 
     /**
      * When product height is invalid
      */
-    const INVALID_HEIGHT = 210;
+    public const INVALID_HEIGHT = 210;
 
     /**
      * When product depth is invalid
      */
-    const INVALID_DEPTH = 220;
+    public const INVALID_DEPTH = 220;
 
     /**
      * When product weight is invalid
      */
-    const INVALID_WEIGHT = 230;
+    public const INVALID_WEIGHT = 230;
 
     /**
      * When product additional shipping cost is invalid
      */
-    const INVALID_ADDITIONAL_SHIPPING_COST = 240;
+    public const INVALID_ADDITIONAL_SHIPPING_COST = 240;
 
     /**
      * When product delivery time in stock notes are invalid
      */
-    const INVALID_DELIVERY_TIME_IN_STOCK_NOTES = 250;
+    public const INVALID_DELIVERY_TIME_IN_STOCK_NOTES = 250;
 
     /**
      * When product delivery time out of stock notes are invalid
      */
-    const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 260;
+    public const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 260;
 
     /**
      * When product redirect type is invalid
      */
-    const INVALID_REDIRECT_TYPE = 270;
+    public const INVALID_REDIRECT_TYPE = 270;
 
     /**
      * When product redirect target
      */
-    const INVALID_REDIRECT_TARGET = 280;
+    public const INVALID_REDIRECT_TARGET = 280;
 
     /**
      * When product meta description is invalid
      */
-    const INVALID_META_DESCRIPTION = 290;
+    public const INVALID_META_DESCRIPTION = 290;
 
     /**
      * When product meta title is invalid
      */
-    const INVALID_META_TITLE = 300;
+    public const INVALID_META_TITLE = 300;
 
     /**
      * When product link rewrite is invalid
      */
-    const INVALID_LINK_REWRITE = 310;
+    public const INVALID_LINK_REWRITE = 310;
 
     /**
      * When product minimal quantity is invalid
      */
-    const INVALID_MINIMAL_QUANTITY = 320;
+    public const INVALID_MINIMAL_QUANTITY = 320;
 
     /**
      * When product location is invalid
      */
-    const INVALID_LOCATION = 330;
+    public const INVALID_LOCATION = 330;
 
     /**
      * When product available later labels are invalid
      */
-    const INVALID_AVAILABLE_LATER = 340;
+    public const INVALID_AVAILABLE_LATER = 340;
 
     /**
      * When product available now labels are is invalid
      */
-    const INVALID_AVAILABLE_NOW = 350;
+    public const INVALID_AVAILABLE_NOW = 350;
 
     /**
      * When product available date is invalid
      */
-    const INVALID_AVAILABLE_DATE = 360;
+    public const INVALID_AVAILABLE_DATE = 360;
 
     /**
      * When product low stock alert is invalid
      */
-    const INVALID_LOW_STOCK_ALERT = 370;
+    public const INVALID_LOW_STOCK_ALERT = 370;
 
     /**
      * When product low stock threshold is invalid
      */
-    const INVALID_LOW_STOCK_THRESHOLD = 380;
+    public const INVALID_LOW_STOCK_THRESHOLD = 380;
 }

@@ -26,10 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+
 /**
  * Thrown when combination constraints are violated
  */
-class CombinationConstraintException extends CombinationException
+class CombinationConstraintException extends ProductConstraintException
 {
-    const INVALID_ID = 1;
 }
