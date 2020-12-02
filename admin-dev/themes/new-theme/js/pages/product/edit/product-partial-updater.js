@@ -25,19 +25,40 @@
 
 const {$} = window;
 
+/**
+ * When product is edited we want to send only partial updates
+ * so this class compares the initial data from the form computes
+ * the diff when form is submitted And dynamically build another
+ * form to submit only updated data (along with required fields
+ * token and such).
+ *
+ * It also disabled the submit button as long as no data has been
+ * modified by the user.
+ */
 export default class ProductPartialUpdater {
   constructor($productForm, $productFormSubmitButton) {
     this.$productForm = $productForm;
     this.$productFormSubmitButton = $productFormSubmitButton;
   }
 
+  /**
+   * This the public method you need to use to start this component
+   * ex: new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
+   */
   watch() {
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit((e) => this.updatePartialForm(e));
-    this.$productForm.on('change', ':input', () => this.updateSubmitState());
+    this.$productForm.on('change', ':input', () => this.updateSubmitButtonState());
   }
 
+  /**
+   * This methods handles the form submit
+   *
+   * @param event
+   * @returns {boolean}
+   * @private
+   */
   updatePartialForm(event) {
     event.stopImmediatePropagation();
 
@@ -45,12 +66,19 @@ export default class ProductPartialUpdater {
     if (updatedData !== null) {
       this.postUpdatedData(updatedData);
     } else {
+      // @todo: This is temporary we should probably use a nice modal instead, that said since the submit button is
+      //        disabled when no data has been modified it should never happen
       alert('no fields updated');
     }
 
     return false;
   }
 
+  /**
+   * Dynamically build a form with provided updated data and submit this "shadow" form
+   *
+   * @param updatedData {Object} Contains an object with all form fields to update indexed by query parameters name
+   */
   postUpdatedData(updatedData) {
     this.$productFormSubmitButton.prop('disabled', true);
     const $updatedForm = this.$productForm.clone();
@@ -68,11 +96,22 @@ export default class ProductPartialUpdater {
     $updatedForm.submit();
   }
 
-  updateSubmitState() {
+  /**
+   * Adapt the submit button state, as long as no data has been updated the button is disabled
+   */
+  updateSubmitButtonState() {
     const updatedData = this.getUpdatedFormData();
     this.$productFormSubmitButton.prop('disabled', updatedData === null);
   }
 
+  /**
+   * Returns the updated data, only fields which are different from the initial page load
+   * are returned (token and method are added since they are required for a valid request).
+   *
+   * If no fields have been modified this method returns null.
+   *
+   * @returns {{}|null}
+   */
   getUpdatedFormData() {
     const currentData = this.getFormDataAsObject();
     // Loop through current form data and remove the one that did not change
@@ -104,6 +143,11 @@ export default class ProductPartialUpdater {
     return currentData;
   }
 
+  /**
+   * Returns the serialized form data as an Object indexed by field name
+   *
+   * @returns {{}}
+   */
   getFormDataAsObject() {
     const formArray = this.$productForm.serializeArray();
     const serializedForm = {};
