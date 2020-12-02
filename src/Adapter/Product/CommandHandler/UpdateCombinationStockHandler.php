@@ -33,10 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -74,29 +70,21 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
 
-        $this->combinationRepository->partialUpdate(
-            $combination,
-            $updatableProperties,
-            CannotUpdateCombinationException::FAILED_UPDATE_STOCK
-        );
+        $this->combinationStockUpdater->update($combination, $updatableProperties);
     }
 
     /**
      * @param Combination $combination
      * @param UpdateCombinationStockCommand $command
      *
-     * @return array
-     *
-     * @throws CombinationConstraintException
-     * @throws StockAvailableNotFoundException
-     * @throws CoreException
+     * @return string[]
      */
     private function fillUpdatableProperties(Combination $combination, UpdateCombinationStockCommand $command): array
     {
         $updatableProperties = [];
 
         if (null !== $command->getQuantity()) {
-            $this->combinationStockUpdater->updateQuantity($combination, $command->getQuantity());
+            $combination->quantity = $command->getQuantity();
             $updatableProperties[] = 'quantity';
         }
 
