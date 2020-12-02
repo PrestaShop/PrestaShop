@@ -4,7 +4,7 @@
 @order-rounding-type
 
 Feature: In BO, get right display prices for products and totals, depending on the order's rounding type
-  As a BO user, I need to get see the right prices depending on rounding type with odd tax
+  As a BO user, I need to see the right prices depending on rounding type with odd tax
 
   Background:
     Given email sending is disabled
