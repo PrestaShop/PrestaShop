@@ -44,7 +44,7 @@ prestashop.selectors = {
     prices:
       '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
     input_customization:
-      '.product-actions input[name=id_customization]',
+      '.product-actions input[name="id_customization"]',
     customization:
       '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization',
     variantsUpdate:
