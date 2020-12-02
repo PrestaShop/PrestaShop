@@ -32,6 +32,8 @@ use CartRule;
 use DateTime;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler\GetCartRuleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
@@ -57,10 +59,8 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
      *
      * @return EditableCartRule
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException
+     * @throws CartRuleException
+     * @throws CartRuleNotFoundException
      */
     public function handle(GetCartRuleForEditing $query): EditableCartRule
     {
