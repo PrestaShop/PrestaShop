@@ -143,6 +143,7 @@ class UpdateCombinationStockCommand
      */
     public function setLocation(string $location): UpdateCombinationStockCommand
     {
+        //@todo: validate with regex pattern
         $this->location = $location;
 
         return $this;
