@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Combination;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
@@ -44,33 +46,61 @@ class CombinationStockUpdater
     private $stockAvailableRepository;
 
     /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param CombinationRepository $combinationRepository
      */
     public function __construct(
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        CombinationRepository $combinationRepository
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
      * @param Combination $combination
-     * @param int $quantity
+     * @param array $propertiesToUpdate
      *
-     * @throws CoreException
      * @throws CombinationConstraintException
+     * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function updateQuantity(Combination $combination, int $quantity): void
+    public function update(Combination $combination, array $propertiesToUpdate): void
+    {
+        $this->combinationRepository->partialUpdate(
+            $combination,
+            $propertiesToUpdate,
+            CannotUpdateCombinationException::FAILED_UPDATE_STOCK
+        );
+
+        if (in_array('quantity', $propertiesToUpdate)) {
+            $this->updateStockAvailableQuantity($combination);
+        }
+    }
+
+    /**
+     * @param Combination $combination
+     *
+     * @throws CombinationConstraintException
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    private function updateStockAvailableQuantity(Combination $combination): void
     {
         $combinationId = new CombinationId((int) $combination->id);
         $stockAvailable = $this->stockAvailableRepository->getForCombination($combinationId);
 
         try {
             //@todo: refactor as in ProductStockUpdater
-            $stockAvailable::setQuantity((int) $combination->id_product, $combinationId->getValue(), $quantity);
+            $stockAvailable::setQuantity((int) $combination->id_product, $combinationId->getValue(), $combination->quantity);
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to update combination %d quantity', $combination->id),
+                sprintf('Error occurred when trying to update combination %d quantity', $combinationId->getValue()),
                 0,
                 $e
             );
