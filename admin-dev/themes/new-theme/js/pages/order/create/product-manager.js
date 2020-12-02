@@ -29,7 +29,6 @@ import eventMap from '@pages/order/create/event-map';
 import {EventEmitter} from '@components/event-emitter';
 import ProductRenderer from '@pages/order/create/product-renderer';
 import Router from '@components/router';
-import _ from 'lodash';
 
 const $ = window.$;
 
@@ -140,10 +139,16 @@ export default class ProductManager {
    */
   _onProductQtyChange() {
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, _.debounce((cartInfo) => {
+    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
-    }, 300));
+
+      const inputsQty = document.querySelectorAll(createOrderMap.listedProductQtyInput);
+
+      inputsQty.forEach((inputQty) => {
+        inputQty.setAttribute('disabled', false);
+      });
+    });
 
     // on failure
     EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
@@ -268,7 +273,7 @@ export default class ProductManager {
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(
       combination.stock,
-      this.selectedProduct.availableOutOfStock || (combination.stock <= 0)
+      this.selectedProduct.availableOutOfStock || combination.stock <= 0
     );
 
     return combination;

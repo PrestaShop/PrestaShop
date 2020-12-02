@@ -26,7 +26,7 @@
 import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
-import createOrderMap from "./create-order-map";
+import createOrderMap from './create-order-map';
 
 const $ = window.$;
 
@@ -47,8 +47,8 @@ export default class CartEditor {
    */
   changeCartAddresses(cartId, addresses) {
     $.post(this.router.generate('admin_carts_edit_addresses', {cartId}), addresses)
-      .then(cartInfo => EventEmitter.emit(eventMap.cartAddressesChanged, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+      .then((cartInfo) => EventEmitter.emit(eventMap.cartAddressesChanged, cartInfo))
+      .catch((response) => showErrorMessage(response.responseJSON.message));
   }
 
   /**
@@ -60,8 +60,9 @@ export default class CartEditor {
   changeDeliveryOption(cartId, value) {
     $.post(this.router.generate('admin_carts_edit_carrier', {cartId}), {
       carrierId: value,
-    }).then(cartInfo => EventEmitter.emit(eventMap.cartDeliveryOptionChanged, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+    })
+      .then((cartInfo) => EventEmitter.emit(eventMap.cartDeliveryOptionChanged, cartInfo))
+      .catch((response) => showErrorMessage(response.responseJSON.message));
   }
 
   /**
@@ -80,8 +81,9 @@ export default class CartEditor {
       isAGift: isAGiftEnabled,
       useRecycledPackaging: useRecycledPackagingEnabled,
       giftMessage,
-    }).then(cartInfo => EventEmitter.emit(eventMap.cartDeliverySettingChanged, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+    })
+      .then((cartInfo) => EventEmitter.emit(eventMap.cartDeliverySettingChanged, cartInfo))
+      .catch((response) => showErrorMessage(response.responseJSON.message));
   }
 
   /**
@@ -93,8 +95,9 @@ export default class CartEditor {
   addCartRuleToCart(cartRuleId, cartId) {
     $.post(this.router.generate('admin_carts_add_cart_rule', {cartId}), {
       cartRuleId,
-    }).then(cartInfo => EventEmitter.emit(eventMap.cartRuleAdded, cartInfo))
-      .catch(response => EventEmitter.emit(eventMap.cartRuleFailedToAdd, response.responseJSON.message));
+    })
+      .then((cartInfo) => EventEmitter.emit(eventMap.cartRuleAdded, cartInfo))
+      .catch((response) => EventEmitter.emit(eventMap.cartRuleFailedToAdd, response.responseJSON.message));
   }
 
   /**
@@ -104,11 +107,14 @@ export default class CartEditor {
    * @param {Number} cartId
    */
   removeCartRuleFromCart(cartRuleId, cartId) {
-    $.post(this.router.generate('admin_carts_delete_cart_rule', {
-      cartId,
-      cartRuleId,
-    })).then(cartInfo => EventEmitter.emit(eventMap.cartRuleRemoved, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+    $.post(
+      this.router.generate('admin_carts_delete_cart_rule', {
+        cartId,
+        cartRuleId,
+      })
+    )
+      .then((cartInfo) => EventEmitter.emit(eventMap.cartRuleRemoved, cartInfo))
+      .catch((response) => showErrorMessage(response.responseJSON.message));
   }
 
   /**
@@ -132,8 +138,9 @@ export default class CartEditor {
       data: data.product,
       processData: false,
       contentType: false,
-    }).then(cartInfo => EventEmitter.emit(eventMap.productAddedToCart, cartInfo))
-      .catch(response => EventEmitter.emit(eventMap.productAddToCartFailed, response.responseJSON.message));
+    })
+      .then((cartInfo) => EventEmitter.emit(eventMap.productAddedToCart, cartInfo))
+      .catch((response) => EventEmitter.emit(eventMap.productAddToCartFailed, response.responseJSON.message));
   }
 
   /**
@@ -147,8 +154,9 @@ export default class CartEditor {
       productId: product.productId,
       attributeId: product.attributeId,
       customizationId: product.customizationId,
-    }).then(cartInfo => EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+    })
+      .then((cartInfo) => EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo))
+      .catch((response) => showErrorMessage(response.responseJSON.message));
   }
 
   /**
@@ -159,15 +167,19 @@ export default class CartEditor {
    * @param {Object} product the updated product
    */
   changeProductPrice(cartId, customerId, product) {
-    $.post(this.router.generate('admin_carts_edit_product_price', {
-      cartId,
-      productId: product.productId,
-      productAttributeId: product.attributeId,
-    }), {
-      newPrice: product.price,
-      customerId,
-    }).then(cartInfo => EventEmitter.emit(eventMap.productPriceChanged, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+    $.post(
+      this.router.generate('admin_carts_edit_product_price', {
+        cartId,
+        productId: product.productId,
+        productAttributeId: product.attributeId,
+      }),
+      {
+        newPrice: product.price,
+        customerId,
+      }
+    )
+      .then((cartInfo) => EventEmitter.emit(eventMap.productPriceChanged, cartInfo))
+      .catch((response) => showErrorMessage(response.responseJSON.message));
   }
 
   /**
@@ -177,15 +189,19 @@ export default class CartEditor {
    * @param product
    */
   changeProductQty(cartId, product) {
-    $.post(this.router.generate('admin_carts_edit_product_quantity', {
-      cartId,
-      productId: product.productId
-    }), {
-      newQty: product.newQty,
-      attributeId: product.attributeId,
-      customizationId: product.customizationId,
-    }).then(cartInfo => EventEmitter.emit(eventMap.productQtyChanged, cartInfo))
-      .catch(response => EventEmitter.emit(eventMap.productQtyChangeFailed, response));
+    $.post(
+      this.router.generate('admin_carts_edit_product_quantity', {
+        cartId,
+        productId: product.productId,
+      }),
+      {
+        newQty: product.newQty,
+        attributeId: product.attributeId,
+        customizationId: product.customizationId,
+      }
+    )
+      .then((cartInfo) => EventEmitter.emit(eventMap.productQtyChanged, cartInfo))
+      .catch((response) => EventEmitter.emit(eventMap.productQtyChangeFailed, response));
   }
 
   /**
@@ -199,8 +215,9 @@ export default class CartEditor {
 
     $.post(this.router.generate('admin_carts_edit_currency', {cartId}), {
       currencyId,
-    }).then(cartInfo => EventEmitter.emit(eventMap.cartCurrencyChanged, cartInfo))
-      .catch(response => EventEmitter.emit(eventMap.cartCurrencyChangeFailed, response));
+    })
+      .then((cartInfo) => EventEmitter.emit(eventMap.cartCurrencyChanged, cartInfo))
+      .catch((response) => EventEmitter.emit(eventMap.cartCurrencyChangeFailed, response));
   }
 
   /**
@@ -212,7 +229,8 @@ export default class CartEditor {
   changeCartLanguage(cartId, languageId) {
     $.post(this.router.generate('admin_carts_edit_language', {cartId}), {
       languageId,
-    }).then(cartInfo => EventEmitter.emit(eventMap.cartLanguageChanged, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+    })
+      .then((cartInfo) => EventEmitter.emit(eventMap.cartLanguageChanged, cartInfo))
+      .catch((response) => showErrorMessage(response.responseJSON.message));
   }
 }
