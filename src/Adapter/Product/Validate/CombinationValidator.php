@@ -73,6 +73,7 @@ class CombinationValidator extends AbstractObjectModelValidator
         $this->validateCombinationProperty($combination, 'price', ProductConstraintException::INVALID_PRICE);
         $this->validateCombinationProperty($combination, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
         $this->validateCombinationProperty($combination, 'unit_price_impact', ProductConstraintException::INVALID_UNIT_PRICE);
+        $this->validateCombinationProperty($combination, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
     }
 
     /**

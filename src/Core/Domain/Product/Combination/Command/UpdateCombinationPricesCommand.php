@@ -54,6 +54,11 @@ class UpdateCombinationPricesCommand
     private $unitPriceImpact;
 
     /**
+     * @var DecimalNumber|null
+     */
+    private $wholesalePrice;
+
+    /**
      * @param int $combinationId
      */
     public function __construct(
@@ -126,6 +131,26 @@ class UpdateCombinationPricesCommand
     public function setUnitPriceImpact(string $unitPriceImpact): UpdateCombinationPricesCommand
     {
         $this->unitPriceImpact = new DecimalNumber($unitPriceImpact);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWholesalePrice(): ?DecimalNumber
+    {
+        return $this->wholesalePrice;
+    }
+
+    /**
+     * @param DecimalNumber $wholesalePrice
+     *
+     * @return UpdateCombinationPricesCommand
+     */
+    public function setWholesalePrice(DecimalNumber $wholesalePrice): UpdateCombinationPricesCommand
+    {
+        $this->wholesalePrice = $wholesalePrice;
 
         return $this;
     }

@@ -84,6 +84,11 @@ final class UpdateCombinationPricesHandler implements UpdateCombinationPricesHan
             $updatableProperties[] = 'unit_price_impact';
         }
 
+        if (null !== $command->getWholesalePrice()) {
+            $combination->wholesale_price = (float) (string) $command->getWholesalePrice();
+            $updatableProperties[] = 'wholesale_price';
+        }
+
         return $updatableProperties;
     }
 }

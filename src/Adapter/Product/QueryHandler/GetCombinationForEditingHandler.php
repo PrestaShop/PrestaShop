@@ -95,7 +95,8 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         return new CombinationPrices(
             new DecimalNumber($combination->ecotax),
             new DecimalNumber($combination->price),
-            new DecimalNumber($combination->unit_price_impact)
+            new DecimalNumber($combination->unit_price_impact),
+            new DecimalNumber($combination->wholesale_price)
         );
     }
 }
