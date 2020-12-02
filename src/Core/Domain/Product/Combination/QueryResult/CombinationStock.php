@@ -45,7 +45,7 @@ class CombinationStock
     /**
      * @var string
      */
-    private $localtion;
+    private $location;
 
     /**
      * @var int
@@ -65,7 +65,7 @@ class CombinationStock
     /**
      * @param int $quantity
      * @param int $minimalQuantity
-     * @param string $localtion
+     * @param string $location
      * @param int $lowStockThreshold
      * @param bool $lowStockAlertOn
      * @param DateTimeInterface $availableDate
@@ -73,14 +73,14 @@ class CombinationStock
     public function __construct(
         int $quantity,
         int $minimalQuantity,
-        string $localtion,
+        string $location,
         int $lowStockThreshold,
         bool $lowStockAlertOn,
         DateTimeInterface $availableDate
     ) {
         $this->quantity = $quantity;
         $this->minimalQuantity = $minimalQuantity;
-        $this->localtion = $localtion;
+        $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertOn = $lowStockAlertOn;
         $this->availableDate = $availableDate;
@@ -105,9 +105,9 @@ class CombinationStock
     /**
      * @return string
      */
-    public function getLocaltion(): string
+    public function getLocation(): string
     {
-        return $this->localtion;
+        return $this->location;
     }
 
     /**
