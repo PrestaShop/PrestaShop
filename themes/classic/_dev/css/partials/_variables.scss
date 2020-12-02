@@ -63,9 +63,3 @@ $display4-size: 1.25rem;
 $display4-weight: 400;
 $text-muted: $gray;
 $radio-border-color: #979797;
-
-// Forced to do this to avoid a breaking change
-/* stylelint-disable */
-$NotoSansPath: "~notosans-fontface/fonts";
-$NotoSansVersion: "1.0.1";
-/* stylelint-enable */
