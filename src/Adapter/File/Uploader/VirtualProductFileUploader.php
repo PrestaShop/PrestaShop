@@ -46,12 +46,20 @@ class VirtualProductFileUploader
     private $virtualProductFileValidator;
 
     /**
+     * @var string
+     */
+    private $downloadDir;
+
+    /**
      * @param VirtualProductFileValidator $virtualProductFileValidator
+     * @param string $downloadDir
      */
     public function __construct(
-        VirtualProductFileValidator $virtualProductFileValidator
+        VirtualProductFileValidator $virtualProductFileValidator,
+        string $downloadDir
     ) {
         $this->virtualProductFileValidator = $virtualProductFileValidator;
+        $this->downloadDir = $downloadDir;
     }
 
     /**
@@ -66,23 +74,40 @@ class VirtualProductFileUploader
     public function upload(string $filePath): string
     {
         $this->virtualProductFileValidator->validate($filePath);
+        $destination = $this->downloadDir . ProductDownload::getNewFilename();
 
-        $destination = _PS_DOWNLOAD_DIR_ . ProductDownload::getNewFilename();
+        $this->copyFile($filePath, $destination);
+        $this->removeFile($filePath);
 
-        if (!copy($filePath, $destination)) {
-            throw new FileUploadException(sprintf(
-                'Failed to copy file from "%s" to "%s"', $filePath, $destination
-            ));
-        }
+        return $destination;
+    }
 
+    /**
+     * @param string $filePath
+     * @param string $destination
+     *
+     * @throws FileUploadException
+     */
+    private function copyFile(string $filePath, string $destination): void
+    {
         try {
-            if (!unlink($filePath)) {
-                throw new CannotUnlinkFileException(sprintf('Failed to unlink file "%s"', $filePath));
-            }
+            copy($filePath, $destination);
+        } catch (ErrorException $e) {
+            throw new FileUploadException($e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * @param string $filePath
+     *
+     * @throws CannotUnlinkFileException
+     */
+    public function removeFile(string $filePath): void
+    {
+        try {
+            unlink($filePath);
         } catch (ErrorException $e) {
             throw new CannotUnlinkFileException($e->getMessage(), 0, $e);
         }
-
-        return $destination;
     }
 }

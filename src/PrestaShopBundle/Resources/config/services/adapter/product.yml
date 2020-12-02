@@ -562,6 +562,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader
         arguments:
             - '@prestashop.adapter.file.validator.virtual_product_file_validator'
+            - !php/const _PS_DOWNLOAD_DIR_
 
     prestashop.adapter.product.validate.product_download_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductDownloadValidator
