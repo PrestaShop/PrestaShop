@@ -72,6 +72,11 @@ class UpdateCombinationStockCommand
     private $availableDate;
 
     /**
+     * @var bool
+     */
+    private $movementOn = true;
+
+    /**
      * @param int $combinationId
      */
     public function __construct(
@@ -207,5 +212,21 @@ class UpdateCombinationStockCommand
         $this->availableDate = $availableDate;
 
         return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getLowStockAlertOn(): ?bool
+    {
+        return $this->lowStockAlertOn;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMovementOn(): bool
+    {
+        return $this->movementOn;
     }
 }
