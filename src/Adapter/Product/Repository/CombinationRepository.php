@@ -116,6 +116,13 @@ class CombinationRepository extends AbstractObjectModelRepository
         return $combination;
     }
 
+    /**
+     * @param Combination $combination
+     * @param array $updatableProperties
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
     public function partialUpdate(Combination $combination, array $updatableProperties, int $errorCode): void
     {
         $this->partiallyUpdateObjectModel(
