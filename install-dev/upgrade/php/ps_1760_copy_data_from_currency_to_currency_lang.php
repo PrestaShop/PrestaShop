@@ -62,7 +62,8 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
 
 function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
 {
-    $cldrLocale = $localeRepoCLDR->getLocale(Context::getContext()->language->locale);
+    $language = new Language($languages[0]['id_lang']);
+    $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
     $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
 
     if (!empty($cldrCurrency)) {
