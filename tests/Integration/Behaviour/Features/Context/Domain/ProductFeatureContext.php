@@ -61,7 +61,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then The category of product :productName has reduction of :reductionPercent% for the customer :customerReference
      */
-    public function theCategoryOfProductHasReductionOfForCustomer(string $productName, float $reductionPercent, string $customerReference)
+    public function addReductionOnProductCategoryForCustomerGroup(string $productName, float $reductionPercent, string $customerReference)
     {
         $productId = $this->getProductIdByName($productName);
 
@@ -92,7 +92,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then The category of product :productName has no reduction
      */
-    public function theCategoryOfProductHasNoReductionForCustomer(string $productName)
+    public function deleteReductionOnProductCategory(string $productName)
     {
         $productId = $this->getProductIdByName($productName);
 
