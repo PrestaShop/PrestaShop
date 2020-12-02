@@ -44,14 +44,22 @@ class CombinationForEditing
     private $prices;
 
     /**
+     * @var CombinationStock
+     */
+    private $stock;
+
+    /**
      * @param CombinationOptions $options
      * @param CombinationPrices $prices
+     * @param CombinationStock $stock
      */
     public function __construct(
         CombinationOptions $options,
-        CombinationPrices $prices
+        CombinationPrices $prices,
+        CombinationStock $stock
     ) {
         $this->options = $options;
+        $this->stock = $stock;
         $this->prices = $prices;
     }
 
@@ -69,5 +77,13 @@ class CombinationForEditing
     public function getPrices(): CombinationPrices
     {
         return $this->prices;
+    }
+
+    /**
+     * @return CombinationStock
+     */
+    public function getStock(): CombinationStock
+    {
+        return $this->stock;
     }
 }
