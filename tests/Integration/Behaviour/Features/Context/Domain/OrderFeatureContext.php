@@ -1728,7 +1728,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the product :productReference in order :orderReference has the following prices for viewing in BO:
+     * @Then product :productReference in order :orderReference has following prices for viewing in BO:
      *
      * @param string $orderReference
      * @param TableNode $table

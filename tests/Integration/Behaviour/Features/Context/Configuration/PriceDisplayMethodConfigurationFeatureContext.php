@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Customer;
 use Group;
+use RuntimeException;
 
 class PriceDisplayMethodConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
@@ -37,13 +38,19 @@ class PriceDisplayMethodConfigurationFeatureContext extends AbstractConfiguratio
     public function setPriceDisplayMethodForCustomer(string $customerEmail, string $priceDisplayMethod)
     {
         $data = Customer::getCustomersByEmail($customerEmail);
-        $customer = new Customer($data[0]['id_customer']);
+        $data = reset($data);
+        if (!isset($data['id_customer'])) {
+            throw new RuntimeException(sprintf('Customer with email %s was not found', $customerEmail));
+        }
+        $customer = new Customer($data['id_customer']);
 
         $group = new Group($customer->id_default_group);
         if ($priceDisplayMethod === 'tax included') {
             $group->price_display_method = Group::PRICE_DISPLAY_METHOD_TAX_INCL;
         } elseif ($priceDisplayMethod === 'tax excluded') {
             $group->price_display_method = Group::PRICE_DISPLAY_METHOD_TAX_EXCL;
+        } else {
+            throw new RuntimeException(sprintf('Price display method %s is not known', $priceDisplayMethod));
         }
 
         $group->update();

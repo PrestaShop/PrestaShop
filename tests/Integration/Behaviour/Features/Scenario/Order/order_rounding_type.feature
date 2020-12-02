@@ -48,7 +48,7 @@ Feature: In BO, get right display prices for products and totals, depending on t
       | unit_price_tax_excl         | 7.80   |
       | total_price_tax_excl        | 624.00 |
       | total_price_tax_incl        | 755.04 |
-    Then the product "Test Product With Odd Tax" in order "bo_order1" has the following prices for viewing in BO:
+    Then product "Test Product With Odd Tax" in order "bo_order1" has following prices for viewing in BO:
       | unit_price_tax_excl_raw     | 7.8    |
       | unit_price_tax_incl_raw     | 9.44   |
       | unit_price                  | $9.44  |
@@ -77,7 +77,7 @@ Feature: In BO, get right display prices for products and totals, depending on t
       | unit_price_tax_excl         | 7.80   |
       | total_price_tax_excl        | 624.00 |
       | total_price_tax_incl        | 755.20 |
-    Then the product "Test Product With Odd Tax" in order "bo_order1" has the following prices for viewing in BO:
+    Then product "Test Product With Odd Tax" in order "bo_order1" has following prices for viewing in BO:
       | unit_price_tax_excl_raw     | 7.8    |
       | unit_price_tax_incl_raw     | 9.44   |
       | unit_price                  | $9.44  |
@@ -106,7 +106,7 @@ Feature: In BO, get right display prices for products and totals, depending on t
       | unit_price_tax_excl         | 7.80   |
       | total_price_tax_excl        | 624.00 |
       | total_price_tax_incl        | 755.04 |
-    Then the product "Test Product With Odd Tax" in order "bo_order1" has the following prices for viewing in BO:
+    Then product "Test Product With Odd Tax" in order "bo_order1" has following prices for viewing in BO:
       | unit_price_tax_excl_raw     | 7.8    |
       | unit_price_tax_incl_raw     | 9.44   |
       | unit_price                  | $9.44  |
