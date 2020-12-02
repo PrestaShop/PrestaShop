@@ -223,6 +223,8 @@ class UpdateCombinationStockCommand
     }
 
     /**
+     * @todo: movement does not reflect in product page. Do we need this (e.g. in case modules are using it)/ used in legacy as $addMovement
+     *
      * @return bool
      */
     public function isMovementOn(): bool
