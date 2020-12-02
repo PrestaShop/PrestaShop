@@ -94,6 +94,7 @@ use SearchEngine;
 use Shop;
 use ShopGroup;
 use ShopUrl;
+use SpecificPrice;
 use State;
 use Stock;
 use StockAvailable;
@@ -352,5 +353,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         TaxRule::resetStaticCache();
         TaxRulesGroup::resetStaticCache();
         WebserviceKey::resetStaticCache();
+        SpecificPrice::flushCache();
     }
 }
