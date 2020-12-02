@@ -532,13 +532,6 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationOptionsCommand
 
-    prestashop.adapter.product.command.update_combination_prices_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCombinationPricesHandler
-        arguments:
-            - '@prestashop.adapter.product.repository.combination_repository'
-        tags:
-            - name: tactician.handler
-
     prestashop.adapter.product.validate.combination_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\CombinationValidator
 
