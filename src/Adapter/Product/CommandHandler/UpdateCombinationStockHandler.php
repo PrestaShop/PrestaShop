@@ -89,7 +89,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
         }
 
         if (null !== $command->getAvailableDate()) {
-            $combination->available_date = $command->getAvailableDate()->format(DateTime::DEFAULT_DATETIME_FORMAT);
+            $combination->available_date = $command->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
             $updatableProperties[] = 'available_date';
         }
 
