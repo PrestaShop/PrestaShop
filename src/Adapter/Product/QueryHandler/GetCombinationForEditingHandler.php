@@ -29,11 +29,18 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Combination;
+use DateTime;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Handles @see GetCombinationForEditing query using legacy object model
@@ -46,12 +53,20 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     private $combinationRepository;
 
     /**
+     * @var StockAvailableRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
+     * @param StockAvailableRepository $stockAvailableRepository
      */
     public function __construct(
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -62,7 +77,8 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         $combination = $this->combinationRepository->get($query->getCombinationId());
 
         return new CombinationForEditing(
-            $this->getOptions($combination)
+            $this->getOptions($combination),
+            $this->getStock($combination)
         );
     }
 
@@ -79,6 +95,29 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             $combination->mpn,
             $combination->reference,
             $combination->upc
+        );
+    }
+
+    /**
+     * @param Combination $combination
+     *
+     * @return CombinationStock
+     *
+     * @throws CombinationConstraintException
+     * @throws StockAvailableNotFoundException
+     * @throws CoreException
+     */
+    private function getStock(Combination $combination): CombinationStock
+    {
+        $stockAvailable = $this->stockAvailableRepository->getForCombination(new Combinationid($combination->id));
+
+        return new CombinationStock(
+            (int) $stockAvailable->quantity,
+            $combination->minimal_quantity,
+            $combination->location,
+            $combination->low_stock_threshold,
+            (bool) $combination->low_stock_alert,
+            new DateTime($combination->available_date)
         );
     }
 }
