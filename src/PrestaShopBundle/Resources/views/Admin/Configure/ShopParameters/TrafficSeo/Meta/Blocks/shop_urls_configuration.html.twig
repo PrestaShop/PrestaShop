@@ -49,7 +49,7 @@
     </div>
   {% endif %}
 
-  {% if shopUrlsForm.children is not empty %}
+  {% if not isShopFeatureActive and not isHostMode and doesMainShopUrlExist %}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">settings</i> {{ cardHeaderLabel }}
