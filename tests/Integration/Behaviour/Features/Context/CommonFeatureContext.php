@@ -36,10 +36,12 @@ use Category;
 use Context;
 use Currency;
 use Employee;
+use Group;
 use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Pack;
 use Product;
+use SpecificPrice;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use TaxManagerFactory;
 
@@ -204,5 +206,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Language::resetCache();
         Currency::resetStaticCache();
         TaxManagerFactory::resetStaticCache();
+        SpecificPrice::flushCache();
+        Group::clearCachedValues();
     }
 }
