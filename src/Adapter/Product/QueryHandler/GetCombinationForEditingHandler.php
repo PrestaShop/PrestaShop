@@ -110,6 +110,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             new DecimalNumber($combination->price),
             new DecimalNumber($combination->unit_price_impact),
             new DecimalNumber($combination->wholesale_price)
+        );
     }
 
     /**
