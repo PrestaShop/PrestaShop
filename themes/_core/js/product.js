@@ -220,7 +220,7 @@ function updateProduct(event, eventType, updateUrl) {
         $(prestashop.selectors.product.customization)
           .first()
           .replaceWith(data.product_customization);
-        $('.product-actions input[name=id_customization]').val(0);
+        $(prestashop.selectors.product.input_customization).val(0);
         $(prestashop.selectors.product.variantsUpdate)
           .first()
           .replaceWith(data.product_variants);
