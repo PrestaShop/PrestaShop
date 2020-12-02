@@ -161,6 +161,7 @@ class ProductStockUpdater
      */
     private function updateQuantity(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
+        //@todo: unused $propertiesToUpdate
         $deltaQuantity = (int) $product->quantity - (int) $stockAvailable->quantity;
         $stockAvailable->quantity = (int) $product->quantity;
 
