@@ -34,7 +34,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 class CannotUpdateCombinationException extends CombinationException
 {
     /**
-     * When fails to update stock information of single combination
+     * When fails to update options of single combination
      */
     const FAILED_UPDATE_OPTIONS = 10;
+
+    /**
+     * When fails to update stock information of single combination
+     */
+    const FAILED_UPDATE_STOCK = 20;
 }
