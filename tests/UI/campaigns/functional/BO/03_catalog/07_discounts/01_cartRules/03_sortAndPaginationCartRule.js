@@ -172,12 +172,12 @@ describe('Sort and pagination cart rules', async () => {
       },
       {
         args: {
-          testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up',
+          testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down',
+          testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down', isDate: true,
         },
       },
       {
@@ -201,7 +201,7 @@ describe('Sort and pagination cart rules', async () => {
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await cartRulesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await cartRulesPage.sortArray(nonSortedTable, test.args.isFloat, test.args.isDate);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);
