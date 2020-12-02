@@ -172,6 +172,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e): array
     {
+        // @todo: all the constraint error messages are missing for now (see ProductConstraintException)
         return [
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(
