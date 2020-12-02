@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
@@ -68,7 +69,7 @@ class CombinationId
     private function assertValueIsPositive(int $value)
     {
         if (0 >= $value) {
-            throw new ProductConstraintException(sprintf('Combination id must be positive integer. "%s" given', $value), ProductConstraintException::INVALID_ID);
+            throw new CombinationConstraintException(sprintf('Combination id must be positive integer. "%s" given', $value), CombinationConstraintException::INVALID_ID);
         }
     }
 }
