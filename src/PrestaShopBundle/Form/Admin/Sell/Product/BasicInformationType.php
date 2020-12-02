@@ -37,6 +37,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Form type containing basic information (some of them are in the Basic settings tab but name and type are in the header)
+ */
 class BasicInformationType extends TranslatorAwareType
 {
     /**
@@ -67,12 +70,12 @@ class BasicInformationType extends TranslatorAwareType
                     new DefaultLanguage(),
                 ],
             ])
-            // This should be FormattedTextAreaType, waiting for #21115
+            // @todo: This should be FormattedTextAreaType, waiting for #21115
             ->add('description_short', TranslatableType::class, [
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => TextareaType::class,
             ])
-            // This should be FormattedTextAreaType, waiting for #21115
+            // @todo: This should be FormattedTextAreaType, waiting for #21115
             ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => TextareaType::class,

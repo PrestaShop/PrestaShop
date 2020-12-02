@@ -40,8 +40,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
- * This is the parent product form type (for now it only contains example fields
- * but it will soon be improved with more accurate sub forms).
+ * Form type containing price fields for Pricing tab
  */
 class PriceType extends TranslatorAwareType
 {
@@ -87,6 +86,7 @@ class PriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => true,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),

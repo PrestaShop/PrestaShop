@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 
+/**
+ * Provides the data that is used to prefill the Product form
+ */
 final class ProductFormDataProvider implements FormDataProviderInterface
 {
     /**
@@ -66,6 +69,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'price' => [
                 'price_tax_excluded' => (float) (string) $result->getPricesInformation()->getPrice(),
+                // @todo: we don't have the price tax included for now This should be computed by GetProductForEditing
                 'price_tax_included' => (float) (string) $result->getPricesInformation()->getPrice(),
                 'ecotax' => (float) (string) $result->getPricesInformation()->getEcotax(),
                 'tax_rules_group_id' => $result->getPricesInformation()->getTaxRulesGroupId(),

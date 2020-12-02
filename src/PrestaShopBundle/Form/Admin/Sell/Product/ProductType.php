@@ -35,6 +35,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * This is the parent product form type
+ */
 class ProductType extends TranslatorAwareType
 {
     /**
