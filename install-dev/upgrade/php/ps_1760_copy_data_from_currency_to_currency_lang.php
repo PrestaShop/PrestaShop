@@ -62,6 +62,18 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
 
 function refreshLocalizedCurrencyData(Currency $currency, array $languages, LocaleRepository $localeRepoCLDR)
 {
+    $language = new Language($languages[0]['id_lang']);
+    $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+    $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
+
+    if (!empty($cldrCurrency)) {
+        $fields = [
+            'numeric_iso_code' => $cldrCurrency->getNumericIsoCode(),
+            'precision' => $cldrCurrency->getDecimalDigits(),
+        ];
+        Db::getInstance()->update('currency', $fields, 'id_currency = ' . (int) $currency->id);
+    }
+
     foreach ($languages as $languageData) {
         $language = new Language($languageData['id_lang']);
         if (empty($language->locale)) {
