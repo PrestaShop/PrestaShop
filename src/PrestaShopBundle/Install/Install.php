@@ -858,6 +858,7 @@ class Install extends AbstractInstall
         // Update default contact
         if (isset($data['admin_email'])) {
             Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
+            Configuration::updateGlobalValue('PS_LOGS_EMAIL_RECEIVERS', $data['admin_email']);
 
             $contacts = new PrestaShopCollection('Contact');
             /** @var \Contact $contact */
