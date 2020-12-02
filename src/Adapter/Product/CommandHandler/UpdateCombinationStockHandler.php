@@ -70,7 +70,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
 
-        $this->combinationStockUpdater->update($combination, $updatableProperties);
+        $this->combinationStockUpdater->update($combination, $updatableProperties, $command->isMovementOn());
     }
 
     /**

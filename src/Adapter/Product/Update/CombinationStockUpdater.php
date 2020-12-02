@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationC
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShopException;
 
 class CombinationStockUpdater
@@ -51,26 +52,35 @@ class CombinationStockUpdater
     private $combinationRepository;
 
     /**
+     * @var StockManager
+     */
+    private $stockManager;
+
+    /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param CombinationRepository $combinationRepository
+     * @param StockManager $stockManager
      */
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        StockManager $stockManager
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
+        $this->stockManager = $stockManager;
     }
 
     /**
      * @param Combination $combination
      * @param array $propertiesToUpdate
+     * @param bool $addMovement
      *
      * @throws CombinationConstraintException
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function update(Combination $combination, array $propertiesToUpdate): void
+    public function update(Combination $combination, array $propertiesToUpdate, bool $addMovement): void
     {
         $this->combinationRepository->partialUpdate(
             $combination,
@@ -78,29 +88,54 @@ class CombinationStockUpdater
             CannotUpdateCombinationException::FAILED_UPDATE_STOCK
         );
 
+        // updating stockAvailable after Combination is important, because quantity validation is done in Combination update
         if (in_array('quantity', $propertiesToUpdate)) {
-            $this->updateStockAvailableQuantity($combination);
+            $this->updateStockAvailable($combination, $addMovement);
         }
     }
 
     /**
      * @param Combination $combination
+     * @param bool $addMovement
      *
      * @throws CombinationConstraintException
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    private function updateStockAvailableQuantity(Combination $combination): void
+    private function updateStockAvailable(Combination $combination, bool $addMovement): void
     {
-        $combinationId = new CombinationId((int) $combination->id);
-        $stockAvailable = $this->stockAvailableRepository->getForCombination($combinationId);
+        $newQuantity = (int) $combination->quantity;
+        $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
+
+        if ($addMovement) {
+            $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
+        }
+
+        $stockAvailable->quantity = $newQuantity;
+        $this->stockAvailableRepository->update($stockAvailable);
+    }
+
+    /**
+     * @param Combination $combination
+     * @param int $oldQuantity
+     * @param int $newQuantity
+     *
+     * @throws CoreException
+     */
+    private function saveMovement(Combination $combination, int $oldQuantity, int $newQuantity): void
+    {
+        $combinationId = $combination->id;
+        $deltaQuantity = $newQuantity - $oldQuantity;
+
+        if (0 === $deltaQuantity) {
+            return;
+        }
 
         try {
-            //@todo: refactor as in ProductStockUpdater
-            $stockAvailable::setQuantity((int) $combination->id_product, $combinationId->getValue(), $combination->quantity);
+            $this->stockManager->saveMovement($combination->id_product, $combinationId, $deltaQuantity);
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to update combination %d quantity', $combinationId->getValue()),
+                sprintf('Error occurred when trying to save stock movement for combination %d', $combinationId),
                 0,
                 $e
             );

@@ -129,9 +129,6 @@ class CombinationRepository extends AbstractObjectModelRepository
      * @param Combination $combination
      * @param array $updatableProperties
      * @param int $errorCode
-     *
-     * @throws CoreException
-     * @throws CannotAddCombinationException
      */
     public function partialUpdate(Combination $combination, array $updatableProperties, int $errorCode): void
     {
