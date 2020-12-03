@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -74,7 +74,7 @@ class DbMySQLiCore extends Db
         }
 
         // UTF-8 support
-        if (!$this->link->query('SET NAMES \'utf8\'')) {
+        if (!$this->link->query('SET NAMES utf8mb4')) {
             throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
         }
 
@@ -178,7 +178,7 @@ class DbMySQLiCore extends Db
         if (method_exists($result, 'fetch_all')) {
             return $result->fetch_all(MYSQLI_ASSOC);
         } else {
-            $ret = array();
+            $ret = [];
 
             while ($row = $this->nextRow($result)) {
                 $ret[] = $row;
@@ -378,7 +378,7 @@ class DbMySQLiCore extends Db
         $result = $this->link->query($sql);
         while ($row = $result->fetch_assoc()) {
             if ($row['Engine'] == 'InnoDB') {
-                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                if (in_array($row['Support'], ['DEFAULT', 'YES'])) {
                     $value = 'InnoDB';
                 }
 
@@ -440,7 +440,7 @@ class DbMySQLiCore extends Db
     public static function tryUTF8($server, $user, $pwd)
     {
         $link = @new mysqli($server, $user, $pwd);
-        $ret = $link->query("SET NAMES 'UTF8'");
+        $ret = $link->query('SET NAMES utf8mb4');
         $link->close();
 
         return $ret;

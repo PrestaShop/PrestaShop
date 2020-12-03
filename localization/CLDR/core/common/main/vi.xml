@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -9,13 +9,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13705 $"/>
+		<version number="$Revision$"/>
 		<language type="vi"/>
 	</identity>
 	<localeDisplayNames>
 		<localeDisplayPattern>
-			<localePattern>{0} ({1})</localePattern>
-			<localeSeparator>{0}, {1}</localeSeparator>
 			<localeKeyTypePattern>{0}: {1}</localeKeyTypePattern>
 		</localeDisplayPattern>
 		<languages>
@@ -47,6 +45,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="aro">Tiếng Araona</language>
 			<language type="arp">Tiếng Arapaho</language>
 			<language type="arq">Tiếng Ả Rập Algeria</language>
+			<language type="ars">Tiếng Ả Rập Najdi</language>
 			<language type="arw">Tiếng Arawak</language>
 			<language type="arz">Tiếng Ả Rập Ai Cập</language>
 			<language type="as">Tiếng Assam</language>
@@ -103,6 +102,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="car">Tiếng Carib</language>
 			<language type="cay">Tiếng Cayuga</language>
 			<language type="cch">Tiếng Atsam</language>
+			<language type="ccp">Tiếng Chakma</language>
 			<language type="ce">Tiếng Chechen</language>
 			<language type="ceb">Tiếng Cebuano</language>
 			<language type="cgg">Tiếng Chiga</language>
@@ -535,7 +535,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="udm">Tiếng Udmurt</language>
 			<language type="ug">Tiếng Uyghur</language>
 			<language type="uga">Tiếng Ugaritic</language>
-			<language type="uk">Tiếng Ucraina</language>
+			<language type="uk">Tiếng Ukraina</language>
 			<language type="umb">Tiếng Umbundu</language>
 			<language type="und">Ngôn ngữ không xác định</language>
 			<language type="ur">Tiếng Urdu</language>
@@ -564,12 +564,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="yi">Tiếng Yiddish</language>
 			<language type="yo">Tiếng Yoruba</language>
 			<language type="yue">Tiếng Quảng Đông</language>
+			<language type="yue" alt="menu">Tiếng Trung (Tiếng Quảng Đông)</language>
 			<language type="za">Tiếng Choang</language>
 			<language type="zap">Tiếng Zapotec</language>
 			<language type="zbl">Ký hiệu Blissymbols</language>
 			<language type="zen">Tiếng Zenaga</language>
 			<language type="zgh">Tiếng Tamazight Chuẩn của Ma-rốc</language>
 			<language type="zh">Tiếng Trung</language>
+			<language type="zh" alt="menu">Tiếng Trung (Phổ thông)</language>
+			<language type="zh_Hans" alt="long">Tiếng Trung Phổ thông (Giản thể)</language>
+			<language type="zh_Hant" alt="long">Tiếng Trung Phổ thông (Phồn thể)</language>
 			<language type="zu">Tiếng Zulu</language>
 			<language type="zun">Tiếng Zuni</language>
 			<language type="zxx">Không có nội dung ngôn ngữ</language>
@@ -586,7 +590,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<script type="Bamu" draft="contributed">Chữ Bamum</script>
 			<script type="Bass" draft="contributed">Chữ Bassa Vah</script>
 			<script type="Batk" draft="contributed">Chữ Batak</script>
-			<script type="Beng">Chữ Bangladesh</script>
+			<script type="Beng">Chữ Bangla</script>
 			<script type="Blis" draft="contributed">Chữ Blissymbols</script>
 			<script type="Bopo">Chữ Bopomofo</script>
 			<script type="Brah" draft="contributed">Chữ Brahmi</script>
@@ -611,15 +615,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<script type="Egyp" draft="contributed">Chữ tượng hình Ai Cập</script>
 			<script type="Ethi">Chữ Ethiopia</script>
 			<script type="Geok" draft="contributed">Chữ Khutsuri Georgia</script>
-			<script type="Geor">Chữ Gruzia</script>
+			<script type="Geor">Chữ Georgia</script>
 			<script type="Glag" draft="contributed">Chữ Glagolitic</script>
 			<script type="Goth" draft="contributed">Chữ Gô-tích</script>
 			<script type="Gran" draft="contributed">Chữ Grantha</script>
 			<script type="Grek">Chữ Hy Lạp</script>
 			<script type="Gujr">Chữ Gujarati</script>
 			<script type="Guru">Chữ Gurmukhi</script>
-			<script type="Hanb">Chữ Hanb</script>
-			<script type="Hang">Chữ Hangul</script>
+			<script type="Hanb">Chữ Hán có chú âm</script>
+			<script type="Hang">Chữ Hàn</script>
 			<script type="Hani">Chữ Hán</script>
 			<script type="Hano" draft="contributed">Chữ Hanunoo</script>
 			<script type="Hans">Giản thể</script>
@@ -630,7 +634,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<script type="Hira">Chữ Hiragana</script>
 			<script type="Hluw" draft="contributed">Chữ tượng hình Anatolia</script>
 			<script type="Hmng" draft="contributed">Chữ Pahawh Hmong</script>
-			<script type="Hrkt" draft="contributed">Bảng ký hiệu âm tiết Tiếng Nhật</script>
+			<script type="Hrkt">Bảng ký hiệu âm tiết Tiếng Nhật</script>
 			<script type="Hung" draft="contributed">Chữ Hungary cổ</script>
 			<script type="Inds" draft="contributed">Chữ Indus</script>
 			<script type="Ital" draft="contributed">Chữ Italic cổ</script>
@@ -734,7 +738,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<script type="Xsux" draft="contributed">Chữ hình nêm Sumero-Akkadian</script>
 			<script type="Yiii" draft="contributed">Chữ Di</script>
 			<script type="Zinh" draft="contributed">Chữ Kế thừa</script>
-			<script type="Zmth" draft="contributed">Ký hiệu Toán học</script>
+			<script type="Zmth">Ký hiệu Toán học</script>
 			<script type="Zsye">Biểu tượng</script>
 			<script type="Zsym">Ký hiệu</script>
 			<script type="Zxxx">Chưa có chữ viết</script>
@@ -760,9 +764,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="034">Nam Á</territory>
 			<territory type="035">Đông Nam Á</territory>
 			<territory type="039">Nam Âu</territory>
-			<territory type="053">Úc và New Zealand</territory>
+			<territory type="053">Australasia</territory>
 			<territory type="054">Melanesia</territory>
-			<territory type="057">Vùng Micronesian</territory>
+			<territory type="057">Vùng Micronesia</territory>
 			<territory type="061">Polynesia</territory>
 			<territory type="142">Châu Á</territory>
 			<territory type="143">Trung Á</territory>
@@ -771,6 +775,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="151">Đông Âu</territory>
 			<territory type="154">Bắc Âu</territory>
 			<territory type="155">Tây Âu</territory>
+			<territory type="202">Châu Phi hạ Sahara</territory>
 			<territory type="419">Châu Mỹ La-tinh</territory>
 			<territory type="AC">Đảo Ascension</territory>
 			<territory type="AD">Andorra</territory>
@@ -783,7 +788,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="AO">Angola</territory>
 			<territory type="AQ">Nam Cực</territory>
 			<territory type="AR">Argentina</territory>
-			<territory type="AS">Đảo Somoa thuộc Mỹ</territory>
+			<territory type="AS">Samoa thuộc Mỹ</territory>
 			<territory type="AT">Áo</territory>
 			<territory type="AU">Australia</territory>
 			<territory type="AW">Aruba</territory>
@@ -850,7 +855,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="ES">Tây Ban Nha</territory>
 			<territory type="ET">Ethiopia</territory>
 			<territory type="EU">Liên Minh Châu Âu</territory>
-			<territory type="EZ" draft="contributed">Khu vực đồng Euro</territory>
+			<territory type="EZ">Khu vực đồng Euro</territory>
 			<territory type="FI">Phần Lan</territory>
 			<territory type="FJ">Fiji</territory>
 			<territory type="FK">Quần đảo Falkland</territory>
@@ -862,7 +867,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="GB">Vương quốc Anh</territory>
 			<territory type="GB" alt="short">Vương quốc Anh</territory>
 			<territory type="GD">Grenada</territory>
-			<territory type="GE">Gruzia</territory>
+			<territory type="GE">Georgia</territory>
 			<territory type="GF">Guiana thuộc Pháp</territory>
 			<territory type="GG">Guernsey</territory>
 			<territory type="GH">Ghana</territory>
@@ -891,7 +896,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="IL">Israel</territory>
 			<territory type="IM">Đảo Man</territory>
 			<territory type="IN">Ấn Độ</territory>
-			<territory type="IO">Lãnh thổ Ấn độ dương thuộc Anh</territory>
+			<territory type="IO">Lãnh thổ Ấn Độ Dương thuộc Anh</territory>
 			<territory type="IQ">Iraq</territory>
 			<territory type="IR">Iran</territory>
 			<territory type="IS">Iceland</territory>
@@ -929,8 +934,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="MF">St. Martin</territory>
 			<territory type="MG">Madagascar</territory>
 			<territory type="MH">Quần đảo Marshall</territory>
-			<territory type="MK">Macedonia</territory>
-			<territory type="MK" alt="variant">Macedonia (FYROM)</territory>
+			<territory type="MK">Bắc Macedonia</territory>
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Myanmar (Miến Điện)</territory>
 			<territory type="MN">Mông Cổ</territory>
@@ -1003,6 +1007,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="SX">Sint Maarten</territory>
 			<territory type="SY">Syria</territory>
 			<territory type="SZ">Swaziland</territory>
+			<territory type="SZ" alt="variant">Eswatini</territory>
 			<territory type="TA">Tristan da Cunha</territory>
 			<territory type="TC">Quần đảo Turks và Caicos</territory>
 			<territory type="TD">Chad</territory>
@@ -1039,6 +1044,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="VU">Vanuatu</territory>
 			<territory type="WF">Wallis và Futuna</territory>
 			<territory type="WS">Samoa</territory>
+			<territory type="XA">Pseudo-Accents</territory>
+			<territory type="XB">Pseudo-Bidi</territory>
 			<territory type="XK">Kosovo</territory>
 			<territory type="YE">Yemen</territory>
 			<territory type="YT">Mayotte</territory>
@@ -1059,8 +1066,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<variant type="AREVELA" draft="contributed">Tiếng Armenia Miền Đông</variant>
 			<variant type="AREVMDA" draft="contributed">Tiếng Armenia Miền Tây</variant>
 			<variant type="BAKU1926" draft="contributed">Bảng chữ cái La-tinh Tiếng Turk Hợp nhất</variant>
-			<variant type="BAUDDHA" draft="contributed">BAUDDHA</variant>
-			<variant type="BISCAYAN" draft="contributed">BISCAYAN</variant>
 			<variant type="BISKE" draft="contributed">Phương ngữ San Giorgio/Bila</variant>
 			<variant type="BOHORIC" draft="contributed">Bảng chữ cái Bohorič</variant>
 			<variant type="BOONT" draft="contributed">Tiếng Boontling</variant>
@@ -1068,17 +1073,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<variant type="EMODENG" draft="contributed">Tiếng Anh Hiện đại Thời kỳ đầu</variant>
 			<variant type="FONIPA" draft="contributed">Ngữ âm học IPA</variant>
 			<variant type="FONUPA" draft="contributed">Ngữ âm học UPA</variant>
-			<variant type="FONXSAMP" draft="contributed">FONXSAMP</variant>
 			<variant type="HEPBURN" draft="contributed">La mã hóa Hepburn</variant>
-			<variant type="HOGNORSK" draft="contributed">HOGNORSK</variant>
-			<variant type="ITIHASA" draft="contributed">ITIHASA</variant>
-			<variant type="JAUER" draft="contributed">JAUER</variant>
-			<variant type="JYUTPING" draft="contributed">JYUTPING</variant>
 			<variant type="KKCOR" draft="contributed">Phép chính tả Chung</variant>
 			<variant type="KSCOR" draft="contributed">Phép chính tả Chuẩn</variant>
-			<variant type="LAUKIKA" draft="contributed">LAUKIKA</variant>
 			<variant type="LIPAW" draft="contributed">Phương ngữ Lipovaz của người Resian</variant>
-			<variant type="LUNA1918" draft="contributed">LUNA1918</variant>
 			<variant type="METELKO" draft="contributed">Bảng chữ cái Metelko</variant>
 			<variant type="MONOTON" draft="contributed">Đơn âm</variant>
 			<variant type="NDYUKA" draft="contributed">Phương ngữ Ndyuka</variant>
@@ -1087,49 +1085,40 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<variant type="NULIK" draft="contributed">Tiếng Volapük Hiện đại</variant>
 			<variant type="OSOJS" draft="contributed">Phương ngữ Oseacco/Osojane</variant>
 			<variant type="PAMAKA" draft="contributed">Phương ngữ Pamaka</variant>
-			<variant type="PETR1708" draft="contributed">PETR1708</variant>
 			<variant type="PINYIN" draft="contributed">La Mã hóa Bính âm</variant>
 			<variant type="POLYTON" draft="contributed">Đa âm</variant>
 			<variant type="POSIX" draft="contributed">Máy tính</variant>
-			<variant type="PUTER" draft="contributed">PUTER</variant>
 			<variant type="REVISED" draft="contributed">Phép chính tả Sửa đổi</variant>
 			<variant type="RIGIK" draft="contributed">Tiếng Volapük Cổ điển</variant>
 			<variant type="ROZAJ" draft="contributed">Tiếng Resian</variant>
-			<variant type="RUMGR" draft="contributed">RUMGR</variant>
 			<variant type="SAAHO" draft="contributed">Tiếng Saho</variant>
 			<variant type="SCOTLAND" draft="contributed">Tiếng Anh chuẩn tại Scotland</variant>
 			<variant type="SCOUSE" draft="contributed">Phương ngữ Liverpool</variant>
 			<variant type="SOLBA" draft="contributed">Phương ngữ Stolvizza/Solbica</variant>
-			<variant type="SURMIRAN" draft="contributed">SURMIRAN</variant>
-			<variant type="SURSILV" draft="contributed">SURSILV</variant>
-			<variant type="SUTSILV" draft="contributed">SUTSILV</variant>
 			<variant type="TARASK" draft="contributed">Phép chính tả Taraskievica</variant>
 			<variant type="UCCOR" draft="contributed">Phép chính tả Hợp nhất</variant>
 			<variant type="UCRCOR" draft="contributed">Phép chính tả Sửa đổi Hợp nhất</variant>
-			<variant type="ULSTER" draft="contributed">ULSTER</variant>
-			<variant type="VAIDIKA" draft="contributed">VAIDIKA</variant>
 			<variant type="VALENCIA" draft="contributed">Tiếng Valencia</variant>
-			<variant type="VALLADER" draft="contributed">VALLADER</variant>
 			<variant type="WADEGILE" draft="contributed">La Mã hóa Wade-Giles</variant>
 		</variants>
 		<keys>
 			<key type="calendar">Lịch</key>
 			<key type="cf">Định dạng tiền tệ</key>
-			<key type="colAlternate" draft="contributed">Bỏ qua sắp xếp biểu tượng</key>
-			<key type="colBackwards" draft="contributed">Sắp xếp dấu trọng âm đảo ngược</key>
-			<key type="colCaseFirst" draft="contributed">Sắp xếp chữ hoa/chữ thường</key>
-			<key type="colCaseLevel" draft="contributed">Sắp xếp phân biệt chữ hoa/chữ thường</key>
+			<key type="colAlternate">Bỏ qua sắp xếp biểu tượng</key>
+			<key type="colBackwards">Sắp xếp dấu trọng âm đảo ngược</key>
+			<key type="colCaseFirst">Sắp xếp chữ hoa/chữ thường</key>
+			<key type="colCaseLevel">Sắp xếp phân biệt chữ hoa/chữ thường</key>
 			<key type="collation">Thứ tự sắp xếp</key>
-			<key type="colNormalization" draft="contributed">Sắp xếp theo chuẩn hóa</key>
-			<key type="colNumeric" draft="contributed">Sắp xếp theo số</key>
-			<key type="colStrength" draft="contributed">Cường độ sắp xếp</key>
+			<key type="colNormalization">Sắp xếp theo chuẩn hóa</key>
+			<key type="colNumeric">Sắp xếp theo số</key>
+			<key type="colStrength">Cường độ sắp xếp</key>
 			<key type="currency">Tiền tệ</key>
-			<key type="hc">Chu kỳ giờ (12 vs 24)</key>
+			<key type="hc">Chu kỳ giờ (12 với 24)</key>
 			<key type="lb">Kiểu xuống dòng</key>
 			<key type="ms">Hệ thống đo lường</key>
 			<key type="numbers">Số</key>
-			<key type="timezone" draft="contributed">Múi giờ</key>
-			<key type="va" draft="contributed">Biến thể ngôn ngữ</key>
+			<key type="timezone">Múi giờ</key>
+			<key type="va">Biến thể ngôn ngữ</key>
 			<key type="x">Sử dụng cá nhân</key>
 		</keys>
 		<types>
@@ -1166,6 +1155,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="collation" type="compat" draft="contributed">Thứ tự sắp xếp trước đây, để tương thích</type>
 			<type key="collation" type="dictionary">Thứ tự sắp xếp theo từ điển</type>
 			<type key="collation" type="ducet">Thứ tự sắp xếp unicode mặc định</type>
+			<type key="collation" type="emoji" draft="contributed">Thứ tự sắp xếp biểu tượng</type>
 			<type key="collation" type="eor" draft="contributed">Quy tắc sắp xếp Châu Âu</type>
 			<type key="collation" type="gb2312han">Thứ tự sắp xếp theo tiếng Trung giản thể - GB2312</type>
 			<type key="collation" type="phonebook">Thứ tự sắp xếp theo danh bạ điện thoại</type>
@@ -1188,8 +1178,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="colStrength" type="quaternary" draft="contributed">Sắp xếp dấu trọng âm/chữ cái/độ rộng/chữ Kana</type>
 			<type key="colStrength" type="secondary" draft="contributed">Sắp xếp dấu trọng âm</type>
 			<type key="colStrength" type="tertiary" draft="contributed">Sắp xếp dấu trọng âm/chữ cái/độ rộng</type>
-			<type key="d0" type="fwidth" draft="contributed">Độ rộng tối đa</type>
-			<type key="d0" type="hwidth" draft="contributed">Nửa độ rộng</type>
+			<type key="d0" type="fwidth">Độ rộng tối đa</type>
+			<type key="d0" type="hwidth">Nửa độ rộng</type>
 			<type key="d0" type="npinyin" draft="contributed">Số</type>
 			<type key="hc" type="h11">Hệ thống 12 giờ (0–11)</type>
 			<type key="hc" type="h12">Hệ thống 12 giờ (1–12)</type>
@@ -1198,11 +1188,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="lb" type="loose">Kiểu xuống dòng thoáng</type>
 			<type key="lb" type="normal">Kiểu xuống dòng thường</type>
 			<type key="lb" type="strict">Kiểu xuống dòng hẹp</type>
-			<type key="m0" type="bgn" draft="contributed">BGN</type>
-			<type key="m0" type="ungegn" draft="contributed">UNGEGN</type>
+			<type key="m0" type="bgn">Chuyển tự US BGN</type>
+			<type key="m0" type="ungegn">Chuyển tự UN GEGN</type>
 			<type key="ms" type="metric">Hệ mét</type>
 			<type key="ms" type="uksystem">Hệ đo lường Anh</type>
 			<type key="ms" type="ussystem">Hệ đo lường Mỹ</type>
+			<type key="numbers" type="ahom" draft="contributed">Chữ số Ahom</type>
 			<type key="numbers" type="arab">Chữ số Ả Rập - Ấn Độ</type>
 			<type key="numbers" type="arabext">Chữ số Ả Rập - Ấn Độ mở rộng</type>
 			<type key="numbers" type="armn">Chữ số Armenia</type>
@@ -1212,11 +1203,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="numbers" type="brah" draft="contributed">Chữ số Brahmi</type>
 			<type key="numbers" type="cakm" draft="contributed">Chữ số Chakma</type>
 			<type key="numbers" type="cham" draft="contributed">Chữ số Chăm</type>
+			<type key="numbers" type="cyrl" draft="contributed">Số Kirin</type>
 			<type key="numbers" type="deva">Chữ số Devanagari</type>
 			<type key="numbers" type="ethi">Chữ số Ethiopia</type>
 			<type key="numbers" type="finance" draft="contributed">Chữ số dùng trong tài chính</type>
 			<type key="numbers" type="fullwide">Chữ số có độ rộng đầy đủ</type>
-			<type key="numbers" type="geor">Chữ số Gruzia</type>
+			<type key="numbers" type="geor">Chữ số Georgia</type>
+			<type key="numbers" type="gong" draft="contributed">Chữ số Gong</type>
+			<type key="numbers" type="gonm" draft="contributed">Chữ số Gonm</type>
 			<type key="numbers" type="grek">Chữ số Hy Lạp</type>
 			<type key="numbers" type="greklow">Chữ số Hy Lạp viết thường</type>
 			<type key="numbers" type="gujr">Chữ số Gujarati</type>
@@ -1227,6 +1221,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="numbers" type="hant">Chữ số tiếng Trung phồn thể</type>
 			<type key="numbers" type="hantfin">Chữ số dùng trong tài chính của tiếng Trung phồn thể</type>
 			<type key="numbers" type="hebr">Chữ số Do Thái</type>
+			<type key="numbers" type="hmng" draft="contributed">Chữ số Hmng</type>
+			<type key="numbers" type="hmnp" draft="contributed">Chữ số Hmnp</type>
 			<type key="numbers" type="java" draft="contributed">Chữ số Java</type>
 			<type key="numbers" type="jpan">Chữ số Nhật Bản</type>
 			<type key="numbers" type="jpanfin">Chữ số dùng trong tài chính của tiếng Nhật</type>
@@ -1239,20 +1235,31 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="numbers" type="latn">Chữ số phương Tây</type>
 			<type key="numbers" type="lepc" draft="contributed">Chữ số Lepcha</type>
 			<type key="numbers" type="limb" draft="contributed">Chữ số Limbu</type>
+			<type key="numbers" type="mathbold" draft="contributed">Chữ số Mathbold</type>
+			<type key="numbers" type="mathdbl" draft="contributed">Chữ số Mathdbl</type>
+			<type key="numbers" type="mathmono" draft="contributed">Chữ số Mathmono</type>
+			<type key="numbers" type="mathsanb" draft="contributed">Chữ số Mathsanb</type>
+			<type key="numbers" type="mathsans" draft="contributed">Chữ số Mathsans</type>
 			<type key="numbers" type="mlym">Chữ số Malayalam</type>
+			<type key="numbers" type="modi" draft="contributed">Chữ số Modi</type>
 			<type key="numbers" type="mong">Chữ số Mông Cổ</type>
+			<type key="numbers" type="mroo" draft="contributed">Chữ số Mroo</type>
 			<type key="numbers" type="mtei" draft="contributed">Chữ số Meetei Mayek</type>
 			<type key="numbers" type="mymr">Chữ số Myanma</type>
 			<type key="numbers" type="mymrshan" draft="contributed">Chữ số Myanmar Shan</type>
+			<type key="numbers" type="mymrtlng" draft="contributed">Chữ số Mymrtlng</type>
 			<type key="numbers" type="native" draft="contributed">Chữ số tự nhiên</type>
 			<type key="numbers" type="nkoo" draft="contributed">Chữ số N’Ko</type>
 			<type key="numbers" type="olck" draft="contributed">Chữ số Ol Chiki</type>
 			<type key="numbers" type="orya">Chữ số Odia</type>
 			<type key="numbers" type="osma" draft="contributed">Chữ số Osmanya</type>
+			<type key="numbers" type="rohg" draft="contributed">Chữ số Rohg</type>
 			<type key="numbers" type="roman">Chữ số La mã</type>
 			<type key="numbers" type="romanlow">Chữ số La Mã viết thường</type>
 			<type key="numbers" type="saur" draft="contributed">Chữ số Saurashtra</type>
 			<type key="numbers" type="shrd" draft="contributed">Chữ số Sharada</type>
+			<type key="numbers" type="sind" draft="contributed">Chữ số Sind</type>
+			<type key="numbers" type="sinh" draft="contributed">Chữ số Sinh</type>
 			<type key="numbers" type="sora" draft="contributed">Chữ số Sora Sompeng</type>
 			<type key="numbers" type="sund" draft="contributed">Chữ số Sudan</type>
 			<type key="numbers" type="takr" draft="contributed">Chữ số Takri</type>
@@ -1262,8 +1269,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="numbers" type="telu">Chữ số Telugu</type>
 			<type key="numbers" type="thai">Chữ số Thái</type>
 			<type key="numbers" type="tibt">Chữ số Tây Tạng</type>
+			<type key="numbers" type="tirh" draft="contributed">Chữ số Tirh</type>
 			<type key="numbers" type="traditional" draft="contributed">Số truyền thống</type>
 			<type key="numbers" type="vaii">Chữ số Vai</type>
+			<type key="numbers" type="wara" draft="contributed">Chữ số Wara</type>
+			<type key="numbers" type="wcho" draft="contributed">Chữ số Wancho</type>
 		</types>
 		<measurementSystemNames>
 			<measurementSystemName type="metric">Hệ mét</measurementSystemName>
@@ -1276,37 +1286,27 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<codePattern type="territory">Vùng: {0}</codePattern>
 		</codePatterns>
 	</localeDisplayNames>
+	<contextTransforms>
+		<contextTransformUsage type="typographicNames">
+			<contextTransform type="stand-alone">titlecase-firstword</contextTransform>
+			<contextTransform type="uiListOrMenu">titlecase-firstword</contextTransform>
+		</contextTransformUsage>
+	</contextTransforms>
 	<characters>
 		<exemplarCharacters>[a à ả ã á ạ ă ằ ẳ ẵ ắ ặ â ầ ẩ ẫ ấ ậ b c d đ e è ẻ ẽ é ẹ ê ề ể ễ ế ệ f g h i ì ỉ ĩ í ị j k l m n o ò ỏ õ ó ọ ô ồ ổ ỗ ố ộ ơ ờ ở ỡ ớ ợ p q r s t u ù ủ ũ ú ụ ư ừ ử ữ ứ ự v w x y ỳ ỷ ỹ ý ỵ z]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[]</exemplarCharacters>
 		<exemplarCharacters type="index" draft="contributed">[A Ă Â B C D Đ E Ê F G H I J K L M N O Ô Ơ P Q R S T U Ư V W X Y Z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
-		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § @ * / \&amp; # † ‡ ′ ″]</exemplarCharacters>
-		<ellipsis type="final">{0}…</ellipsis>
-		<ellipsis type="initial">…{0}</ellipsis>
-		<ellipsis type="medial">{0}…{1}</ellipsis>
-		<ellipsis type="word-final">{0} …</ellipsis>
-		<ellipsis type="word-initial">… {0}</ellipsis>
-		<ellipsis type="word-medial">{0} … {1}</ellipsis>
-		<moreInformation>?</moreInformation>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[\- ‐ ‑ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § @ * / \&amp; # † ‡ ′ ″]</exemplarCharacters>
 		<parseLenients scope="date" level="lenient">
-			<parseLenient sample="-" draft="contributed">[\--/]</parseLenient>
 			<parseLenient sample=":" draft="contributed">[\:∶]</parseLenient>
 		</parseLenients>
 		<parseLenients scope="general" level="lenient">
-			<parseLenient sample="." draft="contributed">[.․。︒﹒．｡]</parseLenient>
 			<parseLenient sample="$" draft="contributed">[\$﹩＄$]</parseLenient>
 			<parseLenient sample="£" draft="contributed">[£₤]</parseLenient>
 			<parseLenient sample="₹" draft="contributed">[₨₹{Rp}{Rs}]</parseLenient>
 		</parseLenients>
 		<parseLenients scope="number" level="lenient">
 			<parseLenient sample="-" draft="contributed">[\-‒⁻₋−➖﹣－]</parseLenient>
-			<parseLenient sample="," draft="contributed">[,،٫、︐︑﹐﹑，､]</parseLenient>
-			<parseLenient sample="+" draft="contributed">[+⁺₊➕﬩﹢＋]</parseLenient>
-		</parseLenients>
-		<parseLenients scope="number" level="stricter">
-			<parseLenient sample="," draft="contributed">[,٫︐﹐，]</parseLenient>
-			<parseLenient sample="." draft="contributed">[.․﹒．｡]</parseLenient>
 		</parseLenients>
 	</characters>
 	<delimiters>
@@ -1335,7 +1335,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="d">'Ngày' dd</dateFormatItem>
 						<dateFormatItem id="M" draft="contributed">'tháng' L</dateFormatItem>
 						<dateFormatItem id="MEd">E, dd-M</dateFormatItem>
-						<dateFormatItem id="MMM" draft="contributed">LLL</dateFormatItem>
 						<dateFormatItem id="MMMMEd">E, dd MMMM</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
@@ -1344,20 +1343,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<months>
 					<monthContext type="format">
 						<monthWidth type="abbreviated">
-							<month type="1" draft="contributed">1</month>
-							<month type="2" draft="contributed">2</month>
-							<month type="3" draft="contributed">3</month>
-							<month type="4" draft="contributed">4</month>
-							<month type="5" draft="contributed">5</month>
-							<month type="6" draft="contributed">6</month>
-							<month type="7" draft="contributed">7</month>
-							<month type="8" draft="contributed">8</month>
-							<month type="9" draft="contributed">9</month>
-							<month type="10" draft="contributed">10</month>
-							<month type="11" draft="contributed">11</month>
-							<month type="12" draft="contributed">12</month>
-						</monthWidth>
-						<monthWidth type="narrow">
 							<month type="1" draft="contributed">1</month>
 							<month type="2" draft="contributed">2</month>
 							<month type="3" draft="contributed">3</month>
@@ -1388,20 +1373,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</monthContext>
 					<monthContext type="stand-alone">
 						<monthWidth type="abbreviated">
-							<month type="1" draft="contributed">1</month>
-							<month type="2" draft="contributed">2</month>
-							<month type="3" draft="contributed">3</month>
-							<month type="4" draft="contributed">4</month>
-							<month type="5" draft="contributed">5</month>
-							<month type="6" draft="contributed">6</month>
-							<month type="7" draft="contributed">7</month>
-							<month type="8" draft="contributed">8</month>
-							<month type="9" draft="contributed">9</month>
-							<month type="10" draft="contributed">10</month>
-							<month type="11" draft="contributed">11</month>
-							<month type="12" draft="contributed">12</month>
-						</monthWidth>
-						<monthWidth type="narrow">
 							<month type="1" draft="contributed">1</month>
 							<month type="2" draft="contributed">2</month>
 							<month type="3" draft="contributed">3</month>
@@ -1605,50 +1576,113 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</dateFormatLength>
 				</dateFormats>
 				<dateTimeFormats>
+					<dateTimeFormatLength type="full">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="long">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="medium">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="short">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
 					<availableFormats>
-						<dateFormatItem id="Bh" draft="contributed">h B</dateFormatItem>
-						<dateFormatItem id="Bhm" draft="contributed">h:mm B</dateFormatItem>
-						<dateFormatItem id="Bhms" draft="contributed">h:mm:ss B</dateFormatItem>
-						<dateFormatItem id="d" draft="contributed">d</dateFormatItem>
-						<dateFormatItem id="E" draft="contributed">ccc</dateFormatItem>
-						<dateFormatItem id="EBhm" draft="contributed">E h:mm B</dateFormatItem>
-						<dateFormatItem id="EBhms" draft="contributed">E h:mm:ss B</dateFormatItem>
-						<dateFormatItem id="Ed" draft="contributed">d, E</dateFormatItem>
-						<dateFormatItem id="Gy" draft="contributed">r U</dateFormatItem>
-						<dateFormatItem id="GyMMM" draft="contributed">r(U) MMM</dateFormatItem>
-						<dateFormatItem id="GyMMMd" draft="contributed">r MMM d</dateFormatItem>
-						<dateFormatItem id="GyMMMEd" draft="contributed">r(U) MMM d, E</dateFormatItem>
-						<dateFormatItem id="h" draft="contributed">h a</dateFormatItem>
-						<dateFormatItem id="H" draft="contributed">HH</dateFormatItem>
-						<dateFormatItem id="hm" draft="contributed">h:mm a</dateFormatItem>
-						<dateFormatItem id="Hm" draft="contributed">HH:mm</dateFormatItem>
-						<dateFormatItem id="hms" draft="contributed">h:mm:ss a</dateFormatItem>
-						<dateFormatItem id="Hms" draft="contributed">HH:mm:ss</dateFormatItem>
-						<dateFormatItem id="M" draft="contributed">L</dateFormatItem>
-						<dateFormatItem id="Md" draft="contributed">MM-dd</dateFormatItem>
-						<dateFormatItem id="MEd" draft="contributed">MM-dd, E</dateFormatItem>
-						<dateFormatItem id="MMM" draft="contributed">LLL</dateFormatItem>
-						<dateFormatItem id="MMMd" draft="contributed">MMM d</dateFormatItem>
-						<dateFormatItem id="MMMEd" draft="contributed">MMM d, E</dateFormatItem>
-						<dateFormatItem id="MMMMd" draft="contributed">MMMM d</dateFormatItem>
-						<dateFormatItem id="ms" draft="contributed">mm:ss</dateFormatItem>
-						<dateFormatItem id="UM" draft="contributed">U MM</dateFormatItem>
-						<dateFormatItem id="UMd" draft="contributed">U MM-d</dateFormatItem>
-						<dateFormatItem id="UMMM" draft="contributed">U MMM</dateFormatItem>
-						<dateFormatItem id="UMMMd" draft="contributed">U MMM d</dateFormatItem>
-						<dateFormatItem id="y" draft="contributed">r(U)</dateFormatItem>
-						<dateFormatItem id="yMd" draft="contributed">r-MM-dd</dateFormatItem>
-						<dateFormatItem id="yyyy" draft="contributed">r(U)</dateFormatItem>
-						<dateFormatItem id="yyyyM" draft="contributed">r-MM</dateFormatItem>
-						<dateFormatItem id="yyyyMd" draft="contributed">r-MM-dd</dateFormatItem>
-						<dateFormatItem id="yyyyMEd" draft="contributed">r-MM-dd, E</dateFormatItem>
-						<dateFormatItem id="yyyyMMM" draft="contributed">r(U) MMM</dateFormatItem>
-						<dateFormatItem id="yyyyMMMd" draft="contributed">r MMM d</dateFormatItem>
-						<dateFormatItem id="yyyyMMMEd" draft="contributed">r(U) MMM d, E</dateFormatItem>
-						<dateFormatItem id="yyyyMMMM" draft="contributed">r(U) MMMM</dateFormatItem>
-						<dateFormatItem id="yyyyQQQ" draft="contributed">r(U) QQQ</dateFormatItem>
-						<dateFormatItem id="yyyyQQQQ" draft="contributed">r(U) QQQQ</dateFormatItem>
+						<dateFormatItem id="Bh">h B</dateFormatItem>
+						<dateFormatItem id="Bhm">h:mm B</dateFormatItem>
+						<dateFormatItem id="Bhms">h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="d">d</dateFormatItem>
+						<dateFormatItem id="E">ccc</dateFormatItem>
+						<dateFormatItem id="EBhm">E h:mm B</dateFormatItem>
+						<dateFormatItem id="EBhms">E h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="Ed">d, E</dateFormatItem>
+						<dateFormatItem id="Gy">r U</dateFormatItem>
+						<dateFormatItem id="GyMMM">r(U) MMM</dateFormatItem>
+						<dateFormatItem id="GyMMMd">r MMM d</dateFormatItem>
+						<dateFormatItem id="GyMMMEd">r(U) MMM d, E</dateFormatItem>
+						<dateFormatItem id="h">h a</dateFormatItem>
+						<dateFormatItem id="H">HH</dateFormatItem>
+						<dateFormatItem id="hm">h:mm a</dateFormatItem>
+						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
+						<dateFormatItem id="hms">h:mm:ss a</dateFormatItem>
+						<dateFormatItem id="Hms">HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="M">L</dateFormatItem>
+						<dateFormatItem id="Md">MM-dd</dateFormatItem>
+						<dateFormatItem id="MEd">MM-dd, E</dateFormatItem>
+						<dateFormatItem id="MMM">LLL</dateFormatItem>
+						<dateFormatItem id="MMMd">MMM d</dateFormatItem>
+						<dateFormatItem id="MMMEd">MMM d, E</dateFormatItem>
+						<dateFormatItem id="MMMMd">MMMM d</dateFormatItem>
+						<dateFormatItem id="ms">mm:ss</dateFormatItem>
+						<dateFormatItem id="UM">U MM</dateFormatItem>
+						<dateFormatItem id="UMd">U MM-d</dateFormatItem>
+						<dateFormatItem id="UMMM">U MMM</dateFormatItem>
+						<dateFormatItem id="UMMMd">U MMM d</dateFormatItem>
+						<dateFormatItem id="y">r(U)</dateFormatItem>
+						<dateFormatItem id="yMd">r-MM-dd</dateFormatItem>
+						<dateFormatItem id="yyyy">r(U)</dateFormatItem>
+						<dateFormatItem id="yyyyM">r-MM</dateFormatItem>
+						<dateFormatItem id="yyyyMd">r-MM-dd</dateFormatItem>
+						<dateFormatItem id="yyyyMEd">r-MM-dd, E</dateFormatItem>
+						<dateFormatItem id="yyyyMMM">r(U) MMM</dateFormatItem>
+						<dateFormatItem id="yyyyMMMd">r MMM d</dateFormatItem>
+						<dateFormatItem id="yyyyMMMEd">r(U) MMM d, E</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM">r(U) MMMM</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">r(U) QQQ</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">r(U) QQQQ</dateFormatItem>
 					</availableFormats>
+					<intervalFormats>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="h" draft="contributed">h:mm – h:mm B</greatestDifference>
+							<greatestDifference id="m" draft="contributed">h:mm – h:mm B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="d">
+							<greatestDifference id="d" draft="contributed">d – d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="h">
+							<greatestDifference id="h" draft="contributed">h – h a</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="H">
+							<greatestDifference id="H" draft="contributed">HH – HH</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="hm">
+							<greatestDifference id="h" draft="contributed">h:mm – h:mm a</greatestDifference>
+							<greatestDifference id="m" draft="contributed">h:mm – h:mm a</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Hm">
+							<greatestDifference id="H" draft="contributed">HH:mm – HH:mm</greatestDifference>
+							<greatestDifference id="m" draft="contributed">HH:mm – HH:mm</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="hmv">
+							<greatestDifference id="h" draft="contributed">h:mm – h:mm a v</greatestDifference>
+							<greatestDifference id="m" draft="contributed">h:mm – h:mm a v</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Hmv">
+							<greatestDifference id="H" draft="contributed">HH:mm – HH:mm v</greatestDifference>
+							<greatestDifference id="m" draft="contributed">HH:mm – HH:mm v</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Hv">
+							<greatestDifference id="H" draft="contributed">HH – HH v</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="M">
+							<greatestDifference id="M" draft="contributed">M – M</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMM">
+							<greatestDifference id="M" draft="contributed">MMM – MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="y">
+							<greatestDifference id="y" draft="contributed">U – U</greatestDifference>
+						</intervalFormatItem>
+					</intervalFormats>
 				</dateTimeFormats>
 			</calendar>
 			<calendar type="coptic">
@@ -1718,6 +1752,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</monthWidth>
 					</monthContext>
 				</months>
+			</calendar>
+			<calendar type="dangi">
+				<dateTimeFormats>
+					<intervalFormats>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="h" draft="contributed">h – h B</greatestDifference>
+						</intervalFormatItem>
+					</intervalFormats>
+				</dateTimeFormats>
 			</calendar>
 			<calendar type="ethiopic">
 				<months>
@@ -1832,28 +1875,28 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</dateTimeFormat>
 					</dateTimeFormatLength>
 					<availableFormats>
-						<dateFormatItem id="Bh" draft="contributed">h B</dateFormatItem>
-						<dateFormatItem id="Bhm" draft="contributed">h:mm B</dateFormatItem>
-						<dateFormatItem id="Bhms" draft="contributed">h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="Bh">h B</dateFormatItem>
+						<dateFormatItem id="Bhm">h:mm B</dateFormatItem>
+						<dateFormatItem id="Bhms">h:mm:ss B</dateFormatItem>
 						<dateFormatItem id="d">'Ngày' dd</dateFormatItem>
 						<dateFormatItem id="E">ccc</dateFormatItem>
-						<dateFormatItem id="EBhm" draft="contributed">E h:mm B</dateFormatItem>
-						<dateFormatItem id="EBhms" draft="contributed">E h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="EBhm">E h:mm B</dateFormatItem>
+						<dateFormatItem id="EBhms">E h:mm:ss B</dateFormatItem>
 						<dateFormatItem id="Ed">E, dd</dateFormatItem>
-						<dateFormatItem id="Ehm" draft="contributed">E h:mm a</dateFormatItem>
-						<dateFormatItem id="EHm" draft="contributed">E HH:mm</dateFormatItem>
-						<dateFormatItem id="Ehms" draft="contributed">E h:mm:ss a</dateFormatItem>
-						<dateFormatItem id="EHms" draft="contributed">E HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="Ehm">E h:mm a</dateFormatItem>
+						<dateFormatItem id="EHm">E HH:mm</dateFormatItem>
+						<dateFormatItem id="Ehms">E h:mm:ss a</dateFormatItem>
+						<dateFormatItem id="EHms">E HH:mm:ss</dateFormatItem>
 						<dateFormatItem id="Gy">y G</dateFormatItem>
 						<dateFormatItem id="GyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="GyMMMd">d MMM, y G</dateFormatItem>
 						<dateFormatItem id="GyMMMEd">E, d MMM, y G</dateFormatItem>
-						<dateFormatItem id="h" draft="contributed">h'h' a</dateFormatItem>
-						<dateFormatItem id="H" draft="contributed">HH'h'</dateFormatItem>
+						<dateFormatItem id="h">h a</dateFormatItem>
+						<dateFormatItem id="H">HH</dateFormatItem>
 						<dateFormatItem id="hm">h:mm a</dateFormatItem>
-						<dateFormatItem id="Hm" draft="contributed">HH:mm</dateFormatItem>
+						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
 						<dateFormatItem id="hms">h:mm:ss a</dateFormatItem>
-						<dateFormatItem id="Hms" draft="contributed">HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="Hms">HH:mm:ss</dateFormatItem>
 						<dateFormatItem id="M">L</dateFormatItem>
 						<dateFormatItem id="Md">dd/M</dateFormatItem>
 						<dateFormatItem id="MEd">E, dd/M</dateFormatItem>
@@ -1879,8 +1922,55 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} - {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="B">h B – h B</greatestDifference>
+							<greatestDifference id="h">h – h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="B">h:mm B – h:mm B</greatestDifference>
+							<greatestDifference id="h">h:mm – h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm – h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">'Ngày' dd–dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">y G – y G</greatestDifference>
+							<greatestDifference id="y">y – y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">M/y GGGGG – M/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/y – M/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/y – M/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">dd-MM-y – dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="G">dd-MM-y GGGGG – dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="M">dd-MM-y – dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="y">dd-MM-y – dd-MM-y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">E, dd-MM-y – E, dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="G">E, dd-MM-y GGGGG – E, dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="M">E, dd-MM-y – E, dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="y">E, dd-MM-y – E, dd-MM-y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">MMM y G – MMM y G</greatestDifference>
+							<greatestDifference id="M">MMM – MMM y G</greatestDifference>
+							<greatestDifference id="y">MMM y – MMM y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">d – d MMM y G</greatestDifference>
+							<greatestDifference id="G">d MMM y G – d MMM y G</greatestDifference>
+							<greatestDifference id="M">d MMM – d MMM y G</greatestDifference>
+							<greatestDifference id="y">d MMM y – d MMM y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">E, d MMM – E, d MMM y G</greatestDifference>
+							<greatestDifference id="G">E, d MMM y G – E, d MMM y G</greatestDifference>
+							<greatestDifference id="M">E, d MMM – E, d MMM y G</greatestDifference>
+							<greatestDifference id="y">E, d MMM y – E, d MMM y G</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="h">
 							<greatestDifference id="a">h'h' a – h'h' a</greatestDifference>
@@ -1992,18 +2082,18 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 							<month type="12">thg 12</month>
 						</monthWidth>
 						<monthWidth type="narrow">
-							<month type="1">1</month>
-							<month type="2">2</month>
-							<month type="3">3</month>
-							<month type="4">4</month>
-							<month type="5">5</month>
-							<month type="6">6</month>
-							<month type="7">7</month>
-							<month type="8">8</month>
-							<month type="9">9</month>
-							<month type="10">10</month>
-							<month type="11">11</month>
-							<month type="12">12</month>
+							<month type="1" draft="contributed">1</month>
+							<month type="2" draft="contributed">2</month>
+							<month type="3" draft="contributed">3</month>
+							<month type="4" draft="contributed">4</month>
+							<month type="5" draft="contributed">5</month>
+							<month type="6" draft="contributed">6</month>
+							<month type="7" draft="contributed">7</month>
+							<month type="8" draft="contributed">8</month>
+							<month type="9" draft="contributed">9</month>
+							<month type="10" draft="contributed">10</month>
+							<month type="11" draft="contributed">11</month>
+							<month type="12" draft="contributed">12</month>
 						</monthWidth>
 						<monthWidth type="wide">
 							<month type="1">tháng 1</month>
@@ -2036,18 +2126,18 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 							<month type="12">Thg 12</month>
 						</monthWidth>
 						<monthWidth type="narrow">
-							<month type="1">1</month>
-							<month type="2">2</month>
-							<month type="3">3</month>
-							<month type="4">4</month>
-							<month type="5">5</month>
-							<month type="6">6</month>
-							<month type="7">7</month>
-							<month type="8">8</month>
-							<month type="9">9</month>
-							<month type="10">10</month>
-							<month type="11">11</month>
-							<month type="12">12</month>
+							<month type="1" draft="contributed">1</month>
+							<month type="2" draft="contributed">2</month>
+							<month type="3" draft="contributed">3</month>
+							<month type="4" draft="contributed">4</month>
+							<month type="5" draft="contributed">5</month>
+							<month type="6" draft="contributed">6</month>
+							<month type="7" draft="contributed">7</month>
+							<month type="8" draft="contributed">8</month>
+							<month type="9" draft="contributed">9</month>
+							<month type="10" draft="contributed">10</month>
+							<month type="11" draft="contributed">11</month>
+							<month type="12" draft="contributed">12</month>
 						</monthWidth>
 						<monthWidth type="wide">
 							<month type="1">Tháng 1</month>
@@ -2254,11 +2344,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<eras>
 					<eraNames>
 						<era type="0">Trước CN</era>
+						<era type="0" alt="variant">trước CN</era>
 						<era type="1">sau CN</era>
 						<era type="1" alt="variant">CN</era>
 					</eraNames>
 					<eraAbbr>
 						<era type="0">Trước CN</era>
+						<era type="0" alt="variant">trước CN</era>
 						<era type="1">sau CN</era>
 						<era type="1" alt="variant">CN</era>
 					</eraAbbr>
@@ -2292,22 +2384,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<timeFormats>
 					<timeFormatLength type="full">
 						<timeFormat>
-							<pattern>HH:mm:ss zzzz</pattern>
+							<pattern draft="contributed">HH:mm:ss zzzz</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="long">
 						<timeFormat>
-							<pattern>HH:mm:ss z</pattern>
+							<pattern draft="contributed">HH:mm:ss z</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="medium">
 						<timeFormat>
-							<pattern>HH:mm:ss</pattern>
+							<pattern draft="contributed">HH:mm:ss</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="short">
 						<timeFormat>
-							<pattern>HH:mm</pattern>
+							<pattern draft="contributed">HH:mm</pattern>
 						</timeFormat>
 					</timeFormatLength>
 				</timeFormats>
@@ -2333,13 +2425,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</dateTimeFormat>
 					</dateTimeFormatLength>
 					<availableFormats>
-						<dateFormatItem id="Bh" draft="contributed">h B</dateFormatItem>
-						<dateFormatItem id="Bhm" draft="contributed">h:mm B</dateFormatItem>
-						<dateFormatItem id="Bhms" draft="contributed">h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="Bh">h B</dateFormatItem>
+						<dateFormatItem id="Bhm">h:mm B</dateFormatItem>
+						<dateFormatItem id="Bhms">h:mm:ss B</dateFormatItem>
 						<dateFormatItem id="d">d</dateFormatItem>
 						<dateFormatItem id="E">ccc</dateFormatItem>
-						<dateFormatItem id="EBhm" draft="contributed">E h:mm B</dateFormatItem>
-						<dateFormatItem id="EBhms" draft="contributed">E h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="EBhm">E h:mm B</dateFormatItem>
+						<dateFormatItem id="EBhms">E h:mm:ss B</dateFormatItem>
 						<dateFormatItem id="Ed">E, 'ngày' d</dateFormatItem>
 						<dateFormatItem id="Ehm">E h:mm a</dateFormatItem>
 						<dateFormatItem id="EHm">E HH:mm</dateFormatItem>
@@ -2389,8 +2481,53 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</appendItems>
 					<intervalFormats>
 						<intervalFormatFallback>{0} - {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="h">h – h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="h">h:mm – h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm – h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">'Ngày' dd–dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">y G – y G</greatestDifference>
+							<greatestDifference id="y">y – y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">M/y GGGGG – M/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/y – M/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/y – M/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">dd-MM-y – dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="G">dd-MM-y GGGGG – dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="M">dd-MM-y – dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="y">dd-MM-y – dd-MM-y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">E, dd-MM-y – E, dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="G">E, dd-MM-y GGGGG – E, dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="M">E, dd-MM-y – E, dd-MM-y GGGGG</greatestDifference>
+							<greatestDifference id="y">E, dd-MM-y – E, dd-MM-y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">MM y G – MM y G</greatestDifference>
+							<greatestDifference id="M">MMM – MMM y G</greatestDifference>
+							<greatestDifference id="y">MMM y – MMM y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">d – d MMM y G</greatestDifference>
+							<greatestDifference id="G">d MMM y G – d MMM y G</greatestDifference>
+							<greatestDifference id="M">d MMM – d MMM y G</greatestDifference>
+							<greatestDifference id="y">d MMM y – d MMM y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">E, d MMM – E, d MMM y G</greatestDifference>
+							<greatestDifference id="G">E, d MMM y G – E, d MMM y G</greatestDifference>
+							<greatestDifference id="M">E, d MMM – E, d MMM y G</greatestDifference>
+							<greatestDifference id="y">E, d MMM y – E, d MMM y G</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="h">
 							<greatestDifference id="a">h a – h a</greatestDifference>
@@ -2703,7 +2840,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<eras>
 					<eraAbbr>
 						<era type="0" draft="contributed">Trước R.O.C</era>
-						<era type="1" draft="contributed">R.O.C.</era>
 					</eraAbbr>
 				</eras>
 				<dateFormats>
@@ -2719,7 +2855,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="M" draft="contributed">'tháng' L</dateFormatItem>
 						<dateFormatItem id="Md">dd-M</dateFormatItem>
 						<dateFormatItem id="MEd">E, dd-M</dateFormatItem>
-						<dateFormatItem id="MMM" draft="contributed">LLL</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2942,7 +3077,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>ngày trong tuần</displayName>
 			</field>
 			<field type="weekday-narrow">
-				<displayName draft="provisional">ngày trong tuần</displayName>
+				<displayName>ngày trong tuần</displayName>
 			</field>
 			<field type="weekdayOfMonth">
 				<displayName>ngày thường trong tháng</displayName>
@@ -3299,6 +3434,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<exemplarCity>Santa Isabel</exemplarCity>
 			</zone>
 			<zone type="Pacific/Honolulu">
+				<short>
+					<generic draft="contributed">Giờ HST</generic>
+					<standard draft="contributed">HST</standard>
+					<daylight draft="contributed">HDT</daylight>
+				</short>
 				<exemplarCity>Honolulu</exemplarCity>
 			</zone>
 			<zone type="Etc/UTC">
@@ -3972,6 +4112,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Asia/Aqtobe">
 				<exemplarCity>Aqtobe</exemplarCity>
 			</zone>
+			<zone type="Asia/Qostanay">
+				<exemplarCity>Kostanay</exemplarCity>
+			</zone>
 			<zone type="Asia/Qyzylorda">
 				<exemplarCity>Qyzylorda</exemplarCity>
 			</zone>
@@ -4627,6 +4770,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<standard>Giờ Chuẩn Alaska</standard>
 					<daylight>Giờ Mùa Hè Alaska</daylight>
 				</long>
+				<short>
+					<generic draft="contributed">AKT</generic>
+					<standard draft="contributed">AKST</standard>
+					<daylight draft="contributed">AKDT</daylight>
+				</short>
 			</metazone>
 			<metazone type="Almaty">
 				<long>
@@ -4648,6 +4796,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<standard>Giờ chuẩn miền Trung</standard>
 					<daylight>Giờ mùa hè miền Trung</daylight>
 				</long>
+				<short>
+					<generic draft="contributed">CT</generic>
+					<standard draft="contributed">CST</standard>
+					<daylight draft="contributed">CDT</daylight>
+				</short>
 			</metazone>
 			<metazone type="America_Eastern">
 				<long>
@@ -4655,6 +4808,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<standard>Giờ chuẩn miền Đông</standard>
 					<daylight>Giờ mùa hè miền Đông</daylight>
 				</long>
+				<short>
+					<generic draft="contributed">ET</generic>
+					<standard draft="contributed">EST</standard>
+					<daylight draft="contributed">EDT</daylight>
+				</short>
 			</metazone>
 			<metazone type="America_Mountain">
 				<long>
@@ -4662,6 +4820,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<standard>Giờ chuẩn miền núi</standard>
 					<daylight>Giờ mùa hè miền núi</daylight>
 				</long>
+				<short>
+					<generic draft="contributed">MT</generic>
+					<standard draft="contributed">MST</standard>
+					<daylight draft="contributed">MDT</daylight>
+				</short>
 			</metazone>
 			<metazone type="America_Pacific">
 				<long>
@@ -4669,6 +4832,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<standard>Giờ chuẩn Thái Bình Dương</standard>
 					<daylight>Giờ mùa hè Thái Bình Dương</daylight>
 				</long>
+				<short>
+					<generic draft="contributed">PT</generic>
+					<standard draft="contributed">PST</standard>
+					<daylight draft="contributed">PDT</daylight>
+				</short>
 			</metazone>
 			<metazone type="Anadyr">
 				<long>
@@ -4732,6 +4900,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<standard>Giờ Chuẩn Đại Tây Dương</standard>
 					<daylight>Giờ mùa hè Đại Tây Dương</daylight>
 				</long>
+				<short>
+					<generic draft="contributed">AT</generic>
+					<standard draft="contributed">AST</standard>
+					<daylight draft="contributed">ADT</daylight>
+				</short>
 			</metazone>
 			<metazone type="Australia_Central">
 				<long>
@@ -4809,6 +4982,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<generic>Giờ Cape Verde</generic>
 					<standard>Giờ Chuẩn Cape Verde</standard>
 					<daylight>Giờ Mùa Hè Cape Verde</daylight>
+				</long>
+			</metazone>
+			<metazone type="Casey">
+				<long>
+					<standard draft="contributed">Giờ Casey</standard>
 				</long>
 			</metazone>
 			<metazone type="Chamorro">
@@ -4964,9 +5142,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</metazone>
 			<metazone type="Georgia">
 				<long>
-					<generic>Giờ Gruzia</generic>
-					<standard>Giờ Chuẩn Gruzia</standard>
-					<daylight>Giờ Mùa Hè Gruzia</daylight>
+					<generic>Giờ Georgia</generic>
+					<standard>Giờ Chuẩn Georgia</standard>
+					<daylight>Giờ Mùa Hè Georgia</daylight>
 				</long>
 			</metazone>
 			<metazone type="Gilbert_Islands">
@@ -5014,6 +5192,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<standard>Giờ Chuẩn Hawaii-Aleut</standard>
 					<daylight>Giờ Mùa Hè Hawaii-Aleut</daylight>
 				</long>
+				<short>
+					<generic draft="contributed">HAT</generic>
+					<standard draft="contributed">HAST</standard>
+					<daylight draft="contributed">HADT</daylight>
+				</short>
 			</metazone>
 			<metazone type="Hong_Kong">
 				<long>
@@ -5547,29 +5730,24 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</timeZoneNames>
 	</dates>
 	<numbers>
-		<defaultNumberingSystem draft="contributed">latn</defaultNumberingSystem>
-		<otherNumberingSystems>
-			<native draft="contributed">latn</native>
-		</otherNumberingSystems>
 		<minimumGroupingDigits draft="contributed">1</minimumGroupingDigits>
 		<symbols numberSystem="latn">
 			<decimal>,</decimal>
 			<group>.</group>
 			<list>;</list>
 			<percentSign>%</percentSign>
-			<plusSign>+</plusSign>
-			<minusSign>-</minusSign>
+			<plusSign draft="contributed">+</plusSign>
+			<minusSign draft="contributed">-</minusSign>
 			<exponential>E</exponential>
 			<superscriptingExponent>×</superscriptingExponent>
 			<perMille>‰</perMille>
 			<infinity>∞</infinity>
 			<nan>NaN</nan>
-			<timeSeparator draft="contributed">:</timeSeparator>
 		</symbols>
 		<decimalFormats numberSystem="latn">
 			<decimalFormatLength>
 				<decimalFormat>
-					<pattern>#,##0.###</pattern>
+					<pattern draft="contributed">#,##0.###</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 			<decimalFormatLength type="long">
@@ -5649,250 +5827,211 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<currencies>
 			<currency type="ADP">
 				<displayName draft="contributed">Đồng Peseta của Andora</displayName>
-				<symbol draft="contributed">ADP</symbol>
 			</currency>
 			<currency type="AED">
 				<displayName>Dirham UAE</displayName>
 				<displayName count="other">Dirham UAE</displayName>
-				<symbol>AED</symbol>
+				<symbol draft="contributed">AED</symbol>
 			</currency>
 			<currency type="AFA">
 				<displayName draft="contributed">Đồng Afghani của Afghanistan (1927–2002)</displayName>
-				<symbol draft="contributed">AFA</symbol>
 			</currency>
 			<currency type="AFN">
 				<displayName>Afghani Afghanistan</displayName>
 				<displayName count="other">Afghani Afghanistan</displayName>
-				<symbol>AFN</symbol>
+				<symbol draft="contributed">AFN</symbol>
 			</currency>
 			<currency type="ALL">
 				<displayName>Lek Albania</displayName>
 				<displayName count="other">Lek Albania</displayName>
-				<symbol>ALL</symbol>
+				<symbol draft="contributed">ALL</symbol>
 			</currency>
 			<currency type="AMD">
 				<displayName>Dram Armenia</displayName>
 				<displayName count="other">Dram Armenia</displayName>
-				<symbol>AMD</symbol>
+				<symbol draft="contributed">AMD</symbol>
 			</currency>
 			<currency type="ANG">
 				<displayName>Guilder Antille Hà Lan</displayName>
 				<displayName count="other">Guilder Antille Hà Lan</displayName>
-				<symbol>ANG</symbol>
+				<symbol draft="contributed">ANG</symbol>
 			</currency>
 			<currency type="AOA">
 				<displayName>Kwanza Angola</displayName>
 				<displayName count="other">Kwanza Angola</displayName>
-				<symbol>AOA</symbol>
-				<symbol alt="narrow" draft="contributed">Kz</symbol>
+				<symbol draft="contributed">AOA</symbol>
 			</currency>
 			<currency type="AOK">
 				<displayName draft="contributed">Đồng Kwanza của Angola (1977–1991)</displayName>
-				<symbol draft="contributed">AOK</symbol>
 			</currency>
 			<currency type="AON">
 				<displayName draft="contributed">Đồng Kwanza Mới của Angola (1990–2000)</displayName>
-				<symbol draft="contributed">AON</symbol>
 			</currency>
 			<currency type="AOR">
 				<displayName draft="contributed">Đồng Kwanza Điều chỉnh lại của Angola (1995–1999)</displayName>
-				<symbol draft="contributed">AOR</symbol>
 			</currency>
 			<currency type="ARA">
 				<displayName draft="contributed">Đồng Austral của Argentina</displayName>
-				<symbol draft="contributed">ARA</symbol>
 			</currency>
 			<currency type="ARL">
 				<displayName draft="contributed">Đồng Peso Ley của Argentina (1970–1983)</displayName>
-				<symbol draft="contributed">ARL</symbol>
 			</currency>
 			<currency type="ARM">
 				<displayName draft="contributed">Đồng Peso Argentina (1881–1970)</displayName>
-				<symbol draft="contributed">ARM</symbol>
 			</currency>
 			<currency type="ARP">
 				<displayName draft="contributed">Đồng Peso Argentina (1983–1985)</displayName>
-				<symbol draft="contributed">ARP</symbol>
 			</currency>
 			<currency type="ARS">
 				<displayName>Peso Argentina</displayName>
 				<displayName count="other">Peso Argentina</displayName>
-				<symbol>ARS</symbol>
+				<symbol draft="contributed">ARS</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="ATS">
 				<displayName draft="contributed">Đồng Schiling Áo</displayName>
-				<symbol draft="contributed">ATS</symbol>
 			</currency>
 			<currency type="AUD">
 				<displayName>Đô la Australia</displayName>
 				<displayName count="other">Đô la Australia</displayName>
 				<symbol>AU$</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="AWG">
 				<displayName>Florin Aruba</displayName>
 				<displayName count="other">Florin Aruba</displayName>
-				<symbol>AWG</symbol>
+				<symbol draft="contributed">AWG</symbol>
 			</currency>
 			<currency type="AZM">
 				<displayName draft="contributed">Đồng Manat của Azerbaijan (1993–2006)</displayName>
-				<symbol draft="contributed">AZM</symbol>
 			</currency>
 			<currency type="AZN">
 				<displayName>Manat Azerbaijan</displayName>
 				<displayName count="other">Manat Azerbaijan</displayName>
-				<symbol>AZN</symbol>
+				<symbol draft="contributed">AZN</symbol>
 			</currency>
 			<currency type="BAD">
 				<displayName draft="contributed">Đồng Dinar của Bosnia-Herzegovina (1992–1994)</displayName>
-				<symbol draft="contributed">BAD</symbol>
 			</currency>
 			<currency type="BAM">
 				<displayName>Mark Bosnia-Herzegovina có thể chuyển đổi</displayName>
 				<displayName count="other">Mark Bosnia-Herzegovina có thể chuyển đổi</displayName>
-				<symbol>BAM</symbol>
-				<symbol alt="narrow" draft="contributed">KM</symbol>
+				<symbol draft="contributed">BAM</symbol>
 			</currency>
 			<currency type="BAN">
 				<displayName draft="contributed">Đồng Dinar Mới của Bosnia-Herzegovina (1994–1997)</displayName>
-				<symbol draft="contributed">BAN</symbol>
 			</currency>
 			<currency type="BBD">
 				<displayName>Đô la Barbados</displayName>
 				<displayName count="other">Đô la Barbados</displayName>
-				<symbol>BBD</symbol>
+				<symbol draft="contributed">BBD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BDT">
 				<displayName>Taka Bangladesh</displayName>
 				<displayName count="other">Taka Bangladesh</displayName>
-				<symbol>BDT</symbol>
-				<symbol alt="narrow" draft="contributed">৳</symbol>
+				<symbol draft="contributed">BDT</symbol>
 			</currency>
 			<currency type="BEC">
 				<displayName draft="contributed">Đồng Franc Bỉ (có thể chuyển đổi)</displayName>
-				<symbol draft="contributed">BEC</symbol>
 			</currency>
 			<currency type="BEF">
 				<displayName draft="contributed">Đồng Franc Bỉ</displayName>
-				<symbol draft="contributed">BEF</symbol>
 			</currency>
 			<currency type="BEL">
 				<displayName draft="contributed">Đồng Franc Bỉ (tài chính)</displayName>
-				<symbol draft="contributed">BEL</symbol>
 			</currency>
 			<currency type="BGL">
 				<displayName draft="contributed">Đồng Lev Xu của Bun-ga-ri</displayName>
-				<symbol draft="contributed">BGL</symbol>
 			</currency>
 			<currency type="BGM">
 				<displayName draft="contributed">Đồng Lev Xã hội chủ nghĩa của Bun-ga-ri</displayName>
-				<symbol draft="contributed">BGM</symbol>
 			</currency>
 			<currency type="BGN">
 				<displayName>Lev Bulgaria</displayName>
 				<displayName count="other">Lev Bulgaria</displayName>
-				<symbol>BGN</symbol>
+				<symbol draft="contributed">BGN</symbol>
 			</currency>
 			<currency type="BGO">
 				<displayName draft="contributed">Đồng Lev của Bun-ga-ri (1879–1952)</displayName>
-				<symbol draft="contributed">BGO</symbol>
 			</currency>
 			<currency type="BHD">
 				<displayName>Dinar Bahrain</displayName>
 				<displayName count="other">Dinar Bahrain</displayName>
-				<symbol>BHD</symbol>
+				<symbol draft="contributed">BHD</symbol>
 			</currency>
 			<currency type="BIF">
 				<displayName>Franc Burundi</displayName>
 				<displayName count="other">Franc Burundi</displayName>
-				<symbol>BIF</symbol>
+				<symbol draft="contributed">BIF</symbol>
 			</currency>
 			<currency type="BMD">
 				<displayName>Đô la Bermuda</displayName>
 				<displayName count="other">Đô la Bermuda</displayName>
-				<symbol>BMD</symbol>
+				<symbol draft="contributed">BMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BND">
 				<displayName>Đô la Brunei</displayName>
 				<displayName count="other">Đô la Brunei</displayName>
-				<symbol>BND</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">BND</symbol>
 			</currency>
 			<currency type="BOB">
 				<displayName>Boliviano Bolivia</displayName>
 				<displayName count="other">Boliviano Bolivia</displayName>
-				<symbol>BOB</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
+				<symbol draft="contributed">BOB</symbol>
 			</currency>
 			<currency type="BOL">
 				<displayName draft="contributed">Đồng Boliviano của Bolivia (1863–1963)</displayName>
-				<symbol draft="contributed">BOL</symbol>
 			</currency>
 			<currency type="BOP">
 				<displayName draft="contributed">Đồng Peso Bolivia</displayName>
-				<symbol draft="contributed">BOP</symbol>
 			</currency>
 			<currency type="BOV">
 				<displayName draft="contributed">Đồng Mvdol Bolivia</displayName>
-				<symbol draft="contributed">BOV</symbol>
 			</currency>
 			<currency type="BRB">
 				<displayName draft="contributed">Đồng Cruzerio Mới của Braxin (1967–1986)</displayName>
-				<symbol draft="contributed">BRB</symbol>
 			</currency>
 			<currency type="BRC">
 				<displayName draft="contributed">Đồng Cruzado của Braxin (1986–1989)</displayName>
-				<symbol draft="contributed">BRC</symbol>
 			</currency>
 			<currency type="BRE">
 				<displayName draft="contributed">Đồng Cruzerio của Braxin (1990–1993)</displayName>
-				<symbol draft="contributed">BRE</symbol>
 			</currency>
 			<currency type="BRL">
 				<displayName>Real Braxin</displayName>
 				<displayName count="other">Real Braxin</displayName>
-				<symbol>R$</symbol>
-				<symbol alt="narrow" draft="contributed">R$</symbol>
 			</currency>
 			<currency type="BRN">
 				<displayName draft="contributed">Đồng Cruzado Mới của Braxin (1989–1990)</displayName>
-				<symbol draft="contributed">BRN</symbol>
 			</currency>
 			<currency type="BRR">
 				<displayName draft="contributed">Đồng Cruzeiro của Braxin (1993–1994)</displayName>
-				<symbol draft="contributed">BRR</symbol>
 			</currency>
 			<currency type="BRZ">
 				<displayName draft="contributed">Đồng Cruzeiro của Braxin (1942–1967)</displayName>
-				<symbol draft="contributed">BRZ</symbol>
 			</currency>
 			<currency type="BSD">
 				<displayName>Đô la Bahamas</displayName>
 				<displayName count="other">Đô la Bahamas</displayName>
-				<symbol>BSD</symbol>
+				<symbol draft="contributed">BSD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BTN">
 				<displayName>Ngultrum Bhutan</displayName>
 				<displayName count="other">Ngultrum Bhutan</displayName>
-				<symbol>BTN</symbol>
+				<symbol draft="contributed">BTN</symbol>
 			</currency>
 			<currency type="BUK">
 				<displayName draft="contributed">Đồng Kyat Miến Điện</displayName>
-				<symbol draft="contributed">BUK</symbol>
 			</currency>
 			<currency type="BWP">
 				<displayName>Pula Botswana</displayName>
 				<displayName count="other">Pula Botswana</displayName>
-				<symbol>BWP</symbol>
-				<symbol alt="narrow" draft="contributed">P</symbol>
+				<symbol draft="contributed">BWP</symbol>
 			</currency>
 			<currency type="BYB">
 				<displayName draft="contributed">Đồng Rúp Mới của Belarus (1994–1999)</displayName>
-				<symbol draft="contributed">BYB</symbol>
 			</currency>
 			<currency type="BYN">
 				<displayName>Rúp Belarus</displayName>
@@ -5903,51 +6042,45 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<currency type="BYR">
 				<displayName>Rúp Belarus (2000–2016)</displayName>
 				<displayName count="other">Rúp Belarus (2000–2016)</displayName>
-				<symbol>BYR</symbol>
 			</currency>
 			<currency type="BZD">
 				<displayName>Đô la Belize</displayName>
 				<displayName count="other">Đô la Belize</displayName>
-				<symbol>BZD</symbol>
+				<symbol draft="contributed">BZD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CAD">
 				<displayName>Đô la Canada</displayName>
 				<displayName count="other">Đô la Canada</displayName>
-				<symbol>CA$</symbol>
+				<symbol draft="contributed">CA$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CDF">
 				<displayName>Franc Congo</displayName>
 				<displayName count="other">Franc Congo</displayName>
-				<symbol>CDF</symbol>
+				<symbol draft="contributed">CDF</symbol>
 			</currency>
 			<currency type="CHE">
 				<displayName draft="contributed">Đồng Euro WIR</displayName>
-				<symbol draft="contributed">CHE</symbol>
 			</currency>
 			<currency type="CHF">
 				<displayName>Franc Thụy sĩ</displayName>
 				<displayName count="other">Franc Thụy sĩ</displayName>
-				<symbol>CHF</symbol>
+				<symbol draft="contributed">CHF</symbol>
 			</currency>
 			<currency type="CHW">
 				<displayName draft="contributed">Đồng France WIR</displayName>
-				<symbol draft="contributed">CHW</symbol>
 			</currency>
 			<currency type="CLE">
 				<displayName draft="contributed">Đồng Escudo của Chile</displayName>
-				<symbol draft="contributed">CLE</symbol>
 			</currency>
 			<currency type="CLF">
 				<displayName draft="contributed">Đơn vị Kế toán của Chile (UF)</displayName>
-				<symbol draft="contributed">CLF</symbol>
 			</currency>
 			<currency type="CLP">
 				<displayName>Peso Chile</displayName>
 				<displayName count="other">Peso Chile</displayName>
-				<symbol>CLP</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">CLP</symbol>
 			</currency>
 			<currency type="CNH">
 				<displayName>Nhân dân tệ (hải ngoại)</displayName>
@@ -5957,1049 +6090,895 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<currency type="CNY">
 				<displayName>Nhân dân tệ</displayName>
 				<displayName count="other">Nhân dân tệ</displayName>
-				<symbol>CN¥</symbol>
-				<symbol alt="narrow" draft="contributed">¥</symbol>
 			</currency>
 			<currency type="COP">
 				<displayName>Peso Colombia</displayName>
 				<displayName count="other">Peso Colombia</displayName>
-				<symbol>COP</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">COP</symbol>
 			</currency>
 			<currency type="COU">
 				<displayName draft="contributed">Đơn vị Giá trị Thực của Colombia</displayName>
-				<symbol draft="contributed">COU</symbol>
 			</currency>
 			<currency type="CRC">
 				<displayName>Colón Costa Rica</displayName>
 				<displayName count="other">Colón Costa Rica</displayName>
-				<symbol>CRC</symbol>
+				<symbol draft="contributed">CRC</symbol>
 				<symbol alt="narrow" draft="contributed">₡</symbol>
 			</currency>
 			<currency type="CSD">
 				<displayName draft="contributed">Đồng Dinar của Serbia (2002–2006)</displayName>
-				<symbol draft="contributed">CSD</symbol>
 			</currency>
 			<currency type="CSK">
 				<displayName draft="contributed">Đồng Koruna Xu của Czechoslovakia</displayName>
-				<symbol draft="contributed">CSK</symbol>
 			</currency>
 			<currency type="CUC">
 				<displayName>Peso Cuba có thể chuyển đổi</displayName>
 				<displayName count="other">Peso Cuba có thể chuyển đổi</displayName>
-				<symbol>CUC</symbol>
+				<symbol draft="contributed">CUC</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CUP">
 				<displayName>Peso Cuba</displayName>
 				<displayName count="other">Peso Cuba</displayName>
-				<symbol>CUP</symbol>
+				<symbol draft="contributed">CUP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CVE">
 				<displayName>Escudo Cape Verde</displayName>
 				<displayName count="other">Escudo Cape Verde</displayName>
-				<symbol>CVE</symbol>
+				<symbol draft="contributed">CVE</symbol>
 			</currency>
 			<currency type="CYP">
 				<displayName draft="contributed">Đồng Bảng Síp</displayName>
-				<symbol draft="contributed">CYP</symbol>
 			</currency>
 			<currency type="CZK">
 				<displayName>Koruna Cộng hòa Séc</displayName>
 				<displayName count="other">Koruna Cộng hòa Séc</displayName>
-				<symbol>CZK</symbol>
-				<symbol alt="narrow" draft="contributed">Kč</symbol>
+				<symbol draft="contributed">CZK</symbol>
 			</currency>
 			<currency type="DDM">
 				<displayName draft="contributed">Đồng Mark Đông Đức</displayName>
-				<symbol draft="contributed">DDM</symbol>
 			</currency>
 			<currency type="DEM">
 				<displayName draft="contributed">Đồng Mark Đức</displayName>
-				<symbol draft="contributed">DEM</symbol>
 			</currency>
 			<currency type="DJF">
 				<displayName>Franc Djibouti</displayName>
 				<displayName count="other">Franc Djibouti</displayName>
-				<symbol>DJF</symbol>
+				<symbol draft="contributed">DJF</symbol>
 			</currency>
 			<currency type="DKK">
 				<displayName>Krone Đan Mạch</displayName>
 				<displayName count="other">Krone Đan Mạch</displayName>
-				<symbol>DKK</symbol>
-				<symbol alt="narrow" draft="contributed">kr</symbol>
+				<symbol draft="contributed">DKK</symbol>
 			</currency>
 			<currency type="DOP">
 				<displayName>Peso Dominica</displayName>
 				<displayName count="other">Peso Dominica</displayName>
-				<symbol>DOP</symbol>
+				<symbol draft="contributed">DOP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="DZD">
 				<displayName>Dinar Algeria</displayName>
 				<displayName count="other">Dinar Algeria</displayName>
-				<symbol>DZD</symbol>
+				<symbol draft="contributed">DZD</symbol>
 			</currency>
 			<currency type="ECS">
 				<displayName draft="contributed">Đồng Scure Ecuador</displayName>
-				<symbol draft="contributed">ECS</symbol>
 			</currency>
 			<currency type="ECV">
 				<displayName draft="contributed">Đơn vị Giá trị Không đổi của Ecuador</displayName>
-				<symbol draft="contributed">ECV</symbol>
 			</currency>
 			<currency type="EEK">
 				<displayName draft="contributed">Crun Extônia</displayName>
-				<symbol draft="contributed">EEK</symbol>
 			</currency>
 			<currency type="EGP">
 				<displayName>Bảng Ai Cập</displayName>
 				<displayName count="other">Bảng Ai Cập</displayName>
-				<symbol>EGP</symbol>
-				<symbol alt="narrow" draft="contributed">E£</symbol>
+				<symbol draft="contributed">EGP</symbol>
 			</currency>
 			<currency type="ERN">
 				<displayName>Nakfa Eritrea</displayName>
 				<displayName count="other">Nakfa Eritrea</displayName>
-				<symbol>ERN</symbol>
+				<symbol draft="contributed">ERN</symbol>
 			</currency>
 			<currency type="ESA">
 				<displayName draft="contributed">Đồng Peseta Tây Ban Nha (Tài khoản)</displayName>
-				<symbol draft="contributed">ESA</symbol>
 			</currency>
 			<currency type="ESB">
 				<displayName draft="contributed">Đồng Peseta Tây Ban Nha (tài khoản có thể chuyển đổi)</displayName>
-				<symbol draft="contributed">ESB</symbol>
 			</currency>
 			<currency type="ESP">
 				<displayName draft="contributed">Đồng Peseta Tây Ban Nha</displayName>
-				<symbol draft="contributed">ESP</symbol>
 			</currency>
 			<currency type="ETB">
 				<displayName>Birr Ethiopia</displayName>
 				<displayName count="other">Birr Ethiopia</displayName>
-				<symbol>ETB</symbol>
+				<symbol draft="contributed">ETB</symbol>
 			</currency>
 			<currency type="EUR">
 				<displayName>Euro</displayName>
 				<displayName count="other">euro</displayName>
-				<symbol>€</symbol>
-				<symbol alt="narrow" draft="contributed">€</symbol>
 			</currency>
 			<currency type="FIM">
 				<displayName draft="contributed">Đồng Markka Phần Lan</displayName>
-				<symbol draft="contributed">FIM</symbol>
 			</currency>
 			<currency type="FJD">
 				<displayName>Đô la Fiji</displayName>
 				<displayName count="other">Đô la Fiji</displayName>
-				<symbol>FJD</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">FJD</symbol>
 			</currency>
 			<currency type="FKP">
 				<displayName>Bảng Quần đảo Falkland</displayName>
 				<displayName count="other">Bảng Quần đảo Falkland</displayName>
-				<symbol>FKP</symbol>
-				<symbol alt="narrow" draft="contributed">£</symbol>
+				<symbol draft="contributed">FKP</symbol>
 			</currency>
 			<currency type="FRF">
 				<displayName draft="contributed">Franc Pháp</displayName>
-				<symbol draft="contributed">FRF</symbol>
 			</currency>
 			<currency type="GBP">
 				<displayName>Bảng Anh</displayName>
 				<displayName count="other">Bảng Anh</displayName>
-				<symbol>£</symbol>
-				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="GEK">
 				<displayName draft="contributed">Đồng Kupon Larit của Georgia</displayName>
-				<symbol draft="contributed">GEK</symbol>
 			</currency>
 			<currency type="GEL">
-				<displayName>Lari Gruzia</displayName>
-				<displayName count="other">Lari Gruzia</displayName>
-				<symbol>GEL</symbol>
-				<symbol alt="narrow" draft="contributed">₾</symbol>
+				<displayName>Lari Georgia</displayName>
+				<displayName count="other">Lari Georgia</displayName>
+				<symbol draft="contributed">GEL</symbol>
 				<symbol alt="variant" draft="contributed">₾</symbol>
 			</currency>
 			<currency type="GHC">
 				<displayName draft="contributed">Cedi Ghana (1979–2007)</displayName>
-				<symbol draft="contributed">GHC</symbol>
 			</currency>
 			<currency type="GHS">
 				<displayName>Cedi Ghana</displayName>
 				<displayName count="other">Cedi Ghana</displayName>
-				<symbol>GHS</symbol>
+				<symbol draft="contributed">GHS</symbol>
 			</currency>
 			<currency type="GIP">
 				<displayName>Bảng Gibraltar</displayName>
 				<displayName count="other">Bảng Gibraltar</displayName>
-				<symbol>GIP</symbol>
-				<symbol alt="narrow" draft="contributed">£</symbol>
+				<symbol draft="contributed">GIP</symbol>
 			</currency>
 			<currency type="GMD">
 				<displayName>Dalasi Gambia</displayName>
 				<displayName count="other">Dalasi Gambia</displayName>
-				<symbol>GMD</symbol>
+				<symbol draft="contributed">GMD</symbol>
 			</currency>
 			<currency type="GNF">
 				<displayName>Franc Guinea</displayName>
 				<displayName count="other">Franc Guinea</displayName>
-				<symbol>GNF</symbol>
-				<symbol alt="narrow" draft="contributed">FG</symbol>
+				<symbol draft="contributed">GNF</symbol>
 			</currency>
 			<currency type="GNS">
 				<displayName draft="contributed">Syli Guinea</displayName>
-				<symbol draft="contributed">GNS</symbol>
 			</currency>
 			<currency type="GQE">
 				<displayName draft="contributed">Đồng Ekwele của Guinea Xích Đạo</displayName>
-				<symbol draft="contributed">GQE</symbol>
 			</currency>
 			<currency type="GRD">
 				<displayName draft="contributed">Drachma Hy Lạp</displayName>
-				<symbol draft="contributed">GRD</symbol>
 			</currency>
 			<currency type="GTQ">
 				<displayName>Quetzal Guatemala</displayName>
 				<displayName count="other">Quetzal Guatemala</displayName>
-				<symbol>GTQ</symbol>
+				<symbol draft="contributed">GTQ</symbol>
 				<symbol alt="narrow" draft="contributed">Q</symbol>
 			</currency>
 			<currency type="GWE">
 				<displayName draft="contributed">Đồng Guinea Escudo Bồ Đào Nha</displayName>
-				<symbol draft="contributed">GWE</symbol>
 			</currency>
 			<currency type="GWP">
 				<displayName draft="contributed">Peso Guinea-Bissau</displayName>
-				<symbol draft="contributed">GWP</symbol>
 			</currency>
 			<currency type="GYD">
 				<displayName>Đô la Guyana</displayName>
 				<displayName count="other">Đô la Guyana</displayName>
-				<symbol>GYD</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">GYD</symbol>
 			</currency>
 			<currency type="HKD">
 				<displayName>Đô la Hồng Kông</displayName>
 				<displayName count="other">Đô la Hồng Kông</displayName>
-				<symbol>HK$</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="HNL">
 				<displayName>Lempira Honduras</displayName>
 				<displayName count="other">Lempira Honduras</displayName>
-				<symbol>HNL</symbol>
+				<symbol draft="contributed">HNL</symbol>
 				<symbol alt="narrow" draft="contributed">L</symbol>
 			</currency>
 			<currency type="HRD">
 				<displayName draft="contributed">Đồng Dinar Croatia</displayName>
-				<symbol draft="contributed">HRD</symbol>
 			</currency>
 			<currency type="HRK">
 				<displayName>Kuna Croatia</displayName>
 				<displayName count="other">Kuna Croatia</displayName>
-				<symbol>HRK</symbol>
-				<symbol alt="narrow" draft="contributed">kn</symbol>
+				<symbol draft="contributed">HRK</symbol>
 			</currency>
 			<currency type="HTG">
 				<displayName>Gourde Haiti</displayName>
 				<displayName count="other">Gourde Haiti</displayName>
-				<symbol>HTG</symbol>
+				<symbol draft="contributed">HTG</symbol>
 			</currency>
 			<currency type="HUF">
 				<displayName>Forint Hungary</displayName>
 				<displayName count="other">forint Hungary</displayName>
-				<symbol>HUF</symbol>
-				<symbol alt="narrow" draft="contributed">Ft</symbol>
+				<symbol draft="contributed">HUF</symbol>
 			</currency>
 			<currency type="IDR">
 				<displayName>Rupiah Indonesia</displayName>
 				<displayName count="other">Rupiah Indonesia</displayName>
-				<symbol>IDR</symbol>
-				<symbol alt="narrow" draft="contributed">Rp</symbol>
+				<symbol draft="contributed">IDR</symbol>
 			</currency>
 			<currency type="IEP">
 				<displayName draft="contributed">Pao Ai-len</displayName>
-				<symbol draft="contributed">IEP</symbol>
 			</currency>
 			<currency type="ILP">
 				<displayName draft="contributed">Pao Ixraen</displayName>
-				<symbol draft="contributed">ILP</symbol>
 			</currency>
 			<currency type="ILS">
 				<displayName>Sheqel Israel mới</displayName>
 				<displayName count="other">Sheqel Israel mới</displayName>
-				<symbol>₪</symbol>
-				<symbol alt="narrow" draft="contributed">₪</symbol>
 			</currency>
 			<currency type="INR">
 				<displayName>Rupee Ấn Độ</displayName>
 				<displayName count="other">Rupee Ấn Độ</displayName>
-				<symbol>₹</symbol>
-				<symbol alt="narrow" draft="contributed">₹</symbol>
 			</currency>
 			<currency type="IQD">
-				<displayName>Dinar I-rắc</displayName>
-				<displayName count="other">Dinar I-rắc</displayName>
-				<symbol>IQD</symbol>
+				<displayName>Dinar Iraq</displayName>
+				<displayName count="other">Dinar Iraq</displayName>
+				<symbol draft="contributed">IQD</symbol>
 			</currency>
 			<currency type="IRR">
 				<displayName>Rial Iran</displayName>
 				<displayName count="other">Rial Iran</displayName>
-				<symbol>IRR</symbol>
+				<symbol draft="contributed">IRR</symbol>
 			</currency>
 			<currency type="ISK">
 				<displayName>Króna Iceland</displayName>
 				<displayName count="other">króna Iceland</displayName>
-				<symbol>ISK</symbol>
-				<symbol alt="narrow" draft="contributed">kr</symbol>
+				<symbol draft="contributed">ISK</symbol>
 			</currency>
 			<currency type="ITL">
 				<displayName draft="contributed">Lia Ý</displayName>
-				<symbol draft="contributed">ITL</symbol>
 			</currency>
 			<currency type="JMD">
 				<displayName>Đô la Jamaica</displayName>
 				<displayName count="other">Đô la Jamaica</displayName>
-				<symbol>JMD</symbol>
+				<symbol draft="contributed">JMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="JOD">
 				<displayName>Dinar Jordan</displayName>
 				<displayName count="other">Dinar Jordan</displayName>
-				<symbol>JOD</symbol>
+				<symbol draft="contributed">JOD</symbol>
 			</currency>
 			<currency type="JPY">
 				<displayName>Yên Nhật</displayName>
 				<displayName count="other">Yên Nhật</displayName>
-				<symbol>JP¥</symbol>
-				<symbol alt="narrow" draft="contributed">¥</symbol>
 			</currency>
 			<currency type="KES">
 				<displayName>Shilling Kenya</displayName>
 				<displayName count="other">Shilling Kenya</displayName>
-				<symbol>KES</symbol>
+				<symbol draft="contributed">KES</symbol>
 			</currency>
 			<currency type="KGS">
 				<displayName>Som Kyrgyzstan</displayName>
 				<displayName count="other">Som Kyrgyzstan</displayName>
-				<symbol>KGS</symbol>
+				<symbol draft="contributed">KGS</symbol>
 			</currency>
 			<currency type="KHR">
 				<displayName>Riel Campuchia</displayName>
 				<displayName count="other">Riel Campuchia</displayName>
-				<symbol>KHR</symbol>
-				<symbol alt="narrow" draft="contributed">៛</symbol>
+				<symbol draft="contributed">KHR</symbol>
 			</currency>
 			<currency type="KMF">
 				<displayName>Franc Comoros</displayName>
 				<displayName count="other">Franc Comoros</displayName>
-				<symbol>KMF</symbol>
-				<symbol alt="narrow" draft="contributed">CF</symbol>
+				<symbol draft="contributed">KMF</symbol>
 			</currency>
 			<currency type="KPW">
 				<displayName>Won Triều Tiên</displayName>
 				<displayName count="other">Won Triều Tiên</displayName>
-				<symbol>KPW</symbol>
-				<symbol alt="narrow" draft="contributed">₩</symbol>
+				<symbol draft="contributed">KPW</symbol>
 			</currency>
 			<currency type="KRH">
 				<displayName draft="contributed">Đồng Hwan Hàn Quốc (1953–1962)</displayName>
-				<symbol draft="contributed">KRH</symbol>
 			</currency>
 			<currency type="KRO">
 				<displayName draft="contributed">Đồng Won Hàn Quốc (1945–1953)</displayName>
-				<symbol draft="contributed">KRO</symbol>
 			</currency>
 			<currency type="KRW">
 				<displayName>Won Hàn Quốc</displayName>
 				<displayName count="other">Won Hàn Quốc</displayName>
-				<symbol>₩</symbol>
-				<symbol alt="narrow" draft="contributed">₩</symbol>
 			</currency>
 			<currency type="KWD">
 				<displayName>Dinar Kuwait</displayName>
 				<displayName count="other">Dinar Kuwait</displayName>
-				<symbol>KWD</symbol>
+				<symbol draft="contributed">KWD</symbol>
 			</currency>
 			<currency type="KYD">
 				<displayName>Đô la Quần đảo Cayman</displayName>
 				<displayName count="other">Đô la Quần đảo Cayman</displayName>
-				<symbol>KYD</symbol>
+				<symbol draft="contributed">KYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="KZT">
 				<displayName>Tenge Kazakhstan</displayName>
 				<displayName count="other">Tenge Kazakhstan</displayName>
-				<symbol>KZT</symbol>
-				<symbol alt="narrow" draft="contributed">₸</symbol>
+				<symbol draft="contributed">KZT</symbol>
 			</currency>
 			<currency type="LAK">
 				<displayName>Kip Lào</displayName>
 				<displayName count="other">Kip Lào</displayName>
-				<symbol>LAK</symbol>
-				<symbol alt="narrow" draft="contributed">₭</symbol>
+				<symbol draft="contributed">LAK</symbol>
 			</currency>
 			<currency type="LBP">
 				<displayName>Bảng Li-băng</displayName>
 				<displayName count="other">Bảng Li-băng</displayName>
-				<symbol>LBP</symbol>
-				<symbol alt="narrow" draft="contributed">L£</symbol>
+				<symbol draft="contributed">LBP</symbol>
 			</currency>
 			<currency type="LKR">
 				<displayName>Rupee Sri Lanka</displayName>
 				<displayName count="other">Rupee Sri Lanka</displayName>
-				<symbol>LKR</symbol>
-				<symbol alt="narrow" draft="contributed">Rs</symbol>
+				<symbol draft="contributed">LKR</symbol>
 			</currency>
 			<currency type="LRD">
 				<displayName>Đô la Liberia</displayName>
 				<displayName count="other">Đô la Liberia</displayName>
-				<symbol>LRD</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">LRD</symbol>
 			</currency>
 			<currency type="LSL">
 				<displayName draft="contributed">Ioti Lesotho</displayName>
-				<symbol draft="contributed">LSL</symbol>
 			</currency>
 			<currency type="LTL">
 				<displayName>Litas Lít-va</displayName>
 				<displayName count="other">litas Lít-va</displayName>
-				<symbol>LTL</symbol>
 			</currency>
 			<currency type="LTT">
 				<displayName draft="contributed">Đồng Talonas Litva</displayName>
-				<symbol draft="contributed">LTT</symbol>
 			</currency>
 			<currency type="LUC">
 				<displayName draft="contributed">Đồng Franc Luxembourg có thể chuyển đổi</displayName>
-				<symbol draft="contributed">LUC</symbol>
 			</currency>
 			<currency type="LUF">
 				<displayName draft="contributed">Đồng Franc Luxembourg</displayName>
-				<symbol draft="contributed">LUF</symbol>
 			</currency>
 			<currency type="LUL">
 				<displayName draft="contributed">Đồng Franc Luxembourg tài chính</displayName>
-				<symbol draft="contributed">LUL</symbol>
 			</currency>
 			<currency type="LVL">
 				<displayName>Lats Latvia</displayName>
 				<displayName count="other">lats Lativia</displayName>
-				<symbol>LVL</symbol>
 			</currency>
 			<currency type="LVR">
 				<displayName draft="contributed">Đồng Rúp Latvia</displayName>
-				<symbol draft="contributed">LVR</symbol>
 			</currency>
 			<currency type="LYD">
 				<displayName>Dinar Libi</displayName>
 				<displayName count="other">Dinar Libi</displayName>
-				<symbol>LYD</symbol>
+				<symbol draft="contributed">LYD</symbol>
 			</currency>
 			<currency type="MAD">
 				<displayName>Dirham Ma-rốc</displayName>
 				<displayName count="other">Dirham Ma-rốc</displayName>
-				<symbol>MAD</symbol>
+				<symbol draft="contributed">MAD</symbol>
 			</currency>
 			<currency type="MAF">
 				<displayName draft="contributed">Đồng Franc Ma-rốc</displayName>
-				<symbol draft="contributed">MAF</symbol>
 			</currency>
 			<currency type="MCF">
 				<displayName draft="contributed">Đồng Franc Monegasque</displayName>
-				<symbol draft="contributed">MCF</symbol>
 			</currency>
 			<currency type="MDC">
 				<displayName draft="contributed">Đồng Cupon Moldova</displayName>
-				<symbol draft="contributed">MDC</symbol>
 			</currency>
 			<currency type="MDL">
 				<displayName>Leu Moldova</displayName>
 				<displayName count="other">Leu Moldova</displayName>
-				<symbol>MDL</symbol>
+				<symbol draft="contributed">MDL</symbol>
 			</currency>
 			<currency type="MGA">
 				<displayName>Ariary Malagasy</displayName>
 				<displayName count="other">Ariary Malagasy</displayName>
-				<symbol>MGA</symbol>
-				<symbol alt="narrow" draft="contributed">Ar</symbol>
+				<symbol draft="contributed">MGA</symbol>
 			</currency>
 			<currency type="MGF">
 				<displayName draft="contributed">Đồng Franc Magalasy</displayName>
-				<symbol draft="contributed">MGF</symbol>
 			</currency>
 			<currency type="MKD">
 				<displayName>Denar Macedonia</displayName>
 				<displayName count="other">Denar Macedonia</displayName>
-				<symbol>MKD</symbol>
+				<symbol draft="contributed">MKD</symbol>
 			</currency>
 			<currency type="MKN">
 				<displayName draft="contributed">Đồng Denar Macedonia (1992–1993)</displayName>
-				<symbol draft="contributed">MKN</symbol>
 			</currency>
 			<currency type="MLF">
 				<displayName draft="contributed">Đồng Franc Mali</displayName>
-				<symbol draft="contributed">MLF</symbol>
 			</currency>
 			<currency type="MMK">
 				<displayName>Kyat Myanma</displayName>
 				<displayName count="other">Kyat Myanma</displayName>
-				<symbol>MMK</symbol>
-				<symbol alt="narrow" draft="contributed">K</symbol>
+				<symbol draft="contributed">MMK</symbol>
 			</currency>
 			<currency type="MNT">
 				<displayName>Tugrik Mông Cổ</displayName>
 				<displayName count="other">Tugrik Mông Cổ</displayName>
-				<symbol>MNT</symbol>
-				<symbol alt="narrow" draft="contributed">₮</symbol>
+				<symbol draft="contributed">MNT</symbol>
 			</currency>
 			<currency type="MOP">
 				<displayName>Pataca Ma Cao</displayName>
 				<displayName count="other">Pataca Ma Cao</displayName>
-				<symbol>MOP</symbol>
+				<symbol draft="contributed">MOP</symbol>
 			</currency>
 			<currency type="MRO">
+				<displayName>Ouguiya Mauritania (1973–2017)</displayName>
+				<displayName count="other">Ouguiya Mauritania (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Ouguiya Mauritania</displayName>
 				<displayName count="other">Ouguiya Mauritania</displayName>
-				<symbol>MRO</symbol>
+				<symbol draft="contributed">MRU</symbol>
 			</currency>
 			<currency type="MTL">
 				<displayName draft="contributed">Lia xứ Man-tơ</displayName>
-				<symbol draft="contributed">MTL</symbol>
 			</currency>
 			<currency type="MTP">
 				<displayName draft="contributed">Đồng Bảng Malta</displayName>
-				<symbol draft="contributed">MTP</symbol>
 			</currency>
 			<currency type="MUR">
 				<displayName>Rupee Mauritius</displayName>
 				<displayName count="other">Rupee Mauritius</displayName>
-				<symbol>MUR</symbol>
-				<symbol alt="narrow" draft="contributed">Rs</symbol>
+				<symbol draft="contributed">MUR</symbol>
 			</currency>
 			<currency type="MVR">
 				<displayName>Rufiyaa Maldives</displayName>
 				<displayName count="other">Rufiyaa Maldives</displayName>
-				<symbol>MVR</symbol>
+				<symbol draft="contributed">MVR</symbol>
 			</currency>
 			<currency type="MWK">
 				<displayName>Kwacha Malawi</displayName>
 				<displayName count="other">Kwacha Malawi</displayName>
-				<symbol>MWK</symbol>
+				<symbol draft="contributed">MWK</symbol>
 			</currency>
 			<currency type="MXN">
 				<displayName>Peso Mexico</displayName>
 				<displayName count="other">Peso Mexico</displayName>
-				<symbol>MX$</symbol>
+				<symbol draft="contributed">MX$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="MXP">
 				<displayName draft="contributed">Đồng Peso Bạc Mê-hi-cô (1861–1992)</displayName>
-				<symbol draft="contributed">MXP</symbol>
 			</currency>
 			<currency type="MXV">
 				<displayName draft="contributed">Đơn vị Đầu tư Mê-hi-cô</displayName>
-				<symbol draft="contributed">MXV</symbol>
 			</currency>
 			<currency type="MYR">
 				<displayName>Ringgit Malaysia</displayName>
 				<displayName count="other">Ringgit Malaysia</displayName>
-				<symbol>MYR</symbol>
-				<symbol alt="narrow" draft="contributed">RM</symbol>
+				<symbol draft="contributed">MYR</symbol>
 			</currency>
 			<currency type="MZE">
 				<displayName draft="contributed">Escudo Mozambique</displayName>
-				<symbol draft="contributed">MZE</symbol>
 			</currency>
 			<currency type="MZM">
 				<displayName draft="contributed">Đồng Metical Mozambique (1980–2006)</displayName>
-				<symbol draft="contributed">MZM</symbol>
 			</currency>
 			<currency type="MZN">
 				<displayName>Metical Mozambique</displayName>
 				<displayName count="other">Metical Mozambique</displayName>
-				<symbol>MZN</symbol>
+				<symbol draft="contributed">MZN</symbol>
 			</currency>
 			<currency type="NAD">
 				<displayName>Đô la Namibia</displayName>
 				<displayName count="other">Đô la Namibia</displayName>
-				<symbol>NAD</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">NAD</symbol>
 			</currency>
 			<currency type="NGN">
 				<displayName>Naira Nigeria</displayName>
 				<displayName count="other">Naira Nigeria</displayName>
-				<symbol>NGN</symbol>
-				<symbol alt="narrow" draft="contributed">₦</symbol>
+				<symbol draft="contributed">NGN</symbol>
 			</currency>
 			<currency type="NIC">
 				<displayName draft="contributed">Đồng Córdoba Nicaragua (1988–1991)</displayName>
-				<symbol draft="contributed">NIC</symbol>
 			</currency>
 			<currency type="NIO">
 				<displayName>Córdoba Nicaragua</displayName>
 				<displayName count="other">Córdoba Nicaragua</displayName>
-				<symbol>NIO</symbol>
+				<symbol draft="contributed">NIO</symbol>
 				<symbol alt="narrow" draft="contributed">C$</symbol>
 			</currency>
 			<currency type="NLG">
 				<displayName draft="contributed">Đồng Guilder Hà Lan</displayName>
-				<symbol draft="contributed">NLG</symbol>
 			</currency>
 			<currency type="NOK">
 				<displayName>Krone Na Uy</displayName>
 				<displayName count="other">Krone Na Uy</displayName>
-				<symbol>NOK</symbol>
-				<symbol alt="narrow" draft="contributed">kr</symbol>
+				<symbol draft="contributed">NOK</symbol>
 			</currency>
 			<currency type="NPR">
 				<displayName>Rupee Nepal</displayName>
 				<displayName count="other">Rupee Nepal</displayName>
-				<symbol>NPR</symbol>
-				<symbol alt="narrow" draft="contributed">Rs</symbol>
+				<symbol draft="contributed">NPR</symbol>
 			</currency>
 			<currency type="NZD">
 				<displayName>Đô la New Zealand</displayName>
 				<displayName count="other">Đô la New Zealand</displayName>
-				<symbol>NZ$</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="OMR">
 				<displayName>Rial Oman</displayName>
 				<displayName count="other">Rial Oman</displayName>
-				<symbol>OMR</symbol>
+				<symbol draft="contributed">OMR</symbol>
 			</currency>
 			<currency type="PAB">
 				<displayName>Balboa Panama</displayName>
 				<displayName count="other">Balboa Panama</displayName>
-				<symbol>PAB</symbol>
+				<symbol draft="contributed">PAB</symbol>
 			</currency>
 			<currency type="PEI">
 				<displayName draft="contributed">Đồng Inti Peru</displayName>
-				<symbol draft="contributed">PEI</symbol>
 			</currency>
 			<currency type="PEN">
 				<displayName>Sol Peru</displayName>
 				<displayName count="other">Sol Peru</displayName>
-				<symbol>PEN</symbol>
+				<symbol draft="contributed">PEN</symbol>
 			</currency>
 			<currency type="PES">
 				<displayName draft="contributed">Đồng Sol Peru (1863–1965)</displayName>
-				<symbol draft="contributed">PES</symbol>
 			</currency>
 			<currency type="PGK">
-				<displayName>Kina Papua New Guinean</displayName>
-				<displayName count="other">Kina Papua New Guinean</displayName>
-				<symbol>PGK</symbol>
+				<displayName>Kina Papua New Guinea</displayName>
+				<displayName count="other">Kina Papua New Guinea</displayName>
+				<symbol draft="contributed">PGK</symbol>
 			</currency>
 			<currency type="PHP">
 				<displayName>Peso Philipin</displayName>
 				<displayName count="other">Peso Philipin</displayName>
-				<symbol>PHP</symbol>
-				<symbol alt="narrow" draft="contributed">₱</symbol>
+				<symbol draft="contributed">PHP</symbol>
 			</currency>
 			<currency type="PKR">
 				<displayName>Rupee Pakistan</displayName>
 				<displayName count="other">Rupee Pakistan</displayName>
-				<symbol>PKR</symbol>
-				<symbol alt="narrow" draft="contributed">Rs</symbol>
+				<symbol draft="contributed">PKR</symbol>
 			</currency>
 			<currency type="PLN">
 				<displayName>Zloty Ba Lan</displayName>
 				<displayName count="other">Zloty Ba Lan</displayName>
-				<symbol>PLN</symbol>
-				<symbol alt="narrow" draft="contributed">zł</symbol>
+				<symbol draft="contributed">PLN</symbol>
 			</currency>
 			<currency type="PLZ">
 				<displayName draft="contributed">Đồng Zloty Ba Lan (1950–1995)</displayName>
-				<symbol draft="contributed">PLZ</symbol>
 			</currency>
 			<currency type="PTE">
 				<displayName draft="contributed">Đồng Escudo Bồ Đào Nha</displayName>
-				<symbol draft="contributed">PTE</symbol>
 			</currency>
 			<currency type="PYG">
 				<displayName>Guarani Paraguay</displayName>
 				<displayName count="other">Guarani Paraguay</displayName>
-				<symbol>PYG</symbol>
-				<symbol alt="narrow" draft="contributed">₲</symbol>
+				<symbol draft="contributed">PYG</symbol>
 			</currency>
 			<currency type="QAR">
 				<displayName>Rial Qatar</displayName>
 				<displayName count="other">Rial Qatar</displayName>
-				<symbol>QAR</symbol>
+				<symbol draft="contributed">QAR</symbol>
 			</currency>
 			<currency type="RHD">
 				<displayName draft="contributed">Đồng Đô la Rhode</displayName>
-				<symbol draft="contributed">RHD</symbol>
 			</currency>
 			<currency type="ROL">
 				<displayName draft="contributed">Đồng Leu Rumani (1952–2006)</displayName>
-				<symbol draft="contributed">ROL</symbol>
 			</currency>
 			<currency type="RON">
 				<displayName>Leu Romania</displayName>
 				<displayName count="other">Leu Romania</displayName>
-				<symbol>RON</symbol>
-				<symbol alt="narrow" draft="contributed">lei</symbol>
+				<symbol draft="contributed">RON</symbol>
 			</currency>
 			<currency type="RSD">
 				<displayName>Dinar Serbia</displayName>
 				<displayName count="other">Dinar Serbia</displayName>
-				<symbol>RSD</symbol>
+				<symbol draft="contributed">RSD</symbol>
 			</currency>
 			<currency type="RUB">
 				<displayName>Rúp Nga</displayName>
 				<displayName count="other">Rúp Nga</displayName>
-				<symbol>RUB</symbol>
-				<symbol alt="narrow" draft="contributed">₽</symbol>
+				<symbol draft="contributed">RUB</symbol>
 			</currency>
 			<currency type="RUR">
 				<displayName draft="contributed">Đồng Rúp Nga (1991–1998)</displayName>
-				<symbol draft="contributed">RUR</symbol>
 			</currency>
 			<currency type="RWF">
 				<displayName>Franc Rwanda</displayName>
 				<displayName count="other">Franc Rwanda</displayName>
-				<symbol>RWF</symbol>
-				<symbol alt="narrow" draft="contributed">RF</symbol>
+				<symbol draft="contributed">RWF</symbol>
 			</currency>
 			<currency type="SAR">
 				<displayName>Riyal Ả Rập Xê-út</displayName>
 				<displayName count="other">Riyal Ả Rập Xê-út</displayName>
-				<symbol>SAR</symbol>
+				<symbol draft="contributed">SAR</symbol>
 			</currency>
 			<currency type="SBD">
 				<displayName>Đô la quần đảo Solomon</displayName>
 				<displayName count="other">Đô la quần đảo Solomon</displayName>
-				<symbol>SBD</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">SBD</symbol>
 			</currency>
 			<currency type="SCR">
 				<displayName>Rupee Seychelles</displayName>
 				<displayName count="other">Rupee Seychelles</displayName>
-				<symbol>SCR</symbol>
+				<symbol draft="contributed">SCR</symbol>
 			</currency>
 			<currency type="SDD">
 				<displayName draft="contributed">Đồng Dinar Sudan (1992–2007)</displayName>
-				<symbol draft="contributed">SDD</symbol>
 			</currency>
 			<currency type="SDG">
 				<displayName>Bảng Sudan</displayName>
 				<displayName count="other">Bảng Sudan</displayName>
-				<symbol>SDG</symbol>
+				<symbol draft="contributed">SDG</symbol>
 			</currency>
 			<currency type="SDP">
 				<displayName draft="contributed">Đồng Bảng Sudan (1957–1998)</displayName>
-				<symbol draft="contributed">SDP</symbol>
 			</currency>
 			<currency type="SEK">
 				<displayName>Krona Thụy Điển</displayName>
 				<displayName count="other">Krona Thụy Điển</displayName>
-				<symbol>SEK</symbol>
-				<symbol alt="narrow" draft="contributed">kr</symbol>
+				<symbol draft="contributed">SEK</symbol>
 			</currency>
 			<currency type="SGD">
 				<displayName>Đô la Singapore</displayName>
 				<displayName count="other">Đô la Singapore</displayName>
-				<symbol>SGD</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">SGD</symbol>
 			</currency>
 			<currency type="SHP">
 				<displayName>Bảng St. Helena</displayName>
 				<displayName count="other">bảng St. Helena</displayName>
-				<symbol>SHP</symbol>
-				<symbol alt="narrow" draft="contributed">£</symbol>
+				<symbol draft="contributed">SHP</symbol>
 			</currency>
 			<currency type="SIT">
 				<displayName draft="contributed">Tôla Xlôvênia</displayName>
-				<symbol draft="contributed">SIT</symbol>
 			</currency>
 			<currency type="SKK">
 				<displayName draft="contributed">Cuaron Xlôvác</displayName>
-				<symbol draft="contributed">SKK</symbol>
 			</currency>
 			<currency type="SLL">
 				<displayName>Leone Sierra Leone</displayName>
 				<displayName count="other">Leone Sierra Leone</displayName>
-				<symbol>SLL</symbol>
+				<symbol draft="contributed">SLL</symbol>
 			</currency>
 			<currency type="SOS">
 				<displayName>Schilling Somali</displayName>
 				<displayName count="other">Schilling Somali</displayName>
-				<symbol>SOS</symbol>
+				<symbol draft="contributed">SOS</symbol>
 			</currency>
 			<currency type="SRD">
 				<displayName>Đô la Suriname</displayName>
 				<displayName count="other">Đô la Suriname</displayName>
-				<symbol>SRD</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">SRD</symbol>
 			</currency>
 			<currency type="SRG">
 				<displayName draft="contributed">Đồng Guilder Surinam</displayName>
-				<symbol draft="contributed">SRG</symbol>
 			</currency>
 			<currency type="SSP">
 				<displayName>Bảng Nam Sudan</displayName>
 				<displayName count="other">Bảng Nam Sudan</displayName>
-				<symbol>SSP</symbol>
-				<symbol alt="narrow" draft="contributed">£</symbol>
+				<symbol draft="contributed">SSP</symbol>
 			</currency>
 			<currency type="STD">
+				<displayName>Dobra São Tomé và Príncipe (1977–2017)</displayName>
+				<displayName count="other">Dobra São Tomé và Príncipe (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Dobra São Tomé và Príncipe</displayName>
 				<displayName count="other">Dobra São Tomé và Príncipe</displayName>
-				<symbol>STD</symbol>
-				<symbol alt="narrow" draft="contributed">Db</symbol>
+				<symbol draft="contributed">STN</symbol>
 			</currency>
 			<currency type="SUR">
 				<displayName draft="contributed">Đồng Rúp Sô viết</displayName>
-				<symbol draft="contributed">SUR</symbol>
 			</currency>
 			<currency type="SVC">
 				<displayName draft="contributed">Colón El Salvador</displayName>
-				<symbol draft="contributed">SVC</symbol>
 			</currency>
 			<currency type="SYP">
 				<displayName>Bảng Syria</displayName>
 				<displayName count="other">Bảng Syria</displayName>
-				<symbol>SYP</symbol>
-				<symbol alt="narrow" draft="contributed">£</symbol>
+				<symbol draft="contributed">SYP</symbol>
 			</currency>
 			<currency type="SZL">
 				<displayName>Lilangeni Swaziland</displayName>
 				<displayName count="other">Lilangeni Swaziland</displayName>
-				<symbol>SZL</symbol>
+				<symbol draft="contributed">SZL</symbol>
 			</currency>
 			<currency type="THB">
 				<displayName>Bạt Thái Lan</displayName>
 				<displayName count="other">Bạt Thái Lan</displayName>
 				<symbol>฿</symbol>
-				<symbol alt="narrow" draft="contributed">฿</symbol>
 			</currency>
 			<currency type="TJR">
 				<displayName draft="contributed">Đồng Rúp Tajikistan</displayName>
-				<symbol draft="contributed">TJR</symbol>
 			</currency>
 			<currency type="TJS">
 				<displayName>Somoni Tajikistan</displayName>
 				<displayName count="other">Somoni Tajikistan</displayName>
-				<symbol>TJS</symbol>
+				<symbol draft="contributed">TJS</symbol>
 			</currency>
 			<currency type="TMM">
 				<displayName draft="contributed">Đồng Manat Turkmenistan (1993–2009)</displayName>
-				<symbol draft="contributed">TMM</symbol>
 			</currency>
 			<currency type="TMT">
 				<displayName>Manat Turkmenistan</displayName>
 				<displayName count="other">Manat Turkmenistan</displayName>
-				<symbol>TMT</symbol>
+				<symbol draft="contributed">TMT</symbol>
 			</currency>
 			<currency type="TND">
 				<displayName>Dinar Tunisia</displayName>
 				<displayName count="other">Dinar Tunisia</displayName>
-				<symbol>TND</symbol>
+				<symbol draft="contributed">TND</symbol>
 			</currency>
 			<currency type="TOP">
 				<displayName>Paʻanga Tonga</displayName>
 				<displayName count="other">Paʻanga Tonga</displayName>
-				<symbol>TOP</symbol>
-				<symbol alt="narrow" draft="contributed">T$</symbol>
+				<symbol draft="contributed">TOP</symbol>
 			</currency>
 			<currency type="TPE">
 				<displayName draft="contributed">Đồng Escudo Timor</displayName>
-				<symbol draft="contributed">TPE</symbol>
 			</currency>
 			<currency type="TRL">
 				<displayName>Lia Thổ Nhĩ Kỳ (1922–2005)</displayName>
 				<displayName count="other">lia Thổ Nhĩ Kỳ (1922–2005)</displayName>
-				<symbol draft="contributed">TRL</symbol>
 			</currency>
 			<currency type="TRY">
 				<displayName>Lia Thổ Nhĩ Kỳ</displayName>
 				<displayName count="other">Lia Thổ Nhĩ Kỳ</displayName>
-				<symbol>TRY</symbol>
-				<symbol alt="narrow" draft="contributed">₺</symbol>
-				<symbol alt="variant" draft="contributed">TL</symbol>
+				<symbol draft="contributed">TRY</symbol>
 			</currency>
 			<currency type="TTD">
 				<displayName>Đô la Trinidad và Tobago</displayName>
 				<displayName count="other">Đô la Trinidad và Tobago</displayName>
-				<symbol>TTD</symbol>
+				<symbol draft="contributed">TTD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="TWD">
 				<displayName>Đô la Đài Loan mới</displayName>
 				<displayName count="other">Đô la Đài Loan mới</displayName>
-				<symbol>NT$</symbol>
 				<symbol alt="narrow" draft="contributed">NT$</symbol>
 			</currency>
 			<currency type="TZS">
 				<displayName>Shilling Tanzania</displayName>
 				<displayName count="other">Shilling Tanzania</displayName>
-				<symbol>TZS</symbol>
+				<symbol draft="contributed">TZS</symbol>
 			</currency>
 			<currency type="UAH">
-				<displayName>Hryvnia Ucraina</displayName>
+				<displayName>Hryvnia Ukraina</displayName>
 				<displayName count="other">Hryvnia Ucraina</displayName>
-				<symbol>UAH</symbol>
-				<symbol alt="narrow" draft="contributed">₴</symbol>
+				<symbol draft="contributed">UAH</symbol>
 			</currency>
 			<currency type="UAK">
 				<displayName draft="contributed">Đồng Karbovanets Ucraina</displayName>
-				<symbol draft="contributed">UAK</symbol>
 			</currency>
 			<currency type="UGS">
 				<displayName draft="contributed">Đồng Shilling Uganda (1966–1987)</displayName>
-				<symbol draft="contributed">UGS</symbol>
 			</currency>
 			<currency type="UGX">
 				<displayName>Shilling Uganda</displayName>
 				<displayName count="other">Shilling Uganda</displayName>
-				<symbol>UGX</symbol>
+				<symbol draft="contributed">UGX</symbol>
 			</currency>
 			<currency type="USD">
 				<displayName>Đô la Mỹ</displayName>
 				<displayName count="other">Đô la Mỹ</displayName>
-				<symbol>US$</symbol>
+				<symbol draft="contributed">US$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="USN">
 				<displayName draft="contributed">Đô la Mỹ (Ngày tiếp theo)</displayName>
-				<symbol draft="contributed">USN</symbol>
 			</currency>
 			<currency type="USS">
 				<displayName draft="contributed">Đô la Mỹ (Cùng ngày)</displayName>
-				<symbol draft="contributed">USS</symbol>
 			</currency>
 			<currency type="UYI">
 				<displayName draft="contributed">Đồng Peso Uruguay (Đơn vị Theo chỉ số)</displayName>
-				<symbol draft="contributed">UYI</symbol>
 			</currency>
 			<currency type="UYP">
 				<displayName draft="contributed">Đồng Peso Uruguay (1975–1993)</displayName>
-				<symbol draft="contributed">UYP</symbol>
 			</currency>
 			<currency type="UYU">
 				<displayName>Peso Uruguay</displayName>
 				<displayName count="other">Peso Uruguay</displayName>
-				<symbol>UYU</symbol>
-				<symbol alt="narrow" draft="contributed">$</symbol>
+				<symbol draft="contributed">UYU</symbol>
 			</currency>
 			<currency type="UZS">
 				<displayName>Som Uzbekistan</displayName>
 				<displayName count="other">Som Uzbekistan</displayName>
-				<symbol>UZS</symbol>
+				<symbol draft="contributed">UZS</symbol>
 			</currency>
 			<currency type="VEB">
 				<displayName>Đồng bolívar của Venezuela (1871–2008)</displayName>
-				<symbol draft="contributed">VEB</symbol>
 			</currency>
 			<currency type="VEF">
+				<displayName>Bolívar Venezuela (2008–2018)</displayName>
+				<displayName count="other">Bolívar Venezuela (2008–2018)</displayName>
+			</currency>
+			<currency type="VES">
 				<displayName>Bolívar Venezuela</displayName>
 				<displayName count="other">Bolívar Venezuela</displayName>
-				<symbol>VEF</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
+				<symbol draft="contributed">VES</symbol>
 			</currency>
 			<currency type="VND">
 				<displayName>Đồng Việt Nam</displayName>
 				<displayName count="other">Đồng Việt Nam</displayName>
-				<symbol>₫</symbol>
-				<symbol alt="narrow" draft="contributed">₫</symbol>
 			</currency>
 			<currency type="VNN">
 				<displayName draft="contributed">Đồng Việt Nam (1978–1985)</displayName>
-				<symbol draft="contributed">VNN</symbol>
 			</currency>
 			<currency type="VUV">
 				<displayName>Vatu Vanuatu</displayName>
 				<displayName count="other">Vatu Vanuatu</displayName>
-				<symbol>VUV</symbol>
+				<symbol draft="contributed">VUV</symbol>
 			</currency>
 			<currency type="WST">
 				<displayName>Tala Samoa</displayName>
 				<displayName count="other">Tala Samoa</displayName>
-				<symbol>WST</symbol>
+				<symbol draft="contributed">WST</symbol>
 			</currency>
 			<currency type="XAF">
 				<displayName>Franc CFA Trung Phi</displayName>
 				<displayName count="other">franc CFA Trung Phi</displayName>
-				<symbol>FCFA</symbol>
 			</currency>
 			<currency type="XAG">
 				<displayName draft="contributed">Bạc</displayName>
-				<symbol draft="contributed">XAG</symbol>
 			</currency>
 			<currency type="XAU">
 				<displayName draft="contributed">Vàng</displayName>
-				<symbol draft="contributed">XAU</symbol>
 			</currency>
 			<currency type="XBA">
 				<displayName draft="contributed">Đơn vị Tổng hợp Châu Âu</displayName>
-				<symbol draft="contributed">XBA</symbol>
 			</currency>
 			<currency type="XBB">
 				<displayName draft="contributed">Đơn vị Tiền tệ Châu Âu</displayName>
-				<symbol draft="contributed">XBB</symbol>
 			</currency>
 			<currency type="XBC">
 				<displayName draft="contributed">Đơn vị Kế toán Châu Âu (XBC)</displayName>
-				<symbol draft="contributed">XBC</symbol>
 			</currency>
 			<currency type="XBD">
 				<displayName draft="contributed">Đơn vị Kế toán Châu Âu (XBD)</displayName>
-				<symbol draft="contributed">XBD</symbol>
 			</currency>
 			<currency type="XCD">
 				<displayName>Đô la Đông Caribê</displayName>
 				<displayName count="other">Đô la Đông Caribê</displayName>
-				<symbol>EC$</symbol>
+				<symbol draft="contributed">EC$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="XDR">
 				<displayName draft="contributed">Quyền Rút vốn Đặc biệt</displayName>
-				<symbol draft="contributed">XDR</symbol>
 			</currency>
 			<currency type="XEU">
 				<displayName draft="contributed">Đơn vị Tiền Châu Âu</displayName>
-				<symbol draft="contributed">XEU</symbol>
 			</currency>
 			<currency type="XFO">
 				<displayName draft="contributed">Đồng France Pháp Vàng</displayName>
-				<symbol draft="contributed">XFO</symbol>
 			</currency>
 			<currency type="XFU">
 				<displayName draft="contributed">Đồng UIC-Franc Pháp</displayName>
-				<symbol draft="contributed">XFU</symbol>
 			</currency>
 			<currency type="XOF">
 				<displayName>Franc CFA Tây Phi</displayName>
 				<displayName count="other">franc CFA Tây Phi</displayName>
-				<symbol>CFA</symbol>
 			</currency>
 			<currency type="XPD">
 				<displayName draft="contributed">Paladi</displayName>
-				<symbol draft="contributed">XPD</symbol>
 			</currency>
 			<currency type="XPF">
 				<displayName>Franc CFP</displayName>
 				<displayName count="other">Franc CFP</displayName>
-				<symbol>CFPF</symbol>
 			</currency>
 			<currency type="XPT">
 				<displayName draft="contributed">Bạch kim</displayName>
-				<symbol draft="contributed">XPT</symbol>
 			</currency>
 			<currency type="XRE">
 				<displayName draft="contributed">Quỹ RINET</displayName>
-				<symbol draft="contributed">XRE</symbol>
 			</currency>
 			<currency type="XTS">
 				<displayName draft="contributed">Mã Tiền tệ Kiểm tra</displayName>
-				<symbol draft="contributed">XTS</symbol>
 			</currency>
 			<currency type="XXX">
 				<displayName>Tiền tệ chưa biết</displayName>
@@ -7008,72 +6987,60 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</currency>
 			<currency type="YDD">
 				<displayName draft="contributed">Đồng Dinar Yemen</displayName>
-				<symbol draft="contributed">YDD</symbol>
 			</currency>
 			<currency type="YER">
 				<displayName>Rial Yemen</displayName>
 				<displayName count="other">Rial Yemen</displayName>
-				<symbol>YER</symbol>
+				<symbol draft="contributed">YER</symbol>
 			</currency>
 			<currency type="YUD">
 				<displayName draft="contributed">Đồng Dinar Nam Tư Xu (1966–1990)</displayName>
-				<symbol draft="contributed">YUD</symbol>
 			</currency>
 			<currency type="YUM">
 				<displayName draft="contributed">Đồng Dinar Nam Tư Mới (1994–2002)</displayName>
-				<symbol draft="contributed">YUM</symbol>
 			</currency>
 			<currency type="YUN">
 				<displayName draft="contributed">Đồng Dinar Nam Tư Có thể chuyển đổi (1990–1992)</displayName>
-				<symbol draft="contributed">YUN</symbol>
 			</currency>
 			<currency type="YUR">
 				<displayName draft="contributed">Đồng Dinar Nam Tư Tái cơ cấu (1992–1993)</displayName>
-				<symbol draft="contributed">YUR</symbol>
 			</currency>
 			<currency type="ZAL">
 				<displayName draft="contributed">Đồng Rand Nam Phi (tài chính)</displayName>
-				<symbol draft="contributed">ZAL</symbol>
 			</currency>
 			<currency type="ZAR">
 				<displayName>Rand Nam Phi</displayName>
 				<displayName count="other">Rand Nam Phi</displayName>
-				<symbol>ZAR</symbol>
-				<symbol alt="narrow" draft="contributed">R</symbol>
+				<symbol draft="contributed">ZAR</symbol>
 			</currency>
 			<currency type="ZMK">
 				<displayName>Đồng kwacha của Zambia (1968–2012)</displayName>
-				<symbol draft="contributed">ZMK</symbol>
 			</currency>
 			<currency type="ZMW">
 				<displayName>Kwacha Zambia</displayName>
 				<displayName count="other">Kwacha Zambia</displayName>
-				<symbol>ZMW</symbol>
-				<symbol alt="narrow" draft="contributed">ZK</symbol>
+				<symbol draft="contributed">ZMW</symbol>
 			</currency>
 			<currency type="ZRN">
 				<displayName draft="contributed">Đồng Zaire Mới (1993–1998)</displayName>
-				<symbol draft="contributed">ZRN</symbol>
 			</currency>
 			<currency type="ZRZ">
 				<displayName draft="contributed">Đồng Zaire (1971–1993)</displayName>
-				<symbol draft="contributed">ZRZ</symbol>
 			</currency>
 			<currency type="ZWD">
 				<displayName draft="contributed">Đồng Đô la Zimbabwe (1980–2008)</displayName>
-				<symbol draft="contributed">ZWD</symbol>
 			</currency>
 			<currency type="ZWL">
 				<displayName draft="contributed">Đồng Đô la Zimbabwe (2009)</displayName>
-				<symbol draft="contributed">ZWL</symbol>
 			</currency>
 			<currency type="ZWR">
 				<displayName draft="contributed">Đồng Đô la Zimbabwe (2008)</displayName>
-				<symbol draft="contributed">ZWR</symbol>
 			</currency>
 		</currencies>
 		<miscPatterns numberSystem="latn">
+			<pattern type="approximately">~{0}</pattern>
 			<pattern type="atLeast">{0}+</pattern>
+			<pattern type="atMost">≤{0}</pattern>
 			<pattern type="range">{0}-{1}</pattern>
 		</miscPatterns>
 		<minimalPairs>
@@ -7085,16 +7052,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 	</numbers>
 	<units>
 		<unitLength type="long">
-			<compoundUnit type="per">
-				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
-			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>lực g</displayName>
 				<unitPattern count="other">{0} lực g</unitPattern>
-			</unit>
-			<unit type="acceleration-meter-per-second-squared">
-				<displayName>m/s²</displayName>
-				<unitPattern count="other">{0} m/s²</unitPattern>
 			</unit>
 			<unit type="angle-revolution">
 				<displayName>vòng</displayName>
@@ -7119,7 +7079,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="area-square-kilometer">
 				<displayName>kilômét vuông</displayName>
 				<unitPattern count="other">{0} kilômét vuông</unitPattern>
-				<perUnitPattern>{0}/km²</perUnitPattern>
 			</unit>
 			<unit type="area-hectare">
 				<displayName>héc-ta</displayName>
@@ -7128,17 +7087,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="area-square-meter">
 				<displayName>mét vuông</displayName>
 				<unitPattern count="other">{0} mét vuông</unitPattern>
-				<perUnitPattern>{0}/m²</perUnitPattern>
 			</unit>
 			<unit type="area-square-centimeter">
 				<displayName>xentimét vuông</displayName>
 				<unitPattern count="other">{0} xentimét vuông</unitPattern>
-				<perUnitPattern>{0}/cm²</perUnitPattern>
 			</unit>
 			<unit type="area-square-mile">
 				<displayName>dặm vuông</displayName>
 				<unitPattern count="other">{0} dặm vuông</unitPattern>
-				<perUnitPattern>{0}/mi²</perUnitPattern>
 			</unit>
 			<unit type="area-acre">
 				<displayName>mẫu</displayName>
@@ -7155,23 +7111,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="area-square-inch">
 				<displayName>inch vuông</displayName>
 				<unitPattern count="other">{0} inch vuông</unitPattern>
-				<perUnitPattern>{0}/in²</perUnitPattern>
 			</unit>
 			<unit type="concentr-karat">
 				<displayName>karat</displayName>
 				<unitPattern count="other">{0} karat</unitPattern>
 			</unit>
-			<unit type="concentr-milligram-per-deciliter">
-				<displayName>mg/dL</displayName>
-				<unitPattern count="other">{0} mg/dL</unitPattern>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="other">{0}%</unitPattern>
 			</unit>
-			<unit type="concentr-millimole-per-liter">
-				<displayName>mmol/L</displayName>
-				<unitPattern count="other">{0} mmol/L</unitPattern>
+			<unit type="concentr-permille">
+				<displayName>‰</displayName>
+				<unitPattern count="other">{0}‰</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
-				<displayName>ppm</displayName>
-				<unitPattern count="other">{0} ppm</unitPattern>
+			<unit type="concentr-permyriad">
+				<displayName>phần chục nghìn</displayName>
+				<unitPattern count="other">{0} phần chục nghìn</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>mol</displayName>
+				<unitPattern count="other">{0} mol</unitPattern>
 			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>lít/km</displayName>
@@ -7186,8 +7145,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} dặm/gallon</unitPattern>
 			</unit>
 			<unit type="consumption-mile-per-gallon-imperial">
-				<displayName>mpg Imp.</displayName>
-				<unitPattern count="other">{0} mpg Imp.</unitPattern>
+				<displayName>dặm/galông Anh</displayName>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>petabyte</displayName>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>terabyte</displayName>
@@ -7221,17 +7182,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>kilobit</displayName>
 				<unitPattern count="other">{0} kilobit</unitPattern>
 			</unit>
-			<unit type="digital-byte">
-				<displayName>byte</displayName>
-				<unitPattern count="other">{0} byte</unitPattern>
-			</unit>
-			<unit type="digital-bit">
-				<displayName>bit</displayName>
-				<unitPattern count="other">{0} bit</unitPattern>
-			</unit>
 			<unit type="duration-century">
 				<displayName>thế kỷ</displayName>
 				<unitPattern count="other">{0} thế kỷ</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName>thập kỷ</displayName>
+				<unitPattern count="other">{0} thập kỷ</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>năm</displayName>
@@ -7320,31 +7277,57 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>kilôoát giờ</displayName>
 				<unitPattern count="other">{0} kilôoát giờ</unitPattern>
 			</unit>
-			<unit type="frequency-gigahertz">
-				<displayName>GHz</displayName>
-				<unitPattern count="other">{0} GHz</unitPattern>
+			<unit type="energy-electronvolt">
+				<displayName>electronvôn</displayName>
+				<unitPattern count="other">{0} electronvôn</unitPattern>
 			</unit>
-			<unit type="frequency-megahertz">
-				<displayName>MHz</displayName>
-				<unitPattern count="other">{0} MHz</unitPattern>
+			<unit type="energy-british-thermal-unit">
+				<displayName>đơn vị nhiệt Anh</displayName>
+				<unitPattern count="other">{0} đơn vị nhiệt Anh</unitPattern>
 			</unit>
-			<unit type="frequency-kilohertz">
-				<displayName>kHz</displayName>
-				<unitPattern count="other">{0} kHz</unitPattern>
+			<unit type="energy-therm-us">
+				<displayName>đơn vị nhiệt Mỹ</displayName>
+				<unitPattern count="other">{0} đơn vị nhiệt Mỹ</unitPattern>
 			</unit>
-			<unit type="frequency-hertz">
-				<displayName>Hz</displayName>
-				<unitPattern count="other">{0} Hz</unitPattern>
+			<unit type="force-pound-force">
+				<displayName>pound lực</displayName>
+				<unitPattern count="other">{0} pound lực</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>newton</displayName>
+				<unitPattern count="other">{0} newton</unitPattern>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName>pixel</displayName>
+				<unitPattern count="other">{0} pixel</unitPattern>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName>megapixel</displayName>
+				<unitPattern count="other">{0} megapixel</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-centimeter">
+				<displayName>pixel/xentimét</displayName>
+				<unitPattern count="other">{0} pixel/xentimét</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-inch">
+				<displayName>pixel/inch</displayName>
+				<unitPattern count="other">{0} pixel/inch</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-centimeter">
+				<displayName>chấm/xentimét</displayName>
+				<unitPattern count="other">{0} chấm/xentimét</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-inch">
+				<displayName>chấm/inch</displayName>
+				<unitPattern count="other">{0} chấm/inch</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>kilômét</displayName>
 				<unitPattern count="other">{0} kilômét</unitPattern>
-				<perUnitPattern>{0}/km</perUnitPattern>
 			</unit>
 			<unit type="length-meter">
 				<displayName>mét</displayName>
 				<unitPattern count="other">{0} mét</unitPattern>
-				<perUnitPattern>{0}/m</perUnitPattern>
 			</unit>
 			<unit type="length-decimeter">
 				<displayName>đềximét</displayName>
@@ -7353,7 +7336,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="length-centimeter">
 				<displayName>xentimét</displayName>
 				<unitPattern count="other">{0} xentimét</unitPattern>
-				<perUnitPattern>{0}/cm</perUnitPattern>
 			</unit>
 			<unit type="length-millimeter">
 				<displayName>milimét</displayName>
@@ -7382,7 +7364,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="length-foot">
 				<displayName>feet</displayName>
 				<unitPattern count="other">{0} feet</unitPattern>
-				<perUnitPattern>{0}/ft</perUnitPattern>
 			</unit>
 			<unit type="length-inch">
 				<displayName>inch</displayName>
@@ -7398,8 +7379,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} năm ánh sáng</unitPattern>
 			</unit>
 			<unit type="length-astronomical-unit">
-				<displayName>au</displayName>
-				<unitPattern count="other">{0} au</unitPattern>
+				<displayName>đơn vị thiên văn</displayName>
+				<unitPattern count="other">{0} đơn vị thiên văn</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>hải lý</displayName>
@@ -7413,18 +7394,25 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>đ</displayName>
 				<unitPattern count="other">{0} đ</unitPattern>
 			</unit>
+			<unit type="length-solar-radius">
+				<displayName>bán kính mặt trời</displayName>
+				<unitPattern count="other">{0} bán kính mặt trời</unitPattern>
+			</unit>
 			<unit type="light-lux">
 				<displayName>lux</displayName>
 				<unitPattern count="other">{0} lux</unitPattern>
 			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>độ sáng của mặt trời</displayName>
+				<unitPattern count="other">{0} độ sáng của mặt trời</unitPattern>
+			</unit>
 			<unit type="mass-metric-ton">
-				<displayName>MT</displayName>
-				<unitPattern count="other">{0} MT</unitPattern>
+				<displayName>tấn hệ mét</displayName>
+				<unitPattern count="other">{0} tấn hệ mét</unitPattern>
 			</unit>
 			<unit type="mass-kilogram">
 				<displayName>kilôgam</displayName>
 				<unitPattern count="other">{0} kilôgam</unitPattern>
-				<perUnitPattern>{0}/kg</perUnitPattern>
 			</unit>
 			<unit type="mass-gram">
 				<displayName>gam</displayName>
@@ -7446,20 +7434,31 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="mass-pound">
 				<displayName>pao</displayName>
 				<unitPattern count="other">{0} pao</unitPattern>
-				<perUnitPattern>{0}/lb</perUnitPattern>
 			</unit>
 			<unit type="mass-ounce">
-				<displayName>oz</displayName>
-				<unitPattern count="other">{0} oz</unitPattern>
-				<perUnitPattern>{0}/oz</perUnitPattern>
+				<displayName>aoxơ</displayName>
+				<unitPattern count="other">{0} aoxơ</unitPattern>
+				<perUnitPattern>{0}/aoxơ</perUnitPattern>
 			</unit>
 			<unit type="mass-ounce-troy">
-				<displayName>oz t</displayName>
-				<unitPattern count="other">{0} oz t</unitPattern>
+				<displayName>troi ao-xơ</displayName>
+				<unitPattern count="other">{0} troi ao-xơ</unitPattern>
 			</unit>
 			<unit type="mass-carat">
 				<displayName>carat</displayName>
 				<unitPattern count="other">{0} carat</unitPattern>
+			</unit>
+			<unit type="mass-dalton">
+				<displayName>dalton</displayName>
+				<unitPattern count="other">{0} dalton</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>Trọng lượng trái đất</displayName>
+				<unitPattern count="other">{0} trọng lượng trái đất</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>trọng lượng mặt trời</displayName>
+				<unitPattern count="other">{0} trọng lượng mặt trời</unitPattern>
 			</unit>
 			<unit type="power-gigawatt">
 				<displayName>gigaoát</displayName>
@@ -7485,17 +7484,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mã lực</displayName>
 				<unitPattern count="other">{0} mã lực</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>héctô pascal</displayName>
-				<unitPattern count="other">{0} héctô pascal</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
-				<displayName>mm Hg</displayName>
-				<unitPattern count="other">{0} mm Hg</unitPattern>
+				<displayName>milimét thủy ngân</displayName>
+				<unitPattern count="other">{0} milimét thủy ngân</unitPattern>
 			</unit>
 			<unit type="pressure-pound-per-square-inch">
-				<displayName>psi</displayName>
-				<unitPattern count="other">{0} psi</unitPattern>
+				<displayName>pound/inch vuông</displayName>
+				<unitPattern count="other">{0} pound/inch vuông</unitPattern>
 			</unit>
 			<unit type="pressure-inch-hg">
 				<displayName>inch thủy ngân</displayName>
@@ -7504,6 +7499,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="pressure-millibar">
 				<displayName>millibar</displayName>
 				<unitPattern count="other">{0} millibar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<unitPattern count="other">{0} átmốtphe</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>héctô pascal</displayName>
+				<unitPattern count="other">{0} héctô pascal</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>kilômét/giờ</displayName>
@@ -7521,10 +7523,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>nút</displayName>
 				<unitPattern count="other">{0} nút</unitPattern>
 			</unit>
-			<unit type="temperature-generic">
-				<displayName>°</displayName>
-				<unitPattern count="other">{0}°</unitPattern>
-			</unit>
 			<unit type="temperature-celsius">
 				<displayName>độ C</displayName>
 				<unitPattern count="other">{0} độ C</unitPattern>
@@ -7537,6 +7535,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>độ K</displayName>
 				<unitPattern count="other">{0} độ K</unitPattern>
 			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>pound-feet</displayName>
+				<unitPattern count="other">{0} pound-feet</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>newton-mét</displayName>
+				<unitPattern count="other">{0} newton-mét</unitPattern>
+			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>kilômét khối</displayName>
 				<unitPattern count="other">{0} kilômét khối</unitPattern>
@@ -7544,12 +7550,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="volume-cubic-meter">
 				<displayName>mét khối</displayName>
 				<unitPattern count="other">{0} mét khối</unitPattern>
-				<perUnitPattern>{0}/m³</perUnitPattern>
 			</unit>
 			<unit type="volume-cubic-centimeter">
 				<displayName>xentimét khối</displayName>
 				<unitPattern count="other">{0} xentimét khối</unitPattern>
-				<perUnitPattern>{0}/cm³</perUnitPattern>
 			</unit>
 			<unit type="volume-cubic-mile">
 				<displayName>dặm khối</displayName>
@@ -7578,7 +7582,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="volume-liter">
 				<displayName>lít</displayName>
 				<unitPattern count="other">{0} lít</unitPattern>
-				<perUnitPattern>{0}/l</perUnitPattern>
 			</unit>
 			<unit type="volume-deciliter">
 				<displayName>đềxilít</displayName>
@@ -7600,10 +7603,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>cup khối</displayName>
 				<unitPattern count="other">{0} cup khối</unitPattern>
 			</unit>
-			<unit type="volume-acre-foot">
-				<displayName>ac ft</displayName>
-				<unitPattern count="other">{0} ac ft</unitPattern>
-			</unit>
 			<unit type="volume-gallon">
 				<displayName>gallon</displayName>
 				<unitPattern count="other">{0} gallon</unitPattern>
@@ -7619,16 +7618,19 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} quart</unitPattern>
 			</unit>
 			<unit type="volume-pint">
-				<displayName>pint</displayName>
-				<unitPattern count="other">{0} pint</unitPattern>
+				<displayName>panh</displayName>
+				<unitPattern count="other">{0} panh</unitPattern>
 			</unit>
 			<unit type="volume-cup">
-				<displayName>cup</displayName>
 				<unitPattern count="other">{0} cup</unitPattern>
 			</unit>
 			<unit type="volume-fluid-ounce">
-				<displayName>fl oz</displayName>
-				<unitPattern count="other">{0} fl oz</unitPattern>
+				<displayName>aoxơ chất lỏng</displayName>
+				<unitPattern count="other">{0} aoxơ chất lỏng</unitPattern>
+			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>Aoxơ chất lỏng theo hệ đo lường Anh</displayName>
+				<unitPattern count="other">{0} Aoxơ chất lỏng theo hệ đo lường Anh</unitPattern>
 			</unit>
 			<unit type="volume-tablespoon">
 				<displayName>muỗng canh</displayName>
@@ -7638,7 +7640,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>muỗng cà phê</displayName>
 				<unitPattern count="other">{0} muỗng cà phê</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName>thùng</displayName>
+				<unitPattern count="other">{0} thùng</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>phương trời</displayName>
 				<coordinateUnitPattern type="east">{0}Đ</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}B</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}N</coordinateUnitPattern>
@@ -7646,153 +7653,79 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</coordinateUnit>
 		</unitLength>
 		<unitLength type="short">
-			<compoundUnit type="per">
-				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
-			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>lực g</displayName>
-				<unitPattern count="other">{0} G</unitPattern>
-			</unit>
-			<unit type="acceleration-meter-per-second-squared">
-				<displayName>m/s²</displayName>
-				<unitPattern count="other">{0} m/s²</unitPattern>
 			</unit>
 			<unit type="angle-revolution">
-				<displayName>rev</displayName>
-				<unitPattern count="other">{0} rev</unitPattern>
-			</unit>
-			<unit type="angle-radian">
-				<displayName>rad</displayName>
-				<unitPattern count="other">{0} rad</unitPattern>
+				<displayName>vòng</displayName>
+				<unitPattern count="other">{0} vòng</unitPattern>
 			</unit>
 			<unit type="angle-degree">
 				<displayName>độ</displayName>
-				<unitPattern count="other">{0}°</unitPattern>
 			</unit>
 			<unit type="angle-arc-minute">
 				<displayName>phút</displayName>
-				<unitPattern count="other">{0}′</unitPattern>
 			</unit>
 			<unit type="angle-arc-second">
 				<displayName>giây</displayName>
-				<unitPattern count="other">{0}″</unitPattern>
 			</unit>
 			<unit type="area-square-kilometer">
 				<displayName>km²</displayName>
-				<unitPattern count="other">{0} km²</unitPattern>
-				<perUnitPattern>{0}/km²</perUnitPattern>
 			</unit>
 			<unit type="area-hectare">
 				<displayName>ha</displayName>
-				<unitPattern count="other">{0} ha</unitPattern>
-			</unit>
-			<unit type="area-square-meter">
-				<displayName>m²</displayName>
-				<unitPattern count="other">{0} m²</unitPattern>
-				<perUnitPattern>{0}/m²</perUnitPattern>
 			</unit>
 			<unit type="area-square-centimeter">
 				<displayName>cm²</displayName>
-				<unitPattern count="other">{0} cm²</unitPattern>
-				<perUnitPattern>{0}/cm²</perUnitPattern>
-			</unit>
-			<unit type="area-square-mile">
-				<displayName>mi²</displayName>
-				<unitPattern count="other">{0} mi²</unitPattern>
-				<perUnitPattern>{0}/mi²</perUnitPattern>
 			</unit>
 			<unit type="area-acre">
 				<displayName>mẫu</displayName>
 				<unitPattern count="other">{0} mẫu</unitPattern>
 			</unit>
-			<unit type="area-square-yard">
-				<displayName>yd²</displayName>
-				<unitPattern count="other">{0} yd²</unitPattern>
-			</unit>
-			<unit type="area-square-foot">
-				<displayName>ft²</displayName>
-				<unitPattern count="other">{0} ft²</unitPattern>
-			</unit>
-			<unit type="area-square-inch">
-				<displayName>in²</displayName>
-				<unitPattern count="other">{0} in²</unitPattern>
-				<perUnitPattern>{0}/in²</perUnitPattern>
-			</unit>
-			<unit type="concentr-karat">
-				<displayName>kt</displayName>
-				<unitPattern count="other">{0} kt</unitPattern>
-			</unit>
 			<unit type="concentr-milligram-per-deciliter">
 				<displayName>mg/dL</displayName>
-				<unitPattern count="other">{0} mg/dL</unitPattern>
 			</unit>
-			<unit type="concentr-millimole-per-liter">
-				<displayName>mmol/L</displayName>
-				<unitPattern count="other">{0} mmol/L</unitPattern>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="other">{0}%</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
-				<displayName>ppm</displayName>
-				<unitPattern count="other">{0} ppm</unitPattern>
+			<unit type="concentr-permille">
+				<displayName>‰</displayName>
+				<unitPattern count="other">{0}‰</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>phần vạn</displayName>
+				<unitPattern count="other">{0}‱</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>mol</displayName>
+				<unitPattern count="other">{0} mol</unitPattern>
 			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>l/km</displayName>
 				<unitPattern count="other">{0} l/km</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
-				<displayName>L/100km</displayName>
-				<unitPattern count="other">{0} L/100km</unitPattern>
-			</unit>
 			<unit type="consumption-mile-per-gallon">
 				<displayName>mpg</displayName>
 				<unitPattern count="other">{0} mpg</unitPattern>
 			</unit>
-			<unit type="consumption-mile-per-gallon-imperial">
-				<displayName>mpg Imp.</displayName>
-				<unitPattern count="other">{0} mpg Imp.</unitPattern>
-			</unit>
-			<unit type="digital-terabyte">
-				<displayName>TB</displayName>
-				<unitPattern count="other">{0} TB</unitPattern>
-			</unit>
-			<unit type="digital-terabit">
-				<displayName>Tb</displayName>
-				<unitPattern count="other">{0} Tb</unitPattern>
-			</unit>
-			<unit type="digital-gigabyte">
-				<displayName>GB</displayName>
-				<unitPattern count="other">{0} GB</unitPattern>
-			</unit>
-			<unit type="digital-gigabit">
-				<displayName>Gb</displayName>
-				<unitPattern count="other">{0} Gb</unitPattern>
-			</unit>
-			<unit type="digital-megabyte">
-				<displayName>MB</displayName>
-				<unitPattern count="other">{0} MB</unitPattern>
-			</unit>
-			<unit type="digital-megabit">
-				<displayName>Mb</displayName>
-				<unitPattern count="other">{0} Mb</unitPattern>
-			</unit>
-			<unit type="digital-kilobyte">
-				<displayName>kB</displayName>
-				<unitPattern count="other">{0} kB</unitPattern>
-			</unit>
-			<unit type="digital-kilobit">
-				<displayName>kb</displayName>
-				<unitPattern count="other">{0} kb</unitPattern>
+			<unit type="digital-petabyte">
+				<displayName>PByte</displayName>
+				<unitPattern count="other">{0} PB</unitPattern>
 			</unit>
 			<unit type="digital-byte">
 				<displayName>byte</displayName>
-				<unitPattern count="other">{0} byte</unitPattern>
 			</unit>
 			<unit type="digital-bit">
 				<displayName>bit</displayName>
-				<unitPattern count="other">{0} bit</unitPattern>
 			</unit>
 			<unit type="duration-century">
 				<displayName>thế kỷ</displayName>
 				<unitPattern count="other">{0} thế kỷ</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName>thập kỷ</displayName>
+				<unitPattern count="other">{0} thập kỷ</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>năm</displayName>
@@ -7843,212 +7776,158 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="electric-ampere">
 				<displayName>A</displayName>
-				<unitPattern count="other">{0} A</unitPattern>
-			</unit>
-			<unit type="electric-milliampere">
-				<displayName>mA</displayName>
-				<unitPattern count="other">{0} mA</unitPattern>
 			</unit>
 			<unit type="electric-ohm">
 				<displayName>Ω</displayName>
-				<unitPattern count="other">{0} Ω</unitPattern>
 			</unit>
 			<unit type="electric-volt">
 				<displayName>v</displayName>
-				<unitPattern count="other">{0} V</unitPattern>
-			</unit>
-			<unit type="energy-kilocalorie">
-				<displayName>kcal</displayName>
-				<unitPattern count="other">{0} kcal</unitPattern>
-			</unit>
-			<unit type="energy-calorie">
-				<displayName>cal</displayName>
-				<unitPattern count="other">{0} cal</unitPattern>
-			</unit>
-			<unit type="energy-foodcalorie">
-				<displayName>Cal</displayName>
-				<unitPattern count="other">{0} Cal</unitPattern>
-			</unit>
-			<unit type="energy-kilojoule">
-				<displayName>kJ</displayName>
-				<unitPattern count="other">{0} kJ</unitPattern>
 			</unit>
 			<unit type="energy-joule">
 				<displayName>J</displayName>
-				<unitPattern count="other">{0} J</unitPattern>
 			</unit>
-			<unit type="energy-kilowatt-hour">
-				<displayName>kWh</displayName>
-				<unitPattern count="other">{0} kWh</unitPattern>
+			<unit type="energy-electronvolt">
+				<displayName>electronvôn</displayName>
+				<unitPattern count="other">{0} eV</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>BTU</displayName>
+				<unitPattern count="other">{0} Btu</unitPattern>
+			</unit>
+			<unit type="energy-therm-us">
+				<displayName>therm Mỹ</displayName>
+				<unitPattern count="other">{0} therm Mỹ</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>pound-lực</displayName>
+				<unitPattern count="other">{0} lbf</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>newton</displayName>
+				<unitPattern count="other">{0} N</unitPattern>
 			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>GHz</displayName>
-				<unitPattern count="other">{0} GHz</unitPattern>
 			</unit>
 			<unit type="frequency-megahertz">
 				<displayName>MHz</displayName>
-				<unitPattern count="other">{0} MHz</unitPattern>
 			</unit>
 			<unit type="frequency-kilohertz">
 				<displayName>kHz</displayName>
-				<unitPattern count="other">{0} kHz</unitPattern>
 			</unit>
 			<unit type="frequency-hertz">
 				<displayName>Hz</displayName>
-				<unitPattern count="other">{0} Hz</unitPattern>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName>megapixel</displayName>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>km</displayName>
-				<unitPattern count="other">{0} km</unitPattern>
-				<perUnitPattern>{0}/km</perUnitPattern>
 			</unit>
 			<unit type="length-meter">
 				<displayName>m</displayName>
-				<unitPattern count="other">{0} m</unitPattern>
-				<perUnitPattern>{0}/m</perUnitPattern>
 			</unit>
 			<unit type="length-decimeter">
 				<displayName>dm</displayName>
-				<unitPattern count="other">{0} dm</unitPattern>
 			</unit>
 			<unit type="length-centimeter">
 				<displayName>cm</displayName>
-				<unitPattern count="other">{0} cm</unitPattern>
-				<perUnitPattern>{0}/cm</perUnitPattern>
 			</unit>
 			<unit type="length-millimeter">
 				<displayName>mm</displayName>
-				<unitPattern count="other">{0} mm</unitPattern>
-			</unit>
-			<unit type="length-micrometer">
-				<displayName>µm</displayName>
-				<unitPattern count="other">{0} µm</unitPattern>
 			</unit>
 			<unit type="length-nanometer">
 				<displayName>nm</displayName>
-				<unitPattern count="other">{0} nm</unitPattern>
 			</unit>
 			<unit type="length-picometer">
 				<displayName>pm</displayName>
-				<unitPattern count="other">{0} pm</unitPattern>
 			</unit>
 			<unit type="length-mile">
 				<displayName>dặm</displayName>
 				<unitPattern count="other">{0} dặm</unitPattern>
 			</unit>
-			<unit type="length-yard">
-				<displayName>yd</displayName>
-				<unitPattern count="other">{0} yd</unitPattern>
-			</unit>
-			<unit type="length-foot">
-				<displayName>ft</displayName>
-				<unitPattern count="other">{0} ft</unitPattern>
-				<perUnitPattern>{0}/ft</perUnitPattern>
-			</unit>
 			<unit type="length-inch">
 				<displayName>inch</displayName>
 				<unitPattern count="other">{0} inch</unitPattern>
-				<perUnitPattern>{0}/in</perUnitPattern>
-			</unit>
-			<unit type="length-parsec">
-				<displayName>pc</displayName>
-				<unitPattern count="other">{0} pc</unitPattern>
-			</unit>
-			<unit type="length-light-year">
-				<displayName>ly</displayName>
-				<unitPattern count="other">{0} ly</unitPattern>
 			</unit>
 			<unit type="length-astronomical-unit">
 				<displayName>au</displayName>
-				<unitPattern count="other">{0} au</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>nmi</displayName>
-				<unitPattern count="other">{0} nmi</unitPattern>
 			</unit>
 			<unit type="length-mile-scandinavian">
 				<displayName>smi</displayName>
-				<unitPattern count="other">{0} smi</unitPattern>
 			</unit>
 			<unit type="length-point">
 				<displayName>đ</displayName>
 				<unitPattern count="other">{0} đ</unitPattern>
 			</unit>
-			<unit type="light-lux">
-				<displayName>lx</displayName>
-				<unitPattern count="other">{0} lx</unitPattern>
+			<unit type="length-solar-radius">
+				<displayName>bán kính mặt trời</displayName>
+				<unitPattern count="other">{0} R☉</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>độ sáng của mặt trời</displayName>
+				<unitPattern count="other">{0} L☉</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>t</displayName>
-				<unitPattern count="other">{0} t</unitPattern>
 			</unit>
 			<unit type="mass-kilogram">
 				<displayName>kg</displayName>
-				<unitPattern count="other">{0} kg</unitPattern>
-				<perUnitPattern>{0}/kg</perUnitPattern>
 			</unit>
 			<unit type="mass-gram">
 				<displayName>g</displayName>
-				<unitPattern count="other">{0} g</unitPattern>
-				<perUnitPattern>{0}/g</perUnitPattern>
 			</unit>
 			<unit type="mass-milligram">
 				<displayName>mg</displayName>
-				<unitPattern count="other">{0} mg</unitPattern>
 			</unit>
 			<unit type="mass-microgram">
 				<displayName>µg</displayName>
-				<unitPattern count="other">{0} µg</unitPattern>
-			</unit>
-			<unit type="mass-ton">
-				<displayName>tn</displayName>
-				<unitPattern count="other">{0} tn</unitPattern>
 			</unit>
 			<unit type="mass-pound">
 				<displayName>pao</displayName>
-				<unitPattern count="other">{0} lb</unitPattern>
-				<perUnitPattern>{0}/lb</perUnitPattern>
 			</unit>
 			<unit type="mass-ounce">
 				<displayName>oz</displayName>
 				<unitPattern count="other">{0} oz</unitPattern>
-				<perUnitPattern>{0}/oz</perUnitPattern>
 			</unit>
 			<unit type="mass-ounce-troy">
-				<displayName>oz t</displayName>
-				<unitPattern count="other">{0} oz t</unitPattern>
+				<displayName>ozt</displayName>
+				<unitPattern count="other">{0} ozt</unitPattern>
 			</unit>
 			<unit type="mass-carat">
-				<displayName>CD</displayName>
-				<unitPattern count="other">{0} CD</unitPattern>
+				<displayName>cara</displayName>
+				<unitPattern count="other">{0} CT</unitPattern>
+			</unit>
+			<unit type="mass-dalton">
+				<displayName>dalton</displayName>
+				<unitPattern count="other">{0} Da</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>Trọng lượng trái đất</displayName>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>trọng lượng mặt trời</displayName>
 			</unit>
 			<unit type="power-gigawatt">
 				<displayName>GW</displayName>
-				<unitPattern count="other">{0} GW</unitPattern>
 			</unit>
 			<unit type="power-megawatt">
 				<displayName>MW</displayName>
-				<unitPattern count="other">{0} MW</unitPattern>
 			</unit>
 			<unit type="power-kilowatt">
 				<displayName>kW</displayName>
-				<unitPattern count="other">{0} kW</unitPattern>
 			</unit>
 			<unit type="power-watt">
 				<displayName>W</displayName>
-				<unitPattern count="other">{0} W</unitPattern>
 			</unit>
 			<unit type="power-milliwatt">
 				<displayName>mW</displayName>
-				<unitPattern count="other">{0} mW</unitPattern>
 			</unit>
 			<unit type="power-horsepower">
 				<displayName>hp</displayName>
-				<unitPattern count="other">{0} hp</unitPattern>
-			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="other">{0} hPa</unitPattern>
 			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>mm Hg</displayName>
@@ -8056,85 +7935,51 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="pressure-pound-per-square-inch">
 				<displayName>psi</displayName>
-				<unitPattern count="other">{0} psi</unitPattern>
 			</unit>
 			<unit type="pressure-inch-hg">
 				<displayName>inHg</displayName>
-				<unitPattern count="other">{0} inHg</unitPattern>
 			</unit>
 			<unit type="pressure-millibar">
 				<displayName>mbar</displayName>
-				<unitPattern count="other">{0} mbar</unitPattern>
 			</unit>
-			<unit type="speed-kilometer-per-hour">
-				<displayName>km/h</displayName>
-				<unitPattern count="other">{0} km/h</unitPattern>
+			<unit type="pressure-atmosphere">
+				<displayName>atm</displayName>
+				<unitPattern count="other">{0} atm</unitPattern>
 			</unit>
-			<unit type="speed-meter-per-second">
-				<displayName>m/s</displayName>
-				<unitPattern count="other">{0} m/s</unitPattern>
-			</unit>
-			<unit type="speed-mile-per-hour">
-				<displayName>mi/h</displayName>
-				<unitPattern count="other">{0} mi/h</unitPattern>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
 			</unit>
 			<unit type="speed-knot">
 				<displayName>kn</displayName>
-				<unitPattern count="other">{0} kn</unitPattern>
-			</unit>
-			<unit type="temperature-generic">
-				<displayName>°</displayName>
-				<unitPattern count="other">{0}°</unitPattern>
-			</unit>
-			<unit type="temperature-celsius">
-				<displayName>°C</displayName>
-				<unitPattern count="other">{0}°C</unitPattern>
-			</unit>
-			<unit type="temperature-fahrenheit">
-				<displayName>°F</displayName>
-				<unitPattern count="other">{0}°F</unitPattern>
 			</unit>
 			<unit type="temperature-kelvin">
 				<displayName>K</displayName>
-				<unitPattern count="other">{0} K</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>lbf⋅ft</displayName>
+				<unitPattern count="other">{0} lbf⋅ft</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>N⋅m</displayName>
+				<unitPattern count="other">{0} N⋅m</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>km³</displayName>
-				<unitPattern count="other">{0} km³</unitPattern>
 			</unit>
 			<unit type="volume-cubic-meter">
 				<displayName>m³</displayName>
-				<unitPattern count="other">{0} m³</unitPattern>
-				<perUnitPattern>{0}/m³</perUnitPattern>
 			</unit>
 			<unit type="volume-cubic-centimeter">
 				<displayName>cm³</displayName>
-				<unitPattern count="other">{0} cm³</unitPattern>
-				<perUnitPattern>{0}/cm³</perUnitPattern>
 			</unit>
 			<unit type="volume-cubic-mile">
 				<displayName>mi³</displayName>
-				<unitPattern count="other">{0} mi³</unitPattern>
-			</unit>
-			<unit type="volume-cubic-yard">
-				<displayName>yd³</displayName>
-				<unitPattern count="other">{0} yd³</unitPattern>
-			</unit>
-			<unit type="volume-cubic-foot">
-				<displayName>ft³</displayName>
-				<unitPattern count="other">{0} ft³</unitPattern>
-			</unit>
-			<unit type="volume-cubic-inch">
-				<displayName>in³</displayName>
-				<unitPattern count="other">{0} in³</unitPattern>
 			</unit>
 			<unit type="volume-megaliter">
 				<displayName>ML</displayName>
-				<unitPattern count="other">{0} ML</unitPattern>
 			</unit>
 			<unit type="volume-hectoliter">
 				<displayName>hL</displayName>
-				<unitPattern count="other">{0} hL</unitPattern>
 			</unit>
 			<unit type="volume-liter">
 				<displayName>l</displayName>
@@ -8143,63 +7988,52 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="volume-deciliter">
 				<displayName>dL</displayName>
-				<unitPattern count="other">{0} dL</unitPattern>
 			</unit>
 			<unit type="volume-centiliter">
 				<displayName>cL</displayName>
-				<unitPattern count="other">{0} cL</unitPattern>
 			</unit>
 			<unit type="volume-milliliter">
 				<displayName>mL</displayName>
-				<unitPattern count="other">{0} mL</unitPattern>
 			</unit>
 			<unit type="volume-pint-metric">
 				<displayName>mpt</displayName>
-				<unitPattern count="other">{0} mpt</unitPattern>
 			</unit>
 			<unit type="volume-cup-metric">
 				<displayName>mcup</displayName>
-				<unitPattern count="other">{0} mc</unitPattern>
-			</unit>
-			<unit type="volume-acre-foot">
-				<displayName>ac ft</displayName>
-				<unitPattern count="other">{0} ac ft</unitPattern>
 			</unit>
 			<unit type="volume-gallon">
 				<displayName>gal</displayName>
 				<unitPattern count="other">{0} gal</unitPattern>
-				<perUnitPattern>{0}/gal</perUnitPattern>
+				<perUnitPattern>{0}/gal Mỹ</perUnitPattern>
 			</unit>
 			<unit type="volume-gallon-imperial">
 				<displayName>gal Anh</displayName>
 				<unitPattern count="other">{0} gal Anh</unitPattern>
 				<perUnitPattern>{0}/gal Anh</perUnitPattern>
 			</unit>
-			<unit type="volume-quart">
-				<displayName>qt</displayName>
-				<unitPattern count="other">{0} qt</unitPattern>
-			</unit>
-			<unit type="volume-pint">
-				<displayName>pt</displayName>
-				<unitPattern count="other">{0} pt</unitPattern>
-			</unit>
 			<unit type="volume-cup">
 				<displayName>c</displayName>
-				<unitPattern count="other">{0} c</unitPattern>
 			</unit>
 			<unit type="volume-fluid-ounce">
 				<displayName>fl oz</displayName>
 				<unitPattern count="other">{0} fl oz</unitPattern>
 			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>fl oz Anh</displayName>
+				<unitPattern count="other">{0} fl oz Anh</unitPattern>
+			</unit>
 			<unit type="volume-tablespoon">
-				<displayName>tbsp</displayName>
-				<unitPattern count="other">{0} tbsp</unitPattern>
+				<displayName>thìa xúp</displayName>
 			</unit>
 			<unit type="volume-teaspoon">
 				<displayName>tsp</displayName>
-				<unitPattern count="other">{0} tsp</unitPattern>
+			</unit>
+			<unit type="volume-barrel">
+				<displayName>thùng</displayName>
+				<unitPattern count="other">{0} thùng</unitPattern>
 			</unit>
 			<coordinateUnit>
+				<displayName>hướng</displayName>
 				<coordinateUnitPattern type="east">{0}Đ</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}B</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}N</coordinateUnitPattern>
@@ -8207,14 +8041,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</coordinateUnit>
 		</unitLength>
 		<unitLength type="narrow">
-			<compoundUnit type="per">
-				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
-			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<unitPattern count="other">{0}G</unitPattern>
-			</unit>
-			<unit type="angle-degree">
-				<unitPattern count="other">{0}°</unitPattern>
 			</unit>
 			<unit type="angle-arc-minute">
 				<unitPattern count="other">{0}′</unitPattern>
@@ -8222,23 +8050,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="angle-arc-second">
 				<unitPattern count="other">{0}″</unitPattern>
 			</unit>
-			<unit type="area-square-kilometer">
-				<unitPattern count="other">{0} km²</unitPattern>
-			</unit>
 			<unit type="area-hectare">
 				<unitPattern count="other">{0}ha</unitPattern>
 			</unit>
-			<unit type="area-square-meter">
-				<unitPattern count="other">{0} m²</unitPattern>
-			</unit>
-			<unit type="area-square-mile">
-				<unitPattern count="other">{0} mi²</unitPattern>
-			</unit>
 			<unit type="area-acre">
 				<unitPattern count="other">{0} mẫu</unitPattern>
-			</unit>
-			<unit type="area-square-foot">
-				<unitPattern count="other">{0} ft²</unitPattern>
 			</unit>
 			<unit type="consumption-liter-per-100kilometers">
 				<displayName>L/100km</displayName>
@@ -8333,17 +8149,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="power-horsepower">
 				<unitPattern count="other">{0}hp</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<unitPattern count="other">{0}hPa</unitPattern>
-			</unit>
 			<unit type="pressure-inch-hg">
 				<unitPattern count="other">{0}&quot; Hg</unitPattern>
 			</unit>
 			<unit type="pressure-millibar">
 				<unitPattern count="other">{0}mb</unitPattern>
 			</unit>
+			<unit type="pressure-hectopascal">
+				<unitPattern count="other">{0}hPa</unitPattern>
+			</unit>
 			<unit type="speed-kilometer-per-hour">
-				<displayName>km/h</displayName>
 				<unitPattern count="other">{0}km/h</unitPattern>
 			</unit>
 			<unit type="speed-meter-per-second">
@@ -8354,10 +8169,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="temperature-celsius">
 				<displayName>°C</displayName>
-				<unitPattern count="other">{0}°C</unitPattern>
-			</unit>
-			<unit type="temperature-fahrenheit">
-				<unitPattern count="other">{0}°F</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<unitPattern count="other">{0}km³</unitPattern>
@@ -8369,7 +8180,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>l</displayName>
 				<unitPattern count="other">{0}L</unitPattern>
 			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<unitPattern count="other" draft="contributed">{0} fl ozIm</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>hướng</displayName>
 				<coordinateUnitPattern type="east">{0}Đ</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}B</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}N</coordinateUnitPattern>
@@ -8394,34 +8209,24 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<listPatternPart type="2">{0} và {1}</listPatternPart>
 		</listPattern>
 		<listPattern type="or">
-			<listPatternPart type="start" draft="contributed">{0}, {1}</listPatternPart>
-			<listPatternPart type="middle" draft="contributed">{0}, {1}</listPatternPart>
-			<listPatternPart type="end" draft="contributed">{0} hoặc {1}</listPatternPart>
-			<listPatternPart type="2" draft="contributed">{0} hoặc {1}</listPatternPart>
+			<listPatternPart type="end">{0} hoặc {1}</listPatternPart>
+			<listPatternPart type="2">{0} hoặc {1}</listPatternPart>
 		</listPattern>
-		<listPattern type="standard-short">
-			<listPatternPart type="start">{0}, {1}</listPatternPart>
-			<listPatternPart type="middle">{0}, {1}</listPatternPart>
-			<listPatternPart type="end">{0} và {1}</listPatternPart>
-			<listPatternPart type="2">{0} và {1}</listPatternPart>
-		</listPattern>
-		<listPattern type="unit">
+		<listPattern type="standard-narrow">
 			<listPatternPart type="start">{0}, {1}</listPatternPart>
 			<listPatternPart type="middle">{0}, {1}</listPatternPart>
 			<listPatternPart type="end">{0}, {1}</listPatternPart>
 			<listPatternPart type="2">{0}, {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="standard-short">
+			<listPatternPart type="end">{0} và {1}</listPatternPart>
+			<listPatternPart type="2">{0} và {1}</listPatternPart>
 		</listPattern>
 		<listPattern type="unit-narrow">
 			<listPatternPart type="start">{0} {1}</listPatternPart>
 			<listPatternPart type="middle">{0} {1}</listPatternPart>
 			<listPatternPart type="end">{0} {1}</listPatternPart>
 			<listPatternPart type="2">{0} {1}</listPatternPart>
-		</listPattern>
-		<listPattern type="unit-short">
-			<listPatternPart type="start">{0}, {1}</listPatternPart>
-			<listPatternPart type="middle">{0}, {1}</listPatternPart>
-			<listPatternPart type="end">{0}, {1}</listPatternPart>
-			<listPatternPart type="2">{0}, {1}</listPatternPart>
 		</listPattern>
 	</listPatterns>
 	<posix>
@@ -8528,4 +8333,76 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="western_asian_scripts">chữ viết Tây Á</characterLabel>
 		<characterLabel type="whitespace">dấu cách</characterLabel>
 	</characterLabels>
+	<typographicNames>
+		<axisName type="ital">nghiêng</axisName>
+		<axisName type="opsz">kích thước quang học</axisName>
+		<axisName type="slnt">xiên</axisName>
+		<axisName type="wdth">chiều rộng</axisName>
+		<axisName type="wght">trọng lượng</axisName>
+		<styleName type="ital" subtype="1">chữ thảo</styleName>
+		<styleName type="opsz" subtype="8">chú thích</styleName>
+		<styleName type="opsz" subtype="12">văn bản</styleName>
+		<styleName type="opsz" subtype="18">văn tự</styleName>
+		<styleName type="opsz" subtype="72">hiển thị</styleName>
+		<styleName type="opsz" subtype="144">áp phích</styleName>
+		<styleName type="slnt" subtype="-12">bị nghiêng sau</styleName>
+		<styleName type="slnt" subtype="0">thẳng đứng</styleName>
+		<styleName type="slnt" subtype="12">bị nghiêng</styleName>
+		<styleName type="slnt" subtype="24">rất xiên</styleName>
+		<styleName type="wdth" subtype="50">co lại rất nhiều</styleName>
+		<styleName type="wdth" subtype="50" alt="compressed">được nén rất nhiều</styleName>
+		<styleName type="wdth" subtype="50" alt="narrow">siêu hẹp | siêu mỏng</styleName>
+		<styleName type="wdth" subtype="62.5">co lại nhiều</styleName>
+		<styleName type="wdth" subtype="62.5" alt="compressed">được nén nhiều</styleName>
+		<styleName type="wdth" subtype="62.5" alt="narrow">rất hẹp</styleName>
+		<styleName type="wdth" subtype="75">được co lại</styleName>
+		<styleName type="wdth" subtype="75" alt="compressed">được nén</styleName>
+		<styleName type="wdth" subtype="75" alt="narrow">hẹp</styleName>
+		<styleName type="wdth" subtype="75" alt="short">co lại</styleName>
+		<styleName type="wdth" subtype="87.5">co một nửa</styleName>
+		<styleName type="wdth" subtype="87.5" alt="compressed">bán nén</styleName>
+		<styleName type="wdth" subtype="87.5" alt="narrow">bán hẹp</styleName>
+		<styleName type="wdth" subtype="100">bình thường</styleName>
+		<styleName type="wdth" subtype="112.5">mở rộng một nửa</styleName>
+		<styleName type="wdth" subtype="112.5" alt="extended">kéo giãn một nửa</styleName>
+		<styleName type="wdth" subtype="112.5" alt="wide">bán rộng</styleName>
+		<styleName type="wdth" subtype="125">được mở rộng</styleName>
+		<styleName type="wdth" subtype="125" alt="extended">được kéo giãn</styleName>
+		<styleName type="wdth" subtype="125" alt="wide">rộng</styleName>
+		<styleName type="wdth" subtype="150">mở rộng nhiều</styleName>
+		<styleName type="wdth" subtype="150" alt="extended">kéo giãn nhiều</styleName>
+		<styleName type="wdth" subtype="150" alt="wide">rất rộng</styleName>
+		<styleName type="wdth" subtype="200">mở rộng rất nhiều</styleName>
+		<styleName type="wdth" subtype="200" alt="extended">kéo giãn rất nhiều</styleName>
+		<styleName type="wdth" subtype="200" alt="wide">siêu rộng</styleName>
+		<styleName type="wght" subtype="100">mỏng</styleName>
+		<styleName type="wght" subtype="200">rất nhạt</styleName>
+		<styleName type="wght" subtype="200" alt="ultra">siêu nhạt</styleName>
+		<styleName type="wght" subtype="300">nhạt</styleName>
+		<styleName type="wght" subtype="350">nửa nhạt</styleName>
+		<styleName type="wght" subtype="380">sách</styleName>
+		<styleName type="wght" subtype="400">thường</styleName>
+		<styleName type="wght" subtype="500">trung bình</styleName>
+		<styleName type="wght" subtype="600">nửa đậm</styleName>
+		<styleName type="wght" subtype="600" alt="demi">bán đậm</styleName>
+		<styleName type="wght" subtype="700">đậm</styleName>
+		<styleName type="wght" subtype="800">rất đậm</styleName>
+		<styleName type="wght" subtype="800" alt="ultra">siêu đậm</styleName>
+		<styleName type="wght" subtype="900">đen</styleName>
+		<styleName type="wght" subtype="900" alt="heavy">mập</styleName>
+		<styleName type="wght" subtype="950">rất đen</styleName>
+		<styleName type="wght" subtype="950" alt="ultrablack">siêu đen</styleName>
+		<styleName type="wght" subtype="950" alt="ultraheavy">siêu mập</styleName>
+		<featureName type="afrc">phân số dọc</featureName>
+		<featureName type="cpsp">giãn cách chữ hoa</featureName>
+		<featureName type="dlig">chữ ghép tùy chọn</featureName>
+		<featureName type="frac">phân số chéo</featureName>
+		<featureName type="lnum">sắp dòng số</featureName>
+		<featureName type="onum">số kiểu cũ</featureName>
+		<featureName type="ordn">số thứ tự</featureName>
+		<featureName type="pnum">số tỷ lệ</featureName>
+		<featureName type="smcp">chữ hoa nhỏ</featureName>
+		<featureName type="tnum">số trong bảng</featureName>
+		<featureName type="zero">số 0 có gạch</featureName>
+	</typographicNames>
 </ldml>

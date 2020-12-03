@@ -1,0 +1,39 @@
+.order-navigation {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  & &-left,
+  & &-right {
+    margin: 0 7px;
+  }
+
+  a {
+    padding: 0.375rem 0.45rem;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  #order-view-page {
+    .order-navigation {
+      justify-content: space-between;
+
+      &-left,
+      &-right {
+        margin: 0;
+        width: calc(50% - 7px);
+
+        a {
+          display: block;
+          width: 100%;
+        }
+      }
+
+      &-right {
+        .btn {
+          text-align: right;
+        }
+      }
+    }
+  }
+}

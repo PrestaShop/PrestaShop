@@ -1,0 +1,122 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+  {% set icon %}
+    {{ include('@WebProfiler/Icon/request.svg') }}
+    <span class="sf-toolbar-value">Commands / Queries</span>
+  {% endset %}
+
+  {% set text %}
+    <div class="sf-toolbar-info-piece">
+      <div class="sf-toolbar-info-piece">
+        <b class="sf-toolbar-ajax-info">Commands / Queries</b>
+      </div>
+      <div class="sf-toolbar-info-piece">
+        <b>Commands</b>
+        {% set commandsCount = collector.executedCommands|length %}
+        <span class="sf-toolbar-status sf-toolbar-status-{% if commandsCount > 0 %}green{% else %}red{% endif %}">
+          {{ commandsCount }}
+        </span>
+      </div>
+      <div class="sf-toolbar-info-piece">
+        <b>Queries</b>
+        {% set queriesCount = collector.executedQueries|length %}
+        <span class="sf-toolbar-status sf-toolbar-status-{% if queriesCount > 0 %}green{% else %}red{% endif %}">
+          {{ queriesCount }}
+        </span>
+      </div>
+    </div>
+  {% endset %}
+
+  {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
+{% endblock %}
+
+{% block menu %}
+  <span class="label">
+    <span class="icon">{{ include('@WebProfiler/Icon/request.svg') }}</span>
+    <strong>Commands / Queries</strong>
+  </span>
+{% endblock %}
+
+{% block panel %}
+  <h2>Commands</h2>
+
+  <div class="sf-toolbar-info-piece">
+    <table id="cqrs-commands-log">
+      <thead>
+        <tr>
+          <th>Command</th>
+          <th>Command Handler</th>
+          <th>Called from</th>
+        </tr>
+      </thead>
+      <tbody class="sf-toolbar-ajax-request-list">
+        {% if collector.executedCommands is not empty %}
+          {% for command in collector.executedCommands %}
+            <tr>
+              <td class="text-small">{{ command.command }}</td>
+              <td class="text-small">{{ command.command_handler }}</td>
+              <td class="text-small">{{ command.trace.file }}:{{ command.trace.line }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3" class="font-normal">No Commands where executed during request.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    <h2>Queries</h2>
+
+    <table id="cqrs-queries-log">
+      <thead>
+        <tr>
+          <th>Query</th>
+          <th>Query Handler</th>
+          <th>Called from</th>
+        </tr>
+      </thead>
+      <tbody class="sf-toolbar-ajax-request-list">
+      {% if collector.executedQueries is not empty %}
+        {% for query in collector.executedQueries %}
+          <tr>
+            <td class="text-small">{{ query.query }}</td>
+            <td class="text-small">{{ query.query_handler }}</td>
+            <td class="text-small">{{ query.trace.file }}:{{ query.trace.line }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="3" class="font-normal">No Queries where executed during request.</td>
+        </tr>
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

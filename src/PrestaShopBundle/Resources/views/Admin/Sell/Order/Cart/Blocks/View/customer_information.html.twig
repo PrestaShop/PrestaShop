@@ -1,0 +1,72 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Customer information'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </h3>
+  <div class="card-body">
+    <div class="row">
+      {% if cartView.customerInformation.id %}
+        <div class="col">
+          <h2>
+            <a href="{{ path('admin_customers_view', {'customerId': cartView.customerInformation.id }) }}">
+              {% if cartView.customerInformation.gender %}
+                {{ cartView.customerInformation.gender }}
+              {% endif %}
+              {{ cartView.customerInformation.first_name }}
+              {{ cartView.customerInformation.last_name }}
+            </a>
+          </h2>
+
+          <p class="mb-0">
+            {{ 'Account registration date:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            {{ cartView.customerInformation.registration_date }}
+          </p>
+
+          <p class="mb-0">
+            {{ 'Valid orders placed:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            {{ cartView.customerInformation.valid_orders_count }}
+          </p>
+
+          <p class="mb-0">
+            {{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            {{ cartView.customerInformation.total_spent_since_registration }}
+          </p>
+        </div>
+
+        <div class="col text-right">
+          <a href="mailto:{{ cartView.customerInformation.email }}" class="btn btn-outline-secondary">
+            {{ cartView.customerInformation.email }}
+          </a>
+        </div>
+      {% else %}
+        <div class="col">
+          <h2 class="mb-0">{{ 'Guest not registered'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

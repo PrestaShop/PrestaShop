@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,19 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
-use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
+use PrestaShopBundle\DependencyInjection\Config\ConfigYamlLoader;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -40,15 +42,15 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
 {
-    /** @var string */
-    private $cacheDir;
+    /** @var EnvironmentInterface */
+    private $environment;
 
     /**
-     * @param string $cacheDir
+     * @param EnvironmentInterface $environment
      */
-    public function __construct($cacheDir)
+    public function __construct(EnvironmentInterface $environment)
     {
-        $this->cacheDir = $cacheDir;
+        $this->environment = $environment;
     }
 
     /**
@@ -56,9 +58,14 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
      */
     public function build(ContainerBuilder $container)
     {
-        $yamlParser = new YamlParser($this->cacheDir);
+        $configDirectories = [$container->getParameter('kernel.root_dir') . '/config'];
+        $fileLocator = new FileLocator($configDirectories);
 
-        $config = $yamlParser->parse(_PS_ROOT_DIR_ . '/app/config/config.yml');
+        $configLoader = new ConfigYamlLoader($fileLocator);
+        $configPath = sprintf('config_legacy_%s.yml', $this->environment->getName());
+        $configLoader->load($configPath);
+        $config = $configLoader->getConfig();
+
         $container->registerExtension(new DoctrineExtension());
         $container->loadFromExtension('doctrine', $config['doctrine']);
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());

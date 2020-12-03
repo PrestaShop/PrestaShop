@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class TaxRulesGroupCore extends ObjectModel
 {
@@ -41,26 +41,26 @@ class TaxRulesGroupCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'tax_rules_group',
         'primary' => 'id_tax_rules_group',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'tax_rule_groups',
         'objectNodeName' => 'tax_rule_group',
-        'fields' => array(
-        ),
-    );
+        'fields' => [
+        ],
+    ];
 
-    protected static $_taxes = array();
+    protected static $_taxes = [];
 
     public function update($null_values = false)
     {
@@ -147,7 +147,7 @@ class TaxRulesGroupCore extends ObjectModel
      */
     public static function getTaxRulesGroupsForOptions()
     {
-        $tax_rules[] = array('id_tax_rules_group' => 0, 'name' => Context::getContext()->getTranslator()->trans('No tax', array(), 'Admin.International.Notification'));
+        $tax_rules[] = ['id_tax_rules_group' => 0, 'name' => Context::getContext()->getTranslator()->trans('No tax', [], 'Admin.International.Notification')];
 
         return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups());
     }
@@ -175,7 +175,7 @@ class TaxRulesGroupCore extends ObjectModel
 			AND 0 between `zipcode_from` AND `zipcode_to`'
         );
 
-        $res = array();
+        $res = [];
         foreach ($rows as $row) {
             $res[$row['id_tax_rules_group']] = $row['rate'];
         }
@@ -244,6 +244,6 @@ class TaxRulesGroupCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
 
-        return array();
+        return [];
     }
 }

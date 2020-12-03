@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
@@ -58,12 +58,11 @@ class Environment implements EnvironmentInterface
             $this->isDebug = $isDebug;
         }
 
-        $this->name = $name;
-        if (null === $this->name) {
-            if (!empty($_SERVER['APP_ENV'])) {
-                $this->name = $_SERVER['APP_ENV'];
-            } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-                $this->name = 'test';
+        if (null !== $name) {
+            $this->name = $name;
+        } else {
+            if (defined(_PS_ENV_)) {
+                $this->name = _PS_ENV_;
             } else {
                 $this->name = $this->isDebug ? 'dev' : 'prod';
             }
@@ -91,6 +90,10 @@ class Environment implements EnvironmentInterface
      */
     public function getCacheDir()
     {
+        if (defined('_PS_CACHE_DIR_')) {
+            return _PS_CACHE_DIR_;
+        }
+
         return _PS_ROOT_DIR_ . '/var/cache/' . $this->getName() . '/';
     }
 }

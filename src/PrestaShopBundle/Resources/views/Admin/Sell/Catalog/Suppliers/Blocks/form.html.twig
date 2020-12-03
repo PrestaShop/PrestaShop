@@ -1,0 +1,162 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(supplierForm) }}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">local_shipping</i>
+    {{ 'Suppliers'|trans({}, 'Admin.Global') }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+
+      {% set invalidCatalogNameHint %}
+        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+      {% endset %}
+
+      {{ ps.form_group_row(supplierForm.name, {}, {
+        'label': 'Name'|trans({}, 'Admin.Global'),
+        'help': invalidCatalogNameHint
+      }) }}
+
+      {% set invalidGenericNameHint %}
+        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
+      {% endset %}
+
+      {% set descriptionHint %}
+        {% autoescape false %}
+          {{ 'Will appear in the list of suppliers.'|trans({}, 'Admin.Catalog.Help')~ invalidCatalogNameHint }}
+        {% endautoescape %}
+      {% endset %}
+
+      {{ ps.form_group_row(supplierForm.description, {}, {
+        'label': 'Description'|trans({}, 'Admin.Global'),
+        'help': descriptionHint
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.phone, {}, {
+        'label': 'Home phone'|trans({}, 'Admin.Global'),
+        'hint': 'Phone number for this supplier'|trans({}, 'Admin.Catalog.Help')
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.mobile_phone, {}, {
+        'label': 'Mobile phone'|trans({}, 'Admin.Global'),
+        'hint': 'Mobile phone number for this supplier.'|trans({}, 'Admin.Catalog.Help')
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.address, {}, {
+        'label': 'Address'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.address2, {}, {
+        'label': 'Address (2)'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.post_code, {}, {
+        'label': 'Zip/postal code'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.city, {}, {
+        'label': 'City'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.id_country, {'attr': {
+        'class': 'js-supplier-country-select',
+        'data-states-url': path('admin_country_states') }}, {
+        'label': 'Country'|trans({}, 'Admin.Global'),
+      }) }}
+
+      <div class="js-supplier-state{% if supplierForm.id_state.vars.choices is empty %} d-none{% endif %}">
+        {{ ps.form_group_row(supplierForm.id_state, {}, {
+          'label': 'State'|trans({}, 'Admin.Global'),
+        }) }}
+      </div>
+
+      {{ ps.form_group_row(supplierForm.dni, {}, {
+        'label': 'DNI'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.logo, {}, {
+        'label': 'Logo'|trans({}, 'Admin.Global'),
+        'help': 'Upload a supplier logo from your computer.'|trans({}, 'Admin.Catalog.Help')
+      }) }}
+
+      {% if logoImage is defined and logoImage is not null %}
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            {% include '@PrestaShop/Admin/Sell/Catalog/Suppliers/logo_image.html.twig' %}
+          </div>
+        </div>
+      {% endif %}
+
+      {{ ps.form_group_row(supplierForm.meta_title, {}, {
+        'label': 'Meta title'|trans({}, 'Admin.Catalog.Feature'),
+        'help': invalidGenericNameHint
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.meta_description, {}, {
+        'label': 'Meta description'|trans({}, 'Admin.Global'),
+        'help': invalidGenericNameHint
+      }) }}
+
+      {% set keywordHint %}
+        {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
+        {{ invalidGenericNameHint }}
+      {% endset %}
+
+      {{ ps.form_group_row(supplierForm.meta_keyword, {}, {
+        'label': 'Meta keywords'|trans({}, 'Admin.Global'),
+        'help': keywordHint
+      }) }}
+
+      {{ ps.form_group_row(supplierForm.is_enabled, {}, {
+        'label': 'Enabled'|trans({}, 'Admin.Global')
+      }) }}
+
+      {% if supplierForm.shop_association is defined %}
+        {{ ps.form_group_row(supplierForm.shop_association, {}, {
+          'label': 'Shop association'|trans({}, 'Admin.Global')
+        }) }}
+      {% endif %}
+
+      {% block supplier_form_rest %}
+        {{ form_rest(supplierForm) }}
+      {% endblock %}
+
+    </div>
+  </div>
+  <div class="card-footer">
+    <a href="{{ path('admin_suppliers_index') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <button class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+</div>
+ {{ form_end(supplierForm) }}

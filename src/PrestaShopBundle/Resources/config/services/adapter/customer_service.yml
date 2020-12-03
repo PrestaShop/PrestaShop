@@ -1,0 +1,36 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.customer_service.query_handler.get_customer_thread_for_viewing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler\GetCustomerThreadForViewingHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing'
+
+  prestashop.adapter.customer_service.query_handler.get_customer_service_signature_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServiceSignatureHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature'
+
+  prestashop.adapter.customer_service.command_handler.forward_customer_thread_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\ForwardCustomerThreadHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - '@prestashop.adapter.legacy.configuration'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand'
+
+  prestashop.adapter.customer_service.command_handler.reply_to_customer_thread_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\ReplyToCustomerThreadHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand'

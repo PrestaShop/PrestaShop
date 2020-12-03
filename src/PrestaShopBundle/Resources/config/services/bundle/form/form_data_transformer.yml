@@ -9,3 +9,13 @@ services:
     class: 'PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+
+  prestashop.bundle.form.data_transformer.arabic_to_latin_digit:
+    class: 'PrestaShopBundle\Form\DataTransformer\ArabicToLatinDigitDataTransformer'
+    arguments:
+      - '@prestashop.core.util.arabic_to_latin_digit_converter'
+
+  prestashop.bundle.form.data_transformer.idn_converter:
+    class: 'PrestaShopBundle\Form\DataTransformer\IDNConverterDataTransformer'
+    arguments:
+      - '@prestashop.core.util.internationalized_domain_name_converter'

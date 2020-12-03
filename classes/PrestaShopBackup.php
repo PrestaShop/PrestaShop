@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -119,7 +119,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification')));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
         }
 
         // Check the realpath so we can validate the backup file is under the backup directory
@@ -148,7 +148,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification')));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
         }
 
         return @filemtime($backupdir . DIRECTORY_SEPARATOR . $filename);
@@ -187,8 +187,8 @@ class PrestaShopBackupCore
     public function delete()
     {
         if (!$this->id || !unlink($this->id)) {
-            $this->error = Context::getContext()->getTranslator()->trans('Error deleting', array(), 'Admin.Advparameters.Notification') . ' ' . ($this->id ? '"' . $this->id . '"' :
-                Context::getContext()->getTranslator()->trans('Invalid ID', array(), 'Admin.Advparameters.Notification'));
+            $this->error = Context::getContext()->getTranslator()->trans('Error deleting', [], 'Admin.Advparameters.Notification') . ' ' . ($this->id ? '"' . $this->id . '"' :
+                Context::getContext()->getTranslator()->trans('Invalid ID', [], 'Admin.Advparameters.Notification'));
 
             return false;
         }
@@ -223,11 +223,11 @@ class PrestaShopBackupCore
     public function add()
     {
         if (!$this->psBackupAll) {
-            $ignoreInsertTable = array(_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
+            $ignoreInsertTable = [_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
                 . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',
-            );
+            ];
         } else {
-            $ignoreInsertTable = array();
+            $ignoreInsertTable = [];
         }
 
         // Generate some random number, to make it extra hard to guess backup file names
@@ -247,7 +247,7 @@ class PrestaShopBackupCore
         }
 
         if ($fp === false) {
-            echo Context::getContext()->getTranslator()->trans('Unable to create backup file', array(), 'Admin.Advparameters.Notification') . ' "' . addslashes($backupfile) . '"';
+            echo Context::getContext()->getTranslator()->trans('Unable to create backup file', [], 'Admin.Advparameters.Notification') . ' "' . addslashes($backupfile) . '"';
 
             return false;
         }
@@ -255,7 +255,7 @@ class PrestaShopBackupCore
         $this->id = realpath($backupfile);
 
         fwrite($fp, '/* Backup for ' . Tools::getHttpHost(false, false) . __PS_BASE_URI__ . "\n *  at " . date($date) . "\n */\n");
-        fwrite($fp, "\n" . 'SET NAMES \'utf8\';');
+        fwrite($fp, "\n" . 'SET NAMES \'utf8mb4\';');
         fwrite($fp, "\n" . 'SET FOREIGN_KEY_CHECKS = 0;');
         fwrite($fp, "\n" . 'SET SESSION sql_mode = \'\';' . "\n\n");
 
@@ -276,7 +276,7 @@ class PrestaShopBackupCore
             if (count($schema) != 1 || !isset($schema[0]['Table']) || !isset($schema[0]['Create Table'])) {
                 fclose($fp);
                 $this->delete();
-                echo Context::getContext()->getTranslator()->trans('An error occurred while backing up. Unable to obtain the schema of %s', array($table), 'Admin.Advparameters.Notification');
+                echo Context::getContext()->getTranslator()->trans('An error occurred while backing up. Unable to obtain the schema of %s', [$table], 'Admin.Advparameters.Notification');
 
                 return false;
             }
@@ -340,7 +340,7 @@ class PrestaShopBackupCore
         fclose($fp);
         if ($found == 0) {
             $this->delete();
-            echo Context::getContext()->getTranslator()->trans('No valid tables were found to backup.', array(), 'Admin.Advparameters.Notification');
+            echo Context::getContext()->getTranslator()->trans('No valid tables were found to backup.', [], 'Admin.Advparameters.Notification');
 
             return false;
         }

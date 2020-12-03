@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 
-Proper interpretation of these files requires synthesis of missing items, as per
-​http://unicode.org/repos/cldr/trunk/specs/ldml/tr35-general.html#Annotations
-Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/ for derived annotations.
+the U.S. and other countries. CLDR data files are interpreted according to
+the LDML specification (http://unicode.org/reports/tr35/) Proper interpretation
+of these files requires synthesis of missing items, as per ​http://unicode.org/repos/cldr/trunk/specs/ldml/tr35-general.html#Annotations
+Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
+for derived annotations.
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="root"/>
 	</identity>
 	<localeDisplayNames>
@@ -40,8 +42,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 	<characters>
 		<exemplarCharacters>[]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
-		<exemplarCharacters type="punctuation">[\- , ; \: ! ? . ( ) \[ \] \{ \}]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[\- ‑ , ; \: ! ? . ( ) \[ \] \{ \}]</exemplarCharacters>
 		<ellipsis type="final">{0}…</ellipsis>
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
@@ -51,16 +53,21 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<moreInformation>?</moreInformation>
 		<parseLenients scope="date" level="lenient">
 			<parseLenient sample="-">[\--/]</parseLenient>
-			<parseLenient sample=":">[\:∶]</parseLenient>
+			<parseLenient sample=":">[\:∶︓﹕：]</parseLenient>
 		</parseLenients>
 		<parseLenients scope="general" level="lenient">
 			<parseLenient sample=".">[.․。︒﹒．｡]</parseLenient>
-			<parseLenient sample="$">[\$﹩＄$]</parseLenient>
-			<parseLenient sample="£">[£₤]</parseLenient>
+			<parseLenient sample="’">['ʼ՚᾽᾿’＇]</parseLenient>
+			<parseLenient sample="%">[%٪﹪％]</parseLenient>
+			<parseLenient sample="‰">[؉‰]</parseLenient>
+			<parseLenient sample="$">[\$﹩＄]</parseLenient>
+			<parseLenient sample="£">[£₤￡]</parseLenient>
+			<parseLenient sample="¥">[¥￥]</parseLenient>
+			<parseLenient sample="₩">[₩￦]</parseLenient>
 			<parseLenient sample="₹">[₨₹{Rp}{Rs}]</parseLenient>
 		</parseLenients>
 		<parseLenients scope="number" level="lenient">
-			<parseLenient sample="-">[\-‒⁻₋−➖﹣－]</parseLenient>
+			<parseLenient sample="-">[\-‐‒–⁻₋−➖﹣－]</parseLenient>
 			<parseLenient sample=",">[,،٫、︐︑﹐﹑，､]</parseLenient>
 			<parseLenient sample="+">[+⁺₊➕﬩﹢＋]</parseLenient>
 		</parseLenients>
@@ -96,7 +103,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</eraNames>
 					<eraAbbr>
 						<era type="0">BE</era>
-						<!-- = 544 BC gregorian. -->
 					</eraAbbr>
 					<eraNarrow>
 						<alias source="locale" path="../eraAbbr"/>
@@ -197,7 +203,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<dayPeriods>
 					<alias source="locale" path="../../calendar[@type='gregorian']/dayPeriods"/>
 				</dayPeriods>
-				<!-- chinese eras are computed, and don't fall back to gregorian -->
 				<cyclicNameSets>
 					<cyclicNameSet type="dayParts">
 						<cyclicNameContext type="format">
@@ -369,7 +374,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</dateFormatLength>
 					<dateFormatLength type="short">
 						<dateFormat>
-							<!-- using y here to be short in locales that may not understand U anyway -->
 							<pattern>r-MM-dd</pattern>
 						</dateFormat>
 					</dateFormatLength>
@@ -457,6 +461,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</appendItems>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="B">h B – h B</greatestDifference>
+							<greatestDifference id="h">h–h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="B">h:mm B – h:mm B</greatestDifference>
+							<greatestDifference id="h">h:mm–h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm–h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d–d</greatestDifference>
 						</intervalFormatItem>
@@ -947,8 +960,55 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</appendItems>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="B">h B – h B</greatestDifference>
+							<greatestDifference id="h">h–h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="B">h:mm B – h:mm B</greatestDifference>
+							<greatestDifference id="h">h:mm–h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm–h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d–d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">G y – G y</greatestDifference>
+							<greatestDifference id="y">G y–y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">GGGGG y-MM – GGGGG y-MM</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM – y-MM</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM – y-MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="G">GGGGG y-MM-dd – GGGGG y-MM-dd</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+							<greatestDifference id="G">GGGGG y-MM-dd, E – GGGGG y-MM-dd, E</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">G y MMM – G y MMM</greatestDifference>
+							<greatestDifference id="M">G y MMM–MMM</greatestDifference>
+							<greatestDifference id="y">G y MMM – y MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">G y MMM d–d</greatestDifference>
+							<greatestDifference id="G">G y MMM d – G y MMM d</greatestDifference>
+							<greatestDifference id="M">G y MMM d – MMM d</greatestDifference>
+							<greatestDifference id="y">G y MMM d – y MMM d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">G y MMM d, E – MMM d, E</greatestDifference>
+							<greatestDifference id="G">G y MMM d, E – G y MMM d, E</greatestDifference>
+							<greatestDifference id="M">G y MMM d, E – MMM d, E</greatestDifference>
+							<greatestDifference id="y">G y MMM d, E – y MMM d, E</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="h">
 							<greatestDifference id="a">h a – h a</greatestDifference>
@@ -1326,8 +1386,55 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</appendItems>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="B">h B – h B</greatestDifference>
+							<greatestDifference id="h">h–h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="B">h:mm B – h:mm B</greatestDifference>
+							<greatestDifference id="h">h:mm–h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm–h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d–d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">G y – G y</greatestDifference>
+							<greatestDifference id="y">G y–y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">GGGGG y-MM – GGGGG y-MM</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM – y-MM</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM – y-MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="G">GGGGG y-MM-dd – GGGGG y-MM-dd</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+							<greatestDifference id="G">GGGGG y-MM-dd, E – GGGGG y-MM-dd, E</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">G y MMM – G y MMM</greatestDifference>
+							<greatestDifference id="M">G y MMM–MMM</greatestDifference>
+							<greatestDifference id="y">G y MMM – y MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">G y MMM d–d</greatestDifference>
+							<greatestDifference id="G">G y MMM d – G y MMM d</greatestDifference>
+							<greatestDifference id="M">G y MMM d – MMM d</greatestDifference>
+							<greatestDifference id="y">G y MMM d – y MMM d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">G y MMM d, E – MMM d, E</greatestDifference>
+							<greatestDifference id="G">G y MMM d, E – G y MMM d, E</greatestDifference>
+							<greatestDifference id="M">G y MMM d, E – MMM d, E</greatestDifference>
+							<greatestDifference id="y">G y MMM d, E – y MMM d, E</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="h">
 							<greatestDifference id="a">h a – h a</greatestDifference>
@@ -1487,7 +1594,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</eraNames>
 					<eraAbbr>
 						<era type="0">AM</era>
-						<!-- HY = Anno Mundi = -180799862400000 milliseconds since 1/1/1970 AD -->
 					</eraAbbr>
 					<eraNarrow>
 						<alias source="locale" path="../eraAbbr"/>
@@ -1653,7 +1759,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</eraNames>
 					<eraAbbr>
 						<era type="0">AH</era>
-						<!-- Anno Hijri, = 7/16/622 AD = -42521587200000.0 millis since 1/1/1970 -->
 					</eraAbbr>
 					<eraNarrow>
 						<alias source="locale" path="../eraAbbr"/>
@@ -1791,9 +1896,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<alias source="locale" path="../eraAbbr"/>
 					</eraNames>
 					<eraAbbr>
-						<!-- These eras are numbered according to the data used by the ICU Japanese Calendar. search for
-							 'ERAS ='
-						-->
 						<era type="0">Taika (645–650)</era>
 						<era type="1">Hakuchi (650–671)</era>
 						<era type="2">Hakuhō (672–686)</era>
@@ -2030,6 +2132,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<era type="233">Taishō</era>
 						<era type="234">Shōwa</era>
 						<era type="235">Heisei</era>
+						<era type="236">Reiwa</era>
 					</eraAbbr>
 					<eraNarrow>
 						<era type="0">Taika (645–650)</era>
@@ -2268,6 +2371,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<era type="233">T</era>
 						<era type="234">S</era>
 						<era type="235">H</era>
+						<era type="236">R</era>
 					</eraNarrow>
 				</eras>
 				<dateFormats>
@@ -2374,7 +2478,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<eraNames>
 						<alias source="locale" path="../eraAbbr"/>
 					</eraNames>
-					<!-- = 1912 AD gregorian. See: http://en.wikipedia.org/wiki/Minguo_calendar -->
 					<eraAbbr>
 						<era type="0">Before R.O.C.</era>
 						<era type="1">R.O.C.</era>
@@ -2469,7 +2572,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<relativeTime type="past">
 					<relativeTimePattern count="other">-{0} w</relativeTimePattern>
 				</relativeTime>
-				<relativePeriod>the week of {0}</relativePeriod> <!-- for example, “the week of April 1” -->
+				<relativePeriod>the week of {0}</relativePeriod>
 			</field>
 			<field type="week-short">
 				<alias source="locale" path="../field[@type='week']"/>
@@ -2775,6 +2878,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Asia/Rangoon">
 				<exemplarCity>Yangon</exemplarCity>
 			</zone>
+			<zone type="Asia/Macau">
+				<exemplarCity>Macao</exemplarCity>
+			</zone>
 			<zone type="Asia/Katmandu">
 				<exemplarCity>Kathmandu</exemplarCity>
 			</zone>
@@ -2837,13 +2943,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<symbols>
 			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
 		</symbols>
+		<symbols numberSystem="adlm">
+			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
+		</symbols>
 		<symbols numberSystem="arab">
 			<decimal>٫</decimal>
 			<group>٬</group>
 			<list>؛</list>
-			<percentSign>٪؜</percentSign> <!-- includes ALM after sign -->
-			<plusSign>؜+</plusSign> <!-- includes ALM before sign -->
-			<minusSign>؜-</minusSign> <!-- includes ALM before sign (002D) -->
+			<percentSign>٪؜</percentSign>
+			<plusSign>؜+</plusSign>
+			<minusSign>؜-</minusSign>
 			<exponential>اس</exponential>
 			<superscriptingExponent>×</superscriptingExponent>
 			<perMille>؉</perMille>
@@ -2856,8 +2965,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<group>٬</group>
 			<list>؛</list>
 			<percentSign>٪</percentSign>
-			<plusSign>‎+‎</plusSign> <!-- includes LRM before and after sign -->
-			<minusSign>‎-‎</minusSign> <!-- includes LRM before and after sign (002D) -->
+			<plusSign>‎+‎</plusSign>
+			<minusSign>‎-‎</minusSign>
 			<exponential>×۱۰^</exponential>
 			<superscriptingExponent>×</superscriptingExponent>
 			<perMille>؉</perMille>
@@ -2884,6 +2993,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
 		</symbols>
 		<symbols numberSystem="fullwide">
+			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
+		</symbols>
+		<symbols numberSystem="gong">
 			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
 		</symbols>
 		<symbols numberSystem="gonm">
@@ -2966,6 +3078,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<symbols numberSystem="osma">
 			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
 		</symbols>
+		<symbols numberSystem="rohg">
+			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
+		</symbols>
 		<symbols numberSystem="saur">
 			<alias source="locale" path="../symbols[@numberSystem='latn']"/>
 		</symbols>
@@ -3002,6 +3117,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<decimalFormats>
 			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
 		</decimalFormats>
+		<decimalFormats numberSystem="adlm">
+			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
+		</decimalFormats>
 		<decimalFormats numberSystem="arab">
 			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
 		</decimalFormats>
@@ -3027,6 +3145,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
 		</decimalFormats>
 		<decimalFormats numberSystem="fullwide">
+			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
+		</decimalFormats>
+		<decimalFormats numberSystem="gong">
 			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
 		</decimalFormats>
 		<decimalFormats numberSystem="gonm">
@@ -3121,6 +3242,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<decimalFormats numberSystem="osma">
 			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
 		</decimalFormats>
+		<decimalFormats numberSystem="rohg">
+			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
+		</decimalFormats>
 		<decimalFormats numberSystem="saur">
 			<alias source="locale" path="../decimalFormats[@numberSystem='latn']"/>
 		</decimalFormats>
@@ -3157,6 +3281,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<scientificFormats>
 			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
 		</scientificFormats>
+		<scientificFormats numberSystem="adlm">
+			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
+		</scientificFormats>
 		<scientificFormats numberSystem="arab">
 			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
 		</scientificFormats>
@@ -3182,6 +3309,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
 		</scientificFormats>
 		<scientificFormats numberSystem="fullwide">
+			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
+		</scientificFormats>
+		<scientificFormats numberSystem="gong">
 			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
 		</scientificFormats>
 		<scientificFormats numberSystem="gonm">
@@ -3257,6 +3387,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<scientificFormats numberSystem="osma">
 			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
 		</scientificFormats>
+		<scientificFormats numberSystem="rohg">
+			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
+		</scientificFormats>
 		<scientificFormats numberSystem="saur">
 			<alias source="locale" path="../scientificFormats[@numberSystem='latn']"/>
 		</scientificFormats>
@@ -3293,10 +3426,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<percentFormats>
 			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
 		</percentFormats>
+		<percentFormats numberSystem="adlm">
+			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
+		</percentFormats>
 		<percentFormats numberSystem="arab">
 			<percentFormatLength>
 				<percentFormat>
-					<pattern>#,##0 %</pattern>
+					<pattern>#,##0%</pattern>
 				</percentFormat>
 			</percentFormatLength>
 		</percentFormats>
@@ -3322,6 +3458,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
 		</percentFormats>
 		<percentFormats numberSystem="fullwide">
+			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
+		</percentFormats>
+		<percentFormats numberSystem="gong">
 			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
 		</percentFormats>
 		<percentFormats numberSystem="gonm">
@@ -3397,6 +3536,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<percentFormats numberSystem="osma">
 			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
 		</percentFormats>
+		<percentFormats numberSystem="rohg">
+			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
+		</percentFormats>
 		<percentFormats numberSystem="saur">
 			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
 		</percentFormats>
@@ -3431,6 +3573,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../percentFormats[@numberSystem='latn']"/>
 		</percentFormats>
 		<currencyFormats>
+			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
+		</currencyFormats>
+		<currencyFormats numberSystem="adlm">
 			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
 		</currencyFormats>
 		<currencyFormats numberSystem="arab">
@@ -3468,6 +3613,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
 		</currencyFormats>
 		<currencyFormats numberSystem="fullwide">
+			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
+		</currencyFormats>
+		<currencyFormats numberSystem="gong">
 			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
 		</currencyFormats>
 		<currencyFormats numberSystem="gonm">
@@ -3573,6 +3721,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
 		</currencyFormats>
 		<currencyFormats numberSystem="osma">
+			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
+		</currencyFormats>
+		<currencyFormats numberSystem="rohg">
 			<alias source="locale" path="../currencyFormats[@numberSystem='latn']"/>
 		</currencyFormats>
 		<currencyFormats numberSystem="saur">
@@ -3871,7 +4022,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<currency type="SSP">
 				<symbol alt="narrow">£</symbol>
 			</currency>
-			<currency type="STD">
+			<currency type="STN">
 				<symbol alt="narrow">Db</symbol>
 			</currency>
 			<currency type="SYP">
@@ -3924,6 +4075,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<currency type="XPF">
 				<symbol>CFPF</symbol>
 			</currency>
+			<currency type="XXX">
+				<symbol>¤</symbol>
+			</currency>
 			<currency type="ZAR">
 				<symbol alt="narrow">R</symbol>
 			</currency>
@@ -3931,6 +4085,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol alt="narrow">ZK</symbol>
 			</currency>
 		</currencies>
+		<miscPatterns numberSystem="adlm">
+			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
+		</miscPatterns>
 		<miscPatterns numberSystem="arab">
 			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
 		</miscPatterns>
@@ -3956,6 +4113,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
 		</miscPatterns>
 		<miscPatterns numberSystem="fullwide">
+			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
+		</miscPatterns>
+		<miscPatterns numberSystem="gong">
 			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
 		</miscPatterns>
 		<miscPatterns numberSystem="gonm">
@@ -3992,7 +4152,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
 		</miscPatterns>
 		<miscPatterns numberSystem="latn">
-			<pattern type="atLeast">⩾{0}</pattern>
+			<pattern type="approximately">~{0}</pattern>
+			<pattern type="atLeast">≥{0}</pattern>
+			<pattern type="atMost">≤{0}</pattern>
 			<pattern type="range">{0}–{1}</pattern>
 		</miscPatterns>
 		<miscPatterns numberSystem="lepc">
@@ -4026,6 +4188,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
 		</miscPatterns>
 		<miscPatterns numberSystem="osma">
+			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
+		</miscPatterns>
+		<miscPatterns numberSystem="rohg">
 			<alias source="locale" path="../miscPatterns[@numberSystem='latn']"/>
 		</miscPatterns>
 		<miscPatterns numberSystem="saur">
@@ -4073,6 +4238,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<unitLength type="short">
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="times">
+				<compoundUnitPattern>{0}⋅{1}</compoundUnitPattern>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>g-force</displayName>
@@ -4143,6 +4311,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} in²</unitPattern>
 				<perUnitPattern>{0}/in²</perUnitPattern>
 			</unit>
+			<unit type="area-dunam">
+				<displayName>dunam</displayName>
+				<unitPattern count="other">{0} dunam</unitPattern>
+			</unit>
 			<unit type="concentr-karat">
 				<displayName>kt</displayName>
 				<unitPattern count="other">{0} kt</unitPattern>
@@ -4159,6 +4331,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>ppm</displayName>
 				<unitPattern count="other">{0} ppm</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="other">{0}%</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>‰</displayName>
+				<unitPattern count="other">{0}‰</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>‱</displayName>
+				<unitPattern count="other">{0}‱</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>mol</displayName>
+				<unitPattern count="other">{0} mol</unitPattern>
+			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>L/km</displayName>
 				<unitPattern count="other">{0} L/km</unitPattern>
@@ -4174,6 +4362,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="consumption-mile-per-gallon-imperial">
 				<displayName>mpg Imp.</displayName>
 				<unitPattern count="other">{0} mpg Imp.</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>PB</displayName>
+				<unitPattern count="other">{0} PB</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>TB</displayName>
@@ -4218,6 +4410,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="duration-century">
 				<displayName>c</displayName>
 				<unitPattern count="other">{0} c</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName>dec</displayName>
+				<unitPattern count="other">{0} dec</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>yr</displayName>
@@ -4318,6 +4514,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>kWh</displayName>
 				<unitPattern count="other">{0} kWh</unitPattern>
 			</unit>
+			<unit type="energy-electronvolt">
+				<displayName>eV</displayName>
+				<unitPattern count="other">{0} eV</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>Btu</displayName>
+				<unitPattern count="other">{0} Btu</unitPattern>
+			</unit>
+			<unit type="energy-therm-us">
+				<displayName>US therm</displayName>
+				<unitPattern count="other">{0} US therm</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>lbf</displayName>
+				<unitPattern count="other">{0} lbf</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>N</displayName>
+				<unitPattern count="other">{0} N</unitPattern>
+			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>GHz</displayName>
 				<unitPattern count="other">{0} GHz</unitPattern>
@@ -4333,6 +4549,34 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="frequency-hertz">
 				<displayName>Hz</displayName>
 				<unitPattern count="other">{0} Hz</unitPattern>
+			</unit>
+			<unit type="graphics-em">
+				<displayName>em</displayName>
+				<unitPattern count="other">{0} em</unitPattern>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName>px</displayName>
+				<unitPattern count="other">{0} px</unitPattern>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName>MP</displayName>
+				<unitPattern count="other">{0} MP</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-centimeter">
+				<displayName>ppcm</displayName>
+				<unitPattern count="other">{0} ppcm</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-inch">
+				<displayName>ppi</displayName>
+				<unitPattern count="other">{0} ppi</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-centimeter">
+				<displayName>dpcm</displayName>
+				<unitPattern count="other">{0} dpcm</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-inch">
+				<displayName>dpi</displayName>
+				<unitPattern count="other">{0} dpi</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>km</displayName>
@@ -4405,7 +4649,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="length-fathom">
 				<displayName>fm</displayName>
-				<unitPattern count="other">{0} fm</unitPattern>
+				<unitPattern count="other">{0} fth</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>nmi</displayName>
@@ -4419,9 +4663,17 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>pt</displayName>
 				<unitPattern count="other">{0} pt</unitPattern>
 			</unit>
+			<unit type="length-solar-radius">
+				<displayName>R☉</displayName>
+				<unitPattern count="other">{0} R☉</unitPattern>
+			</unit>
 			<unit type="light-lux">
 				<displayName>lx</displayName>
 				<unitPattern count="other">{0} lx</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>L☉</displayName>
+				<unitPattern count="other">{0} L☉</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>t</displayName>
@@ -4471,6 +4723,18 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>CD</displayName>
 				<unitPattern count="other">{0} CD</unitPattern>
 			</unit>
+			<unit type="mass-dalton">
+				<displayName>Da</displayName>
+				<unitPattern count="other">{0} Da</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>M⊕</displayName>
+				<unitPattern count="other">{0} M⊕</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>M☉</displayName>
+				<unitPattern count="other">{0} M☉</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>GW</displayName>
 				<unitPattern count="other">{0} GW</unitPattern>
@@ -4495,10 +4759,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>hp</displayName>
 				<unitPattern count="other">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="other">{0} hPa</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="other">{0} mm Hg</unitPattern>
@@ -4511,9 +4771,33 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>inHg</displayName>
 				<unitPattern count="other">{0} inHg</unitPattern>
 			</unit>
+			<unit type="pressure-bar">
+				<displayName>bar</displayName>
+				<unitPattern count="other">{0} bar</unitPattern>
+			</unit>
 			<unit type="pressure-millibar">
 				<displayName>mbar</displayName>
 				<unitPattern count="other">{0} mbar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atm</displayName>
+				<unitPattern count="other">{0} atm</unitPattern>
+			</unit>
+			<unit type="pressure-pascal">
+				<displayName>Pa</displayName>
+				<unitPattern count="other">{0} Pa</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="other">{0} hPa</unitPattern>
+			</unit>
+			<unit type="pressure-kilopascal">
+				<displayName>kPa</displayName>
+				<unitPattern count="other">{0} kPa</unitPattern>
+			</unit>
+			<unit type="pressure-megapascal">
+				<displayName>MPa</displayName>
+				<unitPattern count="other">{0} MPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/h</displayName>
@@ -4546,6 +4830,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="temperature-kelvin">
 				<displayName>K</displayName>
 				<unitPattern count="other">{0} K</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>lbf⋅ft</displayName>
+				<unitPattern count="other">{0} lbf⋅ft</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>N⋅m</displayName>
+				<unitPattern count="other">{0} N⋅m</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>km³</displayName>
@@ -4641,8 +4933,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} c</unitPattern>
 			</unit>
 			<unit type="volume-fluid-ounce">
-				<displayName>fl oz</displayName>
-				<unitPattern count="other">{0} fl oz</unitPattern>
+				<displayName>US fl oz</displayName>
+				<unitPattern count="other">{0} fl oz US</unitPattern>
+			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>Imp. fl oz</displayName>
+				<unitPattern count="other">{0} fl oz Imp.</unitPattern>
 			</unit>
 			<unit type="volume-tablespoon">
 				<displayName>tbsp</displayName>
@@ -4652,7 +4948,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>tsp</displayName>
 				<unitPattern count="other">{0} tsp</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName>bbl</displayName>
+				<unitPattern count="other">{0} bbl</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>direction</displayName>
 				<coordinateUnitPattern type="east">{0}E</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}N</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}S</coordinateUnitPattern>
@@ -4663,13 +4964,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<alias source="locale" path="../unitLength[@type='short']"/>
 		</unitLength>
 		<durationUnit type="hm">
-			<durationUnitPattern>h:mm</durationUnitPattern> <!-- 33:59 -->
+			<durationUnitPattern>h:mm</durationUnitPattern>
 		</durationUnit>
 		<durationUnit type="hms">
-			<durationUnitPattern>h:mm:ss</durationUnitPattern> <!-- 33:04:59 -->
+			<durationUnitPattern>h:mm:ss</durationUnitPattern>
 		</durationUnit>
 		<durationUnit type="ms">
-			<durationUnitPattern>m:ss</durationUnitPattern> <!-- 33:59 -->
+			<durationUnitPattern>m:ss</durationUnitPattern>
 		</durationUnit>
 	</units>
 	<listPatterns>
@@ -4684,6 +4985,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<listPatternPart type="middle">{0}, {1}</listPatternPart>
 			<listPatternPart type="end">{0}, or {1}</listPatternPart>
 			<listPatternPart type="2">{0} or {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="or-narrow">
+			<alias source="locale" path="../listPattern[@type='or-short']"/>
+		</listPattern>
+		<listPattern type="or-short">
+			<alias source="locale" path="../listPattern[@type='or']"/>
+		</listPattern>
+		<listPattern type="standard-narrow">
+			<alias source="locale" path="../listPattern[@type='standard-short']"/>
 		</listPattern>
 		<listPattern type="standard-short">
 			<alias source="locale" path="../listPattern"/>
@@ -4715,7 +5025,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabelPattern type="other">{0} — other</characterLabelPattern>
 		<characterLabelPattern type="scripts">scripts — {0}</characterLabelPattern>
 		<characterLabelPattern type="strokes" count="other">{0} strokes</characterLabelPattern>
-		<!-- regular -->
 		<characterLabel type="activities">activity</characterLabel>
 		<characterLabel type="african_scripts">African script</characterLabel>
 		<characterLabel type="american_scripts">American script</characterLabel>
@@ -4803,4 +5112,74 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="western_asian_scripts">Western Asian script</characterLabel>
 		<characterLabel type="whitespace">whitespace</characterLabel>
 	</characterLabels>
+	<typographicNames>
+		<axisName type="ital">italic</axisName>
+		<axisName type="opsz">optical size</axisName>
+		<axisName type="slnt">slant</axisName>
+		<axisName type="wdth">width</axisName>
+		<axisName type="wght">weight</axisName>
+		<styleName type="ital" subtype="1">cursive</styleName>
+		<styleName type="opsz" subtype="8">caption</styleName>
+		<styleName type="opsz" subtype="12">text</styleName>
+		<styleName type="opsz" subtype="18">titling</styleName>
+		<styleName type="opsz" subtype="72">display</styleName>
+		<styleName type="opsz" subtype="144">poster</styleName>
+		<styleName type="slnt" subtype="-12">backslanted</styleName>
+		<styleName type="slnt" subtype="0">upright</styleName>
+		<styleName type="slnt" subtype="12">slanted</styleName>
+		<styleName type="slnt" subtype="24">extra-slanted</styleName>
+		<styleName type="wdth" subtype="50">ultracondensed</styleName>
+		<styleName type="wdth" subtype="50" alt="compressed">ultracompressed</styleName>
+		<styleName type="wdth" subtype="50" alt="narrow">ultranarrow</styleName>
+		<styleName type="wdth" subtype="62.5">extra-condensed</styleName>
+		<styleName type="wdth" subtype="62.5" alt="compressed">extra-compressed</styleName>
+		<styleName type="wdth" subtype="62.5" alt="narrow">extra-narrow</styleName>
+		<styleName type="wdth" subtype="75">condensed</styleName>
+		<styleName type="wdth" subtype="75" alt="compressed">compressed</styleName>
+		<styleName type="wdth" subtype="75" alt="narrow">compressed</styleName>
+		<styleName type="wdth" subtype="87.5">semicondensed</styleName>
+		<styleName type="wdth" subtype="87.5" alt="compressed">semicompressed</styleName>
+		<styleName type="wdth" subtype="87.5" alt="narrow">seminarrow</styleName>
+		<styleName type="wdth" subtype="100">normal</styleName>
+		<styleName type="wdth" subtype="112.5">semiexpanded</styleName>
+		<styleName type="wdth" subtype="112.5" alt="extended">semiextended</styleName>
+		<styleName type="wdth" subtype="112.5" alt="wide">semiwide</styleName>
+		<styleName type="wdth" subtype="125">expanded</styleName>
+		<styleName type="wdth" subtype="125" alt="extended">extended</styleName>
+		<styleName type="wdth" subtype="125" alt="wide">wide</styleName>
+		<styleName type="wdth" subtype="150">extra-expanded</styleName>
+		<styleName type="wdth" subtype="150" alt="extended">extra-extended</styleName>
+		<styleName type="wdth" subtype="150" alt="wide">extra-wide</styleName>
+		<styleName type="wdth" subtype="200">ultraexpanded</styleName>
+		<styleName type="wdth" subtype="200" alt="extended">ultraextended</styleName>
+		<styleName type="wdth" subtype="200" alt="wide">ultrawide</styleName>
+		<styleName type="wght" subtype="100">thin</styleName>
+		<styleName type="wght" subtype="200">extra-light</styleName>
+		<styleName type="wght" subtype="200" alt="ultra">ultralight</styleName>
+		<styleName type="wght" subtype="300">light</styleName>
+		<styleName type="wght" subtype="350">semilight</styleName>
+		<styleName type="wght" subtype="380">book</styleName>
+		<styleName type="wght" subtype="400">regular</styleName>
+		<styleName type="wght" subtype="500">medium</styleName>
+		<styleName type="wght" subtype="600">semibold</styleName>
+		<styleName type="wght" subtype="600" alt="demi">demibold</styleName>
+		<styleName type="wght" subtype="700">bold</styleName>
+		<styleName type="wght" subtype="800">extra-bold</styleName>
+		<styleName type="wght" subtype="900">black</styleName>
+		<styleName type="wght" subtype="900" alt="heavy">heavy</styleName>
+		<styleName type="wght" subtype="950">extra-black</styleName>
+		<styleName type="wght" subtype="950" alt="ultrablack">ultrablack</styleName>
+		<styleName type="wght" subtype="950" alt="ultraheavy">ultraheavy</styleName>
+		<featureName type="afrc">vertical fractions</featureName>
+		<featureName type="cpsp">capital spacing</featureName>
+		<featureName type="dlig">optional ligatures</featureName>
+		<featureName type="frac">diagonal fractions</featureName>
+		<featureName type="lnum">lining numbers</featureName>
+		<featureName type="onum">old-style figures</featureName>
+		<featureName type="ordn">ordinals</featureName>
+		<featureName type="pnum">proportional numbers</featureName>
+		<featureName type="smcp">small capitals</featureName>
+		<featureName type="tnum">tabular numbers</featureName>
+		<featureName type="zero">slashed zero</featureName>
+	</typographicNames>
 </ldml>

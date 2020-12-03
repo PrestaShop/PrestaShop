@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -50,14 +50,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class SupplierGridDefinitionFactory creates definition for supplier grid.
  */
-final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    public const GRID_ID = 'supplier';
+
+    use BulkDeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'supplier';
+        return self::GRID_ID;
     }
 
     /**
@@ -200,10 +207,9 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'supplier',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_suppliers_index',
                 ])
@@ -229,12 +235,8 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_suppliers_bulk_disable',
                 ])
             )
-            ->add((new SubmitBulkAction('suppliers_delete'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_suppliers_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->add(
+                $this->buildBulkDeleteAction('admin_suppliers_bulk_delete')
             )
         ;
     }

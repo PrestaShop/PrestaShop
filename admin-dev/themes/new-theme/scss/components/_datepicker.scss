@@ -1,5 +1,5 @@
-.datepicker {
-  .prev span::before, .next span::before {
+.bootstrap-datetimepicker-widget {
+  .prev span::before, .next span::before, .up:before, .down:before, .date:before, .time:before {
     font-family: 'Material Icons';
   }
   .prev span::before {
@@ -7,5 +7,17 @@
   }
   .next span::before {
     content: "\E315";
+  }
+  .up:before {
+    content: '\E316'
+  }
+  .down:before {
+    content: '\E313'
+  }
+  .date:before {
+    content: '\E916'
+  }
+  .time:before {
+    content: '\E192'
   }
 }

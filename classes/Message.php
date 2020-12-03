@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -55,36 +55,36 @@ class MessageCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'message',
         'primary' => 'id_message',
-        'fields' => array(
-            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
-            'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'private' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600],
+            'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'private' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_cart' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_cart' => [
                 'xlink_resource' => 'carts',
-            ),
-            'id_order' => array(
+            ],
+            'id_order' => [
                 'xlink_resource' => 'orders',
-            ),
-            'id_customer' => array(
+            ],
+            'id_customer' => [
                 'xlink_resource' => 'customers',
-            ),
-            'id_employee' => array(
+            ],
+            'id_employee' => [
                 'xlink_resource' => 'employees',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     /**
      * Return the last message from cart.

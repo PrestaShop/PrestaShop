@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Address;
 use AppKernel;
+use Cache;
+use Carrier;
+use Cart;
+use CartRule;
+use Category;
+use Context;
+use Currency;
+use Employee;
+use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Pack;
+use Product;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use TaxManagerFactory;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -49,6 +63,12 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         self::$kernel = new AppKernel('test', true);
         self::$kernel->boot();
+
+        global $kernel;
+        $kernel = self::$kernel;
+
+        $employee = new Employee();
+        Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
     }
 
     /**
@@ -63,6 +83,71 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * This hook can be used to flag a feature for kernel reboot
+     *
+     * @BeforeFeature @reboot-kernel-before-feature
+     */
+    public static function rebootKernelPrepareFeature()
+    {
+        self::rebootKernel();
+    }
+
+    /**
+     * This hook can be used to flag a scenario for kernel reboot
+     *
+     * @BeforeScenario @reboot-kernel-before-scenario
+     */
+    public static function rebootKernelBeforeScenario()
+    {
+        self::rebootKernel();
+    }
+
+    /**
+     * Return PrestaShop Symfony services container
+     *
+     * @return ContainerInterface
+     */
+    public static function getContainer()
+    {
+        return static::$kernel->getContainer();
+    }
+
+    /**
+     * @AfterFeature @clear-cache-after-feature
+     */
+    public static function clearCacheAfterFeature()
+    {
+        self::clearCache();
+    }
+
+    /**
+     * @BeforeFeature @clear-cache-before-feature
+     */
+    public static function clearCacheBeforeFeature()
+    {
+        self::clearCache();
+    }
+
+    /**
+     * @BeforeScenario @clear-cache-before-scenario
+     */
+    public static function clearCacheBeforeScenario()
+    {
+        self::clearCache();
+    }
+
+    /**
+     * This hook can be used to flag a scenario for database hard reset
+     *
+     * @BeforeScenario @reset-database-before-scenario
+     */
+    public static function cleanDatabaseHardPrepareScenario()
+    {
+        DatabaseCreator::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
      * This hook can be used to flag a scenario for database hard reset
      *
      * @BeforeScenario @database-scenario
@@ -70,6 +155,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function cleanDatabaseHardPrepare()
     {
         DatabaseCreator::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
     /**
@@ -83,12 +169,40 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * Return PrestaShop Symfony services container
-     *
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     * @Given I reboot kernel
      */
-    public static function getContainer()
+    public function rebootKernelOnDemand()
     {
-        return static::$kernel->getContainer();
+        self::rebootKernel();
+    }
+
+    /**
+     * This method reboots Symfony kernel, this is used to force recreation of services
+     * (e.g: when you add some currencies in the database, you may need to reset the CLDR
+     * related services to use the new ones)
+     */
+    private static function rebootKernel(): void
+    {
+        $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
+        $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
+        self::$kernel->reboot($warmupDir);
+    }
+
+    /**
+     * Clears cache
+     */
+    private static function clearCache(): void
+    {
+        Address::resetStaticCache();
+        Cache::clear();
+        Carrier::resetStaticCache();
+        Cart::resetStaticCache();
+        CartRule::resetStaticCache();
+        Category::resetStaticCache();
+        Pack::resetStaticCache();
+        Product::resetStaticCache();
+        Language::resetCache();
+        Currency::resetStaticCache();
+        TaxManagerFactory::resetStaticCache();
     }
 }

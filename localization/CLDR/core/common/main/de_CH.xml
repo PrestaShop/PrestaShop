@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13708 $"/>
+		<version number="$Revision$"/>
 		<language type="de"/>
 		<territory type="CH"/>
 	</identity>
@@ -15,17 +15,23 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		<languages>
 			<language type="ace">Aceh-Sprache</language>
 			<language type="ach">Acholi-Sprache</language>
+			<language type="ar_001">Modernes Hocharabisch</language>
+			<language type="ars">Nadschd-Arabisch</language>
 			<language type="bas">Basaa-Sprache</language>
 			<language type="be">Weissrussisch</language>
 			<language type="bik">Bikol-Sprache</language>
 			<language type="bin">Bini-Sprache</language>
 			<language type="chb">Chibcha-Sprache</language>
+			<language type="de_CH">Schweizer Hochdeutsch</language>
 			<language type="din">Dinka-Sprache</language>
 			<language type="fan">Pangwe-Sprache</language>
 			<language type="gba">Gbaya-Sprache</language>
 			<language type="kmb">Kimbundu-Sprache</language>
 			<language type="mus">Muskogee-Sprache</language>
+			<language type="nl_BE">Flämisch</language>
 			<language type="prg">Altpreussisch</language>
+			<language type="zh_Hans">Chinesisch (vereinfacht)</language>
+			<language type="zh_Hant">Chinesisch (traditionell)</language>
 		</languages>
 		<territories>
 			<territory type="BN">Brunei</territory>
@@ -39,8 +45,8 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="ZW">Zimbabwe</territory>
 		</territories>
 		<keys>
-			<key type="colCaseFirst" draft="contributed">Sortierung nach Gross- bzw. Kleinbuchstaben</key>
-			<key type="colCaseLevel" draft="contributed">Sortierung nach Gross- oder Kleinschreibung</key>
+			<key type="colCaseFirst">Sortierung nach Gross- bzw. Kleinbuchstaben</key>
+			<key type="colCaseLevel">Sortierung nach Gross- oder Kleinschreibung</key>
 			<key type="ms">Mass-System</key>
 		</keys>
 		<types>
@@ -53,7 +59,10 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[a ä b c d e f g h i j k l m n o ö p q r s t u ü v w x y z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- . ’ % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ . ’ % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<parseLenients scope="general" level="lenient">
+			<parseLenient sample="’" draft="contributed">['ʼ՚᾽᾿’＇]</parseLenient>
+		</parseLenients>
 	</characters>
 	<dates>
 		<calendars>
@@ -76,10 +85,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		<fields>
 			<field type="era-narrow">
 				<displayName>Epoche</displayName>
-			</field>
-			<field type="quarter">
-				<relative type="-1">letztes Quartal</relative>
-				<relative type="0">dieses Quartal</relative>
 			</field>
 			<field type="weekOfMonth">
 				<displayName>Woche im Monat</displayName>
@@ -107,9 +112,25 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</field>
 		</fields>
 		<timeZoneNames>
+			<zone type="Asia/Brunei">
+				<exemplarCity>Brunei</exemplarCity>
+			</zone>
+			<zone type="Asia/Macau">
+				<exemplarCity>Macao</exemplarCity>
+			</zone>
 			<zone type="Europe/Saratov">
 				<exemplarCity>Saratov</exemplarCity>
 			</zone>
+			<metazone type="Brunei">
+				<long>
+					<standard>Brunei-Zeit</standard>
+				</long>
+			</metazone>
+			<metazone type="Solomon">
+				<long>
+					<standard>Salomoninseln-Zeit</standard>
+				</long>
+			</metazone>
 		</timeZoneNames>
 	</dates>
 	<numbers>
@@ -143,12 +164,13 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName count="other">Weissrussische Rubel (2000–2016)</displayName>
 			</currency>
 			<currency type="EUR">
-				<symbol>EUR</symbol>
+				<symbol draft="contributed">EUR</symbol>
 				<symbol alt="narrow" draft="contributed">EUR</symbol>
 			</currency>
-			<currency type="PEN">
-				<displayName>Peruanischer Neuer Sol</displayName>
-				<displayName count="one">Peruanischer Neuer Sol</displayName>
+			<currency type="STN">
+				<displayName>São-toméischer Dobra (2018)</displayName>
+				<displayName count="one">São-toméischer Dobra (2018)</displayName>
+				<displayName count="other">São-toméischer Dobra (2018)</displayName>
 			</currency>
 		</currencies>
 	</numbers>
@@ -174,6 +196,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<unitPattern count="other">{0} Kubikfuss</unitPattern>
 			</unit>
 			<unit type="volume-gallon-imperial">
+				<unitPattern count="one">{0} gal Imp.</unitPattern>
 				<unitPattern count="other">{0} gal Imp.</unitPattern>
 				<perUnitPattern>{0}/gal Imp.</perUnitPattern>
 			</unit>
@@ -189,4 +212,13 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</unit>
 		</unitLength>
 	</units>
+	<typographicNames>
+		<axisName type="opsz">optische Grösse</axisName>
+		<styleName type="opsz" subtype="8">Konsultationsgrösse</styleName>
+		<styleName type="opsz" subtype="12">Lesegrösse</styleName>
+		<styleName type="opsz" subtype="18">Schaugrösse</styleName>
+		<styleName type="opsz" subtype="72">Plakatgrösse</styleName>
+		<styleName type="opsz" subtype="144">Ferngrösse</styleName>
+		<styleName type="wght" subtype="500">medium</styleName>
+	</typographicNames>
 </ldml>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use AppKernel;
+use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
+use OrderCarrier;
 use OrderCartRule;
+use PHPUnit\Framework\Assert as Assert;
+use RuntimeException;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -50,13 +56,13 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                 $paymentModule = new PaymentModuleFake();
                 break;
             default:
-                throw new \Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
+                throw new Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
         }
 
         // need to boot kernel for usage in $paymentModule->validateOrder()
         global $kernel;
         $previousKernel = $kernel;
-        $kernel = new \AppKernel('test', true);
+        $kernel = new AppKernel('test', true);
         $kernel->boot();
 
         // need to update secret_key in order to get payment working
@@ -89,13 +95,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_products_wt : $order->total_products;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -108,13 +108,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -127,13 +121,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -145,13 +133,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $count = count($order->getCartRules());
         if ($expectedCount != $count) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedCount,
-                    $count
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedCount, $count));
         }
     }
 
@@ -163,28 +145,140 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $orderCartRulesData = $order->getCartRules();
         if (!isset($orderCartRulesData[$position - 1]['id_order_cart_rule'])) {
-            throw new \Exception(
-                sprintf('Undefined order cart rule on position #%s', $position)
-            );
+            throw new Exception(sprintf('Undefined order cart rule on position #%s', $position));
         }
         $orderCartRule = new OrderCartRule($orderCartRulesData[$position - 1]['id_order_cart_rule']);
         if ((float) $discountTaxIncluded != (float) $orderCartRule->value) {
-            throw new \RuntimeException(
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxIncluded, $orderCartRule->value));
+        }
+        if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxExcluded, $orderCartRule->value_tax_excl));
+        }
+    }
+
+    /**
+     * @Then order :reference should have following details:
+     */
+    public function checkOrderDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        foreach ($orderData as $orderField => $orderValue) {
+            Assert::assertEquals(
+                (float) $orderValue,
+                $order->{$orderField},
                 sprintf(
-                    'Expects %s, got %s instead',
-                    $discountTaxIncluded,
-                    $orderCartRule->value
+                    'Invalid order field %s, expected %s instead of %s',
+                    $orderField,
+                    $orderValue,
+                    $order->{$orderField}
                 )
             );
         }
-        if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
-            throw new \RuntimeException(
+    }
+
+    /**
+     * @Then order :reference should have following tax details:
+     */
+    public function checkOrderTaxDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $taxDetailsData = $table->getColumnsHash();
+
+        $order = new Order($orderId);
+        $orderProductsTaxDetails = $order->getProductTaxesDetails();
+        // Check that the number of rows match
+        Assert::assertLessThanOrEqual(
+            count($orderProductsTaxDetails),
+            count($taxDetailsData),
+            sprintf(
+                'Invalid number of tax details, expected at least %d instead of %d',
+                count($taxDetailsData),
+                count($orderProductsTaxDetails)
+            )
+        );
+
+        foreach ($taxDetailsData as $taxDetailsIndex => $expectedTaxDetails) {
+            $productsTaxDetails = $orderProductsTaxDetails[$taxDetailsIndex];
+            foreach ($expectedTaxDetails as $taxField => $taxValue) {
+                Assert::assertEquals(
+                    (float) $taxValue,
+                    (float) $productsTaxDetails[$taxField],
+                    sprintf(
+                        'Invalid order tax field %s, expected %s instead of %s',
+                        $taxField,
+                        $taxValue,
+                        (float) $productsTaxDetails[$taxField]
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * @Then order :reference should have no tax details
+     */
+    public function checkOrderHasNoTaxDetails(string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $order = new Order($orderId);
+        $orderProductsTaxDetails = $order->getProductTaxesDetails();
+        Assert::assertEmpty($orderProductsTaxDetails, 'The order should have no tax details');
+    }
+
+    /**
+     * @Then order :reference carrier should have following details:
+     */
+    public function checkOrderCarrierDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderCarrierData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        foreach ($orderCarrierData as $orderCarrierField => $orderCarrierValue) {
+            Assert::assertEquals(
+                (float) $orderCarrierValue,
+                $orderCarrier->{$orderCarrierField},
                 sprintf(
-                    'Expects %s, got %s instead',
-                    $discountTaxIncluded,
-                    $orderCartRule->value_tax_excl
+                    'Invalid order carrier field %s, expected %s instead of %s',
+                    $orderCarrierField,
+                    $orderCarrierValue,
+                    $orderCarrier->{$orderCarrierField}
                 )
             );
+        }
+    }
+
+    /**
+     * @Then order :reference should have :carrierReference as a carrier
+     *
+     * @param string $orderReference
+     * @param string $carrierReference
+     */
+    public function checkOrderCarrier(string $orderReference, string $carrierReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
+        $order = new Order($orderId);
+
+        if ((int) $order->id_carrier === 0) {
+            throw new RuntimeException(sprintf(
+                'Order %s has no carrier defined',
+                $orderReference
+            ));
+        }
+        if ((int) $order->id_carrier !== $carrierId) {
+            throw new RuntimeException(sprintf(
+                'Order %s should have %s as a carrier, expected id_carrier to be %d but is %d instead',
+                $orderReference,
+                $carrierReference,
+                $carrierId,
+                (int) $order->id_carrier
+            ));
         }
     }
 
@@ -192,7 +286,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $cart = $this->getCurrentCart();
         if (null === $cart) {
-            throw new \Exception('Current cart was not initialized');
+            throw new Exception('Current cart was not initialized');
         }
         $order = Order::getByCartId($cart->id);
 
@@ -208,5 +302,23 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             $order->delete();
         }
         $this->orders = [];
+    }
+
+    /**
+     * @Then order :reference should have :paymentModuleName payment method
+     *
+     * @param string $reference
+     * @param string $paymentModuleName
+     */
+    public function createdOrderShouldHavePaymentMethod(string $reference, string $paymentModuleName)
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        $order = new Order($orderId);
+
+        // todo: think about a way to get paymentModuleName from domain classes
+        if ($order->module !== $paymentModuleName) {
+            throw new RuntimeException(sprintf('Order should have "%s" payment method, but has "%s" instead.', $paymentModuleName, $order->payment));
+        }
     }
 }

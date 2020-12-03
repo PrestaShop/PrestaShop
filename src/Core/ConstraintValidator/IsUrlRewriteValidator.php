@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * Class IsUrlRewriteValidator is responsible of validating url rewrites according to several patterns
@@ -38,16 +39,20 @@ use Symfony\Component\Validator\ConstraintValidator;
 class IsUrlRewriteValidator extends ConstraintValidator
 {
     /**
-     * @var bool
+     * @var ConfigurationInterface|bool
      */
-    private $isAscendedCharsAllowed;
+    private $accentedCharsConfiguration;
 
     /**
-     * @param bool $isAscendedCharsAllowed
+     * this constructor can accept boolean value of already predefined accented chars allowance configuration to not
+     * introduce BC break. The recommended approach is to pass
+     * PrestaShop\PrestaShop\Adapter\Configuration as a service instead to avoid keeping cached scalar value.
+     *
+     * @param ConfigurationInterface|bool $accentedCharsConfiguration
      */
-    public function __construct($isAscendedCharsAllowed)
+    public function __construct($accentedCharsConfiguration)
     {
-        $this->isAscendedCharsAllowed = $isAscendedCharsAllowed;
+        $this->accentedCharsConfiguration = $accentedCharsConfiguration;
     }
 
     /**
@@ -77,7 +82,7 @@ class IsUrlRewriteValidator extends ConstraintValidator
     }
 
     /**
-     * Validates url rewrite according the patterns which vary based on ascended chars allowed setting.
+     * Validates url rewrite according the patterns which vary based on ascented chars allowed setting.
      *
      * @param string $urlRewrite
      *
@@ -87,10 +92,24 @@ class IsUrlRewriteValidator extends ConstraintValidator
     {
         $pattern = '/^[_a-zA-Z0-9\-]+$/';
 
-        if ($this->isAscendedCharsAllowed) {
+        if ($this->getAllowAccentedCharsSetting()) {
             $pattern = '/^[_a-zA-Z0-9\pL\pS-]+$/u';
         }
 
         return preg_match($pattern, $urlRewrite);
+    }
+
+    /**
+     * Gets the accented chars url setting.
+     *
+     * @return bool
+     */
+    private function getAllowAccentedCharsSetting()
+    {
+        if ($this->accentedCharsConfiguration instanceof ConfigurationInterface) {
+            return $this->accentedCharsConfiguration->get('PS_ALLOW_ACCENTED_CHARS_URL');
+        }
+
+        return $this->accentedCharsConfiguration;
     }
 }

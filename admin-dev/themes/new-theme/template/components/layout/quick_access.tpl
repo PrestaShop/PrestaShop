@@ -1,7 +1,7 @@
 {* Quick access *}
 <div class="dropdown quick-accesses">
   <button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="quick_select">
-    {l s='Quick Access'}
+    {l s='Quick Access' d='Admin.Navigation.Header'}
   </button>
   <div class="dropdown-menu">
     {foreach $quick_access as $quick}
@@ -22,11 +22,11 @@
         data-icon="{$quick_access_current_link_icon}"
         data-url="{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}"
         data-post-link="{$link->getAdminLink('AdminQuickAccesses')}"
-        data-prompt-text="{l s='Please name this shortcut:' js=1}"
+        data-prompt-text="{l s='Please name this shortcut:' js=1 d='Admin.Navigation.Header'}"
         data-link="{$quick_access_current_link_name|truncate:32}"
       >
         <i class="material-icons">remove_circle_outline</i>
-        {l s='Remove from QuickAccess'}
+        {l s='Remove from Quick Access' d='Admin.Navigation.Header'}
       </a>
     {else}
       <a
@@ -37,16 +37,16 @@
         data-method="add"
         data-url="{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}"
         data-post-link="{$link->getAdminLink('AdminQuickAccesses')}"
-        data-prompt-text="{l s='Please name this shortcut:' js=1}"
+        data-prompt-text="{l s='Please name this shortcut:' js=1  d='Admin.Navigation.Header'}"
         data-link="{$quick_access_current_link_name|truncate:32}"
       >
         <i class="material-icons">add_circle</i>
-        {l s='Add current page to QuickAccess'}
+        {l s='Add current page to Quick Access'  d='Admin.Actions'}
       </a>
     {/if}
     <a class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
       <i class="material-icons">settings</i>
-      {l s='Manage quick accesses'}
+      {l s='Manage your quick accesses' d='Admin.Navigation.Header'}
     </a>
   </div>
 </div>

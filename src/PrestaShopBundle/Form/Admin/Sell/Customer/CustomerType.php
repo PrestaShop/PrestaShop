@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
+use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -126,6 +127,9 @@ class CustomerType extends AbstractType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new CustomerName([
+                        'message' => $this->trans('The %s field is invalid.', [sprintf('"%s"', $this->trans('First name', [], 'Admin.Global'))], 'Admin.Notifications.Error'),
+                    ]),
                 ],
             ])
             ->add('last_name', TextType::class, [
@@ -140,6 +144,9 @@ class CustomerType extends AbstractType
                             ['%limit%' => LastName::MAX_LENGTH],
                             'Admin.Notifications.Error'
                         ),
+                    ]),
+                    new CustomerName([
+                        'message' => $this->trans('The %s field is invalid.', [sprintf('"%s"', $this->trans('Last name', [], 'Admin.Global'))], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])

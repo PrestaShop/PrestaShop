@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use Doctrine\DBAL\DBALException;
+
 ob_start();
 
 require_once 'install_version.php';
@@ -90,15 +92,19 @@ require_once _PS_CORE_DIR_.'/config/autoload.php';
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 
-    if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-        $env = 'test';
-    } else {
-        $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-    }
     global $kernel;
-    $kernel = new AppKernel($env, _PS_MODE_DEV_);
-    $kernel->loadClassCache();
-    $kernel->boot();
+    try {
+        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel->boot();
+    } catch (DBALException $e) {
+        /**
+         * Doctrine couldn't be loaded because database settings point to a
+         * non existence database
+         */
+        if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
+            throw $e;
+        }
+    }
 }
 
 if (!defined('_THEME_NAME_')) {

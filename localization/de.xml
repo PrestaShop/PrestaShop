@@ -7,8 +7,8 @@
     <language iso_code="de"/>
   </languages>
   <taxes>
-    <tax id="1" name="MwSt. DE 19%" rate="19" eu-tax-group="virtual"/>
-    <tax id="2" name="MwSt. DE 7%" rate="7"/>
+    <tax id="1" name="MwSt. DE 16%" rate="16" eu-tax-group="virtual"/>
+    <tax id="2" name="MwSt. DE 5%" rate="5"/>
     <tax id="3" name="USt. AT 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="4" name="TVA BE 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="5" name="ДДС BG 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -20,7 +20,7 @@
     <tax id="11" name="ALV FI 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="12" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="13" name="VAT UK 20%" rate="20.0" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="14" name="ΦΠΑ GR 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="14" name="ΦΠΑ GR 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="15" name="Croatia PDV 25%" rate="25.000" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="16" name="ÁFA HU 27%" rate="27" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="17" name="VAT IE 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -32,11 +32,11 @@
     <tax id="23" name="BTW NL 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="24" name="PTU PL 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="25" name="IVA PT 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="26" name="TVA RO 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="26" name="TVA RO 19%" rate="19" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="27" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="28" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="29" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
-    <taxRulesGroup name="DE Standard Rate (19%)">
+    <taxRulesGroup name="DE Standard Rate (16%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>
       <taxRule iso_code_country="cz" id_tax="1"/>
@@ -44,6 +44,7 @@
       <taxRule iso_code_country="de" id_tax="1"/>
       <taxRule iso_code_country="ee" id_tax="1"/>
       <taxRule iso_code_country="gr" id_tax="1"/>
+      <taxRule iso_code_country="hr" id_tax="1"/>
       <taxRule iso_code_country="es" id_tax="1"/>
       <taxRule iso_code_country="fr" id_tax="1"/>
       <taxRule iso_code_country="ie" id_tax="1"/>
@@ -63,9 +64,9 @@
       <taxRule iso_code_country="sk" id_tax="1"/>
       <taxRule iso_code_country="fi" id_tax="1"/>
       <taxRule iso_code_country="se" id_tax="1"/>
-      <taxRule iso_code_country="uk" id_tax="1"/>
+      <taxRule iso_code_country="gb" id_tax="1"/>
     </taxRulesGroup>
-    <taxRulesGroup name="DE Reduced Rate (7%)">
+    <taxRulesGroup name="DE Reduced Rate (5%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -73,6 +74,7 @@
       <taxRule iso_code_country="de" id_tax="2"/>
       <taxRule iso_code_country="ee" id_tax="2"/>
       <taxRule iso_code_country="gr" id_tax="2"/>
+      <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
@@ -92,9 +94,9 @@
       <taxRule iso_code_country="sk" id_tax="2"/>
       <taxRule iso_code_country="fi" id_tax="2"/>
       <taxRule iso_code_country="se" id_tax="2"/>
-      <taxRule iso_code_country="uk" id_tax="2"/>
+      <taxRule iso_code_country="gb" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="DE Foodstuff Rate (7%)">
+    <taxRulesGroup name="DE Foodstuff Rate (5%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -102,6 +104,7 @@
       <taxRule iso_code_country="de" id_tax="2"/>
       <taxRule iso_code_country="ee" id_tax="2"/>
       <taxRule iso_code_country="gr" id_tax="2"/>
+      <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
@@ -121,9 +124,9 @@
       <taxRule iso_code_country="sk" id_tax="2"/>
       <taxRule iso_code_country="fi" id_tax="2"/>
       <taxRule iso_code_country="se" id_tax="2"/>
-      <taxRule iso_code_country="uk" id_tax="2"/>
+      <taxRule iso_code_country="gb" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="DE Books Rate (7%)">
+    <taxRulesGroup name="DE Books Rate (5%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -131,6 +134,7 @@
       <taxRule iso_code_country="de" id_tax="2"/>
       <taxRule iso_code_country="ee" id_tax="2"/>
       <taxRule iso_code_country="gr" id_tax="2"/>
+      <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
@@ -150,7 +154,7 @@
       <taxRule iso_code_country="sk" id_tax="2"/>
       <taxRule iso_code_country="fi" id_tax="2"/>
       <taxRule iso_code_country="se" id_tax="2"/>
-      <taxRule iso_code_country="uk" id_tax="2"/>
+      <taxRule iso_code_country="gb" id_tax="2"/>
     </taxRulesGroup>
     <taxRulesGroup name="EU VAT For Virtual Products" auto-generated="1" eu-tax-group="virtual">
       <taxRule iso_code_country="de" id_tax="1"/>

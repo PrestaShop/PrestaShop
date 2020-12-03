@@ -1,0 +1,66 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+  {% block addresses_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': addressGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block address_required_fields_form %}
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          <button class="btn btn-primary"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#addressRequiredFieldsContainer"
+                  aria-expanded="false"
+                  aria-controls="addressRequiredFieldsContainer"
+          >
+            <i class="material-icons">add_circle</i>
+            {{ 'Set required fields for this section'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </p>
+      </div>
+
+      <div class="col-md-12">
+        {% include '@PrestaShop/Admin/Sell/Address/Blocks/required_fields.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/address.bundle.js') }}"></script>
+{% endblock %}

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 /**
  * @since 1.5.0
@@ -51,29 +51,29 @@ class WarehouseProductLocationCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'warehouse_product_location',
         'primary' => 'id_warehouse_product_location',
-        'fields' => array(
-            'location' => array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_warehouse' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_product' => array('xlink_resource' => 'products'),
-            'id_product_attribute' => array('xlink_resource' => 'combinations'),
-            'id_warehouse' => array('xlink_resource' => 'warehouses'),
-        ),
-        'hidden_fields' => array(
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_product' => ['xlink_resource' => 'products'],
+            'id_product_attribute' => ['xlink_resource' => 'combinations'],
+            'id_warehouse' => ['xlink_resource' => 'warehouses'],
+        ],
+        'hidden_fields' => [
+        ],
+    ];
 
     /**
      * For a given product and warehouse, gets the location.

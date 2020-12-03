@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,29 +29,29 @@
  */
 class TranslatedConfigurationCore extends Configuration
 {
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectNodeName' => 'translated_configuration',
         'objectsNodeName' => 'translated_configurations',
-        'fields' => array(
-            'value' => array(),
-            'date_add' => array(),
-            'date_upd' => array(),
-        ),
-    );
+        'fields' => [
+            'value' => [],
+            'date_add' => [],
+            'date_upd' => [],
+        ],
+    ];
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'configuration',
         'primary' => 'id_configuration',
         'multilang' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
-            'id_shop_group' => array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
-            'id_shop' => array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
-            'value' => array('type' => self::TYPE_STRING, 'lang' => true),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32],
+            'id_shop_group' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
+            'id_shop' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
+            'value' => ['type' => self::TYPE_STRING, 'lang' => true],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     /**
      * TranslatedConfigurationCore constructor.

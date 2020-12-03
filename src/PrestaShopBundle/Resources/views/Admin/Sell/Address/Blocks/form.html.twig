@@ -1,0 +1,153 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(addressForm) }}
+<div class="card">
+  <div class="card-header">
+    <i class="material-icons">mail_outline</i>
+    {{ 'Addresses'|trans({}, 'Admin.Navigation.Menu') }}
+  </div>
+
+  <div class="card-block row">
+    <div class="card-text">
+      {{ form_errors(addressForm) }}
+
+      {% block customer_information %}
+        {% if customerInformation is not null %}
+          {% if addressForm.id_customer is defined %}
+            {{ ps.form_widget_with_error(addressForm.id_customer) }}
+          {% endif %}
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Customer'|trans({}, 'Admin.Global') }}
+            </label>
+            <div class="col-sm">
+              <a href="{{ path('admin_customers_view', {'customerId': customerId}) }}" class="btn btn-outline-secondary">
+                <i class="material-icons">remove_red_eye</i>
+                {{ customerInformation }}
+              </a>
+            </div>
+          </div>
+        {% endif %}
+        {% if addressForm.customer_email is defined %}
+          {{ ps.form_group_row(addressForm.customer_email, {'attr': {
+            'data-customer-information-url': path('admin_customer_for_address_information') }}, {
+            'label': 'Customer email'|trans({}, 'Admin.Orderscustomers.Feature'),
+          }) }}
+        {% endif %}
+      {% endblock %}
+
+      {{ ps.form_group_row(addressForm.dni, {}, {
+        'label': 'Identification number'|trans({}, 'Admin.Orderscustomers.Feature'),
+        'help' : 'The national ID card number of this person, or a unique tax identification number.'|trans({}, 'Admin.Orderscustomers.Help')
+      }) }}
+
+      {{ ps.form_group_row(addressForm.alias, {}, {
+        'label': 'Address alias'|trans({}, 'Admin.Orderscustomers.Feature'),
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {{ ps.form_group_row(addressForm.first_name, {}, {
+        'label': 'First name'|trans({}, 'Admin.Global'),
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
+      }) }}
+
+      {{ ps.form_group_row(addressForm.last_name, {}, {
+        'label': 'Last name'|trans({}, 'Admin.Global'),
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
+      }) }}
+
+      {{ ps.form_group_row(addressForm.company, {}, {
+        'label': 'Company'|trans({}, 'Admin.Global'),
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {{ ps.form_group_row(addressForm.vat_number, {}, {
+        'label': 'VAT number'|trans({}, 'Admin.Orderscustomers.Feature'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.address1, {}, {
+        'label': 'Address'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.address2, {}, {
+        'label': 'Address (2)'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(addressForm.postcode, {}, {
+        'label': 'Zip/postal code'|trans({}, 'Admin.Global')
+      }) }}
+
+      {{ ps.form_group_row(addressForm.city, {}, {
+        'label': 'City'|trans({}, 'Admin.Global')
+      }) }}
+
+      {{ ps.form_group_row(addressForm.id_country, {'attr': {
+        'class': 'js-customer-country-select',
+        'data-states-url': path('admin_country_states') }}, {
+        'label': 'Country'|trans({}, 'Admin.Global'),
+      }) }}
+
+      <div class="js-address-state-select{% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
+        {{ ps.form_group_row(addressForm.id_state, {}, {
+          'label': 'State'|trans({}, 'Admin.Global'),
+        }) }}
+      </div>
+
+      {{ ps.form_group_row(addressForm.phone, {}, {
+        'label': 'Phone'|trans({}, 'Admin.Global')
+      }) }}
+
+      {{ ps.form_group_row(addressForm.phone_mobile, {}, {
+        'label': 'Mobile phone'|trans({}, 'Admin.Global')
+      }) }}
+
+      {{ ps.form_group_row(addressForm.other, {}, {
+        'label': 'Other'|trans({}, 'Admin.Global'),
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {{ form_rest(addressForm) }}
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="d-inline-flex">
+      {% if (displayInIframe is defined and displayInIframe == true) %}
+        <a href="javascript:window.parent.$.fancybox.close();" class="btn btn-outline-secondary">
+      {% else %}
+        <a href="{{ cancelPath|default(path('admin_addresses_index')) }}" class="btn btn-outline-secondary">
+      {% endif %}
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <div class="d-inline-flex float-right">
+      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    </div>
+  </div>
+</div>
+{{ form_end(addressForm) }}

@@ -23,6 +23,6 @@ Steps to reproduce the behavior:
 **Screenshots**
 If applicable, add screenshots or screenrecords to help explain your problem.
 
-**Additionnal information**
+**Additional information**
 PrestaShop version: N/A
 PHP version: N/A

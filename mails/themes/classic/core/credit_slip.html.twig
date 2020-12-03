@@ -23,7 +23,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Credit slip created'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               {{ 'We have generated a credit slip in your name for order with the reference [1]{order_name}[/1].'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
@@ -42,7 +42,7 @@
   <td class="linkbelow">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
       <span>
-        {{ 'You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
+        {{ 'Review this credit slip and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%credit_slips_label%</a> section of your customer account.'|trans({'%credit_slips_label%': 'Credit slips'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}
       </span>
     </font>
   </td>

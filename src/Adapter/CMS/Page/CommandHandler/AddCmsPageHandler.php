@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
@@ -41,9 +41,6 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws CmsPageException
-     * @throws PrestaShopException
      */
     public function handle(AddCmsPageCommand $command)
     {
@@ -55,17 +52,11 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
             }
 
             if (false === $cms->add()) {
-                throw new CannotAddCmsPageException(
-                    'Failed to add cms page'
-                );
+                throw new CannotAddCmsPageException('Failed to add cms page');
             }
             $this->associateWithShops($cms, $command->getShopAssociation());
         } catch (PrestaShopException $e) {
-            throw new CmsPageException(
-                'An unexpected error occurred when adding cms page',
-                0,
-                $e
-            );
+            throw new CmsPageException('An unexpected error occurred when adding cms page', 0, $e);
         }
 
         return new CmsPageId((int) $cms->id);
@@ -75,15 +66,16 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
      * @param AddCmsPageCommand $command
      *
      * @return CMS
-     *
-     * @throws PrestaShopException
      */
     protected function createCmsFromCommand(AddCmsPageCommand $command)
     {
+        $cmsCategoryId = $command->getCmsPageCategory()->getValue();
+        $this->assertCmsCategoryExists($cmsCategoryId);
+
         $cms = new CMS();
+        $cms->id_cms_category = $cmsCategoryId;
         $cms->meta_title = $command->getLocalizedTitle();
         $cms->head_seo_title = $command->getLocalizedMetaTitle();
-        $cms->id_cms_category = $command->getCmsPageCategory()->getValue();
         $cms->meta_description = $command->getLocalizedMetaDescription();
         $cms->meta_keywords = $command->getLocalizedMetaKeyword();
         $cms->link_rewrite = $command->getLocalizedFriendlyUrl();

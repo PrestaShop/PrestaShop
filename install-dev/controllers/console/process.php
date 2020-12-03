@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShopBundle\Install\Database;
 use PrestaShopBundle\Install\Install;
@@ -114,7 +114,14 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 $this->model_database->createDatabase($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
             }
 
-            if (!$this->model_database->testDatabaseSettings($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password, $this->datas->database_prefix, $this->datas->database_engine, $this->datas->database_clear)) {
+            if (!$this->model_database->testDatabaseSettings(
+                $this->datas->database_server,
+                $this->datas->database_name,
+                $this->datas->database_login,
+                $this->datas->database_password,
+                $this->datas->database_prefix,
+                $this->datas->database_clear
+            )) {
                 $this->printErrors();
             }
             if (!$this->processInstallDatabase()) {
@@ -163,17 +170,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         // Update fixtures lang
         foreach (Language::getLanguages() as $lang) {
             Language::updateMultilangTable($lang['iso_code']);
-        }
-
-        if ($this->datas->newsletter) {
-            $params = http_build_query(array(
-                'email' => $this->datas->admin_email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $this->datas->lang,
-                'visitorType' => 1,
-                'source' => 'installer',
-            ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
@@ -256,7 +252,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             'admin_password' => $this->datas->admin_password,
             'admin_email' => $this->datas->admin_email,
             'configuration_agrement' => true,
-            'send_informations' => true,
             'enable_ssl' => $this->datas->enable_ssl,
             'rewrite_engine' => $this->datas->rewrite_engine,
         ));
@@ -345,14 +340,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     {
         require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 
-        if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-            $env = 'test';
-        } else {
-            $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-        }
         global $kernel;
-        $kernel = new AppKernel($env, _PS_MODE_DEV_);
-        $kernel->loadClassCache();
+        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     }
 }

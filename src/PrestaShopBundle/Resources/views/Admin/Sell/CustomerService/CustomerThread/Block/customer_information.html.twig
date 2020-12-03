@@ -1,0 +1,84 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="row mt-4">
+  <div class="col">
+    <div class="media">
+      {% if customerThreadView.customerInformation.customerId %}
+        <a href="{{ path('admin_customers_view', {'customerId': customerThreadView.customerInformation.customerId}) }}">
+          <i class="material-icons thread-customer-icon">
+            person
+          </i>
+        </a>
+      {% else %}
+        <i class="material-icons thread-customer-icon">
+          person
+        </i>
+      {% endif %}
+
+      <div class="media-body">
+        <h2 class="mt-0 mb-0">
+          {% if customerThreadView.customerInformation.firstName %}
+            <a href="{{ path('admin_customers_view', {'customerId': customerThreadView.customerInformation.customerId}) }}">
+              {{ customerThreadView.customerInformation.firstName }}
+              {{ customerThreadView.customerInformation.lastName }}
+              <small class="text-muted">({{ customerThreadView.customerInformation.email }})</small>
+            </a>
+          {% else %}
+            {{ customerThreadView.customerInformation.email }}
+          {% endif %}
+        </h2>
+        <p>
+          {% if customerThreadView.contactName is not empty %}
+            {{ 'To:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            <span class="badge badge-primary rounded">{{ customerThreadView.contactName }}</span>
+          {% endif %}
+        </p>
+      </div>
+
+    </div>
+  </div>
+  <div class="col">
+    {% if customerThreadView.customerInformation.validatedOrdersCount %}
+      {{ '[1]%count%[/1] order(s) validated for a total amount of [2]%total%[/2]'|trans({
+        '%count%': customerThreadView.customerInformation.validatedOrdersCount,
+        '%total%': customerThreadView.customerInformation.validatedOrdersAmount,
+        '[1]': '<span class="badge badge-primary rounded">',
+        '[/1]': '</span>',
+        '[2]': '<span class="badge badge-success rounded">',
+        '[/2]': '</span>'
+      }, 'Admin.Orderscustomers.Feature')|raw }}
+    {% else %}
+      {{ 'No order validated for the moment. By default, an order is considered validated when its payment is accepted.'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    {% endif %}
+
+    <p class="text-muted">
+      {{ 'Customer since: %s'|trans(
+        {'%s': customerThreadView.customerInformation.customerSinceDate},
+        'Admin.Orderscustomers.Feature'
+      ) }}
+    </p>
+  </div>
+</div>

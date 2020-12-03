@@ -10,11 +10,21 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="НДС 20%" rate="20" />
-		
+		<tax id="2" name="НДС 7%" rate="7" />
+		<tax id="3" name="НДС 0%" rate="0" />
+    
 		<taxRulesGroup name="НДС (20%)">
 			<taxRule iso_code_country="ua" id_tax="1" />
 		</taxRulesGroup>
-	</taxes>
+    
+		<taxRulesGroup name="НДС (7%)">
+			<taxRule iso_code_country="ua" id_tax="2" />
+		</taxRulesGroup>
+    
+		<taxRulesGroup name="НДС (0%)">
+			<taxRule iso_code_country="ua" id_tax="3" />
+		</taxRulesGroup>    
+  </taxes>
 	<states>
 		<state name="Винницкая область" iso_code="05" country="UA" zone="Europe" />
 		<state name="Волынская область" iso_code="07" country="UA" zone="Europe" />

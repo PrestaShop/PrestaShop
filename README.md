@@ -1,18 +1,17 @@
 About PrestaShop
 --------
 
-[![Build Status](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.org/PrestaShop/PrestaShop)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a798dc20a1254776aa7a8a0d8bd8d331)](https://www.codacy.com/app/PrestaShop/PrestaShop?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PrestaShop/PrestaShop&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.com/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.com/PrestaShop/PrestaShop)
 [![Gitter chat](https://badges.gitter.im/PrestaShop/PrestaShop.png)](https://gitter.im/PrestaShop/General)
 
 
 PrestaShop is an Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][available-features].
 
 <p align="center">
-  <img src="https://www.prestashop.com/1.7/assets/img/product.png" alt="PrestaShop 1.7 back office"/>
+  <img src="https://user-images.githubusercontent.com/1009343/61462749-8fb19f00-a949-11e9-801f-70ab0a84192d.png" alt="PrestaShop 1.7 back office"/>
 </p>
 
-This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 1.7), please go to [the download page][2] on the official PrestaShop site.
+This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 1.7), please go to [the download page][download] on the official PrestaShop site.
 
 
 About the 'develop' branch
@@ -22,12 +21,12 @@ The 'develop' branch of this repository contains the work in progress source cod
  
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
-PRESTASHOP 1.7 IS NOW PRODUCTION-READY! Its first stable version, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](http://build.prestashop.com/tag/1.7/).
+The first stable version of PrestaShop 1.7, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop.com/tag/1.7/).
 
 Server configuration
 --------
 
-To install PrestaShop 1.7, you need a web server running PHP 5.6+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).
+To install the latest PrestaShop 1.7, you need a web server running PHP 7.1+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.). Versions between 1.7.0 and 1.7.6 work with PHP 5.6+.
 
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
 We recommend the Apache or Nginx web servers (check out our [example Nginx configuration file][example-nginx]).
@@ -124,24 +123,24 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
-[user-doc]: http://doc.prestashop.com
+[user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
-[contributing-tutorial]: http://doc.prestashop.com/display/PS16/Contributing+to+PrestaShop
+[contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
-[getting-started]: http://doc.prestashop.com/display/PS17/Getting+Started
-[user-guide]: http://doc.prestashop.com/display/PS17/User+Guide
-[updating-guide]: http://doc.prestashop.com/display/PS16/Updating+PrestaShop
-[merchant-guide]: http://doc.prestashop.com/display/PS16/Merchant%27s+Guide
-[faq-17]: http://build.prestashop.com/news/prestashop-1-7-faq/
-[troubleshooting]: http://doc.prestashop.com/display/PS16/Troubleshooting
-[sysadmin-guide]: http://doc.prestashop.com/display/PS16/System+Administrator+Guide
+[getting-started]: https://doc.prestashop.com/display/PS17/Getting+Started
+[user-guide]: https://doc.prestashop.com/display/PS17/User+Guide
+[updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
+[merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
+[faq-17]: https://build.prestashop.com/news/prestashop-1-7-faq/
+[troubleshooting]: https://doc.prestashop.com/display/PS16/Troubleshooting
+[sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [addons]: https://addons.prestashop.com/
 [contributors-md]: CONTRIBUTORS.md
 [example-nginx]: docs/server_config/nginx.conf.dist
 [docker-compose]: https://docs.docker.com/compose/
 [install-guide-dev]: https://devdocs.prestashop.com/1.7/basics/installation/
 [system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/
-[install-guide]: http://doc.prestashop.com/display/PS17/Installing+PrestaShop
+[install-guide]: https://doc.prestashop.com/display/PS17/Installing+PrestaShop
 [devdocs]: https://devdocs.prestashop.com/
 [create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
 [reporting-issues]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/

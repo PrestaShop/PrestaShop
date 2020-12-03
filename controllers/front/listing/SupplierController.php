@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
@@ -79,23 +79,23 @@ class SupplierControllerCore extends ProductListingFrontController
                 $this->assignSupplier();
                 $this->label = $this->trans(
                     'List of products by supplier %supplier_name%',
-                    array(
+                    [
                         '%supplier_name%' => $this->supplier->name,
-                    ),
+                    ],
                     'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(
                     'catalog/listing/supplier',
-                    array('entity' => 'supplier', 'id' => $this->supplier->id)
+                    ['entity' => 'supplier', 'id' => $this->supplier->id]
                 );
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(
                     'List of all suppliers',
-                    array(),
+                    [],
                     'Shop.Theme.Catalog'
                 );
-                $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
+                $this->setTemplate('catalog/suppliers', ['entity' => 'suppliers']);
             }
         } else {
             $this->redirect_after = '404';
@@ -130,7 +130,7 @@ class SupplierControllerCore extends ProductListingFrontController
 
         $filteredSupplier = Hook::exec(
             'filterSupplierContent',
-            array('object' => $supplierVar),
+            ['object' => $supplierVar],
             $id_module = null,
             $array_return = false,
             $check_exceptions = true,
@@ -142,9 +142,9 @@ class SupplierControllerCore extends ProductListingFrontController
             $supplierVar = $filteredSupplier['object'];
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'supplier' => $supplierVar,
-        ));
+        ]);
     }
 
     /**
@@ -158,7 +158,7 @@ class SupplierControllerCore extends ProductListingFrontController
             foreach ($suppliersVar as $k => $supplier) {
                 $filteredSupplier = Hook::exec(
                     'filterSupplierContent',
-                    array('object' => $supplier),
+                    ['object' => $supplier],
                     $id_module = null,
                     $array_return = false,
                     $check_exceptions = true,
@@ -172,15 +172,15 @@ class SupplierControllerCore extends ProductListingFrontController
             }
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'brands' => $suppliersVar,
-        ));
+        ]);
     }
 
     public function getTemplateVarSuppliers()
     {
         $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true);
-        $suppliers_for_display = array();
+        $suppliers_for_display = [];
 
         foreach ($suppliers as $supplier) {
             $suppliers_for_display[$supplier['id_supplier']] = $supplier;
@@ -188,8 +188,8 @@ class SupplierControllerCore extends ProductListingFrontController
             $suppliers_for_display[$supplier['id_supplier']]['image'] = $this->context->link->getSupplierImageLink($supplier['id_supplier'], 'small_default');
             $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
             $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1
-                ? $this->trans('%number% products', array('%number%' => $supplier['nb_products']), 'Shop.Theme.Catalog')
-                : $this->trans('%number% product', array('%number%' => $supplier['nb_products']), 'Shop.Theme.Catalog');
+                ? $this->trans('%number% products', ['%number%' => $supplier['nb_products']], 'Shop.Theme.Catalog')
+                : $this->trans('%number% product', ['%number%' => $supplier['nb_products']], 'Shop.Theme.Catalog');
         }
 
         return $suppliers_for_display;
@@ -198,5 +198,24 @@ class SupplierControllerCore extends ProductListingFrontController
     public function getListingLabel()
     {
         return $this->label;
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('All suppliers', [], 'Shop.Theme.Catalog'),
+            'url' => $this->context->link->getPageLink('supplier', true),
+        ];
+
+        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
+            $breadcrumb['links'][] = [
+                'title' => $this->supplier->name,
+                'url' => $this->context->link->getSupplierLink($this->supplier),
+            ];
+        }
+
+        return $breadcrumb;
     }
 }

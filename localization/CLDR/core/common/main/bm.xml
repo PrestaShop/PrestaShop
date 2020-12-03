@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13133 $"/>
+		<version number="$Revision$"/>
 		<language type="bm"/>
 	</identity>
 	<localeDisplayNames>
@@ -184,7 +184,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MD">Molidavi</territory>
 			<territory type="MG">Madagasikari</territory>
 			<territory type="MH">Marisali Gun</territory>
-			<territory type="MK">Macedɔni</territory>
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Myanimari</territory>
 			<territory type="MN">Moŋoli</territory>
@@ -694,6 +693,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>madagasikari Fraŋ</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>mɔritani Uguwiya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>mɔritani Uguwiya</displayName>
 			</currency>
 			<currency type="MUR">
@@ -736,6 +738,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>somali Siling</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>sawotome Dobra (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>sawotome Dobra</displayName>
 			</currency>
 			<currency type="SZL">

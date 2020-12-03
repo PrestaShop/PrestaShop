@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -64,7 +64,7 @@ class CountryCore extends ObjectModel
     /** @var bool Status for delivery */
     public $active = true;
 
-    protected static $_idZones = array();
+    protected static $_idZones = [];
 
     const GEOLOC_ALLOWED = 0;
 
@@ -75,40 +75,40 @@ class CountryCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'country',
         'primary' => 'id_country',
         'multilang' => true,
-        'fields' => array(
-            'id_zone' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'call_prefix' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'contains_states' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'need_identification_number' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'need_zip_code' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'zip_code_format' => array('type' => self::TYPE_STRING, 'validate' => 'isZipCodeFormat'),
-            'display_tax_label' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+        'fields' => [
+            'id_zone' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'call_prefix' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'contains_states' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+            'need_identification_number' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+            'need_zip_code' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'zip_code_format' => ['type' => self::TYPE_STRING, 'validate' => 'isZipCodeFormat'],
+            'display_tax_label' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-        ),
-        'associations' => array(
-            'zone' => array('type' => self::HAS_ONE),
-            'currency' => array('type' => self::HAS_ONE),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+        ],
+        'associations' => [
+            'zone' => ['type' => self::HAS_ONE],
+            'currency' => ['type' => self::HAS_ONE],
+        ],
+    ];
 
-    protected static $cache_iso_by_id = array();
+    protected static $cache_iso_by_id = [];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'countries',
-        'fields' => array(
-            'id_zone' => array('xlink_resource' => 'zones'),
-            'id_currency' => array('xlink_resource' => 'currencies'),
-        ),
-    );
+        'fields' => [
+            'id_zone' => ['xlink_resource' => 'zones'],
+            'id_currency' => ['xlink_resource' => 'currencies'],
+        ],
+    ];
 
     /**
      * Deletes current Country from the database.
@@ -138,7 +138,7 @@ class CountryCore extends ObjectModel
      */
     public static function getCountries($idLang, $active = false, $containStates = false, $listStates = true)
     {
-        $countries = array();
+        $countries = [];
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cl.*,c.*, cl.`name` country, z.`name` zone
 		FROM `' . _DB_PREFIX_ . 'country` c ' . Shop::addSqlAssociation('country', 'c') . '
@@ -464,7 +464,7 @@ class CountryCore extends ObjectModel
      *
      * @return bool Indictes whether the restrictions were successfully applied
      */
-    public static function addModuleRestrictions(array $shops = array(), array $countries = array(), array $modules = array())
+    public static function addModuleRestrictions(array $shops = [], array $countries = [], array $modules = [])
     {
         if (!count($shops)) {
             $shops = Shop::getShops(true, null, true);
@@ -514,7 +514,7 @@ class CountryCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
-        $return = parent::add($autoDate, $nullValues) && self::addModuleRestrictions(array(), array(array('id_country' => $this->id)), array());
+        $return = parent::add($autoDate, $nullValues) && self::addModuleRestrictions([], [['id_country' => $this->id]], []);
 
         return $return;
     }

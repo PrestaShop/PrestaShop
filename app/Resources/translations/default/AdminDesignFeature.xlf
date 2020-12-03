@@ -279,7 +279,7 @@
       <trans-unit id="d1e9d1892046943ae96e613646fc0381">
         <source>Add new image type</source>
         <target>Add new image type</target>
-        <note>Line: 702</note>
+        <note>Line: 703</note>
       </trans-unit>
     </body>
   </file>
@@ -355,7 +355,7 @@
       <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
         <source>Pages in category "%name%"</source>
         <target>Pages in category "%name%"</target>
-        <note>Line: 118</note>
+        <note>Line: 120</note>
       </trans-unit>
     </body>
   </file>
@@ -364,12 +364,36 @@
       <trans-unit id="cca370c1880917b42e0ca0f484afb715">
         <source>Preview Theme %s</source>
         <target>Preview Theme %s</target>
-        <note>Line: 249</note>
+        <note>Line: 250</note>
       </trans-unit>
       <trans-unit id="7accead9f41b1968f1957961177b1ed7">
         <source>Test email %template%</source>
         <target>Test email %template%</target>
-        <note>Line: 320</note>
+        <note>Line: 321</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="21f93401134586a6c481422bf01fccfd">
+        <source>Only letters and the hyphen (-) character are allowed.</source>
+        <target>Only letters and the hyphen (-) character are allowed.</target>
+        <note>Line: 209</note>
+      </trans-unit>
+      <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
+        <source>Page content</source>
+        <target>Page content</target>
+        <note>Line: 242</note>
+      </trans-unit>
+      <trans-unit id="ce1e51212c9df52777620dc9de246da0">
+        <source>Indexation by search engines</source>
+        <target>Indexation by search engines</target>
+        <note>Line: 259</note>
+      </trans-unit>
+      <trans-unit id="79e48ca19eefe7806fbaf27df903e8d5">
+        <source>Page category</source>
+        <target>Page category</target>
+        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>
@@ -387,36 +411,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Cms/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="21f93401134586a6c481422bf01fccfd">
-        <source>Only letters and the hyphen (-) character are allowed.</source>
-        <target>Only letters and the hyphen (-) character are allowed.</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
-        <source>Page content</source>
-        <target>Page content</target>
-        <note>Line: 86</note>
-      </trans-unit>
-      <trans-unit id="ce1e51212c9df52777620dc9de246da0">
-        <source>Indexation by search engines</source>
-        <target>Indexation by search engines</target>
-        <note>Line: 90</note>
-      </trans-unit>
-      <trans-unit id="79e48ca19eefe7806fbaf27df903e8d5">
-        <source>Page category</source>
-        <target>Page category</target>
-        <note>Line: 40</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/configuration_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d52c442675e27baf9d7c5a19d6ef93fa">
         <source>Select your default email theme</source>
         <target>Select your default email theme</target>
-        <note>Line: 41</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -425,22 +425,22 @@
       <trans-unit id="a0a17caf8de192bd85662445714f0adc">
         <source>Generate emails</source>
         <target>Generate emails</target>
-        <note>Line: 32</note>
+        <note>Line: 33</note>
       </trans-unit>
       <trans-unit id="98d77d08b65418c4375c4947921ce44c">
         <source>Select your email theme</source>
         <target>Select your email theme</target>
-        <note>Line: 40</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="d8605aca26dca73f3e67726f7301a165">
         <source>Select the theme you want to overwrite</source>
         <target>Select the theme you want to overwrite</target>
-        <note>Line: 61</note>
+        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="b445b07a4ce0e996acaf7ceb6a2547c3">
         <source>Overwrite templates</source>
         <target>Overwrite templates</target>
-        <note>Line: 76</note>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>
@@ -519,7 +519,7 @@
       <trans-unit id="49824ed511fd64f33f2f8a1818ee8fe1">
         <source>Header logo</source>
         <target>Header logo</target>
-        <note>Line: 43</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="358b0205fd07c94c16a82d8278bc5b76">
         <source>Mail logo</source>
@@ -529,12 +529,12 @@
       <trans-unit id="d84613cd39906ab9161e1ad513f8947b">
         <source>Invoice logo</source>
         <target>Invoice logo</target>
-        <note>Line: 138</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="49e95301d8fcdbc23f623e0f2d1ed1e6">
         <source>Favicon</source>
         <target>Favicon</target>
-        <note>Line: 126</note>
+        <note>Line: 127</note>
       </trans-unit>
     </body>
   </file>
@@ -615,7 +615,7 @@
       <trans-unit id="859a82ffb385f9227c656960996025eb">
         <source>Visit the theme catalog</source>
         <target>Visit the theme catalog</target>
-        <note>Line: 151</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
         <source>Theme</source>
@@ -625,17 +625,17 @@
       <trans-unit id="6b8e9498b52135e7f6cee757294a6079">
         <source>My current theme</source>
         <target>My current theme</target>
-        <note>Line: 98</note>
+        <note>Line: 99</note>
       </trans-unit>
       <trans-unit id="b6ba229b668e5a7b6700e4d275683084">
         <source>Use this theme</source>
         <target>Use this theme</target>
-        <note>Line: 121</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="6fe78057f585de51da0f61d514143fe1">
         <source>Explore more than a thousand themes</source>
         <target>Explore more than a thousand themes</target>
-        <note>Line: 146</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="10d79e2800631feee6411615a72eb79e">
         <source>My theme for %name% shop</source>

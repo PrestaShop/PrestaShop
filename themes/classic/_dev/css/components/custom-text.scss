@@ -19,6 +19,10 @@
       font-weight: 400;
     }
   }
+  img {
+    max-width: 100%;
+    height: 100%;
+  }
 }
 .page-content.page-cms{
   background: white;
@@ -28,6 +32,10 @@
     img{
       max-width: 100%;
     }
+  }
+  ul {
+    @extend p;
+    list-style: disc inside none;
   }
 }
 @include media-breakpoint-down(md) {

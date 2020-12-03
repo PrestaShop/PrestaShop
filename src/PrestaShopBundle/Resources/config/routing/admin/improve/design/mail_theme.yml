@@ -1,3 +1,7 @@
+_mail_theme_deprecated:
+  resource: "_mail_theme_deprecated.yml"
+  prefix: /
+
 admin_mail_theme_index:
   path: /
   methods: [GET]
@@ -15,7 +19,7 @@ admin_mail_theme_generate:
     _legacy_link: AdminMailTheme:postGenerateMails
 
 admin_mail_theme_save_configuration:
-  path: /saveConfiguration
+  path: /save-configuration
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:saveConfiguration
@@ -66,7 +70,7 @@ admin_mail_theme_raw_module_layout:
     _legacy_controller: AdminMailTheme
 
 admin_mail_theme_send_test_mail:
-  path: /sendTestMail/{locale}/{theme}/{layout}
+  path: /send-test-mail/{locale}/{theme}/{layout}
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:sendTestMail
@@ -75,9 +79,17 @@ admin_mail_theme_send_test_mail:
     module: ''
 
 admin_mail_theme_send_test_module_mail:
-  path: /sendTestMail/{locale}/{theme}/{module}/{layout}
+  path: /send-test-mail/{locale}/{theme}/{module}/{layout}
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:sendTestMail
     _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme
+
+admin_mail_theme_translate_body:
+  path: /translate-body
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:translateBody
+    _legacy_controller: AdminMailTheme
+    _legacy_link: AdminMailTheme:translateBody

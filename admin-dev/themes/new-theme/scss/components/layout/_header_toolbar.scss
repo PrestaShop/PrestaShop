@@ -91,6 +91,10 @@
         @include notification_counter();
         top: -1.75rem;
         right: -0.9375rem;
+
+        &:empty {
+          border: none;
+        }
       }
     }
   }

@@ -1,0 +1,64 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(merchandiseReturnsOptionsForm, {action: path('admin_merchandise_returns_save_options')}) }}
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Merchandise return (RMA) options'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.enable_order_return, {}, {
+        label: 'Enable returns'|trans({}, 'Admin.Orderscustomers.Feature'),
+        help: 'Would you like to allow merchandise returns in your shop?'|trans({}, 'Admin.Orderscustomers.Help')
+      }) }}
+
+      {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.order_return_period_in_days, {}, {
+        label: 'Time limit of validity'|trans({}, 'Admin.Orderscustomers.Feature'),
+        help: 'How many days after the delivery date does the customer have to return a product?'|trans({}, 'Admin.Orderscustomers.Help')
+      }) }}
+
+      {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.order_return_prefix, {}, {
+        label: 'Returns prefix'|trans({}, 'Admin.Orderscustomers.Feature'),
+        help: 'Prefix used for return name (e.g. RE00001).'|trans({}, 'Admin.Orderscustomers.Help')
+      }) }}
+
+      {% block merchandise_return_options_form_rest %}
+        {{ form_rest(merchandiseReturnsOptionsForm) }}
+      {% endblock %}
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+</div>
+{{ form_end(merchandiseReturnsOptionsForm) }}
+

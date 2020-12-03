@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.domain.customer_service.command_handler.update_customer_thread_status_handler:
+    class: PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateCustomerThreadStatusHandler
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand

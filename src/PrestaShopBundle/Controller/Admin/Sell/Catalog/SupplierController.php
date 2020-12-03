@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
@@ -36,9 +37,17 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierExc
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -66,46 +75,17 @@ class SupplierController extends FrameworkBundleAdminController
     public function indexAction(Request $request, SupplierFilters $filters)
     {
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
-
         $supplierGrid = $supplierGridFactory->getGrid($filters);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig',
             [
-                'supplierGrid' => $gridPresenter->present($supplierGrid),
+                'supplierGrid' => $this->presentGrid($supplierGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
+                'settingsTipMessage' => $this->getSettingsTipMessage(),
             ]
         );
-    }
-
-    /**
-     * Filters list results.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.supplier');
-        $supplierDefinition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($supplierDefinition);
-
-        $searchParametersForm->handleRequest($request);
-        $filters = [];
-
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_suppliers_index', ['filters' => $filters]);
     }
 
     /**
@@ -117,15 +97,36 @@ class SupplierController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $legacyLink = $this->getAdminLink('AdminSuppliers', [
-            'addsupplier' => 1,
-        ]);
+        $formData = [];
+        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+            $formData['id_country'] = $formCountryId;
+        }
 
-        return $this->redirect($legacyLink);
+        $supplierForm = $this->getFormBuilder()->getForm($formData);
+        $supplierForm->handleRequest($request);
+
+        try {
+            $result = $this->getFormHandler()->handle($supplierForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_suppliers_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/add.html.twig', [
+            'supplierForm' => $supplierForm->createView(),
+        ]);
     }
 
     /**
@@ -153,8 +154,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -193,8 +194,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -232,8 +233,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -271,8 +272,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -287,18 +288,48 @@ class SupplierController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
+     * @param Request $request
      * @param int $supplierId
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($supplierId)
+    public function editAction(Request $request, $supplierId)
     {
-        $legacyLink = $this->getAdminLink('AdminSuppliers', [
-            'id_supplier' => $supplierId,
-            'updatesupplier' => 1,
-        ]);
+        $formData = [];
+        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+            $formData['id_country'] = $formCountryId;
+        }
 
-        return $this->redirect($legacyLink);
+        try {
+            /** @var EditableSupplier $editableSupplier */
+            $editableSupplier = $this->getQueryBus()->handle(new GetSupplierForEditing((int) $supplierId));
+
+            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId, $formData);
+            $supplierForm->handleRequest($request);
+
+            $result = $this->getFormHandler()->handleFor((int) $supplierId, $supplierForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_suppliers_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        if (!isset($supplierForm) || !isset($editableSupplier)) {
+            return $this->redirectToRoute('admin_suppliers_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/edit.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'supplierForm' => $supplierForm->createView(),
+            'supplierName' => $editableSupplier->getName(),
+            'logoImage' => $editableSupplier->getLogoImage(),
+        ]);
     }
 
     /**
@@ -326,8 +357,8 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $exception) {
-            $this->addFlash('error', $this->handleException($exception));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_suppliers_index');
@@ -338,18 +369,33 @@ class SupplierController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param int $supplierId
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function viewAction($supplierId)
+    public function viewAction(Request $request, $supplierId)
     {
-        $legacyLink = $this->getAdminLink('AdminSuppliers', [
-            'id_supplier' => $supplierId,
-            'viewsupplier' => 1,
-        ]);
+        try {
+            /** @var ViewableSupplier $viewableSupplier */
+            $viewableSupplier = $this->getQueryBus()->handle(new GetSupplierForViewing(
+                (int) $supplierId,
+                (int) $this->getContextLangId()
+            ));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-        return $this->redirect($legacyLink);
+            return $this->redirectToRoute('admin_suppliers_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/view.html.twig', [
+            'layoutTitle' => $viewableSupplier->getName(),
+            'viewableSupplier' => $viewableSupplier,
+            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
     }
 
     /**
@@ -393,35 +439,21 @@ class SupplierController extends FrameworkBundleAdminController
     }
 
     /**
-     * Gets error by exception type.
+     * Provides error messages for exceptions
      *
-     * @param Exception $exception
-     *
-     * @return string
-     *
-     * @todo use FrameworkAdminBundleController::getErrorMessageForException() instead
+     * @return array
      */
-    private function handleException(Exception $exception)
+    private function getErrorMessages()
     {
-        if (0 !== $exception->getCode()) {
-            return $this->getExceptionMessageByExceptionCode($exception);
-        }
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
 
-        return $this->getExceptionMessageByType($exception);
-    }
-
-    /**
-     * Gets by exception type
-     *
-     * @param Exception $exception
-     *
-     * @return string
-     */
-    private function getExceptionMessageByType(Exception $exception)
-    {
-        $exceptionTypeDictionary = [
+        return [
             SupplierNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
+            AddressNotFoundException::class => $this->trans(
+                'The address for this supplier has been deleted.',
                 'Admin.Notifications.Error'
             ),
             CannotToggleSupplierStatusException::class => $this->trans(
@@ -432,36 +464,6 @@ class SupplierController extends FrameworkBundleAdminController
                 'An error occurred while updating the status for an object.',
                 'Admin.Notifications.Error'
             ),
-        ];
-
-        if ($exception instanceof CannotDeleteSupplierException) {
-            return $this->trans(
-                'Can\'t delete #%id%',
-                'Admin.Notifications.Error',
-                [
-                    '%id%' => $exception->getSupplierId(),
-                ]
-            );
-        }
-
-        $exceptionType = get_class($exception);
-        if (isset($exceptionTypeDictionary[$exceptionType])) {
-            return $exceptionTypeDictionary[$exceptionType];
-        }
-
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
-    }
-
-    /**
-     * Gets exception message by exception code.
-     *
-     * @param Exception $exception
-     *
-     * @return string
-     */
-    private function getExceptionMessageByExceptionCode(Exception $exception)
-    {
-        $exceptionConstraintDictionary = [
             SupplierConstraintException::class => [
                 SupplierConstraintException::INVALID_BULK_DATA => $this->trans(
                     'You must select at least one element to delete.',
@@ -473,16 +475,73 @@ class SupplierController extends FrameworkBundleAdminController
                     'It is not possible to delete a supplier if there are pending supplier orders.',
                     'Admin.Catalog.Notification'
                 ),
+                CannotDeleteSupplierException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                CannotDeleteSupplierException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            MemoryLimitException::class => $this->trans(
+                'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
+                'Admin.Notifications.Error'
+            ),
+            ImageUploadException::class => $this->trans(
+                'An error occurred while uploading the image.',
+                'Admin.Notifications.Error'
+            ),
+            ImageOptimizationException::class => $this->trans(
+                'Unable to resize one or more of your pictures.',
+                'Admin.Catalog.Notification'
+            ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Maximum image size: %s.', 'Admin.Global', [
+                    $iniConfig->getUploadMaxSizeInBytes(),
+                ]),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Admin.Notifications.Error'
+                ),
             ],
         ];
+    }
 
-        $exceptionType = get_class($exception);
-        $exceptionCode = $exception->getCode();
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getFormBuilder()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.supplier_form_builder');
+    }
 
-        if (isset($exceptionConstraintDictionary[$exceptionType][$exceptionCode])) {
-            return $exceptionConstraintDictionary[$exceptionType][$exceptionCode];
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.supplier_form_handler');
+    }
+
+    protected function getSettingsTipMessage()
+    {
+        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
+        $urlEnding = '</a>';
+
+        if ($this->configuration->get('PS_DISPLAY_SUPPLIERS')) {
+            return $this->trans(
+                'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
+                'Admin.Catalog.Notification',
+                [$urlOpening, $urlEnding]
+            );
         }
 
-        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->trans(
+            'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
+            'Admin.Catalog.Notification',
+            [$urlOpening, $urlEnding]
+        );
     }
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="lrc"/>
 	</identity>
 	<localeDisplayNames>
@@ -347,8 +347,8 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		<exemplarCharacters>[\u0659 \u065B آ أ ؤ ئ ا ب پ ت ث ج چ ح خ د ذ ر ز ژ س ش ص ض ط ظ ع غ ف ڤ ق ک گ ل م ن ھ ە و ۉ ۊ ی ؽ]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[\u200B\u200C\u200D\u200E\u200F \u064B \u064C \u064D \u064E \u064F \u0650 \u0651 \u0652 \u0654 إ ة ك ه ى ي]</exemplarCharacters>
 		<exemplarCharacters type="index">[آ ا ب پ ت ث ج چ ح خ د ذ ر ز ژ س ش ص ض ط ظ ع غ ف ق ک گ ل م ن ھ و ی]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
-		<exemplarCharacters type="punctuation">[\- ‐ ، ٫ ٬ ؛ \: ! ؟ . … ‹ › « » ( ) \[ \] * / \\]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[\- ‐ ‑ ، ٫ ٬ ؛ \: ! ؟ . … ‹ › « » ( ) \[ \] * / \\]</exemplarCharacters>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -498,6 +498,66 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 						</monthWidth>
 					</monthContext>
 				</months>
+				<days>
+					<dayContext type="format">
+						<dayWidth type="abbreviated">
+							<day type="sun">Sun</day>
+							<day type="mon">Mon</day>
+							<day type="tue">Tue</day>
+							<day type="wed">Wed</day>
+							<day type="thu">Thu</day>
+							<day type="fri">Fri</day>
+							<day type="sat">Sat</day>
+						</dayWidth>
+						<dayWidth type="narrow">
+							<day type="sun">S</day>
+							<day type="mon">M</day>
+							<day type="tue">T</day>
+							<day type="wed">W</day>
+							<day type="thu">T</day>
+							<day type="fri">F</day>
+							<day type="sat">S</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun">Sun</day>
+							<day type="mon">Mon</day>
+							<day type="tue">Tue</day>
+							<day type="wed">Wed</day>
+							<day type="thu">Thu</day>
+							<day type="fri">Fri</day>
+							<day type="sat">Sat</day>
+						</dayWidth>
+					</dayContext>
+					<dayContext type="stand-alone">
+						<dayWidth type="abbreviated">
+							<day type="sun">Sun</day>
+							<day type="mon">Mon</day>
+							<day type="tue">Tue</day>
+							<day type="wed">Wed</day>
+							<day type="thu">Thu</day>
+							<day type="fri">Fri</day>
+							<day type="sat">Sat</day>
+						</dayWidth>
+						<dayWidth type="narrow">
+							<day type="sun">S</day>
+							<day type="mon">M</day>
+							<day type="tue">T</day>
+							<day type="wed">W</day>
+							<day type="thu">T</day>
+							<day type="fri">F</day>
+							<day type="sat">S</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun">Sun</day>
+							<day type="mon">Mon</day>
+							<day type="tue">Tue</day>
+							<day type="wed">Wed</day>
+							<day type="thu">Thu</day>
+							<day type="fri">Fri</day>
+							<day type="sat">Sat</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<quarters>
 					<quarterContext type="format">
 						<quarterWidth type="abbreviated">
@@ -555,7 +615,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<eras>
 					<eraAbbr>
 						<era type="0">BCE</era>
+						<era type="0" alt="variant">BCE</era>
 						<era type="1">CE</era>
+						<era type="1" alt="variant">CE</era>
 					</eraAbbr>
 				</eras>
 				<dateFormats>
@@ -737,6 +799,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		<otherNumberingSystems>
 			<native>arabext</native>
 		</otherNumberingSystems>
+		<symbols numberSystem="arabext">
+			<timeSeparator>:</timeSeparator>
+		</symbols>
 		<symbols numberSystem="latn">
 			<decimal>.</decimal>
 			<group>,</group>

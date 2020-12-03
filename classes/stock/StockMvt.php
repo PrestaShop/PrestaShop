@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -138,38 +138,38 @@ class StockMvtCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'stock_mvt',
         'primary' => 'id_stock_mvt',
-        'fields' => array(
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'id_stock' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'physical_quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'id_stock_mvt_reason' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'sign' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'last_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'current_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'referer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'id_stock' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'id_stock_mvt_reason' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_supply_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'sign' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'last_wa' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'current_wa' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'price_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'referer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'stock_movements',
         'objectNodeName' => 'stock_movement',
-        'fields' => array(
-            'id_employee' => array('xlink_resource' => 'employees'),
-            'id_stock' => array('xlink_resource' => 'stock'),
-            'id_stock_mvt_reason' => array('xlink_resource' => 'stock_movement_reasons'),
-            'id_order' => array('xlink_resource' => 'orders'),
-            'id_supply_order' => array('xlink_resource' => 'supply_order'),
-        ),
-    );
+        'fields' => [
+            'id_employee' => ['xlink_resource' => 'employees'],
+            'id_stock' => ['xlink_resource' => 'stock'],
+            'id_stock_mvt_reason' => ['xlink_resource' => 'stock_movement_reasons'],
+            'id_order' => ['xlink_resource' => 'orders'],
+            'id_supply_order' => ['xlink_resource' => 'supply_order'],
+        ],
+    ];
 
     /**
      * @deprecated since 1.5.0
@@ -199,7 +199,7 @@ class StockMvtCore extends ObjectModel
      */
     public static function getNegativeStockMvts($id_order, $id_product, $id_product_attribute, $quantity, $id_warehouse = null)
     {
-        $movements = array();
+        $movements = [];
         $quantity_total = 0;
 
         // preps query

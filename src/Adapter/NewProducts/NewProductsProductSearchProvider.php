@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\NewProducts;
@@ -87,7 +87,7 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchQuery $query
     ) {
         if (!$products = $this->getProductsOrCount($context, $query, 'products')) {
-            $products = array();
+            $products = [];
         }
         $count = $this->getProductsOrCount($context, $query, 'count');
 
@@ -99,26 +99,26 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
                 ->setTotalProductsCount($count);
 
             $result->setAvailableSortOrders(
-                array(
+                [
                     (new SortOrder('product', 'date_add', 'desc'))->setLabel(
-                        $this->translator->trans('Date added, newest to oldest', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Date added, newest to oldest', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'date_add', 'asc'))->setLabel(
-                        $this->translator->trans('Date added, oldest to newest', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Date added, oldest to newest', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'name', 'asc'))->setLabel(
-                        $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'name', 'desc'))->setLabel(
-                        $this->translator->trans('Name, Z to A', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'price', 'asc'))->setLabel(
-                        $this->translator->trans('Price, low to high', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'price', 'desc'))->setLabel(
-                        $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
                     ),
-                )
+                ]
             );
         }
 

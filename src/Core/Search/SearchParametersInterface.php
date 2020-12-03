@@ -21,13 +21,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface SearchParametersInterface
 {
-    const FILTER_TYPES = array(
+    const FILTER_TYPES = [
         'limit',
         'offset',
         'orderBy',
         'sortOrder',
         'filters',
-    );
+    ];
 
     /**
      * Retrieve list of filters from User Request (ONLY those present in

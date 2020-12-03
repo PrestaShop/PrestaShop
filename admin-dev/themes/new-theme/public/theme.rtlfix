@@ -52,3 +52,8 @@
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
 }
+
+/* Align order status dropdown correctly */
+.adminorders .dropdown-menu {
+  right: inherit;
+}

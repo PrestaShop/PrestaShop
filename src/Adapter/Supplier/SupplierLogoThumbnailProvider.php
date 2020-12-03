@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
-use HelperList;
-use ImageManager;
+use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
@@ -42,20 +41,20 @@ final class SupplierLogoThumbnailProvider implements ImageProviderInterface
     private $imageTagSourceParser;
 
     /**
-     * @var int
+     * @var ImageManager
      */
-    private $contextShopId;
+    private $imageManager;
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
-     * @param int $contextShopId
+     * @param ImageManager $imageManager
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
-        $contextShopId
+        ImageManager $imageManager
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextShopId = $contextShopId;
+        $this->imageManager = $imageManager;
     }
 
     /**
@@ -63,12 +62,11 @@ final class SupplierLogoThumbnailProvider implements ImageProviderInterface
      */
     public function getPath($supplierId)
     {
-        $pathToImage = _PS_IMG_DIR_ . 'su' . DIRECTORY_SEPARATOR . $supplierId . '.jpg';
-
-        $imageTag = ImageManager::thumbnail(
-            $pathToImage,
-            'supplier_mini_' . $supplierId . '_' . $this->contextShopId . '.jpg',
-            HelperList::LIST_THUMBNAIL_SIZE
+        $imageTag = $this->imageManager->getThumbnailForListing(
+            $supplierId,
+            'jpg',
+            'supplier',
+            _PS_SUPP_IMG_DIR_
         );
 
         return $this->imageTagSourceParser->parse($imageTag);

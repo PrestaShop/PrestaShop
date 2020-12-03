@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -56,60 +56,60 @@ class CustomizationCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'customization',
         'primary' => 'id_customization',
-        'fields' => array(
+        'fields' => [
             /* Classic fields */
-            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_address_delivery' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'quantity_refunded' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'quantity_returned' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'in_cart' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-        ),
-    );
+            'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_address_delivery' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'quantity_refunded' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'quantity_returned' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'in_cart' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_address_delivery' => array(
-                'xlink_resource' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_address_delivery' => [
+                'xlink_resource' => [
                     'resourceName' => 'addresses',
-                ),
-            ),
-            'id_cart' => array(
-                'xlink_resource' => array(
+                ],
+            ],
+            'id_cart' => [
+                'xlink_resource' => [
                     'resourceName' => 'carts',
-                ),
-            ),
-            'id_product' => array(
-                'xlink_resource' => array(
+                ],
+            ],
+            'id_product' => [
+                'xlink_resource' => [
                     'resourceName' => 'products',
-                ),
-            ),
-        ),
-        'associations' => array(
-            'customized_data_text_fields' => array(
+                ],
+            ],
+        ],
+        'associations' => [
+            'customized_data_text_fields' => [
                 'resource' => 'customized_data_text_field',
                 'virtual_entity' => true,
-                'fields' => array(
-                    'id_customization_field' => array('required' => true, 'xlink_resource' => 'product_customization_fields'),
-                    'value' => array(),
-                ),
-            ),
-            'customized_data_images' => array(
+                'fields' => [
+                    'id_customization_field' => ['required' => true, 'xlink_resource' => 'product_customization_fields'],
+                    'value' => [],
+                ],
+            ],
+            'customized_data_images' => [
                 'resource' => 'customized_data_image',
                 'virtual_entity' => true,
                 'setter' => false,
-                'fields' => array(
-                    'id_customization_field' => array('xlink_resource' => 'product_customization_fields'),
-                    'value' => array(),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id_customization_field' => ['xlink_resource' => 'product_customization_fields'],
+                    'value' => [],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * Get returned Customizations.
@@ -127,7 +127,7 @@ class CustomizationCore extends ObjectModel
 			WHERE ore.`id_order` = ' . (int) ($idOrder) . ' AND ord.`id_customization` != 0')) === false) {
             return false;
         }
-        $customizations = array();
+        $customizations = [];
         foreach ($result as $row) {
             $customizations[(int) ($row['id_customization'])] = $row;
         }
@@ -148,7 +148,7 @@ class CustomizationCore extends ObjectModel
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_cart` = ' . (int) ($idCart))) {
             return false;
         }
-        $customizations = array();
+        $customizations = [];
         foreach ($result as $row) {
             $customizations[(int) ($row['id_customization'])] = $row;
         }
@@ -205,7 +205,7 @@ class CustomizationCore extends ObjectModel
      */
     public static function countCustomizationQuantityByProduct($customizations)
     {
-        $total = array();
+        $total = [];
         foreach ($customizations as $customization) {
             $total[(int) $customization['id_order_detail']] = !isset($total[(int) $customization['id_order_detail']]) ? (int) $customization['quantity'] : $total[(int) $customization['id_order_detail']] + (int) $customization['quantity'];
         }
@@ -251,7 +251,7 @@ class CustomizationCore extends ObjectModel
      */
     public static function retrieveQuantitiesFromIds($idsCustomizations)
     {
-        $quantities = array();
+        $quantities = [];
 
         $inValues = '';
         foreach ($idsCustomizations as $key => $idCustomization) {
@@ -285,7 +285,7 @@ class CustomizationCore extends ObjectModel
      */
     public static function countQuantityByCart($idCart)
     {
-        $quantity = array();
+        $quantity = [];
 
         $results = Db::getInstance()->executeS('
 			SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
@@ -346,7 +346,7 @@ class CustomizationCore extends ObjectModel
 			WHERE `id_product` = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
 			AND cf.type = ' . (int) Product::CUSTOMIZE_TEXTFIELD)) {
-            return array();
+            return [];
         }
 
         return $results;
@@ -367,7 +367,7 @@ class CustomizationCore extends ObjectModel
 			WHERE `id_product` = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
 			AND cf.type = ' . (int) Product::CUSTOMIZE_FILE)) {
-            return array();
+            return [];
         }
 
         return $results;
@@ -385,7 +385,7 @@ class CustomizationCore extends ObjectModel
     {
         $cart = new Cart($this->id_cart);
         if (!Validate::isLoadedObject($cart)) {
-            WebserviceRequest::getInstance()->setError(500, $this->trans('Could not load cart id=%s', array($this->id_cart), 'Admin.Notifications.Error'), 137);
+            WebserviceRequest::getInstance()->setError(500, $this->trans('Could not load cart id=%s', [$this->id_cart], 'Admin.Notifications.Error'), 137);
 
             return false;
         }

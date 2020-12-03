@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -26,7 +26,7 @@
 	var current_level_percent_tab = {$current_level_percent|intval};
 	var current_level_tab = '{$current_level|intval}';
 	var gamification_level_tab = '{l s='Level' mod='gamification' js=1}';
-	$(document).ready( function () {	
+	$(document).ready( function () {
 		$('.gamification_badges_img').tooltip();
 		$('#gamification_progressbar_tab').progressbar({
 			change: function() {

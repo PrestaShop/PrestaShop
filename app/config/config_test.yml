@@ -22,3 +22,10 @@ swiftmailer:
 services:
     prestashop.bundle.routing.converter.cache:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        connections:
+            default:
+                dbname: "test_%database_name%"

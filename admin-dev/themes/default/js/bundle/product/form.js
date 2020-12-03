@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 $(document).ready(function() {
@@ -63,12 +63,6 @@ $(document).ready(function() {
     $(this).val(parsedValue);
   });
 
-  /** Attach date picker */
-  $('.datepicker').datetimepicker({
-    locale: full_language_code,
-    format: 'YYYY-MM-DD'
-  });
-
   /** tooltips should be hidden when we move to another tab */
   $('#form-nav').on('click','.nav-item', function clearTooltipsAndPopovers() {
     $('[data-toggle="tooltip"]').tooltip('hide');
@@ -76,6 +70,7 @@ $(document).ready(function() {
   });
 
   $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
+  form.switchLanguage($('#form_switch_language').val());
 });
 
 /**
@@ -84,10 +79,12 @@ $(document).ready(function() {
 function resetEditor() {
   const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each(function(index, textarea) {
-    const editor = tinyMCE.get(textarea.id);
-    if (editor) {
-      //Reset content to force refresh of editor
-      editor.setContent(editor.getContent());
+    if (window.tinyMCE) {
+      const editor = window.tinyMCE.get(textarea.id);
+      if (editor) {
+        //Reset content to force refresh of editor
+        editor.setContent(editor.getContent());
+      }
     }
   });
 }
@@ -759,11 +756,11 @@ var form = (function() {
     });
   }
 
-  function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
+  function switchLanguage(isoCode) {
+    $(`div.translations.tabbable > div > div.translation-field:not(.translation-label-${isoCode})`)
+      .removeClass('show active');
 
-    const langueTabSelector = 'div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code;
-    $(langueTabSelector).addClass('show active');
+    $(`div.translations.tabbable > div > div.translation-field.translation-label-${isoCode}`).addClass('show active');
     resetEditor();
   }
 
@@ -1155,15 +1152,6 @@ var attachmentProduct = (function() {
     'init': function() {
       var buttonSave = $('#form_step6_attachment_product_add');
       var buttonCancel = $('#form_step6_attachment_product_cancel');
-
-      /** check all attachments files */
-      $('#product-attachment-files-check').change(function() {
-        if ($(this).is(":checked")) {
-          $('#product-attachment-file input[type="checkbox"]').prop('checked', true);
-        } else {
-          $('#product-attachment-file input[type="checkbox"]').prop('checked', false);
-        }
-      });
 
       buttonCancel.click(function (){
         resetAttachmentForm();

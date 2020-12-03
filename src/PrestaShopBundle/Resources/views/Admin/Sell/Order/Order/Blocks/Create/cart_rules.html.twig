@@ -1,0 +1,89 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="card d-none" id="cart-rules-block">
+  <h3 class="card-header">
+    {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </h3>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-3">
+        <span class="float-right">{{ 'Search for a voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      </div>
+      <div class="col-4" id="cart-rules-search-block">
+        <div class="col p-0">
+          <input type="text" class="form-control" id="search-cart-rules-input">
+          <ul id="search-cart-rules-result-box" class="position-absolute bg-white w-100 form-control d-none list-unstyled"></ul>
+          <div class="text-danger align-top d-none" id="js-cart-rule-error-block">
+            <i class="material-icons form-error-icon">error_outline</i>
+            <span id="js-cart-rule-error-text"></span>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
+        <a
+          class="btn btn-primary"
+          id="js-add-cart-rule-btn"
+          href="{{ getAdminLink('AdminCartRules', true, {'liteDisplaying': 1, 'submitFormAjax': 1, 'addcart_rule': 1}) }}"
+        >
+          {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </div>
+
+    <table class="table d-none mt-2" id="cart-rules-table">
+      <thead>
+      <tr>
+        <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+        <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
+        <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script id="cart-rules-table-row-template" type="text/template">
+  <tr>
+    <td class="js-cart-rule-name"></td>
+    <td class="js-cart-rule-description"></td>
+    <td class="js-cart-rule-value"></td>
+    <td class="text-right">
+      <button class="btn btn-outline-danger js-cart-rule-delete-btn">{{ 'Remove'|trans({}, 'Admin.Global') }}</button>
+    </td>
+  </tr>
+</script>
+
+<script id="cart-rules-not-found-template" type="text/template">
+  <li>{{ 'No voucher was found'|trans({}, 'Admin.Orderscustomers.Feature') }}</li>
+</script>
+
+<script id="found-cart-rule-template" type="text/template">
+  <li data-cart-rule-id="" class="js-found-cart-rule found-cart-rule"></li>
+</script>
+

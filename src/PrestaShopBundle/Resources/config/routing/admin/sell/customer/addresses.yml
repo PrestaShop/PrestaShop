@@ -1,0 +1,93 @@
+admin_addresses_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:index
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses
+
+admin_addresses_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.address
+    redirectRoute: admin_addresses_index
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:submitFilteraddress
+
+admin_addresses_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:create
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:addaddress
+  options:
+    expose: true
+
+admin_addresses_edit:
+  path: /{addressId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:edit
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:updateaddress
+    _legacy_parameters:
+      id_address: addressId
+  requirements:
+    addressId: \d+
+  options:
+    expose: true
+
+admin_order_addresses_edit:
+  path: /order/{orderId}/{addressType}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editOrderAddress
+    _legacy_controller: AdminAddresses
+  requirements:
+    orderId: \d+
+    addressType: delivery|invoice
+  options:
+    expose: true
+
+admin_cart_addresses_edit:
+  path: /cart/{cartId}/{addressType}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editCartAddress
+    _legacy_controller: AdminAddresses
+  requirements:
+    cartId: \d+
+    addressType: delivery|invoice
+  options:
+    expose: true
+
+admin_addresses_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:deleteBulk
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:submitBulkdeleteaddress
+
+admin_addresses_delete:
+  path: /{addressId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:delete
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:deleteaddress
+    _legacy_parameters:
+      id_address: addressId
+  requirements:
+    addressId: \d+
+
+admin_addresses_save_required_fields:
+  path: /save-required-fields
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:saveRequiredFields
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:submitFields

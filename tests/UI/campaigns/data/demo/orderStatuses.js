@@ -1,0 +1,52 @@
+module.exports = {
+  Statuses: {
+    awaitingCheckPayment: {
+      id: 1,
+      status: 'Awaiting check payment',
+      sendEmailToCustomer: true,
+      delivery: false,
+      invoice: false,
+      emailTemplate: 'cheque',
+    },
+    paymentAccepted: {
+      id: 2,
+      status: 'Payment accepted',
+      sendEmailToCustomer: true,
+      delivery: false,
+      invoice: true,
+      emailTemplate: 'payment',
+    },
+    shipped: {
+      id: 4,
+      status: 'Shipped',
+      sendEmailToCustomer: true,
+      delivery: true,
+      invoice: true,
+      emailTemplate: 'shipped',
+    },
+    canceled: {
+      id: 6,
+      status: 'Canceled',
+      sendEmailToCustomer: true,
+      delivery: false,
+      invoice: false,
+      emailTemplate: 'order_canceled',
+    },
+    paymentError: {
+      id: 8,
+      status: 'Payment error',
+      sendEmailToCustomer: true,
+      delivery: false,
+      invoice: false,
+      emailTemplate: 'payment_error',
+    },
+    awaitingBankWire: {
+      id: 10,
+      status: 'Awaiting bank wire payment',
+      sendEmailToCustomer: true,
+      delivery: false,
+      invoice: false,
+      emailTemplate: 'bankwire',
+    },
+  },
+};

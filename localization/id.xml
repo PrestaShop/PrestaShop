@@ -8,13 +8,13 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="PPN ID 10%" rate="10" />
-		<tax id="2" name="PPN ID 5%" rate="5" />
+		<tax id="2" name="PPN ID 0%" rate="0" />
 		
 		<taxRulesGroup name="ID Standard Rate (10%)">
 			<taxRule iso_code_country="id" id_tax="1" />
 		</taxRulesGroup>
 		
-		<taxRulesGroup name="ID Reduced Rate (5%)">
+		<taxRulesGroup name="ID Zero Rate (0%)">
 			<taxRule iso_code_country="id" id_tax="2" />
 		</taxRulesGroup>
 	</taxes>

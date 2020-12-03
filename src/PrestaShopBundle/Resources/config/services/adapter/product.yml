@@ -21,7 +21,11 @@ services:
 
     prestashop.adapter.admin.wrapper.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
-        arguments: ["@translator", "@prestashop.adapter.legacy.context"]
+        arguments:
+            - "@translator"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
+            - "@prestashop.core.localization.locale.context_locale"
+            - "@prestashop.utils.float_parser"
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
@@ -31,3 +35,33 @@ services:
 
     prestashop.adapter.product.list_parameters_updater:
         class: 'PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater'
+
+    prestashop.adapter.product.command_handler.add_category_to_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand }
+
+    prestashop.adapter.product.command_handler.update_product_status_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusCommandHandler
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
+
+    prestashop.adapter.product.query_handler.search_products:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@prestashop.core.localization.locale.context_locale'
+            - '@prestashop.adapter.tools'
+            - '@prestashop.adapter.data_provider.currency'
+            - '@prestashop.adapter.context_state_manager'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
+
+    prestashop.adapter.product.command_handler.get_product_is_enabled_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductIsEnabledHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled

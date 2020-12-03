@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotUpdateContactExcep
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -90,26 +89,14 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
             }
 
             if (false === $entity->update()) {
-                throw new CannotUpdateContactException(
-                    sprintf(
-                        'Unable to update contact object with id %s',
-                        $command->getContactId()->getValue()
-                    )
-                );
+                throw new CannotUpdateContactException(sprintf('Unable to update contact object with id %s', $command->getContactId()->getValue()));
             }
 
             if (null !== $command->getShopAssociation()) {
                 $this->associateWithShops($entity, $command->getShopAssociation());
             }
         } catch (PrestaShopException $e) {
-            throw new ContactException(
-                sprintf(
-                    'An unexpected error occurred when retrieving contact with id %s',
-                    var_export($command->getContactId()->getValue(), true)
-                ),
-                0,
-                $e
-            );
+            throw new ContactException(sprintf('An unexpected error occurred when retrieving contact with id %s', var_export($command->getContactId()->getValue(), true)), 0, $e);
         }
     }
 
@@ -126,10 +113,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
             $errors = $this->validator->validate($description, new CleanHtml());
 
             if (0 !== count($errors)) {
-                throw new ContactConstraintException(
-                    sprintf('Given description "%s" contains javascript events or script tags', $description),
-                    ContactConstraintException::INVALID_DESCRIPTION
-                );
+                throw new ContactConstraintException(sprintf('Given description "%s" contains javascript events or script tags', $description), ContactConstraintException::INVALID_DESCRIPTION);
             }
         }
     }
@@ -146,10 +130,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
         $errors = $this->validator->validate($localisedTitle, new DefaultLanguage());
 
         if (0 !== count($errors)) {
-            throw new ContactConstraintException(
-                'Title field is not found for default language',
-                ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE
-            );
+            throw new ContactConstraintException('Title field is not found for default language', ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE);
         }
     }
 
@@ -169,12 +150,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
         $entity = new Contact($contactId);
 
         if (0 >= $entity->id) {
-            throw new ContactNotFoundException(
-                sprintf(
-                    'Contact object with id %s was not found',
-                    var_export($contactId, true)
-                )
-            );
+            throw new ContactNotFoundException(sprintf('Contact object with id %s was not found', var_export($contactId, true)));
         }
 
         return $entity;

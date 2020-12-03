@@ -1,6 +1,6 @@
 <phpunit bootstrap="bootstrap.php"
-         color="true"
          stopOnFailure="true"
+         backupGlobals="true"
 >
   <php>
     <server name="KERNEL_CLASS" value="AppKernel" />

@@ -280,6 +280,10 @@ $color-active: #25B9D7;
   margin-left: 0.9375rem;
 }
 
+.d-flex.tree-name.disable{
+  opacity: 0.3;
+}
+
 #jetsContent {
   form {
     margin-bottom: 3.125rem;
