@@ -1426,9 +1426,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $productName
      *
-     * @return int
+     * @throws RuntimeException
+     *
+     * @return FoundProduct
      */
-    private function getProductByName(string $productName)
+    private function getProductByName(string $productName): FoundProduct
     {
         $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 

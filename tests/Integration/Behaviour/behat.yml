@@ -90,6 +90,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\PriceDisplayMethodConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
         currency:
             paths:
                 - %paths.base%/Features/Scenario/Currency
@@ -99,6 +100,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
         cldr:
             paths:
                 - %paths.base%/Features/Scenario/CLDR
