@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-odd-tax
 @reset-database-before-feature
+@reset-context-before-feature
 @clear-cache-before-feature
 @order-odd-tax
 Feature: Order from Back Office (BO)
