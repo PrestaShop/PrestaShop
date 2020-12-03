@@ -66,7 +66,7 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
             // @todo add $shop['shopGroup']['color'] parameter when PR 20125 is merged
             $result[] = new FoundShop(
                 $shop['id'],
-                !empty($shop['color']) ? $shop['color'] : null,
+                !empty($shop['color']) ? $shop['color'] : '',
                 $shop['name'],
                 $shop['shopGroup']['id'],
                 $shop['shopGroup']['name']
