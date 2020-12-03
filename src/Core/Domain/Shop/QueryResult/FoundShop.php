@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult;
 
 /**
@@ -66,11 +68,11 @@ class FoundShop
      * @param string $groupName
      */
     public function __construct(
-        $id,
-        $color,
-        $name,
-        $groupId,
-        $groupName
+        int $id,
+        string $color,
+        string $name,
+        int $groupId,
+        string $groupName
     ) {
         $this->id = $id;
         $this->color = $color;
