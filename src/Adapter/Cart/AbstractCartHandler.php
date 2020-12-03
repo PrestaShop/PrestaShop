@@ -26,12 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
+use Address;
 use Cart;
+use Configuration;
+use Country;
+use Currency;
+use Customer;
+use Language;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShopException;
+use Shop;
 
 /**
  * Provides reusable methods for cart handlers
@@ -60,5 +68,39 @@ abstract class AbstractCartHandler
         }
 
         return $cart;
+    }
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     * @param Cart $cart
+     */
+    protected function setCartContext(ContextStateManager $contextStateManager, Cart $cart): void
+    {
+        $contextStateManager
+            ->setCart($cart)
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCountry($this->getCartTaxCountry($cart))
+            ->setShop(new Shop($cart->id_shop))
+        ;
+        $contextStateManager->saveCurrentContext();
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return Country
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    protected function getCartTaxCountry(Cart $cart): Country
+    {
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
+        $taxAddress = new Address($taxAddressId);
+
+        return new Country($taxAddress->id_country);
     }
 }
