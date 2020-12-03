@@ -71,6 +71,7 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
             ->setCustomer(new Customer($cart->id_customer))
             ->setShop(new Shop($cart->id_shop))
         ;
+        $this->contextStateManager->saveCurrentContext();
 
         try {
             $cart->setDeliveryOption([

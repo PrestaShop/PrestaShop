@@ -92,6 +92,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             ->setCountry($this->getTaxCountry($cart))
             ->setShop(new Shop($cart->id_shop))
         ;
+        $this->contextStateManager->saveCurrentContext();
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
