@@ -53,7 +53,7 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
     }
 
     /**
-     * @Transform table: combination stock detail,value
+     * @Transform table:combination stock detail,value
      *
      * @param TableNode $tableNode
      *
