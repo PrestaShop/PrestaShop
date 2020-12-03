@@ -1,11 +1,11 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-options
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-details
 @reset-database-before-feature
 @clear-cache-before-feature
 @update-combination
-@update-combination-options
-Feature: Update product combination options in Back Office (BO)
+@update-combination-details
+Feature: Update product combination details in Back Office (BO)
   As an employee
-  I need to be able to update product combination options from BO
+  I need to be able to update product combination details from BO
 
   Background:
     Given language with iso code "en" is the default one
@@ -19,7 +19,7 @@ Feature: Update product combination options in Back Office (BO)
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
 
-  Scenario: I update combination options:
+  Scenario: I update combination details:
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | is_virtual  | false             |
@@ -35,47 +35,47 @@ Feature: Update product combination options in Back Office (BO)
       | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-    And combination "product1SWhite" should have following options:
-      | combination option | value |
+    And combination "product1SWhite" should have following details:
+      | combination detail | value |
       | ean13              |       |
       | isbn               |       |
       | mpn                |       |
       | reference          |       |
       | upc                |       |
-    When I update combination "product1SWhite" options with following details:
+    When I update combination "product1SWhite" details with following values:
       | ean13     | 978020137962      |
       | isbn      | 978-3-16-148410-0 |
       | mpn       | mpn1              |
       | reference | ref1              |
       | upc       | 72527273070       |
-    Then combination "product1SWhite" should have following options:
-      | combination option | value             |
+    Then combination "product1SWhite" should have following details:
+      | combination detail | value             |
       | ean13              | 978020137962      |
       | isbn               | 978-3-16-148410-0 |
       | mpn                | mpn1              |
       | reference          | ref1              |
       | upc                | 72527273070       |
-    When I update combination "product1SWhite" options with following details:
+    When I update combination "product1SWhite" details with following values:
       | ean13     | 978020137962      |
       | isbn      | 978-3-16-148410-0 |
       | mpn       |                   |
       | reference | ref1              |
       | upc       |                   |
-    Then combination "product1SWhite" should have following options:
-      | combination option | value             |
+    Then combination "product1SWhite" should have following details:
+      | combination detail | value             |
       | ean13              | 978020137962      |
       | isbn               | 978-3-16-148410-0 |
       | mpn                |                   |
       | reference          | ref1              |
       | upc                |                   |
-    When I update combination "product1SWhite" options with following details:
+    When I update combination "product1SWhite" details with following values:
       | ean13     |  |
       | isbn      |  |
       | mpn       |  |
       | reference |  |
       | upc       |  |
-    Then combination "product1SWhite" should have following options:
-      | combination option | value |
+    Then combination "product1SWhite" should have following details:
+      | combination detail | value |
       | ean13              |       |
       | isbn               |       |
       | mpn                |       |

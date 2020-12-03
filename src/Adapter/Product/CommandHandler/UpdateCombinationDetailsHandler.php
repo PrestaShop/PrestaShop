@@ -30,14 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationOptionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationOptionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 
 /**
- * Handles @see UpdateCombinationOptionsCommand using legacy object model
+ * Handles @see UpdateCombinationDetailsCommand using legacy object model
  */
-final class UpdateCombinationOptionsHandler implements UpdateCombinationOptionsHandlerInterface
+final class UpdateCombinationDetailsHandler implements UpdateCombinationDetailsHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -56,7 +56,7 @@ final class UpdateCombinationOptionsHandler implements UpdateCombinationOptionsH
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCombinationOptionsCommand $command): void
+    public function handle(UpdateCombinationDetailsCommand $command): void
     {
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
@@ -70,11 +70,11 @@ final class UpdateCombinationOptionsHandler implements UpdateCombinationOptionsH
 
     /**
      * @param Combination $combination
-     * @param UpdateCombinationOptionsCommand $command
+     * @param UpdateCombinationDetailsCommand $command
      *
      * @return string[]|array<string, int[]>
      */
-    private function fillUpdatableProperties(Combination $combination, UpdateCombinationOptionsCommand $command): array
+    private function fillUpdatableProperties(Combination $combination, UpdateCombinationDetailsCommand $command): array
     {
         //@todo: ps_stock table contains properties(reference, ean13 etc.) that should be updated too depending if we still support ADVANCED_STOCK_MANAGEMENT
         //  check Product::updateAttribute L 2165

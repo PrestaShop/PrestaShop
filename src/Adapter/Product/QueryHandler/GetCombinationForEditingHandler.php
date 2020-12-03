@@ -33,8 +33,8 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 
 /**
@@ -64,7 +64,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         $combination = $this->combinationRepository->get($query->getCombinationId());
 
         return new CombinationForEditing(
-            $this->getOptions($combination),
+            $this->getDetails($combination),
             $this->getPrices($combination)
         );
     }
@@ -72,11 +72,11 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     /**
      * @param Combination $combination
      *
-     * @return CombinationOptions
+     * @return CombinationDetails
      */
-    private function getOptions(Combination $combination): CombinationOptions
+    private function getDetails(Combination $combination): CombinationDetails
     {
-        return new CombinationOptions(
+        return new CombinationDetails(
             $combination->ean13,
             $combination->isbn,
             $combination->mpn,

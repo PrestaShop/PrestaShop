@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
 /**
- * Transfers combination options information
+ * Transfers combination details
  */
-class CombinationOptions
+class CombinationDetails
 {
     /**
      * @var string

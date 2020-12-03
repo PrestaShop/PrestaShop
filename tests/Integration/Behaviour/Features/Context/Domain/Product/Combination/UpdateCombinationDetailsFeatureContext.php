@@ -30,36 +30,36 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationOptionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureContext
+class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
-     * @When I update combination :combinationReference options with following details:
+     * @When I update combination :combinationReference details with following values:
      *
      * @param string $combinationReference
      * @param TableNode $tableNode
      */
-    public function updateOptions(string $combinationReference, TableNode $tableNode): void
+    public function updateDetails(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationOptionsCommand($this->getSharedStorage()->get($combinationReference));
+        $command = new UpdateCombinationDetailsCommand($this->getSharedStorage()->get($combinationReference));
 
         $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
     }
 
     /**
-     * @Then combination :combinationReference should have following options:
+     * @Then combination :combinationReference should have following details:
      *
      * @param string $combinationReference
-     * @param CombinationOptions $expectedOptions
+     * @param CombinationDetails $expectedOptions
      */
-    public function assertOptions(string $combinationReference, CombinationOptions $expectedOptions): void
+    public function assertOptions(string $combinationReference, CombinationDetails $expectedOptions): void
     {
         $optionPropertyNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualOptions = $this->getCombinationForEditing($combinationReference)->getOptions();
+        $actualOptions = $this->getCombinationForEditing($combinationReference)->getDetails();
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($optionPropertyNames as $propertyName) {
@@ -72,17 +72,17 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
     }
 
     /**
-     * @Transform table:combination option,value
+     * @Transform table:combination detail,value
      *
      * @param TableNode $tableNode
      *
-     * @return CombinationOptions
+     * @return CombinationDetails
      */
-    public function transformOptions(TableNode $tableNode): CombinationOptions
+    public function transformOptions(TableNode $tableNode): CombinationDetails
     {
         $options = $tableNode->getRowsHash();
 
-        return new CombinationOptions(
+        return new CombinationDetails(
             $options['ean13'],
             $options['isbn'],
             $options['mpn'],
@@ -92,10 +92,10 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
     }
 
     /**
-     * @param UpdateCombinationOptionsCommand $command
+     * @param UpdateCombinationDetailsCommand $command
      * @param array $dataRows
      */
-    private function fillCommand(UpdateCombinationOptionsCommand $command, array $dataRows): void
+    private function fillCommand(UpdateCombinationDetailsCommand $command, array $dataRows): void
     {
         if (isset($dataRows['ean13'])) {
             $command->setEan13($dataRows['ean13']);
