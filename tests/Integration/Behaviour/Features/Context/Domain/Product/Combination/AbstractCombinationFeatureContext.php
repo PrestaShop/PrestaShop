@@ -28,12 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureContext
@@ -59,34 +57,11 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      * @param string $combinationReference
      *
      * @return CombinationForEditing
-     *
-     * @throws CombinationConstraintException
      */
     protected function getCombinationForEditing(string $combinationReference): CombinationForEditing
     {
         return $this->getQueryBus()->handle(new GetCombinationForEditing(
             $this->getSharedStorage()->get($combinationReference)
         ));
-    }
-
-    /**
-     * @param CombinationForEditing $combinationForEditing
-     * @param string $propertyName
-     *
-     * @return mixed
-     */
-    protected function extractValueFromCombinationForEditing(CombinationForEditing $combinationForEditing, string $propertyName)
-    {
-        $pathsByNames = [
-            'ean13' => 'options.ean13',
-            'isbn' => 'options.isbn',
-            'mpn' => 'options.mpn',
-            'reference' => 'options.reference',
-            'upc' => 'options.upc',
-        ];
-
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-
-        return $propertyAccessor->getValue($combinationForEditing, $pathsByNames[$propertyName]);
     }
 }

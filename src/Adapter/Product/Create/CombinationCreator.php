@@ -28,10 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Create;
 
-use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -125,7 +123,6 @@ class CombinationCreator
      *
      * @return CombinationId[]
      *
-     * @throws CombinationConstraintException
      * @throws CoreException
      */
     private function addCombinations(Product $product, Traversable $generatedCombinations): array
@@ -151,7 +148,6 @@ class CombinationCreator
      * @return CombinationId
      *
      * @throws CoreException
-     * @throws CombinationConstraintException
      */
     private function persistCombination(int $productId, array $generatedCombination, bool $isDefault): CombinationId
     {

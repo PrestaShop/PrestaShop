@@ -29,11 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Combination;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 
 /**
  * Handles @see GetCombinationForEditing query using legacy object model
@@ -62,7 +64,8 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         $combination = $this->combinationRepository->get($query->getCombinationId());
 
         return new CombinationForEditing(
-            $this->getOptions($combination)
+            $this->getOptions($combination),
+            $this->getPrices($combination)
         );
     }
 
@@ -79,6 +82,21 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             $combination->mpn,
             $combination->reference,
             $combination->upc
+        );
+    }
+
+    /**
+     * @param Combination $combination
+     *
+     * @return CombinationPrices
+     */
+    private function getPrices(Combination $combination): CombinationPrices
+    {
+        return new CombinationPrices(
+            new DecimalNumber($combination->ecotax),
+            new DecimalNumber($combination->price),
+            new DecimalNumber($combination->unit_price_impact),
+            new DecimalNumber($combination->wholesale_price)
         );
     }
 }
