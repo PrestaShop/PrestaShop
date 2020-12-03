@@ -483,6 +483,25 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I use a voucher :voucherCode on the cart :cartReference
+     *
+     * @param string $voucherCode
+     * @param string $cartReference
+     */
+    public function useDiscountByCodeOnCart(string $voucherCode, string $cartReference)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cartRuleId = SharedStorage::getStorage()->get($voucherCode);
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                $cartId,
+                $cartRuleId
+            )
+        );
+    }
+
+    /**
      * @When I use a voucher :voucherCode which provides a gift product :productName on the cart :cartReference
      *
      * @param string $voucherCode
@@ -968,6 +987,18 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $minQuantity,
                 $this->lastException->getMinimalQuantity()
             ));
+        }
+    }
+
+    /**
+     * @Then cart :cartReference total with tax included should be :expectedTotal
+     */
+    public function totalCartWithTaxShouldBe(string $cartReference, string $expectedTotal)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+        $cartTotal = $cartInfo->getSummary()->getTotalPriceWithTaxes();
+        if ($cartTotal !== $expectedTotal) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
     }
 }
