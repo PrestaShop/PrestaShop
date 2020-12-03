@@ -673,8 +673,3 @@ DELETE FROM `PREFIX_hook` WHERE name = 'actionFrontControllerAfterInit';
 
 /* Update wrong hook alias */
 UPDATE `PREFIX_hook_alias` SET name = 'displayHeader', alias = 'Header' WHERE name = 'Header' AND alias = 'displayHeader';
-
-/* add id_order in cart */
-ALTER TABLE `PREFIX_cart`
-    ADD `id_order` INT(10) UNSIGNED NULL DEFAULT NULL,
-    ADD INDEX (id_order);
