@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler\SearchShopsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShopBundle\Entity\Repository\ShopRepository;
 
 /**
@@ -62,15 +63,14 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
         $result = [];
 
         foreach ($shopList as $shop) {
-            $result['shops'][] = [
-                'id' => $shop['id'],
-                'color' => !empty($shop['color']) ? $shop['color'] : null,
-                'name' => $shop['name'],
-                'group_id' => $shop['shopGroup']['id'],
-                // to be uncommented once PR 20125 is merged
-                // 'group_color' => $shop['shopGroup']['color'],
-                'group_name' => $shop['shopGroup']['name'],
-            ];
+            // @todo add $shop['shopGroup']['color'] parameter when PR 20125 is merged
+            $result['shops'][] = new FoundShop(
+                $shop['id'],
+                !empty($shop['color']) ? $shop['color'] : null,
+                $shop['name'],
+                $shop['shopGroup']['id'],
+                $shop['shopGroup']['name']
+            );
         }
 
         return $result;
