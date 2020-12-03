@@ -3527,7 +3527,11 @@ class ProductCore extends ObjectModel
         }
 
         // Group reduction
-        if (!$specific_price && $use_group_reduction) {
+        // if there is no specificPrice or specificPrice exists but not applied to a customer or cart, then apply group reduction
+        if (
+            (!$specific_price || (empty($specific_price['id_cart']) && empty($specific_price['id_customer'])))
+            && $use_group_reduction
+        ) {
             $reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
             if ($reduction_from_category !== false) {
                 $group_reduction = $price * (float) $reduction_from_category;
