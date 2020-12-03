@@ -177,11 +177,11 @@ class EntityTranslator implements EntityTranslatorInterface
     protected function shopFieldExists(string $tableNameSql): bool
     {
         $columns = $this->db->executeS(
-            sprintf('SHOW COLUMNS FROM `%s`', $tableNameSql)
+            sprintf('SHOW COLUMNS FROM `%s`', bqSQL($tableNameSql))
         );
 
         foreach ($columns as $column) {
-            if ($column['Field'] == 'id_shop') {
+            if ($column['Field'] === 'id_shop') {
                 return true;
             }
         }
