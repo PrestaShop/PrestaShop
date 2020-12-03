@@ -329,7 +329,7 @@ class LocalizationPackCore
                 /** @var Language $defaultLang */
                 $defaultLang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
-                $currency = $this->getSoftDeletedByIsoCodeOrCreate((string) $attributes['iso_code']);
+                $currency = $this->getExistingByIsoCodeOrCreate((string) $attributes['iso_code']);
                 $currency->name = (string) $attributes['name'];
                 $currency->iso_code = (string) $attributes['iso_code'];
                 $currency->iso_code_num = (int) $attributes['iso_code_num'];
@@ -629,7 +629,7 @@ class LocalizationPackCore
      *
      * @throws PrestaShopDatabaseException
      */
-    private function getSoftDeletedByIsoCodeOrCreate(string $isoCode): Currency
+    private function getExistingByIsoCodeOrCreate(string $isoCode): Currency
     {
         $currencies = Currency::findAllInstalled();
         foreach ($currencies as $currency) {
