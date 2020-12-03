@@ -100,6 +100,8 @@ class ContextMocker
         ObjectModel::resetStaticCache();
         Tools::resetStaticCache();
 
+        Cache::clean('*');
+
         $this->contextBackup = Context::getContext();
         $context             = clone $this->contextBackup;
         Context::setInstanceForTesting($context);
@@ -117,6 +119,7 @@ class ContextMocker
             ? 'https://' : 'http://';
         $context->link     = new Link($protocol_link, $protocol_content);
         $context->currency = new Currency(1, 1, 1);
+        $context->cart     = new Cart();
         $context->smarty   = $smarty;
 
         return $this;

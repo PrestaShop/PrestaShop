@@ -65,6 +65,7 @@ use Image;
 use ImageType;
 use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use LegacyTests\Unit\ContextMocker;
 use Mail;
 use Manufacturer;
 use Message;
@@ -80,6 +81,7 @@ use OrderSlip;
 use OrderState;
 use Pack;
 use Page;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Product;
 use ProductDownload;
 use ProductSupplier;
@@ -128,6 +130,11 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      * @var AppKernel
      */
     protected static $kernel;
+
+    /**
+     * @var ContextMocker
+     */
+    protected static $contextMocker;
 
     /**
      * @BeforeSuite
@@ -193,6 +200,34 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function clearCacheAfterFeature()
     {
         self::clearCache();
+    }
+
+    /**
+     * @BeforeScenario @reset-context-after-scenario
+     */
+    public static function mockContextBeforeScenario()
+    {
+        /** @var LegacyContext $localeRepository */
+        $legacyContext = self::getContainer()->get('prestashop.adapter.legacy.context');
+        /*
+         * We need to call this before initializing the ContextMocker because this method forcefully init
+         * the shop context thus overriding the expected value
+         */
+        $legacyContext->getContext();
+
+        self::$contextMocker = new ContextMocker();
+        self::$contextMocker->mockContext();
+    }
+
+    /**
+     * @AfterScenario @reset-context-after-scenario
+     */
+    public static function resetContextAfterScenario()
+    {
+        if (empty(self::$contextMocker)) {
+            throw new \Exception('Context was not mocked');
+        }
+        self::$contextMocker->resetContext();
     }
 
     /**

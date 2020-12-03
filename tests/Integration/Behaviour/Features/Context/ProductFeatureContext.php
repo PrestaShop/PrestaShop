@@ -31,9 +31,11 @@ use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Combination;
 use Configuration;
+use Context;
 use Customization;
 use CustomizationField;
 use Pack;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Exception;
 use Product;
 use RuntimeException;
 use SpecificPrice;
@@ -83,13 +85,39 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /* PRODUCTS */
 
     /**
-     * @param $productName
+     * @param string $productName
      *
      * @return Product
      */
-    public function getProductWithName($productName)
+    public function getProductWithName(string $productName)
     {
-        return $this->products[$productName];
+        $idShop = (int) Context::getContext()->shop->id !== (int) Configuration::get('PS_SHOP_DEFAULT') ?
+            (string) Context::getContext()->shop->id : '';
+
+        return $this->products[$productName . $idShop];
+    }
+
+    /**
+     * @param Product $product
+     */
+    private function addProduct(Product $product): void
+    {
+        $idShop = (int) Context::getContext()->shop->id !== (int) Configuration::get('PS_SHOP_DEFAULT') ?
+            (string) Context::getContext()->shop->id : '';
+        $this->products[$product->name . $idShop] = $product;
+    }
+
+    /**
+     * @param string $productName
+     *
+     * @return bool
+     */
+    private function hasProduct(string $productName): bool
+    {
+        $idShop = (int) Context::getContext()->shop->id !== (int) Configuration::get('PS_SHOP_DEFAULT') ?
+            (string) Context::getContext()->shop->id : '';
+
+        return isset($this->products[$productName . $idShop]);
     }
 
     /**
@@ -117,7 +145,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function iAddProductNamedInMyCartWithQuantity($productQuantity, $productName)
     {
         $this->checkProductWithNameExists($productName);
-        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id);
+        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->getProductWithName($productName)->id);
         if (!$result) {
             throw new RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
@@ -130,7 +158,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $expected = $expectedStr == 'OK';
-        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id, null, false, $operator);
+        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->getProductWithName($productName)->id, null, false, $operator);
         if ($expected != $result) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $expected, $result));
         }
@@ -142,12 +170,12 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function quantityOfProductNamedInMyCartShouldBe($productQuantity, $productName, $packItemsIncluded = null)
     {
         if ($packItemsIncluded != 'including') {
-            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, null);
+            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, null, null);
             if ($productQuantity != $nbProduct['quantity']) {
                 throw new RuntimeException(sprintf('Expects %s, got %s instead (excluding items in pack)', $productQuantity, $nbProduct['quantity']));
             }
         } else {
-            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, null);
+            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, null, null);
             if ($productQuantity != $nbProduct['deep_quantity']) {
                 throw new RuntimeException(sprintf('Expects %s, got %s instead (including items in pack)', $productQuantity, $nbProduct['deep_quantity']));
             }
@@ -159,9 +187,11 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
-        $this->checkProductWithNameExists($productName);
+        if (!$this->hasProduct($productName)) {
+            throw new Exception('Product named "' . $productName . '" doesn\'t exist');
+        }
         // Be careful this counts the amount present in the cart as well event if the stock has not been updated yet
-        $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), null);
+        $nbProduct = Product::getQuantity($this->getProductWithName($productName)->id, null, null, $this->getCurrentCart(), null);
         if ($productQuantity != $nbProduct) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
         }
@@ -172,8 +202,10 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function actualQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
-        $this->checkProductWithNameExists($productName);
-        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, null);
+        if (!$this->hasProduct($productName)) {
+            throw new Exception('Product named "' . $productName . '" doesn\'t exist');
+        }
+        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->getProductWithName($productName)->id, null);
         if ($productQuantity != $nbProduct) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
         }
@@ -186,7 +218,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
-        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->getProductWithName($productName)->id, $this->combinations[$productName][$combinationName]->id);
         if ($combinationQuantity != $nbProduct) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct));
         }
@@ -197,7 +229,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function iAmNotAbleToAddProductNamedInMyCartWithQuantity($productQuantity, $productName)
     {
-        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id);
+        $result = $this->getCurrentCart()->updateQty($productQuantity, $this->getProductWithName($productName)->id);
         if ($result) {
             throw new RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
@@ -205,7 +237,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 
     protected function createProduct($productName, $price, $productQuantity)
     {
-        if (isset($this->products[$productName])) {
+        if ($this->hasProduct($productName)) {
             throw new \Exception('Product named "' . $productName . '" was already added in fixtures');
         }
         $product = new Product();
@@ -214,13 +246,14 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $product->quantity = $productQuantity;
         // Use same default tax rules group as products from fixtures to have the same tax rate
         $product->id_tax_rules_group = TaxRulesGroup::getIdByName('US-FL Rate (6%)');
+        $product->id_shop_default = (int) Context::getContext()->shop->id;
         $productAdded = $product->add();
         if (!$productAdded) {
             throw new RuntimeException('Could not add product in database');
         }
         StockAvailable::setQuantity((int) $product->id, 0, $product->quantity);
 
-        $this->products[$productName] = $product;
+        $this->addProduct($product);
 
         // Fix issue pack cache is set when adding products.
         Pack::resetStaticCache();
@@ -247,11 +280,11 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameIsOutOfStock($productName)
     {
         $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->quantity = 0;
-        $this->products[$productName]->out_of_stock = 0;
-        $this->products[$productName]->save();
-        StockAvailable::setQuantity($this->products[$productName]->id, 0, 0);
-        StockAvailable::setProductOutOfStock((int) $this->products[$productName]->id, 0);
+        $this->getProductWithName($productName)->quantity = 0;
+        $this->getProductWithName($productName)->out_of_stock = 0;
+        $this->getProductWithName($productName)->save();
+        StockAvailable::setQuantity($this->getProductWithName($productName)->id, 0, 0);
+        StockAvailable::setProductOutOfStock((int) $this->getProductWithName($productName)->id, 0);
     }
 
     /**
@@ -263,8 +296,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductWeight(string $productName, float $weight)
     {
         $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->weight = $weight;
-        $this->products[$productName]->save();
+        $this->getProductWithName($productName)->weight = $weight;
+        $this->getProductWithName($productName)->save();
     }
 
     /**
@@ -293,8 +326,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductMinimalQuantity(string $productName, int $minimalQty)
     {
         $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->minimal_quantity = $minimalQty;
-        $this->products[$productName]->save();
+        $this->getProductWithName($productName)->minimal_quantity = $minimalQty;
+        $this->getProductWithName($productName)->save();
     }
 
     /**
@@ -305,7 +338,20 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameCanBeOrderedOutOfStock($productName)
     {
         $this->checkProductWithNameExists($productName);
-        StockAvailable::setProductOutOfStock($this->products[$productName]->id, 1);
+        StockAvailable::setProductOutOfStock($this->getProductWithName($productName)->id, 1);
+    }
+
+    /**
+     * @Given /^product "(.+)" cannot be ordered out of stock$/
+     *
+     * @param string $productName
+     */
+    public function productWithNameCannotBeOrderedOutOfStock($productName)
+    {
+        if (!$this->hasProduct($productName)) {
+            throw new Exception('Product named "' . $productName . '" doesn\'t exist');
+        }
+        StockAvailable::setProductOutOfStock($this->getProductWithName($productName)->id, 0);
     }
 
     /**
@@ -327,7 +373,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
             throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
         }
         $specificPrice = new SpecificPrice();
-        $specificPrice->id_product = $this->products[$productName]->id;
+        $specificPrice->id_product = $this->getProductWithName($productName)->id;
         $specificPrice->price = -1;
         $specificPrice->reduction = $specificPriceDiscount;
         $specificPrice->reduction_type = 'amount';
@@ -353,7 +399,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
             throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
         }
         $specificPrice = new SpecificPrice();
-        $specificPrice->id_product = $this->products[$productName]->id;
+        $specificPrice->id_product = $this->getProductWithName($productName)->id;
         $specificPrice->price = -1;
         $specificPrice->reduction = $specificPricePercent / 100;
         $specificPrice->reduction_type = 'percentage';
@@ -430,8 +476,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
     {
         $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->id_tax_rules_group = $taxRuleGroupId;
-        $this->products[$productName]->save();
+        $this->getProductWithName($productName)->id_tax_rules_group = $taxRuleGroupId;
+        $this->getProductWithName($productName)->save();
     }
 
     /* COMBINATION */
@@ -446,10 +492,10 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         }
         $combination = new Combination();
         $combination->reference = $combinationName;
-        $combination->id_product = $this->products[$productName]->id;
+        $combination->id_product = $this->getProductWithName($productName)->id;
         $combination->quantity = $combinationQuantity;
         $combination->add();
-        StockAvailable::setQuantity((int) $this->products[$productName]->id, $combination->id, $combination->quantity);
+        StockAvailable::setQuantity((int) $this->getProductWithName($productName)->id, $combination->id, $combination->quantity);
         $this->combinations[$productName][$combinationName] = $combination;
     }
 
@@ -475,7 +521,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasCombinationsWithFollowingDetails($productName, TableNode $table)
     {
         $this->checkProductWithNameExists($productName);
-        $productId = (int) $this->products[$productName]->id;
+        $productId = (int) $this->getProductWithName($productName)->id;
         $combinationsList = $table->getColumnsHash();
         $attributesList = \Attribute::getAttributes((int) Configuration::get('PS_LANG_DEFAULT'));
         foreach ($combinationsList as $combinationDetails) {
@@ -509,7 +555,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
-        $nbProduct = Product::getQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null, $this->getCurrentCart(), null);
+        $nbProduct = Product::getQuantity($this->getProductWithName($productName)->id, $this->combinations[$productName][$combinationName]->id, null, $this->getCurrentCart(), null);
         if ($combinationQuantity != $nbProduct) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct));
         }
@@ -522,7 +568,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
-        $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->getProductWithName($productName)->id, $this->combinations[$productName][$combinationName]->id);
         if (!$result) {
             throw new RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
@@ -535,7 +581,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
-        $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->getProductWithName($productName)->id, $this->combinations[$productName][$combinationName]->id);
         if ($result) {
             throw new RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
@@ -548,7 +594,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
-        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null);
+        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, $this->combinations[$productName][$combinationName]->id, null);
         if ($combinationQuantity != $nbProduct['quantity']) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct['quantity']));
         }
@@ -586,11 +632,11 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasACustomizationWithName($productName, $customizationFieldName)
     {
         $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->customizable = 1;
-        $this->products[$productName]->save();
+        $this->getProductWithName($productName)->customizable = 1;
+        $this->getProductWithName($productName)->save();
 
         $customizationField = new CustomizationField();
-        $customizationField->id_product = $this->products[$productName]->id;
+        $customizationField->id_product = $this->getProductWithName($productName)->id;
         $customizationField->type = 1; // text field
         $customizationField->required = 1;
         $customizationField->name = [
@@ -607,7 +653,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
-        $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), $this->customizationsInCart[$productName]->id);
+        $nbProduct = Product::getQuantity($this->getProductWithName($productName)->id, null, null, $this->getCurrentCart(), $this->customizationsInCart[$productName]->id);
         if ($customizationQuantity != $nbProduct) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $customizationQuantity, $nbProduct));
         }
@@ -620,7 +666,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
-        $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
+        $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->getProductWithName($productName)->id, null, $this->customizationsInCart[$productName]->id);
         if (!$result) {
             throw new RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
@@ -634,7 +680,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkProductWithNameExists($productName);
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
         $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
-        $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationFields[$productName][$customizationFieldName]->id);
+        $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->getProductWithName($productName)->id, null, $this->customizationFields[$productName][$customizationFieldName]->id);
         if ($result) {
             throw new RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
@@ -647,7 +693,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
-        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
+        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, null, $this->customizationsInCart[$productName]->id);
         if ($customizationFieldQuantity != $nbProduct['quantity']) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $customizationFieldQuantity, $nbProduct['quantity']));
         }
@@ -660,7 +706,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         $customization = new Customization();
-        $customization->id_product = $this->products[$productName]->id;
+        $customization->id_product = $this->getProductWithName($productName)->id;
         $customization->id_product_attribute = 0;
         $customization->id_address_delivery = 0;
         $customization->quantity = 0;
@@ -756,7 +802,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productIsConsideredAsAPack($productName)
     {
         $this->checkProductWithNameExists($productName);
-        if (!Pack::isPack($this->products[$productName]->id)) {
+        if (!Pack::isPack($this->getProductWithName($productName)->id)) {
             throw new RuntimeException(sprintf('Expects %s to be considered as a pack, it is not', $productName));
         }
     }
@@ -767,8 +813,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameProductIsVirtual($productName)
     {
         $this->checkProductWithNameExists($productName);
-        $this->products[$productName]->is_virtual = 1;
-        $this->products[$productName]->save();
+        $this->getProductWithName($productName)->is_virtual = 1;
+        $this->getProductWithName($productName)->save();
     }
 
     /**
@@ -781,9 +827,9 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 
         $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
 
-        $this->products[$productName]->id_category_default = $category->id_category;
-        $this->products[$productName]->addToCategories([$category->id]);
-        $this->products[$productName]->save();
+        $this->getProductWithName($productName)->id_category_default = $category->id_category;
+        $this->getProductWithName($productName)->addToCategories([$category->id]);
+        $this->getProductWithName($productName)->save();
     }
 
     /**
@@ -795,7 +841,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $productPricesList = $this->getCurrentCart()->getProducts(true);
 
         foreach ($productPricesList as $productPrices) {
-            if ($this->products[$productName]->id == $productPrices['id_product'] && $productPrices['price_with_reduction'] != $priceWithReduction) {
+            if ($this->getProductWithName($productName)->id == $productPrices['id_product'] && $productPrices['price_with_reduction'] != $priceWithReduction) {
                 throw new RuntimeException(sprintf('Expects %s, got %s instead', $priceWithReduction, $productPrices['price_with_reduction']));
             }
         }
