@@ -38,7 +38,7 @@ Feature: Update product combination stock information in Back Office (BO)
     And combination "product1SBlack" should have following stock details:
       | combination stock detail | value      |
       | quantity                 | 0          |
-      | minimal quantity         | 0          |
+      | minimal quantity         | 1          |
       | location                 |            |
       | low stock threshold      | 0          |
       | low stock alert is on    | false      |
@@ -52,6 +52,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date        | 2021-10-10  |
     Then combination "product1SBlack" should have following stock details:
       | combination stock detail | value       |
+      | quantity                 | 100         |
       | minimal quantity         | 10          |
       | location                 | Storage nr1 |
       | low stock threshold      | 10          |
@@ -76,7 +77,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | location              |            |
       | low stock threshold   | 0          |
       | low stock alert is on | false      |
-      | available date        | 0000-00-00 |
+      | available date        | 2020-01-01 |
     Then combination "product1SBlack" should have following stock details:
       | combination stock detail | value      |
       | quantity                 | 0          |
@@ -84,4 +85,4 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                 |            |
       | low stock threshold      | 0          |
       | low stock alert is on    | false      |
-      | available date           | 0000-00-00 |
+      | available date           | 2020-01-01 |
