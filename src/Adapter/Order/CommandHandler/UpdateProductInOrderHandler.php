@@ -34,6 +34,7 @@ use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
@@ -59,14 +60,22 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
     private $orderProductQuantityUpdater;
 
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
      * UpdateProductInOrderHandler constructor.
      *
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
-        OrderProductQuantityUpdater $orderProductQuantityUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        ContextStateManager $contextStateManager
     ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -82,6 +91,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             if (!empty($command->getOrderInvoiceId())) {
                 $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
             }
+
+            // Set Context Shop
+            $this->contextStateManager->setShop(new Shop($orderDetail->id_shop));
 
             // Check fields validity
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
@@ -105,6 +117,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             throw $e;
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 
@@ -172,9 +186,16 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 //            }
 //        }
 
-        //check if product is available in stock
-        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+        // Check if product is available in stock
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock(
+            $orderDetail->product_id,
+            $orderDetail->id_shop
+        ))) {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $orderDetail->product_id,
+                $orderDetail->product_attribute_id,
+                $orderDetail->id_shop
+            );
             $quantityDiff = $command->getQuantity() - (int) $orderDetail->product_quantity;
 
             if ($quantityDiff > $availableQuantity) {
