@@ -148,16 +148,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Set the list of found shops in the last research
-     *
-     * @param array $shops
-     */
-    private function setLastSearchShopsResult(array $shops): void
-    {
-        $this->getSharedStorage()->set(self::LAST_FOUND_SHOPS_KEY, $shops);
-    }
-
-    /**
      * @When I search for shops with the term :searchTerm I should get a SearchShopException
      */
     public function assertShopException(string $searchTerm): void
