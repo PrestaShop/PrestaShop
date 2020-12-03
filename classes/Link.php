@@ -152,7 +152,7 @@ class LinkCore
         $relativeProtocol = false,
         $withIdInAnchor = false,
         $extraParams = [],
-        $addAnchor = true
+        bool $addAnchor = true
     ) {
         $dispatcher = Dispatcher::getInstance();
 
