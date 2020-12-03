@@ -50,7 +50,7 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
         return new CombinationPrices(
             new DecimalNumber($dataRows['eco tax']),
             new DecimalNumber($dataRows['impact on price']),
-            new DecimalNUmber($dataRows['unit price impact']),
+            new DecimalNUmber($dataRows['impact on unit price']),
             new DecimalNUmber($dataRows['wholesale price'])
         );
     }
@@ -80,11 +80,11 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
         $actualPrices = $this->getCombinationForEditing($combinationReference)->getPrices();
 
         Assert::assertTrue(
-            $expectedPrices->getUnitPriceImpact()->equals($actualPrices->getUnitPriceImpact()),
+            $expectedPrices->getImpactOnUnitPrice()->equals($actualPrices->getImpactOnUnitPrice()),
             sprintf(
-                'Unexpected combination unit price impact. Expected "%s", got "%s"',
-                (string) $expectedPrices->getUnitPriceImpact(),
-                (string) $actualPrices->getUnitPriceImpact()
+                'Unexpected combination impact on unit price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnUnitPrice(),
+                (string) $actualPrices->getImpactOnUnitPrice()
             )
         );
         Assert::assertTrue(
@@ -125,8 +125,8 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
         if (isset($data['impact on price'])) {
             $command->setImpactOnPrice($data['impact on price']);
         }
-        if (isset($data['unit price impact'])) {
-            $command->setUnitPriceImpact($data['unit price impact']);
+        if (isset($data['impact on unit price'])) {
+            $command->setImpactOnUnitPrice($data['impact on unit price']);
         }
         if (isset($data['wholesale price'])) {
             $command->setWholesalePrice($data['wholesale price']);

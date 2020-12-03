@@ -51,7 +51,7 @@ class UpdateCombinationPricesCommand
     /**
      * @var DecimalNumber|null
      */
-    private $unitPriceImpact;
+    private $impactOnUnitPrice;
 
     /**
      * @var DecimalNumber|null
@@ -118,19 +118,19 @@ class UpdateCombinationPricesCommand
     /**
      * @return DecimalNumber|null
      */
-    public function getUnitPriceImpact(): ?DecimalNumber
+    public function getImpactOnUnitPrice(): ?DecimalNumber
     {
-        return $this->unitPriceImpact;
+        return $this->impactOnUnitPrice;
     }
 
     /**
-     * @param string $unitPriceImpact
+     * @param string $impactOnUnitPrice
      *
      * @return UpdateCombinationPricesCommand
      */
-    public function setUnitPriceImpact(string $unitPriceImpact): UpdateCombinationPricesCommand
+    public function setImpactOnUnitPrice(string $impactOnUnitPrice): UpdateCombinationPricesCommand
     {
-        $this->unitPriceImpact = new DecimalNumber($unitPriceImpact);
+        $this->impactOnUnitPrice = new DecimalNumber($impactOnUnitPrice);
 
         return $this;
     }

@@ -39,18 +39,18 @@ Feature: Update product combination prices in Back Office (BO)
       | combination price detail | value |
       | eco tax                  | 0     |
       | impact on price          | 0     |
-      | unit price impact        | 0     |
+      | impact on unit price     | 0     |
       | wholesale price          | 0     |
     When I update combination "product1SWhite" prices with following details:
-      | eco tax           | 0.5 |
-      | impact on price   | -5  |
-      | unit price impact | -1  |
-      | wholesale price   | 20  |
+      | eco tax              | 0.5 |
+      | impact on price      | -5  |
+      | impact on unit price | -1  |
+      | wholesale price      | 20  |
     Then combination "product1SWhite" should have following prices:
       | combination price detail | value |
       | eco tax                  | 0.5   |
       | impact on price          | -5    |
-      | unit price impact        | -1    |
+      | impact on unit price     | -1    |
       | wholesale price          | 20    |
     When I update combination "product1SWhite" prices with following details:
       | impact on price | 0 |
@@ -58,16 +58,16 @@ Feature: Update product combination prices in Back Office (BO)
       | combination price detail | value |
       | eco tax                  | 0.5   |
       | impact on price          | 0     |
-      | unit price impact        | -1    |
+      | impact on unit price     | -1    |
       | wholesale price          | 20    |
     When I update combination "product1SWhite" prices with following details:
-      | eco tax           | 0 |
-      | impact on price   | 0 |
-      | unit price impact | 0 |
-      | wholesale price   | 0 |
+      | eco tax              | 0 |
+      | impact on price      | 0 |
+      | impact on unit price | 0 |
+      | wholesale price      | 0 |
     Then combination "product1SWhite" should have following prices:
       | combination price detail | value |
       | eco tax                  | 0     |
       | impact on price          | 0     |
-      | unit price impact        | 0     |
+      | impact on unit price     | 0     |
       | wholesale price          | 0     |

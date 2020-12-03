@@ -82,8 +82,8 @@ final class UpdateCombinationPricesHandler implements UpdateCombinationPricesHan
             $updatableProperties[] = 'ecotax';
         }
 
-        if (null !== $command->getUnitPriceImpact()) {
-            $combination->unit_price_impact = (float) (string) $command->getUnitPriceImpact();
+        if (null !== $command->getImpactOnUnitPrice()) {
+            $combination->unit_price_impact = (float) (string) $command->getImpactOnUnitPrice();
             $updatableProperties[] = 'unit_price_impact';
         }
 
