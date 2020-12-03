@@ -43,7 +43,7 @@ class ShopController extends FrameworkBundleAdminController
     /**
      * Search for shops by query.
      *
-     * @AdminSecurity("is_granted('read', 'AdminOrders')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param string $searchTerm
      *
