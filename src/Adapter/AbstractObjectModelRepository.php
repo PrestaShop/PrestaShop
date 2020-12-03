@@ -50,7 +50,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to check if %s #%d exists', $objectTableName, $id),
+                sprintf(
+                    'Error occurred when trying to check if %s #%d exists [%]',
+                    $objectTableName,
+                    $id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -76,7 +81,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to get %s #%d', $objectModelClass, $id),
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    $objectModelClass,
+                    $id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -105,7 +115,11 @@ abstract class AbstractObjectModelRepository
             return (int) $objectModel->id;
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to add %s', get_class($objectModel)),
+                sprintf(
+                    'Error occurred when trying to add %s [%s]',
+                    get_class($objectModel),
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -134,7 +148,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to update %s #%d', get_class($objectModel), $objectModel->id),
+                sprintf(
+                    'Error occurred when trying to update %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -179,7 +198,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to delete %s #%d', get_class($objectModel), $objectModel->id),
+                sprintf(
+                    'Error occurred when trying to delete %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -204,7 +228,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to soft delete %s #%d', get_class($objectModel), $objectModel->id),
+                sprintf(
+                    'Error occurred when trying to soft delete %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
