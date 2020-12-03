@@ -170,7 +170,7 @@ describe('sort and pagination shopping carts', async () => {
   });
 
   // 3 - Sort table
-  describe('Sort cart rules table', async () => {
+  describe('Sort shopping cart table', async () => {
     const sortTests = [
       {
         args: {

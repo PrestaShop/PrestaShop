@@ -6,6 +6,7 @@ class TaxRules extends BOBasePage {
     super();
 
     this.pageTitle = 'Tax Rules •';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
     // HEADER buttons
@@ -33,6 +34,7 @@ class TaxRules extends BOBasePage {
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+    this.tableColumnCheckIcon = row => `${this.tableColumnActive(row)} i.icon-check`;
 
     // Bulk actions selectors
     this.toggleDropDown = row => `${this.tableRow(row)} button[data-toggle='dropdown']`;
@@ -60,6 +62,8 @@ class TaxRules extends BOBasePage {
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
   }
 
   /*
@@ -312,6 +316,54 @@ class TaxRules extends BOBasePage {
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable / disable tax rules by Bulk Actions
+   * @param page
+   * @param enable
+   * @returns {Promise<string>}
+   */
+  async bulkSetStatus(page, enable = true) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+    // Click to change status
+    await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
+    /* Successful message is not visible, skipping it */
+    // return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Get Value of columns enabled
+   * @param page
+   * @param row, row in table
+   * @return {Promise<boolean>}
+   */
+  async getStatus(page, row) {
+    await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
+    return this.elementVisible(page, this.tableColumnCheckIcon(row), 100);
+  }
+
+  /**
+   * Quick edit toggle column value
+   * @param page
+   * @param row, row in table
+   * @param valueWanted, Value wanted in column
+   * @return {Promise<boolean>}, return true if action is done, false otherwise
+   */
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await Promise.all([
+        page.$eval(`${this.tableColumnActive(row)} i`, el => el.click()),
+        page.waitForNavigation({waitUntil: 'networkidle'}),
+      ]);
+      return true;
+    }
+    return false;
   }
 }
 

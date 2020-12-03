@@ -58,7 +58,7 @@ class AddBrand extends BOBasePage {
     await this.addKeywords(page, brandData.metaKeywordsFr, 2);
 
     // Add logo
-    await this.generateAndUploadImage(page, this.logoFileInput, brandData.logo);
+    await this.uploadFile(page, this.logoFileInput, brandData.logo);
 
     // Set Enabled value
     await page.click(this.enabledSwitchLabel(brandData.enabled ? 1 : 0));

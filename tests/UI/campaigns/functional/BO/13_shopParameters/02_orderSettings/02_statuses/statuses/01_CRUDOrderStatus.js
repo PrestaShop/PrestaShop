@@ -29,6 +29,7 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let numberOfOrderStatuses = 0;
+const tableName = 'order';
 
 const createOrderStatusData = new OrderStatusFaker();
 const editOrderStatusData = new OrderStatusFaker({name: `edit_${createOrderStatusData.name}`});
@@ -44,6 +45,12 @@ describe('Create, read, update and delete order status in BO', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    await Promise.all([
+      files.generateImage(`${createOrderStatusData.name}.jpg`),
+      files.generateImage(`${editOrderStatusData.name}.jpg`),
+    ]);
   });
 
   after(async () => {
@@ -85,7 +92,7 @@ describe('Create, read, update and delete order status in BO', async () => {
   it('should reset all filters and get number of order statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page);
+    numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
     await expect(numberOfOrderStatuses).to.be.above(0);
   });
 
@@ -106,7 +113,7 @@ describe('Create, read, update and delete order status in BO', async () => {
       const textResult = await addOrderStatusPage.setOrderStatus(page, createOrderStatusData);
       await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
 
-      const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page);
+      const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
       await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + 1);
     });
   });
@@ -170,23 +177,24 @@ describe('Create, read, update and delete order status in BO', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await statusesPage.resetFilter(page);
+      await statusesPage.resetFilter(page, tableName);
 
       await statusesPage.filterTable(
         page,
+        tableName,
         'input',
         'name',
         createOrderStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
       await expect(textEmail).to.contains(createOrderStatusData.name);
     });
 
     it('should go to edit order status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderStatusPage', baseContext);
 
-      await statusesPage.gotoEditOrderStatusPage(page, 1);
+      await statusesPage.gotoEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderStatusPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleEdit);
@@ -198,7 +206,7 @@ describe('Create, read, update and delete order status in BO', async () => {
       const textResult = await addOrderStatusPage.setOrderStatus(page, editOrderStatusData);
       await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
 
-      const numberOfOrderStatusesAfterUpdate = await statusesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderStatusesAfterUpdate = await statusesPage.resetAndGetNumberOfLines(page, tableName);
       await expect(numberOfOrderStatusesAfterUpdate).to.be.equal(numberOfOrderStatuses + 1);
     });
   });
@@ -208,26 +216,27 @@ describe('Create, read, update and delete order status in BO', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await statusesPage.resetFilter(page);
+      await statusesPage.resetFilter(page, tableName);
 
       await statusesPage.filterTable(
         page,
+        tableName,
         'input',
         'name',
         editOrderStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
       await expect(textEmail).to.contains(editOrderStatusData.name);
     });
 
     it('should delete order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
-      const textResult = await statusesPage.deleteOrderStatus(page, 1);
+      const textResult = await statusesPage.deleteOrderStatus(page, tableName, 1);
       await expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
 
-      const numberOfOrderStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page, tableName);
       await expect(numberOfOrderStatusesAfterDelete).to.be.equal(numberOfOrderStatuses);
     });
   });

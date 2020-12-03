@@ -115,7 +115,6 @@ describe('Filter And Quick Edit Customers', async () => {
             filterBy: 'active',
             filterValue: DefaultAccount.enabled,
           },
-        expected: 'check',
       },
       {
         args:
@@ -125,7 +124,6 @@ describe('Filter And Quick Edit Customers', async () => {
             filterBy: 'newsletter',
             filterValue: DefaultAccount.newsletter,
           },
-        expected: 'check',
       },
       {
         args:
@@ -135,7 +133,6 @@ describe('Filter And Quick Edit Customers', async () => {
             filterBy: 'optin',
             filterValue: false,
           },
-        expected: 'clear',
       },
     ];
 
@@ -162,15 +159,16 @@ describe('Filter And Quick Edit Customers', async () => {
         await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
 
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-          const textColumn = await customersPage.getTextColumnFromTableCustomers(
-            page,
-            i,
-            test.args.filterBy,
-          );
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (typeof test.args.filterValue === 'boolean') {
+            const toggleValue = await customersPage.getToggleColumnValue(page, i, test.args.filterBy);
+            await expect(toggleValue).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await customersPage.getTextColumnFromTableCustomers(
+              page,
+              i,
+              test.args.filterBy,
+            );
+
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }

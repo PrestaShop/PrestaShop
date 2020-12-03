@@ -180,16 +180,6 @@ class Product extends BOBasePage {
   }
 
   /**
-   * Get Product Status
-   * @param page
-   * @param row
-   * @returns {Promise<string>}
-   */
-  async getProductStatusFromList(page, row) {
-    return this.getTextContent(page, this.productsListTableColumnStatus(row));
-  }
-
-  /**
    * Filter products
    * @param page
    * @param filterBy
@@ -445,7 +435,7 @@ class Product extends BOBasePage {
    * @param row, row in table
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
+  async getProductStatusFromList(page, row) {
     return this.elementVisible(page, this.productsListTableColumnStatusEnabled(row), 100);
   }
 
@@ -456,13 +446,14 @@ class Product extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
+  async setProductStatus(page, row, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.productsListTableColumnStatus(row), 2000);
-    const actualValue = await this.getToggleColumnValue(page, row);
+    const actualValue = await this.getProductStatusFromList(page, row);
     if (actualValue !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.productsListTableColumnStatus(row));
       return true;
     }
+
     return false;
   }
 

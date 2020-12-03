@@ -108,15 +108,15 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     });
 
     const tests = [
-      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
-      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
     ];
 
     tests.forEach((test) => {
       it(`should ${test.args.action} customers with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Customers`, baseContext);
 
-        const textResult = await customersPage.changeCustomersEnabledColumnBulkActions(
+        const textResult = await customersPage.bulkSetStatus(
           page,
           test.args.enabledValue,
         );
@@ -127,8 +127,8 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
         await expect(numberOfCustomersInGrid).to.be.at.least(2);
 
         for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-          const textColumn = await customersPage.getTextColumnFromTableCustomers(page, 1, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const customerStatus = await customersPage.getToggleColumnValue(page, i, 'active');
+          await expect(customerStatus).to.equals(test.args.enabledValue);
         }
       });
     });

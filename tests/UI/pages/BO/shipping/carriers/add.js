@@ -56,7 +56,7 @@ class AddCarrier extends BOBasePage {
     await this.setValue(page, this.nameInput, carrierData.name);
     await this.setValue(page, this.transitTimeInput, carrierData.transitName);
     await this.setValue(page, this.speedGradeInput, carrierData.speedGrade);
-    await this.generateAndUploadImage(page, this.logoInput, `${carrierData.name}.jpg`);
+    await this.uploadFile(page, this.logoInput, `${carrierData.name}.jpg`);
     await this.setValue(page, this.trackingURLInput, carrierData.trakingURL);
     await page.click(this.nextButton);
 
@@ -71,7 +71,11 @@ class AddCarrier extends BOBasePage {
     }
     await this.selectByVisibleText(page, this.taxRuleSelect, carrierData.taxRule);
     await this.selectByVisibleText(page, this.rangeBehaviorSelect, carrierData.outOfRangeBehavior);
-    await this.setValue(page, this.rangeSupInput, carrierData.rangeSup);
+
+    // Set range sup only if free shipping is disabled
+    if (!carrierData.freeShipping) {
+      await this.setValue(page, this.rangeSupInput, carrierData.rangeSup);
+    }
 
     if (carrierData.allZones) {
       await page.click(this.allZonesRadioButton);
