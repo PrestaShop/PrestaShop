@@ -91,6 +91,7 @@ describe('Create simple order in BO', async () => {
       dashboardPage.ordersLink,
     );
 
+    await ordersPage.closeSfToolBar(page);
     const pageTitle = await ordersPage.getPageTitle(page);
     await expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
@@ -103,8 +104,8 @@ describe('Create simple order in BO', async () => {
     await expect(pageTitle).to.contains(addOrderPage.pageTitle);
   });
 
-  describe('Choose which customer to order with', async () => {
-    it('should search for existent customer and check customer card', async function () {
+  describe('Create order and check result', async () => {
+    it('should create te order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       await addOrderPage.createOrder(page, orderToMake);

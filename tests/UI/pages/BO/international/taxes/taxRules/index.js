@@ -34,7 +34,7 @@ class TaxRules extends BOBasePage {
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnCheckIcon = row => `${this.tableColumnActive(row)} .icon-check`;
+    this.tableColumnCheckIcon = row => `${this.tableColumnActive(row)} i.icon-check`;
 
     // Bulk actions selectors
     this.toggleDropDown = row => `${this.tableRow(row)} button[data-toggle='dropdown']`;
@@ -324,7 +324,7 @@ class TaxRules extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -343,7 +343,7 @@ class TaxRules extends BOBasePage {
    * @param row, row in table
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
+  async getStatus(page, row) {
     await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
     return this.elementVisible(page, this.tableColumnCheckIcon(row), 100);
   }
@@ -355,8 +355,8 @@ class TaxRules extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>}, return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
       await Promise.all([
         page.$eval(`${this.tableColumnActive(row)} i`, el => el.click()),
         page.waitForNavigation({waitUntil: 'networkidle'}),

@@ -162,4 +162,30 @@ module.exports = {
       if (err) throw err;
     });
   },
+
+  /**
+   * Generate image
+   * @param imageName
+   * @param width
+   * @param height
+   * @param quality
+   * @return {Promise<void>}
+   */
+  async generateImage(imageName, width = 200, height = 200, quality = 1) {
+    await imgGen.generateImage(width, height, quality, (err, image) => {
+      fs.writeFileSync(imageName, image.data);
+    });
+  },
+
+  /**
+   * Rename files
+   * @param oldPath
+   * @param newPath
+   * @return {Promise<void>}
+   */
+  async renameFile(oldPath, newPath) {
+    await fs.rename(oldPath, newPath, (err) => {
+      if (err) throw err;
+    });
+  },
 };

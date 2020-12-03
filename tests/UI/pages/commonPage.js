@@ -318,7 +318,7 @@ module.exports = class CommonPage {
     }
 
     if (isDate) {
-      return arrayToSort.sort((a, b) => new Date(b) - new Date(a));
+      return arrayToSort.sort((a, b) => new Date(a) - new Date(b));
     }
 
     return arrayToSort.sort((a, b) => a.localeCompare(b));

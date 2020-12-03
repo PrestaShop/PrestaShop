@@ -561,6 +561,13 @@ class CurrencyController extends FrameworkBundleAdminController
                             sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
                         ]
                     ),
+                CurrencyConstraintException::INVALID_NAME => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Currency name', 'Admin.International.Feature')),
+                    ]
+                ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS => $this->trans(
                     'This currency already exists.',
                     'Admin.International.Notification'

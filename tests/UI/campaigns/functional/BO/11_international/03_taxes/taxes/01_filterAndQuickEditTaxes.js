@@ -81,9 +81,11 @@ describe('Filter And Quick Edit taxes', async () => {
       {
         args:
           {
-            testIdentifier: 'filterActive', filterType: 'select', filterBy: 'active', filterValue: DefaultFrTax.enabled,
+            testIdentifier: 'filterActive',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: DefaultFrTax.enabled,
           },
-        expected: 'check',
       },
     ];
 
@@ -99,11 +101,11 @@ describe('Filter And Quick Edit taxes', async () => {
 
         // Check value in table
         for (let i = 1; i <= numberOfTaxesAfterFilter; i++) {
-          const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, i, test.args.filterBy);
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const taxStatus = await taxesPage.getStatus(page, i);
+            await expect(taxStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -140,7 +142,7 @@ describe('Filter And Quick Edit taxes', async () => {
       it(`should ${test.args.action} first tax`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Tax`, baseContext);
 
-        const isActionPerformed = await taxesPage.updateEnabledValue(
+        const isActionPerformed = await taxesPage.setStatus(
           page,
           1,
           test.args.enabledValue,
@@ -155,7 +157,7 @@ describe('Filter And Quick Edit taxes', async () => {
           await expect(resultMessage).to.contains(taxesPage.successfulUpdateStatusMessage);
         }
 
-        const taxStatus = await taxesPage.getToggleColumnValue(page, 1, 'active');
+        const taxStatus = await taxesPage.getStatus(page, 1);
         await expect(taxStatus).to.be.equal(test.args.enabledValue);
       });
     });

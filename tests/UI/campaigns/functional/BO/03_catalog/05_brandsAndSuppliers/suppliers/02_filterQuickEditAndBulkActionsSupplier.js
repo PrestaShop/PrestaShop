@@ -143,7 +143,6 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
             filterBy: 'active',
             filterValue: firstSupplierData.enabled,
           },
-        expected: 'check',
       },
     ];
 
@@ -154,8 +153,6 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
         if (test.args.filterBy === 'active') {
           await suppliersPage.filterSupplierEnabled(
             page,
-            test.args.filterType,
-            test.args.filterBy,
             test.args.filterValue,
           );
         } else {
@@ -171,13 +168,13 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
         const numberOfSuppliersAfterFilter = await suppliersPage.getNumberOfElementInGrid(page);
         await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
 
-        // check text column in all rows after filter
+        // Check text column or status in all rows after filter
         for (let i = 1; i <= numberOfSuppliersAfterFilter; i++) {
-          const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, i, test.args.filterBy);
-
-          if (test.expected !== undefined) {
-            await expect(textColumn).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const supplierStatus = await suppliersPage.getStatus(page, i);
+            await expect(supplierStatus).to.equal(test.args.filterValue);
           } else {
+            const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -222,7 +219,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
       it(`should ${test.args.action} first supplier`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Supplier`, baseContext);
 
-        const isActionPerformed = await suppliersPage.updateEnabledValue(page, 1, test.args.enabledValue);
+        const isActionPerformed = await suppliersPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
           const resultMessage = await suppliersPage.getTextContent(
@@ -232,7 +229,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
           await expect(resultMessage).to.contains(suppliersPage.successfulUpdateStatusMessage);
         }
 
-        const supplierStatus = await suppliersPage.getToggleColumnValue(page, 1);
+        const supplierStatus = await suppliersPage.getStatus(page, 1);
         await expect(supplierStatus).to.be.equal(test.args.enabledValue);
       });
     });
@@ -248,15 +245,15 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   // 4: Enable, disable and delete with bulk actions
   describe('Enable, disable and delete with bulk actions', async () => {
     const tests = [
-      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
-      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
     ];
 
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}Suppliers`, baseContext);
 
-        const disableTextResult = await suppliersPage.changeSuppliersEnabledColumnBulkActions(
+        const disableTextResult = await suppliersPage.bulkSetStatus(
           page,
           test.args.enabledValue,
         );
@@ -268,8 +265,8 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
         await expect(numberOfSuppliersInGrid).to.be.at.most(numberOfSuppliers);
 
         for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
-          const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const supplierStatus = await suppliersPage.getStatus(page, i);
+          await expect(supplierStatus).to.equal(test.args.enabledValue);
         }
       });
     });

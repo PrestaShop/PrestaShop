@@ -184,7 +184,7 @@ class Pages extends BOBasePage {
    * @param row, row in table
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, table, row) {
+  async getStatus(page, table, row) {
     return this.elementVisible(page, this.columnValidIcon(table, row), 100);
   }
 
@@ -196,16 +196,18 @@ class Pages extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, table, row, valueWanted = true) {
+  async setStatus(page, table, row, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.listTableColumn(table, row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, table, row) !== valueWanted) {
+    if (await this.getStatus(page, table, row) !== valueWanted) {
       page.click(this.listTableColumn(table, row, 'active'));
       await this.waitForVisibleSelector(
         page,
         (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)(table, row),
       );
+
       return true;
     }
+
     return false;
   }
 
@@ -216,7 +218,7 @@ class Pages extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeEnabledColumnBulkActions(page, table, enable = true) {
+  async bulkSetStatus(page, table, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel(table), el => el.click()),

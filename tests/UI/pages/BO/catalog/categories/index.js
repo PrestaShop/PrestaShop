@@ -28,9 +28,9 @@ class Categories extends BOBasePage {
     } a.grid-view-row-link`;
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a.grid-edit-row-link`;
-    this.categoriesListColumnValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } i.grid-toggler-icon-valid`;
-    this.categoriesListColumnNotValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
+    this.categoriesListStatusColumn = row => this.categoriesListTableColumn(row, 'active');
+    this.categoriesListColumnValidIcon = row => `${this.categoriesListStatusColumn(row)} i.grid-toggler-icon-valid`;
+    this.categoriesListColumnNotValidIcon = row => `${this.categoriesListStatusColumn(row)
     } i.grid-toggler-icon-not-valid`;
     // Filters
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
@@ -130,36 +130,36 @@ class Categories extends BOBasePage {
    * Get Value of column Displayed
    * @param page
    * @param row, row in table
-   * @param column, column to check
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row, column) {
-    return this.elementVisible(page, this.categoriesListColumnValidIcon(row, column), 100);
+  async getStatus(page, row) {
+    return this.elementVisible(page, this.categoriesListColumnValidIcon(row), 500);
   }
 
   /**
    * Quick edit toggle column value
    * @param page
    * @param row, row in table
-   * @param column, column to update
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, column, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.categoriesListTableColumn(row, column), 2000);
-    if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
-      await page.click(`${this.categoriesListTableColumn(row, column)} i`);
+  async setStatus(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.categoriesListStatusColumn(row), 2000);
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await page.click(`${this.categoriesListStatusColumn(row)} i`);
       await this.waitForVisibleSelector(
         page,
         (
           valueWanted
-            ? this.categoriesListColumnValidIcon(row, column)
-            : this.categoriesListColumnNotValidIcon(row, column)
+            ? this.categoriesListColumnValidIcon(row)
+            : this.categoriesListColumnNotValidIcon(row)
         ),
         15000,
       );
+
       return true;
     }
+
     return false;
   }
 
@@ -186,7 +186,7 @@ class Categories extends BOBasePage {
       name: await this.getTextColumnFromTableCategories(page, row, 'name'),
       description: await this.getTextColumnFromTableCategories(page, row, 'description'),
       position: parseFloat(await this.getTextColumnFromTableCategories(page, row, 'position')),
-      status: await this.getToggleColumnValue(page, row, 'active'),
+      status: await this.getStatus(page, row),
     };
   }
 
@@ -281,7 +281,7 @@ class Categories extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeCategoriesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),

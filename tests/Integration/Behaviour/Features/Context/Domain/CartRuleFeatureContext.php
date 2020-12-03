@@ -253,6 +253,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $properties['discount_product_id'] ?? null
         );
 
+        if ($properties['code']) {
+            SharedStorage::getStorage()->set(
+                $properties['code'],
+                $cartRuleId->getValue()
+            );
+        }
+
         SharedStorage::getStorage()->set(
             sprintf('cart_rule_object_%s', $properties['name']),
             new CartRule($cartRuleId->getValue())

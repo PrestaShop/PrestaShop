@@ -1,252 +1,259 @@
 {
-    "name": "prestashop/prestashop",
-    "description": "PrestaShop offers a free, fully scalable, Open Source e-commerce solution.",
-    "type": "project",
-    "require": {
-        "php": ">=7.1.3",
-        "ext-curl": "*",
-        "ext-dom": "*",
-        "ext-fileinfo": "*",
-        "ext-gd": "*",
-        "ext-iconv": "*",
-        "ext-intl": "*",
-        "ext-json": "*",
-        "ext-mbstring": "*",
-        "ext-zip": "*",
-        "beberlei/doctrineextensions": "^1.0",
-        "composer/ca-bundle": "^1.0",
-        "composer/installers": "^1.0.21",
-        "csa/guzzle-bundle": "dev-1.3",
-        "cssjanus/cssjanus": "dev-patch-1",
-        "curl/curl": "^1.2.1",
-        "defuse/php-encryption": "~2.0.1",
-        "doctrine/cache": "^1.8",
-        "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/orm": "^2.7",
-        "egulias/email-validator": "^2.1",
-        "ezyang/htmlpurifier": "^4.10",
-        "friendsofsymfony/jsrouting-bundle": "^2.4",
-        "geoip2/geoip2": "~2.4.2",
-        "greenlion/php-sql-parser": "^4.3",
-        "guzzlehttp/cache-subscriber": "^0.2.0",
-        "guzzlehttp/guzzle": "~5.0",
-        "incenteev/composer-parameter-handler": "~2.0",
-        "ircmaxell/password-compat": "^1.0.4",
-        "ircmaxell/random-lib": "^1.2.0",
-        "jakeasmith/http_build_url": "^1",
-        "league/tactician-bundle": "^1.0",
-        "martinlindhe/php-mb-helpers": "^0.1.6",
-        "matthiasmullie/minify": "~1.3.0",
-        "mobiledetect/mobiledetectlib": "~2.8.34",
-        "mrclay/minify": "~2.3.0",
-        "nikic/php-parser": "^4.0",
-        "paragonie/random_compat": "^2.0",
-        "pear/archive_tar": "^1.4.6",
-        "pelago/emogrifier": "^2.1",
-        "phpoffice/phpspreadsheet": "~1.5",
-        "prestashop/blockreassurance": "^5",
-        "prestashop/circuit-breaker": "^3.0",
-        "prestashop/contactform": "^4",
-        "prestashop/dashactivity": "^2",
-        "prestashop/dashgoals": "^2",
-        "prestashop/dashproducts": "^2",
-        "prestashop/dashtrends": "^2",
-        "prestashop/decimal": "^1.4",
-        "prestashop/graphnvd3": "^2",
-        "prestashop/gridhtml": "^2",
-        "prestashop/gsitemap": "^4",
-        "prestashop/pagesnotfound": "^2",
-        "prestashop/productcomments": "^4.0",
-        "prestashop/ps_banner": "^2",
-        "prestashop/ps_categorytree": "^2",
-        "prestashop/ps_checkpayment": "^2",
-        "prestashop/ps_contactinfo": "^3.2",
-        "prestashop/ps_crossselling": "^2.0",
-        "prestashop/ps_currencyselector": "^2",
-        "prestashop/ps_customeraccountlinks": "^3",
-        "prestashop/ps_customersignin": "^2",
-        "prestashop/ps_customtext": "^4",
-        "prestashop/ps_dataprivacy": "^2.0",
-        "prestashop/ps_emailsubscription": "^2.5",
-        "prestashop/ps_facetedsearch": "^3.2.1",
-        "prestashop/ps_faviconnotificationbo": "^2",
-        "prestashop/ps_featuredproducts": "^2",
-        "prestashop/ps_imageslider": "^3",
-        "prestashop/ps_languageselector": "^2",
-        "prestashop/ps_linklist": "^3",
-        "prestashop/ps_mainmenu": "^2",
-        "prestashop/ps_searchbar": "^2",
-        "prestashop/ps_sharebuttons": "^2",
-        "prestashop/ps_shoppingcart": "^2",
-        "prestashop/ps_socialfollow": "^2",
-        "prestashop/ps_themecusto": "^1",
-        "prestashop/ps_wirepayment": "^2",
-        "prestashop/sekeywords": "^2",
-        "prestashop/statsbestcategories": "^2",
-        "prestashop/statsbestcustomers": "^2",
-        "prestashop/statsbestmanufacturers": "^2",
-        "prestashop/statsbestproducts": "^2",
-        "prestashop/statsbestsuppliers": "^2",
-        "prestashop/statsbestvouchers": "^2",
-        "prestashop/statscarrier": "^2",
-        "prestashop/statscatalog": "^2",
-        "prestashop/statscheckup": "^2",
-        "prestashop/statsdata": "^2",
-        "prestashop/statsequipment": "^2",
-        "prestashop/statsforecast": "^2",
-        "prestashop/statslive": "^2",
-        "prestashop/statsnewsletter": "^2",
-        "prestashop/statsorigin": "^2",
-        "prestashop/statspersonalinfos": "^2",
-        "prestashop/statsproduct": "^2",
-        "prestashop/statsregistrations": "^2",
-        "prestashop/statssales": "^2",
-        "prestashop/statssearch": "^2",
-        "prestashop/statsstock": "^2",
-        "prestashop/statsvisits": "^2",
-        "prestashop/translationtools-bundle": "^4.0",
-        "prestashop/welcome": "^6",
-        "sensio/distribution-bundle": "^5.0",
-        "sensio/framework-extra-bundle": "^5.1",
-        "shudrum/array-finder": "^1.1.0",
-        "smarty/smarty": "^3.1.31",
-        "soundasleep/html2text": "^0.5.0",
-        "swiftmailer/swiftmailer": "~6.2",
-        "symfony/monolog-bundle": "^3.1.0",
-        "symfony/polyfill-apcu": "^1.0",
-        "symfony/polyfill-php73": "^1.10",
-        "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/symfony": ">=3.4.37",
-        "tecnickcom/tcpdf": "^6.2.12",
-        "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "twig/twig": "^1.38"
+  "name": "prestashop/prestashop",
+  "description": "PrestaShop offers a free, fully scalable, Open Source e-commerce solution.",
+  "type": "project",
+  "require": {
+    "php": ">=7.1.3",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-fileinfo": "*",
+    "ext-gd": "*",
+    "ext-iconv": "*",
+    "ext-intl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-zip": "*",
+    "beberlei/doctrineextensions": "^1.0",
+    "composer/ca-bundle": "^1.0",
+    "composer/installers": "^1.0.21",
+    "csa/guzzle-bundle": "dev-compat-php",
+    "cssjanus/cssjanus": "dev-patch-1",
+    "curl/curl": "^1.2.1",
+    "defuse/php-encryption": "~2.0.1",
+    "doctrine/cache": "^1.8",
+    "doctrine/doctrine-bundle": "^1.6",
+    "doctrine/orm": "^2.7",
+    "egulias/email-validator": "^2.1",
+    "ezyang/htmlpurifier": "^4.10",
+    "friendsofsymfony/jsrouting-bundle": "^2.4",
+    "geoip2/geoip2": "~2.4.2",
+    "greenlion/php-sql-parser": "^4.3",
+    "guzzlehttp/cache-subscriber": "^0.2.0",
+    "guzzlehttp/guzzle": "~5.0",
+    "incenteev/composer-parameter-handler": "~2.0",
+    "ircmaxell/password-compat": "^1.0.4",
+    "ircmaxell/random-lib": "^1.2.0",
+    "jakeasmith/http_build_url": "^1",
+    "league/tactician-bundle": "^1.0",
+    "martinlindhe/php-mb-helpers": "^0.1.6",
+    "matthiasmullie/minify": "~1.3.0",
+    "mobiledetect/mobiledetectlib": "~2.8.34",
+    "mrclay/minify": "~2.3.0",
+    "nikic/php-parser": "^4.0",
+    "paragonie/random_compat": "^2.0",
+    "pear/archive_tar": "^1.4.11",
+    "pelago/emogrifier": "^2.1",
+    "phpoffice/phpspreadsheet": "~1.5",
+    "prestashop/blockreassurance": "^5",
+    "prestashop/circuit-breaker": "^3.0",
+    "prestashop/contactform": "^4",
+    "prestashop/dashactivity": "^2",
+    "prestashop/dashgoals": "^2",
+    "prestashop/dashproducts": "^2",
+    "prestashop/dashtrends": "^2",
+    "prestashop/decimal": "^1.4",
+    "prestashop/graphnvd3": "^2",
+    "prestashop/gridhtml": "^2",
+    "prestashop/gsitemap": "^4",
+    "prestashop/pagesnotfound": "^2",
+    "prestashop/productcomments": "^4.0",
+    "prestashop/ps_banner": "^2",
+    "prestashop/ps_categorytree": "^2",
+    "prestashop/ps_checkpayment": "^2",
+    "prestashop/ps_contactinfo": "^3.2",
+    "prestashop/ps_crossselling": "^2.0",
+    "prestashop/ps_currencyselector": "^2",
+    "prestashop/ps_customeraccountlinks": "^3",
+    "prestashop/ps_customersignin": "^2",
+    "prestashop/ps_customtext": "^4",
+    "prestashop/ps_dataprivacy": "^2.0",
+    "prestashop/ps_emailsubscription": "^2.5",
+    "prestashop/ps_facetedsearch": "^3.2.1",
+    "prestashop/ps_faviconnotificationbo": "^2",
+    "prestashop/ps_featuredproducts": "^2",
+    "prestashop/ps_imageslider": "^3",
+    "prestashop/ps_languageselector": "^2",
+    "prestashop/ps_linklist": "^3",
+    "prestashop/ps_mainmenu": "^2",
+    "prestashop/ps_searchbar": "^2",
+    "prestashop/ps_sharebuttons": "^2",
+    "prestashop/ps_shoppingcart": "^2",
+    "prestashop/ps_socialfollow": "^2",
+    "prestashop/ps_themecusto": "^1",
+    "prestashop/ps_wirepayment": "^2",
+    "prestashop/sekeywords": "^2",
+    "prestashop/statsbestcategories": "^2",
+    "prestashop/statsbestcustomers": "^2",
+    "prestashop/statsbestmanufacturers": "^2",
+    "prestashop/statsbestproducts": "^2",
+    "prestashop/statsbestsuppliers": "^2",
+    "prestashop/statsbestvouchers": "^2",
+    "prestashop/statscarrier": "^2",
+    "prestashop/statscatalog": "^2",
+    "prestashop/statscheckup": "^2",
+    "prestashop/statsdata": "^2",
+    "prestashop/statsequipment": "^2",
+    "prestashop/statsforecast": "^2",
+    "prestashop/statslive": "^2",
+    "prestashop/statsnewsletter": "^2",
+    "prestashop/statsorigin": "^2",
+    "prestashop/statspersonalinfos": "^2",
+    "prestashop/statsproduct": "^2",
+    "prestashop/statsregistrations": "^2",
+    "prestashop/statssales": "^2",
+    "prestashop/statssearch": "^2",
+    "prestashop/statsstock": "^2",
+    "prestashop/statsvisits": "^2",
+    "prestashop/translationtools-bundle": "^4.0",
+    "prestashop/welcome": "^6",
+    "sensio/distribution-bundle": "^5.0",
+    "sensio/framework-extra-bundle": "^5.1",
+    "shudrum/array-finder": "^1.1.0",
+    "smarty/smarty": "^3.1.31",
+    "soundasleep/html2text": "^0.5.0",
+    "swiftmailer/swiftmailer": "~6.2",
+    "symfony/monolog-bundle": "^3.1.0",
+    "symfony/polyfill-apcu": "^1.0",
+    "symfony/polyfill-php73": "^1.10",
+    "symfony/swiftmailer-bundle": "^3.1",
+    "symfony/symfony": ">=3.4.37",
+    "tecnickcom/tcpdf": "^6.2.12",
+    "tijsverkoyen/css-to-inline-styles": "^2.2",
+    "twig/twig": "^1.38"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/php-cssjanus",
+      "canonical": false
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrestaShop/php-cssjanus"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrestaShop/CsaGuzzleBundle"
-        }
+    {
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/CsaGuzzleBundle",
+      "canonical": false
+    }
+  ],
+  "require-dev": {
+    "behat/behat": "^3.5",
+    "friendsofphp/php-cs-fixer": "^2.16.1",
+    "johnkary/phpunit-speedtrap": "^3",
+    "mikey179/vfsstream": "^1.6",
+    "phake/phake": "@stable",
+    "phpstan/phpstan": "^0.12.48",
+    "phpunit/phpunit": "~7.5.18",
+    "symfony/phpunit-bridge": "^3.4"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "LegacyTests\\": "tests-legacy/",
+      "Tests\\": "tests/"
+    },
+    "files": [
+      "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\PrestaShop\\": "src/",
+      "PrestaShopBundle\\": "src/PrestaShopBundle/"
+    },
+    "classmap": [
+      "app/AppKernel.php",
+      "app/AppCache.php"
+    ]
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
-    "require-dev": {
-        "behat/behat": "^3.5",
-        "friendsofphp/php-cs-fixer": "^2.16.1",
-        "johnkary/phpunit-speedtrap": "^3",
-        "mikey179/vfsstream": "^1.6",
-        "phake/phake": "@stable",
-        "phpstan/phpstan": "^0.12.48",
-        "phpunit/phpunit": "~7.5.18",
-        "symfony/phpunit-bridge": "^3.4"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "LegacyTests\\": "tests-legacy/",
-            "Tests\\": "tests/"
-        },
-        "files": [
-            "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
-        ]
-    },
-    "autoload": {
-        "psr-4": {
-            "PrestaShop\\PrestaShop\\": "src/",
-            "PrestaShopBundle\\": "src/PrestaShopBundle/"
-        },
-        "classmap": ["app/AppKernel.php", "app/AppCache.php"]
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ],
-        "post-update-cmd": [
-            "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ],
-        "create-test-db": [
-            "@php ./tests-legacy/create-test-db.php"
-        ],
-        "test-all": [
-            "@composer phpunit-admin",
-            "@composer phpunit-legacy",
-            "@composer unit-tests",
-            "@composer phpunit-sf",
-            "@composer integration-tests",
-            "@composer phpunit-controllers",
-            "@composer integration-behaviour-tests"
-        ],
-        "phpunit-legacy": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
-        ],
-        "phpunit-endpoints": [
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
-        ],
-        "unit-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
-        ],
-        "integration-tests": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
-        ],
-        "phpunit-admin": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
-        ],
-        "phpunit-sf": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
-        ],
-        "phpunit-controllers": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
-        ],
-        "integration-behaviour-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml  --format progress --no-snippets --strict"
-        ],
-        "create-release": "@php tools/build/CreateRelease.php",
-        "git-hook-install": "@php .github/contrib/install.php",
-        "git-hook-uninstall": "@php .github/contrib/uninstall.php"
-    },
-    "scripts-descriptions": {
-        "test-all": "Launch all PHPUnit test suites",
-        "create-test-db": "Create a Database for testing purposes",
-        "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
-    },
-    "config": {
-        "platform": {
-            "php": "7.1.3"
-        },
-        "sort-packages": true
-    },
-    "extra": {
-        "symfony-app-dir": "app",
-        "symfony-bin-dir": "bin",
-        "symfony-var-dir": "var",
-        "symfony-web-dir": ".",
-        "symfony-tests-dir": "tests",
-        "symfony-assets-install": "relative",
-        "incenteev-parameters": {
-          "file": "app/config/parameters.yml"
-        },
-        "symfony": {
-            "require": "~3.4"
-        }
-    },
-    "authors": [
-        {
-            "name": "PrestaShop SA",
-            "email": "contact@prestashop.com"
-        },
-        {
-            "name": "PrestaShop Community",
-            "homepage": "http://contributors.prestashop.com/"
-        }
+    "post-update-cmd": [
+      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
-    "license": "OSL-3.0"
+    "create-test-db": [
+      "@php ./tests-legacy/create-test-db.php"
+    ],
+    "test-all": [
+      "@composer phpunit-admin",
+      "@composer phpunit-legacy",
+      "@composer unit-tests",
+      "@composer phpunit-sf",
+      "@composer integration-tests",
+      "@composer phpunit-controllers",
+      "@composer integration-behaviour-tests"
+    ],
+    "phpunit-legacy": [
+      "@composer create-test-db",
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
+    ],
+    "phpunit-endpoints": [
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
+    ],
+    "unit-tests": [
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
+    ],
+    "integration-tests": [
+      "@composer create-test-db",
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
+    ],
+    "phpunit-admin": [
+      "@composer create-test-db",
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
+    ],
+    "phpunit-sf": [
+      "@composer create-test-db",
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
+    ],
+    "phpunit-controllers": [
+      "@composer create-test-db",
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
+    ],
+    "integration-behaviour-tests": [
+      "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml  --format progress --no-snippets --strict"
+    ],
+    "create-release": "@php tools/build/CreateRelease.php",
+    "git-hook-install": "@php .github/contrib/install.php",
+    "git-hook-uninstall": "@php .github/contrib/uninstall.php"
+  },
+  "scripts-descriptions": {
+    "test-all": "Launch all PHPUnit test suites",
+    "create-test-db": "Create a Database for testing purposes",
+    "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
+  },
+  "config": {
+    "platform": {
+      "php": "7.1.3"
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "symfony-app-dir": "app",
+    "symfony-bin-dir": "bin",
+    "symfony-var-dir": "var",
+    "symfony-web-dir": ".",
+    "symfony-tests-dir": "tests",
+    "symfony-assets-install": "relative",
+    "incenteev-parameters": {
+      "file": "app/config/parameters.yml"
+    },
+    "symfony": {
+      "require": "~3.4"
+    }
+  },
+  "authors": [
+    {
+      "name": "PrestaShop SA",
+      "email": "contact@prestashop.com"
+    },
+    {
+      "name": "PrestaShop Community",
+      "homepage": "http://contributors.prestashop.com/"
+    }
+  ],
+  "license": "OSL-3.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

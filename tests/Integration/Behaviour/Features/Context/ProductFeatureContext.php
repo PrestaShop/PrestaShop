@@ -95,6 +95,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @param string $productName
+     * @param string $combinationName
+     *
+     * @return Combination
+     */
+    public function getCombinationWithName(string $productName, string $combinationName): Combination
+    {
+        return $this->combinations[$productName][$combinationName];
+    }
+
+    /**
      * @Given /^there is a product in the catalog named "(.+)" with a price of (\d+\.\d+) and (\d+) items in stock$/
      */
     public function thereIsAProductWithNameAndPriceAndQuantity($productName, $price, $productQuantity)
@@ -429,6 +440,22 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $combination->add();
         StockAvailable::setQuantity((int) $this->products[$productName]->id, $combination->id, $combination->quantity);
         $this->combinations[$productName][$combinationName] = $combination;
+    }
+
+    /**
+     * @Given /^the combination "(.+)" of the product "(.+)" has a minimal quantity of (\d+)$/
+     *
+     * @param string $combinationName
+     * @param string $productName
+     * @param int $minimalQty
+     */
+    public function setProductCombinationMinimalQuantity(string $combinationName, string $productName, int $minimalQty)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+
+        $this->combinations[$productName][$combinationName]->minimal_quantity = $minimalQty;
+        $this->combinations[$productName][$combinationName]->save();
     }
 
     /**

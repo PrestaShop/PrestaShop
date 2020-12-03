@@ -23,9 +23,53 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+
 ####################################
-#   v1.7.7.0 - (2020-11-03)
+#   v1.7.7.0 - (2020-12-02)
 ####################################
+
+- Back Office:
+  - Bug fix:
+    - #22191: Validate currency localized names (by @jolelievre)
+    - #22013: Handle parallel updates from CartRules when updating a product in Order (by @jolelievre)
+    - #22018: Order zero ratio for order detail tax (by @matks)
+    - #21781: Remove gifted quantity from product order quantity (by @sowbiba)
+    - #21994: Remove or cancel all products (by @jolelievre)
+    - #21721: Handle Shop context override in order editing (by @jolelievre)
+    - #21816: Remove useless logic Product customization images in Order Page and handle exotic chars in name (by @matks)
+    - #21853: Add missing use in CancelOrderProductHandler (by @matks)
+    - #21830: Correctly generate cart error messages (by @jolelievre)
+    - #21555: Fixed increment button when adding a product out of stock and with allow order (by @Progi1984)
+    - #21526: Improved Error message in New Order Page when adding a minimal product (by @Progi1984)
+    - #21557: Fix product pagination when adding a product in an empty order (by @atomiix)
+- Front Office:
+  - Bug fix:
+    - #21981: Make sure favicon, stores_icon and logo are correctly settled for themes (by @PierreRambaud)
+- Core:
+  - Bug fix:
+    - #22178: Set numeric_iso_code & precision in currency from CLDR when upgrading (by @atomiix)
+    - #22182: Update pear/archive_tar to 1.4.11 (by @PierreRambaud)
+    - #22174: Use displayHeader hook instead of Header (by @atomiix)
+    - #22164: Fix upgrade script from < 1.7.6.0 to 1.7.7.0 (by @atomiix)
+    - #22146: Remove --classmap-authoritative when building release (by @atomiix)
+    - #22130: Fix dependency which is targeting the v1.3.0 instead of the 1.3 branch (by @PierreRambaud)
+    - #21975: Correctly substring fields before update, remove duplicates and add missing sql queries (by @PierreRambaud)
+- Installer:
+  - Improvement:
+    - #21957: Update latest native modules (by @jolelievre)
+  - Bug fix:
+    - #21953: Fix "column count doesn't match value count" error during upgrade (by @okom3pom)
+- Localization:
+  - Improvement:
+    - #22063: Last translation updates (by @jolelievre)
+- Tests:
+  - Refactoring:
+    - #22055: Delete spaces in the end of title name in faker for UI tests (by @boubkerbribri)
+
+####################################
+#   v1.7.7.0-rc.1 - (2020-11-03)
+####################################
+
 - Back Office:
   - Improvement:
     - #21435:  Add hooks for the AdminLoginController, AdminController, FrontController and Controller (by @PierreRambaud)

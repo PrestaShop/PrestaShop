@@ -81,8 +81,8 @@
       <title>Homepage content</title>
       <description>This hook displays new elements on the homepage</description>
     </hook>
-    <hook id="Header">
-      <name>Header</name>
+    <hook id="displayHeader">
+      <name>displayHeader</name>
       <title>Pages html head section</title>
       <description>This hook adds additional elements in the head section of your pages (head section of html)</description>
     </hook>
