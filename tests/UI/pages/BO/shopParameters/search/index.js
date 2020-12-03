@@ -257,9 +257,10 @@ class Search extends BOBasePage {
     // Click on Button Bulk actions
     await page.click(this.bulkActionMenuButton);
 
-
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableButton : this.bulkDisableButton);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
