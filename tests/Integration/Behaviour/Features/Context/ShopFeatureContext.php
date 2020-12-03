@@ -38,7 +38,7 @@ use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureCon
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
-    const LAST_FOUND_SHOPS_KEY = 'LAST_FOUND_SHOPS';
+    public const LAST_FOUND_SHOPS_KEY = 'LAST_FOUND_SHOPS';
 
     /**
      * @Given single shop :shopReference context is loaded
