@@ -39,6 +39,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateProductInOrderHandler
     arguments:
       - '@prestashop.adapter.order.product_quantity.updater'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand
