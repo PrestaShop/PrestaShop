@@ -417,9 +417,6 @@ class OrderHistoryCore extends ObjectModel
             $order->setDelivery();
         }
 
-        // executes hook
-        Hook::exec('actionOrderStatusPostUpdate', ['newOrderStatus' => $new_os, 'id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
-
         // sync all stock
         (new StockManagerAdapter())->updatePhysicalProductQuantity(
             (int) $order->id_shop,
@@ -428,6 +425,9 @@ class OrderHistoryCore extends ObjectModel
             null,
             (int) $order->id
         );
+        
+        // executes hook
+        Hook::exec('actionOrderStatusPostUpdate', ['newOrderStatus' => $new_os, 'id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
 
         ShopUrl::resetMainDomainCache();
     }
