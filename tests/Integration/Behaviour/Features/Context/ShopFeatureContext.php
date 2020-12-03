@@ -26,8 +26,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Configuration;
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
