@@ -31,12 +31,8 @@ use BoOrderCore;
 use Cart;
 use Configuration;
 use Context;
-use Country;
-use Currency;
-use Customer;
 use Employee;
 use Exception;
-use Language;
 use Message;
 use Module;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -45,13 +41,12 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOffic
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use Shop;
 use Validate;
 
 /**
  * @internal
  */
-final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandlerInterface
+final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler implements AddOrderFromBackOfficeHandlerInterface
 {
     /**
      * @var ContextStateManager
@@ -92,6 +87,8 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             ->setCountry($this->getTaxCountry($cart))
             ->setShop(new Shop($cart->id_shop))
         ;
+        $this->setCartContext($this->contextStateManager, $cart);
+        $this->contextStateManager->saveCurrentContext();
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
@@ -174,22 +171,5 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         if ($isInvoiceCountryDisabled) {
             throw new OrderException(sprintf('Invoice country for cart with id "%d" is disabled.', $cart->id));
         }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return Country
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function getTaxCountry(Cart $cart)
-    {
-        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
-        $taxAddress = new Address($taxAddressId);
-
-        return new Country($taxAddress->id_country);
     }
 }

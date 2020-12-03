@@ -27,14 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Carrier;
-use Currency;
-use Customer;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
-use Shop;
 use Validate;
 
 /**
@@ -63,13 +60,7 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
         $this->assertActiveCarrier($command->getNewCarrierId());
 
         $cart = $this->getCart($command->getCartId());
-        $this->contextStateManager
-            ->setCart($cart)
-            ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage($cart->getAssociatedLanguage())
-            ->setCustomer(new Customer($cart->id_customer))
-            ->setShop(new Shop($cart->id_shop))
-        ;
+        $this->setCartContext($this->contextStateManager, $cart);
 
         try {
             $cart->setDeliveryOption([
