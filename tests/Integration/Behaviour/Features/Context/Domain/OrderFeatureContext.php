@@ -1733,11 +1733,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $orderReference
      * @param TableNode $table
      */
-    public function checkOrderForViewingWithReference(string $productReference, string $orderReference, TableNode $table)
+    public function checkOrderForViewingWithReference(string $productReference, string $orderReference, TableNode $table): void
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $productId = $this->getProductIdByName($productReference);
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $productList = $orderForViewing->getProducts()->getProducts();
         $expectedDetails = $table->getRowsHash();

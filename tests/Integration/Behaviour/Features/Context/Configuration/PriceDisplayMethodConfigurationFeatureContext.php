@@ -35,7 +35,7 @@ class PriceDisplayMethodConfigurationFeatureContext extends AbstractConfiguratio
     /**
      * @Given /^price display method for the group of the customer having email "(.+)" is "(tax included|tax excluded)"$/
      */
-    public function setPriceDisplayMethodForCustomer(string $customerEmail, string $priceDisplayMethod)
+    public function setPriceDisplayMethodForCustomer(string $customerEmail, string $priceDisplayMethod): void
     {
         $data = Customer::getCustomersByEmail($customerEmail);
         $data = reset($data);
