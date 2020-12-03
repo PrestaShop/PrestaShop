@@ -102,7 +102,10 @@ abstract class AbstractDomainFeatureContext implements Context
         return CommonFeatureContext::getContainer();
     }
 
-    protected function assertLastErrorIsNull()
+    /**
+     * @throws RuntimeException
+     */
+    protected function assertLastErrorIsNull(): void
     {
         if (null !== $this->lastException) {
             throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($this->lastException), $this->lastException->getMessage()), 0, $this->lastException);
