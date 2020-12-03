@@ -93,9 +93,7 @@ class Order extends BOBasePage {
       page.click(this.UpdateProductButton),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.productQuantitySpan(row)),
-    ]);
+    await this.waitForVisibleSelector(page, this.productQuantitySpan(row));
     return parseFloat(await this.getTextContent(page, this.productQuantitySpan(row)));
   }
 
