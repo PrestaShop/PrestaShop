@@ -38,8 +38,6 @@ use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureCon
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
-    public const LAST_FOUND_SHOPS_KEY = 'LAST_FOUND_SHOPS';
-
     /**
      * @Given single shop :shopReference context is loaded
      *
@@ -123,15 +121,15 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         foreach ($expectedShops as $key => $currentExpectedShop) {
             $wasCurrentExpectedShopFound = false;
             foreach ($foundShops['shops'] as $currentFoundShop) {
-                if (strtolower($currentExpectedShop['name']) == strtolower($currentFoundShop['name'])) {
+                if (strtolower($currentExpectedShop['name']) == strtolower($currentFoundShop->getName())) {
                     $wasCurrentExpectedShopFound = true;
                     Assert::assertEquals(
                         $currentExpectedShop['group_name'],
-                        $currentFoundShop['group_name'],
+                        $currentFoundShop->getGroupName(),
                         sprintf(
                             'Expected and found shops\'s groups don\'t match (%s and %s)',
                             $currentExpectedShop['group_name'],
-                            $currentFoundShop['group_name']
+                            $currentFoundShop->getGroupName()
                         )
                     );
                     continue;
