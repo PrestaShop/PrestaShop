@@ -29,11 +29,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
+use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureContext
@@ -106,8 +107,8 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             sprintf('Unexpected combination "%s" location', $combinationReference)
         );
         Assert::assertEquals(
-            $expectedStock->getAvailableDate()->format(DateTime::DEFAULT_DATETIME_FORMAT),
-            $actualStock->getAvailableDate()->format(DateTime::DEFAULT_DATETIME_FORMAT),
+            $expectedStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+            $actualStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
             sprintf('Unexpected combination "%s" availability date', $combinationReference)
         );
     }
@@ -128,13 +129,13 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             $command->setLocation($dataRows['location']);
         }
         if (isset($dataRows['low stock threshold'])) {
-            $command->setLowStockThreshold($dataRows['low stock threshold']);
+            $command->setLowStockThreshold((int) $dataRows['low stock threshold']);
         }
         if (isset($dataRows['low stock alert is on'])) {
-            $command->setLowStockAlertOn($dataRows['low stock alert is on']);
+            $command->setLowStockAlertOn(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is on']));
         }
         if (isset($dataRows['available date'])) {
-            $command->setAvailableDate($dataRows['available date']);
+            $command->setAvailableDate(new DateTime($dataRows['available date']));
         }
     }
 }
