@@ -113,10 +113,10 @@ use Tax;
 use TaxManagerFactory;
 use TaxRule;
 use TaxRulesGroup;
+use Tests\Resources\ResourceResetter;
 use WarehouseProductLocation;
 use WebserviceKey;
 use Zone;
-use Tests\Resources\ResourceResetter;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
