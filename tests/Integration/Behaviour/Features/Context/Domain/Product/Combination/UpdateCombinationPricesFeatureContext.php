@@ -103,6 +103,14 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
                 (string) $actualPrices->getImpactOnPrice()
             )
         );
+        Assert::assertTrue(
+            $expectedPrices->getWholesalePrice()->equals($actualPrices->getWholesalePrice()),
+            sprintf(
+                'Unexpected combination wholesale price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getWholesalePrice(),
+                (string) $actualPrices->getWholesalePrice()
+            )
+        );
     }
 
     /**
@@ -114,13 +122,14 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
         if (isset($data['eco tax'])) {
             $command->setEcoTax($data['eco tax']);
         }
-
         if (isset($data['impact on price'])) {
             $command->setImpactOnPrice($data['impact on price']);
         }
-
         if (isset($data['unit price impact'])) {
             $command->setUnitPriceImpact($data['unit price impact']);
+        }
+        if (isset($data['wholesale price'])) {
+            $command->setWholesalePrice($data['wholesale price']);
         }
     }
 }

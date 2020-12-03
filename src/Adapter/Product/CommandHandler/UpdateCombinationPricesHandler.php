@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 
+/**
+ * Handles @see UpdateCombinationPricesCommand using legacy object model
+ */
 final class UpdateCombinationPricesHandler implements UpdateCombinationPricesHandlerInterface
 {
     /**

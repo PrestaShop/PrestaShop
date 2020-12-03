@@ -144,13 +144,13 @@ class UpdateCombinationPricesCommand
     }
 
     /**
-     * @param DecimalNumber $wholesalePrice
+     * @param string $wholesalePrice
      *
      * @return UpdateCombinationPricesCommand
      */
-    public function setWholesalePrice(DecimalNumber $wholesalePrice): UpdateCombinationPricesCommand
+    public function setWholesalePrice(string $wholesalePrice): UpdateCombinationPricesCommand
     {
-        $this->wholesalePrice = $wholesalePrice;
+        $this->wholesalePrice = new DecimalNumber($wholesalePrice);
 
         return $this;
     }
