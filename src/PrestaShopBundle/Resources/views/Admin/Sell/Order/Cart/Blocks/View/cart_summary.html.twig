@@ -84,7 +84,7 @@
                       {% if customizationField.type == 'customizable_file' %}
                         <img src="{{ customizationField.image }}">
                       {% else %}
-                        {{ customizationField.value }}
+                        {{ customizationField.value | raw }}
                       {% endif %}
                     </div>
                   </div>
