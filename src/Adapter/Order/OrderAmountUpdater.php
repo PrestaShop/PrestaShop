@@ -284,7 +284,7 @@ class OrderAmountUpdater
                     $orderDetail->product_price = $orderDetail->unit_price_tax_excl = Tools::ps_round($unitPriceTaxExcl, $computingPrecision);
                     $orderDetail->unit_price_tax_incl = Tools::ps_round($unitPriceTaxIncl, $computingPrecision);
                     $orderDetail->total_price_tax_excl = $orderDetail->unit_price_tax_excl * $orderDetail->product_quantity;
-                    $orderDetail->total_price_tax_incl = $orderDetail->total_price_tax_incl * $orderDetail->product_quantity;
+                    $orderDetail->total_price_tax_incl = $orderDetail->unit_price_tax_incl * $orderDetail->product_quantity;
 
                     break;
             }
