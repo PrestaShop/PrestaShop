@@ -81,11 +81,11 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this
-            ->getQueryBuilder()
-            ->select('COUNT(*)')
-            ->from($this->dbPrefix . 'log', 'lg')
-        ;
+        $queryBuilder = $this->getQueryBuilder()
+            ->select('COUNT(lg.id_log)')
+            ->from($this->dbPrefix . 'log', 'lg');
+
+        return $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
     }
 
     private function applyAssociatedQueries(QueryBuilder $queryBuilder): void
@@ -113,7 +113,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function appendShopQuery(QueryBuilder $queryBuilder): void
     {
-        $shopQueryBuilder = $this->connection->createQueryBuilder()
+        $shopQueryBuilder = $this->getQueryBuilder()
             ->select('s.name')
             ->from($this->dbPrefix . 'shop', 's')
             ->where('s.id_shop = lg.id_shop')
@@ -129,7 +129,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function appendShopGroupQuery(QueryBuilder $queryBuilder): void
     {
-        $shopQueryBuilder = $this->connection->createQueryBuilder()
+        $shopQueryBuilder = $this->getQueryBuilder()
             ->select('sg.name')
             ->from($this->dbPrefix . 'shop_group', 'sg')
             ->where('sg.id_shop_group = lg.id_shop_group')
@@ -145,7 +145,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function appendLangQuery(QueryBuilder $queryBuilder): void
     {
-        $shopQueryBuilder = $this->connection->createQueryBuilder()
+        $shopQueryBuilder = $this->getQueryBuilder()
             ->select('lng.name')
             ->from($this->dbPrefix . 'lang', 'lng')
             ->where('lng.id_lang = lg.id_lang')
@@ -172,8 +172,10 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @param array $filters
      * @param QueryBuilder $qb
+     *
+     * @return QueryBuilder
      */
-    private function applyFilters(array $filters, QueryBuilder $qb)
+    private function applyFilters(array $filters, QueryBuilder $qb): QueryBuilder
     {
         $allowedFilters = [
             'id_log',
@@ -217,6 +219,8 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->andWhere('`' . $filterName . '` LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
+
+        return $qb;
     }
 
     /**
