@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 
 /**
- * Interface for service which handles GetLogos query
+ * Interface for service which handles SearchShops query
  */
 interface SearchShopsHandlerInterface
 {
