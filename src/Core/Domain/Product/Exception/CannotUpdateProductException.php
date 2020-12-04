@@ -47,57 +47,62 @@ class CannotUpdateProductException extends ProductException
     const FAILED_UPDATE_OPTIONS = 30;
 
     /**
+     * When product details update fails
+     */
+    const FAILED_UPDATE_DETAILS = 40;
+
+    /**
      * When product tags update fails
      */
-    const FAILED_UPDATE_TAGS = 40;
+    const FAILED_UPDATE_TAGS = 50;
 
     /**
      * When product categories update fails
      */
-    const FAILED_UPDATE_CATEGORIES = 50;
+    const FAILED_UPDATE_CATEGORIES = 60;
 
     /**
      * When product properties associated with customization fields update fails
      */
-    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
+    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 70;
 
     /**
      * When product shipping options update fails
      */
-    const FAILED_UPDATE_SHIPPING_OPTIONS = 70;
+    const FAILED_UPDATE_SHIPPING_OPTIONS = 80;
 
     /**
      * When product default supplier update fails
      */
-    const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
+    const FAILED_UPDATE_DEFAULT_SUPPLIER = 90;
 
     /**
      * When product default category update fails
      */
-    const FAILED_UPDATE_DEFAULT_CATEGORY = 90;
+    const FAILED_UPDATE_DEFAULT_CATEGORY = 100;
 
     /**
      * When product seo options update fails
      */
-    const FAILED_UPDATE_SEO = 100;
+    const FAILED_UPDATE_SEO = 110;
 
     /**
      * When product attachments association update fails
      */
-    const FAILED_UPDATE_ATTACHMENTS = 110;
+    const FAILED_UPDATE_ATTACHMENTS = 120;
 
     /**
      * When product default combination update fails
      */
-    const FAILED_UPDATE_DEFAULT_ATTRIBUTE = 120;
+    const FAILED_UPDATE_DEFAULT_ATTRIBUTE = 130;
 
     /**
      * When search indexation update for product fails
      */
-    const FAILED_UPDATE_SEARCH_INDEXATION = 130;
+    const FAILED_UPDATE_SEARCH_INDEXATION = 140;
 
     /**
      * When stock update fails
      */
-    const FAILED_UPDATE_STOCK = 140;
+    const FAILED_UPDATE_STOCK = 150;
 }

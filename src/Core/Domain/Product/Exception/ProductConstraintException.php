@@ -220,4 +220,44 @@ class ProductConstraintException extends ProductException
      * When product low stock threshold is invalid
      */
     public const INVALID_LOW_STOCK_THRESHOLD = 380;
+
+    /**
+     * When available for order option is invalid
+     */
+    public const INVALID_AVAILABLE_FOR_ORDER = 390;
+
+    /**
+     * When online only option is invalid
+     */
+    public const INVALID_ONLINE_ONLY = 400;
+
+    /**
+     * When show price option is invalid
+     */
+    public const INVALID_SHOW_PRICE = 410;
+
+    /**
+     * When manufacturer id option is invalid
+     */
+    public const INVALID_MANUFACTURER_ID = 420;
+
+    /**
+     * When customizability is invalid
+     */
+    public const INVALID_CUSTOMIZABILITY = 430;
+
+    /**
+     * When customizable text fields count is invalid
+     */
+    public const INVALID_TEXT_FIELDS_COUNT = 440;
+
+    /**
+     * When uploaded files count for customization is invalid
+     */
+    public const INVALID_UPLOADABLE_FILES_COUNT = 450;
+
+    /**
+     * When additional delivery time notes type is invalid
+     */
+    public const INVALID_ADDITIONAL_DELIVERY_TIME_NOTES_TYPE = 460;
 }
