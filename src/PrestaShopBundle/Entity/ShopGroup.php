@@ -53,6 +53,13 @@ class ShopGroup
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="color", type="string", length=50)
+     */
+    private $color;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="share_customer", type="boolean")
@@ -119,6 +126,30 @@ class ShopGroup
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set color
+     *
+     * @param string $color
+     *
+     * @return ShopGroup
+     */
+    public function setColor(string $color): ShopGroup
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return string|null
+     */
+    public function getColor(): ?string
+    {
+        return $this->color;
     }
 
     /**
