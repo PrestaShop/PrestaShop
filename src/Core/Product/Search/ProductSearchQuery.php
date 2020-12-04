@@ -62,7 +62,7 @@ class ProductSearchQuery
     private $searchTag;
 
     /**
-     * @var array
+     * @var array|string
      */
     private $encodedFacets;
 
