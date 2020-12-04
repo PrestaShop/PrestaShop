@@ -39,12 +39,12 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I update product :productReference options with following information:
+     * @When I update product :productReference details with following values:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateProductOptions(string $productReference, TableNode $table): void
+    public function updateProductDetails(string $productReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
         $productId = $this->getSharedStorage()->get($productReference);
@@ -61,7 +61,7 @@ class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Transform table:product detail, value
+     * @Transform table:product detail,value
      *
      * @param TableNode $tableNode
      *

@@ -86,13 +86,13 @@ class ProductOptions
         string $condition,
         int $manufacturerId
     ) {
+        $this->active = $active;
         $this->visibility = $visibility;
         $this->availableForOrder = $availableForOrder;
         $this->onlineOnly = $onlineOnly;
         $this->showPrice = $showPrice;
         $this->condition = $condition;
         $this->manufacturerId = $manufacturerId;
-        $this->active = $active;
     }
 
     /**
@@ -141,5 +141,13 @@ class ProductOptions
     public function getManufacturerId(): int
     {
         return $this->manufacturerId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCondition(): string
+    {
+        return $this->condition;
     }
 }

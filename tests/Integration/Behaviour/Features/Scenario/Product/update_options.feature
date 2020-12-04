@@ -13,20 +13,12 @@ Feature: Update product options from Back Office (BO)
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | is_virtual  | false         |
-    Then product "product1" should have following options information:
+    Then product "product1" should have following options:
       | visibility          | both  |
       | available_for_order | true  |
       | online_only         | false |
       | show_price          | true  |
       | condition           | new   |
-      | isbn                |       |
-      | upc                 |       |
-      | ean13               |       |
-      | mpn                 |       |
-      | reference           |       |
-    And product "product1" localized "tags" should be:
-      | locale | value |
-      | en-US  |       |
     And product product1 should have no manufacturer assigned
     When I update product "product1" options with following information:
       | visibility          | catalog           |
@@ -34,51 +26,31 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true              |
       | show_price          | false             |
       | condition           | used              |
-      | isbn                | 978-3-16-148410-0 |
-      | upc                 | 72527273070       |
-      | ean13               | 978020137962      |
-      | mpn                 | mpn1              |
-      | reference           | ref1              |
       | manufacturer        | studioDesign      |
-    Then product "product1" should have following options information:
+    Then product "product1" should have following options:
       | visibility          | catalog           |
       | available_for_order | false             |
       | online_only         | true              |
       | show_price          | false             |
       | condition           | used              |
-      | isbn                | 978-3-16-148410-0 |
-      | upc                 | 72527273070       |
-      | ean13               | 978020137962      |
-      | mpn                 | mpn1              |
-      | reference           | ref1              |
     And manufacturer "studioDesign" should be assigned to product product1
 
   Scenario: I only update product availability for order, leaving other properties unchanged
-    Given product "product1" should have following options information:
+    Given product "product1" should have following options:
       | visibility          | catalog           |
       | available_for_order | false             |
       | online_only         | true              |
       | show_price          | false             |
       | condition           | used              |
-      | isbn                | 978-3-16-148410-0 |
-      | upc                 | 72527273070       |
-      | ean13               | 978020137962      |
-      | mpn                 | mpn1              |
-      | reference           | ref1              |
     And manufacturer "studioDesign" should be assigned to product product1
     When I update product "product1" options with following information:
       | available_for_order | true |
-    Then product "product1" should have following options information:
+    Then product "product1" should have following options:
       | visibility          | catalog           |
       | available_for_order | true              |
       | online_only         | true              |
       | show_price          | false             |
       | condition           | used              |
-      | isbn                | 978-3-16-148410-0 |
-      | upc                 | 72527273070       |
-      | ean13               | 978020137962      |
-      | mpn                 | mpn1              |
-      | reference           | ref1              |
     And manufacturer "studioDesign" should be assigned to product product1
 
   Scenario: I update manufacturer with invalid values
@@ -103,25 +75,21 @@ Feature: Update product options from Back Office (BO)
     Given I add product "product2" with following information:
       | name[en-US] | 'The truth is out there' wallpaper |
       | is_virtual  | true                               |
+    And product "product2" should have following options:
+      | visibility          | both  |
+      | available_for_order | true  |
+      | online_only         | false |
+      | show_price          | true  |
+      | condition           | new   |
     When I update product "product2" options with following information:
       | visibility | show it to me plz |
     Then I should get error that product visibility is invalid
     When I update product "product2" options with following information:
       | condition | very good condition |
     Then I should get error that product condition is invalid
-    When I update product "product2" options with following information:
-      | isbn | isbn1 |
-    Then I should get error that product isbn is invalid
-    When I update product "product2" options with following information:
-      | upc | upc1 |
-    Then I should get error that product upc is invalid
-    When I update product "product2" options with following information:
-      | ean13 | ean1 |
-    Then I should get error that product ean13 is invalid
-    When I update product "product2" options with following information:
-      | mpn | this is more than forty characters long string |
-    Then I should get error that product mpn is invalid
-    When I update product "product2" options with following information:
-      | reference | invalid chars like ^;{ |
-    Then I should get error that product reference is invalid
-
+    And product "product2" should have following options:
+      | visibility          | both  |
+      | available_for_order | true  |
+      | online_only         | false |
+      | show_price          | true  |
+      | condition           | new   |

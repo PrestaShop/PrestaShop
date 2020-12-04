@@ -84,12 +84,12 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following options information:
+     * @Then product :productReference should have following options:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertOptionsInformation(string $productReference, TableNode $table)
+    public function assertOptions(string $productReference, TableNode $table)
     {
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
