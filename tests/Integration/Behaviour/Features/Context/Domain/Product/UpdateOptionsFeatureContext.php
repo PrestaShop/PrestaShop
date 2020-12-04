@@ -99,11 +99,6 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         $this->assertBoolProperty($productForEditing, $data, 'show_price');
         $this->assertStringProperty($productForEditing, $data, 'visibility');
         $this->assertStringProperty($productForEditing, $data, 'condition');
-        $this->assertStringProperty($productForEditing, $data, 'isbn');
-        $this->assertStringProperty($productForEditing, $data, 'upc');
-        $this->assertStringProperty($productForEditing, $data, 'ean13');
-        $this->assertStringProperty($productForEditing, $data, 'mpn');
-        $this->assertStringProperty($productForEditing, $data, 'reference');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
@@ -160,30 +155,6 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
 
         if (isset($data['condition'])) {
             $command->setCondition($data['condition']);
-        }
-
-        if (isset($data['isbn'])) {
-            $command->setIsbn($data['isbn']);
-        }
-
-        if (isset($data['upc'])) {
-            $command->setUpc($data['upc']);
-        }
-
-        if (isset($data['ean13'])) {
-            $command->setEan13($data['ean13']);
-        }
-
-        if (isset($data['mpn'])) {
-            $command->setMpn($data['mpn']);
-        }
-
-        if (isset($data['reference'])) {
-            $command->setReference($data['reference']);
-        }
-
-        if (isset($data['mpn'])) {
-            $command->setMpn($data['mpn']);
         }
 
         if (isset($data['manufacturer'])) {
