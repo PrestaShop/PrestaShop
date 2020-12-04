@@ -36,7 +36,7 @@ class CombinationForEditing
     /**
      * @var CombinationDetails
      */
-    private $options;
+    private $details;
 
     /**
      * @var CombinationPrices
@@ -44,14 +44,14 @@ class CombinationForEditing
     private $prices;
 
     /**
-     * @param CombinationDetails $options
+     * @param CombinationDetails $details
      * @param CombinationPrices $prices
      */
     public function __construct(
-        CombinationDetails $options,
+        CombinationDetails $details,
         CombinationPrices $prices
     ) {
-        $this->options = $options;
+        $this->details = $details;
         $this->prices = $prices;
     }
 
@@ -60,7 +60,7 @@ class CombinationForEditing
      */
     public function getDetails(): CombinationDetails
     {
-        return $this->options;
+        return $this->details;
     }
 
     /**

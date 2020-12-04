@@ -43,7 +43,7 @@ class CombinationValidator extends AbstractObjectModelValidator
      */
     public function validate(Combination $combination): void
     {
-        $this->validateOptions($combination);
+        $this->validateDetails($combination);
         $this->validatePrices($combination);
     }
 
@@ -53,13 +53,14 @@ class CombinationValidator extends AbstractObjectModelValidator
      * @throws CoreException
      * @throws ProductConstraintException
      */
-    private function validateOptions(Combination $combination): void
+    private function validateDetails(Combination $combination): void
     {
         $this->validateCombinationProperty($combination, 'ean13', ProductConstraintException::INVALID_EAN_13);
         $this->validateCombinationProperty($combination, 'isbn', ProductConstraintException::INVALID_ISBN);
         $this->validateCombinationProperty($combination, 'mpn', ProductConstraintException::INVALID_MPN);
         $this->validateCombinationProperty($combination, 'reference', ProductConstraintException::INVALID_REFERENCE);
         $this->validateCombinationProperty($combination, 'upc', ProductConstraintException::INVALID_UPC);
+        $this->validateCombinationProperty($combination, 'weight', ProductConstraintException::INVALID_WEIGHT);
     }
 
     /**

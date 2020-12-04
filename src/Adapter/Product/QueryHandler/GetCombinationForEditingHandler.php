@@ -81,7 +81,8 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             $combination->isbn,
             $combination->mpn,
             $combination->reference,
-            $combination->upc
+            $combination->upc,
+            new DecimalNumber($combination->weight)
         );
     }
 

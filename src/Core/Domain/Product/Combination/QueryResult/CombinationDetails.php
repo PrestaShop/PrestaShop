@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
+use PrestaShop\Decimal\DecimalNumber;
+
 /**
  * Transfers combination details
  */
@@ -59,24 +61,32 @@ class CombinationDetails
     private $upc;
 
     /**
+     * @var DecimalNumber
+     */
+    private $weight;
+
+    /**
      * @param string $ean13
      * @param string $isbn
      * @param string $mpn
      * @param string $reference
      * @param string $upc
+     * @param DecimalNumber $weight
      */
     public function __construct(
         string $ean13,
         string $isbn,
         string $mpn,
         string $reference,
-        string $upc
+        string $upc,
+        DecimalNumber $weight
     ) {
         $this->ean13 = $ean13;
         $this->isbn = $isbn;
         $this->mpn = $mpn;
         $this->reference = $reference;
         $this->upc = $upc;
+        $this->weight = $weight;
     }
 
     /**
@@ -117,5 +127,13 @@ class CombinationDetails
     public function getUpc(): string
     {
         return $this->upc;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getWeight(): DecimalNumber
+    {
+        return $this->weight;
     }
 }
