@@ -563,7 +563,7 @@ class AddressController extends FrameworkBundleAdminController
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(
                         '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
-                        ['refreshCartAddresses' => 'false']
+                        ['refreshCartAddresses' => 'true']
                     );
                 }
 

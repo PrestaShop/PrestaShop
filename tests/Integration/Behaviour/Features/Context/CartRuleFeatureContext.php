@@ -45,6 +45,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected $cartRules = [];
 
     /**
+     * @var CountryFeatureContext
+     */
+    protected $countryFeatureContext;
+
+    /**
      * @var ProductFeatureContext
      */
     protected $productFeatureContext;
@@ -80,6 +85,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
+        $this->countryFeatureContext = $scope->getEnvironment()->getContext(CountryFeatureContext::class);
         $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
         $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
         $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
@@ -218,6 +224,25 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
           VALUES('" . (int) $this->cartRules[$cartRuleName]->id . "',
           '" . (int) $this->carrierFeatureContext->getCarrierWithName($carrierName)->id . "')
         ");
+        Cache::clear();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" is restricted to country "(.+)"$/
+     */
+    public function cartRuleNamedIsRestrictedToCountryNamed(string $cartRuleName, string $country)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->countryFeatureContext->checkCountryWithIsoCodeExists($country);
+        $this->cartRules[$cartRuleName]->country_restriction = 1;
+        $this->cartRules[$cartRuleName]->save();
+
+        $idCartRule = (int) $this->cartRules[$cartRuleName]->id;
+        $idCountry = (int) $this->countryFeatureContext->getCountryWithIsoCode($country);
+        Db::getInstance()->execute(
+            'INSERT INTO ' . _DB_PREFIX_ . 'cart_rule_country(`id_cart_rule`, `id_country`) ' .
+            'VALUES(' . $idCartRule . ', ' . $idCountry . ')'
+        );
         Cache::clear();
     }
 

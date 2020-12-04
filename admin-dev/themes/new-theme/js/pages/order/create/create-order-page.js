@@ -290,6 +290,7 @@ export default class CreateOrderPage {
   _onCartAddressesChanged() {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
