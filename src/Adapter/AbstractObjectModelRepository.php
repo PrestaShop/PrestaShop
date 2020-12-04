@@ -51,7 +51,7 @@ abstract class AbstractObjectModelRepository
         } catch (PrestaShopException $e) {
             throw new CoreException(
                 sprintf(
-                    'Error occurred when trying to check if %s #%d exists [%]',
+                    'Error occurred when trying to check if %s #%d exists [%s]',
                     $objectTableName,
                     $id,
                     $e->getMessage()
