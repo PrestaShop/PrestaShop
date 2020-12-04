@@ -139,6 +139,52 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  Scenario: Partial refund product from order
+    When I update order "bo_order1" status to "Processing in progress"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2 |
+    And I watch the stock of product "Mug The best is yet to come"
+    When I issue a partial refund on "bo_order1" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 2                        | 7.5    |
+    Then "bo_order1" has 1 credit slips
+    Then "bo_order1" last credit slip is:
+      | amount                  | 7.5  |
+      | total_products_tax_excl | 7.5  |
+      | total_products_tax_incl | 7.95 |
+      | shipping_cost_amount    | 0.0  |
+      | total_shipping_tax_incl | 0.0  |
+      | total_shipping_tax_excl | 0.0  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 2    |
+      | product_quantity_reinjected | 2    |
+      | total_refunded_tax_excl     | 7.5  |
+      | total_refunded_tax_incl     | 7.95 |
+    And there are 2 more "Mug The best is yet to come" in stock
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
   Scenario: Return product from order
     When I update order "bo_order1" status to "Processing in progress"
     Then order "bo_order1" should have following details:
