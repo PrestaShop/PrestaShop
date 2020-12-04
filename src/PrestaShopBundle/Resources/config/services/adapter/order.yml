@@ -131,6 +131,7 @@ services:
       - '@prestashop.adapter.order.refund.order_slip_creator'
       - '@prestashop.adapter.order.refund.voucher_generator'
       - '@prestashop.adapter.order.refund.updater'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand
