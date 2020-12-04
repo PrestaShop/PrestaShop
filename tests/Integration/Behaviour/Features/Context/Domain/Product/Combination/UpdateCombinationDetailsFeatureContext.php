@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -54,21 +55,30 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
      * @Then combination :combinationReference should have following details:
      *
      * @param string $combinationReference
-     * @param CombinationDetails $expectedOptions
+     * @param CombinationDetails $expectedDetails
      */
-    public function assertOptions(string $combinationReference, CombinationDetails $expectedOptions): void
+    public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails): void
     {
-        $optionPropertyNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualOptions = $this->getCombinationForEditing($combinationReference)->getDetails();
+        $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
+        $actualDetails = $this->getCombinationForEditing($combinationReference)->getDetails();
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        foreach ($optionPropertyNames as $propertyName) {
+        foreach ($scalarDetailNames as $propertyName) {
             Assert::assertSame(
-                $propertyAccessor->getValue($expectedOptions, $propertyName),
-                $propertyAccessor->getValue($actualOptions, $propertyName),
+                $propertyAccessor->getValue($expectedDetails, $propertyName),
+                $propertyAccessor->getValue($actualDetails, $propertyName),
                 sprintf('Unexpected %s of "%s"', $propertyName, $combinationReference)
             );
         }
+
+        Assert::assertTrue(
+            $expectedDetails->getWeight()->equals($actualDetails->getWeight()),
+            sprintf(
+                'Unexpected combination weight. Expected "%s" got "%s"',
+                var_export($expectedDetails, true),
+                var_export($actualDetails, true)
+            )
+        );
     }
 
     /**
@@ -78,16 +88,17 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
      *
      * @return CombinationDetails
      */
-    public function transformOptions(TableNode $tableNode): CombinationDetails
+    public function transformDetails(TableNode $tableNode): CombinationDetails
     {
-        $options = $tableNode->getRowsHash();
+        $details = $tableNode->getRowsHash();
 
         return new CombinationDetails(
-            $options['ean13'],
-            $options['isbn'],
-            $options['mpn'],
-            $options['reference'],
-            $options['upc']
+            $details['ean13'],
+            $details['isbn'],
+            $details['mpn'],
+            $details['reference'],
+            $details['upc'],
+            new DecimalNumber($details['weight'])
         );
     }
 
@@ -111,6 +122,9 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
         }
         if (isset($dataRows['upc'])) {
             $command->setUpc($dataRows['upc']);
+        }
+        if (isset($dataRows['weight'])) {
+            $command->setWeight($dataRows['weight']);
         }
     }
 }

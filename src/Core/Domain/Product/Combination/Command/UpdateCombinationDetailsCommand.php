@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
@@ -69,6 +70,11 @@ class UpdateCombinationDetailsCommand
      * @var Upc|null
      */
     private $upc;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $weight;
 
     /**
      * @param int $combinationId
@@ -185,6 +191,26 @@ class UpdateCombinationDetailsCommand
     public function setUpc(string $upc): UpdateCombinationDetailsCommand
     {
         $this->upc = new Upc($upc);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWeight(): ?DecimalNumber
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param string $weight
+     *
+     * @return UpdateCombinationDetailsCommand
+     */
+    public function setWeight(string $weight): UpdateCombinationDetailsCommand
+    {
+        $this->weight = new DecimalNumber($weight);
 
         return $this;
     }
