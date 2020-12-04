@@ -30,9 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -59,30 +57,26 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
-        } catch (ManufacturerException $e) {
-            $this->setLastException($e);
         }
     }
 
     /**
-     * @Then I should get error that assigned manufacturer is invalid
+     * @When I assign non existing manufacturer to product :productReference
+     *
+     * @param string $productReference
      */
-    public function assertInvalidManufacturerError(): void
+    public function updateOptionsWithNonExistingManufacturer(string $productReference): void
     {
-        $this->assertLastErrorIs(
-            ManufacturerConstraintException::class,
-            ManufacturerConstraintException::INVALID_ID
-        );
-    }
+        // intentional. Mimics id of non-existing manufacturer
+        $nonExistingId = 50000;
 
-    /**
-     * @Then I should get error that assigned manufacturer does not exist
-     */
-    public function assertManufacturerDoesNotExistError(): void
-    {
-        $this->assertLastErrorIs(
-            ManufacturerNotFoundException::class
-        );
+        try {
+            $command = new UpdateProductOptionsCommand($this->getSharedStorage()->get($productReference));
+            $command->setManufacturerId($nonExistingId);
+            $this->getCommandBus()->handle($command);
+        } catch (ManufacturerException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -103,7 +97,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['online_only']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_price']),
             $dataRows['condition'],
-            $this->parseManufacturerId($dataRows['manufacturer'])
+            $this->getManufacturerId($dataRows['manufacturer'])
         );
     }
 
@@ -137,31 +131,6 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then manufacturer :manufacturerReference should be assigned to product :productReference
-     *
-     * @param string $manufacturerReference
-     * @param string $productReference
-     */
-    public function assertManufacturerId(string $manufacturerReference, string $productReference): void
-    {
-        $expectedId = $this->getSharedStorage()->get($manufacturerReference);
-        $actualId = $this->getProductForEditing($productReference)->getOptions()->getManufacturerId();
-
-        Assert::assertEquals($expectedId, $actualId, 'Unexpected product manufacturer id');
-    }
-
-    /**
-     * @Then product :productReference should have no manufacturer assigned
-     *
-     * @param string $productReference
-     */
-    public function assertProductHasNoManufacturer(string $productReference): void
-    {
-        $manufacturerId = $this->getProductForEditing($productReference)->getOptions()->getManufacturerId();
-        Assert::assertEmpty($manufacturerId, sprintf('Expected product "%s" to have no manufacturer assigned', $productReference));
-    }
-
-    /**
      * @param array $data
      * @param UpdateProductOptionsCommand $command
      */
@@ -192,32 +161,21 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['manufacturer'])) {
-            $command->setManufacturerId($this->parseManufacturerId($data['manufacturer']));
+            $command->setManufacturerId($this->getManufacturerId($data['manufacturer']));
         }
     }
 
     /**
-     * @param string $value
+     * @param string $manufacturerReference
      *
      * @return int
      */
-    private function parseManufacturerId(string $value): int
+    private function getManufacturerId(string $manufacturerReference): int
     {
-        switch ($value) {
-            case 'invalid':
-                $manufacturerId = -1;
-                break;
-            case 'non-existent':
-                $manufacturerId = 42;
-                break;
-            case '':
-                $manufacturerId = NoManufacturerId::NO_MANUFACTURER_ID;
-                break;
-            default:
-                $manufacturerId = $this->getSharedStorage()->get($value);
-                break;
+        if ('' === $manufacturerReference) {
+            return NoManufacturerId::NO_MANUFACTURER_ID;
         }
 
-        return $manufacturerId;
+        return $this->getSharedStorage()->get($manufacturerReference);
     }
 }

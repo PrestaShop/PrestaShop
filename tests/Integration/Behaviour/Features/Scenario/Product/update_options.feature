@@ -63,23 +63,38 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | manufacturer        | studioDesign |
 
-  Scenario: I update manufacturer with invalid values
-    Given manufacturer "studioDesign" should be assigned to product product1
-    When I update product "product1" options with following values:
-      | manufacturer | invalid |
-    Then I should get error that assigned manufacturer is invalid
-    When I update product "product1" options with following values:
-      | manufacturer | non-existent |
-    Then I should get error that assigned manufacturer does not exist
-
   Scenario: I update manufacturer and check the relationship is updated correctly
-    Given manufacturer "studioDesign" should be assigned to product product1
+    Given product "product1" should have following options:
+      | product option      | value        |
+      | active              | true         |
+      | visibility          | catalog      |
+      | available_for_order | true         |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | manufacturer        | studioDesign |
     When I update product "product1" options with following values:
       | manufacturer | graphicCorner |
-    Then manufacturer "graphicCorner" should be assigned to product product1
+    Then product "product1" should have following options:
+      | product option      | value         |
+      | active              | true          |
+      | visibility          | catalog       |
+      | available_for_order | true          |
+      | online_only         | true          |
+      | show_price          | false         |
+      | condition           | used          |
+      | manufacturer        | graphicCorner |
     When I update product "product1" options with following values:
       | manufacturer |  |
-    Then product product1 should have no manufacturer assigned
+    Then product "product1" should have following options:
+      | product option      | value   |
+      | active              | true    |
+      | visibility          | catalog |
+      | available_for_order | true    |
+      | online_only         | true    |
+      | show_price          | false   |
+      | condition           | used    |
+      | manufacturer        |         |
 
   Scenario: I update product options providing invalid values
     Given I add product "product2" with following information:
@@ -94,6 +109,8 @@ Feature: Update product options from Back Office (BO)
       | show_price          | true  |
       | condition           | new   |
       | manufacturer        |       |
+    When I assign non existing manufacturer to product "product2"
+    Then I should get error that manufacturer does not exist
     When I update product "product2" options with following values:
       | visibility | show it to me plz |
     Then I should get error that product visibility is invalid
