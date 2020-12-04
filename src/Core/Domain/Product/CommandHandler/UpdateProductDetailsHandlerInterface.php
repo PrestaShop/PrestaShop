@@ -24,15 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDetailsCommand;
 
 /**
- * Defines settings for customizations
+ * Defines contract to handle @see UpdateProductDetailsCommand
  */
-class CustomizationSettings
+interface UpdateProductDetailsHandlerInterface
 {
     /**
-     * Maximum allowed length for customization text field value
+     * @param UpdateProductDetailsCommand $command
      */
-    const MAX_TEXT_LENGTH = 255;
+    public function handle(UpdateProductDetailsCommand $command): void;
 }

@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
@@ -90,12 +91,12 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
         return new ProductForEditing(
             (int) $product->id,
-            (bool) $product->active,
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
             $this->getOptions($product),
+            $this->getDetails($product),
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
@@ -114,7 +115,8 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getProductType($product),
             $product->name,
             $product->description,
-            $product->description_short
+            $product->description_short,
+            $this->getLocalizedTagsList((int) $product->id)
         );
     }
 
@@ -180,18 +182,29 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private function getOptions(Product $product): ProductOptions
     {
         return new ProductOptions(
+            (bool) $product->active,
             $product->visibility,
             (bool) $product->available_for_order,
             (bool) $product->online_only,
             (bool) $product->show_price,
-            $this->getLocalizedTagsList((int) $product->id),
             $product->condition,
+            (int) $product->id_manufacturer
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductDetails
+     */
+    private function getDetails(Product $product): ProductDetails
+    {
+        return new ProductDetails(
             $product->isbn,
             $product->upc,
             $product->ean13,
             $product->mpn,
-            $product->reference,
-            (int) $product->id_manufacturer
+            $product->reference
         );
     }
 

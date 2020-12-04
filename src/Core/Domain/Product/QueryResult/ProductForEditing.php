@@ -39,11 +39,6 @@ class ProductForEditing
     private $productId;
 
     /**
-     * @var bool
-     */
-    private $active;
-
-    /**
      * @var ProductBasicInformation
      */
     private $basicInformation;
@@ -62,6 +57,11 @@ class ProductForEditing
      * @var ProductOptions
      */
     private $options;
+
+    /**
+     * @var ProductDetails
+     */
+    private $details;
 
     /**
      * @var ProductCustomizationOptions
@@ -90,12 +90,12 @@ class ProductForEditing
 
     /**
      * @param int $productId
-     * @param bool $active
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
      * @param ProductCategoriesInformation $categoriesInformation
      * @param ProductPricesInformation $pricesInformation
      * @param ProductOptions $options
+     * @param ProductDetails $details
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
@@ -103,24 +103,24 @@ class ProductForEditing
      */
     public function __construct(
         int $productId,
-        bool $active,
         ProductCustomizationOptions $customizationOptions,
         ProductBasicInformation $basicInformation,
         ProductCategoriesInformation $categoriesInformation,
         ProductPricesInformation $pricesInformation,
         ProductOptions $options,
+        ProductDetails $details,
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
         ProductStockInformation $stockInformation
     ) {
         $this->productId = $productId;
-        $this->active = $active;
         $this->customizationOptions = $customizationOptions;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
         $this->pricesInformation = $pricesInformation;
         $this->options = $options;
+        $this->details = $details;
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
@@ -133,14 +133,6 @@ class ProductForEditing
     public function getProductId(): int
     {
         return $this->productId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
     }
 
     /**
@@ -181,6 +173,14 @@ class ProductForEditing
     public function getOptions(): ProductOptions
     {
         return $this->options;
+    }
+
+    /**
+     * @return ProductDetails
+     */
+    public function getDetails(): ProductDetails
+    {
+        return $this->details;
     }
 
     /**
