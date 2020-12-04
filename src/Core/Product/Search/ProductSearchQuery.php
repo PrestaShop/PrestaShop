@@ -273,7 +273,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param array $encodedFacets
+     * @param array|string $encodedFacets
      *
      * @return $this
      */
@@ -285,7 +285,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return array
+     * @return array|string
      */
     public function getEncodedFacets()
     {
