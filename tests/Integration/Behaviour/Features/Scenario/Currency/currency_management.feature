@@ -417,20 +417,20 @@ Feature: Currency Management
       | shop_association | shop1     |
     Then I should get error that currency name is invalid
     When I edit currency "currency17" with following properties:
-      | iso_code         | JPP                     |
-      | exchange_rate    | 0.8                     |
-      | name             | <>                      |
-      | is_enabled       | 1                       |
-      | is_unofficial    | 1                       |
-      | shop_association | shop1                   |
-      | transformations  | en-US:rightWithoutSpace |
+      | iso_code               | JPP               |
+      | exchange_rate          | 0.8               |
+      | name                   | <>                |
+      | is_enabled             | 1                 |
+      | is_unofficial          | 1                 |
+      | shop_association       | shop1             |
+      | transformations[en-US] | rightWithoutSpace |
     Then I should get error that currency name is invalid
     When I edit currency "currency16" with following properties:
-      | iso_code         | JPY                  |
-      | exchange_rate    | 0.08                 |
-      | name             | <>                   |
-      | is_enabled       | 1                    |
-      | is_unofficial    | 0                    |
-      | shop_association | shop1                |
-      | transformations  | en-US:rightWithSpace |
+      | iso_code               | JPY            |
+      | exchange_rate          | 0.08           |
+      | name                   | <>             |
+      | is_enabled             | 1              |
+      | is_unofficial          | 0              |
+      | shop_association       | shop1          |
+      | transformations[en-US] | rightWithSpace |
     Then I should get error that currency name is invalid

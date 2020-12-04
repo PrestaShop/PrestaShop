@@ -261,7 +261,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
 
-        $this->lastException = null;
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -275,7 +275,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
