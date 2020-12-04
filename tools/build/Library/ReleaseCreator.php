@@ -86,7 +86,7 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $foldersRemoveList = [];
+    protected $foldersRemoveList = ['.docker'];
 
     /**
      * Pattern of files or directories to remove.
