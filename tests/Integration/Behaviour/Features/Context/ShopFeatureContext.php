@@ -85,13 +85,13 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given I add a shop :reference with name :shopName for the group :shopGroupName
+     * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
      *
      * @param string $reference
      * @param string $shopName
      * @param string $shopGroupName
      */
-    public function addShop(string $reference, string $shopName, string $shopGroupName): void
+    public function addShop(string $reference, string $shopName, string $color, string $shopGroupName): void
     {
         $shop = new Shop();
         $shop->active = true;
@@ -99,6 +99,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $shop->id_category = 2;
         $shop->theme_name = _THEME_NAME_;
         $shop->name = $shopName;
+        $shop->color = $color;
         if (!$shop->add()) {
             throw new RuntimeException(sprintf('Could not create shop: %s', Db::getInstance()->getMsgError()));
         }
@@ -121,7 +122,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         foreach ($expectedShops as $key => $currentExpectedShop) {
             $wasCurrentExpectedShopFound = false;
             foreach ($foundShops as $currentFoundShop) {
-                if (strtolower($currentExpectedShop['name']) === strtolower($currentFoundShop->getName())) {
+                if ($currentExpectedShop['name'] === $currentFoundShop->getName()) {
                     $wasCurrentExpectedShopFound = true;
                     Assert::assertEquals(
                         $currentExpectedShop['group_name'],
@@ -130,6 +131,18 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
                             'Expected and found shops\'s groups don\'t match (%s and %s)',
                             $currentExpectedShop['group_name'],
                             $currentFoundShop->getGroupName()
+                        )
+                    );
+                    if (empty($currentExpectedShop['color'])) {
+                        continue;
+                    }
+                    Assert::assertEquals(
+                        $currentExpectedShop['color'],
+                        $currentFoundShop->getColor(),
+                        sprintf(
+                            'Expected and found shops\'s colors don\'t match (%s and %s)',
+                            $currentExpectedShop['color'],
+                            $currentFoundShop->getColor()
                         )
                     );
                     continue;
