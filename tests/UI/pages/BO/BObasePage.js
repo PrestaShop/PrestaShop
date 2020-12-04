@@ -312,17 +312,27 @@ module.exports = class BOBasePage extends CommonPage {
   }
 
   /**
-   * Close growl message and return its value
+   * Get growl message content
    * @param page
    * @return {Promise<string>}
    */
+  getGrowlMessageContent(page) {
+    return this.getTextContent(page, this.growlMessageBlock);
+  }
+
+  /**
+   * Close growl message and return its value
+   * @param page
+   * @return {Promise<void>}
+   */
   async closeGrowlMessage(page) {
-    const growlMessageText = await this.getTextContent(page, this.growlMessageBlock);
-    await Promise.all([
-      page.$eval(this.growlCloseButton, e => e.click()),
-      page.waitForSelector(this.growlMessageBlock, {state: 'hidden'}),
-    ]);
-    return growlMessageText;
+    // Close growl message if exist
+    try {
+      await page.click(this.growlCloseButton);
+      await page.waitForSelector(this.growlMessageBlock, {state: 'hidden'});
+    } catch (e) {
+      // If element does not exist it's already not visible
+    }
   }
 
   /**
