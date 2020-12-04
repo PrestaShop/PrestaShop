@@ -83,6 +83,11 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     {
         $updatableProperties = [];
 
+        if (null !== $command->isActive()) {
+            $product->active = $command->isActive();
+            $updatableProperties[] = 'active';
+        }
+
         if (null !== $command->getVisibility()) {
             $product->visibility = $command->getVisibility()->getValue();
             $updatableProperties[] = 'visibility';

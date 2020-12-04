@@ -34,6 +34,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 class ProductOptions
 {
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @var string
      */
     private $visibility;
@@ -62,11 +67,6 @@ class ProductOptions
      * @var int
      */
     private $manufacturerId;
-
-    /**
-     * @var bool
-     */
-    private $active;
 
     /**
      * @param bool $active

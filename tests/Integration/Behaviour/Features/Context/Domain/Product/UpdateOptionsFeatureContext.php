@@ -36,12 +36,14 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoun
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I update product :productReference options with following information:
+     * @When I update product :productReference options with following values:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -53,7 +55,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
 
         try {
             $command = new UpdateProductOptionsCommand($productId);
-            $this->setUpdateOptionsCommandData($data, $command);
+            $this->fillCommand($data, $command);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
@@ -84,26 +86,54 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Transform table:product option,value
+     *
+     * @param TableNode $tableNode
+     *
+     * @return ProductOptions
+     */
+    public function transformOptions(TableNode $tableNode): ProductOptions
+    {
+        $dataRows = $tableNode->getRowsHash();
+
+        return new ProductOptions(
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['active']),
+            $dataRows['visibility'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['available_for_order']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['online_only']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_price']),
+            $dataRows['condition'],
+            $this->parseManufacturerId($dataRows['manufacturer'])
+        );
+    }
+
+    /**
      * @Then product :productReference should have following options:
      *
      * @param string $productReference
-     * @param TableNode $table
+     * @param ProductOptions $expectedOptions
      */
-    public function assertOptions(string $productReference, TableNode $table)
+    public function assertOptions(string $productReference, ProductOptions $expectedOptions)
     {
-        $productForEditing = $this->getProductForEditing($productReference);
-        $data = $table->getRowsHash();
+        $properties = [
+            'active',
+            'availableForOrder',
+            'onlineOnly',
+            'showPrice',
+            'visibility',
+            'condition',
+            'manufacturerId',
+        ];
+        $actualOptions = $this->getProductForEditing($productReference)->getOptions();
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        $this->assertBoolProperty($productForEditing, $data, 'available_for_order');
-        $this->assertBoolProperty($productForEditing, $data, 'online_only');
-        $this->assertBoolProperty($productForEditing, $data, 'show_price');
-        $this->assertStringProperty($productForEditing, $data, 'visibility');
-        $this->assertStringProperty($productForEditing, $data, 'condition');
-
-        // Assertions checking isset() can hide some errors if it doesn't find array key,
-        // to make sure all provided fields were checked we need to unset every asserted field
-        // and finally, if provided data is not empty, it means there are some unnasserted values left
-        Assert::assertEmpty($data, sprintf('Some provided product options fields haven\'t been asserted: %s', var_export($data, true)));
+        foreach ($properties as $property) {
+            Assert::assertSame(
+                $propertyAccessor->getValue($expectedOptions, $property),
+                $propertyAccessor->getValue($actualOptions, $property),
+                sprintf('Unexpected %s of product "%s"', $property, $productReference)
+            );
+        }
     }
 
     /**
@@ -135,8 +165,12 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
      * @param array $data
      * @param UpdateProductOptionsCommand $command
      */
-    private function setUpdateOptionsCommandData(array $data, UpdateProductOptionsCommand $command): void
+    private function fillCommand(array $data, UpdateProductOptionsCommand $command): void
     {
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+
         if (isset($data['visibility'])) {
             $command->setVisibility($data['visibility']);
         }
@@ -158,21 +192,32 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['manufacturer'])) {
-            switch ($data['manufacturer']) {
-                case 'invalid':
-                    $manufacturerId = -1;
-                    break;
-                case 'non-existent':
-                    $manufacturerId = 42;
-                    break;
-                case '':
-                    $manufacturerId = NoManufacturerId::NO_MANUFACTURER_ID;
-                    break;
-                default:
-                    $manufacturerId = $this->getSharedStorage()->get($data['manufacturer']);
-                    break;
-            }
-            $command->setManufacturerId($manufacturerId);
+            $command->setManufacturerId($this->parseManufacturerId($data['manufacturer']));
         }
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return int
+     */
+    private function parseManufacturerId(string $value): int
+    {
+        switch ($value) {
+            case 'invalid':
+                $manufacturerId = -1;
+                break;
+            case 'non-existent':
+                $manufacturerId = 42;
+                break;
+            case '':
+                $manufacturerId = NoManufacturerId::NO_MANUFACTURER_ID;
+                break;
+            default:
+                $manufacturerId = $this->getSharedStorage()->get($value);
+                break;
+        }
+
+        return $manufacturerId;
     }
 }
