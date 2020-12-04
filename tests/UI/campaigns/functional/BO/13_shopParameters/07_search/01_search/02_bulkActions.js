@@ -109,22 +109,22 @@ describe('Enable/Disable and delete by bulk actions search', async () => {
     });
 
     const tests = [
-      {args: {action: 'disable', value: false}, expected: 'Disabled'},
-      {args: {action: 'enable', value: true}, expected: 'Enabled'},
+      {args: {action: 'disable', value: false}},
+      {args: {action: 'enable', value: true}},
     ];
 
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Status`, baseContext);
 
-        const textResult = await searchPage.enableDisableByBulkActions(page, test.args.value);
+        const textResult = await searchPage.bulkSetStatus(page, test.args.value);
         await expect(textResult).to.contains(searchPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await searchPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementInGrid; i++) {
-          const textColumn = await searchPage.getTextColumn(page, i, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const textColumn = await searchPage.getStatus(page, i);
+          await expect(textColumn).to.equal(test.args.value);
         }
       });
     });

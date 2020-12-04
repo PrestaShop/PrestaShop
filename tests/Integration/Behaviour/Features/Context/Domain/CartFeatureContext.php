@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use CartRule;
 use Configuration;
@@ -60,10 +61,22 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
 use State;
+use Tests\Integration\Behaviour\Features\Context\ProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @var ProductFeatureContext
+     */
+    protected $productFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+    }
+
     /**
      * @Given the current currency is :currencyIsoCode
      */
@@ -226,6 +239,44 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $customizationId->getValue()
             )
         );
+    }
+
+    /**
+     * @When I add :quantity items of combination :combinationName of the product :productName to the cart :cartReference
+     *
+     * @param int $quantity
+     * @param string $combinationName
+     * @param string $productName
+     * @param string $cartReference
+     */
+    public function addProductsCombinationsToCart(
+        int $quantity,
+        string $combinationName,
+        string $productName,
+        string $cartReference
+    ) {
+        $this->productFeatureContext->checkProductWithNameExists($productName);
+        $this->productFeatureContext->checkCombinationWithNameExists($productName, $combinationName);
+        $productId = (int) $this->productFeatureContext->getProductWithName($productName)->id;
+        $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    $cartId,
+                    $productId,
+                    $quantity,
+                    $combinationId
+                )
+            );
+
+            // Clear cart static cache or it will have no products in next calls
+            Cart::resetStaticCache();
+        } catch (MinimalQuantityException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -423,6 +474,25 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             new AddCartRuleToCartCommand(
                 SharedStorage::getStorage()->get($cartReference),
                 $cartRule->id
+            )
+        );
+    }
+
+    /**
+     * @When I use a voucher :voucherCode on the cart :cartReference
+     *
+     * @param string $voucherCode
+     * @param string $cartReference
+     */
+    public function useDiscountByCodeOnCart(string $voucherCode, string $cartReference)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cartRuleId = SharedStorage::getStorage()->get($voucherCode);
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                $cartId,
+                $cartRuleId
             )
         );
     }
@@ -913,6 +983,18 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $minQuantity,
                 $this->getLastException()->getMinimalQuantity()
             ));
+        }
+    }
+
+    /**
+     * @Then cart :cartReference total with tax included should be :expectedTotal
+     */
+    public function totalCartWithTaxShouldBe(string $cartReference, string $expectedTotal)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference);
+        $cartTotal = $cartInfo->getSummary()->getTotalPriceWithTaxes();
+        if ($cartTotal !== $expectedTotal) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
     }
 }

@@ -35,7 +35,8 @@ class Taxes extends BOBasePage {
     this.taxesGridColumnEditLink = row => `${this.taxesGridActionsColumn(row)} a.grid-edit-row-link`;
     this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
     this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a.grid-delete-row-link`;
-    this.toggleColumnValidIcon = (row, column) => `${this.taxesGridColumn(row, column)} i.grid-toggler-icon-valid`;
+    this.taxesGridStatusColumn = row => this.taxesGridColumn(row, 'active');
+    this.toggleColumnValidIcon = row => `${this.taxesGridStatusColumn(row)} i.grid-toggler-icon-valid`;
 
     // Form Taxes Options
     this.taxStatusToggleInput = toggle => `#form_enable_tax_${toggle}`;
@@ -119,11 +120,10 @@ class Taxes extends BOBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @param column
    * @return {Promise<string>}
    */
-  async getToggleColumnValue(page, row, column) {
-    return this.elementVisible(page, this.toggleColumnValidIcon(row, column), 100);
+  async getStatus(page, row) {
+    return this.elementVisible(page, this.toggleColumnValidIcon(row), 100);
   }
 
   /**
@@ -133,12 +133,13 @@ class Taxes extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.taxesGridColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row, 'active') !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.taxesGridColumn(row, 'active'));
+  async setStatus(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.taxesGridStatusColumn(row), 2000);
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.taxesGridStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -218,7 +219,7 @@ class Taxes extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeTaxesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllLabel, el => el.click()),

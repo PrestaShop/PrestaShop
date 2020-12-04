@@ -133,7 +133,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         // It seems that $updateResult can be -1,
         // when adding product with less quantity than minimum required.
         if ($updateResult < 0) {
-            $minQuantity = $command->getCustomizationId() ?
+            $minQuantity = $combinationIdValue ?
                 Attribute::getAttributeMinimalQty($combinationIdValue) :
                 $product->minimal_quantity;
 

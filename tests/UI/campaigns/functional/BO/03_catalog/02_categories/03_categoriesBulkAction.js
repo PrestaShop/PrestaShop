@@ -124,15 +124,15 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     const tests = [
-      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
-      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
     ];
 
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategoryPage${test.args.action}`, baseContext);
 
-        const textResult = await categoriesPage.changeCategoriesEnabledColumnBulkActions(
+        const textResult = await categoriesPage.bulkSetStatus(
           page,
           test.args.enabledValue,
         );
@@ -143,8 +143,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         await expect(numberOfCategoriesInGrid).to.be.at.most(numberOfCategories);
 
         for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-          const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'active');
-          await expect(textColumn).to.contains(test.expected);
+          const categoryStatus = await categoriesPage.getStatus(page, i);
+          await expect(categoryStatus).to.equal(test.args.enabledValue);
         }
       });
     });

@@ -169,18 +169,24 @@ describe('Sort, pagination and bulk actionsweb service keys', async () => {
     });
 
     const tests = [
-      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
-      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
     ];
 
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}WebserviceKey`, baseContext);
 
-        await webservicePage.enableDisableByColumnBulkActions(page, test.args.enabledValue);
+        await webservicePage.bulkSetStatus(page, test.args.enabledValue);
 
         // Validation message not displayed, skipping it https://github.com/PrestaShop/PrestaShop/issues/21745
         // await expect(textResult).to.be.equal(webservicePage.successfulUpdateStatusMessage);
+
+        const numberOfWebserviceKeys = await webservicePage.getNumberOfElementInGrid(page);
+        for (let i = 1; i <= numberOfWebserviceKeys; i++) {
+          const webserviceStatus = await webservicePage.getStatus(page, i);
+          await expect(webserviceStatus).to.equal(test.args.enabledValue);
+        }
       });
     });
   });

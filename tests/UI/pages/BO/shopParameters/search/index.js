@@ -50,6 +50,7 @@ class Search extends BOBasePage {
     this.tableColumnAliases = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnSearch = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+    this.tableColumnStatusCheckIcon = row => `${this.tableColumnStatus(row)} i.icon-check`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -247,20 +248,29 @@ class Search extends BOBasePage {
    * Enable / disable by Bulk Actions
    * @param page
    * @param enable
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async enableDisableByBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Select all rows
     await this.bulkSelectRows(page);
 
     // Click on Button Bulk actions
     await page.click(this.bulkActionMenuButton);
 
-
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableButton : this.bulkDisableButton);
 
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Get alias status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getStatus(page, row) {
+    return this.elementVisible(page, this.tableColumnStatusCheckIcon(row), 500);
   }
 }
 

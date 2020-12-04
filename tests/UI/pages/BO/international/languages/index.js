@@ -177,9 +177,9 @@ class Languages extends LocalizationBasePage {
    * Get language status
    * @param page
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  isEnabled(page, row) {
+  getStatus(page, row) {
     return this.elementVisible(page, this.enabledColumnValidIcon(row), 100);
   }
 
@@ -190,9 +190,9 @@ class Languages extends LocalizationBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async quickEditLanguage(page, row, valueWanted = true) {
+  async setStatus(page, row, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.tableColumn(row, 'active'), 2000);
-    if (await this.isEnabled(page, row) !== valueWanted) {
+    if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.tableColumn(row, 'active'));
       return true;
     }
@@ -206,7 +206,7 @@ class Languages extends LocalizationBasePage {
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async bulkEditEnabledColumn(page, toEnable = true) {
+  async bulkSetStatus(page, toEnable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),

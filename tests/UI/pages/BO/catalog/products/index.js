@@ -458,6 +458,7 @@ class Product extends BOBasePage {
       await this.clickAndWaitForNavigation(page, this.productsListTableColumnStatus(row));
       return true;
     }
+
     return false;
   }
 

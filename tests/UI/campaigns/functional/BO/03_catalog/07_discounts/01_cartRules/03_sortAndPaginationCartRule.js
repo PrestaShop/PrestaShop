@@ -52,7 +52,6 @@ describe('Sort and pagination cart rules', async () => {
     await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
   });
 
-
   it('should reset and get number of cart rules', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 

@@ -122,15 +122,15 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     const statuses = [
-      {args: {status: 'disable', enable: false}, expected: 'clear'},
-      {args: {status: 'enable', enable: true}, expected: 'check'},
+      {args: {status: 'disable', enable: false}},
+      {args: {status: 'enable', enable: true}},
     ];
 
     statuses.forEach((categoryStatus) => {
       it(`should ${categoryStatus.args.status} categories with Bulk Actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${categoryStatus.args.status}Category`, baseContext);
 
-        const textResult = await pagesPage.changeEnabledColumnBulkActions(
+        const textResult = await pagesPage.bulkSetStatus(
           page,
           'cms_page_category',
           categoryStatus.args.enable,
@@ -144,13 +144,13 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         );
 
         for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-          const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
+          const textColumn = await pagesPage.getStatus(
             page,
+            'cms_page_category',
             i,
-            'active',
           );
 
-          await expect(textColumn).to.contains(categoryStatus.expected);
+          await expect(textColumn).to.equal(categoryStatus.args.enable);
         }
       });
     });

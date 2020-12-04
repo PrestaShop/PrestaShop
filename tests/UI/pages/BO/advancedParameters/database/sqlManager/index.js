@@ -4,6 +4,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 class SqlManager extends BOBasePage {
   constructor() {
     super();
+
     this.pageTitle = 'SQL Manager •';
     this.successfulDeleteMessage = 'Successful deletion';
 

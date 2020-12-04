@@ -31,7 +31,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddressesPage(page) {
-    await this.waitForSelectorAndClick(page, this.addressesLink);
+    await this.clickAndWaitForNavigation(page, this.addressesLink);
   }
 }
 

@@ -263,6 +263,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^I should get error that currency name is invalid$/
+     */
+    public function assertLastErrorIsInvalidCurrencyName()
+    {
+        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::INVALID_NAME);
+    }
+
+    /**
      * @Then I should get error that currency already exists
      */
     public function assertLastErrorIsCurrencyAlreadyExists()

@@ -396,3 +396,41 @@ Feature: Currency Management
     And currency "currency18" should be available in shop "shop1"
     And currency "currency18" should have pattern empty for language "fr-FR"
     And currency "currency18" should have pattern empty for language "en-US"
+
+  Scenario: Adding invalid named currency
+    When I add new currency "currency19" with following properties:
+      | iso_code         | IVL       |
+      | exchange_rate    | 0.88      |
+      | name             | <>        |
+      | symbol           | €         |
+      | is_enabled       | 1         |
+      | is_unofficial    | 1         |
+      | shop_association | shop1     |
+    Then I should get error that currency name is invalid
+    When I add new currency "currency19" with following properties:
+      | iso_code         | AOA       |
+      | exchange_rate    | 0.88      |
+      | name             | <>        |
+      | symbol           | €         |
+      | is_enabled       | 1         |
+      | is_unofficial    | 0         |
+      | shop_association | shop1     |
+    Then I should get error that currency name is invalid
+    When I edit currency "currency17" with following properties:
+      | iso_code               | JPP               |
+      | exchange_rate          | 0.8               |
+      | name                   | <>                |
+      | is_enabled             | 1                 |
+      | is_unofficial          | 1                 |
+      | shop_association       | shop1             |
+      | transformations[en-US] | rightWithoutSpace |
+    Then I should get error that currency name is invalid
+    When I edit currency "currency16" with following properties:
+      | iso_code               | JPY            |
+      | exchange_rate          | 0.08           |
+      | name                   | <>             |
+      | is_enabled             | 1              |
+      | is_unofficial          | 0              |
+      | shop_association       | shop1          |
+      | transformations[en-US] | rightWithSpace |
+    Then I should get error that currency name is invalid

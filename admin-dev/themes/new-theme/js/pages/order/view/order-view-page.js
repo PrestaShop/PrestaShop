@@ -30,6 +30,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderDiscountsRefresher from '@pages/order/view/order-discounts-refresher';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
+import OrderPaymentsRefresher from '@pages/order/view/order-payments-refresher';
 import Router from '@components/router';
 import OrderInvoicesRefresher from './order-invoices-refresher';
 import OrderProductCancel from './order-product-cancel';
@@ -43,6 +44,7 @@ export default class OrderViewPage {
     this.orderProductManager = new OrderProductManager();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
+    this.orderPaymentsRefresher = new OrderPaymentsRefresher();
     this.orderDocumentsRefresher = new OrderDocumentsRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
     this.orderProductCancel = new OrderProductCancel();
@@ -89,6 +91,7 @@ export default class OrderViewPage {
 
       this.orderProductRenderer.updateNumProducts(numProducts - 1);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderPaymentsRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
     });
@@ -115,6 +118,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderPricesRefresher.refreshProductPrices(event.orderId);
+      this.orderPaymentsRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
@@ -155,6 +159,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderPaymentsRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
