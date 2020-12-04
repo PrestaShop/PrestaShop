@@ -17,8 +17,8 @@ Feature: Search shops given a search term (BO)
     When I search for shops with the term "test" I should get the following results:
       | name             | group_name | color |
       | test_shop        | Default    |       |
-      | test_second_shop | Default    |       |
-      | test_third_shop  | Default    |       |
+      | test_second_shop | Default    |  red  |
+      | test_third_shop  | Default    |  blue |
     When I search for shops with the term "second" I should get the following results:
       | name             | group_name | color |
       | test_second_shop | Default    | red   |

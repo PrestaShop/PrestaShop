@@ -133,9 +133,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
                             $currentFoundShop->getGroupName()
                         )
                     );
-                    if (empty($currentExpectedShop['color'])) {
-                        continue;
-                    }
                     Assert::assertEquals(
                         $currentExpectedShop['color'],
                         $currentFoundShop->getColor(),
