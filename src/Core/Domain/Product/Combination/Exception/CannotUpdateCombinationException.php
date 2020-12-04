@@ -46,5 +46,5 @@ class CannotUpdateCombinationException extends CombinationException
     /**
      * When fails to update stock information of single combination
      */
-    const FAILED_UPDATE_STOCK = 30;
+    public const FAILED_UPDATE_STOCK = 30;
 }
