@@ -138,3 +138,51 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Return product from order
+    When I update order "bo_order1" status to "Processing in progress"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2 |
+    And I watch the stock of product "Mug The best is yet to come"
+    And return product is enabled
+    When I issue a return product on "bo_order1" with restock with credit slip without voucher on following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 1        |
+    Then "bo_order1" has 1 credit slips
+    Then "bo_order1" last credit slip is:
+      | amount                  | 11.9   |
+      | shipping_cost_amount    | 0.0    |
+      | total_shipping_tax_incl | 0.0    |
+      | total_shipping_tax_excl | 0.0    |
+      | total_products_tax_excl | 11.9   |
+      | total_products_tax_incl | 12.610 |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_quantity_refunded   | 0     |
+      | product_quantity_return     | 1     |
+      | product_quantity_reinjected | 1     |
+      | total_refunded_tax_excl     | 11.90 |
+      | total_refunded_tax_incl     | 12.61 |
+    And there is 1 more "Mug The best is yet to come" in stock
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
