@@ -222,7 +222,7 @@ class ProductConstraintException extends ProductException
     public const INVALID_LOW_STOCK_THRESHOLD = 380;
 
     /**
-     * When product quantity is invalid
+     * When product combination quantity is invalid
      */
-    public const INVALID_QUANTITY = 390;
+    public const INVALID_COMBINATION_QUANTITY = 390;
 }
