@@ -97,7 +97,7 @@ class Tab
     /**
      * @var bool
      *
-     * @ORM\Column(name="hide_host_mode", type="boolean")
+     * @ORM\Column(name="hide_host_mode", type="boolean", options={"default":"1"})
      */
     private $hideHostMode;
 
