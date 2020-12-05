@@ -90,14 +90,14 @@ class Tab
     /**
      * @var bool
      *
-     * @ORM\Column(name="enabled", type="boolean")
+     * @ORM\Column(name="enabled", type="boolean", options={"default":"1"})
      */
     private $enabled = true;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="hide_host_mode", type="boolean", options={"default":"1"})
+     * @ORM\Column(name="hide_host_mode", type="boolean")
      */
     private $hideHostMode;
 
