@@ -312,6 +312,7 @@ ALTER TABLE `PREFIX_product_download` CHANGE `display_filename` `display_filenam
 
 /* Doctrine update happens too late to update the new enabled field, so we preset everything here */
 ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
+UPDATE `PREFIX_tab` SET `enabled` = 1;
 
 /* PHP:ps_1770_preset_tab_enabled(); */;
 /* PHP:ps_1770_update_order_status_colors(); */;
