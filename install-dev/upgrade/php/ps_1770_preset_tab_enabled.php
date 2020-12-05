@@ -25,13 +25,9 @@
  */
 
 /**
- * Preset enabled new column in tabs to true for all (except for disabled modules)
+ * Preset enabled new column in tabs to true for all disabled modules
  */
 function ps_1770_preset_tab_enabled() {
-    //First set all tabs enabled
-    $result = Db::getInstance()->execute(
-        'UPDATE `'._DB_PREFIX_.'tab` SET `enabled` = 1'
-    );
 
     //Then search for inactive modules and disable their tabs
     $inactiveModules = Db::getInstance()->executeS(
