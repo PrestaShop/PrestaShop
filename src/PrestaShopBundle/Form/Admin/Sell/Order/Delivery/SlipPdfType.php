@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
 use DateTime;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -52,7 +51,7 @@ class SlipPdfType extends TranslatorAwareType
                     'data' => $now,
                     'empty_data' => $now,
                     'label' => $this->trans('From', 'Admin.Global'),
-                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help')
+                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
                 ]
             )
             ->add(
@@ -63,7 +62,7 @@ class SlipPdfType extends TranslatorAwareType
                     'data' => $now,
                     'empty_data' => $now,
                     'label' => $this->trans('To', 'Admin.Global'),
-                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help')
+                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
                 ]
             );
     }
