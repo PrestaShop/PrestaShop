@@ -133,8 +133,6 @@ class BackupController extends FrameworkBundleAdminController
             }
         }
 
-        $backupForm = $this->getBackupFormHandler()->getForm();
-
         return $this->renderPage($request, $filters, $backupForm);
     }
 
