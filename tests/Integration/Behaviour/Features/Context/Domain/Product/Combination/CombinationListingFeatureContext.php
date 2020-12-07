@@ -30,12 +30,44 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 {
+    /**
+     * @When I update combination :combinationReference from list with following values:
+     *
+     * @param string $combinationReference
+     * @param TableNode $tableNode
+     */
+    public function updateCombinationFromListing(string $combinationReference, TableNode $tableNode): void
+    {
+        $command = new UpdateCombinationFromListingCommand($this->getSharedStorage()->get($combinationReference));
+        $this->fillCommand($command, $tableNode->getRowsHash());
+
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @param UpdateCombinationFromListingCommand $command
+     * @param array<string, string> $dataRows
+     */
+    private function fillCommand(UpdateCombinationFromListingCommand $command, array $dataRows): void
+    {
+        if (isset($dataRows['impact on price'])) {
+            $command->setImpactOnPrice($dataRows['impact on price']);
+        }
+        if (isset($dataRows['quantity'])) {
+            $command->setQuantity((int) $dataRows['quantity']);
+        }
+        if (isset($dataRows['is default'])) {
+            $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
+        }
+    }
+
     /**
      * @Then I should see following combinations of product :productReference in page :page limited to maximum :limit per page:
      *
