@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider\Factory;
 
-use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
@@ -58,7 +58,7 @@ class ProviderFactoryTest extends KernelTestCase
 
     public function testThrowsExceptionIfTypeIsWrong()
     {
-        $this->expectException(NotImplementedException::class);
+        $this->expectException(InvalidArgumentException::class);
         $provider = $this->providerFactory->build($this->createMock(TypeInterface::class));
     }
 

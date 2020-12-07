@@ -101,7 +101,7 @@ class ThemeExporterTest extends TestCase
 
         $this->themeExporter->finder = $this->finderMock;
         $this->themeExporter->exportDir = dirname(__FILE__) . '/' .
-            str_repeat('../', 4) .
+            str_repeat('../', 5) .
             'var/cache/test' .
             '/export';
     }
@@ -130,13 +130,10 @@ class ThemeExporterTest extends TestCase
         $domain = 'ShopActions.' . self::LOCALE;
         $this->assertArrayHasKey($domain, $messages);
 
-        $this->assertArrayHasKey('Add Product', $messages[$domain]);
-        $this->assertArrayHasKey('Edit Product', $messages[$domain]);
         $this->assertArrayHasKey('Delete Product', $messages[$domain]);
-
         $this->assertArrayHasKey('Override Me Twice', $messages[$domain]);
-        $this->assertSame('Add Product', $messages[$domain]['Add Product']);
-        $this->assertSame('Delete Product', $messages[$domain]['Delete Product']);
+
+        $this->assertSame('Delete', $messages[$domain]['Delete Product']);
         $this->assertSame('Overridden Twice', $messages[$domain]['Override Me Twice']);
     }
 
