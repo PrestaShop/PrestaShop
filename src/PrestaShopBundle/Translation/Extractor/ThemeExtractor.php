@@ -40,10 +40,15 @@ class ThemeExtractor implements ThemeExtractorInterface
      * @var SmartyExtractor the Smarty Extractor
      */
     private $smartyExtractor;
+    /**
+     * @var string
+     */
+    private $cacheDir;
 
-    public function __construct(SmartyExtractor $smartyExtractor)
+    public function __construct(SmartyExtractor $smartyExtractor, string $cacheDir)
     {
         $this->smartyExtractor = $smartyExtractor;
+        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -61,6 +66,30 @@ class ThemeExtractor implements ThemeExtractorInterface
         $catalogue = $this->normalize($catalogue);
 
         return $catalogue;
+    }
+
+    /**
+     * Returns the path to the directory where default translations are stored in cache
+     *
+     * @param Theme $theme
+     *
+     * @return string
+     */
+    public function getStorageFilesPath(Theme $theme): string
+    {
+        return $this->cacheDir . DIRECTORY_SEPARATOR . $theme->getName() . '-tmp';
+    }
+
+    /**
+     * Returns the path to the directory where default translations are stored in cache
+     *
+     * @param Theme $theme
+     *
+     * @return string
+     */
+    public function getTemporaryFilesPath(Theme $theme): string
+    {
+        return $this->cacheDir . DIRECTORY_SEPARATOR . $theme->getName();
     }
 
     /**

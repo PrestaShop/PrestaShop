@@ -75,6 +75,7 @@ services:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
         arguments:
             - "@prestashop.translation.extractor.smarty.legacy"
+            - "%kernel.cache_dir%"
 
     prestashop.translation.extractor.theme_cache:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractorCache
@@ -102,8 +103,6 @@ services:
             - "@prestashop.translation.dumper.xliff"
             - "@prestashop.utils.zip_manager"
             - "@filesystem"
-        properties:
-            cacheDir: "%kernel.cache_dir%"
         calls:
             - [ setExportDir, ["%kernel.cache_dir%/export"]]
 

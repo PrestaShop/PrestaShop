@@ -35,6 +35,7 @@ use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
 use PrestaShopBundle\Translation\Provider\Type\OthersType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -84,12 +85,12 @@ class CoreProviderTest extends KernelTestCase
      * @dataProvider provideLoadsCatalogueFromXliffFilesInLocaleDirectory
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(
-        $databaseContent,
-        $providerType,
-        $expectedDomains,
-        $expectedFirstDomain,
-        $expectedFirstDomainCount,
-        $expectedFirstDomainTranslations
+        array $databaseContent,
+        TypeInterface $providerType,
+        array $expectedDomains,
+        string $expectedFirstDomain,
+        int $expectedFirstDomainCount,
+        array $expectedFirstDomainTranslations
     ) {
         $provider = new CoreProvider(
             new MockDatabaseTranslationReader($databaseContent),
@@ -188,12 +189,12 @@ class CoreProviderTest extends KernelTestCase
      * @dataProvider provideExtractsDefaultCatalogueFromTranslationsDefaultFiles
      */
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(
-        $databaseContent,
-        $providerType,
-        $expectedDomains,
-        $expectedFirstDomain,
-        $expectedFirstDomainCount,
-        $expectedFirstDomainTranslations
+        array $databaseContent,
+        TypeInterface $providerType,
+        array $expectedDomains,
+        string $expectedFirstDomain,
+        int $expectedFirstDomainCount,
+        array $expectedFirstDomainTranslations
     ) {
         $provider = new CoreProvider(
             new MockDatabaseTranslationReader($databaseContent),
@@ -295,12 +296,12 @@ class CoreProviderTest extends KernelTestCase
      * @dataProvider provideLoadsCustomizedTranslationsFromDatabase
      */
     public function testItLoadsCustomizedTranslationsFromDatabase(
-        $databaseContent,
-        $providerType,
-        $expectedDomains,
-        $expectedFirstDomain,
-        $expectedFirstDomainCount,
-        $expectedFirstDomainTranslations
+        array $databaseContent,
+        TypeInterface $providerType,
+        array $expectedDomains,
+        string $expectedFirstDomain,
+        int $expectedFirstDomainCount,
+        array $expectedFirstDomainTranslations
     ) {
         $provider = new CoreProvider(
             new MockDatabaseTranslationReader($databaseContent),

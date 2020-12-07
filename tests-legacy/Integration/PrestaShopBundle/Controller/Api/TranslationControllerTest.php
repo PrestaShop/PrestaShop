@@ -39,14 +39,11 @@ class TranslationControllerTest extends ApiTestCase
         parent::setUp();
 
         $langId = Language::getIdByIso('fr', true);
-        if (!$langId) {
-            $lang = new Language();
-            $lang->locale = 'fr-FR';
-            $lang->language_code = 'fr-FR';
-            $lang->iso_code = 'fr';
-            $lang->name = 'Français';
-            $lang->add();
-        }
+        $lang = new Language($langId); // it's a new object if $langId is null
+        $lang->locale = 'fr-FR';
+        $lang->iso_code = 'fr';
+        $lang->name = 'Français';
+        $lang->save();
     }
 
     /**
