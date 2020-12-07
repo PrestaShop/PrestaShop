@@ -100,11 +100,10 @@ class ThemeExporterTest extends TestCase
         );
 
         $this->themeExporter->finder = $this->finderMock;
-        $cacheDir = dirname(__FILE__) . '/' .
+        $this->themeExporter->exportDir = dirname(__FILE__) . '/' .
             str_repeat('../', 4) .
-            'var/cache/test';
-        $this->themeExporter->exportDir = $cacheDir . '/export';
-        $this->themeExporter->cacheDir = $cacheDir;
+            'var/cache/test' .
+            '/export';
     }
 
     public function testCreateZipArchive()
@@ -131,9 +130,13 @@ class ThemeExporterTest extends TestCase
         $domain = 'ShopActions.' . self::LOCALE;
         $this->assertArrayHasKey($domain, $messages);
 
+        $this->assertArrayHasKey('Add Product', $messages[$domain]);
+        $this->assertArrayHasKey('Edit Product', $messages[$domain]);
         $this->assertArrayHasKey('Delete Product', $messages[$domain]);
 
         $this->assertArrayHasKey('Override Me Twice', $messages[$domain]);
+        $this->assertSame('Add Product', $messages[$domain]['Add Product']);
+        $this->assertSame('Delete Product', $messages[$domain]['Delete Product']);
         $this->assertSame('Overridden Twice', $messages[$domain]['Override Me Twice']);
     }
 

@@ -46,4 +46,22 @@ interface ThemeExtractorInterface
      * @return MessageCatalogue
      */
     public function extract(Theme $theme, string $locale = self::DEFAULT_LOCALE, bool $forceRefresh = false): MessageCatalogue;
+
+    /**
+     * Returns the path to the directory where default translations are stored in cache
+     *
+     * @param Theme $theme
+     *
+     * @return string
+     */
+    public function getStorageFilesPath(Theme $theme): string;
+
+    /**
+     * Returns the path to the directory where default translations are stored during extraction
+     *
+     * @param Theme $theme
+     *
+     * @return string
+     */
+    public function getTemporaryFilesPath(Theme $theme): string;
 }

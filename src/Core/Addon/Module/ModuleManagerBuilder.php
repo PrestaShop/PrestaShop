@@ -67,7 +67,7 @@ class ModuleManagerBuilder
      */
     public static $moduleManager = null;
     public static $adminModuleDataProvider = null;
-    public static $lecacyContext;
+    public static $legacyContext;
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
@@ -194,12 +194,8 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
-        if (null !== $sfContainer) {
-            $themeManagerBuilder = $sfContainer->get('prestashop.core.addon.theme.theme_manager_builder');
-        } else {
-            // SymfonyContainer not available, we won't have TranslationService nor ProviderFactory
-            $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
-        }
+        // SymfonyContainer not available, we won't have TranslationService nor ProviderFactory
+        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
         $themeName = Context::getContext()->shop->theme_name;
         $themeModules = $themeName ?
                         $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :
@@ -210,7 +206,7 @@ class ModuleManagerBuilder
             $prestashopAddonsConfig['prestashop']['addons']['categories'],
             $themeModules
         );
-        self::$lecacyContext = new LegacyContext();
+        self::$legacyContext = new LegacyContext();
 
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);

@@ -28,7 +28,6 @@
 namespace Tests\Integration\PrestaShopBundle\Translation;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**

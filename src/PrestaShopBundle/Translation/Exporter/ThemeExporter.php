@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
@@ -49,7 +48,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ThemeExporter
 {
     /**
-     * @var ThemeExtractorCache the theme extractor
+     * @var ThemeExtractorInterface the theme extractor
      */
     private $themeExtractor;
 
@@ -74,11 +73,6 @@ class ThemeExporter
     private $filesystem;
 
     /**
-     * @var string the cache directory path
-     */
-    public $cacheDir;
-
-    /**
      * @var string the export directory path
      */
     public $exportDir;
@@ -88,7 +82,7 @@ class ThemeExporter
     private $providerFactory;
 
     public function __construct(
-        ThemeExtractorCache $themeExtractor,
+        ThemeExtractorInterface $themeExtractor,
         ThemeRepository $themeRepository,
         ProviderFactory $providerFactory,
         XliffFileDumper $dumper,
@@ -214,10 +208,9 @@ class ThemeExporter
     ): MessageCatalogue {
         $theme = $this->themeRepository->getInstanceByName($themeName);
 
-        $cachedFilesPath = $this->themeExtractor->getCachedFilesPath($theme);
+        $storageFilesPath = $this->themeExtractor->getStorageFilesPath($theme);
         $temporaryFilesPath = $this->themeExtractor->getTemporaryFilesPath($theme);
 
-        $this->filesystem->remove($cachedFilesPath);
         $this->filesystem->remove($temporaryFilesPath);
 
         $tmpExtractPath = $temporaryFilesPath . DIRECTORY_SEPARATOR . $locale;
@@ -237,7 +230,7 @@ class ThemeExporter
 
         Flattenizer::flatten(
             $tmpExtractPath,
-            $cachedFilesPath . DIRECTORY_SEPARATOR . ThemeExtractorInterface::DEFAULT_LOCALE,
+            $storageFilesPath . DIRECTORY_SEPARATOR . ThemeExtractorInterface::DEFAULT_LOCALE,
             $locale
         );
 
@@ -267,28 +260,10 @@ class ThemeExporter
      */
     public function cleanArtifacts(string $themeName): void
     {
-        $this->filesystem->remove($this->getFlattenizationFolder($themeName));
-        $this->filesystem->remove($this->getTemporaryExtractionFolder($themeName));
-    }
+        $theme = $this->themeRepository->getInstanceByName($themeName);
 
-    /**
-     * @param string $themeName
-     *
-     * @return string
-     */
-    protected function getTemporaryExtractionFolder(string $themeName): string
-    {
-        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName . '-tmp';
-    }
-
-    /**
-     * @param string $themeName
-     *
-     * @return string
-     */
-    protected function getFlattenizationFolder(string $themeName): string
-    {
-        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName;
+        $this->filesystem->remove($this->themeExtractor->getStorageFilesPath($theme));
+        $this->filesystem->remove($this->themeExtractor->getTemporaryFilesPath($theme));
     }
 
     /**

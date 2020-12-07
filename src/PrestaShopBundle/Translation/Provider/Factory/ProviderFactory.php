@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
@@ -62,6 +63,6 @@ class ProviderFactory
             }
         }
 
-        throw new NotImplementedException(sprintf('Could not find factory for %s', get_class($providerType)));
+        throw new InvalidArgumentException(sprintf('Could not find factory for %s', get_class($providerType)));
     }
 }

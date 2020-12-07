@@ -49,23 +49,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TranslationController extends ApiController
 {
-    public const TYPE_MODULES = 'modules';
-    public const TYPE_THEMES = 'themes';
-    public const TYPE_MAILS = 'mails';
-    public const TYPE_MAILS_BODY = 'mails_body';
-    public const TYPE_BACK = 'back';
-    public const TYPE_OTHERS = 'others';
-    public const TYPE_CORE_FRONT = 'core_front';
-
-    public const ACCEPTED_TYPES = [
-        self::TYPE_MODULES,
-        self::TYPE_THEMES,
-        self::TYPE_MAILS,
-        self::TYPE_MAILS_BODY,
-        self::TYPE_BACK,
-        self::TYPE_OTHERS,
-    ];
-
     /**
      * @var QueryTranslationParamsCollection
      */
@@ -109,7 +92,11 @@ class TranslationController extends ApiController
             }
             if (!empty($module)) {
                 $providerType = new ModulesType($module);
-            } elseif (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
+            } elseif (
+                !empty($theme)
+                // Default theme is not considered like other themes because his translations are within the Core
+                && $this->container->getParameter('default_theme') !== $theme
+            ) {
                 $providerType = new ThemesType($theme);
             } else {
                 $providerType = new CoreDomainType($domain);
@@ -176,23 +163,20 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (!in_array($type, self::ACCEPTED_TYPES)) {
+            if (!in_array($type, TypeInterface::ACCEPTED_TYPES)) {
                 throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
             }
 
-            if (self::TYPE_THEMES === $type && '0' === $selected) {
-                $type = self::TYPE_CORE_FRONT;
+            if (TypeInterface::TYPE_THEMES === $type && '0' === $selected) {
+                $type = TypeInterface::TYPE_CORE_FRONT;
             }
 
-            if (in_array($type, [self::TYPE_MODULES, self::TYPE_THEMES]) && empty($selected)) {
+            if (in_array($type, [TypeInterface::TYPE_MODULES, TypeInterface::TYPE_THEMES]) && empty($selected)) {
                 throw new Exception("The 'selected' parameter is empty.");
             }
 
-            $selectedTheme = (self::TYPE_THEMES === $type) ? $selected : null;
-            $selectedModule = (self::TYPE_MODULES === $type) ? $selected : null;
-
             return $this->jsonResponse(
-                $this->getTree($lang, $type, $this->searchExpressionToArray($search), $selectedTheme, $selectedModule),
+                $this->getTree($lang, $type, $this->searchExpressionToArray($search), $selected),
                 $request
             );
         } catch (Exception $exception) {
@@ -362,19 +346,18 @@ class TranslationController extends ApiController
      * @param string $lang
      * @param string $type "themes", "modules", "mails", "mails_body", "back" or "others"
      * @param array $search Search strings
-     * @param string|null $theme Selected theme name. Set only if type = "themes"
-     * @param string|null $module
+     * @param string|null $selectedValue Depends on the type. It's a theme name if type = "themes" or a module name if type = "modules"
      *
      * @return array
      *
      * @throws Exception
      */
-    private function getTree(string $lang, string $type, array $search, ?string $theme = null, ?string $module = null)
+    private function getTree(string $lang, string $type, array $search, ?string $selectedValue = null)
     {
         $locale = $this->translationService->langToLocale($lang);
 
         $catalogue = $this->translationService->getTranslationsCatalogue(
-            $this->buildProviderType($type, $theme, $module),
+            $this->buildProviderType($type, $selectedValue),
             $locale,
             $search
         );
@@ -384,40 +367,38 @@ class TranslationController extends ApiController
         return $apiBuilder->buildDomainTreeForApi(
             $catalogue,
             $locale,
-            $theme,
+            (TypeInterface::TYPE_THEMES === $type) ? $selectedValue : null,
             $search
         );
     }
 
     /**
      * @param string $type
-     * @param string|null $theme
-     * @param string|null $module
+     * @param string|null $selectedValue
      *
      * @return TypeInterface
      */
     private function buildProviderType(
         string $type,
-        ?string $theme = null,
-        ?string $module = null
+        ?string $selectedValue = null
     ): TypeInterface {
         switch ($type) {
-            case self::TYPE_MODULES:
-                return new ModulesType($module);
-            case self::TYPE_THEMES:
-                return new ThemesType($theme);
-            case self::TYPE_BACK:
+            case TypeInterface::TYPE_MODULES:
+                return new ModulesType($selectedValue);
+            case TypeInterface::TYPE_THEMES:
+                return new ThemesType($selectedValue);
+            case TypeInterface::TYPE_BACK:
                 return new BackOfficeType();
-            case self::TYPE_CORE_FRONT:
+            case TypeInterface::TYPE_CORE_FRONT:
                 return new CoreFrontType();
-            case self::TYPE_MAILS:
+            case TypeInterface::TYPE_MAILS:
                 return new MailsType();
-            case self::TYPE_MAILS_BODY:
+            case TypeInterface::TYPE_MAILS_BODY:
                 return new MailsBodyType();
-            case self::TYPE_OTHERS:
+            case TypeInterface::TYPE_OTHERS:
                 return new OthersType();
             default:
-                throw new \RuntimeException("Unrecognized type: $type");
+                throw new \RuntimeException(sprintf('Unrecognized type: %s', $type));
         }
     }
 

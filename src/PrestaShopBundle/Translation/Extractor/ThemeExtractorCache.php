@@ -92,7 +92,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
     {
         // @todo: improve this method by fingerprinting files then refreshing cache only when they change
 
-        $directory = $this->getCachedFilesPath($theme);
+        $directory = $this->getStorageFilesPath($theme);
 
         return
             $this->filesystem->exists($directory)
@@ -108,7 +108,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      */
     private function loadFromCache(Theme $theme, string $locale): MessageCatalogue
     {
-        $cacheFiles = $this->getCacheFiles($this->getCachedFilesPath($theme));
+        $cacheFiles = $this->getCacheFiles($this->getStorageFilesPath($theme));
         $xliffFileLoader = new XliffFileLoader();
 
         $catalogue = new MessageCatalogue($locale);
@@ -130,7 +130,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      *
      * @return string
      */
-    public function getCachedFilesPath(Theme $theme): string
+    public function getStorageFilesPath(Theme $theme): string
     {
         return implode(
             DIRECTORY_SEPARATOR,
@@ -169,7 +169,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      */
     private function updateCache(Theme $theme, MessageCatalogue $catalogue): void
     {
-        $path = $this->getCachedFilesPath($theme);
+        $path = $this->getStorageFilesPath($theme);
 
         $this->filesystem->remove($path);
         $this->filesystem->mkdir($path);

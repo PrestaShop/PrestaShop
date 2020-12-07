@@ -31,6 +31,23 @@ namespace PrestaShopBundle\Translation\Provider\Type;
  */
 interface TypeInterface
 {
+    public const TYPE_MODULES = 'modules';
+    public const TYPE_THEMES = 'themes';
+    public const TYPE_MAILS = 'mails';
+    public const TYPE_MAILS_BODY = 'mails_body';
+    public const TYPE_BACK = 'back';
+    public const TYPE_OTHERS = 'others';
+    public const TYPE_CORE_FRONT = 'core_front';
+
+    public const ACCEPTED_TYPES = [
+        self::TYPE_MODULES,
+        self::TYPE_THEMES,
+        self::TYPE_MAILS,
+        self::TYPE_MAILS_BODY,
+        self::TYPE_BACK,
+        self::TYPE_OTHERS,
+    ];
+
     /**
      * Returns a list of patterns to filter catalogue files.
      * Depends on the translation type.
