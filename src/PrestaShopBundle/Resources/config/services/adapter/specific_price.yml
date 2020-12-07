@@ -4,6 +4,8 @@ services:
 
     prestashop.adapter.specific_price.command_handler.add_specific_price:
         class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\AddSpecificPriceHandler
+        arguments:
+            - '@prestashop.adapter.specific_price.repository.specific_price_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand
@@ -32,3 +34,11 @@ services:
 
     prestashop.adapter.specific_price.update.specific_price_priority_updater:
         class: PrestaShop\PrestaShop\Adapter\SpecificPrice\Update\SpecificPricePriorityUpdater
+
+    prestashop.adapter.specific_price.validate.specific_price_validator:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\Validate\SpecificPriceValidator
+
+    prestashop.adapter.specific_price.repository.specific_price_repository:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\Repository\SpecificPriceRepository
+        arguments:
+            - '@prestashop.adapter.specific_price.validate.specific_price_validator'
