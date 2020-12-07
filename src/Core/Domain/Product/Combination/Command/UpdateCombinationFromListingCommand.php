@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 /**
  * Updates combination in list of combinations
  */
-class UpdateListedCombinationCommand
+class UpdateCombinationFromListingCommand
 {
     /**
      * @var CombinationId
@@ -83,9 +83,9 @@ class UpdateListedCombinationCommand
     /**
      * @param string $impactOnPrice
      *
-     * @return UpdateListedCombinationCommand
+     * @return UpdateCombinationFromListingCommand
      */
-    public function setImpactOnPrice(string $impactOnPrice): UpdateListedCombinationCommand
+    public function setImpactOnPrice(string $impactOnPrice): UpdateCombinationFromListingCommand
     {
         $this->impactOnPrice = new DecimalNumber($impactOnPrice);
 
@@ -103,9 +103,9 @@ class UpdateListedCombinationCommand
     /**
      * @param int $quantity
      *
-     * @return UpdateListedCombinationCommand
+     * @return UpdateCombinationFromListingCommand
      */
-    public function setQuantity(int $quantity): UpdateListedCombinationCommand
+    public function setQuantity(int $quantity): UpdateCombinationFromListingCommand
     {
         $this->quantity = $quantity;
 
@@ -123,9 +123,9 @@ class UpdateListedCombinationCommand
     /**
      * @param bool $default
      *
-     * @return UpdateListedCombinationCommand
+     * @return UpdateCombinationFromListingCommand
      */
-    public function setDefault(bool $default): UpdateListedCombinationCommand
+    public function setDefault(bool $default): UpdateCombinationFromListingCommand
     {
         $this->default = $default;
 
