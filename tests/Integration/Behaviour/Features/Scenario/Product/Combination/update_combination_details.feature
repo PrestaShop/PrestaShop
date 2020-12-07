@@ -42,14 +42,14 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                |       |
       | reference          |       |
       | upc                |       |
-      | weight             | 0     |
+      | impact on weight   | 0     |
     When I update combination "product1SWhite" details with following values:
-      | ean13     | 978020137962      |
-      | isbn      | 978-3-16-148410-0 |
-      | mpn       | mpn1              |
-      | reference | ref1              |
-      | upc       | 72527273070       |
-      | weight    | 17.25             |
+      | ean13            | 978020137962      |
+      | isbn             | 978-3-16-148410-0 |
+      | mpn              | mpn1              |
+      | reference        | ref1              |
+      | upc              | 72527273070       |
+      | impact on weight | 17.25             |
     Then combination "product1SWhite" should have following details:
       | combination detail | value             |
       | ean13              | 978020137962      |
@@ -57,13 +57,13 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                | mpn1              |
       | reference          | ref1              |
       | upc                | 72527273070       |
-      | weight             | 17.25             |
+      | impact on weight   | 17.25             |
     When I update combination "product1SWhite" details with following values:
-      | ean13     | 978020137962      |
-      | isbn      | 978-3-16-148410-0 |
-      | mpn       |                   |
-      | reference | ref1              |
-      | upc       |                   |
+      | ean13            | 978020137962      |
+      | isbn             | 978-3-16-148410-0 |
+      | mpn              |                   |
+      | upc              |                   |
+      | impact on weight | -10.25            |
     Then combination "product1SWhite" should have following details:
       | combination detail | value             |
       | ean13              | 978020137962      |
@@ -71,14 +71,14 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                |                   |
       | reference          | ref1              |
       | upc                |                   |
-      | weight             | 17.25             |
+      | impact on weight   | -10.25            |
     When I update combination "product1SWhite" details with following values:
-      | ean13     |   |
-      | isbn      |   |
-      | mpn       |   |
-      | reference |   |
-      | upc       |   |
-      | weight    | 0 |
+      | ean13            |   |
+      | isbn             |   |
+      | mpn              |   |
+      | reference        |   |
+      | upc              |   |
+      | impact on weight | 0 |
     Then combination "product1SWhite" should have following details:
       | combination detail | value |
       | ean13              |       |
@@ -86,4 +86,4 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                |       |
       | reference          |       |
       | upc                |       |
-      | weight             | 0     |
+      | impact on weight   | 0     |

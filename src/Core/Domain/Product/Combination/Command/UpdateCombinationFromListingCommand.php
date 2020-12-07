@@ -57,7 +57,7 @@ class UpdateCombinationFromListingCommand
     private $default;
 
     /**
-     * @param $combinationId
+     * @param int $combinationId
      */
     public function __construct(int $combinationId)
     {
