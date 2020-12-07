@@ -30,14 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateListedCombinationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateListedCombinationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationFromListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 
 /**
- * Handles @see UpdateListedCombinationCommand using legacy object model
+ * Handles @see UpdateCombinationFromListingCommand using legacy object model
  */
-final class UpdateListedCombinationHandler implements UpdateListedCombinationHandlerInterface
+final class UpdateCombinationFromListingHandler implements UpdateCombinationFromListingHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -56,7 +56,7 @@ final class UpdateListedCombinationHandler implements UpdateListedCombinationHan
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateListedCombinationCommand $command): void
+    public function handle(UpdateCombinationFromListingCommand $command): void
     {
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
@@ -65,11 +65,11 @@ final class UpdateListedCombinationHandler implements UpdateListedCombinationHan
 
     /**
      * @param Combination $combination
-     * @param UpdateListedCombinationCommand $command
+     * @param UpdateCombinationFromListingCommand $command
      *
      * @return array<int, string>
      */
-    private function fillUpdatableProperties(Combination $combination, UpdateListedCombinationCommand $command): array
+    private function fillUpdatableProperties(Combination $combination, UpdateCombinationFromListingCommand $command): array
     {
         $updatableProperties = [];
 
