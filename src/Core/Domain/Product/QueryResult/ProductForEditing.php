@@ -96,6 +96,11 @@ class ProductForEditing
     private $virtualProductFile;
 
     /**
+     * @var SpecificPriceForEditing[]
+     */
+    private $specificPrices;
+
+    /**
      * @param int $productId
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
@@ -108,6 +113,7 @@ class ProductForEditing
      * @param array $associatedAttachmentIds
      * @param ProductStockInformation $stockInformation
      * @param VirtualProductFileForEditing|null $virtualProductFile
+     * @param SpecificPriceForEditing[] $specificPrices
      */
     public function __construct(
         int $productId,
@@ -122,6 +128,7 @@ class ProductForEditing
         array $associatedAttachmentIds,
         ProductStockInformation $stockInformation,
         ?VirtualProductFileForEditing $virtualProductFile
+        array $specificPrices
     ) {
         $this->productId = $productId;
         $this->customizationOptions = $customizationOptions;
@@ -135,6 +142,7 @@ class ProductForEditing
         $this->associatedAttachmentIds = $associatedAttachmentIds;
         $this->stockInformation = $stockInformation;
         $this->virtualProductFile = $virtualProductFile;
+        $this->specificPrices = $specificPrices;
     }
 
     /**
@@ -231,5 +239,13 @@ class ProductForEditing
     public function getVirtualProductFile(): ?VirtualProductFileForEditing
     {
         return $this->virtualProductFile;
+    }
+
+    /**
+     * @return SpecificPriceForEditing[]
+     */
+    public function getSpecificPrices(): array
+    {
+        return $this->specificPrices;
     }
 }
