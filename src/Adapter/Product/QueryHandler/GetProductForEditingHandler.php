@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Customization;
 use DateTime;
 use Pack;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -48,10 +49,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeSettings;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
+use SpecificPrice;
 use Tag;
 
 /**
@@ -99,7 +103,8 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
-            $this->getProductStockInformation($product)
+            $this->getProductStockInformation($product),
+            $this->getProductSpecificPrices($product)
         );
     }
 
@@ -313,5 +318,37 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $product->available_later,
             new DateTime($product->available_date)
         );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return SpecificPriceForEditing[]
+     */
+    private function getProductSpecificPrices(Product $product): array
+    {
+        return array_map(function ($specificPrice): SpecificPriceForEditing {
+            $dateFrom = DateTimeSettings::NULL_VALUE !== $specificPrice['from'] ? new DateTime($specificPrice['from']) : null;
+            $dateTo = DateTimeSettings::NULL_VALUE !== $specificPrice['to'] ? new DateTime($specificPrice['to']) : null;
+
+            return new SpecificPriceForEditing(
+                (int) $specificPrice['id_specific_price'],
+                $specificPrice['reduction_type'],
+                new DecimalNumber($specificPrice['reduction']),
+                (bool) $specificPrice['reduction_tax'],
+                new DecimalNumber($specificPrice['price']),
+                (int) $specificPrice['from_quantity'],
+                $dateFrom,
+                $dateTo,
+                $specificPrice['id_shop_group'] ?: null,
+                $specificPrice['id_shop'] ?: null,
+                $specificPrice['id_cart'] ?: null,
+                $specificPrice['id_currency'] ?: null,
+                $specificPrice['id_specific_price_rule'] ?: null,
+                $specificPrice['id_country'] ?: null,
+                $specificPrice['id_group'] ?: null,
+                $specificPrice['id_customer'] ?: null
+            );
+        }, SpecificPrice::getByProductId($product->id, false));
     }
 }

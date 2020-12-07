@@ -89,6 +89,11 @@ class ProductForEditing
     private $stockInformation;
 
     /**
+     * @var SpecificPriceForEditing[]
+     */
+    private $specificPrices;
+
+    /**
      * @param int $productId
      * @param bool $active
      * @param ProductCustomizationOptions $customizationOptions
@@ -100,6 +105,7 @@ class ProductForEditing
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
      * @param ProductStockInformation $stockInformation
+     * @param SpecificPriceForEditing[] $specificPrices
      */
     public function __construct(
         int $productId,
@@ -112,7 +118,8 @@ class ProductForEditing
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
-        ProductStockInformation $stockInformation
+        ProductStockInformation $stockInformation,
+        array $specificPrices
     ) {
         $this->productId = $productId;
         $this->active = $active;
@@ -125,6 +132,7 @@ class ProductForEditing
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
         $this->stockInformation = $stockInformation;
+        $this->specificPrices = $specificPrices;
     }
 
     /**
@@ -213,5 +221,13 @@ class ProductForEditing
     public function getStockInformation(): ProductStockInformation
     {
         return $this->stockInformation;
+    }
+
+    /**
+     * @return SpecificPriceForEditing[]
+     */
+    public function getSpecificPrices(): array
+    {
+        return $this->specificPrices;
     }
 }
