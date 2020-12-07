@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationFromListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
@@ -45,12 +46,20 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
     private $combinationRepository;
 
     /**
+     * @var DefaultCombinationUpdater
+     */
+    private $defaultCombinationUpdater;
+
+    /**
      * @param CombinationRepository $combinationRepository
+     * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->defaultCombinationUpdater = $defaultCombinationUpdater;
     }
 
     /**
@@ -61,6 +70,10 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
         $this->combinationRepository->partialUpdate($combination, $updatableProperties, CannotUpdateCombinationException::FAILED_UPDATE_LISTED_COMBINATION);
+
+        if (true === $command->isDefault()) {
+            $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
+        }
     }
 
     /**
@@ -78,14 +91,10 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             $updatableProperties[] = 'price';
         }
 
+        //@todo: use stockUpdater instead. PR #22185
         if (null !== $command->getQuantity()) {
             $combination->quantity = $command->getQuantity();
             $updatableProperties[] = 'quantity';
-        }
-
-        if (null !== $command->isDefault()) {
-            $combination->default_on = $command->isDefault();
-            $updatableProperties[] = 'default_on';
         }
 
         return $updatableProperties;

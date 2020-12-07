@@ -36,7 +36,7 @@ class CannotUpdateCombinationException extends CombinationException
     /**
      * When fails to update options of single combination
      */
-    public const FAILED_UPDATE_OPTIONS = 10;
+    public const FAILED_UPDATE_DETAILS = 10;
 
     /**
      * When fails to update prices information of single combination
@@ -52,4 +52,9 @@ class CannotUpdateCombinationException extends CombinationException
      * When fails to update combination in combinations list
      */
     public const FAILED_UPDATE_LISTED_COMBINATION = 40;
+
+    /**
+     * When fails to update default combination
+     */
+    public const FAILED_UPDATE_DEFAULT_COMBINATION = 50;
 }
