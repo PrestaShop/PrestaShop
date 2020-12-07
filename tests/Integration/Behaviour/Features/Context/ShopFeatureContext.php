@@ -92,7 +92,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      * @param string $groupName
      * @param string $color
      */
-    public function addShopGroup(string $reference, string $groupName, string $color)
+    public function addShopGroup(string $reference, string $groupName, string $color): void
     {
         $shopGroup = new ShopGroup();
         $shopGroup->name = $groupName;

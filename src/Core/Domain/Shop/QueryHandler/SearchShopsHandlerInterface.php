@@ -24,14 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 
 /**
- * Interface for service which handles SearchShops query
+ * Defines contract to handle @see SearchShops query
  */
 interface SearchShopsHandlerInterface
 {
@@ -40,5 +38,5 @@ interface SearchShopsHandlerInterface
      *
      * @return array
      */
-    public function handle(SearchShops $query);
+    public function handle(SearchShops $query): array;
 }
