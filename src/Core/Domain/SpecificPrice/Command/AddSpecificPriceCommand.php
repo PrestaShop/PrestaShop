@@ -30,6 +30,7 @@ use DateTime;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -80,9 +81,9 @@ class AddSpecificPriceCommand
     private $cartId;
 
     /**
-     * @var int|null
+     * @var CombinationId|null
      */
-    private $productAttributeId;
+    private $combinationId;
 
     /**
      * @var int|null
@@ -249,19 +250,43 @@ class AddSpecificPriceCommand
     }
 
     /**
+     * @deprecated Use getCombinationId instead
+     *
      * @return int|null
      */
     public function getProductAttributeId(): ?int
     {
-        return $this->productAttributeId;
+        return null !== $this->combinationId ? $this->combinationId->getValue() : null;
     }
 
     /**
+     * @deprecated Use setCombinationId instead
+     *
      * @param int $productAttributeId
      */
     public function setProductAttributeId(int $productAttributeId): void
     {
-        $this->productAttributeId = $productAttributeId;
+        $this->setCombinationId($productAttributeId);
+    }
+
+    /**
+     * @return CombinationId|null
+     */
+    public function getCombinationId(): ?CombinationId
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @param int $combinationId
+     *
+     * @return AddSpecificPriceCommand
+     */
+    public function setCombinationId(int $combinationId): AddSpecificPriceCommand
+    {
+        $this->combinationId = new CombinationId($combinationId);
+
+        return $this;
     }
 
     /**
@@ -392,7 +417,7 @@ class AddSpecificPriceCommand
         try {
             return new DateTime($dateTime);
         } catch (Exception $e) {
-            throw new SpecificPriceConstraintException('An error occured when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
+            throw new SpecificPriceConstraintException('An error occurred when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
         }
     }
 }
