@@ -104,7 +104,7 @@ class ThemeExtractorCacheTest extends TestCase
 
         $this->assertCatalogueHasMessages($extracted, $wordings);
 
-        $this->assertDomainFilesExistInCache(array_keys($wordings), $cacheExtractor->getCachedFilesPath($mockTheme));
+        $this->assertDomainFilesExistInCache(array_keys($wordings), $cacheExtractor->getStorageFilesPath($mockTheme));
 
         // second extraction, cache is fresh, it doesn't call the mocked method
         $extracted = $cacheExtractor->extract($mockTheme);
