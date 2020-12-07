@@ -72,9 +72,9 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
         }
 
         Assert::assertTrue(
-            $expectedDetails->getWeight()->equals($actualDetails->getWeight()),
+            $expectedDetails->getImpactOnWeight()->equals($actualDetails->getImpactOnWeight()),
             sprintf(
-                'Unexpected combination weight. Expected "%s" got "%s"',
+                'Unexpected combination impact on weight. Expected "%s" got "%s"',
                 var_export($expectedDetails, true),
                 var_export($actualDetails, true)
             )
@@ -98,7 +98,7 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
             $details['mpn'],
             $details['reference'],
             $details['upc'],
-            new DecimalNumber($details['weight'])
+            new DecimalNumber($details['impact on weight'])
         );
     }
 
@@ -123,8 +123,8 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
         if (isset($dataRows['upc'])) {
             $command->setUpc($dataRows['upc']);
         }
-        if (isset($dataRows['weight'])) {
-            $command->setWeight($dataRows['weight']);
+        if (isset($dataRows['impact on weight'])) {
+            $command->setWeight($dataRows['impact on weight']);
         }
     }
 }
