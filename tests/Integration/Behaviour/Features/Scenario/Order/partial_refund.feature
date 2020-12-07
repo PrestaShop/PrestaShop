@@ -45,7 +45,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 10.5   |
@@ -96,7 +96,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 2                        | 7.5    |
@@ -134,7 +134,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 2                        | 7.5    |
@@ -184,7 +184,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
@@ -210,7 +210,7 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_excl     | 8.0  |
       | total_refunded_tax_incl     | 8.48 |
     And there are 0 more "Mug The best is yet to come" in stock
-    And there are 1 more "Mug Today is a good day" in stock
+    And there is 1 more "Mug Today is a good day" in stock
     And order "bo_order_refund" should have following details:
       | total_products           | 35.7   |
       | total_products_wt        | 37.840000 |
@@ -250,7 +250,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
@@ -316,7 +316,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip with voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
@@ -370,7 +370,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 1024   |
@@ -412,7 +412,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock without credit slip with voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 10.5   |
@@ -430,8 +430,8 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity_reinjected | 1    |
       | total_refunded_tax_excl     | 3.5  |
       | total_refunded_tax_incl     | 3.71 |
-    And there are 1 more "Mug The best is yet to come" in stock
-    And there are 1 more "Mug Today is a good day" in stock
+    And there is 1 more "Mug The best is yet to come" in stock
+    And there is 1 more "Mug Today is a good day" in stock
     And customer "testCustomer" last voucher is 14.0
 
   @order-refund
@@ -447,7 +447,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount              |
       | Mug The best is yet to come | 1                        | 10.5456889623154870 |
@@ -488,7 +488,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 0                        | 8      |
@@ -508,7 +508,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
     Then I should get error that no refunds is invalid
@@ -527,7 +527,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name    | quantity | amount |
       | shipping_refund |          | 3.5    |
@@ -567,7 +567,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 3                        | 8      |
@@ -587,7 +587,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 0      |
@@ -607,7 +607,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | -2.5   |
@@ -628,7 +628,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
@@ -649,7 +649,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock without credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
@@ -670,7 +670,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 10.5   |
@@ -691,7 +691,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     And I pay order "bo_order_refund" with the following details:
       | date           | 2019-11-26 13:56:23 |
       | payment_method | Payments by check   |
@@ -725,8 +725,8 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity_reinjected | 1    |
       | total_refunded_tax_excl     | 3.5  |
       | total_refunded_tax_incl     | 3.71 |
-    And there are 1 more "Mug The best is yet to come" in stock
-    And there are 1 more "Mug Today is a good day" in stock
+    And there is 1 more "Mug The best is yet to come" in stock
+    And there is 1 more "Mug Today is a good day" in stock
 
   @order-refund
   @order-partial-refund
@@ -741,7 +741,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     And return product is enabled
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
@@ -785,7 +785,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     And return product is enabled
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
@@ -813,8 +813,8 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity_reinjected | 1    |
       | total_refunded_tax_excl     | 3.5  |
       | total_refunded_tax_incl     | 3.71 |
-    And there are 1 more "Mug The best is yet to come" in stock
-    And there are 1 more "Mug Today is a good day" in stock
+    And there is 1 more "Mug The best is yet to come" in stock
+    And there is 1 more "Mug Today is a good day" in stock
 
   @order-refund
   @order-partial-refund
@@ -829,7 +829,7 @@ Feature: Refund Order from Back Office (BO)
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
-    And there are 1 less "Mug Today is a good day" in stock
+    And there is 1 less "Mug Today is a good day" in stock
     And I add new tax "state-tax" with following properties:
       | name         | State tax |
       | rate         | 10        |
@@ -857,4 +857,4 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity_reinjected | 1      |
       | total_refunded_tax_excl     | 11.9   |
       | total_refunded_tax_incl     | 12.610000 |
-    And there are 1 more "Mug The best is yet to come" in stock
+    And there is 1 more "Mug The best is yet to come" in stock

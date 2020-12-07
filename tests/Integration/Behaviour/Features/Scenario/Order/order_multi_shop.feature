@@ -138,3 +138,153 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Partial refund product from order
+    When I update order "bo_order1" status to "Processing in progress"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2 |
+    And I watch the stock of product "Mug The best is yet to come"
+    When I issue a partial refund on "bo_order1" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 2                        | 7.5    |
+    Then "bo_order1" has 1 credit slips
+    Then "bo_order1" last credit slip is:
+      | amount                  | 7.5  |
+      | total_products_tax_excl | 7.5  |
+      | total_products_tax_incl | 7.95 |
+      | shipping_cost_amount    | 0.0  |
+      | total_shipping_tax_incl | 0.0  |
+      | total_shipping_tax_excl | 0.0  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 2    |
+      | product_quantity_reinjected | 2    |
+      | total_refunded_tax_excl     | 7.5  |
+      | total_refunded_tax_incl     | 7.95 |
+    And there are 2 more "Mug The best is yet to come" in stock
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Return product from order
+    When I update order "bo_order1" status to "Processing in progress"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2 |
+    And I watch the stock of product "Mug The best is yet to come"
+    And return product is enabled
+    When I issue a return product on "bo_order1" with restock with credit slip without voucher on following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 1        |
+    Then "bo_order1" has 1 credit slips
+    Then "bo_order1" last credit slip is:
+      | amount                  | 11.9   |
+      | shipping_cost_amount    | 0.0    |
+      | total_shipping_tax_incl | 0.0    |
+      | total_shipping_tax_excl | 0.0    |
+      | total_products_tax_excl | 11.9   |
+      | total_products_tax_incl | 12.610 |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_quantity_refunded   | 0     |
+      | product_quantity_return     | 1     |
+      | product_quantity_reinjected | 1     |
+      | total_refunded_tax_excl     | 11.90 |
+      | total_refunded_tax_incl     | 12.61 |
+    And there is 1 more "Mug The best is yet to come" in stock
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 32.650 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Standard refund product from order
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 00.000 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2 |
+    And I watch the stock of product "Mug The best is yet to come"
+    # We add a payment to allow the standard refund, instead of changing its status to Payment accepted Because then it
+    # would create an invoice which would update the shop context, and it wouldn't validate the bug we want to prevent
+    And I pay order "bo_order1" with the following details:
+      | date           | 2019-11-26 13:56:23 |
+      | payment_method | Payments by check   |
+      | transaction_id | test123             |
+      | currency       | USD                 |
+      | amount         | 6.00                |
+    And "bo_order1" has 0 credit slips
+    And order "bo_order1" has status "Awaiting bank wire payment"
+    And return product is enabled
+    When I issue a standard refund on "bo_order1" with credit slip without voucher on following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 1        |
+    Then "bo_order1" has 1 credit slips
+    Then "bo_order1" last credit slip is:
+      | amount                  | 11.90 |
+      | shipping_cost_amount    | 0.0   |
+      | total_shipping_tax_excl | 0.0   |
+      | total_shipping_tax_incl | 0.0   |
+      | total_products_tax_excl | 11.90 |
+      | total_products_tax_incl | 12.61 |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_quantity_refunded   | 1     |
+      | product_quantity_reinjected | 1     |
+      | total_refunded_tax_excl     | 11.90 |
+      | total_refunded_tax_incl     | 12.61 |
+    And there is 1 more "Mug The best is yet to come" in stock
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 6.00   |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |

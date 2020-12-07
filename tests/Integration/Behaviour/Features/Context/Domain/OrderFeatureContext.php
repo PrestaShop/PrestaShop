@@ -1133,6 +1133,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^there are ([\-\d]+) (less|more) "(.+)" in stock$/
+     * @Then /^there is ([\-\d]+) (less|more) "(.+)" in stock$/
      *
      * @param int $productDifference
      * @param string $factor
