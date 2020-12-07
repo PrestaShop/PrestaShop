@@ -69,7 +69,8 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
                 !empty($shop['color']) ? $shop['color'] : '',
                 $shop['name'],
                 $shop['shopGroup']['id'],
-                $shop['shopGroup']['name']
+                $shop['shopGroup']['name'],
+                $shop['shopGroup']['color']
             );
         }
 

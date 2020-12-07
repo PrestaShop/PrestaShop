@@ -59,6 +59,11 @@ class FoundShop
     private $groupName;
 
     /**
+     * @var string
+     */
+    private $groupColor;
+
+    /**
      * FoundShop constructor.
      *
      * @param int $id
@@ -72,13 +77,15 @@ class FoundShop
         string $color,
         string $name,
         int $groupId,
-        string $groupName
+        string $groupName,
+        string $groupColor
     ) {
         $this->id = $id;
         $this->color = $color;
         $this->name = $name;
         $this->groupId = $groupId;
         $this->groupName = $groupName;
+        $this->groupColor = $groupColor;
     }
 
     public function getId(): int
@@ -104,5 +111,10 @@ class FoundShop
     public function getGroupName(): string
     {
         return $this->groupName;
+    }
+
+    public function getGroupColor(): string
+    {
+        return $this->groupColor;
     }
 }
