@@ -13,7 +13,6 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value     |
       | en-US  | funny mug |
-    And product product1 should have no manufacturer assigned
     When I update product "product1" basic information with following values:
       | name[en-US]              | photo of funny mug |
       | is_virtual               | true               |

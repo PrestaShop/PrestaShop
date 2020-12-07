@@ -23,7 +23,7 @@ Feature: Add basic product from Back Office (BO)
       | name[en-US] | bottle of beer |
       | is_virtual  | true           |
     Then product "product1" should be disabled
-    Then product "product1" should have following options information:
+    Then product "product1" should have following options:
       | condition | new |
     And product "product1" type should be virtual
     And product "product1" localized "name" should be:
