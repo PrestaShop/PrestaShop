@@ -197,7 +197,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
 
-        $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
+        $restrictedProduct = $this->productFeatureContext->getProduct($productName);
         $this->cartRules[$cartRuleName]->product_restriction = true;
         $this->cartRules[$cartRuleName]->reduction_product = $restrictedProduct->id;
         $this->cartRules[$cartRuleName]->save();
@@ -305,7 +305,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
-        $this->cartRules[$cartRuleName]->gift_product = $this->productFeatureContext->getProductWithName($productName)->id;
+        $this->cartRules[$cartRuleName]->gift_product = $this->productFeatureContext->getProduct($productName)->id;
         $this->cartRules[$cartRuleName]->save();
     }
 
