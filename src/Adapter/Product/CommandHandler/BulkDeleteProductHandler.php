@@ -28,15 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
 
 /**
- * Handles @see BulkDeleteProductCommand using legacy object model
+ * Handles command which deletes addresses in bulk action
  */
-final class BulkDeleteProductHandler extends AbstractProductHandler implements BulkDeleteProductHandlerInterface
+final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterface
 {
     /**
      * @var ProductRepository
