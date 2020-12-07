@@ -260,4 +260,9 @@ class ProductConstraintException extends ProductException
      * When additional delivery time notes type is invalid
      */
     public const INVALID_ADDITIONAL_DELIVERY_TIME_NOTES_TYPE = 460;
+
+    /**
+     * When product status is invalid
+     */
+    public const INVALID_STATUS = 470;
 }
