@@ -358,6 +358,8 @@ services:
 
     prestashop.adapter.product.combination.command_handler.update_listed_combination_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateListedCombinationHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.combination_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateListedCombinationCommand

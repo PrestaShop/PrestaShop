@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Combination;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateListedCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateListedCombinationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 
 /**
  * Handles @see UpdateListedCombinationCommand using legacy object model
@@ -37,10 +40,54 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateL
 final class UpdateListedCombinationHandler implements UpdateListedCombinationHandlerInterface
 {
     /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
+     * @param CombinationRepository $combinationRepository
+     */
+    public function __construct(
+        CombinationRepository $combinationRepository
+    ) {
+        $this->combinationRepository = $combinationRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateListedCombinationCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $combination = $this->combinationRepository->get($command->getCombinationId());
+        $updatableProperties = $this->fillUpdatableProperties($combination, $command);
+        $this->combinationRepository->partialUpdate($combination, $updatableProperties, CannotUpdateCombinationException::FAILED_UPDATE_LISTED_COMBINATION);
+    }
+
+    /**
+     * @param Combination $combination
+     * @param UpdateListedCombinationCommand $command
+     *
+     * @return array<int, string>
+     */
+    private function fillUpdatableProperties(Combination $combination, UpdateListedCombinationCommand $command): array
+    {
+        $updatableProperties = [];
+
+        if (null !== $command->getImpactOnPrice()) {
+            $combination->price = (float) (string) $command->getImpactOnPrice();
+            $updatableProperties[] = 'price';
+        }
+
+        if (null !== $command->getQuantity()) {
+            $combination->quantity = $command->getQuantity();
+            $updatableProperties[] = 'quantity';
+        }
+
+        if (null !== $command->isDefault()) {
+            $combination->default_on = $command->isDefault();
+            $updatableProperties[] = 'default_on';
+        }
+
+        return $updatableProperties;
     }
 }
