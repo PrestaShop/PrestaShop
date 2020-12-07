@@ -147,7 +147,7 @@ class ThemeExporterTest extends TestCase
             ->getMock();
 
         $cachedFilesPath = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ThemeExporterTest', 'cache']);
-        $this->extractorMock->method('getCachedFilesPath')
+        $this->extractorMock->method('getStorageFilesPath')
             ->willReturn($cachedFilesPath);
 
         $temporaryFilesPath = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ThemeExporterTest', 'temp']);
