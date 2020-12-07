@@ -68,7 +68,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         foreach ($files as $file) {
             $matches = [];
 
-            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg$/i', $file, $matches) === 1) {
+            if (preg_match('/^' . $categoryId . '-(\d)?_thumb.jpg$/i', $file, $matches) === 1) {
                 $usedKeys[] = (int) $matches[1];
             }
         }
