@@ -4127,8 +4127,7 @@ exit;
             return '0';
         }
         $base = log($size) / log(1024);
-        $baseUnity = Context::getContext()->getTranslator()->trans('Bytes', [], 'Shop.Theme.Catalog');
-        $suffixes = ['', 'k', 'M', 'G', 'T'];
+        $suffixes = ['Byte(s)', 'KByte(s)', 'MBytes(s)', 'GByte(s)', 'TByte(s)'];
 
         return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)] . $baseUnity;
     }
