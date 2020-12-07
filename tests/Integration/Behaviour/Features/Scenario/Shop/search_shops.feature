@@ -10,24 +10,25 @@ Feature: Search shops given a search term (BO)
   Background:
     Given multiple shop context is loaded
     Given shop "shop1" with name "test_shop" exists
-    Given I add a shop "shop2" with name "test_second_shop" and color "red" for the group "Default"
-    Given I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "Default"
+    Given I add a shop group "shopGroup2" with name "test_second_shop_group" and color "green"
+    And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "test_second_shop_group"
+    And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
 
   Scenario: I search for existing shops
     When I search for shops with the term "test" I should get the following results:
-      | name             | group_name | color |
-      | test_shop        | Default    |       |
-      | test_second_shop | Default    |  red  |
-      | test_third_shop  | Default    |  blue |
+      | name             | group_name             | color | group_color |
+      | test_shop        | Default                |       |             |
+      | test_second_shop | test_second_shop_group |  red  | green       |
+      | test_third_shop  | test_second_shop_group |  blue | green       |
     When I search for shops with the term "second" I should get the following results:
-      | name             | group_name | color |
-      | test_second_shop | Default    | red   |
+      | name             | group_name             | color | group_color |
+      | test_second_shop | test_second_shop_group | red   | green       |
     When I search for shops with the term "third" I should get the following results:
-      | name             | group_name | color |
-      | test_third_shop  | Default    | blue  |
+      | name             | group_name             | color | group_color |
+      | test_third_shop  | test_second_shop_group | blue  | green       |
     When I search for shops with the term "THIRD" I should get the following results:
-      | name             | group_name | color |
-      | test_third_shop  | Default    | blue  |
+      | name             | group_name             | color | group_color |
+      | test_third_shop  | test_second_shop_group | blue  | green       |
     When I search for shops with the term "doesnt_exist" I should get the following results:
-      | name             | group_name | color |
+      | name             | group_name | color | group_color |
     When I search for shops with the term " " I should get a SearchShopException

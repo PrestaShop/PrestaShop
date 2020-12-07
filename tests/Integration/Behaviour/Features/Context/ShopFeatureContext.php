@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Db;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
@@ -85,6 +86,26 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given I add a shop group :reference with name :groupName and color :color
+     *
+     * @param string $reference
+     * @param string $groupName
+     * @param string $color
+     */
+    public function addShopGroup(string $reference, string $groupName, string $color)
+    {
+        $shopGroup = new ShopGroup();
+        $shopGroup->name = $groupName;
+        $shopGroup->color = $color;
+        $shopGroup->active = true;
+        if (!$shopGroup->add()) {
+            throw new RuntimeException(sprintf('Could not create shop group: %s', Db::getInstance()->getMsgError()));
+        }
+
+        SharedStorage::getStorage()->set($reference, $shopGroup);
+    }
+
+    /**
      * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
      *
      * @param string $reference
@@ -131,6 +152,15 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
                             'Expected and found shops\'s groups don\'t match (%s and %s)',
                             $currentExpectedShop['group_name'],
                             $currentFoundShop->getGroupName()
+                        )
+                    );
+                    Assert::assertEquals(
+                        $currentExpectedShop['group_color'],
+                        $currentFoundShop->getGroupColor(),
+                        sprintf(
+                            'Expected and found shop groups\'s colors don\'t match (%s and %s)',
+                            $currentExpectedShop['group_color'],
+                            $currentFoundShop->getGroupColor()
                         )
                     );
                     Assert::assertEquals(
