@@ -34,25 +34,110 @@ class SpecificPriceConstraintException extends SpecificPriceException
     /**
      * When catalog price rule id is not valid
      */
-    const INVALID_ID = 1;
+    public const INVALID_ID = 1;
 
     /**
      * When date-time format is invalid
      */
-    const INVALID_DATETIME = 2;
+    public const INVALID_DATETIME = 2;
 
     /**
      * When date range is not valid
      */
-    const INVALID_DATE_RANGE = 3;
+    public const INVALID_DATE_RANGE = 3;
 
     /**
      * When specific price priority value is not valid
      */
-    const INVALID_PRIORITY = 4;
+    public const INVALID_PRIORITY = 4;
 
     /**
      * When there is duplicated priorities in specific price priority list
      */
-    const DUPLICATE_PRIORITY = 5;
+    public const DUPLICATE_PRIORITY = 5;
+
+    /**
+     * When specific price from quantity value is not valid
+     */
+    public const INVALID_FROM_QUANTITY = 6;
+
+    /**
+     * When specific price tax included value is not valid
+     */
+    public const INVALID_TAX_INCLUDED = 7;
+
+    /**
+     * When specific price reduction amount value is not valid
+     */
+    public const INVALID_REDUCTION_AMOUNT = 8;
+
+    /**
+     * When specific price price value is not valid
+     */
+    public const INVALID_PRICE = 9;
+
+    /**
+     * When specific price from datetime value is not valid
+     */
+    public const INVALID_FROM_DATETIME = 10;
+
+    /**
+     * When specific price to datetime value is not valid
+     */
+    public const INVALID_TO_DATETIME = 11;
+
+    /**
+     * When specific price cart id is not valid
+     */
+    public const INVALID_CART_ID = 12;
+
+    /**
+     * When specific price country id is not valid
+     */
+    public const INVALID_COUNTRY_ID = 13;
+
+    /**
+     * When specific price currency id is not valid
+     */
+    public const INVALID_CURRENCY_ID = 14;
+
+    /**
+     * When specific price customer id is not valid
+     */
+    public const INVALID_CUSTOMER_ID = 15;
+
+    /**
+     * When specific price group id is not valid
+     */
+    public const INVALID_GROUP_ID = 16;
+
+    /**
+     * When specific price product id is not valid
+     */
+    public const INVALID_PRODUCT_ID = 17;
+
+    /**
+     * When specific price combination id is not valid
+     */
+    public const INVALID_COMBINATION_ID = 18;
+
+    /**
+     * When specific price shop id is not valid
+     */
+    public const INVALID_SHOP_ID = 19;
+
+    /**
+     * When specific price shop group id is not valid
+     */
+    public const INVALID_SHOP_GROUP_ID = 20;
+
+    /**
+     * When specific price catalog price rule id is not valid
+     */
+    public const INVALID_CATALOG_PRICE_RULE_ID = 21;
+
+    /**
+     * When specific price reduction type value is not valid
+     */
+    public const INVALID_REDUCTION_TYPE = 22;
 }
