@@ -274,7 +274,7 @@ class ThemeProviderTest extends KernelTestCase
             ->method('get')
             ->willReturnCallback(function ($param) {
                 $configs = [
-                    '_PS_ALL_THEMES_DIR_' => $this->themesDirectory,
+                    '_PS_ALL_THEMES_DIR_' => rtrim($this->themesDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
                     '_PS_CONFIG_DIR_' => $this->configDir,
                 ];
 

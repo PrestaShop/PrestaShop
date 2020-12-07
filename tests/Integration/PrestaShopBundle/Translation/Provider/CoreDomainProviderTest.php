@@ -144,6 +144,13 @@ class CoreDomainProviderTest extends KernelTestCase
 
     protected function tearDown()
     {
+        $langId = \Language::getIdByIso('fr', true);
+        if ($langId) {
+            \Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
+            );
+        }
+
         self::$kernel->shutdown();
     }
 }
