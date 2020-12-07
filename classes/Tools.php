@@ -4129,7 +4129,7 @@ exit;
         $base = log($size) / log(1024);
         $suffixes = ['Byte(s)', 'KByte(s)', 'MBytes(s)', 'GByte(s)', 'TByte(s)'];
 
-        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)] . $baseUnity;
+        return round(1024 ** ($base - floor($base)), $precision) . Context::getContext()->getTranslator()->trans($suffixes[floor($base)], [], 'Shop.Theme.Catalog');
     }
 
     public static function boolVal($value)
