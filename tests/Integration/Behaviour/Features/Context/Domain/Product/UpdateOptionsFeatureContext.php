@@ -107,7 +107,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param ProductOptions $expectedOptions
      */
-    public function assertOptions(string $productReference, ProductOptions $expectedOptions)
+    public function assertOptions(string $productReference, ProductOptions $expectedOptions): void
     {
         $properties = [
             'active',
