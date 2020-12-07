@@ -260,7 +260,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     ) {
         $this->productFeatureContext->checkProductWithNameExists($productName);
         $this->productFeatureContext->checkCombinationWithNameExists($productName, $combinationName);
-        $productId = (int) $this->productFeatureContext->getProductWithName($productName)->id;
+        $productId = (int) $this->productFeatureContext->getProduct($productName)->id;
         $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
 

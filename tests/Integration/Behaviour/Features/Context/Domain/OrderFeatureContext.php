@@ -563,8 +563,23 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function editProductsToOrderWithFollowingDetails(string $productName, string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
         $data = $table->getRowsHash();
+        //if (!$data['price_tax_incl']) {
+        //    $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
+        //} else {
+        $order = new Order($orderId);
+        $productOrderDetail = [];
+        foreach ($order->getProductsDetail() as $orderDetail) {
+            if ($orderDetail['product_name'] === $productName) {
+                $productOrderDetail = [
+                        'id_order_detail' => $orderDetail['id_order_detail'],
+                        'product_id' => $orderDetail['product_id'],
+                        'price_tax_incl' => $orderDetail['unit_price_tax_incl'],
+                    ];
+                break;
+            }
+        }
+        //}
 
         $this->updateProductInOrder($orderId, $productOrderDetail, $data);
     }
@@ -672,6 +687,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (CannotFindProductInOrderException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @Then I should get no order error
+     */
+    public function assertNoOrderError()
+    {
+        $this->assertLastErrorIsNull();
     }
 
     /**
@@ -1425,12 +1448,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param string $productName
+     * @param Order|null $order
      *
-     * @return int
+     * @return FoundProduct
      */
-    private function getProductByName(string $productName)
+    private function getProductByName(string $productName, Order $order = null)
     {
-        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+        $products = $this->getQueryBus()->handle(
+            new SearchProducts(
+                $productName,
+                1,
+                Context::getContext()->currency->iso_code,
+                $order ? $order->id : null
+            )
+        );
 
         if (empty($products)) {
             throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
@@ -1561,10 +1592,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         ?string $combinationName = null,
         ?int $orderInvoiceId = null
     ): array {
-        $product = $this->getProductByName($productName);
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+        $product = $this->getProductByName($productName, $order);
         $productId = $product->getProductId();
         $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
-        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+
         $orderDetails = $order->getProducts();
         $productOrderDetail = null;
         foreach ($orderDetails as $orderDetail) {
