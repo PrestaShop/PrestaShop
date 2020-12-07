@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
@@ -36,9 +37,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 
 /**
- * Updates combination options
+ * Updates combination details
  */
-class UpdateCombinationOptionsCommand
+class UpdateCombinationDetailsCommand
 {
     /**
      * @var CombinationId
@@ -71,6 +72,11 @@ class UpdateCombinationOptionsCommand
     private $upc;
 
     /**
+     * @var DecimalNumber|null
+     */
+    private $weight;
+
+    /**
      * @param int $combinationId
      *
      * @throws ProductConstraintException
@@ -100,9 +106,9 @@ class UpdateCombinationOptionsCommand
     /**
      * @param string $ean13
      *
-     * @return UpdateCombinationOptionsCommand
+     * @return UpdateCombinationDetailsCommand
      */
-    public function setEan13(string $ean13): UpdateCombinationOptionsCommand
+    public function setEan13(string $ean13): UpdateCombinationDetailsCommand
     {
         $this->ean13 = new Ean13($ean13);
 
@@ -120,9 +126,9 @@ class UpdateCombinationOptionsCommand
     /**
      * @param string $isbn
      *
-     * @return UpdateCombinationOptionsCommand
+     * @return UpdateCombinationDetailsCommand
      */
-    public function setIsbn(string $isbn): UpdateCombinationOptionsCommand
+    public function setIsbn(string $isbn): UpdateCombinationDetailsCommand
     {
         $this->isbn = new Isbn($isbn);
 
@@ -140,9 +146,9 @@ class UpdateCombinationOptionsCommand
     /**
      * @param string $mpn
      *
-     * @return UpdateCombinationOptionsCommand
+     * @return UpdateCombinationDetailsCommand
      */
-    public function setMpn(string $mpn): UpdateCombinationOptionsCommand
+    public function setMpn(string $mpn): UpdateCombinationDetailsCommand
     {
         $this->mpn = $mpn;
 
@@ -160,9 +166,9 @@ class UpdateCombinationOptionsCommand
     /**
      * @param string $reference
      *
-     * @return UpdateCombinationOptionsCommand
+     * @return UpdateCombinationDetailsCommand
      */
-    public function setReference(string $reference): UpdateCombinationOptionsCommand
+    public function setReference(string $reference): UpdateCombinationDetailsCommand
     {
         $this->reference = new Reference($reference);
 
@@ -180,11 +186,31 @@ class UpdateCombinationOptionsCommand
     /**
      * @param string $upc
      *
-     * @return UpdateCombinationOptionsCommand
+     * @return UpdateCombinationDetailsCommand
      */
-    public function setUpc(string $upc): UpdateCombinationOptionsCommand
+    public function setUpc(string $upc): UpdateCombinationDetailsCommand
     {
         $this->upc = new Upc($upc);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWeight(): ?DecimalNumber
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param string $weight
+     *
+     * @return UpdateCombinationDetailsCommand
+     */
+    public function setWeight(string $weight): UpdateCombinationDetailsCommand
+    {
+        $this->weight = new DecimalNumber($weight);
 
         return $this;
     }

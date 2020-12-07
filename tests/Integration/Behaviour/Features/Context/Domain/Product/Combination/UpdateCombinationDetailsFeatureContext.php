@@ -30,72 +30,83 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationOptionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationOptions;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureContext
+class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
-     * @When I update combination :combinationReference options with following details:
+     * @When I update combination :combinationReference details with following values:
      *
      * @param string $combinationReference
      * @param TableNode $tableNode
      */
-    public function updateOptions(string $combinationReference, TableNode $tableNode): void
+    public function updateDetails(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationOptionsCommand($this->getSharedStorage()->get($combinationReference));
+        $command = new UpdateCombinationDetailsCommand($this->getSharedStorage()->get($combinationReference));
 
         $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
     }
 
     /**
-     * @Then combination :combinationReference should have following options:
+     * @Then combination :combinationReference should have following details:
      *
      * @param string $combinationReference
-     * @param CombinationOptions $expectedOptions
+     * @param CombinationDetails $expectedDetails
      */
-    public function assertOptions(string $combinationReference, CombinationOptions $expectedOptions): void
+    public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails): void
     {
-        $optionPropertyNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualOptions = $this->getCombinationForEditing($combinationReference)->getOptions();
+        $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
+        $actualDetails = $this->getCombinationForEditing($combinationReference)->getDetails();
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        foreach ($optionPropertyNames as $propertyName) {
+        foreach ($scalarDetailNames as $propertyName) {
             Assert::assertSame(
-                $propertyAccessor->getValue($expectedOptions, $propertyName),
-                $propertyAccessor->getValue($actualOptions, $propertyName),
+                $propertyAccessor->getValue($expectedDetails, $propertyName),
+                $propertyAccessor->getValue($actualDetails, $propertyName),
                 sprintf('Unexpected %s of "%s"', $propertyName, $combinationReference)
             );
         }
-    }
 
-    /**
-     * @Transform table:combination option,value
-     *
-     * @param TableNode $tableNode
-     *
-     * @return CombinationOptions
-     */
-    public function transformOptions(TableNode $tableNode): CombinationOptions
-    {
-        $options = $tableNode->getRowsHash();
-
-        return new CombinationOptions(
-            $options['ean13'],
-            $options['isbn'],
-            $options['mpn'],
-            $options['reference'],
-            $options['upc']
+        Assert::assertTrue(
+            $expectedDetails->getWeight()->equals($actualDetails->getWeight()),
+            sprintf(
+                'Unexpected combination weight. Expected "%s" got "%s"',
+                var_export($expectedDetails, true),
+                var_export($actualDetails, true)
+            )
         );
     }
 
     /**
-     * @param UpdateCombinationOptionsCommand $command
+     * @Transform table:combination detail,value
+     *
+     * @param TableNode $tableNode
+     *
+     * @return CombinationDetails
+     */
+    public function transformDetails(TableNode $tableNode): CombinationDetails
+    {
+        $details = $tableNode->getRowsHash();
+
+        return new CombinationDetails(
+            $details['ean13'],
+            $details['isbn'],
+            $details['mpn'],
+            $details['reference'],
+            $details['upc'],
+            new DecimalNumber($details['weight'])
+        );
+    }
+
+    /**
+     * @param UpdateCombinationDetailsCommand $command
      * @param array $dataRows
      */
-    private function fillCommand(UpdateCombinationOptionsCommand $command, array $dataRows): void
+    private function fillCommand(UpdateCombinationDetailsCommand $command, array $dataRows): void
     {
         if (isset($dataRows['ean13'])) {
             $command->setEan13($dataRows['ean13']);
@@ -111,6 +122,9 @@ class UpdateCombinationOptionsFeatureContext extends AbstractCombinationFeatureC
         }
         if (isset($dataRows['upc'])) {
             $command->setUpc($dataRows['upc']);
+        }
+        if (isset($dataRows['weight'])) {
+            $command->setWeight($dataRows['weight']);
         }
     }
 }
