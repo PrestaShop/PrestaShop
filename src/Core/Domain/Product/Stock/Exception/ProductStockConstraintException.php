@@ -37,16 +37,36 @@ class ProductStockConstraintException extends ProductStockException
      * Code is used when an advanced stock action is performed while
      * advanced stock managed is disabled
      */
-    const ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED = 10;
+    public const ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED = 10;
 
     /**
      * Code is used when an advanced stock action is performed while
      * advanced stock managed is disabled on the product
      */
-    const ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED = 20;
+    public const ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED = 20;
 
     /**
      * Code is sent when invalid out of stock type is used
      */
-    const INVALID_OUT_OF_STOCK_TYPE = 30;
+    public const INVALID_OUT_OF_STOCK_TYPE = 30;
+
+    /**
+     * When quantity is invalid
+     */
+    public const INVALID_QUANTITY = 40;
+
+    /**
+     * When location is invalid
+     */
+    public const INVALID_LOCATION = 50;
+
+    /**
+     * When depends_on_stock is invalid
+     */
+    public const INVALID_DEPENDS_ON_STOCK = 60;
+
+    /**
+     * When out_of_stock is invalid
+     */
+    public const INVALID_OUT_OF_STOCK = 70;
 }
