@@ -64,17 +64,12 @@ class UpdateCombinationStockCommand
     /**
      * @var bool|null
      */
-    private $lowStockAlertOn;
+    private $lowStockAlertEnabled;
 
     /**
      * @var DateTimeInterface|null
      */
     private $availableDate;
-
-    /**
-     * @var bool
-     */
-    private $movementOn = true;
 
     /**
      * @param int $combinationId
@@ -148,7 +143,6 @@ class UpdateCombinationStockCommand
      */
     public function setLocation(string $location): UpdateCombinationStockCommand
     {
-        //@todo: validate with regex pattern
         $this->location = $location;
 
         return $this;
@@ -177,19 +171,19 @@ class UpdateCombinationStockCommand
     /**
      * @return bool|null
      */
-    public function isLowStockAlertOn(): ?bool
+    public function isLowStockAlertEnabled(): ?bool
     {
-        return $this->lowStockAlertOn;
+        return $this->lowStockAlertEnabled;
     }
 
     /**
-     * @param bool $lowStockAlertOn
+     * @param bool $lowStockAlertEnabled
      *
      * @return UpdateCombinationStockCommand
      */
-    public function setLowStockAlertOn(bool $lowStockAlertOn): UpdateCombinationStockCommand
+    public function setLowStockAlert(bool $lowStockAlertEnabled): UpdateCombinationStockCommand
     {
-        $this->lowStockAlertOn = $lowStockAlertOn;
+        $this->lowStockAlertEnabled = $lowStockAlertEnabled;
 
         return $this;
     }
@@ -217,18 +211,8 @@ class UpdateCombinationStockCommand
     /**
      * @return bool|null
      */
-    public function getLowStockAlertOn(): ?bool
+    public function getLowStockAlertEnabled(): ?bool
     {
-        return $this->lowStockAlertOn;
-    }
-
-    /**
-     * @todo: movement does not reflect in product page. Do we need this (e.g. in case modules are using it)/ used in legacy as $addMovement
-     *
-     * @return bool
-     */
-    public function isMovementOn(): bool
-    {
-        return $this->movementOn;
+        return $this->lowStockAlertEnabled;
     }
 }

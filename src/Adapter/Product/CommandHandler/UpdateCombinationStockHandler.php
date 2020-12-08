@@ -70,7 +70,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
 
-        $this->combinationStockUpdater->update($combination, $updatableProperties, $command->isMovementOn());
+        $this->combinationStockUpdater->update($combination, $updatableProperties);
     }
 
     /**
@@ -108,8 +108,8 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
             $updatableProperties[] = 'minimal_quantity';
         }
 
-        if (null !== $command->isLowStockAlertOn()) {
-            $combination->low_stock_alert = $command->isLowStockAlertOn();
+        if (null !== $command->isLowStockAlertEnabled()) {
+            $combination->low_stock_alert = $command->isLowStockAlertEnabled();
             $updatableProperties[] = 'low_stock_alert';
         }
 

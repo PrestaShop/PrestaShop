@@ -76,9 +76,8 @@ class CombinationStockUpdater
     /**
      * @param Combination $combination
      * @param array $propertiesToUpdate
-     * @param bool $addMovement
      */
-    public function update(Combination $combination, array $propertiesToUpdate, bool $addMovement): void
+    public function update(Combination $combination, array $propertiesToUpdate): void
     {
         $this->combinationRepository->partialUpdate(
             $combination,
@@ -86,18 +85,17 @@ class CombinationStockUpdater
             CannotUpdateCombinationException::FAILED_UPDATE_STOCK
         );
 
-        $this->updateStockAvailable($combination, $propertiesToUpdate, $addMovement);
+        $this->updateStockAvailable($combination, $propertiesToUpdate);
     }
 
     /**
      * @param Combination $combination
      * @param array $propertiesToUpdate
-     * @param bool $addMovement
      *
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    private function updateStockAvailable(Combination $combination, array $propertiesToUpdate, bool $addMovement): void
+    private function updateStockAvailable(Combination $combination, array $propertiesToUpdate): void
     {
         $updateQuantity = false;
         $updateLocation = false;
@@ -116,9 +114,7 @@ class CombinationStockUpdater
 
         if ($updateQuantity) {
             $newQuantity = (int) $combination->quantity;
-            if ($addMovement) {
-                $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
-            }
+            $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
             $stockAvailable->quantity = $newQuantity;
         }
 
