@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidDataException;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
@@ -122,6 +124,21 @@ final class GridDefinition implements GridDefinitionInterface
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getColumn(string $id): ColumnInterface
+    {
+        /** @var ColumnInterface $column */
+        foreach ($this->columns as $column) {
+            if ($id === $column->getId()) {
+                return $column;
+            }
+        }
+
+        throw new ColumnNotFoundException('Column with id "%s" not found');
     }
 
     /**

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
+use Symfony\Component\OptionsResolver\Exception\NoSuchOptionException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -102,6 +103,18 @@ abstract class AbstractColumn implements ColumnInterface
         }
 
         return $this->options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOption(string $name)
+    {
+        if (array_key_exists($name, $this->options)) {
+            return $this->options[$name];
+        }
+
+        throw new NoSuchOptionException(sprintf('Option "%s" does not exist in "%s"', $name, get_class($this)));
     }
 
     /**
