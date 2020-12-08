@@ -126,7 +126,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         return new CombinationStock(
             (int) $stockAvailable->quantity,
             (int) $combination->minimal_quantity,
-            $combination->location,
+            $stockAvailable->location,
             (int) $combination->low_stock_threshold,
             (bool) $combination->low_stock_alert,
             new DateTime($combination->available_date)
