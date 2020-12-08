@@ -739,9 +739,9 @@ abstract class ControllerCore
     }
 
     /**
-     * @param null $value
-     * @param null $controller
-     * @param null $method
+     * @param string|null $value
+     * @param string|null $controller
+     * @param string|null $method
      *
      * @throws PrestaShopException
      */
