@@ -64,7 +64,7 @@ interface GridDefinitionInterface
      *
      * @return ColumnInterface
      */
-    public function getColumn(string $id): ColumnInterface;
+    public function getColumnById(string $id): ColumnInterface;
 
     /**
      * @return BulkActionCollectionInterface

@@ -129,7 +129,7 @@ final class GridDefinition implements GridDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getColumn(string $id): ColumnInterface
+    public function getColumnById(string $id): ColumnInterface
     {
         /** @var ColumnInterface $column */
         foreach ($this->columns as $column) {
