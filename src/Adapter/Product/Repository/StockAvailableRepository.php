@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Validate\StockAvailableValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
@@ -55,15 +56,23 @@ class StockAvailableRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var StockAvailableValidator
+     */
+    private $stockAvailableValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param StockAvailableValidator $stockAvailableValidator
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        StockAvailableValidator $stockAvailableValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->stockAvailableValidator = $stockAvailableValidator;
     }
 
     /**
@@ -73,6 +82,7 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      */
     public function update(StockAvailable $stockAvailable): void
     {
+        $this->stockAvailableValidator->validate($stockAvailable);
         $this->updateObjectModel($stockAvailable, CannotUpdateStockAvailableException::class);
     }
 
