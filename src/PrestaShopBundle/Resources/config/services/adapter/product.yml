@@ -473,6 +473,7 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+            - '@prestashop.adapter.product.validate.stock_available_validator'
 
     prestashop.adapter.product.update.product_stock_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater
@@ -559,3 +560,6 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand
+
+    prestashop.adapter.product.validate.stock_available_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Validate\StockAvailableValidator
