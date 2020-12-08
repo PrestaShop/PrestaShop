@@ -89,8 +89,8 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
             $product->location = $command->getLocation();
             $updatableProperties[] = 'location';
         }
-        if (null !== $command->getLowStockAlert()) {
-            $product->low_stock_alert = $command->getLowStockAlert();
+        if (null !== $command->isLowStockAlertEnabled()) {
+            $product->low_stock_alert = $command->isLowStockAlertEnabled();
             $updatableProperties[] = 'low_stock_alert';
         }
         if (null !== $command->getLowStockThreshold()) {
