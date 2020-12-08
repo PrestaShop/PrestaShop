@@ -177,13 +177,13 @@ class UpdateCombinationStockCommand
     }
 
     /**
-     * @param bool $lowStockAlertEnabled
+     * @param bool $enabled
      *
      * @return UpdateCombinationStockCommand
      */
-    public function setLowStockAlert(bool $lowStockAlertEnabled): UpdateCombinationStockCommand
+    public function setLowStockAlert(bool $enabled): UpdateCombinationStockCommand
     {
-        $this->lowStockAlertEnabled = $lowStockAlertEnabled;
+        $this->lowStockAlertEnabled = $enabled;
 
         return $this;
     }
