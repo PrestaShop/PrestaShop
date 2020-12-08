@@ -88,7 +88,7 @@ class UpdateProductStockInformationCommand
     /**
      * @var bool|null
      */
-    private $lowStockAlert;
+    private $lowStockAlertEnabled;
 
     /**
      * @var string[]|null key value pairs where key is the id of language
@@ -288,19 +288,19 @@ class UpdateProductStockInformationCommand
     /**
      * @return bool|null
      */
-    public function getLowStockAlert(): ?bool
+    public function isLowStockAlertEnabled(): ?bool
     {
-        return $this->lowStockAlert;
+        return $this->lowStockAlertEnabled;
     }
 
     /**
-     * @param bool $lowStockAlert
+     * @param bool $enabled
      *
      * @return UpdateProductStockInformationCommand
      */
-    public function setLowStockAlert(bool $lowStockAlert): UpdateProductStockInformationCommand
+    public function setLowStockAlert(bool $enabled): UpdateProductStockInformationCommand
     {
-        $this->lowStockAlert = $lowStockAlert;
+        $this->lowStockAlertEnabled = $enabled;
 
         return $this;
     }
