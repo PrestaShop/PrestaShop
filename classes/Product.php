@@ -422,7 +422,7 @@ class ProductCore extends ObjectModel
             'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
             'supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'width' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'height' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'depth' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
