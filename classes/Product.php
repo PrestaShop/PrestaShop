@@ -3379,6 +3379,43 @@ class ProductCore extends ObjectModel
             $real_quantity
         );
 
+        // If cart has been ordered the price is saved in OrderDetails
+        // When we want only the reduction no need for this
+        if ($id_cart && !$only_reduc) {
+            $orderId = Order::getIdByCartId($id_cart);
+            if (false !== $orderId) {
+                $sql = new DbQuery();
+                $sql->select('od.*, t.rate AS tax_rate');
+                $sql->from('order_detail', 'od');
+                $sql->where('od.`id_order` = ' . (int) $orderId);
+                $sql->where('od.`product_id` = ' . (int) $id_product);
+                if (Combination::isFeatureActive()) {
+                    $sql->where('od.`product_attribute_id` = ' . (int) $id_product_attribute);
+                }
+                $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
+                $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
+                $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+                if (is_array($res) && count($res)) {
+                    $orderDetail = $res[0];
+                    if ($use_reduc) {
+                        $price = $use_tax ? $orderDetail['unit_price_tax_incl'] : $orderDetail['unit_price_tax_excl'];
+                    } else {
+                        // Without reduction we use the original product price
+                        $tax_rate = $use_tax ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
+                        $price = $orderDetail['original_product_price'] * $tax_rate;
+                    }
+                    $ecotax = 0;
+                    if ($with_ecotax) {
+                        $ecotax = $use_tax ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
+                    }
+                    $price += $ecotax;
+
+                    // Cache the price from OrderDetail
+                    self::$_prices[$cache_id] = $price;
+                }
+            }
+        }
+
         if (isset(self::$_prices[$cache_id])) {
             return self::$_prices[$cache_id];
         }
