@@ -1727,4 +1727,40 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         return $taxManager->getTaxCalculator();
     }
+
+    /**
+     * @Then product :productReference in order :orderReference has following prices for viewing in BO:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkOrderForViewingWithReference(string $productReference, string $orderReference, TableNode $table): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = $this->getProductIdByName($productReference);
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $productList = $orderForViewing->getProducts()->getProducts();
+        $expectedDetails = $table->getRowsHash();
+        foreach ($productList as $product) {
+            if ($product->getId() == $productId) {
+                Assert::assertEquals(
+                    $expectedDetails['unit_price_tax_excl_raw'],
+                    $product->getUnitPriceTaxExclRaw()
+                );
+                Assert::assertEquals(
+                    $expectedDetails['unit_price_tax_incl_raw'],
+                    $product->getUnitPriceTaxInclRaw()
+                );
+                Assert::assertEquals(
+                    $expectedDetails['unit_price'],
+                    $product->getUnitPrice()
+                );
+                Assert::assertEquals(
+                    $expectedDetails['total_price'],
+                    $product->getTotalPrice()
+                );
+            }
+        }
+    }
 }

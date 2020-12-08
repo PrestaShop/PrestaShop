@@ -30,6 +30,7 @@ use Currency;
 use Db;
 use Image;
 use ImageManager;
+use Order;
 use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
@@ -174,12 +175,17 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         $productsForViewing = [];
 
         $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
-
         foreach ($products as $product) {
             $unitPrice = $isOrderTaxExcluded ?
                 $product['unit_price_tax_excl'] :
                 $product['unit_price_tax_incl']
             ;
+
+            // if rounding type is set to "per item" we must round the unit price now, otherwise values won't match
+            // the totals in the order summary
+            if ((int) $order->round_type === Order::ROUND_ITEM) {
+                $unitPrice = (new Number((string) $unitPrice))->round($precision, $this->getNumberRoundMode());
+            }
 
             $totalPrice = $unitPrice *
                 (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);

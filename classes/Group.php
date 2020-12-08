@@ -73,6 +73,9 @@ class GroupCore extends ObjectModel
 
     protected $webserviceParameters = [];
 
+    public const PRICE_DISPLAY_METHOD_TAX_INCL = 0;
+    public const PRICE_DISPLAY_METHOD_TAX_EXCL = 1;
+
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
