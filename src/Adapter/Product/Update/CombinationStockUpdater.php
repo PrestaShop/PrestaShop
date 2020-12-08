@@ -89,29 +89,46 @@ class CombinationStockUpdater
         );
 
         // updating stockAvailable after Combination is important, because quantity validation is done in Combination update
-        if (in_array('quantity', $propertiesToUpdate)) {
-            $this->updateStockAvailable($combination, $addMovement);
-        }
+        $this->updateStockAvailable($combination, $propertiesToUpdate, $addMovement);
     }
 
     /**
      * @param Combination $combination
+     * @param array $propertiesToUpdate
      * @param bool $addMovement
      *
-     * @throws CombinationConstraintException
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    private function updateStockAvailable(Combination $combination, bool $addMovement): void
+    private function updateStockAvailable(Combination $combination, array $propertiesToUpdate, bool $addMovement): void
     {
-        $newQuantity = (int) $combination->quantity;
-        $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
+        $updateQuantity = false;
+        $updateLocation = false;
 
-        if ($addMovement) {
-            $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
+        if (in_array('quantity', $propertiesToUpdate)) {
+            $updateQuantity = true;
+        }
+        if (in_array('location', $propertiesToUpdate)) {
+            $updateLocation = true;
+        }
+        if (!$updateQuantity && !$updateLocation) {
+            return;
         }
 
-        $stockAvailable->quantity = $newQuantity;
+        $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
+
+        if ($updateQuantity) {
+            $newQuantity = (int) $combination->quantity;
+            if ($addMovement) {
+                $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
+            }
+            $stockAvailable->quantity = $newQuantity;
+        }
+
+        if ($updateLocation) {
+            $stockAvailable->location = $combination->location;
+        }
+
         $this->stockAvailableRepository->update($stockAvailable);
     }
 
