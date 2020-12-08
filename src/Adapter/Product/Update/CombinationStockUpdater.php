@@ -32,13 +32,15 @@ use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShopException;
 
+/**
+ * Updates stock for product combination
+ */
 class CombinationStockUpdater
 {
     /**
@@ -75,10 +77,6 @@ class CombinationStockUpdater
      * @param Combination $combination
      * @param array $propertiesToUpdate
      * @param bool $addMovement
-     *
-     * @throws CombinationConstraintException
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
      */
     public function update(Combination $combination, array $propertiesToUpdate, bool $addMovement): void
     {
@@ -88,7 +86,6 @@ class CombinationStockUpdater
             CannotUpdateCombinationException::FAILED_UPDATE_STOCK
         );
 
-        // updating stockAvailable after Combination is important, because quantity validation is done in Combination update
         $this->updateStockAvailable($combination, $propertiesToUpdate, $addMovement);
     }
 
