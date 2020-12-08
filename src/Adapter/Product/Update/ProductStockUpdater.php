@@ -109,7 +109,6 @@ class ProductStockUpdater
         $stockAvailable = $this->getStockAvailable($product);
         $this->productRepository->partialUpdate($product, $propertiesToUpdate, CannotUpdateProductException::FAILED_UPDATE_STOCK);
 
-        // It is very important to update StockAvailable after product, because the validation is performed in ProductRepository::partialUpdate
         $this->updateStockAvailable($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
         if ($this->advancedStockEnabled && $product->depends_on_stock) {
@@ -144,7 +143,7 @@ class ProductStockUpdater
 
         // Quantity is handled separately as it is also related to Stock movements
         if (in_array('quantity', $propertiesToUpdate)) {
-            $this->updateQuantity($product, $stockAvailable, $propertiesToUpdate, $addMovement);
+            $this->updateQuantity($product, $stockAvailable, $addMovement);
             $stockUpdateRequired = true;
         }
 
@@ -156,10 +155,9 @@ class ProductStockUpdater
     /**
      * @param Product $product
      * @param StockAvailable $stockAvailable
-     * @param array $propertiesToUpdate
      * @param bool $addMovement
      */
-    private function updateQuantity(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
+    private function updateQuantity(Product $product, StockAvailable $stockAvailable, bool $addMovement): void
     {
         //@todo: unused $propertiesToUpdate
         $deltaQuantity = (int) $product->quantity - (int) $stockAvailable->quantity;
