@@ -43,6 +43,7 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -136,6 +137,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
         $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
+        $combinationId = null !== $combination ? (int) $combination->id : 0;
 
         $this->checkProductInStock($product, $command);
 
@@ -148,14 +150,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->computingPrecision = $this->getPrecisionFromCart($cart);
         try {
-            $this->updateSpecificPrice(
-                $command->getProductPriceTaxIncluded(),
-                $command->getProductPriceTaxExcluded(),
-                $order,
-                $product,
-                $combination
-            );
-
             $cartComparator = new CartProductsComparator($cart);
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
             $updatedCartProducts = $cart->getProducts(true);
@@ -174,14 +168,22 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 // Now we check if the update is about the currently added product This is important for multi invoice orders, in case
                 // the added product was already in previous invoices
                 $cartCombinationId = null !== $cartProductUpdate->getCombinationId() ? $cartProductUpdate->getCombinationId()->getValue() : 0;
-                $combinationId = null !== $combination ? (int) $combination->id : 0;
                 if ($cartProductUpdate->getProductId()->getValue() === (int) $product->id && $cartCombinationId === $combinationId) {
                     $creationModifications[] = $cartProductUpdate;
                 } else {
                     $updateModifications[] = $cartProductUpdate;
                 }
             }
-            $createdProducts = $this->getCreatedCartProducts($creationModifications, $updatedCartProducts, $command);
+            $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($command->getProductPriceTaxIncluded(), $command->getProductPriceTaxExcluded(), $order, $product, $combination);
+            $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($command->getProductPriceTaxIncluded(), $command->getProductPriceTaxExcluded(), $order, $product, $combination);
+            $createdProducts = $this->getCreatedCartProducts(
+                $product->id,
+                $combinationId,
+                $creationModifications,
+                $updatedCartProducts,
+                $precisePriceTaxExcluded,
+                $precisePriceTaxIncluded
+            );
 
             $invoice = $this->createNewOrEditExistingInvoice(
                 $command,
@@ -203,8 +205,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $order,
                 $command->getProductId()->getValue(),
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
-                $command->getProductPriceTaxExcluded(),
-                $command->getProductPriceTaxIncluded()
+                $precisePriceTaxExcluded,
+                $precisePriceTaxIncluded
             );
             StockAvailable::synchronize($product->id);
 
@@ -295,26 +297,37 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param array $creationUpdates
-     * @param array $cartProducts
-     * @param AddProductToOrderCommand $command
+     * @param int $productId
+     * @param int $combinationId
+     * @param CartProductUpdate[] $creationUpdates
+     * @param CartProductUpdate[] $cartProducts
+     * @param Number $priceTaxExcluded
+     * @param Number $priceTaxIncluded
      *
      * @return array
      */
-    private function getCreatedCartProducts(array $creationUpdates, array $cartProducts, AddProductToOrderCommand $command): array
-    {
+    private function getCreatedCartProducts(
+        int $productId,
+        int $combinationId,
+        array $creationUpdates,
+        array $cartProducts,
+        Number $priceTaxExcluded,
+        Number $priceTaxIncluded
+    ): array {
         $additionalProducts = [];
         foreach ($creationUpdates as $additionalUpdate) {
+            $updateProductId = $additionalUpdate->getProductId()->getValue();
+            $updateCombinationId = null !== $additionalUpdate->getCombinationId() ? $additionalUpdate->getCombinationId()->getValue() : 0;
             $cartProduct = $this->getMatchingProduct($cartProducts, [
-                'id_product' => $additionalUpdate->getProductId()->getValue(),
-                'id_product_attribute' => null !== $additionalUpdate->getCombinationId() ? $additionalUpdate->getCombinationId()->getValue() : 0,
+                'id_product' => $updateProductId,
+                'id_product_attribute' => $updateCombinationId,
             ]);
             $cartProduct['cart_quantity'] = $additionalUpdate->getDeltaQuantity();
 
             // If this is the new added product we override the product with the data from command so that OrderDetail contains the right amount
-            if ($this->isProductFromCommand($command, $additionalUpdate->getProductId(), $additionalUpdate->getCombinationId())) {
-                $cartProduct['price'] = (float) (string) $command->getProductPriceTaxExcluded();
-                $cartProduct['price_wt'] = (float) (string) $command->getProductPriceTaxIncluded();
+            if ($productId === $updateProductId && $combinationId === $updateCombinationId) {
+                $cartProduct['price'] = (float) (string) $priceTaxExcluded;
+                $cartProduct['price_wt'] = (float) (string) $priceTaxIncluded;
                 $cartProduct['total'] = $cartProduct['price'] * $additionalUpdate->getDeltaQuantity();
                 $cartProduct['total_wt'] = $cartProduct['price_wt'] * $additionalUpdate->getDeltaQuantity();
             }
@@ -325,21 +338,21 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param AddProductToOrderCommand $command
+     * @param Product $product
      * @param ProductId $productId
      * @param CombinationId|null $combinationId
      *
      * @return bool
      */
-    private function isProductFromCommand(AddProductToOrderCommand $command, ProductId $productId, ?CombinationId $combinationId): bool
+    private function isProductFromCommand(Product $product, ProductId $productId, ?CombinationId $combinationId): bool
     {
-        if ($command->getProductId()->getValue() !== $productId->getValue()) {
+        if ((int) $product->id !== $productId->getValue()) {
             return false;
         }
         $commandCombinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
         $checkedCombinationId = null !== $combinationId ? $combinationId->getValue() : 0;
 
-        return $commandCombinationId === $checkedCombinationId;
+        return (int) $product->id_product_attribute === $checkedCombinationId;
     }
 
     /**

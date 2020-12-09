@@ -87,28 +87,21 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
             $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
 
-            // Update specific price if needed
-            $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
-            $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
-
-            $this->updateSpecificPrice(
-                $command->getPriceTaxIncluded(),
-                $command->getPriceTaxExcluded(),
-                $order,
-                $product,
-                $combination
-            );
             // Update OrderDetail (only unit price update needed, the total is gonna be updated by orderProductQuantityUpdater)
-            $orderDetail->unit_price_tax_incl = (float) (string) $command->getPriceTaxIncluded();
-            $orderDetail->unit_price_tax_excl = (float) (string) $command->getPriceTaxExcluded();
+            $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
+            $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($command->getPriceTaxIncluded(), $command->getPriceTaxExcluded(), $order, $product, $this->getCombination((int) $orderDetail->product_attribute_id));
+            $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($command->getPriceTaxIncluded(), $command->getPriceTaxExcluded(), $order, $product, $this->getCombination((int) $orderDetail->product_attribute_id));
+
+            $orderDetail->unit_price_tax_incl = (float) (string) $precisePriceTaxIncluded;
+            $orderDetail->unit_price_tax_excl = (float) (string) $precisePriceTaxExcluded;
 
             // Update other order details so that Cart::getProducts will use the correct price
             $this->updateIdenticalOrderDetails(
                 $order,
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
-                $command->getPriceTaxExcluded(),
-                $command->getPriceTaxIncluded()
+                $precisePriceTaxExcluded,
+                $precisePriceTaxIncluded
             );
 
             // Update invoice, quantity and amounts

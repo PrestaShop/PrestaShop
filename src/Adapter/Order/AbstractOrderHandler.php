@@ -154,7 +154,7 @@ abstract class AbstractOrderHandler
      *
      * @return Combination|null
      */
-    protected function getCombination($combinationId)
+    protected function getCombination(int $combinationId)
     {
         $combination = null;
 
@@ -187,81 +187,32 @@ abstract class AbstractOrderHandler
     }
 
     /**
-     * Create a specific price, or update it if it already exists
+     * Since prices in input are sometimes rounded they don't precisely match, so in this case
+     * if the price is different from catalog we use price included as a base and recompute the
+     * price tax excluded with additional precision.
      *
-     * @param \PrestaShop\Decimal\Number $priceTaxIncluded
-     * @param \PrestaShop\Decimal\Number $priceTaxExcluded
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
      * @param Order $order
      * @param Product $product
      * @param Combination|null $combination
      *
-     * @throws PrestaShopException
-     * @throws PrestaShopDatabaseException
+     * @return Number
      */
-    protected function updateSpecificPrice(
+    protected function getPrecisePriceTaxExcluded(
         Number $priceTaxIncluded,
         Number $priceTaxExcluded,
         Order $order,
         Product $product,
         ?Combination $combination
-    ): void {
-        $productSpecificPrice = $this->getProductSpecificPriceInOrder($product, $order, $combination);
+    ): Number {
         $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
 
-        // If provided price is equal to catalog price no need to have specific price
+        // If provided price is equal to catalog price no need to recompute
         if ($productOriginalPrice->equals($priceTaxExcluded)) {
-            // Product specific price is not useful any more we can delete it
-            if (null !== $productSpecificPrice) {
-                $productSpecificPrice->delete();
-            }
-
-            return;
+            return $priceTaxExcluded;
         }
 
-        // If price tax excluded and price tax included don't match exactly, we use the price tax included as a base to recompute
-        // the price tax excluded, this gives us more precision and decimals which avoids offset in later computing (totals)
-        $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $product);
-        if (null !== $productSpecificPrice) {
-            $productSpecificPrice->price = (float) (string) $precisePriceTaxExcluded;
-            $productSpecificPrice->update();
-
-            return;
-        }
-
-        $specificPrice = new SpecificPrice();
-        $specificPrice->id_shop = 0;
-        $specificPrice->id_cart = $order->id_cart;
-        $specificPrice->id_shop_group = 0;
-        $specificPrice->id_currency = $order->id_currency;
-        $specificPrice->id_country = 0;
-        $specificPrice->id_group = 0;
-        $specificPrice->id_customer = $order->id_customer;
-        $specificPrice->id_product = $product->id;
-        $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-        $specificPrice->price = (float) (string) $precisePriceTaxExcluded;
-        $specificPrice->from_quantity = SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY;
-        $specificPrice->reduction = 0;
-        $specificPrice->reduction_type = 'amount';
-        $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
-        $specificPrice->from = SpecificPrice::ORDER_DEFAULT_DATE;
-        $specificPrice->to = SpecificPrice::ORDER_DEFAULT_DATE;
-        $specificPrice->add();
-    }
-
-    /**
-     * @param \PrestaShop\Decimal\Number $priceTaxIncluded
-     * @param \PrestaShop\Decimal\Number $priceTaxExcluded
-     * @param Order $order
-     * @param Product $product
-     *
-     * @return \PrestaShop\Decimal\Number
-     */
-    private function getPrecisePriceTaxExcluded(
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
-        Order $order,
-        Product $product
-    ): Number {
         $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
         $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $product->id, Context::getContext()));
         $productTaxCalculator = $taxManager->getTaxCalculator();
@@ -275,6 +226,41 @@ abstract class AbstractOrderHandler
         // When price tax included is computed based on price tax excluded there is a difference
         // so we recompute the price tax excluded based on the tax rate to have more precision
         return $priceTaxIncluded->dividedBy($taxFactor);
+    }
+
+    /**
+     * Since prices in input are sometimes rounded they don't precisely match, so in this case
+     * if the price is the same as the catalog we use price excluded as a base and recompute the
+     * price tax included with additional precision.
+     *
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     * @param Order $order
+     * @param Product $product
+     * @param Combination|null $combination
+     *
+     * @return Number
+     */
+    protected function getPrecisePriceTaxIncluded(
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded,
+        Order $order,
+        Product $product,
+        ?Combination $combination
+    ): Number {
+        $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
+
+        // If provided price is different from the catalog price we use the input price tax included as a base
+        if (!$productOriginalPrice->equals($priceTaxExcluded)) {
+            return $priceTaxIncluded;
+        }
+
+        $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $product->id, Context::getContext()));
+        $productTaxCalculator = $taxManager->getTaxCalculator();
+        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
+
+        return $priceTaxExcluded->times($taxFactor);
     }
 
     /**
