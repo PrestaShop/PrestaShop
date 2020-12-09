@@ -47,6 +47,7 @@ use Connection;
 use ConnectionsSource;
 use Contact;
 use Context;
+use Country;
 use Currency;
 use CustomerMessage;
 use CustomerSession;
@@ -114,6 +115,7 @@ use Tax;
 use TaxManagerFactory;
 use TaxRule;
 use TaxRulesGroup;
+use Validate;
 use WarehouseProductLocation;
 use WebserviceKey;
 use Zone;
@@ -155,6 +157,39 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     {
         DatabaseCreator::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
+     * This hook can be used to flag a feature for database hard reset
+     *
+     * @BeforeFeature @reset-context-before-feature
+     */
+    public static function resetContextBeforeFeature()
+    {
+        $smarty = null;
+        // Clean all cache values
+        Cache::clean('*');
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $context = Context::getContext();
+        $context->shop = new Shop(1);
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Configuration::loadConfiguration();
+        if (!isset($context->language) || !Validate::isLoadedObject($context->language)) {
+            $context->language = new Language('en');
+        }
+        if (!isset($context->country) || !Validate::isLoadedObject($context->country)) {
+            if ($id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT')) {
+                $context->country = new Country((int) $id_country);
+            }
+        }
+        if (!isset($context->currency) || !Validate::isLoadedObject($context->currency)) {
+            if ($id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT')) {
+                $context->currency = new Currency((int) $id_currency);
+            }
+        }
+
+        $context->cart = new Cart();
     }
 
     /**

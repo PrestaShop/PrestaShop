@@ -564,9 +564,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
-        //if (!$data['price_tax_incl']) {
-        //    $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
-        //} else {
+
         $order = new Order($orderId);
         $productOrderDetail = [];
         foreach ($order->getProductsDetail() as $orderDetail) {
@@ -579,7 +577,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 break;
             }
         }
-        //}
 
         $this->updateProductInOrder($orderId, $productOrderDetail, $data);
     }
@@ -687,14 +684,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (CannotFindProductInOrderException $e) {
             $this->lastException = $e;
         }
-    }
-
-    /**
-     * @Then I should get no order error
-     */
-    public function assertNoOrderError()
-    {
-        $this->assertLastErrorIsNull();
     }
 
     /**
@@ -1448,11 +1437,25 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param string $productName
-     * @param Order|null $order
+     *
+     * @throws RuntimeException
      *
      * @return FoundProduct
      */
-    private function getProductByName(string $productName, Order $order = null)
+    private function getProductByName(string $productName): FoundProduct
+    {
+        return $this->getProductByNameAndOrder($productName);
+    }
+
+    /**
+     * @param string $productName
+     * @param Order|null $order
+     *
+     * @throws RuntimeException
+     *
+     * @return FoundProduct
+     */
+    private function getProductByNameAndOrder(string $productName, Order $order = null): FoundProduct
     {
         $products = $this->getQueryBus()->handle(
             new SearchProducts(
@@ -1593,7 +1596,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         ?int $orderInvoiceId = null
     ): array {
         $order = new Order(SharedStorage::getStorage()->get($orderReference));
-        $product = $this->getProductByName($productName, $order);
+        $product = $this->getProductByNameAndOrder($productName, $order);
         $productId = $product->getProductId();
         $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
 

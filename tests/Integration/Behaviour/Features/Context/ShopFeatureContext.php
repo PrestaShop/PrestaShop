@@ -83,6 +83,7 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
         $shop = new Shop();
         $shop->active = true;
         $shop->id_shop_group = ShopGroup::getIdByName($shopGroupName);
+        // 2 : ID Category for "Home" in database
         $shop->id_category = 2;
         $shop->theme_name = _THEME_NAME_;
         $shop->name = $shopName;
