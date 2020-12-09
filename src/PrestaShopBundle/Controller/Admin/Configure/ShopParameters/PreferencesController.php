@@ -101,7 +101,7 @@ class PreferencesController extends FrameworkBundleAdminController
         return $this->renderForm($request, $form);
     }
 
-    private function renderForm(Request $request, FormInterface $form)
+    private function renderForm(Request $request, FormInterface $form): Response
     {
         /** @var Tools $toolsAdapter */
         $toolsAdapter = $this->get('prestashop.adapter.tools');
