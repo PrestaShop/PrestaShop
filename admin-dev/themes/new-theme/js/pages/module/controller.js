@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ConfirmModal from '@components/modal';
+
 const {$} = window;
 
 /**
@@ -90,7 +92,7 @@ class AdminModuleController {
     // Upgrade All selectors
     this.upgradeAllSource = '.module_action_menu_upgrade_all';
     this.upgradeContainer = '#modules-list-container-update';
-    this.upgradeAllTargets = `${this.upgradeContainer}' .module_action_menu_upgrade:visible`;
+    this.upgradeAllTargets = `${this.upgradeContainer} .module_action_menu_upgrade:visible`;
 
     // Notification selectors
     this.notificationContainer = '#modules-list-container-notification';
@@ -165,7 +167,7 @@ class AdminModuleController {
   initFilterStatusDropdown() {
     const self = this;
     const body = $('body');
-    body.on('click', self.statusItemSelector, function () {
+    body.on('click', self.statusItemSelector, function() {
       // Get data from li DOM input
       self.currentRefStatus = parseInt($(this).data('status-ref'), 10);
       // Change dropdown label to set it to the current status' displayname
@@ -174,7 +176,7 @@ class AdminModuleController {
       self.updateModuleVisibility();
     });
 
-    body.on('click', self.statusResetBtnSelector, function () {
+    body.on('click', self.statusResetBtnSelector, function() {
       $(self.statusSelectorLabelSelector).text($(this).text());
       $(this).hide();
       self.currentRefStatus = null;
@@ -198,7 +200,7 @@ class AdminModuleController {
     body.on('click', self.bulkItemSelector, function initializeBodyChange() {
       if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
         $.growl.warning({
-          message: window.translate_javascripts['Bulk Action - One module minimum'],
+          message: window.translate_javascripts['Bulk Action - One module minimum']
         });
         return;
       }
@@ -221,7 +223,7 @@ class AdminModuleController {
       $(self.bulkConfirmModalSelector).modal('show');
     });
 
-    body.on('click', this.bulkConfirmModalAckBtnSelector, (event) => {
+    body.on('click', this.bulkConfirmModalAckBtnSelector, event => {
       event.preventDefault();
       event.stopPropagation();
       $(self.bulkConfirmModalSelector).modal('hide');
@@ -262,9 +264,9 @@ class AdminModuleController {
 
     $.ajax({
       method: 'GET',
-      url: window.moduleURLs.catalogRefresh,
+      url: window.moduleURLs.catalogRefresh
     })
-      .done((response) => {
+      .done(response => {
         if (response.status === true) {
           if (typeof response.domElements === 'undefined') response.domElements = null;
           if (typeof response.msg === 'undefined') response.msg = null;
@@ -300,7 +302,7 @@ class AdminModuleController {
           });
         }
       })
-      .fail((response) => {
+      .fail(response => {
         $(self.placeholderGlobalSelector).fadeOut(800, () => {
           $(self.placeholderFailureMsgSelector).text(response.statusText);
           $(self.placeholderFailureGlobalSelector).fadeIn(800);
@@ -335,7 +337,7 @@ class AdminModuleController {
           active: parseInt($this.data('active'), 10),
           access: $this.data('last-access'),
           display: $this.hasClass('module-item-list') ? self.DISPLAY_LIST : self.DISPLAY_GRID,
-          container,
+          container
         });
 
         if (self.isModulesPage()) {
@@ -404,11 +406,11 @@ class AdminModuleController {
       const container = $(this);
       const nbModulesInContainer = container.find('.module-item').length;
       if (
-        (self.currentRefCategory && self.currentRefCategory !== String(container.find('.modules-list').data('name')))
-        || (self.currentRefStatus !== null && nbModulesInContainer === 0)
-        || (nbModulesInContainer === 0
-          && String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED)
-        || (self.currentTagsList.length > 0 && nbModulesInContainer === 0)
+        (self.currentRefCategory && self.currentRefCategory !== String(container.find('.modules-list').data('name'))) ||
+        (self.currentRefStatus !== null && nbModulesInContainer === 0) ||
+        (nbModulesInContainer === 0 &&
+          String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED) ||
+        (self.currentTagsList.length > 0 && nbModulesInContainer === 0)
       ) {
         container.hide();
         return;
@@ -447,11 +449,11 @@ class AdminModuleController {
     const counter = {};
     const checkTag = (index, value) => {
       newValue = value.toLowerCase();
-      tagExists
-        |= currentModule.name.indexOf(newValue) !== -1
-        || currentModule.description.indexOf(newValue) !== -1
-        || currentModule.author.indexOf(newValue) !== -1
-        || currentModule.techName.indexOf(newValue) !== -1;
+      tagExists |=
+        currentModule.name.indexOf(newValue) !== -1 ||
+        currentModule.description.indexOf(newValue) !== -1 ||
+        currentModule.author.indexOf(newValue) !== -1 ||
+        currentModule.techName.indexOf(newValue) !== -1;
     };
 
     for (let i = 0; i < modulesListLength; i += 1) {
@@ -459,9 +461,10 @@ class AdminModuleController {
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
 
-        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED
-          ? self.CATEGORY_RECENTLY_USED
-          : currentModule.categories;
+        moduleCategory =
+          self.currentRefCategory === self.CATEGORY_RECENTLY_USED
+            ? self.CATEGORY_RECENTLY_USED
+            : currentModule.categories;
 
         // Check for same category
         if (self.currentRefCategory !== null) {
@@ -492,9 +495,10 @@ class AdminModuleController {
             counter[moduleCategory] = 0;
           }
 
-          defaultMax = moduleCategory === self.CATEGORY_RECENTLY_USED
-            ? self.DEFAULT_MAX_RECENTLY_USED
-            : self.DEFAULT_MAX_PER_CATEGORIES;
+          defaultMax =
+            moduleCategory === self.CATEGORY_RECENTLY_USED
+              ? self.DEFAULT_MAX_RECENTLY_USED
+              : self.DEFAULT_MAX_PER_CATEGORIES;
           if (counter[moduleCategory] >= defaultMax) {
             isVisible &= self.currentCategoryDisplay[moduleCategory];
           }
@@ -528,8 +532,8 @@ class AdminModuleController {
     $(window).on('beforeunload', () => {
       if (self.isUploadStarted === true) {
         return (
-          'It seems some critical operation are running, are you sure you want to change page? '
-          + 'It might cause some unexepcted behaviors.'
+          'It seems some critical operation are running, are you sure you want to change page? ' +
+          'It might cause some unexepcted behaviors.'
         );
       }
 
@@ -587,8 +591,8 @@ class AdminModuleController {
         beforeSend: () => {
           $(self.addonsLoginButtonSelector).show();
           $('button.btn[type="submit"]', self.addonsConnectForm).hide();
-        },
-      }).done((response) => {
+        }
+      }).done(response => {
         if (response.success === 1) {
           window.location.reload();
         } else {
@@ -616,7 +620,7 @@ class AdminModuleController {
     body.on('click', this.moduleImportFailureRetrySelector, () => {
       /* eslint-disable max-len */
       $(
-        `${self.moduleImportSuccessSelector},${self.moduleImportFailureSelector},${self.moduleImportProcessingSelector}`,
+        `${self.moduleImportSuccessSelector},${self.moduleImportFailureSelector},${self.moduleImportProcessingSelector}`
       ).fadeOut(() => {
         /**
          * Added timeout for a better render of animation
@@ -655,10 +659,10 @@ class AdminModuleController {
           event.stopPropagation();
           event.preventDefault();
         }
-      },
+      }
     );
 
-    body.on('click', this.moduleImportSelectFileManualSelector, (event) => {
+    body.on('click', this.moduleImportSelectFileManualSelector, event => {
       event.stopPropagation();
       event.preventDefault();
       /**
@@ -712,7 +716,7 @@ class AdminModuleController {
       error: (file, message) => {
         self.displayOnUploadError(message);
       },
-      complete: (file) => {
+      complete: file => {
         if (file.status !== 'error') {
           const responseObject = $.parseJSON(file.xhr.response);
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
@@ -722,7 +726,7 @@ class AdminModuleController {
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;
-      },
+      }
     };
 
     dropzone.dropzone($.extend(dropzoneOptions));
@@ -813,12 +817,12 @@ class AdminModuleController {
 
         // Install ajax call
         $.post(result.module.attributes.urls.install, {
-          'actionParams[confirmPrestaTrust]': '1',
+          'actionParams[confirmPrestaTrust]': '1'
         })
-          .done((data) => {
+          .done(data => {
             self.displayOnUploadDone(data[moduleName]);
           })
-          .fail((data) => {
+          .fail(data => {
             self.displayOnUploadError(data[moduleName]);
           })
           .always(() => {
@@ -857,10 +861,10 @@ class AdminModuleController {
   updateNotificationsCount(badge) {
     const destinationTabs = {
       to_configure: $('#subtab-AdminModulesNotifications'),
-      to_update: $('#subtab-AdminModulesUpdates'),
+      to_update: $('#subtab-AdminModulesUpdates')
     };
 
-    Object.keys(destinationTabs).forEach((destinationKey) => {
+    Object.keys(destinationTabs).forEach(destinationKey => {
       if (destinationTabs[destinationKey].length !== 0) {
         destinationTabs[destinationKey].find('.notification-counter').text(badge[destinationKey]);
       }
@@ -944,7 +948,7 @@ class AdminModuleController {
       'bulk-enable': 'enable',
       'bulk-disable-mobile': 'disable_mobile',
       'bulk-enable-mobile': 'enable_mobile',
-      'bulk-reset': 'reset',
+      'bulk-reset': 'reset'
     };
 
     // Note no grid selector used yet since we do not needed it at dev time
@@ -952,7 +956,7 @@ class AdminModuleController {
     // use this functionality elsewhere but "manage my module" section
     if (typeof bulkActionToUrl[requestedBulkAction] === 'undefined') {
       $.growl.error({
-        message: window.translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction),
+        message: window.translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction)
       });
       return false;
     }
@@ -974,7 +978,7 @@ class AdminModuleController {
         techName: moduleTechName,
         actionMenuObj: $(this)
           .closest('.module-checkbox-bulk-list')
-          .next(),
+          .next()
       });
     });
 
@@ -1021,7 +1025,7 @@ class AdminModuleController {
         actionMenuLink,
         forceDeletion,
         disableCacheClear,
-        requestEndCallback,
+        requestEndCallback
       );
     }
 
@@ -1048,7 +1052,7 @@ class AdminModuleController {
       $.each(actions, (index, moduleData) => {
         actionMenuLink = $(
           self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
-          moduleData.actionMenuObj,
+          moduleData.actionMenuObj
         );
         if (actionMenuLink.length > 0) {
           menuLinks.push(actionMenuLink);
@@ -1056,7 +1060,7 @@ class AdminModuleController {
           $.growl.error({
             message: window.translate_javascripts['Bulk Action - Request not available for module']
               .replace('[1]', bulkModuleAction)
-              .replace('[2]', moduleData.techName),
+              .replace('[2]', moduleData.techName)
           });
         }
       });
@@ -1077,33 +1081,49 @@ class AdminModuleController {
 
       $.ajax({
         url: $this.data('url'),
-        dataType: 'json',
+        dataType: 'json'
       }).done(() => {
         $next.fadeOut();
       });
     });
 
     // "Upgrade All" button handler
-    $('body').on('click', self.upgradeAllSource, (event) => {
+    $('body').on('click', self.upgradeAllSource, event => {
       event.preventDefault();
 
-      if ($(self.upgradeAllTargets).length <= 0) {
-        console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
-        return false;
-      }
+      const updateAllConfirmModal = new ConfirmModal(
+        {
+          id: 'confirm-modal',
+          confirmTitle: 'Are you sure you want to upgrade these modules?',
+          closeButtonLabel: 'Cancel',
+          confirmButtonLabel: 'Upgrade',
+          confirmButtonClass: 'btn-primary',
+          closable: true
+        },
+        () => {
+          if ($(self.upgradeAllTargets).length <= 0) {
+            console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
+            return false;
+          }
 
-      const modulesActions = [];
-      let moduleTechName;
-      $(self.upgradeAllTargets).each(function bulkActionSelector() {
-        const moduleItemList = $(this).closest('.module-item-list');
-        moduleTechName = moduleItemList.data('tech-name');
-        modulesActions.push({
-          techName: moduleTechName,
-          actionMenuObj: $('.module-actions', moduleItemList),
-        });
-      });
+          const modulesActions = [];
+          let moduleTechName;
+          $(self.upgradeAllTargets).each(function bulkActionSelector() {
+            const moduleItemList = $(this).closest('.module-item-list');
+            moduleTechName = moduleItemList.data('tech-name');
+            modulesActions.push({
+              techName: moduleTechName,
+              actionMenuObj: $('.module-actions', moduleItemList)
+            });
+          });
 
-      this.performModulesAction(modulesActions, 'upgrade');
+          this.performModulesAction(modulesActions, 'upgrade');
+
+          return true;
+        }
+      );
+
+      updateAllConfirmModal.show();
 
       return true;
     });
@@ -1138,7 +1158,7 @@ class AdminModuleController {
   initSearchBlock() {
     const self = this;
     self.pstaggerInput = $('#module-search-bar').pstagger({
-      onTagsChanged: (tagList) => {
+      onTagsChanged: tagList => {
         self.currentTagsList = tagList;
         self.updateModuleVisibility();
       },
@@ -1148,10 +1168,10 @@ class AdminModuleController {
       },
       inputPlaceholder: window.translate_javascripts['Search - placeholder'],
       closingCross: true,
-      context: self,
+      context: self
     });
 
-    $('body').on('click', '.module-addons-search-link', (event) => {
+    $('body').on('click', '.module-addons-search-link', event => {
       event.preventDefault();
       event.stopPropagation();
       window.open($(this).attr('href'), '_blank');
@@ -1192,14 +1212,20 @@ class AdminModuleController {
     $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = true;
       $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeLessSelector).removeClass('d-none');
+      $(this)
+        .closest(self.moduleShortList)
+        .find(self.seeLessSelector)
+        .removeClass('d-none');
       self.updateModuleVisibility();
     });
 
     $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = false;
       $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeMoreSelector).removeClass('d-none');
+      $(this)
+        .closest(self.moduleShortList)
+        .find(self.seeMoreSelector)
+        .removeClass('d-none');
       self.updateModuleVisibility();
     });
   }
@@ -1219,7 +1245,7 @@ class AdminModuleController {
         const $this = $(this);
         replaceFirstWordBy(
           $this.find('.module-search-result-wording'),
-          $this.next('.modules-list').find('.module-item').length,
+          $this.next('.modules-list').find('.module-item').length
         );
       });
 
@@ -1228,23 +1254,21 @@ class AdminModuleController {
       const modulesCount = $('.modules-list').find('.module-item').length;
       replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
-      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST)
-        ? this.addonItemListSelector
-        : this.addonItemGridSelector;
-      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
+      const selectorToToggle =
+        self.currentDisplay === self.DISPLAY_LIST ? this.addonItemListSelector : this.addonItemGridSelector;
+      $(selectorToToggle).toggle(modulesCount !== this.modulesList.length / 2);
 
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
           'href',
-          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`,
+          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`
         );
       }
     }
   }
 
   isModulesPage() {
-    return $(this.upgradeContainer).length === 0
-      && $(this.notificationContainer).length === 0;
+    return $(this.upgradeContainer).length === 0 && $(this.notificationContainer).length === 0;
   }
 }
 
