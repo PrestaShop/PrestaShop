@@ -134,7 +134,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @return Response|null
      */
-    protected function renderForm($byDateForm, $byStatusForm, $optionsForm, $request)
+    protected function renderForm(FormInterface $byDateForm, FormInterface $byStatusForm, FormInterface $optionsForm, Request $request): ?Response
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -155,11 +155,11 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param FormHandlerInterface $formHandler
      * @param Request $request
      *
-     * @return FormInterface false
+     * @return FormInterface
      *
      * @throws \Exception
      */
-    private function processForm(FormHandlerInterface $formHandler, Request $request)
+    private function processForm(FormHandlerInterface $formHandler, Request $request): FormInterface
     {
         $form = $formHandler->getForm();
         $form->submit($request->request->get($form->getName()));
