@@ -127,8 +127,9 @@ class InvoiceOptionsType extends TranslatorAwareType
                         [
                             'value' => $this->nextInvoiceNumber,
                             'message' => $this->trans(
-                                'Invalid invoice number.',
-                                'Admin.Orderscustomers.Notification'
+                                'Invoice number is invalid. Please enter a positive integer greater than the last invoice number (#%number%).',
+                                'Admin.Orderscustomers.Notification',
+                                ['%number%' => $this->nextInvoiceNumber]
                             ),
                         ]
                     ),
@@ -136,8 +137,9 @@ class InvoiceOptionsType extends TranslatorAwareType
                         [
                             'value' => 0,
                             'message' => $this->trans(
-                                'Invalid invoice number.',
-                                'Admin.Orderscustomers.Notification'
+                                'Invoice number is invalid. Please enter a positive integer greater than the last invoice number (#%number%).',
+                                'Admin.Orderscustomers.Notification',
+                                ['%number%' => $this->nextInvoiceNumber]
                             ),
                         ]
                     ),
