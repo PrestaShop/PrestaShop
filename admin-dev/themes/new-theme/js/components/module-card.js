@@ -28,7 +28,7 @@ const {$} = window;
 
 const BOEvent = {
   on(eventName, callback, context) {
-    document.addEventListener(eventName, event => {
+    document.addEventListener(eventName, (event) => {
       if (typeof context !== 'undefined') {
         callback.call(context, event);
       } else {
@@ -42,7 +42,7 @@ const BOEvent = {
     // true values stand for: can bubble, and is cancellable
     event.initEvent(eventName, true, true);
     document.dispatchEvent(event);
-  }
+  },
 };
 
 /**
@@ -78,10 +78,10 @@ export default class ModuleCard {
   initActionButtons() {
     const self = this;
 
-    $(document).on('click', this.forceDeletionOption, function() {
+    $(document).on('click', this.forceDeletionOption, function () {
       const btn = $(
         self.moduleActionModalUninstallLinkSelector,
-        $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)
+        $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`),
       );
 
       if ($(this).prop('checked') === true) {
@@ -91,128 +91,139 @@ export default class ModuleCard {
       }
     });
 
-    $(document).on('click', this.moduleActionMenuInstallLinkSelector, function() {
+    $(document).on('click', this.moduleActionMenuInstallLinkSelector, function () {
       if ($('#modal-prestatrust').length) {
         $('#modal-prestatrust').modal('hide');
       }
 
       return (
-        self.dispatchPreEvent('install', this) &&
-        self.confirmAction('install', this) &&
-        self.requestToController('install', $(this))
+        self.dispatchPreEvent('install', this)
+        && self.confirmAction('install', this)
+        && self.requestToController('install', $(this))
       );
     });
 
-    $(document).on('click', this.moduleActionMenuEnableLinkSelector, function() {
+    $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
       return (
-        self.dispatchPreEvent('enable', this) &&
-        self.confirmAction('enable', this) &&
-        self.requestToController('enable', $(this))
+        self.dispatchPreEvent('enable', this)
+        && self.confirmAction('enable', this)
+        && self.requestToController('enable', $(this))
       );
     });
 
-    $(document).on('click', this.moduleActionMenuUninstallLinkSelector, function() {
+    $(document).on('click', this.moduleActionMenuUninstallLinkSelector, function () {
       return (
-        self.dispatchPreEvent('uninstall', this) &&
-        self.confirmAction('uninstall', this) &&
-        self.requestToController('uninstall', $(this))
+        self.dispatchPreEvent('uninstall', this)
+        && self.confirmAction('uninstall', this)
+        && self.requestToController('uninstall', $(this))
       );
     });
 
-    $(document).on('click', this.moduleActionMenuDisableLinkSelector, function() {
+    $(document).on('click', this.moduleActionMenuDisableLinkSelector, function () {
       return (
-        self.dispatchPreEvent('disable', this) &&
-        self.confirmAction('disable', this) &&
-        self.requestToController('disable', $(this))
+        self.dispatchPreEvent('disable', this)
+        && self.confirmAction('disable', this)
+        && self.requestToController('disable', $(this))
       );
     });
 
-    $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function() {
+    $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
       return (
-        self.dispatchPreEvent('enable_mobile', this) &&
-        self.confirmAction('enable_mobile', this) &&
-        self.requestToController('enable_mobile', $(this))
+        self.dispatchPreEvent('enable_mobile', this)
+        && self.confirmAction('enable_mobile', this)
+        && self.requestToController('enable_mobile', $(this))
       );
     });
 
-    $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function() {
+    $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
       return (
-        self.dispatchPreEvent('disable_mobile', this) &&
-        self.confirmAction('disable_mobile', this) &&
-        self.requestToController('disable_mobile', $(this))
+        self.dispatchPreEvent('disable_mobile', this)
+        && self.confirmAction('disable_mobile', this)
+        && self.requestToController('disable_mobile', $(this))
       );
     });
 
-    $(document).on('click', this.moduleActionMenuResetLinkSelector, function() {
+    $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
       return (
-        self.dispatchPreEvent('reset', this) &&
-        self.confirmAction('reset', this) &&
-        self.requestToController('reset', $(this))
+        self.dispatchPreEvent('reset', this)
+        && self.confirmAction('reset', this)
+        && self.requestToController('reset', $(this))
       );
     });
 
-    $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function(event) {
+    $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function (event) {
       event.preventDefault();
       const modal = $(`#${$(this).data('confirm_modal')}`);
+      const isMaintenanceMode = true;
 
       if (modal.length !== 1) {
+        // Modal body element
+        const maintenanceLink = document.createElement('a');
+        maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
+        maintenanceLink.setAttribute('href', '#');
+        maintenanceLink.innerHTML = 'Go to maintenance page';
+
         const updateConfirmModal = new ConfirmModal(
           {
             id: 'confirm-modal',
             confirmTitle: 'Are you sure you want to upgrade this module?',
             closeButtonLabel: 'Cancel',
-            confirmButtonLabel: 'Upgrade',
-            confirmButtonClass: 'btn-primary',
-            closable: true
+            confirmButtonLabel: isMaintenanceMode ? 'Upgrade' : 'Upgrade anyway',
+            confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
+            confirmMessage: isMaintenanceMode
+              ? ''
+              : 'We strongly advise you to upgrade the modules on maintenance mode to avoid any cache issues.',
+            closable: true,
+            customButtons: isMaintenanceMode ? [] : [maintenanceLink],
           },
-          () =>
-            self.dispatchPreEvent('update', this) &&
-            self.confirmAction('update', this) &&
-            self.requestToController('update', $(this))
+          () => self.dispatchPreEvent('update', this)
+            && self.confirmAction('update', this)
+            && self.requestToController('update', $(this)),
         );
 
         updateConfirmModal.show();
       } else {
         return (
-          self.dispatchPreEvent('update', this) &&
-          self.confirmAction('update', this) &&
-          self.requestToController('update', $(this))
+          self.dispatchPreEvent('update', this)
+          && self.confirmAction('update', this)
+          && self.requestToController('update', $(this))
         );
       }
+
+      return false;
     });
 
-    $(document).on('click', this.moduleActionModalDisableLinkSelector, function() {
+    $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {
       return self.requestToController(
         'disable',
         $(
           self.moduleActionMenuDisableLinkSelector,
-          $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)
-        )
+          $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`),
+        ),
       );
     });
 
-    $(document).on('click', this.moduleActionModalResetLinkSelector, function() {
+    $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
       return self.requestToController(
         'reset',
         $(
           self.moduleActionMenuResetLinkSelector,
-          $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)
-        )
+          $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`),
+        ),
       );
     });
 
-    $(document).on('click', this.moduleActionModalUninstallLinkSelector, e => {
+    $(document).on('click', this.moduleActionModalUninstallLinkSelector, (e) => {
       $(e.target)
         .parents('.modal')
-        .on('hidden.bs.modal', () =>
-          self.requestToController(
-            'uninstall',
-            $(
-              self.moduleActionMenuUninstallLinkSelector,
-              $(`div.module-item-list[data-tech-name='${$(e.target).attr('data-tech-name')}']`)
-            ),
-            $(e.target).attr('data-deletion')
-          )
+        .on('hidden.bs.modal', () => self.requestToController(
+          'uninstall',
+          $(
+            self.moduleActionMenuUninstallLinkSelector,
+            $(`div.module-item-list[data-tech-name='${$(e.target).attr('data-tech-name')}']`),
+          ),
+          $(e.target).attr('data-deletion'),
+        ),
         );
     });
   }
@@ -253,7 +264,7 @@ export default class ModuleCard {
         // Find related form, update it and submit it
         const installButton = $(
           that.moduleActionMenuInstallLinkSelector,
-          `.module-item[data-tech-name="${result.module.attributes.name}"]`
+          `.module-item[data-tech-name="${result.module.attributes.name}"]`,
         );
 
         const form = installButton.parent('form');
@@ -261,7 +272,7 @@ export default class ModuleCard {
           .attr({
             type: 'hidden',
             value: '1',
-            name: 'actionParams[confirmPrestaTrust]'
+            name: 'actionParams[confirmPrestaTrust]',
           })
           .appendTo(form);
 
@@ -341,13 +352,13 @@ export default class ModuleCard {
       beforeSend() {
         jqElementObj.hide();
         jqElementObj.after(spinnerObj);
-      }
+      },
     })
-      .done(result => {
+      .done((result) => {
         if (result === undefined) {
           $.growl.error({
             message: 'No answer received from server',
-            fixed: true
+            fixed: true,
           });
           return;
         }
@@ -370,7 +381,7 @@ export default class ModuleCard {
 
         $.growl({
           message: result[moduleTechName].msg,
-          duration: 6000
+          duration: 6000,
         });
 
         const alteredSelector = self.getModuleItemSelector().replace('.', '');
@@ -402,7 +413,7 @@ export default class ModuleCard {
         const techName = moduleItem.data('techName');
         $.growl.error({
           message: `Could not perform action ${action} for module ${techName}`,
-          fixed: true
+          fixed: true,
         });
       })
       .always(() => {
