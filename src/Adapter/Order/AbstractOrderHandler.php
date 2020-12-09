@@ -35,6 +35,7 @@ use Currency;
 use Customer;
 use Group;
 use Order;
+use OrderDetail;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -327,6 +328,35 @@ abstract class AbstractOrderHandler
             null, // But we keep the cart null as we don't want this order overridden price
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         ));
+    }
+
+    /**
+     * @param Order $order
+     * @param int $productId
+     * @param int $combinationId
+     * @param Number $priceTaxExcluded
+     * @param Number $priceTaxIncluded
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    protected function updateIdenticalOrderDetails(
+        Order $order,
+        int $productId,
+        int $combinationId,
+        Number $priceTaxExcluded,
+        Number $priceTaxIncluded
+    ): void {
+        $orderDetails = $order->getOrderDetailList();
+        foreach ($orderDetails as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === $productId
+                && (int) $orderDetail['product_attribute_id'] === $combinationId) {
+                $identicalOrderDetail = new OrderDetail($orderDetail['id_order_detail']);
+                $identicalOrderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
+                $identicalOrderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
+                $identicalOrderDetail->save();
+            }
+        }
     }
 
     /**

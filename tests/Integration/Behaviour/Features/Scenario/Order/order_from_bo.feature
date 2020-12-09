@@ -494,13 +494,13 @@ Feature: Order from Back Office (BO)
       | price_tax_incl | 100                     |
     When I generate invoice for "bo_order1" order
     Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1         |
-      | product_price               | 94.34     |
-      | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
-      | unit_price_tax_excl         | 94.339622 |
-      | total_price_tax_incl        | 100       |
-      | total_price_tax_excl        | 94.34     |
+      | product_quantity            | 1      |
+      | product_price               | 94.34  |
+      | original_product_price      | 11.90  |
+      | unit_price_tax_incl         | 100.00 |
+      | unit_price_tax_excl         | 94.34  |
+      | total_price_tax_incl        | 100    |
+      | total_price_tax_excl        | 94.34  |
     And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have following details:
       | total_products           | 94.34  |
@@ -519,21 +519,21 @@ Feature: Order from Back Office (BO)
       | price          | 94.34                       |
       | price_tax_incl | 100                         |
     Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1         |
-      | product_price               | 94.34     |
-      | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
-      | unit_price_tax_excl         | 94.339622 |
-      | total_price_tax_incl        | 100       |
-      | total_price_tax_excl        | 94.34     |
+      | product_quantity            | 1      |
+      | product_price               | 94.34  |
+      | original_product_price      | 11.90  |
+      | unit_price_tax_incl         | 100.00 |
+      | unit_price_tax_excl         | 94.34  |
+      | total_price_tax_incl        | 100    |
+      | total_price_tax_excl        | 94.34  |
     And the product "Mug The best is yet to come" in the second invoice from the order "bo_order1" should have the following details:
-      | product_quantity            | 1         |
-      | product_price               | 94.34     |
-      | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
-      | unit_price_tax_excl         | 94.339622 |
-      | total_price_tax_incl        | 100       |
-      | total_price_tax_excl        | 94.34     |
+      | product_quantity            | 1      |
+      | product_price               | 94.34  |
+      | original_product_price      | 11.90  |
+      | unit_price_tax_incl         | 100.00 |
+      | unit_price_tax_excl         | 94.34  |
+      | total_price_tax_incl        | 100    |
+      | total_price_tax_excl        | 94.34  |
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have following details:
       | total_products           | 188.68 |

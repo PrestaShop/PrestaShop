@@ -202,6 +202,21 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 45.370 |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+    When I edit product "Test Product With Specific Price" in second invoice from order "bo_order1" with following products details:
+      | amount        | 1                     |
+      | price         | 12                    |
+    Then product "Test Product With Specific Price" in order "bo_order1" should have specific price 12.0
+    And order "bo_order1" should have following details:
+      | total_products           | 47.800 |
+      | total_products_wt        | 50.670 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 54.800 |
+      | total_paid_tax_incl      | 58.090 |
+      | total_paid               | 58.090 |
+      | total_paid_real          | 45.370 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
 
   Scenario: Add product with specific price, add then remove it The specific price should be removed
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"

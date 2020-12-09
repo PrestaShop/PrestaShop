@@ -54,7 +54,9 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInv
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use Shop;
 use StockAvailable;
@@ -179,7 +181,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                     $updateModifications[] = $cartProductUpdate;
                 }
             }
-            $createdProducts = $this->getCreatedCartProducts($creationModifications, $updatedCartProducts);
+            $createdProducts = $this->getCreatedCartProducts($creationModifications, $updatedCartProducts, $command);
 
             $invoice = $this->createNewOrEditExistingInvoice(
                 $command,
@@ -194,6 +196,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $invoice,
                 $cart,
                 $createdProducts
+            );
+
+            // Update other order details so that Cart::getProducts will use the correct price
+            $this->updateIdenticalOrderDetails(
+                $order,
+                $command->getProductId()->getValue(),
+                null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
+                $command->getProductPriceTaxExcluded(),
+                $command->getProductPriceTaxIncluded()
             );
             StockAvailable::synchronize($product->id);
 
@@ -284,12 +295,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param CartProductUpdate[] $creationUpdates
+     * @param array $creationUpdates
      * @param array $cartProducts
+     * @param AddProductToOrderCommand $command
      *
      * @return array
      */
-    private function getCreatedCartProducts(array $creationUpdates, array $cartProducts): array
+    private function getCreatedCartProducts(array $creationUpdates, array $cartProducts, AddProductToOrderCommand $command): array
     {
         $additionalProducts = [];
         foreach ($creationUpdates as $additionalUpdate) {
@@ -298,10 +310,36 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 'id_product_attribute' => null !== $additionalUpdate->getCombinationId() ? $additionalUpdate->getCombinationId()->getValue() : 0,
             ]);
             $cartProduct['cart_quantity'] = $additionalUpdate->getDeltaQuantity();
+
+            // If this is the new added product we override the product with the data from command so that OrderDetail contains the right amount
+            if ($this->isProductFromCommand($command, $additionalUpdate->getProductId(), $additionalUpdate->getCombinationId())) {
+                $cartProduct['price'] = (float) (string) $command->getProductPriceTaxExcluded();
+                $cartProduct['price_wt'] = (float) (string) $command->getProductPriceTaxIncluded();
+                $cartProduct['total'] = $cartProduct['price'] * $additionalUpdate->getDeltaQuantity();
+                $cartProduct['total_wt'] = $cartProduct['price_wt'] * $additionalUpdate->getDeltaQuantity();
+            }
             $additionalProducts[] = $cartProduct;
         }
 
         return $additionalProducts;
+    }
+
+    /**
+     * @param AddProductToOrderCommand $command
+     * @param ProductId $productId
+     * @param CombinationId|null $combinationId
+     *
+     * @return bool
+     */
+    private function isProductFromCommand(AddProductToOrderCommand $command, ProductId $productId, ?CombinationId $combinationId): bool
+    {
+        if ($command->getProductId()->getValue() !== $productId->getValue()) {
+            return false;
+        }
+        $commandCombinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
+        $checkedCombinationId = null !== $combinationId ? $combinationId->getValue() : 0;
+
+        return $commandCombinationId === $checkedCombinationId;
     }
 
     /**

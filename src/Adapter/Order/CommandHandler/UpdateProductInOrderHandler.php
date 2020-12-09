@@ -98,6 +98,18 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $product,
                 $combination
             );
+            // Update OrderDetail (only unit price update needed, the total is gonna be updated by orderProductQuantityUpdater)
+            $orderDetail->unit_price_tax_incl = (float) (string) $command->getPriceTaxIncluded();
+            $orderDetail->unit_price_tax_excl = (float) (string) $command->getPriceTaxExcluded();
+
+            // Update other order details so that Cart::getProducts will use the correct price
+            $this->updateIdenticalOrderDetails(
+                $order,
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                $command->getPriceTaxExcluded(),
+                $command->getPriceTaxIncluded()
+            );
 
             // Update invoice, quantity and amounts
             $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
