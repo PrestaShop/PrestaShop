@@ -74,7 +74,7 @@ class UpdateProductOptionsCommand
     private $condition;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $showCondition;
 
@@ -232,9 +232,9 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function showCondition(): bool
+    public function showCondition(): ?bool
     {
         return $this->showCondition;
     }

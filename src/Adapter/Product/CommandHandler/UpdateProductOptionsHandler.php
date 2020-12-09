@@ -114,7 +114,7 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
         }
 
         if (null !== $command->showCondition()) {
-            $product->condition = $command->showCondition();
+            $product->show_condition = $command->showCondition();
             $updatableProperties[] = 'show_condition';
         }
 

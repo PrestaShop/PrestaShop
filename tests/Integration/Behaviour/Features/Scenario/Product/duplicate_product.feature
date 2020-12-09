@@ -35,18 +35,18 @@ Feature: Duplicate product from Back Office (BO).
       | categories       | [home, men, clothes] |
       | default category | clothes              |
     And I update product "product1" options with following values:
-      | visibility          | catalog           |
-      | available_for_order | false             |
-      | online_only         | true              |
-      | show_price          | false             |
-      | condition           | used              |
-      | manufacturer        | studioDesign      |
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | manufacturer        | studioDesign |
     And I update product "product1" details with following values:
-      | isbn                | 978-3-16-148410-0 |
-      | upc                 | 72527273070       |
-      | ean13               | 978020137962      |
-      | mpn                 | mpn1              |
-      | reference           | ref1              |
+      | isbn      | 978-3-16-148410-0 |
+      | upc       | 72527273070       |
+      | ean13     | 978020137962      |
+      | mpn       | mpn1              |
+      | reference | ref1              |
     And I update product "product1" tags with following values:
       | tags[en-US] | smart,glasses,sunglasses,men |
       | tags[fr-FR] | lunettes,bien,soleil         |
@@ -140,6 +140,7 @@ Feature: Duplicate product from Back Office (BO).
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
+      | show_condition      | false        |
       | manufacturer        | studioDesign |
     And product "copy_of_product1" should have following details:
       | product detail | value             |

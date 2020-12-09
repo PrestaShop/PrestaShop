@@ -31,6 +31,7 @@ Feature: Add basic product from Back Office (BO)
       | online_only         | false |
       | show_price          | true  |
       | condition           | new   |
+      | show_condition      | false |
       | manufacturer        |       |
     And product "product1" type should be virtual
     And product "product1" localized "name" should be:

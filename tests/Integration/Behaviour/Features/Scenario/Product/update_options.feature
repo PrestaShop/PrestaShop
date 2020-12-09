@@ -22,6 +22,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | false |
       | show_price          | true  |
       | condition           | new   |
+      | show_condition      | false |
       | manufacturer        |       |
     When I update product "product1" options with following values:
       | active              | true         |
@@ -30,6 +31,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
+      | show_condition      | true         |
       | manufacturer        | studioDesign |
     Then product "product1" should have following options:
       | product option      | value        |
@@ -39,6 +41,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
+      | show_condition      | true         |
       | manufacturer        | studioDesign |
 
   Scenario: I only update product availability for order, leaving other properties unchanged
@@ -50,6 +53,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
+      | show_condition      | true         |
       | manufacturer        | studioDesign |
     When I update product "product1" options with following values:
       | available_for_order | true |
@@ -61,6 +65,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
+      | show_condition      | true         |
       | manufacturer        | studioDesign |
 
   Scenario: I update manufacturer and check the relationship is updated correctly
@@ -72,6 +77,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
+      | show_condition      | true         |
       | manufacturer        | studioDesign |
     When I update product "product1" options with following values:
       | manufacturer | graphicCorner |
@@ -83,6 +89,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true          |
       | show_price          | false         |
       | condition           | used          |
+      | show_condition      | true          |
       | manufacturer        | graphicCorner |
     When I update product "product1" options with following values:
       | manufacturer |  |
@@ -94,6 +101,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | true    |
       | show_price          | false   |
       | condition           | used    |
+      | show_condition      | true    |
       | manufacturer        |         |
 
   Scenario: I update product options providing invalid values
@@ -108,6 +116,7 @@ Feature: Update product options from Back Office (BO)
       | online_only         | false |
       | show_price          | true  |
       | condition           | new   |
+      | show_condition      | false |
       | manufacturer        |       |
     When I assign non existing manufacturer to product "product2"
     Then I should get error that manufacturer does not exist
@@ -125,4 +134,5 @@ Feature: Update product options from Back Office (BO)
       | online_only         | false |
       | show_price          | true  |
       | condition           | new   |
+      | show_condition      | false |
       | manufacturer        |       |

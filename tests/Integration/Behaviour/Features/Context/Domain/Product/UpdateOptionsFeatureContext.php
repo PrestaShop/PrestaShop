@@ -97,6 +97,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['online_only']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_price']),
             $dataRows['condition'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['show_condition']),
             $this->getManufacturerId($dataRows['manufacturer'])
         );
     }
@@ -116,6 +117,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
             'showPrice',
             'visibility',
             'condition',
+            'showCondition',
             'manufacturerId',
         ];
         $actualOptions = $this->getProductForEditing($productReference)->getOptions();
@@ -158,6 +160,10 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
 
         if (isset($data['condition'])) {
             $command->setCondition($data['condition']);
+        }
+
+        if (isset($data['show_condition'])) {
+            $command->setShowCondition(PrimitiveUtils::castStringBooleanIntoBoolean($data['show_condition']));
         }
 
         if (isset($data['manufacturer'])) {
