@@ -68,7 +68,7 @@ class NoTagsValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
-    protected function createValidator()
+    protected function createValidator(): NoTagsValidator
     {
         return new NoTagsValidator();
     }
