@@ -165,7 +165,7 @@ export default class ModuleCard {
 
         const updateConfirmModal = new ConfirmModal(
           {
-            id: 'confirm-modal',
+            id: 'confirm-module-update-modal',
             confirmTitle: 'Are you sure you want to upgrade this module?',
             closeButtonLabel: 'Cancel',
             confirmButtonLabel: isMaintenanceMode ? 'Upgrade' : 'Upgrade anyway',
