@@ -160,7 +160,7 @@ final class EmployeeType extends TranslatorAwareType
             ])
             ->add('has_enabled_gravatar', SwitchType::class, [
                 'required' => false,
-                'label' => $this->trans('Enable gravatar', 'Admin.Global'),
+                'label' => $this->trans('Enable gravatar', 'Admin.Advparameters.Feature'),
             ])
             ->add('email', EmailType::class, [
                 'label' => $this->trans('Email address', 'Admin.Global'),
