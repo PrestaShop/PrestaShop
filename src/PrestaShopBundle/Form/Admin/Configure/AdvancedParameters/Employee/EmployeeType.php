@@ -176,7 +176,7 @@ final class EmployeeType extends TranslatorAwareType
 
         if ($options['is_restricted_access']) {
             $builder->add('change_password', ChangePasswordType::class, [
-                'label' => $this->trans('Change password...', 'messages'),
+                'label' => $this->trans('Change password...', 'Admin.Actions'),
                 'row_attr' => [
                     'class' => 'btn-outline-secondary js-change-password',
                 ],
