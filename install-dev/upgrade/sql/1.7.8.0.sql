@@ -40,3 +40,6 @@ ALTER TABLE `PREFIX_log`
   ADD `id_lang` INT(10) NULL DEFAULT NULL after `id_shop_group`,
   ADD `in_all_shops` TINYINT(1) unsigned NOT NULL DEFAULT '0'
 ;
+ALTER TABLE `PREFIX_stock_available` MODIFY COLUMN `location` VARCHAR(255) DEFAULT NULL;
+ALTER TABLE `PREFIX_product` MODIFY COLUMN `location` VARCHAR(255) DEFAULT NULL;
+ALTER TABLE `PREFIX_product_attribute` MODIFY COLUMN `location` VARCHAR(255) DEFAULT NULL;
