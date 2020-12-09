@@ -70,7 +70,7 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
         $product = $this->productRepository->get($command->getProductId());
 
         $propertiesToUpdate = $this->fillUpdatableProperties($product, $command);
-        $this->productStockUpdater->update($product, $propertiesToUpdate, $command->addMovement());
+        $this->productStockUpdater->update($product, $propertiesToUpdate);
     }
 
     /**
