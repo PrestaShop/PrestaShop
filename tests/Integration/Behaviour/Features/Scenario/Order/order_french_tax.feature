@@ -51,7 +51,6 @@ Feature: Order from Back Office (BO)
       | amount         | 2                       |
       | price          | 83.33                   |
       | price_tax_incl | 99.996                  |
-    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.33
     When I generate invoice for "bo_order1" order
     Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2      |
@@ -78,7 +77,6 @@ Feature: Order from Back Office (BO)
       | amount         | 2                       |
       | price          | 83.33                   |
       | price_tax_incl | 100.00                  |
-    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.333333
     # product_price is computed for backward compatibility which is why it is rounded
     And the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2         |
@@ -106,7 +104,6 @@ Feature: Order from Back Office (BO)
       | amount         | 2                           |
       | price          | 83.33                       |
       | price_tax_incl | 99.996                      |
-    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.33
     Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2      |
       | product_price               | 83.33  |
@@ -141,7 +138,6 @@ Feature: Order from Back Office (BO)
       | amount         | 4                           |
       | price          | 83.33                       |
       | price_tax_incl | 100.00                      |
-    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.333333
     And the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2         |
       | product_price               | 83.33     |
