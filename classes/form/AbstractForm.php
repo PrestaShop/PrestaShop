@@ -191,7 +191,9 @@ abstract class AbstractFormCore implements FormInterface
             } elseif ($field->getType() === 'checkbox') {
                 // checkboxes that are not submitted
                 // are interpreted as booleans switched off
-                $field->setValue(false);
+                if (empty($field->getValue())) {
+                    $field->setValue(false);
+                }
             }
         }
 
