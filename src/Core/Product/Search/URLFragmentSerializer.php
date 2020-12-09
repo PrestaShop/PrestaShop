@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 /**
  * This class is a serializer for URL fragments.
+ *
+ * @deprecated since version 1.7.8 and will be removed in the next major version.
  */
 class URLFragmentSerializer
 {
