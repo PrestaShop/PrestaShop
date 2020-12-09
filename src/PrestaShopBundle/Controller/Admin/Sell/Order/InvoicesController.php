@@ -43,7 +43,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response|null Template parameters
+     * @return Response|null Template parameters
      *
      * @throws \Exception
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
