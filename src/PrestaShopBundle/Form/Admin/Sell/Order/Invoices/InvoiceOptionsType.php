@@ -147,6 +147,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'help' => $this->trans('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).', 'Admin.Orderscustomers.Help'),
             ])
             ->add('legal_free_text', TranslatableType::class, [
+                'required' => false,
                 'options' => [
                     'constraints' => [
                         new NoTags(),
@@ -157,6 +158,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'help' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', 'Admin.Orderscustomers.Help'),
             ])
             ->add('footer_text', TranslatableType::class, [
+                'required' => false,
                 'options' => [
                     'constraints' => [
                         new NoTags(),
