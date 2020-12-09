@@ -44,6 +44,7 @@ class PreferencesController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     * @param FormInterface|null $form
      *
      * @return Response
      *
