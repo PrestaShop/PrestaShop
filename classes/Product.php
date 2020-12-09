@@ -1564,6 +1564,7 @@ class ProductCore extends ObjectModel
             AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
 
         $result = Db::getInstance()->executeS($query, true, false);
+
         return count($result) > 0;
     }
 
