@@ -165,3 +165,9 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.cart_summary_form_data_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartSummaryFormDataHandler'
+      arguments:
+          - '@prestashop.core.command_bus'
+          - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
