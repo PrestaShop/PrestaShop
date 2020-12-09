@@ -64,6 +64,11 @@ class ProductOptions
     private $condition;
 
     /**
+     * @var bool
+     */
+    private $showCondition;
+
+    /**
      * @var int
      */
     private $manufacturerId;
@@ -75,6 +80,7 @@ class ProductOptions
      * @param bool $onlineOnly
      * @param bool $showPrice
      * @param string $condition
+     * @param bool $showCondition
      * @param int $manufacturerId
      */
     public function __construct(
@@ -84,6 +90,7 @@ class ProductOptions
         bool $onlineOnly,
         bool $showPrice,
         string $condition,
+        bool $showCondition,
         int $manufacturerId
     ) {
         $this->active = $active;
@@ -92,6 +99,7 @@ class ProductOptions
         $this->onlineOnly = $onlineOnly;
         $this->showPrice = $showPrice;
         $this->condition = $condition;
+        $this->showCondition = $showCondition;
         $this->manufacturerId = $manufacturerId;
     }
 
@@ -136,18 +144,26 @@ class ProductOptions
     }
 
     /**
-     * @return int
-     */
-    public function getManufacturerId(): int
-    {
-        return $this->manufacturerId;
-    }
-
-    /**
      * @return string
      */
     public function getCondition(): string
     {
         return $this->condition;
+    }
+
+    /**
+     * @return bool
+     */
+    public function showCondition(): bool
+    {
+        return $this->showCondition;
+    }
+
+    /**
+     * @return int
+     */
+    public function getManufacturerId(): int
+    {
+        return $this->manufacturerId;
     }
 }

@@ -113,6 +113,11 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
             $updatableProperties[] = 'condition';
         }
 
+        if (null !== $command->showCondition()) {
+            $product->condition = $command->showCondition();
+            $updatableProperties[] = 'show_condition';
+        }
+
         $manufacturerId = $command->getManufacturerId();
         if (null !== $manufacturerId) {
             $product->id_manufacturer = $manufacturerId->getValue();

@@ -188,6 +188,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (bool) $product->online_only,
             (bool) $product->show_price,
             $product->condition,
+            (bool) $product->show_condition,
             (int) $product->id_manufacturer
         );
     }

@@ -74,6 +74,11 @@ class UpdateProductOptionsCommand
     private $condition;
 
     /**
+     * @var bool
+     */
+    private $showCondition;
+
+    /**
      * @var ManufacturerIdInterface|null
      */
     private $manufacturerId;
@@ -212,6 +217,26 @@ class UpdateProductOptionsCommand
         $this->condition = new ProductCondition($condition);
 
         return $this;
+    }
+
+    /**
+     * @param bool $showCondition
+     *
+     * @return $this
+     */
+    public function setShowCondition(bool $showCondition): UpdateProductOptionsCommand
+    {
+        $this->showCondition = $showCondition;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function showCondition(): bool
+    {
+        return $this->showCondition;
     }
 
     /**

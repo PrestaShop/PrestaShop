@@ -141,6 +141,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'id_manufacturer', ProductConstraintException::INVALID_MANUFACTURER_ID);
         $this->validateProductProperty($product, 'visibility', ProductConstraintException::INVALID_VISIBILITY);
         $this->validateProductProperty($product, 'condition', ProductConstraintException::INVALID_CONDITION);
+        $this->validateProductProperty($product, 'show_condition', ProductConstraintException::INVALID_SHOW_CONDITION);
         $this->validateProductProperty($product, 'active', ProductConstraintException::INVALID_STATUS);
     }
 

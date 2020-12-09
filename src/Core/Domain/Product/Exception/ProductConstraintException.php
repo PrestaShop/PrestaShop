@@ -265,4 +265,9 @@ class ProductConstraintException extends ProductException
      * When product status is invalid
      */
     public const INVALID_STATUS = 470;
+
+    /**
+     * When show_condition is invalid
+     */
+    public const INVALID_SHOW_CONDITION = 480;
 }
