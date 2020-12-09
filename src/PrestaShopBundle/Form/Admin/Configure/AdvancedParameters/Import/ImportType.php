@@ -117,7 +117,7 @@ class ImportType extends TranslatorAwareType
                     'class' => 'js-force-ids-form-group',
                 ],
                 'label' => $this->trans('Force all ID numbers', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Enable this option to keep your imported items\’ ID number as is. Otherwise, PrestaShop will ignore them and create auto-incremented ID numbers.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Enable this option to keep your imported items’ ID number as is. Otherwise, PrestaShop will ignore them and create auto-incremented ID numbers.', 'Admin.Advparameters.Help'),
             ])
             ->add('sendemail', SwitchType::class, [
                 'label' => $this->trans('Send notification email', 'Admin.Advparameters.Feature'),
