@@ -84,26 +84,24 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      */
     public function handle(UpdateProductInOrderCommand $command)
     {
+        $order = $this->getOrder($command->getOrderId());
+
+        $orderDetail = new OrderDetail($command->getOrderDetailId());
+        $orderInvoice = null;
+        if (!empty($command->getOrderInvoiceId())) {
+            $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
+        }
+
+        // Check fields validity
+        $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
+        $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
+
+        // Update specific price if needed
+        $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
+        $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
+
+        $this->contextStateManager->setShop(new Shop($order->id_shop));
         try {
-            $order = $this->getOrder($command->getOrderId());
-
-            $orderDetail = new OrderDetail($command->getOrderDetailId());
-            $orderInvoice = null;
-            if (!empty($command->getOrderInvoiceId())) {
-                $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
-            }
-
-            // Set Context Shop
-            $this->contextStateManager->setShop(new Shop($orderDetail->id_shop));
-
-            // Check fields validity
-            $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
-            $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
-
-            // Update specific price if needed
-            $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
-            $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
-
             $this->updateSpecificPrice(
                 $command->getPriceTaxIncluded(),
                 $command->getPriceTaxExcluded(),
@@ -111,16 +109,16 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $product,
                 $combination
             );
-
-            // Update invoice, quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
-
-            Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             throw $e;
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
+
+        // Update invoice, quantity and amounts
+        $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
+
+        Hook::exec('actionOrderEdited', ['order' => $order]);
     }
 
     /**

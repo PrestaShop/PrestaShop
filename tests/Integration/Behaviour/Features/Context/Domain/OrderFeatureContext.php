@@ -564,9 +564,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
-        //if (!$data['price_tax_incl']) {
-        //    $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
-        //} else {
+
         $order = new Order($orderId);
         $productOrderDetail = [];
         foreach ($order->getProductsDetail() as $orderDetail) {
@@ -579,7 +577,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 break;
             }
         }
-        //}
 
         $this->updateProductInOrder($orderId, $productOrderDetail, $data);
     }
@@ -687,14 +684,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (CannotFindProductInOrderException $e) {
             $this->lastException = $e;
         }
-    }
-
-    /**
-     * @Then I should get no order error
-     */
-    public function assertNoOrderError()
-    {
-        $this->assertLastErrorIsNull();
     }
 
     /**

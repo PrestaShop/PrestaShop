@@ -1,8 +1,8 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-odd-tax
 @reset-database-before-feature
+@reset-context-before-feature
 @clear-cache-before-feature
 @order-odd-tax
-
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
   As a BO user
@@ -12,12 +12,6 @@ Feature: Order from Back Office (BO)
     Given email sending is disabled
     And the current currency is "USD"
     And country "FR" is enabled
-    And the module "dummy_payment" is installed
-    And I am logged in as "test@prestashop.com" employee
-    And there is customer "testCustomer" with email "pub@prestashop.com"
-    And customer "testCustomer" has address in "FR" country
-    And I create an empty cart "dummy_cart" for customer "testCustomer"
-    And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add new tax "odd-tax" with following properties:
       | name         | Odd Tax (21%) |
       | rate         | 21            |
@@ -27,6 +21,12 @@ Feature: Order from Back Office (BO)
       | country      | FR            |
     And there is a product in the catalog named "Test Product With Odd Tax" with a price of 7.80 and 100 items in stock
     And I set tax rule group "odd-tax-group" to product "Test Product With Odd Tax"
+    And the module "dummy_payment" is installed
+    And I am logged in as "test@prestashop.com" employee
+    And there is customer "testCustomer" with email "pub@prestashop.com"
+    And customer "testCustomer" has address in "FR" country
+    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 70 products "Test Product With Odd Tax" to the cart "dummy_cart"
     And a carrier "price_carrier" with name "My cheap carrier" exists
     And I enable carrier "price_carrier"

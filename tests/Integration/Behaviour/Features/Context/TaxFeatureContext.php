@@ -150,7 +150,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->productFeatureContext->checkProductWithNameExists($productName);
         $this->checkTaxRuleWithNameExists($taxName);
-        $product = $this->productFeatureContext->getProduct($productName);
+        $product = $this->productFeatureContext->getProductWithName($productName);
         $product->id_tax_rules_group = $this->taxRuleGroups[$taxName]->id;
         $product->save();
     }
