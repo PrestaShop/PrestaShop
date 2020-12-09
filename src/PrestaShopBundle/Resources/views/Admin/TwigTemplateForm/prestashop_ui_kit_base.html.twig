@@ -193,7 +193,7 @@
   {{- parent() -}}
 {%- endblock %}
 
-{#{% block checkbox_widget -%}
+{# {% block checkbox_widget -%}
   {% set parent_label_class = parent_label_class|default('') -%}
   {% if 'checkbox-inline' in parent_label_class %}
     {{- form_label(form, null, { widget: parent() }) -}}

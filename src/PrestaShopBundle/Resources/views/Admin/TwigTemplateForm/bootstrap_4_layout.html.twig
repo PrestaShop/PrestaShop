@@ -163,7 +163,7 @@
     {% if 'radio-inline' in parent_label_class %}
         {{- form_label(form, null, { widget: parent() }) -}}
     {% else -%}
-        <div class="radio">
+        <div class="radio form-check form-check-radio">
             {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {%- endif %}
@@ -474,7 +474,7 @@
           </label>
         </div>
       {% else %}
-      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}{% if attrname is same as("class") %} form-check-label{% endif %}"{% endfor %}{% if label_attr|length <= 0 %} class="form-check-label"{% endif %}>
         {{- widget|raw -}}
         {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
       </label>

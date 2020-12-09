@@ -36,7 +36,15 @@ class AddCustomer extends BOBasePage {
    * @return {Promise<void>}
    */
   async fillCustomerForm(page, customerData) {
-    await page.click(this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
+    // Click on label for social input
+    const socialTitleElement = await this.getParentElement(
+      page,
+      this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1),
+    );
+
+    await socialTitleElement.click();
+
+    // Fill form
     await this.setValue(page, this.firstNameInput, customerData.firstName);
     await this.setValue(page, this.lastNameInput, customerData.lastName);
     await this.setValue(page, this.emailInput, customerData.email);
