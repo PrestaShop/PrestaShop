@@ -50,7 +50,7 @@ class PreferencesController extends FrameworkBundleAdminController
      * @throws \Exception
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, FormInterface $form = null)
     {
         $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();
 
