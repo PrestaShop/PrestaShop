@@ -520,10 +520,10 @@ class ShopCore extends ObjectModel
     /**
      * Get shop URL.
      *
-     * @param string $auto_secure_mode if set to true, secure mode will be checked
-     * @param string $add_base_uri if set to true, shop base uri will be added
+     * @param bool $auto_secure_mode if set to true, secure mode will be checked
+     * @param bool $add_base_uri if set to true, shop base uri will be added
      *
-     * @return string complete base url of current shop
+     * @return string|bool complete base url of current shop
      */
     public function getBaseURL($auto_secure_mode = false, $add_base_uri = true)
     {
