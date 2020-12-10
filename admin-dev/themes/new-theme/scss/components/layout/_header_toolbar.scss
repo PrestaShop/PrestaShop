@@ -77,9 +77,11 @@
         justify-content: flex-start;
       }
 
-      #recommended-modules-button,
-      .btn-help {
-        display: none;
+      @include media-breakpoint-down(sm) {
+        #recommended-modules-button,
+        .btn-help {
+          display: none;
+        }
       }
 
       a + a {
