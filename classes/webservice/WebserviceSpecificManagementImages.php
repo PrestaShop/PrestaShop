@@ -1220,8 +1220,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                     return true;
                 }
+            } else {
+                throw new WebserviceException('Please set an "image" parameter with image data for value', [76, 400]);
             }
-            throw new WebserviceException('Missing tmp_file property. Check supplied input data.', [67, 400]);
         } else {
             throw new WebserviceException('Method ' . $this->wsObject->method . ' is not allowed for an image resource', [77, 405]);
         }
