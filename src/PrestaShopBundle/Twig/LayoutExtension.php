@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Twig\Extension\GlobalsInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template.
@@ -112,7 +113,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('configuration', [$this, 'getConfiguration']),
+            new \Twig_SimpleFilter('configuration', [$this, 'getConfiguration'], ['deprecated' => true]),
         ];
     }
 
@@ -127,6 +128,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
             new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
             new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
             new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
+            new \Twig_SimpleFunction('configuration', [$this, 'getConfiguration']),
         ];
     }
 
@@ -134,12 +136,14 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
      * Returns a legacy configuration key.
      *
      * @param string $key
+     * @param mixed $default Default value is null
+     * @param ShopConstraint $shopConstraint Default value is null
      *
-     * @return array An array of functions
+     * @return mixed
      */
-    public function getConfiguration($key)
+    public function getConfiguration($key, $default = null, ShopConstraint $shopConstraint = null)
     {
-        return $this->configuration->get($key);
+        return $this->configuration->get($key, $default, $shopConstraint);
     }
 
     /**
