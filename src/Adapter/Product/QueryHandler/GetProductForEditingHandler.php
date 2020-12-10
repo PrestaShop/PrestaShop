@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
@@ -306,12 +307,12 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (int) $stockAvailable->out_of_stock,
             (int) $stockAvailable->quantity,
             (int) $product->minimal_quantity,
-            $stockAvailable->location,
             (int) $product->low_stock_threshold,
             (bool) $product->low_stock_alert,
             $product->available_now,
             $product->available_later,
-            new DateTime($product->available_date)
+            $stockAvailable->location,
+            DateTimeUtil::NULL_DATE === $product->available_date ? null : new DateTime($product->available_date)
         );
     }
 }

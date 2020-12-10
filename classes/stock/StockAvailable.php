@@ -62,7 +62,7 @@ class StockAvailableCore extends ObjectModel
     public $out_of_stock = 0;
 
     /** @var string the location of the stock for this product / combination */
-    public $location;
+    public $location = '';
 
     /**
      * @see ObjectModel::$definition

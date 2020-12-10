@@ -66,11 +66,6 @@ class ProductStockInformation
     private $minimalQuantity;
 
     /**
-     * @var string
-     */
-    private $location;
-
-    /**
      * @var int
      */
     private $lowStockThreshold;
@@ -91,7 +86,12 @@ class ProductStockInformation
     private $localizedAvailableLaterLabels;
 
     /**
-     * @var DateTimeInterface
+     * @var string
+     */
+    private $location;
+
+    /**
+     * @var DateTimeInterface|null
      */
     private $availableDate;
 
@@ -102,12 +102,12 @@ class ProductStockInformation
      * @param int $outOfStockType
      * @param int $quantity
      * @param int $minimalQuantity
-     * @param string $location
      * @param int $lowStockThreshold
      * @param bool $lowStockAlert
      * @param array $localizedAvailableNowLabels
      * @param array $localizedAvailableLaterLabels
-     * @param DateTimeInterface $availableDate
+     * @param string $location
+     * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
         bool $useAdvancedStockManagement,
@@ -116,12 +116,12 @@ class ProductStockInformation
         int $outOfStockType,
         int $quantity,
         int $minimalQuantity,
-        string $location,
         int $lowStockThreshold,
         bool $lowStockAlert,
         array $localizedAvailableNowLabels,
         array $localizedAvailableLaterLabels,
-        DateTimeInterface $availableDate
+        string $location,
+        ?DateTimeInterface $availableDate
     ) {
         $this->useAdvancedStockManagement = $useAdvancedStockManagement;
         $this->dependsOnStock = $dependsOnStock;
@@ -186,14 +186,6 @@ class ProductStockInformation
     }
 
     /**
-     * @return string
-     */
-    public function getLocation(): string
-    {
-        return $this->location;
-    }
-
-    /**
      * @return int
      */
     public function getLowStockThreshold(): int
@@ -223,6 +215,14 @@ class ProductStockInformation
     public function getLocalizedAvailableLaterLabels(): array
     {
         return $this->localizedAvailableLaterLabels;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
     }
 
     /**

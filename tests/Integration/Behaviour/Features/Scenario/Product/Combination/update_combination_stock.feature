@@ -39,9 +39,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | combination stock detail | value      |
       | quantity                 | 0          |
       | minimal quantity         | 1          |
-      | location                 |            |
       | low stock threshold      | 0          |
       | low stock alert is on    | false      |
+      | location                 |            |
       | available date           | 0000-00-00 |
     When I update combination "product1SBlack" stock with following details:
       | quantity              | 100         |
@@ -54,9 +54,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | combination stock detail | value       |
       | quantity                 | 100         |
       | minimal quantity         | 10          |
-      | location                 | Storage nr1 |
       | low stock threshold      | 10          |
       | low stock alert is on    | true        |
+      | location                 | Storage nr1 |
       | available date           | 2021-10-10  |
     When I update combination "product1SBlack" stock with following details:
       | quantity            | 100         |
@@ -67,9 +67,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | combination stock detail | value       |
       | quantity                 | 100         |
       | minimal quantity         | 1           |
-      | location                 | Storage nr2 |
       | low stock threshold      | 10          |
       | low stock alert is on    | true        |
+      | location                 | Storage nr2 |
       | available date           | 2021-10-10  |
     When I update combination "product1SBlack" stock with following details:
       | quantity              | 0          |
@@ -82,7 +82,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | combination stock detail | value      |
       | quantity                 | 0          |
       | minimal quantity         | 0          |
-      | location                 |            |
       | low stock threshold      | 0          |
       | low stock alert is on    | false      |
+      | location                 |            |
       | available date           | 2020-01-01 |
