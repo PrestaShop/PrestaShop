@@ -38,15 +38,15 @@
     var moduleTranslations = {
       'singleModuleModalUpdateTitle': '{{ "Are you sure you want to upgrade this module?"|trans({}, 'Admin.Modules.Feature') }}',
       'multipleModuleModalUpdateTitle': '{{ "Are you sure you want to upgrade these modules?"|trans({}, 'Admin.Modules.Feature') }}',
-      'moduleModalUpdateCancel': '{{ "Cancel"|trans({}, 'Admin.Actions') }}', 
-      'moduleModalUpdateMaintenance': '{{ "Go to maintenance page"|trans({}, 'Admin.Actions') }}', 
-      'moduleModalUpdateUpgrade': '{{ "Upgrade"|trans({}, 'Admin.Actions') }}', 
-      'multipleModuleModalUpdateUpgrade': '{{ "Upgrade anyway"|trans({}, 'Admin.Actions') }}', 
-      'moduleModalUpdateConfirmMessage': '{{ "We strongly advise you to upgrade the modules on maintenance mode to avoid any cache issues."|trans({}, 'Admin.Modules.Feature') }}', 
+      'moduleModalUpdateCancel': '{{ "Cancel"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateMaintenance': '{{ "Go to maintenance page"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateUpgrade': '{{ "Upgrade"|trans({}, 'Admin.Actions') }}',
+      'multipleModuleModalUpdateUpgrade': '{{ "Upgrade anyway"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateConfirmMessage': '{{ "We strongly advise you to upgrade the modules on maintenance mode to avoid any cache issues."|trans({}, 'Admin.Modules.Feature') }}',
     };
 
     // Need to come from the backend
-    var isShopMaintenance = true; 
+    var isShopMaintenance = !{{ 'PS_SHOP_ENABLE'|configuration|intCast }};
   </script>
   <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/module.bundle.js') }}"></script>
