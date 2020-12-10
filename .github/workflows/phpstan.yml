@@ -3,10 +3,10 @@ on: [push, pull_request]
 jobs:
   phpstan:
     name: phpstan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
