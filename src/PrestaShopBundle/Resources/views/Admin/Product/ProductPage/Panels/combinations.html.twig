@@ -34,7 +34,7 @@
               <h2>{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</h2>
               <fieldset class="form-group">
                 <div class="row">
-                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                  {% if configuration('PS_STOCK_MANAGEMENT') %}
                     <div class="col-md-4">
                       <label class="form-control-label">{{ formStockQuantity.vars.label }}</label>
                       {{ form_errors(formStockQuantity) }}
@@ -168,7 +168,7 @@
                 </div>
               </div>
             {% endif %}
-            {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+            {% if configuration('PS_STOCK_MANAGEMENT') %}
               <div id="pack_stock_type">
                 <h2>{{ formPackStockType.vars.label }}</h2>
                 <div class="row col-md-4">

@@ -230,7 +230,7 @@
                   '[/1]': '</strong>'
                   }, 'Admin.Orderscustomers.Notification')|raw }}.
 
-                {% if not 'PS_ORDER_RETURN'|configuration %}
+                {% if not configuration('PS_ORDER_RETURN') %}
                   <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>
                 {% endif %}
               </small>
