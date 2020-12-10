@@ -37,7 +37,7 @@ class CombinationCore extends ObjectModel
     /** @var string */
     public $supplier_reference;
 
-    public $location;
+    public $location = '';
 
     public $ean13;
 
@@ -113,6 +113,31 @@ class CombinationCore extends ObjectModel
             'images' => ['resource' => 'image', 'api' => 'images/products'],
         ],
     ];
+
+    /**
+     * @param null $id
+     * @param null $id_lang
+     * @param null $id_shop
+     */
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    {
+        parent::__construct($id, $id_lang, $id_shop);
+        $this->loadStockData();
+    }
+
+    /**
+     * Fill the variables used for stock management.
+     */
+    public function loadStockData()
+    {
+        if (false === Validate::isLoadedObject($this)) {
+            return;
+        }
+
+        // Default product quantity is available quantity to sell in current shop
+        $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id_product, $this->id);
+        $this->location = StockAvailable::getLocation($this->id);
+    }
 
     /**
      * Deletes current Combination from the database.

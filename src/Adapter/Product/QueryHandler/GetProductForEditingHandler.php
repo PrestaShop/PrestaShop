@@ -335,12 +335,12 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (int) $stockAvailable->out_of_stock,
             (int) $stockAvailable->quantity,
             (int) $product->minimal_quantity,
-            $stockAvailable->location,
             (int) $product->low_stock_threshold,
             (bool) $product->low_stock_alert,
             $product->available_now,
             $product->available_later,
-            new DateTime($product->available_date)
+            $stockAvailable->location,
+            DateTimeUtil::NULL_DATE === $product->available_date ? null : new DateTime($product->available_date)
         );
     }
 
