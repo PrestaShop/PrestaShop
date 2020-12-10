@@ -49,7 +49,7 @@
 {% block translate_javascripts %}
   <script>
     var translate_javascripts = {{ js_translatable|json_encode()|raw }};
-    var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration|intCast }};
+    var PS_ALLOW_ACCENTED_CHARS_URL = {{ configuration('PS_ALLOW_ACCENTED_CHARS_URL')|intCast }};
   </script>
 {% endblock %}
 

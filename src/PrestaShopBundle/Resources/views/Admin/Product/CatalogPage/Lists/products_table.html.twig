@@ -60,7 +60,7 @@
             {{ "Price (tax incl.)"|trans({}, 'Admin.Catalog.Feature') }}
           </th>
 
-          {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+          {% if configuration('PS_STOCK_MANAGEMENT') %}
           <th scope="col" class="text-center" style="width: 9%">
             {{ ps.sortable_column_header("Quantity"|trans({}, 'Admin.Catalog.Feature'), 'sav_quantity', orderBy, sortOrder) }}
           </th>
@@ -139,7 +139,7 @@
             } %}
           </th>
           <th class="text-center"></th>
-          {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+          {% if configuration('PS_STOCK_MANAGEMENT') %}
           <th class="text-center">
             {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_sav_quantity",
