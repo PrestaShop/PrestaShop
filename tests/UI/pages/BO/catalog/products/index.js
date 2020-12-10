@@ -22,6 +22,7 @@ class Product extends BOBasePage {
     this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
     this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
     this.dropdownMenuDeleteLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
+    this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick]`;
     this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
@@ -376,6 +377,23 @@ class Product extends BOBasePage {
    */
   async goToEditProductPage(page, row) {
     await this.clickAndWaitForNavigation(page, this.productRowEditLink(row));
+  }
+
+  /**
+   * Preview product from list
+   * @param page
+   * @param row
+   * @return {Promise<Page>}
+   */
+  async previewProduct(page, row) {
+    // Open dropdown
+    await Promise.all([
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(1)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(row)),
+    ]);
+
+    // Open product in a new tab
+    return this.openLinkWithTargetBlank(page, this.dropdownMenuPreviewLink(row));
   }
 
   /**
