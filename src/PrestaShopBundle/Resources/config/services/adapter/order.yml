@@ -47,6 +47,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderDeliveryAddressHandler
     arguments:
         - '@prestashop.adapter.order.amount.updater'
+        - '@prestashop.adapter.order.order_detail.tax_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand
@@ -55,6 +56,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderInvoiceAddressHandler
     arguments:
         - '@prestashop.adapter.order.amount.updater'
+        - '@prestashop.adapter.order.order_detail.tax_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand
@@ -267,3 +269,9 @@ services:
       - '@prestashop.adapter.order.amount.updater'
       - '@prestashop.adapter.order.product.remover'
       - '@prestashop.adapter.context_state_manager'
+
+  prestashop.adapter.order.order_detail.tax_updater:
+      class: PrestaShop\PrestaShop\Adapter\Order\OrderDetailTaxUpdater
+      arguments:
+          - '@prestashop.adapter.context_state_manager'
+          - '@prestashop.adapter.legacy.configuration'
