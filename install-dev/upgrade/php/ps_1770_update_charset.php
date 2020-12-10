@@ -26,24 +26,21 @@
 
 function ps_1770_update_charset()
 {
-    $adminFilterTableExists = false;
-    $adminFilterFilterIdExists = false;
-    $moduleHistoryTableExists = false;
-    $translationTableExists = false;
+    $adminFilterTableExists = $adminFilterFilterIdExists = $moduleHistoryTableExists = $translationTableExists = false;
 
     try {
-        $adminFilterTableExists = Db::getInstance()->executeS(
+        $adminFilterTableExists = (bool) Db::getInstance()->executeS(
             'SELECT count(*) FROM ' . _DB_PREFIX_ . 'admin_filter'
         );
         if ($adminFilterTableExists) {
-            $adminFilterFilterIdExists = Db::getInstance()->executeS(
+            $adminFilterFilterIdExists = (bool) Db::getInstance()->executeS(
                 'SELECT count(filter_id) FROM ' . _DB_PREFIX_ . 'admin_filter'
             );
         }
-        $moduleHistoryTableExists = Db::getInstance()->executeS(
+        $moduleHistoryTableExists = (bool) Db::getInstance()->executeS(
             'SELECT count(*) FROM ' . _DB_PREFIX_ . 'module_history'
         );
-        $translationTableExists = Db::getInstance()->executeS(
+        $translationTableExists = (bool) Db::getInstance()->executeS(
             'SELECT count(*) FROM ' . _DB_PREFIX_ . 'translation'
         );
 
@@ -80,5 +77,5 @@ function ps_1770_update_charset()
         );
     }
 
-    return $result;
+    return (bool) $result;
 }
