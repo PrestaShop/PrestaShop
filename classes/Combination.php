@@ -79,12 +79,10 @@ class CombinationCore extends ObjectModel
         'primary' => 'id_product_attribute',
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13],
             'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32],
             'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12],
             'mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 40],
-            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10],
             'reference' => ['type' => self::TYPE_STRING, 'size' => 64],
             'supplier_reference' => ['type' => self::TYPE_STRING, 'size' => 64],
 
@@ -113,6 +111,31 @@ class CombinationCore extends ObjectModel
             'images' => ['resource' => 'image', 'api' => 'images/products'],
         ],
     ];
+
+    /**
+     * @param null $id
+     * @param null $id_lang
+     * @param null $id_shop
+     */
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    {
+        parent::__construct($id, $id_lang, $id_shop);
+        $this->loadStockData();
+    }
+
+    /**
+     * Fill the variables used for stock management.
+     */
+    public function loadStockData()
+    {
+        if (false === Validate::isLoadedObject($this)) {
+            return;
+        }
+
+        // Default product quantity is available quantity to sell in current shop
+        $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id_product, $this->id);
+        $this->location = StockAvailable::getLocation($this->id);
+    }
 
     /**
      * Deletes current Combination from the database.
