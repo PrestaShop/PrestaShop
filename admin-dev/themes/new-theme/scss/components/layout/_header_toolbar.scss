@@ -77,6 +77,11 @@
         justify-content: flex-start;
       }
 
+      #recommended-modules-button,
+      .btn-help {
+        display: none;
+      }
+
       a + a {
         margin-left: $grid-gutter-width / 2;
       }
