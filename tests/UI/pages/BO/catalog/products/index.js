@@ -22,7 +22,8 @@ class Product extends BOBasePage {
     this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
     this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
     this.dropdownMenuDeleteLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
-    this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick]`;
+    this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
+    this.dropdownMenuDuplicateLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
     this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
@@ -380,6 +381,19 @@ class Product extends BOBasePage {
   }
 
   /**
+   * Open row dropdown for a product
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async openProductDropdown(page, row) {
+    await Promise.all([
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(row)),
+    ]);
+  }
+
+  /**
    * Preview product from list
    * @param page
    * @param row
@@ -387,13 +401,26 @@ class Product extends BOBasePage {
    */
   async previewProduct(page, row) {
     // Open dropdown
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(1)}[aria-expanded='true']`),
-      page.click(this.dropdownToggleButton(row)),
-    ]);
+    await this.openProductDropdown(page, row);
 
     // Open product in a new tab
     return this.openLinkWithTargetBlank(page, this.dropdownMenuPreviewLink(row));
+  }
+
+  /**
+   * Duplicate product
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async duplicateProduct(page, row) {
+    // Open dropdown
+    await this.openProductDropdown(page, row);
+
+    // Duplicate product and go to add product page
+    await this.clickAndWaitForNavigation(page, this.dropdownMenuDuplicateLink(row));
+
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
