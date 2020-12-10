@@ -67,10 +67,10 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
         return new CombinationStock(
             (int) $dataRows['quantity'],
             (int) $dataRows['minimal quantity'],
-            $dataRows['location'],
             (int) $dataRows['low stock threshold'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is on']),
-            PrimitiveUtils::castElementInType($dataRows['available date'], PrimitiveUtils::TYPE_DATETIME)
+            $dataRows['location'],
+            DateTimeUtil::NULL_DATE === $dataRows['available date'] ? null : new DateTime($dataRows['available date'])
         );
     }
 
@@ -106,11 +106,23 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             $actualStock->getLocation(),
             sprintf('Unexpected combination "%s" location', $combinationReference)
         );
-        Assert::assertEquals(
-            $expectedStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-            $actualStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-            sprintf('Unexpected combination "%s" availability date', $combinationReference)
-        );
+
+        if (null === $expectedStock->getAvailableDate()) {
+            Assert::assertSame(
+                $expectedStock->getAvailableDate(),
+                $actualStock->getAvailableDate(),
+                sprintf('Unexpected combination "%s" availability date. Expected NULL, got "%s"',
+                    $combinationReference,
+                    var_export($actualStock->getAvailableDate())
+                )
+            );
+        } else {
+            Assert::assertEquals(
+                $expectedStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                $actualStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                sprintf('Unexpected combination "%s" availability date', $combinationReference)
+            );
+        }
     }
 
     /**

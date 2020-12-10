@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
  * Handles @see GetCombinationForEditing query using legacy object model
@@ -126,10 +127,10 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         return new CombinationStock(
             (int) $stockAvailable->quantity,
             (int) $combination->minimal_quantity,
-            $stockAvailable->location,
             (int) $combination->low_stock_threshold,
             (bool) $combination->low_stock_alert,
-            new DateTime($combination->available_date)
+            $stockAvailable->location,
+            DateTimeUtil::NULL_DATE === $combination->available_date ? null : new DateTime($combination->available_date)
         );
     }
 }

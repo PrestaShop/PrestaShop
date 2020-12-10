@@ -43,11 +43,6 @@ class CombinationStock
     private $minimalQuantity;
 
     /**
-     * @var string
-     */
-    private $location;
-
-    /**
      * @var int
      */
     private $lowStockThreshold;
@@ -58,6 +53,11 @@ class CombinationStock
     private $lowStockAlertOn;
 
     /**
+     * @var string
+     */
+    private $location;
+
+    /**
      * @var DateTimeInterface
      */
     private $availableDate;
@@ -65,18 +65,18 @@ class CombinationStock
     /**
      * @param int $quantity
      * @param int $minimalQuantity
-     * @param string $location
      * @param int $lowStockThreshold
      * @param bool $lowStockAlertOn
-     * @param DateTimeInterface $availableDate
+     * @param string $location
+     * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
         int $quantity,
         int $minimalQuantity,
-        string $location,
         int $lowStockThreshold,
         bool $lowStockAlertOn,
-        DateTimeInterface $availableDate
+        string $location,
+        ?DateTimeInterface $availableDate
     ) {
         $this->quantity = $quantity;
         $this->minimalQuantity = $minimalQuantity;
@@ -127,9 +127,9 @@ class CombinationStock
     }
 
     /**
-     * @return DateTimeInterface
+     * @return DateTimeInterface|null
      */
-    public function getAvailableDate(): DateTimeInterface
+    public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
     }
