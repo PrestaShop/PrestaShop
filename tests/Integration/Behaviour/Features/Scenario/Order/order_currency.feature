@@ -54,6 +54,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2        |
+      | original_product_price      | 119.00   |
       | product_price               | 119.00   |
       | unit_price_tax_incl         | 126.14   |
       | unit_price_tax_excl         | 119.00   |
@@ -159,6 +160,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_price_tax_excl        | 238.00   |
     And product "Test Product With Discount and SpecificPrice" in order "bo_order1" has following details:
       | product_quantity            | 2        |
+      | original_product_price      | 160.00   |
       | product_price               | 120.00   |
       | unit_price_tax_incl         | 127.20   |
       | unit_price_tax_excl         | 120.00   |
@@ -184,6 +186,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_incl  | 74.20  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2     |
+      | original_product_price      | 119.00 |
       | product_price               | 119.00 |
       | unit_price_tax_incl         | 126.14 |
       | unit_price_tax_excl         | 119.00 |
@@ -196,13 +199,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | price         | 12.00                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3     |
-      | product_price               | 12.00 |
-      | unit_price_tax_incl         | 12.72 |
-      | unit_price_tax_excl         | 12.00 |
-      | total_price_tax_incl        | 38.16 |
-      | total_price_tax_excl        | 36.00 |
-    And product "Mug The best is yet to come" in order "bo_order1" should have specific price 12.00
+      | product_quantity            | 3      |
+      | original_product_price      | 119.00 |
+      | product_price               | 12.00  |
+      | unit_price_tax_incl         | 12.72  |
+      | unit_price_tax_excl         | 12.00  |
+      | total_price_tax_incl        | 38.16  |
+      | total_price_tax_excl        | 36.00  |
     And order "bo_order1" should have following details:
       | total_products           | 36.00 |
       | total_products_wt        | 38.16 |
@@ -260,6 +263,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | shipping_cost_tax_incl | 70.00 |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
+      | original_product_price      | 119.00 |
       | product_price               | 119.00 |
       | unit_price_tax_incl         | 119.00 |
       | unit_price_tax_excl         | 119.00 |
@@ -293,6 +297,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | shipping_cost_tax_incl | 74.20 |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
+      | original_product_price      | 119.00 |
       | product_price               | 119.00 |
       | unit_price_tax_incl         | 126.14 |
       | unit_price_tax_excl         | 119.00 |
@@ -326,6 +331,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | shipping_cost_tax_incl | 63.60  |
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2        |
+      | original_product_price      | 119.00 |
       | product_price               | 119.00   |
       | unit_price_tax_incl         | 126.14   |
       | unit_price_tax_excl         | 119.00   |
@@ -367,6 +373,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | shipping_cost_tax_incl | 74.20 |
       And product "Mug The best is yet to come" in order "bo_order1" has following details:
         | product_quantity            | 2      |
+        | original_product_price      | 119.00 |
         | product_price               | 119.00 |
         | unit_price_tax_incl         | 126.14 |
         | unit_price_tax_excl         | 119.00 |
@@ -374,6 +381,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | total_price_tax_excl        | 238.00 |
       And product "Test Product Gifted" in order "bo_order1" has following details:
         | product_quantity            | 1      |
+        | original_product_price      | 150.00 |
         | product_price               | 150.00 |
         | unit_price_tax_incl         | 159.00 |
         | unit_price_tax_excl         | 150.00 |
@@ -404,6 +412,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "€230.00"
       And product "Mug The best is yet to come" in order "bo_order1" has following details:
         | product_quantity            | 2      |
+        | original_product_price      | 119.00 |
         | product_price               | 119.00 |
         | unit_price_tax_incl         | 126.14 |
         | unit_price_tax_excl         | 119.00 |
@@ -411,6 +420,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | total_price_tax_excl        | 238.00 |
       And product "Test Product Gifted" in order "bo_order1" has following details:
         | product_quantity            | 2      |
+        | original_product_price      | 150.00 |
         | product_price               | 150.00 |
         | unit_price_tax_incl         | 159.00 |
         | unit_price_tax_excl         | 150.00 |
@@ -418,6 +428,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | total_price_tax_excl        | 300.00 |
       And product "Test Product With Auto Gift" in order "bo_order1" has following details:
         | product_quantity            | 1      |
+        | original_product_price      | 120.00 |
         | product_price               | 120.00 |
         | unit_price_tax_incl         | 127.20 |
         | unit_price_tax_excl         | 120.00 |
@@ -444,6 +455,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | shipping_cost_tax_incl | 74.20 |
       And product "Mug The best is yet to come" in order "bo_order1" has following details:
         | product_quantity            | 2      |
+        | original_product_price      | 119.00 |
         | product_price               | 119.00 |
         | unit_price_tax_incl         | 126.14 |
         | unit_price_tax_excl         | 119.00 |
@@ -451,6 +463,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | total_price_tax_excl        | 238.00 |
       And product "Test Product Gifted" in order "bo_order1" has following details:
         | product_quantity            | 1      |
+        | original_product_price      | 150.00 |
         | product_price               | 150.00 |
         | unit_price_tax_incl         | 159.00 |
         | unit_price_tax_excl         | 150.00 |
@@ -458,6 +471,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | total_price_tax_excl        | 150.00 |
       And product "Test Product With Auto Gift" in order "bo_order1" has following details:
         | product_quantity            | 1      |
+        | original_product_price      | 120.00 |
         | product_price               | 120.00 |
         | unit_price_tax_incl         | 127.20 |
         | unit_price_tax_excl         | 120.00 |
