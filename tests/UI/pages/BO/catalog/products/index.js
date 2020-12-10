@@ -11,6 +11,8 @@ class Product extends BOBasePage {
     this.productMultiDeletedSuccessfulMessage = 'Product(s) successfully deleted.';
     this.productDeactivatedSuccessfulMessage = 'Product successfully deactivated.';
     this.productActivatedSuccessfulMessage = 'Product successfully activated.';
+    this.productMultiActivatedSuccessfulMessage = 'Product(s) successfully activated.';
+    this.productMultiDeactivatedSuccessfulMessage = 'Product(s) successfully deactivated.';
 
     // Selectors
     // List of products
@@ -29,6 +31,8 @@ class Product extends BOBasePage {
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
+    this.productBulkEnableLink = `${this.productBulkDropdownMenu} a[onclick*='activate_all']`;
+    this.productBulkDisableLink = `${this.productBulkDropdownMenu} a[onclick*='deactivate_all']`;
     // Filters input
     this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
     this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
@@ -471,6 +475,27 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Bulk set status
+   * @param page
+   * @param status
+   * @return {Promise<string>}
+   */
+  async bulkSetStatus(page, status) {
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.productBulkMenuButton),
+      page.click(this.selectAllBulkCheckboxLabel),
+    ]);
+
+    await Promise.all([
+      this.waitForVisibleSelector(page, `${this.productBulkMenuButton}[aria-expanded='true']`),
+      page.click(this.productBulkMenuButton),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, status ? this.productBulkEnableLink : this.productBulkDisableLink);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
