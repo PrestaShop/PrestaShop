@@ -61,7 +61,7 @@ class StockAvailableCore extends ObjectModel
      */
     public $out_of_stock = 0;
 
-    /** @var string the location of the stock for this product / combination */
+    /** @var string|null the location of the stock for this product / combination */
     public $location;
 
     /**
@@ -78,7 +78,7 @@ class StockAvailableCore extends ObjectModel
             'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'depends_on_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'out_of_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
+            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255, 'allow_null' => true],
         ],
     ];
 
