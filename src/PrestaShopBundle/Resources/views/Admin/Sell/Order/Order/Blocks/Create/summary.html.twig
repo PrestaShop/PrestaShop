@@ -110,7 +110,9 @@
             'label': 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
           }) }}
 
-          {{ form_rest(summaryForm) }}
+          {% block cart_summary_form_rest %}
+            {{ form_rest(summaryForm) }}
+          {% endblock %}
 
           <div class="form-group row mt-4">
             <div class="col-sm offset-sm-4">
