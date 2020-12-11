@@ -122,12 +122,12 @@ export default class CurrencyForm {
     }
   }
 
-  onCurrencySelectorChange() {
+  async onCurrencySelectorChange() {
     const selectedISOCode = this.$currencySelector.val();
     if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
-      this.resetCurrencyData(selectedISOCode);
+      await this.resetCurrencyData(selectedISOCode);
     } else {
       this.$isUnofficialCheckbox.prop('checked', true);
       this.$isoCodeInput.prop('readonly', false);
@@ -177,7 +177,7 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton.addClass('spinner');
 
     this.state.currencyData = await this.fetchCurrency(selectedISOCode);
-    await this.fillCurrencyData(this.state.currencyData);
+    this.fillCurrencyData(this.state.currencyData);
 
     // Reset languages
     this.originalLanguages.forEach((language) => {
