@@ -251,6 +251,23 @@
       font-size: 0.875rem;
       color: $gray;
     }
+
+    .product-line {
+      &-pack {
+        padding: 0.2rem 0;
+
+        &-product {
+          &-title {
+            font-size: 0.8rem;
+            color: $gray-dark;
+
+            &:hover {
+              color: $brand-primary;
+            }
+          }
+        }
+      }
+    }
   }
 }
 

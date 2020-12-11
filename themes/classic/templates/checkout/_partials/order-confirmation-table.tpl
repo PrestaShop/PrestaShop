@@ -50,6 +50,11 @@
             {if $add_product_link}<a href="{$product.url}" target="_blank">{/if}
               <span>{$product.name}</span>
             {if $add_product_link}</a>{/if}
+
+            {if isset($product.packItems)}
+              {include file='checkout/_partials/product-line-pack.tpl' product=$product}
+            {/if}
+
             {if is_array($product.customizations) && $product.customizations|count}
               {foreach from=$product.customizations item="customization"}
                 <div class="customizations">

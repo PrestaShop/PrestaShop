@@ -38,6 +38,9 @@
   <div class="product-line-grid-body col-md-4 col-xs-8">
     <div class="product-line-info">
       <a class="label" href="{$product.url}" data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
+      {if isset($product.packItems)}
+        {include file='checkout/_partials/product-line-pack.tpl' product=$product}
+      {/if}
     </div>
 
     <div class="product-line-info product-price h5 {if $product.has_discount}has-discount{/if}">
