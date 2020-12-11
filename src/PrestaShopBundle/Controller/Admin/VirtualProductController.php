@@ -54,7 +54,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $router = $this->get('router');
 
         //get product
-        $product = $productAdapter->getProduct((int) $idProduct, true);
+        $product = $productAdapter->getProduct((int) $idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;
