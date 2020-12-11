@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -96,10 +95,12 @@ class MaintenanceConfiguration implements DataConfigurationInterface
 
     /**
      * @param array $configuration
+     *
      * @return bool
      */
     public function validateConfiguration(array $configuration): bool
     {
         // TODO: Implement validateConfiguration() method.
+        return true;
     }
 }
