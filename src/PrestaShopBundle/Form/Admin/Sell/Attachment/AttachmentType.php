@@ -49,6 +49,10 @@ class AttachmentType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $required = true;
+        if (isset($options['data']['file_name']) && $options['data']['file_name']) {
+            $required = false;
+        }
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
@@ -88,7 +92,7 @@ class AttachmentType extends TranslatorAwareType
                 ],
             ])
             ->add('file', FileType::class, [
-                'required' => false,
+                'required' => $required,
                 'label' => $this->trans('File', 'Admin.Global'),
             ])
         ;
