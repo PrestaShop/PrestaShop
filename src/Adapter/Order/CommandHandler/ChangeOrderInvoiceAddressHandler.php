@@ -30,7 +30,7 @@ use Address;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
-use PrestaShop\PrestaShop\Adapter\Order\OrderDetailTaxUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -47,17 +47,17 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
     private $orderAmountUpdater;
 
     /**
-     * @var OrderDetailTaxUpdater
+     * @var OrderDetailUpdater
      */
     private $orderDetailTaxUpdater;
 
     /**
      * @param OrderAmountUpdater $orderAmountUpdater
-     * @param OrderDetailTaxUpdater $orderDetailTaxUpdater
+     * @param OrderDetailUpdater $orderDetailTaxUpdater
      */
     public function __construct(
         OrderAmountUpdater $orderAmountUpdater,
-        OrderDetailTaxUpdater $orderDetailTaxUpdater
+        OrderDetailUpdater $orderDetailTaxUpdater
     ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
         $this->orderDetailTaxUpdater = $orderDetailTaxUpdater;

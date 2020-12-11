@@ -35,6 +35,7 @@ use Order;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
@@ -59,14 +60,22 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
     private $orderProductQuantityUpdater;
 
     /**
+     * @var OrderDetailUpdater
+     */
+    private $orderDetailUpdater;
+
+    /**
      * UpdateProductInOrderHandler constructor.
      *
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     * @param OrderDetailUpdater $orderDetailUpdater
      */
     public function __construct(
-        OrderProductQuantityUpdater $orderProductQuantityUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        OrderDetailUpdater $orderDetailUpdater
     ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->orderDetailUpdater = $orderDetailUpdater;
     }
 
     /**
@@ -92,11 +101,16 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($command->getPriceTaxIncluded(), $command->getPriceTaxExcluded(), $order, $product, $this->getCombination((int) $orderDetail->product_attribute_id));
             $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($command->getPriceTaxIncluded(), $command->getPriceTaxExcluded(), $order, $product, $this->getCombination((int) $orderDetail->product_attribute_id));
 
-            $orderDetail->unit_price_tax_incl = (float) (string) $precisePriceTaxIncluded;
-            $orderDetail->unit_price_tax_excl = (float) (string) $precisePriceTaxExcluded;
+            // Update current OrderDetail with new price (the object will be updated by reference)
+            $this->orderDetailUpdater->updateOrderDetail(
+                $orderDetail,
+                $order,
+                $precisePriceTaxExcluded,
+                $precisePriceTaxIncluded
+            );
 
-            // Update other order details so that Cart::getProducts will use the correct price
-            $this->updateIdenticalOrderDetails(
+            // We also need to update all identical OrderDetails to be sure that Cart will get the correct price
+            $this->orderDetailUpdater->updateIdenticalOrderDetails(
                 $order,
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,

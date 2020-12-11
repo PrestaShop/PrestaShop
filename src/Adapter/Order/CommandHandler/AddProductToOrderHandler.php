@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
@@ -102,22 +103,30 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $orderProductQuantityUpdater;
 
     /**
+     * @var OrderDetailUpdater
+     */
+    private $orderDetailUpdater;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
      * @param OrderAmountUpdater $orderAmountUpdater
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     * @param OrderDetailUpdater $orderDetailUpdater
      */
     public function __construct(
         TranslatorInterface $translator,
         ContextStateManager $contextStateManager,
         OrderAmountUpdater $orderAmountUpdater,
-        OrderProductQuantityUpdater $orderProductQuantityUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        OrderDetailUpdater $orderDetailUpdater
     ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
         $this->contextStateManager = $contextStateManager;
         $this->orderAmountUpdater = $orderAmountUpdater;
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->orderDetailUpdater = $orderDetailUpdater;
     }
 
     /**
@@ -201,7 +210,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             );
 
             // Update other order details so that Cart::getProducts will use the correct price
-            $this->updateIdenticalOrderDetails(
+            $this->orderDetailUpdater->updateIdenticalOrderDetails(
                 $order,
                 $command->getProductId()->getValue(),
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,

@@ -40,6 +40,7 @@ use Order;
 use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -66,6 +67,11 @@ class OrderAmountUpdater
     private $contextStateManager;
 
     /**
+     * @var OrderDetailUpdater
+     */
+    private $orderDetailUpdater;
+
+    /**
      * @var array
      */
     private $orderConstraints = [];
@@ -73,13 +79,16 @@ class OrderAmountUpdater
     /**
      * @param ShopConfigurationInterface $shopConfiguration
      * @param ContextStateManager $contextStateManager
+     * @param OrderDetailUpdater $orderDetailUpdater
      */
     public function __construct(
         ShopConfigurationInterface $shopConfiguration,
-        ContextStateManager $contextStateManager
+        ContextStateManager $contextStateManager,
+        OrderDetailUpdater $orderDetailUpdater
     ) {
         $this->shopConfiguration = $shopConfiguration;
         $this->contextStateManager = $contextStateManager;
+        $this->orderDetailUpdater = $orderDetailUpdater;
     }
 
     /**
@@ -113,7 +122,7 @@ class OrderAmountUpdater
             $computingPrecision = $this->getPrecisionFromCart($cart);
 
             // Update order details (if quantity or product price have been modified)
-            $this->updateOrderDetails($order, $cart, $computingPrecision);
+            $this->updateOrderDetails($order, $cart);
 
             // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
             $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
@@ -242,63 +251,24 @@ class OrderAmountUpdater
     /**
      * @param Order $order
      * @param Cart $cart
-     * @param int $computingPrecision
      *
      * @throws OrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function updateOrderDetails(Order $order, Cart $cart, int $computingPrecision): void
+    private function updateOrderDetails(Order $order, Cart $cart): void
     {
         $cartProducts = $cart->getProducts(true);
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
 
-            // Update tax rules group as it might have changed
-            $orderDetail->id_tax_rules_group = $orderDetail->getTaxRulesGroupId();
-
-            $unitPriceTaxExcl = (float) $cartProduct['price_with_reduction_without_tax'];
-            // this is the price with specific_price applied
-            $unitPriceTaxIncl = (float) $cartProduct['price_with_reduction'];
-
-            $orderDetail->product_price = (float) $cartProduct['price'];
-            $orderDetail->unit_price_tax_excl = $unitPriceTaxExcl;
-            $orderDetail->unit_price_tax_incl = $unitPriceTaxIncl;
-
-            $roundType = $this->getOrderConfiguration('PS_ROUND_TYPE', $order);
-            switch ($roundType) {
-                case Order::ROUND_TOTAL:
-                    $orderDetail->total_price_tax_excl = $unitPriceTaxExcl * $orderDetail->product_quantity;
-                    $orderDetail->total_price_tax_incl = $unitPriceTaxIncl * $orderDetail->product_quantity;
-
-                    break;
-                case Order::ROUND_LINE:
-                    $orderDetail->total_price_tax_excl = Tools::ps_round($unitPriceTaxExcl * $orderDetail->product_quantity, $computingPrecision);
-                    $orderDetail->total_price_tax_incl = Tools::ps_round($unitPriceTaxIncl * $orderDetail->product_quantity, $computingPrecision);
-
-                    break;
-
-                case Order::ROUND_ITEM:
-                default:
-                    $orderDetail->product_price = $orderDetail->unit_price_tax_excl = Tools::ps_round($unitPriceTaxExcl, $computingPrecision);
-                    $orderDetail->unit_price_tax_incl = Tools::ps_round($unitPriceTaxIncl, $computingPrecision);
-                    $orderDetail->total_price_tax_excl = $orderDetail->unit_price_tax_excl * $orderDetail->product_quantity;
-                    $orderDetail->total_price_tax_incl = $orderDetail->unit_price_tax_incl * $orderDetail->product_quantity;
-
-                    break;
-            }
-
-            // Finally update taxes (order_detail_tax table) We don't use Order::updateOrderDetailTax because there
-            // it rely too much on order_detail_tax and there are two things it's not able to do
-            // - insert new order_detail_tax when no one was present
-            // - clean all order_detail_tax when they are not needed any more
-            // This should be fixed and refactored so that OrderDetail::saveTaxCalculator can really be depreciated
-            $orderDetail->updateTaxAmount($order);
-
-            if (!$orderDetail->update()) {
-                throw new OrderException('An error occurred while editing the product line.');
-            }
+            $this->orderDetailUpdater->updateOrderDetail(
+                $orderDetail,
+                $order,
+                new Number((string) $cartProduct['price_with_reduction_without_tax']),
+                new Number((string) $cartProduct['price_with_reduction'])
+            );
         }
     }
 

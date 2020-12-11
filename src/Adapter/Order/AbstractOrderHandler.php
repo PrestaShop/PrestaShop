@@ -35,7 +35,6 @@ use Currency;
 use Customer;
 use Group;
 use Order;
-use OrderDetail;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -43,10 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
-use SpecificPrice;
 use TaxManagerFactory;
 use Validate;
 
@@ -117,36 +114,6 @@ abstract class AbstractOrderHandler
         $currency = new Currency((int) $cart->id_currency);
 
         return $computingPrecision->getPrecision($currency->precision);
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return Cart
-     */
-    protected function createNewOrEditExistingCart(Order $order)
-    {
-        $cartId = Cart::getCartIdByOrderId($order->id);
-        if ($cartId) {
-            $cart = new Cart($cartId);
-        } else {
-            $cart = new Cart();
-            $cart->id_shop_group = $order->id_shop_group;
-            $cart->id_shop = $order->id_shop;
-            $cart->id_customer = $order->id_customer;
-            $cart->id_carrier = $order->id_carrier;
-            $cart->id_address_delivery = $order->id_address_delivery;
-            $cart->id_address_invoice = $order->id_address_invoice;
-            $cart->id_currency = $order->id_currency;
-            $cart->id_lang = $order->id_lang;
-            $cart->secure_key = $order->secure_key;
-
-            $cart->add();
-        }
-
-        Context::getContext()->cart = $cart;
-
-        return $cart;
     }
 
     /**
@@ -268,30 +235,7 @@ abstract class AbstractOrderHandler
      * @param Order $order
      * @param Combination|null $combination
      *
-     * @return SpecificPrice|null
-     */
-    protected function getProductSpecificPriceInOrder(
-        Product $product,
-        Order $order,
-        ?Combination $combination
-    ): ?SpecificPrice {
-        // WARNING: DO NOT use SpecificPrice::getSpecificPrice as it filters out fields that are not in database
-        // hence it ignores the customer or cart restriction and results are biased
-        $existingSpecificPriceId = $order->getProductSpecificPriceId($product->id, $combination ? $combination->id : 0);
-
-        if (empty($existingSpecificPriceId)) {
-            return null;
-        }
-
-        return new SpecificPrice($existingSpecificPriceId);
-    }
-
-    /**
-     * @param Product $product
-     * @param Order $order
-     * @param Combination|null $combination
-     *
-     * @return \PrestaShop\Decimal\Number
+     * @return Number
      */
     protected function getProductRegularPrice(
         Product $product,
@@ -314,35 +258,6 @@ abstract class AbstractOrderHandler
             null, // But we keep the cart null as we don't want this order overridden price
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         ));
-    }
-
-    /**
-     * @param Order $order
-     * @param int $productId
-     * @param int $combinationId
-     * @param Number $priceTaxExcluded
-     * @param Number $priceTaxIncluded
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
-    protected function updateIdenticalOrderDetails(
-        Order $order,
-        int $productId,
-        int $combinationId,
-        Number $priceTaxExcluded,
-        Number $priceTaxIncluded
-    ): void {
-        $orderDetails = $order->getOrderDetailList();
-        foreach ($orderDetails as $orderDetail) {
-            if ((int) $orderDetail['product_id'] === $productId
-                && (int) $orderDetail['product_attribute_id'] === $combinationId) {
-                $identicalOrderDetail = new OrderDetail($orderDetail['id_order_detail']);
-                $identicalOrderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
-                $identicalOrderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
-                $identicalOrderDetail->save();
-            }
-        }
     }
 
     /**
