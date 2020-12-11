@@ -48,6 +48,18 @@ class AddCurrency extends BOBasePage {
       await page.waitForTimeout(200);
     }
 
+    // Wait for input to have value
+    let inputHasValue = false;
+    for (let i = 0; i < 50 && !inputHasValue; i++) {
+      /* eslint-env browser */
+      inputHasValue = await page.evaluate(
+        selector => document.querySelector(selector).value !== "",
+        this.currencyNameInput(1),
+      );
+
+      await page.waitForTimeout(200);
+    }
+
     await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
