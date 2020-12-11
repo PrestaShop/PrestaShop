@@ -57,10 +57,15 @@
   }
 
   // breadcrumb
-  nav > ol {
-    padding-left: 0;
-  }
+  nav {
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
 
+    > ol {
+      padding-left: 0;
+    }
+  }
   // toolbar buttons
   .toolbar-icons {
     @include media-breakpoint-down(sm) {
