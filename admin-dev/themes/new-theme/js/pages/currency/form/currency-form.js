@@ -122,12 +122,12 @@ export default class CurrencyForm {
     }
   }
 
-  async onCurrencySelectorChange() {
+  onCurrencySelectorChange() {
     const selectedISOCode = this.$currencySelector.val();
     if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
-      await this.resetCurrencyData(selectedISOCode);
+      this.resetCurrencyData(selectedISOCode);
     } else {
       this.$isUnofficialCheckbox.prop('checked', true);
       this.$isoCodeInput.prop('readonly', false);
