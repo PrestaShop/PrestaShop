@@ -469,7 +469,7 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Get product name frrom inout
+   * Get product name from input
    * @param page
    * @return {Promise<string>}
    */
