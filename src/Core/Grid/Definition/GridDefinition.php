@@ -138,7 +138,7 @@ final class GridDefinition implements GridDefinitionInterface
             }
         }
 
-        throw new ColumnNotFoundException('Column with id "%s" not found');
+        throw new ColumnNotFoundException(sprintf('Column with id "%s" not found', $id));
     }
 
     /**
