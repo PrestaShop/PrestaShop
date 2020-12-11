@@ -28,18 +28,18 @@ import TinyMCEEditor from '@components/tinymce-editor';
 const {$} = window;
 
 $(() => {
-  $('.multistore-checkbox').on('change', function(){
-    const configurationKey = $(this).attr('multistore_configuration_key');
-    const configurationInput = $(this).closest('.form-group').find('input:not(.multistore-checkbox)');
-
+  $('.multistore-checkbox').on('change', function () {
+    const input = $(this).closest('.form-group').find('input:not(.multistore-checkbox)');
+    const inputContainer = $(this).closest('.form-group').find('.col-sm');
+    const labelContainer = $(this).closest('.form-group').find('.form-control-label');
     if ($(this).is(':checked') === false) {
-      $('.col-sm[multistore_configuration_key="' + configurationKey + '"]').addClass('disabled');
-      $(this).closest('.form-group').find('.form-control-label').addClass('disabled');
-      configurationInput.prop('disabled', true);
+      inputContainer.addClass('disabled');
+      labelContainer.addClass('disabled');
+      input.prop('disabled', true);
     } else {
-      $('.col-sm[multistore_configuration_key="' + configurationKey + '"]').removeClass('disabled');
-      $(this).closest('.form-group').find('.form-control-label').removeClass('disabled');
-      configurationInput.prop('disabled', false);
+      inputContainer.removeClass('disabled');
+      labelContainer.removeClass('disabled');
+      input.prop('disabled', false);
     }
   });
   new TinyMCEEditor();
