@@ -39,3 +39,8 @@ ALTER TABLE `PREFIX_log`
   ADD `id_lang` INT(10) NULL DEFAULT NULL after `id_shop_group`,
   ADD `in_all_shops` TINYINT(1) unsigned NOT NULL DEFAULT '0'
 ;
+
+UPDATE `PREFIX_product` SET `redirect_type` = '404' WHERE `redirect_type` = '';
+ALTER TABLE `PREFIX_product` MODIFY COLUMN `redirect_type` ENUM(
+    '404', '301-product', '302-product', '301-category', '302-category'
+) NOT NULL DEFAULT '404';
