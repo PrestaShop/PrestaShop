@@ -8,9 +8,12 @@ class AddProduct extends BOBasePage {
     this.pageTitle = 'Product •';
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
+    this.duplicateSuccessfulMessage = 'Product successfully duplicated.';
     this.errorMessage = 'Unable to update settings.';
     this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
       + ` It should have ${number} characters or less.`;
+
+
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
@@ -463,6 +466,15 @@ class AddProduct extends BOBasePage {
     for (let i = 0; i < keys.length; i += 1) {
       await this.addProductToPack(page, keys[i], pack[keys[i]]);
     }
+  }
+
+  /**
+   * Get product name from input
+   * @param page
+   * @return {Promise<string>}
+   */
+  getProductName(page) {
+    return this.getAttributeContent(page, this.productNameInput, 'value');
   }
 }
 
