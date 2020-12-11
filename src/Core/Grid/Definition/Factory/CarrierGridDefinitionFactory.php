@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -242,7 +243,7 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
     }
 
-    private function getRowActions(): RowActionCollection
+    private function getRowActions(): RowActionCollectionInterface
     {
         return (new RowActionCollection())
             ->add(
