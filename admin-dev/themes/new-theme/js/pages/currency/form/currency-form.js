@@ -177,7 +177,7 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton.addClass('spinner');
 
     this.state.currencyData = await this.fetchCurrency(selectedISOCode);
-    this.fillCurrencyData(this.state.currencyData);
+    await this.fillCurrencyData(this.state.currencyData);
 
     // Reset languages
     this.originalLanguages.forEach((language) => {
