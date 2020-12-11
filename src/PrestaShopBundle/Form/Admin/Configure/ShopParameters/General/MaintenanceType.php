@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShopBundle\Form\Admin\Type\ConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\IpAddressType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -33,6 +35,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class returning the content of the form in the maintenance page.
@@ -40,6 +43,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MaintenanceType extends TranslatorAwareType
 {
+    /**
+     * @var ShopConfigurationInterface
+     */
+    private $shopConfiguration;
+
+    public function __construct(TranslatorInterface $translator, array $locales, ShopConfigurationInterface $shopConfiguration)
+    {
+        parent::__construct($translator, $locales);
+        $this->shopConfiguration = $shopConfiguration;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -51,6 +65,10 @@ class MaintenanceType extends TranslatorAwareType
                 SwitchType::class,
                 [
                     'required' => true,
+                    'attr' => [
+                        'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                        'disabled' => !$this->shopConfiguration->isOverridenByCurrentContext('PS_SHOP_ENABLE'),
+                    ],
                 ]
             )
             ->add(
@@ -61,6 +79,8 @@ class MaintenanceType extends TranslatorAwareType
                     'empty_data' => '',
                     'attr' => [
                         'class' => 'col-md-5',
+                        'multistore_configuration_key' => 'PS_MAINTENANCE_IP',
+                        'disabled' => !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_IP'),
                     ],
                 ]
             )
@@ -75,6 +95,11 @@ class MaintenanceType extends TranslatorAwareType
                     'locales' => $this->locales,
                     'hideTabs' => false,
                     'required' => true,
+                    'disabled' => true,
+                    'attr' => [
+                        'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
+                        'disabled' => !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_TEXT'),
+                    ],
                 ]
             );
     }
@@ -95,5 +120,10 @@ class MaintenanceType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'maintenance_general_block';
+    }
+
+    public function getParent(): string
+    {
+        return ConfigurationType::class;
     }
 }
