@@ -610,3 +610,36 @@ Feature: Order from Back Office (BO)
       | reduction      | 0.25       |
       | reduction_type | percentage |
       | reduction_tax  | 1          |
+
+  Scenario: I create a cart with a specific price, it should be present when order is created and stays present even if product price is modified
+    And I create an empty cart "customized_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "customized_cart"
+    And I add 2 products "Mug The best is yet to come" to the cart "customized_cart"
+    And I update product "Mug The best is yet to come" in the cart "customized_cart" to 15.00
+    Then product "Mug The best is yet to come" in cart "customized_cart" should have specific price 15.00
+    And I add order "bo_order1" with the following details:
+      | cart                | customized_cart            |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    # When Order is added all the specific prices associated to the cart are deleted
+    Then product "Mug The best is yet to come" in order "bo_order1" should have no specific price
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 15.00 |
+      | original_product_price      | 11.90 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 31.80 |
+      | total_price_tax_excl        | 30.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 30.000 |
+      | total_products_wt        | 31.800 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 37.000 |
+      | total_paid_tax_incl      | 39.220 |
+      | total_paid               | 39.220 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |

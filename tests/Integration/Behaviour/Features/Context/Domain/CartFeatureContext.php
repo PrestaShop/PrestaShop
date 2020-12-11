@@ -58,8 +58,11 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use Product;
 use RuntimeException;
+use SpecificPrice;
 use State;
 use Tests\Integration\Behaviour\Features\Context\ProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -177,6 +180,78 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         } catch (MinimalQuantityException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @When I update product :productName in the cart :cartReference to :price
+     *
+     * @param string $productName
+     * @param string $cartReference
+     * @param float $price
+     */
+    public function updateProductPriceInCart(string $productName, string $cartReference, float $price): void
+    {
+        $productId = $this->getProductIdByName($productName);
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+
+        $command = new AddSpecificPriceCommand(
+            $productId,
+            Reduction::TYPE_AMOUNT,
+            0,
+            true,
+            $price,
+            1
+        );
+        $command->setCartId($cartId);
+        $command->setCustomerId((int) $cart->id_customer);
+
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then product :productName in cart :cartReference should have specific price :price
+     *
+     * @param string $productName
+     * @param string $cartReference
+     * @param float $price
+     */
+    public function checkCartProductSpecificPrice(string $productName, string $cartReference, float $price): void
+    {
+        $productId = $this->getProductIdByName($productName);
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+
+        $specificPriceId = SpecificPrice::exists(
+            $productId,
+            0,
+            0,
+            0,
+            0,
+            0,
+            $cart->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $cartId
+        );
+
+        if (!$specificPriceId) {
+            throw new RuntimeException(sprintf(
+                'Could not find specific price for product %s in car %s',
+                $productName,
+                $cartReference
+            ));
+        }
+
+        $specificPrice = new SpecificPrice($specificPriceId);
+        Assert::assertEquals(
+            $price,
+            $specificPrice->price
+        );
+        Assert::assertEquals('amount', $specificPrice->reduction_type);
+        Assert::assertTrue((bool) $specificPrice->reduction_tax);
     }
 
     /**
