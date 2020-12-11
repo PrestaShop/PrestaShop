@@ -28,5 +28,21 @@ import TinyMCEEditor from '@components/tinymce-editor';
 const {$} = window;
 
 $(() => {
+  $('.multistore-checkbox').on('change', function(){
+    var configurationKey = $(this).attr('multistore_configuration_key');
+    var configurationInput = $(this).closest('.form-group').find('input:not(.multistore-checkbox)');
+
+    if ($(this).is(':checked') === false) {
+      $('.col-sm[multistore_configuration_key="' + configurationKey + '"]').addClass('disabled');
+      $(this).closest('.form-group').find('.form-control-label').addClass('disabled');
+      configurationInput.prop('disabled', true);
+    } else {
+      $('.col-sm[multistore_configuration_key="' + configurationKey + '"]').removeClass('disabled');
+      $(this).closest('.form-group').find('.form-control-label').removeClass('disabled');
+      configurationInput.prop('disabled', false);
+    }
+  });
   new TinyMCEEditor();
 });
+
+
