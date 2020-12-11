@@ -358,6 +358,8 @@ services:
     form.type.maintenance.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
         parent: 'form.type.translatable.aware'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
         public: true
         tags:
             - { name: form.type }
@@ -1233,7 +1235,7 @@ services:
         public: true
         tags:
             - { name: form.type }
-            
+
     form.type.logs_by_email:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
         parent: 'form.type.translatable.aware'

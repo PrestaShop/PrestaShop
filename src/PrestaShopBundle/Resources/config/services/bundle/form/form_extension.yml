@@ -32,3 +32,11 @@ services:
       tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.configuration:
+        class: 'PrestaShopBundle\Form\Admin\Extension\ConfigurationTypeExtension'
+        arguments:
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.legacy.configuration'
+        tags:
+            - { name: form.type_extension, extended_type: PrestaShopBundle\Form\Admin\Type\ConfigurationType }
