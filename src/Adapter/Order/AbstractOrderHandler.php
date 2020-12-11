@@ -30,12 +30,10 @@ use Address;
 use Cart;
 use Combination;
 use Configuration;
-use Context;
 use Currency;
 use Customer;
 use Group;
 use Order;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -44,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopException;
 use Product;
-use TaxManagerFactory;
 use Validate;
 
 /**
@@ -52,8 +49,6 @@ use Validate;
  */
 abstract class AbstractOrderHandler
 {
-    const COMPARISON_PRECISION = 6;
-
     /**
      * @param OrderId $orderId
      *
@@ -151,113 +146,6 @@ abstract class AbstractOrderHandler
         }
 
         return $product;
-    }
-
-    /**
-     * Since prices in input are sometimes rounded they don't precisely match, so in this case
-     * if the price is different from catalog we use price included as a base and recompute the
-     * price tax excluded with additional precision.
-     *
-     * @param Number $priceTaxIncluded
-     * @param Number $priceTaxExcluded
-     * @param Order $order
-     * @param Product $product
-     * @param Combination|null $combination
-     *
-     * @return Number
-     */
-    protected function getPrecisePriceTaxExcluded(
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
-        Order $order,
-        Product $product,
-        ?Combination $combination
-    ): Number {
-        $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
-
-        // If provided price is equal to catalog price no need to recompute
-        if ($productOriginalPrice->equals($priceTaxExcluded)) {
-            return $priceTaxExcluded;
-        }
-
-        $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
-        $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $product->id, Context::getContext()));
-        $productTaxCalculator = $taxManager->getTaxCalculator();
-        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
-
-        $computedPriceTaxIncluded = $priceTaxExcluded->times($taxFactor);
-        if ($computedPriceTaxIncluded->equals($priceTaxIncluded)) {
-            return $priceTaxExcluded;
-        }
-
-        // When price tax included is computed based on price tax excluded there is a difference
-        // so we recompute the price tax excluded based on the tax rate to have more precision
-        return $priceTaxIncluded->dividedBy($taxFactor);
-    }
-
-    /**
-     * Since prices in input are sometimes rounded they don't precisely match, so in this case
-     * if the price is the same as the catalog we use price excluded as a base and recompute the
-     * price tax included with additional precision.
-     *
-     * @param Number $priceTaxIncluded
-     * @param Number $priceTaxExcluded
-     * @param Order $order
-     * @param Product $product
-     * @param Combination|null $combination
-     *
-     * @return Number
-     */
-    protected function getPrecisePriceTaxIncluded(
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
-        Order $order,
-        Product $product,
-        ?Combination $combination
-    ): Number {
-        $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
-
-        // If provided price is different from the catalog price we use the input price tax included as a base
-        if (!$productOriginalPrice->equals($priceTaxExcluded)) {
-            return $priceTaxIncluded;
-        }
-
-        $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
-        $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $product->id, Context::getContext()));
-        $productTaxCalculator = $taxManager->getTaxCalculator();
-        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
-
-        return $priceTaxExcluded->times($taxFactor);
-    }
-
-    /**
-     * @param Product $product
-     * @param Order $order
-     * @param Combination|null $combination
-     *
-     * @return Number
-     */
-    protected function getProductRegularPrice(
-        Product $product,
-        Order $order,
-        ?Combination $combination
-    ): Number {
-        // Get price via getPriceStatic so that the catalog price rules are applied
-
-        return new Number((string) Product::getPriceStatic(
-            $product->id,
-            false,
-            null !== $combination ? $combination->id : 0,
-            self::COMPARISON_PRECISION,
-            null,
-            false,
-            true,
-            1,
-            false,
-            $order->id_customer, // We still use the customer ID in case this customer has some special prices
-            null, // But we keep the cart null as we don't want this order overridden price
-            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
-        ));
     }
 
     /**

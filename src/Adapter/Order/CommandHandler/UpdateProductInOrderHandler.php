@@ -44,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use StockAvailable;
 use Validate;
@@ -96,17 +95,12 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
             $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
 
-            // Update OrderDetail (only unit price update needed, the total is gonna be updated by orderProductQuantityUpdater)
-            $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
-            $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($command->getPriceTaxIncluded(), $command->getPriceTaxExcluded(), $order, $product, $this->getCombination((int) $orderDetail->product_attribute_id));
-            $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($command->getPriceTaxIncluded(), $command->getPriceTaxExcluded(), $order, $product, $this->getCombination((int) $orderDetail->product_attribute_id));
-
             // Update current OrderDetail with new price (the object will be updated by reference)
             $this->orderDetailUpdater->updateOrderDetail(
                 $orderDetail,
                 $order,
-                $precisePriceTaxExcluded,
-                $precisePriceTaxIncluded
+                $command->getPriceTaxExcluded(),
+                $command->getPriceTaxIncluded()
             );
 
             // We also need to update all identical OrderDetails to be sure that Cart will get the correct price
@@ -114,8 +108,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $order,
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
-                $precisePriceTaxExcluded,
-                $precisePriceTaxIncluded
+                $command->getPriceTaxExcluded(),
+                $command->getPriceTaxIncluded()
             );
 
             // Update invoice, quantity and amounts
@@ -176,20 +170,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             throw new OrderException('Invalid price');
         }
 
-        if (!is_array($command->getQuantity())
-            && !Validate::isUnsignedInt($command->getQuantity())
-        ) {
+        if (!Validate::isUnsignedInt($command->getQuantity())) {
             throw new OrderException('Invalid quantity');
         }
-
-        // @todo: check if quantity can be array
-//        if (is_array($command->getQuantity())) {
-//            foreach ($command->getQuantity() as $qty) {
-//                if (!Validate::isUnsignedInt($qty)) {
-//                    throw new OrderException('Invalid quantity');
-//                }
-//            }
-//        }
 
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {

@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use Product;
 use Shop;
 use TaxCalculator;
 use TaxManagerFactory;
@@ -50,6 +51,8 @@ use Tools;
 
 class OrderDetailUpdater
 {
+    private const COMPARISON_PRECISION = 6;
+
     /**
      * @var ContextStateManager
      */
@@ -86,13 +89,16 @@ class OrderDetailUpdater
         Number $priceTaxExcluded,
         Number $priceTaxIncluded
     ): void {
-        list($roundType, $computingPrecision) = $this->setOrderContext($order);
+        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
+            $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+            $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+
             $this->applyPriceUpdate(
                 $orderDetail,
-                $priceTaxExcluded,
-                $priceTaxIncluded,
+                $precisePriceTaxExcluded,
+                $precisePriceTaxIncluded,
                 $roundType,
                 $computingPrecision
             );
@@ -117,7 +123,7 @@ class OrderDetailUpdater
         Number $priceTaxExcluded,
         Number $priceTaxIncluded
     ): void {
-        list($roundType, $computingPrecision) = $this->setOrderContext($order);
+        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
             $this->applyIdenticalUpdates(
@@ -127,7 +133,8 @@ class OrderDetailUpdater
                 $priceTaxExcluded,
                 $priceTaxIncluded,
                 $roundType,
-                $computingPrecision
+                $computingPrecision,
+                $taxAddress
             );
         } finally {
             $this->contextStateManager->restorePreviousContext();
@@ -139,7 +146,7 @@ class OrderDetailUpdater
      */
     public function updateOrderDetailsTaxes(Order $order): void
     {
-        list($roundType, $computingPrecision, $taxAddress) = $this->setOrderContext($order);
+        list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
             $orderDetailsData = $order->getProducts();
@@ -202,7 +209,7 @@ class OrderDetailUpdater
      *
      * @return array
      */
-    private function setOrderContext(Order $order): array
+    private function prepareOrderContext(Order $order): array
     {
         $shopConstraint = new ShopConstraint(
             (int) $order->id_shop,
@@ -285,6 +292,7 @@ class OrderDetailUpdater
      * @param Number $priceTaxIncluded
      * @param int $roundType
      * @param int $computingPrecision
+     * @param Address $taxAddress
      *
      * @throws OrderException
      */
@@ -295,14 +303,24 @@ class OrderDetailUpdater
         Number $priceTaxExcluded,
         Number $priceTaxIncluded,
         int $roundType,
-        int $computingPrecision
+        int $computingPrecision,
+        Address $taxAddress
     ): void {
         $identicalOrderDetails = $this->getIdenticalOrderDetails($order, $productId, $combinationId);
+        if (empty($identicalOrderDetails)) {
+            return;
+        }
+
+        // Get precise prices thanks to first OrderDetail (they all have the same price anyway)
+        $orderDetail = $identicalOrderDetails[0];
+        $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+        $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+
         foreach ($identicalOrderDetails as $identicalOrderDetail) {
             $this->applyPriceUpdate(
                 $identicalOrderDetail,
-                $priceTaxExcluded,
-                $priceTaxIncluded,
+                $precisePriceTaxExcluded,
+                $precisePriceTaxIncluded,
                 $roundType,
                 $computingPrecision
             );
@@ -331,6 +349,109 @@ class OrderDetailUpdater
         }
 
         return $identicalOrderDetails;
+    }
+
+    /**
+     * Since prices in input are sometimes rounded they don't precisely match, so in this case
+     * if the price is different from catalog we use price included as a base and recompute the
+     * price tax excluded with additional precision.
+     *
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param Address $taxAddress
+     *
+     * @return Number
+     */
+    private function getPrecisePriceTaxExcluded(
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded,
+        Order $order,
+        OrderDetail $orderDetail,
+        Address $taxAddress
+    ): Number {
+        $productOriginalPrice = $this->getProductRegularPrice($order, $orderDetail, $taxAddress);
+
+        // If provided price is equal to catalog price no need to recompute
+        if ($productOriginalPrice->equals($priceTaxExcluded)) {
+            return $priceTaxExcluded;
+        }
+
+        $productTaxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
+        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
+
+        $computedPriceTaxIncluded = $priceTaxExcluded->times($taxFactor);
+        if ($computedPriceTaxIncluded->equals($priceTaxIncluded)) {
+            return $priceTaxExcluded;
+        }
+
+        // When price tax included is computed based on price tax excluded there is a difference
+        // so we recompute the price tax excluded based on the tax rate to have more precision
+        return $priceTaxIncluded->dividedBy($taxFactor);
+    }
+
+    /**
+     * Since prices in input are sometimes rounded they don't precisely match, so in this case
+     * if the price is the same as the catalog we use price excluded as a base and recompute the
+     * price tax included with additional precision.
+     *
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param Address $taxAddress
+     *
+     * @return Number
+     */
+    private function getPrecisePriceTaxIncluded(
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded,
+        Order $order,
+        OrderDetail $orderDetail,
+        Address $taxAddress
+    ): Number {
+        $productOriginalPrice = $this->getProductRegularPrice($order, $orderDetail, $taxAddress);
+
+        // If provided price is different from the catalog price we use the input price tax included as a base
+        if (!$productOriginalPrice->equals($priceTaxExcluded)) {
+            return $priceTaxIncluded;
+        }
+
+        $productTaxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
+        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
+
+        return $priceTaxExcluded->times($taxFactor);
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param Address $taxAddress
+     *
+     * @return Number
+     */
+    private function getProductRegularPrice(
+        Order $order,
+        OrderDetail $orderDetail,
+        Address $taxAddress
+    ): Number {
+        // Get price via getPriceStatic so that the catalog price rules are applied
+
+        return new Number((string) Product::getPriceStatic(
+            (int) $orderDetail->product_id,
+            false,
+            (int) $orderDetail->product_attribute_id,
+            self::COMPARISON_PRECISION,
+            null,
+            false,
+            true,
+            1,
+            false,
+            $order->id_customer, // We still use the customer ID in case this customer has some special prices
+            null, // But we keep the cart null as we don't want this order overridden price
+            $taxAddress->id
+        ));
     }
 
     /**
