@@ -45,3 +45,9 @@ UPDATE `PREFIX_product` SET `location` = '' WHERE `location` IS NULL;
 ALTER TABLE `PREFIX_product` MODIFY COLUMN `location` VARCHAR(255) NOT NULL DEFAULT '';
 UPDATE `PREFIX_product_attribute` SET `location` = '' WHERE `location` IS NULL;
 ALTER TABLE `PREFIX_product_attribute` MODIFY COLUMN `location` VARCHAR(255) NOT NULL DEFAULT '';
+
+UPDATE `PREFIX_product` SET `redirect_type` = '404' WHERE `redirect_type` = '';
+ALTER TABLE `PREFIX_product` MODIFY COLUMN `redirect_type` ENUM(
+    '404', '301-product', '302-product', '301-category', '302-category'
+) NOT NULL DEFAULT '404';
+
