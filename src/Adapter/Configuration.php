@@ -289,6 +289,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
     /**
      * @param string $key
+     *
      * @return bool
      */
     public function isOverridenByCurrentContext(string $key): bool

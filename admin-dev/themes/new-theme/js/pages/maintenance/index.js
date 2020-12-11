@@ -29,8 +29,8 @@ const {$} = window;
 
 $(() => {
   $('.multistore-checkbox').on('change', function(){
-    var configurationKey = $(this).attr('multistore_configuration_key');
-    var configurationInput = $(this).closest('.form-group').find('input:not(.multistore-checkbox)');
+    const configurationKey = $(this).attr('multistore_configuration_key');
+    const configurationInput = $(this).closest('.form-group').find('input:not(.multistore-checkbox)');
 
     if ($(this).is(':checked') === false) {
       $('.col-sm[multistore_configuration_key="' + configurationKey + '"]').addClass('disabled');
@@ -44,5 +44,3 @@ $(() => {
   });
   new TinyMCEEditor();
 });
-
-
