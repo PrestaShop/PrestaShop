@@ -75,6 +75,12 @@ class CarrierGridDataFactory implements GridDataFactoryInterface
         );
     }
 
+    /**
+     * Add logo column to grid.
+     *
+     * @param array $carriers
+     * @return array
+     */
     private function applyModifications(array $carriers): array
     {
         foreach ($carriers as $i => $carrier) {
