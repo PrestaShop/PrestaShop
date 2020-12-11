@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
@@ -39,9 +41,15 @@ class MaintenanceConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
+    /**
+     * @var Context
+     */
+    private $shopContext;
+
+    public function __construct(Configuration $configuration, Context $shopContext)
     {
         $this->configuration = $configuration;
+        $this->shopContext = $shopContext;
     }
 
     /**
@@ -61,24 +69,28 @@ class MaintenanceConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop']);
-            $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip']);
-            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], null, ['html' => true]);
+        $shopConstraint = null;
+        if (!$this->shopContext->isAllShopContext()) {
+            $contextShopGroup = $this->shopContext->getContextShopGroup();
+            $contextShopId = $this->shopContext->getContextShopID();
+            $contextShopId = (int) $contextShopId > 0 ? $contextShopId : null;
+
+            $shopConstraint = new ShopConstraint(
+                $contextShopId,
+                $contextShopGroup->id
+            );
+        }
+
+        if (isset($configuration['enable_shop'])) {
+            $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop'], $shopConstraint);
+        }
+        if (isset($configuration['maintenance_ip'])) {
+            $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip'], $shopConstraint);
+        }
+        if (isset($configuration['maintenance_text'])) {
+            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], $shopConstraint, ['html' => true]);
         }
 
         return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateConfiguration(array $configuration)
-    {
-        return isset(
-            $configuration['enable_shop'],
-            $configuration['maintenance_ip'],
-            $configuration['maintenance_text']
-        );
     }
 }
