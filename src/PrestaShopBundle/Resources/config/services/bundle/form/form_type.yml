@@ -358,6 +358,8 @@ services:
     form.type.maintenance.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
         parent: 'form.type.translatable.aware'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
         public: true
         tags:
             - { name: form.type }
