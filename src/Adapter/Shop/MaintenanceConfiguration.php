@@ -93,4 +93,13 @@ class MaintenanceConfiguration implements DataConfigurationInterface
 
         return [];
     }
+
+    /**
+     * @param array $configuration
+     * @return bool
+     */
+    public function validateConfiguration(array $configuration): bool
+    {
+        // TODO: Implement validateConfiguration() method.
+    }
 }
