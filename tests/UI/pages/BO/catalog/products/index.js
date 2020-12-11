@@ -29,6 +29,7 @@ class Product extends BOBasePage {
     this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
+    this.productBulkMenuButtonState = state => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     this.productBulkEnableLink = `${this.productBulkDropdownMenu} a[onclick*='activate_all']`;
@@ -465,7 +466,7 @@ class Product extends BOBasePage {
     ]);
 
     await Promise.all([
-      this.waitForVisibleSelector(page, `${this.productBulkMenuButton}[aria-expanded='true']`),
+      this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
       page.click(this.productBulkMenuButton),
     ]);
 
@@ -491,7 +492,7 @@ class Product extends BOBasePage {
     ]);
 
     await Promise.all([
-      this.waitForVisibleSelector(page, `${this.productBulkMenuButton}[aria-expanded='true']`),
+      this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
       page.click(this.productBulkMenuButton),
     ]);
 
