@@ -825,6 +825,24 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     */
+    public function getShippingAction(int $orderId)
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        return $this->json([
+            'total' => count($orderForViewing->getShipping()->getCarriers()),
+            'html' => $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig', [
+                'orderForViewing' => $orderForViewing,
+            ])->getContent(),
+        ]);
+    }
+
+    /**
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
