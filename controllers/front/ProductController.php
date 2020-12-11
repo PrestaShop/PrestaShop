@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -83,11 +84,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
-    public function getCanonicalUrl(): string
+    public function getCanonicalURL(): string
     {
         $product = $this->context->smarty->getTemplateVars('product');
 
-        if (!($product instanceof Product)) {
+        if (!($product instanceof ProductLazyArray)) {
             return '';
         }
 
