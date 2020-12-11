@@ -121,7 +121,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
-    private function applyFilters(QueryBuilder $qb, array $filters)
+    private function applyFilters(QueryBuilder $qb, array $filters): void
     {
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, self::ALLOWED_FILTERS)) {

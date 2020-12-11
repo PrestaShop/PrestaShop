@@ -61,7 +61,7 @@ class BulkToggleCarrierStatusCommand
     /**
      * @return CarrierId[]
      */
-    public function getCarrierIds()
+    public function getCarrierIds(): array
     {
         return $this->carrierIds;
     }
@@ -71,7 +71,7 @@ class BulkToggleCarrierStatusCommand
      *
      * @throws CarrierConstraintException
      */
-    private function setCarrierIds(array $carrierIds)
+    private function setCarrierIds(array $carrierIds): void
     {
         foreach ($carrierIds as $carrierId) {
             $this->carrierIds[] = new CarrierId((int) $carrierId);
@@ -81,7 +81,7 @@ class BulkToggleCarrierStatusCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus()
+    public function getExpectedStatus(): bool
     {
         return $this->expectedStatus;
     }
