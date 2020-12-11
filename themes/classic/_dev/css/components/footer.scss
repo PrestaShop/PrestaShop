@@ -1,4 +1,9 @@
+#footer {
+  padding-top: 2.5rem;
+}
+
 .block-contact {
+  font-size: 0.875rem;
   color: $gray;
 
   .block-contact-title {
@@ -178,10 +183,15 @@
 }
 
 .footer-container {
-  padding-top: $medium-space;
-  margin-top: $medium-space;
+  padding-top: $extra-large-space;
   overflow: hidden;
   box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.3);
+
+  .h3,
+  .h4 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
 
   li {
     margin-bottom: 0.3125rem;
