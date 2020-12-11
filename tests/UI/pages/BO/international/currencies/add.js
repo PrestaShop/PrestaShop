@@ -53,7 +53,7 @@ class AddCurrency extends BOBasePage {
     for (let i = 0; i < 50 && !inputHasValue; i++) {
       /* eslint-env browser */
       inputHasValue = await page.evaluate(
-        selector => document.querySelector(selector).value !== "",
+        selector => document.querySelector(selector).value !== '',
         this.currencyNameInput(1),
       );
 
