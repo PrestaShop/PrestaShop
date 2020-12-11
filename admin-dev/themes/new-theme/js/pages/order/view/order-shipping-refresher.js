@@ -35,7 +35,7 @@ export default class OrderShippingRefresher {
     }
 
     refresh(orderId) {
-        $.ajax(this.router.generate('admin_orders_get_shipping', {orderId}))
+        $.getJSON(this.router.generate('admin_orders_get_shipping', {orderId}))
             .then((response) => {
                 $(OrderViewPageMap.orderShippingTabCount).text(response.total);
                 $(OrderViewPageMap.orderShippingTabBody).html(response.html);
