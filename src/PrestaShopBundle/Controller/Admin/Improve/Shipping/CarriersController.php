@@ -66,7 +66,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request, CarrierFilters $filters)
+    public function indexAction(Request $request, CarrierFilters $filters): Response
     {
         $carrierGridFactory = $this->get('prestashop.core.grid.factory.carrier');
         $carrierGrid = $carrierGridFactory->getGrid($filters);

@@ -54,7 +54,7 @@ class DeleteCarrierCommand
     /**
      * @return CarrierId
      */
-    public function getCarrierId()
+    public function getCarrierId(): CarrierId
     {
         return $this->carrierId;
     }

@@ -75,7 +75,7 @@ class CarrierGridDataFactory implements GridDataFactoryInterface
         );
     }
 
-    private function applyModifications(array $carriers)
+    private function applyModifications(array $carriers): array
     {
         foreach ($carriers as $i => $carrier) {
             $carriers[$i]['logo'] = $this->carrierLogoProvider->getPath($carrier['id_carrier']);

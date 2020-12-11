@@ -242,7 +242,7 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
     }
 
-    private function getRowActions()
+    private function getRowActions(): RowActionCollection
     {
         return (new RowActionCollection())
             ->add(

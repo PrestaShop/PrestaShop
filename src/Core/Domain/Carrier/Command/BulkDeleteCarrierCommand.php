@@ -54,7 +54,7 @@ class BulkDeleteCarrierCommand
     /**
      * @return CarrierId[]
      */
-    public function getCarrierIds()
+    public function getCarrierIds(): array
     {
         return $this->carrierIds;
     }
@@ -64,7 +64,7 @@ class BulkDeleteCarrierCommand
      *
      * @throws CarrierConstraintException
      */
-    private function setCarrierIds(array $carrierIds)
+    private function setCarrierIds(array $carrierIds): void
     {
         foreach ($carrierIds as $carrierId) {
             $this->carrierIds[] = new CarrierId((int) $carrierId);
