@@ -43,7 +43,6 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -186,12 +185,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($command->getProductPriceTaxIncluded(), $command->getProductPriceTaxExcluded(), $order, $product, $combination);
             $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($command->getProductPriceTaxIncluded(), $command->getProductPriceTaxExcluded(), $order, $product, $combination);
             $createdProducts = $this->getCreatedCartProducts(
-                $product->id,
-                $combinationId,
                 $creationModifications,
-                $updatedCartProducts,
-                $precisePriceTaxExcluded,
-                $precisePriceTaxIncluded
+                $updatedCartProducts
             );
 
             $invoice = $this->createNewOrEditExistingInvoice(
@@ -209,7 +204,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $createdProducts
             );
 
-            // Update other order details so that Cart::getProducts will use the correct price
+            // Once OrderDetail has been created we update it (and identical ones) with the correct price
             $this->orderDetailUpdater->updateIdenticalOrderDetails(
                 $order,
                 $command->getProductId()->getValue(),
@@ -306,22 +301,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param int $productId
-     * @param int $combinationId
      * @param CartProductUpdate[] $creationUpdates
      * @param CartProductUpdate[] $cartProducts
-     * @param Number $priceTaxExcluded
-     * @param Number $priceTaxIncluded
      *
      * @return array
      */
     private function getCreatedCartProducts(
-        int $productId,
-        int $combinationId,
         array $creationUpdates,
-        array $cartProducts,
-        Number $priceTaxExcluded,
-        Number $priceTaxIncluded
+        array $cartProducts
     ): array {
         $additionalProducts = [];
         foreach ($creationUpdates as $additionalUpdate) {
@@ -332,14 +319,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 'id_product_attribute' => $updateCombinationId,
             ]);
             $cartProduct['cart_quantity'] = $additionalUpdate->getDeltaQuantity();
-
-            // If this is the new added product we override the product with the data from command so that OrderDetail contains the right amount
-            if ($productId === $updateProductId && $combinationId === $updateCombinationId) {
-                $cartProduct['price'] = (float) (string) $priceTaxExcluded;
-                $cartProduct['price_wt'] = (float) (string) $priceTaxIncluded;
-                $cartProduct['total'] = $cartProduct['price'] * $additionalUpdate->getDeltaQuantity();
-                $cartProduct['total_wt'] = $cartProduct['price_wt'] * $additionalUpdate->getDeltaQuantity();
-            }
             $additionalProducts[] = $cartProduct;
         }
 
