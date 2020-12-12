@@ -268,7 +268,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
         .true;
     });
 
-    it("should show no payment needed text", async function () {
+    it("should contain no payment needed text", async function () {
       await testContext.addContextItem(
         this,
         "testIdentifier",
@@ -276,12 +276,11 @@ describe("Create 100% discount with free shipping discount code", async () => {
         baseContext
       );
 
-      // we should have a "no payment needed text" and the button should be enabled
-      const isPaymentNotNeededVisible = await checkoutPage.isPaymentNotNeedNotificationVisible(
-        page
+      const noPaymentNeededText = await checkoutPage.getTextContent(
+        page,
+        checkoutPage.noPaymentNeededElement
       );
-      await expect(isPaymentNotNeededVisible, "No payment needed notification")
-        .to.be.true;
+      await expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
     });
 
     it("complete order button should be enabled", async function () {
@@ -295,10 +294,8 @@ describe("Create 100% discount with free shipping discount code", async () => {
       const confirmButtonVisible = await checkoutPage.paymentConfirmationButton(
         page
       );
-      await expect(confirmButtonVisible, "Confirm button visible")
-        .to.be.true;
+      await expect(confirmButtonVisible, "Confirm button visible").to.be.true;
     });
-
 
     it("should complete the order", async function () {
       await testContext.addContextItem(
