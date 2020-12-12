@@ -116,6 +116,16 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Is confirm button visible and enabled
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isPaymentConfirmationButtonVisibleAndEnabled(page) {
+    // small side effect note, the selector is the one that checks for disabled
+    return this.elementVisible(page, this.paymentConfirmationButton, 1000);
+  }
+
+  /**
    * Get selected shipping method name
    * @param page
    * @return {Promise<string>}
