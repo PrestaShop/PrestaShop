@@ -291,7 +291,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
         baseContext
       );
 
-      const confirmButtonVisible = await checkoutPage.paymentConfirmationButton(
+      const confirmButtonVisible = await checkoutPage.isPaymentConfirmationButtonVisibleAndEnabled(
         page
       );
       await expect(confirmButtonVisible, "Confirm button visible").to.be.true;
