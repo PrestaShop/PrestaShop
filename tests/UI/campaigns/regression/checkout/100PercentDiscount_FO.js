@@ -254,11 +254,11 @@ describe("Create 100% discount with free shipping discount code", async () => {
         .true;
     });
 
-    it("should validate the order", async function () {
+    it("should go to last step", async function () {
       await testContext.addContextItem(
         this,
         "testIdentifier",
-        "validateOrder",
+        "goToLastStep",
         baseContext
       );
 
@@ -266,14 +266,58 @@ describe("Create 100% discount with free shipping discount code", async () => {
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, "Step Address is not complete").to.be
         .true;
+    });
 
-      // finally test it :)
+    it("should show no payment needed text", async function () {
+      await testContext.addContextItem(
+        this,
+        "testIdentifier",
+        "checkNoPaymentNeededText",
+        baseContext
+      );
+
       // we should have a "no payment needed text" and the button should be enabled
+      const isPaymentNotNeededVisible = await checkoutPage.isPaymentNotNeedNotificationVisible(
+        page
+      );
+      await expect(isPaymentNotNeededVisible, "No payment needed notification")
+        .to.be.true;
+    });
 
-      // and click on the button should take us to the confirmationpage
+    it("complete order button should be enabled", async function () {
+      await testContext.addContextItem(
+        this,
+        "testIdentifier",
+        "checkCompleteIsNotDisabled",
+        baseContext
+      );
+
+      const confirmButtonVisible = await checkoutPage.paymentConfirmationButton(
+        page
+      );
+      await expect(confirmButtonVisible, "Confirm button visible")
+        .to.be.true;
+    });
+
+
+    it("should complete the order", async function () {
+      await testContext.addContextItem(
+        this,
+        "testIdentifier",
+        "completeOrder",
+        baseContext
+      );
+
+      // and click on the confirm button should take us to the confirmationpage
+      await checkoutPage.clickAndWaitForNavigation(
+        page,
+        checkoutPage.paymentConfirmationButton
+      );
 
       // Check that we got to order confirmation (probably not necessary)
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(
+        page
+      );
       await expect(cardTitle).to.contains(
         orderConfirmationPage.orderConfirmationCardTitle
       );
