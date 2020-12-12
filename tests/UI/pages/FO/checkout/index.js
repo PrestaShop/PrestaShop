@@ -13,6 +13,7 @@ class Checkout extends FOBasePage {
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
+    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p`;
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
     this.createAccountOptionalNotice = `${this.personalInformationStepForm} #customer-form section p`;
