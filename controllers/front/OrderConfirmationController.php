@@ -70,7 +70,7 @@ class OrderConfirmationControllerCore extends FrontController
 
         // free order uses -1 as id_module, it has a special check here
         if ($this->id_module == -1) {
-            if ($order->module != "free_order") {
+            if ($order->module != 'free_order') {
                 Tools::redirect($redirectLink);
             }
         } else {
