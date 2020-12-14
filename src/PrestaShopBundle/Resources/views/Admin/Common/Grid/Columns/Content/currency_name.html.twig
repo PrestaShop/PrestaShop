@@ -24,3 +24,9 @@
   *#}
 
 {{ record[column.options.field] }}
+
+{% if record.unofficial %}
+  <i class="material-icons unofficial">person</i>
+{% elseif record.modified %}
+  ({{ 'Edited' | trans({}, 'Admin.International.Feature') }})
+{% endif %}
