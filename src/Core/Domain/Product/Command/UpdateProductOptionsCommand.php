@@ -32,13 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 
 class UpdateProductOptionsCommand
 {
@@ -46,6 +42,11 @@ class UpdateProductOptionsCommand
      * @var ProductId
      */
     private $productId;
+
+    /**
+     * @var bool|null
+     */
+    private $active;
 
     /**
      * @var ProductVisibility|null
@@ -73,29 +74,9 @@ class UpdateProductOptionsCommand
     private $condition;
 
     /**
-     * @var Isbn|null
+     * @var bool|null
      */
-    private $isbn;
-
-    /**
-     * @var Upc|null
-     */
-    private $upc;
-
-    /**
-     * @var Ean13|null
-     */
-    private $ean13;
-
-    /**
-     * @var string|null
-     */
-    private $mpn;
-
-    /**
-     * @var Reference|null
-     */
-    private $reference;
+    private $showCondition;
 
     /**
      * @var ManufacturerIdInterface|null
@@ -116,6 +97,26 @@ class UpdateProductOptionsCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setActive(bool $active): UpdateProductOptionsCommand
+    {
+        $this->active = $active;
+
+        return $this;
     }
 
     /**
@@ -219,103 +220,23 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return Isbn|null
-     */
-    public function getIsbn(): ?Isbn
-    {
-        return $this->isbn;
-    }
-
-    /**
-     * @param string $isbn
+     * @param bool $showCondition
      *
-     * @return UpdateProductOptionsCommand
+     * @return $this
      */
-    public function setIsbn(string $isbn): UpdateProductOptionsCommand
+    public function setShowCondition(bool $showCondition): UpdateProductOptionsCommand
     {
-        $this->isbn = new Isbn($isbn);
+        $this->showCondition = $showCondition;
 
         return $this;
     }
 
     /**
-     * @return Upc|null
+     * @return bool|null
      */
-    public function getUpc(): ?Upc
+    public function showCondition(): ?bool
     {
-        return $this->upc;
-    }
-
-    /**
-     * @param string $upc
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setUpc(string $upc): UpdateProductOptionsCommand
-    {
-        $this->upc = new Upc($upc);
-
-        return $this;
-    }
-
-    /**
-     * @return Ean13|null
-     */
-    public function getEan13(): ?Ean13
-    {
-        return $this->ean13;
-    }
-
-    /**
-     * @param string $ean13
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setEan13(string $ean13): UpdateProductOptionsCommand
-    {
-        $this->ean13 = new Ean13($ean13);
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getMpn(): ?string
-    {
-        return $this->mpn;
-    }
-
-    /**
-     * @param string $mpn
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setMpn(string $mpn): UpdateProductOptionsCommand
-    {
-        $this->mpn = $mpn;
-
-        return $this;
-    }
-
-    /**
-     * @return Reference|null
-     */
-    public function getReference(): ?Reference
-    {
-        return $this->reference;
-    }
-
-    /**
-     * @param string $reference
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setReference(string $reference): UpdateProductOptionsCommand
-    {
-        $this->reference = new Reference($reference);
-
-        return $this;
+        return $this->showCondition;
     }
 
     /**

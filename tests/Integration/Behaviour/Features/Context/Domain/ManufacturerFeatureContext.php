@@ -289,6 +289,14 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that manufacturer does not exist
+     */
+    public function assertManufacturerDoesNotExistError()
+    {
+        $this->assertLastErrorIs(ManufacturerNotFoundException::class);
+    }
+
+    /**
      * @Given manufacturer :manufacturerReference named :name exists
      *
      * @param string $name

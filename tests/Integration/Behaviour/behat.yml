@@ -224,6 +224,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateOptionsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext

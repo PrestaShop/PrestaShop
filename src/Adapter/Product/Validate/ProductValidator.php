@@ -97,6 +97,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateCustomizability($product);
         $this->validateBasicInfo($product);
         $this->validateOptions($product);
+        $this->validateDetails($product);
         $this->validateShipping($product);
         $this->validateStock($product);
         $this->validateSeo($product);
@@ -110,9 +111,9 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateCustomizability(Product $product): void
     {
-        $this->validateProductProperty($product, 'customizable');
-        $this->validateProductProperty($product, 'text_fields');
-        $this->validateProductProperty($product, 'uploadable_files');
+        $this->validateProductProperty($product, 'customizable', ProductConstraintException::INVALID_CUSTOMIZABILITY);
+        $this->validateProductProperty($product, 'text_fields', ProductConstraintException::INVALID_TEXT_FIELDS_COUNT);
+        $this->validateProductProperty($product, 'uploadable_files', ProductConstraintException::INVALID_UPLOADABLE_FILES_COUNT);
     }
 
     /**
@@ -134,12 +135,23 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateOptions(Product $product): void
     {
-        $this->validateProductProperty($product, 'available_for_order');
-        $this->validateProductProperty($product, 'online_only');
-        $this->validateProductProperty($product, 'show_price');
-        $this->validateProductProperty($product, 'id_manufacturer');
+        $this->validateProductProperty($product, 'available_for_order', ProductConstraintException::INVALID_AVAILABLE_FOR_ORDER);
+        $this->validateProductProperty($product, 'online_only', ProductConstraintException::INVALID_ONLINE_ONLY);
+        $this->validateProductProperty($product, 'show_price', ProductConstraintException::INVALID_SHOW_PRICE);
+        $this->validateProductProperty($product, 'id_manufacturer', ProductConstraintException::INVALID_MANUFACTURER_ID);
         $this->validateProductProperty($product, 'visibility', ProductConstraintException::INVALID_VISIBILITY);
         $this->validateProductProperty($product, 'condition', ProductConstraintException::INVALID_CONDITION);
+        $this->validateProductProperty($product, 'show_condition', ProductConstraintException::INVALID_SHOW_CONDITION);
+        $this->validateProductProperty($product, 'active', ProductConstraintException::INVALID_STATUS);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateDetails(Product $product): void
+    {
         $this->validateProductProperty($product, 'ean13', ProductConstraintException::INVALID_EAN_13);
         $this->validateProductProperty($product, 'isbn', ProductConstraintException::INVALID_ISBN);
         $this->validateProductProperty($product, 'mpn', ProductConstraintException::INVALID_MPN);
@@ -159,7 +171,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'depth', ProductConstraintException::INVALID_DEPTH);
         $this->validateProductProperty($product, 'weight', ProductConstraintException::INVALID_WEIGHT);
         $this->validateProductProperty($product, 'additional_shipping_cost', ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST);
-        $this->validateProductProperty($product, 'additional_delivery_times');
+        $this->validateProductProperty($product, 'additional_delivery_times', ProductConstraintException::INVALID_ADDITIONAL_DELIVERY_TIME_NOTES_TYPE);
         $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
         $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
     }
