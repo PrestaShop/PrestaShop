@@ -66,19 +66,19 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productId = $this->getProductIdByName($productName);
 
         $product = new Product($productId);
-        $category = new Category($product->id_category_default);
-        if (!$category) {
+        if (!Category::categoryExists($product->id_category_default)) {
             throw new RuntimeException('The product doesn\'t have default category');
         }
 
         $customerId = SharedStorage::getStorage()->get($customerReference);
-        $customer = new Customer((int) $customerId);
-        if (!$customer) {
+        if (!Customer::customerIdExistsStatic($customerId)) {
             throw new RuntimeException('The customer doesn\'t exist');
         }
 
+        $customer = new Customer((int) $customerId);
+
         $groupReduction = new GroupReduction();
-        $groupReduction->id_category = $category->id;
+        $groupReduction->id_category = $product->id_category_default;
         $groupReduction->id_group = $customer->id_default_group;
         $groupReduction->reduction = $reductionPercent / 100;
 
