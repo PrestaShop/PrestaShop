@@ -75,7 +75,7 @@
                   {l s='Help' d='Admin.Global'}
                 </a>
               {else}
-                <a class="btn btn-outline-secondary" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
+                <a class="btn btn-outline-secondary btn-help" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
                   {l s='Help' d='Admin.Global'}
                 </a>
               {/if}
