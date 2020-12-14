@@ -86,9 +86,9 @@ describe('Check customer subscription to newsletter from BO', async () => {
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
 
-      await customersPage.updateToggleColumnValue(page, 1, 'newsletter', test.args.value);
+      await customersPage.setNewsletterStatus(page, 1, test.args.value);
 
-      const newsletterStatus = await customersPage.getToggleColumnValue(page, 1, 'newsletter');
+      const newsletterStatus = await customersPage.getNewsletterStatus(page, 1);
       await expect(newsletterStatus).to.be.equal(test.args.value);
     });
 
