@@ -226,9 +226,9 @@ class ProductStockInformation
     }
 
     /**
-     * @return DateTimeInterface
+     * @return DateTimeInterface|null
      */
-    public function getAvailableDate(): DateTimeInterface
+    public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
     }

@@ -217,6 +217,12 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'minimal_quantity', ProductConstraintException::INVALID_MINIMAL_QUANTITY);
         $this->validateProductLocalizedProperty($product, 'available_later', ProductConstraintException::INVALID_AVAILABLE_LATER);
         $this->validateProductLocalizedProperty($product, 'available_now', ProductConstraintException::INVALID_AVAILABLE_NOW);
+        $this->validateObjectModelProperty(
+            $product,
+            'location',
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INVALID_LOCATION
+        );
     }
 
     /**
