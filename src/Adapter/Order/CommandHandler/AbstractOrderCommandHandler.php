@@ -26,14 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Address;
+use Cart;
 use Configuration;
 use Context;
+use Country;
+use Currency;
+use Customer;
+use Language;
+use Order;
 use OrderDetail;
 use Pack;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use Product;
+use Shop;
 use StockAvailable;
 use StockManagerFactory;
 use StockMvt;
@@ -168,5 +177,48 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
         } else {
             throw new OrderException('This product cannot be re-stocked.');
         }
+    }
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     * @param Cart $cart
+     */
+    protected function setCartContext(ContextStateManager $contextStateManager, Cart $cart): void
+    {
+        $contextStateManager
+            ->setCart($cart)
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCountry($this->getCartTaxCountry($cart))
+            ->setShop(new Shop($cart->id_shop))
+        ;
+    }
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     * @param Order $order
+     */
+    protected function setOrderContext(ContextStateManager $contextStateManager, Order $order): void
+    {
+        $cart = new Cart($order->id_cart);
+        $this->setCartContext($contextStateManager, $cart);
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return Country
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    protected function getCartTaxCountry(Cart $cart): Country
+    {
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
+        $taxAddress = new Address($taxAddressId);
+
+        return new Country($taxAddress->id_country);
     }
 }

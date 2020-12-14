@@ -75,8 +75,8 @@ Feature: Cancel Order Product from Back Office (BO)
       | total_refunded_tax_excl     | 0.000000    |
       | total_refunded_tax_incl     | 0.000000    |
     And there are 2 more "Mug The best is yet to come" in stock
-    And there are 1 more "Mug Today is a good day" in stock
-    And there are 1 more "Customizable mug" in stock
+    And there is 1 more "Mug Today is a good day" in stock
+    And there is 1 more "Customizable mug" in stock
     And order "bo_order_cancel_product" should have following details:
       | total_products           | 73.40  |
       | total_products_wt        | 77.80  |

@@ -93,6 +93,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\RoundingTypeConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\PriceDisplayMethodConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext

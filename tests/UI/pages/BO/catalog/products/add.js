@@ -8,9 +8,12 @@ class AddProduct extends BOBasePage {
     this.pageTitle = 'Product •';
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
+    this.duplicateSuccessfulMessage = 'Product successfully duplicated.';
     this.errorMessage = 'Unable to update settings.';
     this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
       + ` It should have ${number} characters or less.`;
+
+
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
@@ -121,8 +124,14 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page) {
-    await page.click(this.saveProductButton);
-    return this.closeGrowlMessage(page);
+    const [growlTextMessage] = await Promise.all([
+      this.getGrowlMessageContent(page),
+      page.click(this.saveProductButton),
+    ]);
+
+    await this.closeGrowlMessage(page);
+
+    return growlTextMessage;
   }
 
   /**
@@ -388,12 +397,15 @@ class AddProduct extends BOBasePage {
     await this.setValue(page, this.startingAtInput, specificPriceData.startingAt.toString());
     await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount.toString());
     await this.selectByVisibleText(page, this.reductionType, specificPriceData.reductionType);
+
     // Apply specific price
-    await Promise.all([
-      this.scrollTo(page, this.applyButton),
+    await this.scrollTo(page, this.applyButton);
+    const [growlMessageText] = await Promise.all([
+      this.getGrowlMessageContent(page),
       page.click(this.applyButton),
     ]);
-    const growlMessageText = await this.closeGrowlMessage(page);
+
+    await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);
     return growlMessageText;
   }
@@ -450,6 +462,15 @@ class AddProduct extends BOBasePage {
     for (let i = 0; i < keys.length; i += 1) {
       await this.addProductToPack(page, keys[i], pack[keys[i]]);
     }
+  }
+
+  /**
+   * Get product name from input
+   * @param page
+   * @return {Promise<string>}
+   */
+  getProductName(page) {
+    return this.getAttributeContent(page, this.productNameInput, 'value');
   }
 }
 
