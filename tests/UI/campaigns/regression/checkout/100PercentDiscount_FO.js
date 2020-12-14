@@ -14,28 +14,15 @@ const cartRulesPage = require("@pages/BO/catalog/discounts");
 const addCartRulePage = require("@pages/BO/catalog/discounts/add");
 const orderSettingsPage = require("@pages/BO/shopParameters/orderSettings");
 
-const localizationPage = require("@pages/BO/international/localization");
-const currenciesPage = require("@pages/BO/international/currencies");
-const addCurrencyPage = require("@pages/BO/international/currencies/add");
-const ordersPage = require("@pages/BO/orders");
-const sqlManagerPage = require("@pages/BO/advancedParameters/database/sqlManager");
-const addSqlQueryPage = require("@pages/BO/advancedParameters/database/sqlManager/add");
-const viewSqlQueryPage = require("@pages/BO/advancedParameters/database/sqlManager/view");
 
 // FO pages
 const homePage = require("@pages/FO/home");
-const searchResultsPage = require("@pages/FO/searchResults");
-const foLoginPage = require("@pages/FO/login");
-const productPage = require("@pages/FO/product");
 const cartPage = require("@pages/FO/cart");
 const checkoutPage = require("@pages/FO/checkout");
 const orderConfirmationPage = require("@pages/FO/checkout/orderConfirmation");
 
 // Import expect from chai
 const { expect } = require("chai");
-
-// Import demo data
-const { PaymentMethods } = require("@data/demo/paymentMethods");
 
 // Import faker data
 const CartRuleFaker = require("@data/faker/cartRule");
@@ -49,6 +36,7 @@ const percentCartRule = new CartRuleFaker({
   discountPercent: 100,
   freeShipping: "on",
 });
+
 const customerData = new CustomerFaker({ password: "" });
 const addressData = new AddressFaker();
 
@@ -135,6 +123,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
           page,
           percentCartRule
         );
+        
         await expect(validationMessage).to.contains(
           addCartRulePage.successfulCreationMessage
         );
@@ -159,7 +148,15 @@ describe("Create 100% discount with free shipping discount code", async () => {
         const pageTitle = await orderSettingsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
+      
       it("Should change the terms and conditions back to disabled", async () => {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          'dissableTermAndConditions',
+          baseContext,
+        );
+        
         const result = await orderSettingsPage.setTermsOfService(page, false);
         await expect(result).to.contains(
           orderSettingsPage.successfulUpdateMessage
@@ -200,7 +197,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
       await expect(pageTitle).to.equal(cartPage.pageTitle);
     });
 
-    it("should add our discount code and check that the grandtotal is 0", async function () {
+    it("should add our discount code and check that the total price is 0", async function () {
       await testContext.addContextItem(
         this,
         "testIdentifier",
@@ -210,11 +207,18 @@ describe("Create 100% discount with free shipping discount code", async () => {
 
       await cartPage.addPromoCode(page, percentCartRule.code);
 
-      const grandTotal = await cartPage.getATIPrice(page);
-      await expect(grandTotal, "Order total price is incorrect").to.equal(0);
+      const totalPrice = await cartPage.getATIPrice(page);
+      await expect(totalPrice, "Order total price is incorrect").to.equal(0);
     });
 
     it("should go to checkout process", async function () {
+      await testContext.addContextItem(
+        this,
+        "testIdentifier",
+        "proceedToCheckout",
+        baseContext
+      );
+      
       await cartPage.clickOnProceedToCheckout(page);
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage).to.be.true;
@@ -250,8 +254,9 @@ describe("Create 100% discount with free shipping discount code", async () => {
         page,
         addressData
       );
-      await expect(isStepAddressComplete, "Step Address is not complete").to.be
-        .true;
+      
+      await expect(isStepAddressComplete, "Step Address is not complete")
+        .to.be.true;
     });
 
     it("should go to last step", async function () {
@@ -264,8 +269,8 @@ describe("Create 100% discount with free shipping discount code", async () => {
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, "Step Address is not complete").to.be
-        .true;
+      await expect(isStepDeliveryComplete, "Step Address is not complete")
+        .to.be.true;
     });
 
     it("should contain no payment needed text", async function () {
@@ -280,6 +285,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
         page,
         checkoutPage.noPaymentNeededElement
       );
+      
       await expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
     });
 
@@ -294,6 +300,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
       const confirmButtonVisible = await checkoutPage.isPaymentConfirmationButtonVisibleAndEnabled(
         page
       );
+      
       await expect(confirmButtonVisible, "Confirm button visible").to.be.true;
     });
 
@@ -315,6 +322,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(
         page
       );
+      
       await expect(cardTitle).to.contains(
         orderConfirmationPage.orderConfirmationCardTitle
       );
@@ -399,6 +407,7 @@ describe("Create 100% discount with free shipping discount code", async () => {
           true,
           "Terms and conditions of use"
         );
+        
         await expect(result).to.contains(
           orderSettingsPage.successfulUpdateMessage
         );
