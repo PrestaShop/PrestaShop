@@ -30,18 +30,20 @@
   <div class="card">
     <h3 class="card-header">
       {{ 'Options'|trans({}, 'Admin.Global') }}
+
+      <span
+        class="help-box"
+        data-container="body"
+        data-toggle="popover"
+        data-trigger="hover"
+        data-placement="right"
+        data-content="{{ 'The following features are only available if you enable the Geolocation by IP address feature.'|trans }}"
+        title
+      >
+      </span>
     </h3>
     <div class="card-block row">
       <div class="card-text">
-        <div class="row">
-          <div class="col">
-            <div class="alert alert-info" role="alert">
-              <span class="alert-text">
-                {{ 'The following features are only available if you enable the Geolocation by IP address feature.'|trans }}
-              </span>
-            </div>
-          </div>
-        </div>
         {{ form_widget(geolocationOptionsForm) }}
       </div>
     </div>
