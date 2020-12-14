@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Preferences;
 
+use Cookie;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
@@ -70,6 +71,16 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
+        if ($this->validateSameSiteConfiguration($configuration)) {
+            return [
+                [
+                    'key' => 'Cannot disable SSL configuration due to the Cookie SameSite=None.',
+                    'domain' => 'Admin.Advparameters.Notification',
+                    'parameters' => [],
+                ],
+            ];
+        }
+
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
             $this->configuration->set('PS_SSL_ENABLED_EVERYWHERE', $configuration['enable_ssl_everywhere']);
@@ -86,6 +97,23 @@ class PreferencesConfiguration implements DataConfigurationInterface
         }
 
         return [];
+    }
+
+    /**
+     * Validate the SSL configuration can be disabled if the SameSite Cookie
+     * is not settled to None
+     *
+     * @param array $configuration
+     *
+     * @return bool
+     */
+    protected function validateSameSiteConfiguration(array $configuration): bool
+    {
+        return (
+            $configuration['enable_ssl'] === false
+            || $configuration['enable_ssl_everywhere'] === false
+        )
+            && $this->configuration->get('PS_COOKIE_SAMESITE') === Cookie::SAMESITE_NONE;
     }
 
     /**
