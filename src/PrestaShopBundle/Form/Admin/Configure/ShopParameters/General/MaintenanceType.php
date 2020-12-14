@@ -109,7 +109,7 @@ class MaintenanceType extends TranslatorAwareType
                     'disabled' => true,
                     'attr' => [
                         'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
-                        'disabled' => !$this->g && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_TEXT'),
+                        'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_TEXT'),
                     ],
                 ]
             );
