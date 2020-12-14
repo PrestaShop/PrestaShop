@@ -25,6 +25,7 @@
 
 import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
+import _ from 'lodash';
 import createOrderMap from './create-order-map';
 import CustomerManager from './customer-manager';
 import ShippingRenderer from './shipping-renderer';
@@ -39,7 +40,6 @@ import ProductRenderer from './product-renderer';
 import SummaryRenderer from './summary-renderer';
 import SummaryManager from './summary-manager';
 import {ValidateAddresses} from './address-validator';
-import _ from 'lodash';
 
 const {$} = window;
 
@@ -264,11 +264,11 @@ export default class CreateOrderPage {
       _.debounce((e) => {
         const inputsQty = document.querySelectorAll(createOrderMap.listedProductQtyInput);
 
-        inputsQty.forEach(inputQty => {
+        inputsQty.forEach((inputQty) => {
           inputQty.setAttribute('disabled', true);
         });
         this.initProductChangeQty(e);
-      }, 500)
+      }, 500),
     );
     this.$container.on('change', createOrderMap.addressSelect, () => this.changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, (e) => this.initProductRemoveFromCart(e));
@@ -454,8 +454,8 @@ export default class CreateOrderPage {
       const cartRuleId = $(event.currentTarget).data('cart-rule-id');
       this.cartRuleManager.addCartRuleToCart(cartRuleId, this.cartId);
 
-        // manually fire blur event after cart rule is selected.
-      })
+      // manually fire blur event after cart rule is selected.
+    })
       .on('click', createOrderMap.foundCartRuleListItem, () => {
         $(createOrderMap.cartRuleSearchInput).blur();
       });
@@ -518,7 +518,7 @@ export default class CreateOrderPage {
       productId: $(event.currentTarget).data('product-id'),
       attributeId: $(event.currentTarget).data('attribute-id'),
       customizationId: $(event.currentTarget).data('customization-id'),
-      price: $(event.currentTarget).val()
+      price: $(event.currentTarget).val(),
     };
     this.productManager.changeProductPrice(this.cartId, this.customerId, product);
   }
@@ -540,10 +540,10 @@ export default class CreateOrderPage {
     };
 
     if (
-      typeof product.productId !== 'undefined' &&
-      product.productId !== null &&
-      typeof product.attributeId !== 'undefined' &&
-      product.attributeId !== null
+      typeof product.productId !== 'undefined'
+      && product.productId !== null
+      && typeof product.attributeId !== 'undefined'
+      && product.attributeId !== null
     ) {
       this.productManager.changeProductQty(this.cartId, product);
     } else {
