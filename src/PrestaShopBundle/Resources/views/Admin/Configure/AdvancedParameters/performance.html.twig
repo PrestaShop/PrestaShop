@@ -92,16 +92,20 @@
           <div class="card" id="optional_features">
             <h3 class="card-header">
               <i class="material-icons">extension</i> {{ 'Optional features'|trans }}
+
+              <span
+                class="help-box"
+                data-container="body"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-placement="right"
+                data-content="{{ 'Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help') }}"
+                title
+              >
+              </span>
             </h3>
             <div class="card-block row">
               <div class="card-text">
-
-                <div class="row">
-                  <div class="col">
-                    {{ ps.infotip('Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help')) }}
-                  </div>
-                </div>
-
                 {% block perfs_form_optional_features_form %}
                   {{ form_widget(optionalFeaturesForm) }}
                 {% endblock %}
@@ -125,15 +129,21 @@
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">zoom_out_map</i> {{ 'CCC (Combine, Compress and Cache)'|trans }}
+
+
+            <span
+              class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help') }}"
+              title
+            >
+            </span>
             </h3>
             <div class="card-block row">
               <div class="card-text">
-                <div class="row">
-                  <div class="col">
-                    {{ ps.infotip('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help')) }}
-                  </div>
-                </div>
-
                 {% block perfs_form_ccc_form %}
                   {{ form_widget(combineCompressCacheForm) }}
                 {% endblock %}
@@ -157,15 +167,20 @@
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">link</i> {{ 'Media servers (use only with CCC)'|trans }}
+
+              <span
+                class="help-box"
+                data-container="body"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-placement="right"
+                data-content="{{ 'You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature') }}"
+                title
+              >
+              </span>
             </h3>
             <div class="card-block row">
               <div class="card-text">
-                <div class="row">
-                  <div class="col">
-                    {{ ps.infotip('You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature')) }}
-                  </div>
-                </div>
-
                 {% block perfs_form_media_servers_form %}
                   {{ form_widget(mediaServersForm) }}
                 {% endblock %}
