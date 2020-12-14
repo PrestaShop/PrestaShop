@@ -2748,6 +2748,7 @@ class ToolsCore
             $cache_control = "<IfModule mod_expires.c>
 	ExpiresActive On
 	ExpiresByType image/gif \"access plus 1 month\"
+    ExpiresByType image/jpg \"access plus 1 month\"
 	ExpiresByType image/jpeg \"access plus 1 month\"
 	ExpiresByType image/png \"access plus 1 month\"
 	ExpiresByType text/css \"access plus 1 week\"
@@ -2774,7 +2775,7 @@ class ToolsCore
 FileETag none
 <IfModule mod_deflate.c>
     <IfModule mod_filter.c>
-        AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype image/svg+xml
+        AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype image/svg+xml image/gif image/jpg image/jpeg image/png image/x-icon image/vnd.microsoft.icon
     </IfModule>
 </IfModule>\n\n";
             fwrite($write_fd, $cache_control);
