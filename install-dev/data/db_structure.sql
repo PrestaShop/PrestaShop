@@ -1649,7 +1649,7 @@ CREATE TABLE `PREFIX_product` (
   `redirect_type` ENUM(
     '404', '301-product', '302-product',
     '301-category', '302-category'
-  ) NOT NULL DEFAULT '',
+  ) NOT NULL DEFAULT '404',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
