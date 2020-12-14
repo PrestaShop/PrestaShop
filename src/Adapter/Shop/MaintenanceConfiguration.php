@@ -70,6 +70,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
     {
         $shopConstraint = null;
         if (!$this->shopContext->isAllShopContext()) {
+            $configuration = $this->removeDisabledFields($configuration);
             $contextShopGroup = $this->shopContext->getContextShopGroup();
             $contextShopId = $this->shopContext->getContextShopID();
             $contextShopId = (int) $contextShopId > 0 ? $contextShopId : null;
@@ -91,6 +92,26 @@ class MaintenanceConfiguration implements DataConfigurationInterface
         }
 
         return [];
+    }
+
+    /**
+     * @param array $configuration
+     *
+     * @return array
+     */
+    private function removeDisabledFields(array $configuration): array
+    {
+        if ($this->shopContext->isAllShopContext()) {
+            return $configuration;
+        }
+
+        foreach ($configuration as $key => $value) {
+            if (substr($key, 0, 11) !== 'multistore_' && $configuration['multistore_' . $key] !== true) {
+                unset($configuration[$key]);
+            }
+        }
+
+        return $configuration;
     }
 
     /**
