@@ -360,6 +360,7 @@ services:
         parent: 'form.type.translatable.aware'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
         public: true
         tags:
             - { name: form.type }

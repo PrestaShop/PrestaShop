@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\ConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\IpAddressType;
@@ -48,10 +49,20 @@ class MaintenanceType extends TranslatorAwareType
      */
     private $shopConfiguration;
 
-    public function __construct(TranslatorInterface $translator, array $locales, ShopConfigurationInterface $shopConfiguration)
-    {
+    /**
+     * @var bool
+     */
+    private $isAllShopContext;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ShopConfigurationInterface $shopConfiguration,
+        MultistoreContextCheckerInterface $multistoreContext
+    ) {
         parent::__construct($translator, $locales);
         $this->shopConfiguration = $shopConfiguration;
+        $this->isAllShopContext = $multistoreContext->isAllShopContext();
     }
 
     /**
@@ -67,7 +78,7 @@ class MaintenanceType extends TranslatorAwareType
                     'required' => true,
                     'attr' => [
                         'multistore_configuration_key' => 'PS_SHOP_ENABLE',
-                        'disabled' => !$this->shopConfiguration->isOverridenByCurrentContext('PS_SHOP_ENABLE'),
+                        'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_SHOP_ENABLE'),
                     ],
                 ]
             )
@@ -80,7 +91,7 @@ class MaintenanceType extends TranslatorAwareType
                     'attr' => [
                         'class' => 'col-md-5',
                         'multistore_configuration_key' => 'PS_MAINTENANCE_IP',
-                        'disabled' => !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_IP'),
+                        'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_IP'),
                     ],
                 ]
             )
@@ -98,7 +109,7 @@ class MaintenanceType extends TranslatorAwareType
                     'disabled' => true,
                     'attr' => [
                         'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
-                        'disabled' => !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_TEXT'),
+                        'disabled' => !$this->g && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_TEXT'),
                     ],
                 ]
             );
