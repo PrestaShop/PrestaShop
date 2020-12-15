@@ -143,12 +143,12 @@ class MultiStoreSettings extends BOBasePage {
   }
 
   /**
-   * Is toggle button visible
+   * Is action toggle button visible
    * @param page
    * @param row
    * @returns {Promise<boolean>}
    */
-  async isToggleButtonVisible(page, row) {
+  async isActionToggleButtonVisible(page, row) {
     return this.elementVisible(page, this.tableColumnActionsToggleButton(row));
   }
 

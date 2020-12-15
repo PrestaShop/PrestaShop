@@ -192,7 +192,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
 
       await multiStorePage.filterTable(page, 'a!name', updateShopGroupData.name);
 
-      const isVisible = await multiStorePage.isToggleButtonVisible(page, 1);
+      const isVisible = await multiStorePage.isActionToggleButtonVisible(page, 1);
       await expect(isVisible).to.be.false;
     });
   });
