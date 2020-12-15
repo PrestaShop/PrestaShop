@@ -49,6 +49,10 @@
         padding-right: 25px;
         text-align: right;
       }
+
+      @include media-breakpoint-down("sm") {
+        padding-left: 0;
+      }
     }
 
     &.type-hidden {
