@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
 use ErrorException;
-use PrestaShop\Decimal\Exception\DivisionByZeroException;
 use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
@@ -66,10 +65,6 @@ class VirtualProductFileUploader
      * @param string $filePath file to upload $filePath
      *
      * @return string uploaded file path
-     *
-     * @throws CannotUnlinkFileException
-     * @throws FileUploadException
-     * @throws DivisionByZeroException
      */
     public function upload(string $filePath): string
     {
@@ -102,7 +97,7 @@ class VirtualProductFileUploader
      *
      * @throws CannotUnlinkFileException
      */
-    public function removeFile(string $filePath): void
+    private function removeFile(string $filePath): void
     {
         try {
             unlink($filePath);
