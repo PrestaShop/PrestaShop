@@ -203,10 +203,7 @@ class Profiles extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextContent(page, this.profilesListTableColumn(i, column));
-      if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
-      }
+      const rowContent = await this.getTextContent(page, this.profilesListTableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;

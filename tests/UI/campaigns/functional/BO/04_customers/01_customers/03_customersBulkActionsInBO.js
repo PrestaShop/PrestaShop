@@ -127,7 +127,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
         await expect(numberOfCustomersInGrid).to.be.at.least(2);
 
         for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-          const customerStatus = await customersPage.getToggleColumnValue(page, i, 'active');
+          const customerStatus = await customersPage.getCustomerStatus(page, i);
           await expect(customerStatus).to.equals(test.args.enabledValue);
         }
       });
