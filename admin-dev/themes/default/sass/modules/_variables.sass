@@ -1,6 +1,7 @@
 // PrestaShop Admin Theme Colors
 $main-color: #363A41 !default
 $primary-color: #25B9D7 !default
+$primary-light-color: #7cd5e7 !default
 $secondary-color: $greenPrestashop !default
 $bg-content-color: #EFF1F2 !default
 
@@ -33,6 +34,10 @@ $gray: lighten(#000, 33.5%)  //#555
 $gray-light: lighten(#000, 60%)  //#999
 $gray-lighter: lighten(#000, 93.5%)  //#eee
 
+// Cards
+$card-border-color: #dbe6e9
+$card-icon-color: #6c868e;
+
 // Brand colors
 $brand-primary: $primary-color !default
 
@@ -41,21 +46,21 @@ $brand-warning: #fbbb22 !default
 $brand-danger: #E08F95 !default
 $brand-info: #25b9d7 !default
 
-$alert-success-bg:            lighten($brand-success, 30%) !default
-$alert-success-text:          $brand-success !default
-$alert-success-border:        $brand-success !default
+$alert-success-bg:            #cbf2d4 !default
+$alert-success-text:          #363a41 !default
+$alert-success-border:        #53d572 !default
 
-$alert-info-bg:               #DCF4F9 !default
-$alert-info-text:             #1e94ab !default
-$alert-info-border:           $brand-info !default
+$alert-info-bg:               #beeaf3 !default
+$alert-info-text:             #363a41 !default
+$alert-info-border:           #25b9d7 !default
 
-$alert-warning-bg:            #FFF3D7 !default
-$alert-warning-text:          #D2A63C !default
-$alert-warning-border:        #D2A63C !default
+$alert-warning-bg:            #fffbd3 !default
+$alert-warning-text:          #363a41 !default
+$alert-warning-border:        #fab000 !default
 
-$alert-danger-bg:             #FFE2E4 !default
-$alert-danger-text:           #D27C82 !default
-$alert-danger-border:         $brand-danger !default
+$alert-danger-bg:             #fbc6c3 !default
+$alert-danger-text:           #363a41 !default
+$alert-danger-border:         #f44336 !default
 
 // Sidebar
 $sidebar-menu-color: #BEBEBE !default
@@ -83,8 +88,8 @@ $line-height-computed: floor($font-size-base * $line-height-base)
 $headings-font-weight: 400
 
 // Components
-$padding-base-vertical: 6px
-$padding-base-horizontal: 8px
+$padding-base-vertical: 8px
+$padding-base-horizontal: 16px
 $border-radius-base: 4px
 
 // Tables
@@ -96,16 +101,18 @@ $table-bg-hover: #EDF7FB
 // Buttons
 $btn-default-color: $main-color
 $btn-default-bg: white
-$btn-default-border: #DEDEDE
+$btn-default-border: #bbcdd2
 $btn-primary-color: $btn-default-color
-$btn-primary-bg: #2eacce
-$btn-primary-border: #2eacce
+$btn-primary-bg: $primary-color
+$btn-primary-border: $primary-color
 
 // Forms
-$input-bg: #F5F8F9
+$input-bg: #FFFFFF
 $input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2)
 $input-group-addon-bg: #F5F8F9
-$input-border: #C7D6DB
+$input-border: #bbcdd2
+$input-focus-background: #f4fcfd
+$input-focus-border: $primary-color
 // Dropdowns
 $dropdown-link-hover-color: white
 $dropdown-link-hover-bg: $brand-primary

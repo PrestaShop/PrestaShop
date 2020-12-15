@@ -12,6 +12,7 @@
   "devDependencies": {
     "@babel/core": "^7.0.0-rc.1",
     "@babel/preset-env": "^7.0.0-rc.1",
+    "@openfonts/ubuntu-condensed_latin": "^1.43.0",
     "babel-loader": "^8.0.2",
     "bourbon": "^4.3.4",
     "clean-webpack-plugin": "^2.0.2",
