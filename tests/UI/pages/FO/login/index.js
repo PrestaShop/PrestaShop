@@ -45,75 +45,12 @@ class Login extends FOBasePage {
   }
 
   /**
-   * Create new customer account
-   * @param page
-   * @param customer
-   * @returns {Promise<void>}
-   */
-  async createAccount(page, customer) {
-    await this.waitForSelectorAndClick(page, this.displayRegisterFormLink);
-    await this.waitForSelectorAndClick(page, this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
-    await this.setValue(page, this.firstNameInput, customer.firstName);
-    await this.setValue(page, this.lastNameInput, customer.lastName);
-    await this.setValue(page, this.newEmailInput, customer.email);
-    await this.setValue(page, this.newPasswordInput, customer.password);
-
-    await this.setValue(
-      page,
-      this.birthdateInput,
-      `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`,
-    );
-
-    await page.click(this.customerPrivacyCheckbox);
-    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
-      await page.click(this.psgdprCheckbox);
-    }
-    await page.click(this.saveButton);
-  }
-
-  /**
    * Go to create account page
    * @param page
    * @returns {Promise<void>}
    */
   async goToCreateAccountPage(page) {
-    await this.waitForSelectorAndClick(page, this.displayRegisterFormLink);
-  }
-
-  /**
-   * Is partner offer required
-   * @param page
-   * @returns {Promise<boolean>}
-   */
-  async isPartnerOfferRequired(page) {
-    return this.elementVisible(page, `${this.partnerOfferCheckbox}:required`, 1000);
-  }
-
-  /**
-   * Is birth date input visible
-   * @param page
-   * @returns {Promise<boolean>}
-   */
-  async isBirthDateVisible(page) {
-    return this.elementVisible(page, this.birthdateInput, 1000);
-  }
-
-  /**
-   * Is partner offer visible
-   * @param page
-   * @returns {Promise<boolean>}
-   */
-  async isPartnerOfferVisible(page) {
-    return this.elementVisible(page, this.partnerOfferCheckbox, 1000);
-  }
-
-  /**
-   * Is company input visible
-   * @param page
-   * @returns {Promise<boolean>}
-   */
-  async isCompanyInputVisible(page) {
-    return this.elementVisible(page, this.companyInput, 1000);
+    await this.clickAndWaitForNavigation(page, this.displayRegisterFormLink);
   }
 }
 
