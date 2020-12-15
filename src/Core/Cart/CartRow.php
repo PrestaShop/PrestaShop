@@ -107,6 +107,11 @@ class CartRow
     protected $roundType;
 
     /**
+     * @var int|null
+     */
+    protected $orderId;
+
+    /**
      * @var array previous data for product: array given by Cart::getProducts()
      */
     protected $rowData = [];
@@ -147,6 +152,7 @@ class CartRow
      * @param bool $useEcotax
      * @param int $precision
      * @param string $roundType see self::ROUND_MODE_*
+     * @param int|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      */
     public function __construct(
         $rowData,
@@ -158,7 +164,8 @@ class CartRow
         Database $databaseAdapter,
         $useEcotax,
         $precision,
-        $roundType
+        $roundType,
+        $orderId = null
     ) {
         $this->setRowData($rowData);
         $this->priceCalculator = $priceCalculator;
@@ -170,6 +177,7 @@ class CartRow
         $this->useEcotax = $useEcotax;
         $this->precision = $precision;
         $this->roundType = $roundType;
+        $this->orderId = $orderId;
     }
 
     /**
@@ -357,7 +365,8 @@ class CartRow
             true,
             (int) $cart->id,
             $cartQuantity,
-            (int) $rowData['id_customization']
+            (int) $rowData['id_customization'],
+            $this->orderId
         );
         $priceTaxExcl = $this->priceCalculator->priceCalculation(
             $shopId,
@@ -380,7 +389,8 @@ class CartRow
             true,
             (int) $cart->id,
             $cartQuantity,
-            (int) $rowData['id_customization']
+            (int) $rowData['id_customization'],
+            $this->orderId
         );
 
         return new AmountImmutable($priceTaxIncl, $priceTaxExcl);

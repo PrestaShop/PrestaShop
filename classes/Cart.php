@@ -646,10 +646,11 @@ class CartCore extends ObjectModel
      * @param bool $id_product
      * @param int $id_country
      * @param bool $fullInfos
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return array Products
      */
-    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true)
+    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true, $keepOrderPrices = true)
     {
         if (!$this->id) {
             return [];
@@ -840,15 +841,16 @@ class CartCore extends ObjectModel
                 }
 
                 if (!$row['is_gift'] || (int) $row['cart_quantity'] === $givenAwayQuantity) {
-                    $row = $this->applyProductCalculations($row, $cart_shop_context);
+                    $row = $this->applyProductCalculations($row, $cart_shop_context, null, $keepOrderPrices);
                 } else {
                     // Separate products given away from those manually added to cart
-                    $this->_products[] = $this->applyProductCalculations($row, $cart_shop_context, $givenAwayQuantity);
+                    $this->_products[] = $this->applyProductCalculations($row, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
                     unset($row['is_gift']);
                     $row = $this->applyProductCalculations(
                         $row,
                         $cart_shop_context,
-                        $row['cart_quantity'] - $givenAwayQuantity
+                        $row['cart_quantity'] - $givenAwayQuantity,
+                        $keepOrderPrices
                     );
                 }
 
@@ -865,10 +867,11 @@ class CartCore extends ObjectModel
      * @param $row
      * @param $shopContext
      * @param $productQuantity
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return mixed
      */
-    protected function applyProductCalculations($row, $shopContext, $productQuantity = null)
+    protected function applyProductCalculations($row, $shopContext, $productQuantity = null, $keepOrderPrices = true)
     {
         if (null === $productQuantity) {
             $productQuantity = (int) $row['cart_quantity'];
@@ -910,6 +913,12 @@ class CartCore extends ObjectModel
         $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 
         $specific_price_output = null;
+        // Specify the orderId if needed so that Product::getPriceStatic returns the prices saved in OrderDetails
+        $orderId = null;
+        if ($keepOrderPrices) {
+            $orderId = Order::getIdByCartId($this->id);
+            $orderId = (int) $orderId ?: null;
+        }
 
         $row['price_without_reduction'] = Product::getPriceStatic(
             (int) $row['id_product'],
@@ -929,7 +938,8 @@ class CartCore extends ObjectModel
             true,
             $shopContext,
             true,
-            $row['id_customization']
+            $row['id_customization'],
+            $orderId
         );
 
         $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
@@ -950,7 +960,8 @@ class CartCore extends ObjectModel
             true,
             $shopContext,
             true,
-            $row['id_customization']
+            $row['id_customization'],
+            $orderId
         );
 
         $row['price_with_reduction'] = Product::getPriceStatic(
@@ -971,7 +982,8 @@ class CartCore extends ObjectModel
             true,
             $shopContext,
             true,
-            $row['id_customization']
+            $row['id_customization'],
+            $orderId
         );
 
         $row['price'] = $row['price_with_reduction_without_tax'] = Product::getPriceStatic(
@@ -992,7 +1004,8 @@ class CartCore extends ObjectModel
             true,
             $shopContext,
             true,
-            $row['id_customization']
+            $row['id_customization'],
+            $orderId
         );
 
         switch (Configuration::get('PS_ROUND_TYPE')) {
@@ -1926,6 +1939,7 @@ class CartCore extends ObjectModel
      * @param array $products
      * @param int $id_carrier
      * @param bool $use_cache @deprecated
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return float Order total
      *
@@ -1936,7 +1950,8 @@ class CartCore extends ObjectModel
         $type = Cart::BOTH,
         $products = null,
         $id_carrier = null,
-        $use_cache = false
+        $use_cache = false,
+        $keepOrderPrices = true
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
@@ -2002,7 +2017,7 @@ class CartCore extends ObjectModel
         }
 
         $computePrecision = Context::getContext()->getComputingPrecision();
-        $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision);
+        $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
@@ -2057,11 +2072,17 @@ class CartCore extends ObjectModel
      * @param array $cartRules list of cart rules to apply
      * @param int $id_carrier carrier id (fees calculation)
      * @param int|null $computePrecision
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null)
+    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, $keepOrderPrices = true)
     {
+        $orderId = null;
+        if ($keepOrderPrices) {
+            $orderId = Order::getIdByCartId($this->id);
+            $orderId = (int) $orderId ?: null;
+        }
         $calculator = new Calculator($this, $id_carrier, $computePrecision);
 
         /** @var PriceCalculator $priceCalculator */
@@ -2093,7 +2114,8 @@ class CartCore extends ObjectModel
                 new Database(),
                 $useEcotax,
                 $precision,
-                $roundType
+                $roundType,
+                $orderId
             );
             $calculator->addCartRow($cartRow);
         }

@@ -59,6 +59,7 @@ class PriceCalculator
      * @param Context|null $context
      * @param bool $useCustomerPrice
      * @param int|null $idCustomization
+     * @param int|false|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      *
      * @return float Product price
      */
@@ -80,7 +81,8 @@ class PriceCalculator
         $useGroupReduction = true,
         Context $context = null,
         $useCustomerPrice = true,
-        $idCustomization = null
+        $idCustomization = null,
+        $orderId = false
     ) {
         return Product::getPriceStatic(
             $idProduct,
@@ -100,7 +102,8 @@ class PriceCalculator
             $useGroupReduction,
             $context,
             $useCustomerPrice,
-            $idCustomization
+            $idCustomization,
+            $orderId
         );
     }
 
@@ -129,6 +132,7 @@ class PriceCalculator
      * @param int $idCart
      * @param int $realQuantity
      * @param int $idCustomization
+     * @param int|false|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      *
      * @return float Product price
      **/
@@ -153,7 +157,8 @@ class PriceCalculator
         $useCustomerPrice = true,
         $idCart = 0,
         $realQuantity = 0,
-        $idCustomization = 0
+        $idCustomization = 0,
+        $orderId = false
     ) {
         return Product::priceCalculation(
             $idShop,
@@ -176,7 +181,8 @@ class PriceCalculator
             $useCustomerPrice,
             $idCart,
             $realQuantity,
-            $idCustomization
+            $idCustomization,
+            $orderId
         );
     }
 }
