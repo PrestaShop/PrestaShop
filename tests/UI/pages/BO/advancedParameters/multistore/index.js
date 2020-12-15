@@ -11,6 +11,7 @@ class MultiStoreSettings extends BOBasePage {
 
     // Header selectors
     this.newShopGroupLink = '#page-header-desc-shop_group-new';
+    this.newShopLink = '#page-header-desc-shop_group-new_2';
 
     // Form selectors
     this.gridForm = '#form-shop_group';
@@ -51,6 +52,15 @@ class MultiStoreSettings extends BOBasePage {
    */
   async goToNewShopGroupPage(page) {
     await this.clickAndWaitForNavigation(page, this.newShopGroupLink);
+  }
+
+  /**
+   * Go to new shop page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToNewShopPage(page) {
+    await this.clickAndWaitForNavigation(page, this.newShopLink);
   }
 
   /* Filter methods */
@@ -126,6 +136,16 @@ class MultiStoreSettings extends BOBasePage {
 
     // Get successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Is toggle button visible
+   * @param page
+   * @param row
+   * @returns {Promise<boolean>}
+   */
+  async isToggleButtonVisible(page, row) {
+    return this.elementVisible(page, this.tableColumnActionsToggleButton(row));
   }
 }
 
