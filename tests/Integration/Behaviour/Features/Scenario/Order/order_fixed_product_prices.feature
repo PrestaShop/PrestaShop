@@ -36,6 +36,14 @@ Feature: Order from Back Office (BO)
       And order "bo_order1" should have 0 invoices
       And order "bo_order1" should have 0 cart rule
       And order "bo_order1" should have "price_carrier" as a carrier
+      And product "Test Changing Product" in order "bo_order1" has following details:
+        | product_quantity            | 2     |
+        | product_price               | 10.00 |
+        | original_product_price      | 10.00 |
+        | unit_price_tax_incl         | 10.60 |
+        | unit_price_tax_excl         | 10.00 |
+        | total_price_tax_incl        | 21.20 |
+        | total_price_tax_excl        | 20.00 |
       And order "bo_order1" should have following details:
         | total_products           | 43.800 |
         | total_products_wt        | 46.430 |
@@ -55,6 +63,14 @@ Feature: Order from Back Office (BO)
       Given product "Test Changing Product" price is 15.00
       When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "default_carrier"
       Then order "bo_order1" should have "default_carrier" as a carrier
+      And product "Test Changing Product" in order "bo_order1" has following details:
+        | product_quantity            | 2     |
+        | product_price               | 10.00 |
+        | original_product_price      | 10.00 |
+        | unit_price_tax_incl         | 10.60 |
+        | unit_price_tax_excl         | 10.00 |
+        | total_price_tax_incl        | 21.20 |
+        | total_price_tax_excl        | 20.00 |
       And order "bo_order1" should have following details:
         | total_products           | 43.800 |
         | total_products_wt        | 46.430 |
