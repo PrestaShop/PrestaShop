@@ -9,6 +9,8 @@ class Carriers extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
+    this.growlMessageBlock = '#growls .growl-message:last-of-type';
+
     // Header links
     this.addNewCarrierLink = '#page-header-desc-carrier-new_carrier';
 
@@ -408,6 +410,23 @@ class Carriers extends BOBasePage {
     }
 
     return false;
+  }
+
+  /**
+   * Change carrier position
+   * @param page
+   * @param actualPosition
+   * @param newPosition
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return this.getTextContent(page, this.growlMessageBlock);
   }
 }
 
