@@ -57,8 +57,7 @@ final class LanguageByIdChoiceProvider implements ConfigurableFormChoiceProvider
     public function getChoices(array $options = [])
     {
         $choices = [];
-        $shopId = !empty((int) $options['shop_id']) ? $options['shop_id'] : false;
-
+        $shopId = isset($options['shop_id']) && (int) $options['shop_id'] > 0 ? $options['shop_id'] : false;
         foreach ($this->languageDataProvider->getLanguages(true, $shopId) as $language) {
             $choices[$language['name']] = $language['id_lang'];
         }
