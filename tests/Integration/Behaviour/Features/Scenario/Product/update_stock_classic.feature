@@ -160,11 +160,9 @@ Feature: Update product stock from Back Office (BO)
       | quantity | 0 |
     When I update product "product1" stock with following information:
       | quantity     | 51    |
-      | add_movement | false |
-    And product "product1" has no stock movements
+    Then product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
       | quantity     | 42   |
-      | add_movement | true |
     Then product "product1" should have following stock information:
       | quantity | 42 |
     And product "product1" last stock movement decreased by 9
@@ -257,9 +255,8 @@ Feature: Update product stock from Back Office (BO)
     When I update product "product1" stock with following information:
       | minimal_quantity | -1 |
     Then I should get error that product minimal_quantity is invalid
-    When I update product "product1" stock with following information:
-      | location | ssf> |
-    Then I should get error that product location is invalid
+    When I update product product1 location with value of 300 symbols length
+    Then I should get error that product stock location is invalid
     When I update product "product1" stock with following information:
       | available_now_labels[en-US] | get it now <3 |
     Then I should get error that product available_now_labels is invalid
