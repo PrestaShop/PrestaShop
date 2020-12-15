@@ -3700,7 +3700,9 @@ class ProductCore extends ObjectModel
 
         // fetch price & attribute price
         $cache_id_2 = $id_product . '-' . $id_shop;
-        if (!isset(self::$_pricesLevel2[$cache_id_2])) {
+        // We need to check the cache for this price AND attribute, if absent the whole product cache needs update
+        // This can happen if the cache was filled before the combination was created for example
+        if (!isset(self::$_pricesLevel2[$cache_id_2][(int) $id_product_attribute])) {
             $sql = new DbQuery();
             $sql->select('product_shop.`price`, product_shop.`ecotax`');
             $sql->from('product', 'p');
