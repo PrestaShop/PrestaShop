@@ -327,7 +327,7 @@ class OrderAmountUpdater
         $newCartRules = $cart->getCartRules();
         // We need the calculator to compute the discount on the whole products because they can interact with each
         // other so they can't be computed independently
-        $calculator = $cart->newCalculator($order->getCartProducts(), $newCartRules, null, $computingPrecision);
+        $calculator = $cart->newCalculator($order->getCartProducts(), $newCartRules, null, $computingPrecision, true);
         $calculator->processCalculation();
 
         foreach ($order->getCartRules() as $orderCartRuleData) {
