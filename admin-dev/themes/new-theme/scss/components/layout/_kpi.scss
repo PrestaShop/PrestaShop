@@ -1,11 +1,26 @@
 .kpi-container {
   position: relative;
   display: block;
-  padding-top: .9375rem;
-  padding-bottom: .9375rem;
+  padding-top: 0.9375rem;
+  padding-bottom: 0.9375rem;
   text-align: center;
   text-decoration: none;
   background: #fff;
+
+  @include media-breakpoint-down(sm) {
+    > .row {
+      display: flex;
+      flex-wrap: nowrap;
+      // stylelint-disable-next-line
+      justify-content: flex-start !important;
+      overflow: scroll;
+
+      > div {
+        min-width: 10rem;
+        margin: 0 1rem;
+      }
+    }
+  }
 
   &:hover {
     text-decoration: none;
@@ -17,6 +32,13 @@
   top: 0;
   right: 0;
   z-index: 1;
+
+  @include media-breakpoint-down(sm) {
+    button {
+      padding: 0.3rem;
+      font-size: 0.75rem;
+    }
+  }
 }
 
 .kpi-content {
@@ -49,8 +71,8 @@
   .title,
   .subtitle,
   .value {
-    padding-left: .125rem;
-    font-size: .75rem;
+    padding-left: 0.125rem;
+    font-size: 0.75rem;
     color: $gray-dark;
   }
 
