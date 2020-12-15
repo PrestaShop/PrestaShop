@@ -124,6 +124,7 @@ describe('Create, Read, Update and Delete shop groups in BO', async () => {
   describe('Update shop group', async () => {
     it('should go to edit the created shop group page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditShopGroupPage', baseContext);
+
       await multiStorePage.filterTable(page, 'a!name', 'group1');
 
       await multiStorePage.gotoEditShopGroupPage(page, 1);
