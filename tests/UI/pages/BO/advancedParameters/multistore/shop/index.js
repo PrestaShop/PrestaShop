@@ -1,37 +1,32 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class MultiStoreSettings extends BOBasePage {
+class ShopSettings extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Multistore • ';
-
     this.alertSuccessBlockParagraph = '.alert-success';
 
-    // Header selectors
-    this.newShopGroupLink = '#page-header-desc-shop_group-new';
-    this.newShopLink = '#page-header-desc-shop_group-new_2';
-
     // Form selectors
-    this.gridForm = '#form-shop_group';
+    this.gridForm = '#form-shop';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
 
     // Table selectors
-    this.gridTable = '#table-shop_group';
+    this.gridTable = '#table-shop';
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='shop_groupFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtonshop_group';
-    this.filterResetButton = 'button[name=\'submitResetshop_group\']';
+    this.filterColumn = filterBy => `${this.filterRow} [name='shopFilter_${filterBy}']`;
+    this.filterSearchButton = '#submitFilterButtonshop';
+    this.filterResetButton = 'button[name=\'submitResetshop\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -39,32 +34,6 @@ class MultiStoreSettings extends BOBasePage {
     this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
     this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
-
-    // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
-
-    // Multistore tree selectors
-    this.multistoreTree = '#shops-tree';
-    this.shopLink = id => `${this.multistoreTree} a[href*='shop_id=${id}']`;
-  }
-
-  /* Header methods */
-  /**
-   * Go to new shop group page
-   * @param page
-   * @return {Promise<void>}
-   */
-  async goToNewShopGroupPage(page) {
-    await this.clickAndWaitForNavigation(page, this.newShopGroupLink);
-  }
-
-  /**
-   * Go to new shop page
-   * @param page
-   * @return {Promise<void>}
-   */
-  async goToNewShopPage(page) {
-    await this.clickAndWaitForNavigation(page, this.newShopLink);
   }
 
   /* Filter methods */
@@ -90,7 +59,7 @@ class MultiStoreSettings extends BOBasePage {
   }
 
   /**
-   * Reset and get number of shop groups
+   * Reset and get number of shops
    * @param page
    * @return {Promise<number>}
    */
@@ -100,7 +69,7 @@ class MultiStoreSettings extends BOBasePage {
   }
 
   /**
-   * Filter shop groups
+   * Filter shops
    * @param page
    * @param filterBy
    * @param value
@@ -112,55 +81,63 @@ class MultiStoreSettings extends BOBasePage {
   }
 
   /**
-   * Go to edit shop group page
-   * @param page
-   * @param row
-   * @return {Promise<void>}
-   */
-  async gotoEditShopGroupPage(page, row) {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
-  }
-
-  /**
-   * Delete shop group from row
+   * Delete shop from row
    * @param page
    * @param row
    * @return {Promise<string>}
    */
-  async deleteShopGroup(page, row) {
+  async deleteShop(page, row) {
+    this.dialogListener(page);
+    // Click on dropDown
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
     ]);
 
+    // Click on delete
     await page.click(this.tableColumnActionsDeleteLink(row));
-
-    // Confirm delete action
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
-   * Is toggle button visible
+   * Get text from column in table
    * @param page
    * @param row
-   * @returns {Promise<boolean>}
+   * @param columnName
+   * @return {Promise<string>}
    */
-  async isToggleButtonVisible(page, row) {
-    return this.elementVisible(page, this.tableColumnActionsToggleButton(row));
-  }
+  async getTextColumn(page, row, columnName) {
+    let columnSelector;
 
-  /**
-   * Go to shop link
-   * @param page
-   * @param id
-   * @returns {Promise<void>}
-   */
-  async goToShopPage(page, id) {
-    await this.clickAndWaitForNavigation(page, this.shopLink(id));
+    switch (columnName) {
+      case 'id_shop':
+        columnSelector = this.tableColumn(row, 1);
+        break;
+
+      case 'a!name':
+        columnSelector = this.tableColumn(row, 2);
+        break;
+
+      case 'gs!name':
+        columnSelector = this.tableColumn(row, 3);
+        break;
+
+      case 'cl!name':
+        columnSelector = this.tableColumn(row, 4);
+        break;
+
+      case 'url':
+        columnSelector = this.tableColumn(row, 5);
+        break;
+
+      default:
+        throw new Error(`Column ${columnName} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
   }
 }
 
-module.exports = new MultiStoreSettings();
+module.exports = new ShopSettings();
