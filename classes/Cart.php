@@ -86,7 +86,7 @@ class CartCore extends ObjectModel
     public $date_upd;
 
     /** @var int|null Order ID */
-    public $id_order;
+    public $reference_order;
 
     public $checkedTos = false;
     public $pictures;
@@ -141,7 +141,7 @@ class CartCore extends ObjectModel
             'allow_seperated_package' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'allow_null' => true],
+            'reference_order' => ['type' => self::TYPE_STRING, 'allow_null' => true],
         ],
     ];
 
