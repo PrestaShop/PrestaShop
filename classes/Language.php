@@ -783,7 +783,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $key = 'Language::getIdByLocale_' . $locale;
         if ($noCache || !Cache::isStored($key)) {
-            $idLang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
+            $idLang = Db::getInstance()
+                ->getValue(
+                    'SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang`
+                    WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'
+                    OR `language_code` = \'' . pSQL(strtolower($locale)) . '\''
+                );
 
             Cache::store($key, $idLang);
 
