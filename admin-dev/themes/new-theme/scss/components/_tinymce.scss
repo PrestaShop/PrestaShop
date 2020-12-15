@@ -926,7 +926,14 @@ i.mce-i-checkbox {
   margin: 2px 0 2px 2px;
   *zoom: 1;
   &.mce-last {
+    max-width: 100%;
     margin-right: 2px;
+
+    > div {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
   }
 }
 
@@ -1222,7 +1229,8 @@ i.mce-i-resize {
 
     &.mce-active {
       /* stylelint-disable */
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+      box-shadow:
+ inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
       /* stylelint-enable */
     }
   }
