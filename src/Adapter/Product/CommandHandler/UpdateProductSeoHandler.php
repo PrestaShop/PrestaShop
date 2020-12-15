@@ -29,15 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
 use Product;
 
 /**
@@ -46,100 +42,73 @@ use Product;
 class UpdateProductSeoHandler extends AbstractProductHandler implements UpdateProductSeoHandlerInterface
 {
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductSeoPropertiesFiller
+     */
+    private $productSeoPropertiesFiller;
+
+    /**
+     * @param ProductRepository $productRepository
+     * @param ProductSeoPropertiesFiller $productSeoPropertiesFiller
+     */
+    public function __construct(
+        ProductRepository $productRepository,
+        ProductSeoPropertiesFiller $productSeoPropertiesFiller
+    ) {
+        $this->productRepository = $productRepository;
+        $this->productSeoPropertiesFiller = $productSeoPropertiesFiller;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductSeoCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
-        $this->fillUpdatableFieldsWithCommandData($product, $command);
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_SEO);
+        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_SEO);
     }
 
     /**
      * @param Product $product
      * @param UpdateProductSeoCommand $command
-     */
-    private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductSeoCommand $command): void
-    {
-        $redirectOption = $command->getRedirectOption();
-
-        if (null !== $redirectOption) {
-            $this->fillRedirectOptionValues($product, $redirectOption);
-        }
-
-        if (null !== $command->getLocalizedMetaDescriptions()) {
-            $product->meta_description = $command->getLocalizedMetaDescriptions();
-            $this->validateLocalizedField($product, 'meta_description', ProductConstraintException::INVALID_META_DESCRIPTION);
-            $this->fieldsToUpdate['meta_description'] = true;
-        }
-
-        if (null !== $command->getLocalizedMetaTitles()) {
-            $product->meta_title = $command->getLocalizedMetaTitles();
-            $this->validateLocalizedField($product, 'meta_title', ProductConstraintException::INVALID_META_TITLE);
-            $this->fieldsToUpdate['meta_title'] = true;
-        }
-
-        if (null !== $command->getLocalizedLinkRewrites()) {
-            $product->link_rewrite = $command->getLocalizedLinkRewrites();
-            $this->validateLocalizedField($product, 'link_rewrite', ProductConstraintException::INVALID_LINK_REWRITE);
-            $this->fieldsToUpdate['link_rewrite'] = true;
-        }
-    }
-
-    /**
-     * @param Product $product
-     * @param RedirectOption $redirectOption
      *
-     * @throws CategoryNotFoundException
-     * @throws ProductException
-     * @throws ProductNotFoundException
+     * @return array
      */
-    private function fillRedirectOptionValues(Product $product, RedirectOption $redirectOption): void
+    private function fillUpdatableProperties(Product $product, UpdateProductSeoCommand $command): array
     {
-        $redirectType = $redirectOption->getRedirectType();
-        $redirectTarget = $redirectOption->getRedirectTarget();
+        $updatableProperties = [];
 
-        if ($redirectType->isProductType()) {
-            $this->assertProductExists($redirectTarget->getValue());
-        } elseif (!$redirectType->isTypeNotFound() && !$redirectTarget->isNoTarget()) {
-            $this->assertCategoryExists($redirectTarget->getValue());
-        }
-
-        $product->redirect_type = $redirectType->getValue();
-        $product->id_type_redirected = $redirectTarget->getValue();
-        $this->fieldsToUpdate['redirect_type'] = true;
-        $this->fieldsToUpdate['id_type_redirected'] = true;
-    }
-
-    /**
-     * @param int $categoryId
-     *
-     * @throws CategoryNotFoundException
-     * @throws ProductException
-     */
-    private function assertCategoryExists(int $categoryId): void
-    {
-        if (!$this->entityExists('category', $categoryId)) {
-            throw new CategoryNotFoundException(
-                new CategoryId($categoryId),
-                sprintf('Category #%d does not exist', $categoryId)
+        if (null !== $command->getRedirectOption()) {
+            $updatableProperties = array_merge(
+                $updatableProperties,
+                $this->productSeoPropertiesFiller->fillWithRedirectOption($product, $command->getRedirectOption())
             );
         }
-    }
 
-    /**
-     * @param int $productId
-     *
-     * @throws ProductException
-     * @throws ProductNotFoundException
-     */
-    private function assertProductExists(int $productId): void
-    {
-        if (!$this->entityExists('product', $productId)) {
-            throw new ProductNotFoundException(
-                sprintf('Product #%d does not exist', $productId)
-            );
+        $localizedMetaDescriptions = $command->getLocalizedMetaDescriptions();
+        if (null !== $localizedMetaDescriptions) {
+            $product->meta_description = $localizedMetaDescriptions;
+            $updatableProperties['meta_description'] = array_keys($localizedMetaDescriptions);
         }
+
+        $localizedMetaTitles = $command->getLocalizedMetaTitles();
+        if (null !== $localizedMetaTitles) {
+            $product->meta_title = $localizedMetaTitles;
+            $updatableProperties['meta_title'] = array_keys($localizedMetaTitles);
+        }
+
+        $localizedLinkRewrites = $command->getLocalizedLinkRewrites();
+        if (null !== $localizedLinkRewrites) {
+            $product->link_rewrite = $localizedLinkRewrites;
+            $updatableProperties['link_rewrite'] = array_keys($localizedLinkRewrites);
+        }
+
+        return $updatableProperties;
     }
 }

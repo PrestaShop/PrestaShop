@@ -39,6 +39,7 @@ class AdminModuleController {
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
+    this.DEFAULT_MAX_PER_CATEGORIES = 6;
     this.DISPLAY_GRID = 'grid';
     this.DISPLAY_LIST = 'list';
     this.CATEGORY_RECENTLY_USED = 'recently-used';
@@ -67,6 +68,9 @@ class AdminModuleController {
     this.addonsCardList = null;
 
     this.moduleShortList = '.module-short-list';
+    // See more & See less selector
+    this.seeMoreSelector = '.see-more';
+    this.seeLessSelector = '.see-less';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemGridSelector = '.module-item-grid';
@@ -85,7 +89,11 @@ class AdminModuleController {
 
     // Upgrade All selectors
     this.upgradeAllSource = '.module_action_menu_upgrade_all';
-    this.upgradeAllTargets = '#modules-list-container-update .module_action_menu_upgrade:visible';
+    this.upgradeContainer = '#modules-list-container-update';
+    this.upgradeAllTargets = `${this.upgradeContainer}' .module_action_menu_upgrade:visible`;
+
+    // Notification selectors
+    this.notificationContainer = '#modules-list-container-notification';
 
     // Bulk action selectors
     this.bulkActionDropDownSelector = '.module-bulk-actions';
@@ -151,6 +159,7 @@ class AdminModuleController {
     this.initFilterStatusDropdown();
     this.fetchModulesList();
     this.getNotificationsCount();
+    this.initializeSeeMore();
   }
 
   initFilterStatusDropdown() {
@@ -222,11 +231,16 @@ class AdminModuleController {
 
   initBOEventRegistering() {
     window.BOEvent.on('Module Disabled', this.onModuleDisabled, this);
+    window.BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   }
 
   onModuleDisabled() {
     const self = this;
     self.getModuleItemSelector();
+
+    $('.modules-list').each(() => {
+      self.updateTotalResults();
+    });
   }
 
   initPlaceholderMechanism() {
@@ -324,7 +338,9 @@ class AdminModuleController {
           container,
         });
 
-        $this.remove();
+        if (self.isModulesPage()) {
+          $this.remove();
+        }
       });
     });
 
@@ -399,6 +415,9 @@ class AdminModuleController {
       }
 
       container.show();
+      container
+        .find(`${self.seeMoreSelector}, ${self.seeLessSelector}`)
+        .toggle(nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES);
     });
   }
 
@@ -407,12 +426,14 @@ class AdminModuleController {
 
     self.updateModuleSorting();
 
-    $(self.recentlyUsedSelector)
-      .find('.module-item')
-      .remove();
-    $('.modules-list')
-      .find('.module-item')
-      .remove();
+    if (self.isModulesPage()) {
+      $(self.recentlyUsedSelector)
+        .find('.module-item')
+        .remove();
+      $('.modules-list')
+        .find('.module-item')
+        .remove();
+    }
 
     // Modules visibility management
     let isVisible;
@@ -420,6 +441,7 @@ class AdminModuleController {
     let moduleCategory;
     let tagExists;
     let newValue;
+    let defaultMax;
 
     const modulesListLength = self.modulesList.length;
     const counter = {};
@@ -470,10 +492,11 @@ class AdminModuleController {
             counter[moduleCategory] = 0;
           }
 
-          if (moduleCategory === self.CATEGORY_RECENTLY_USED) {
-            if (counter[moduleCategory] >= self.DEFAULT_MAX_RECENTLY_USED) {
-              isVisible &= self.currentCategoryDisplay[moduleCategory];
-            }
+          defaultMax = moduleCategory === self.CATEGORY_RECENTLY_USED
+            ? self.DEFAULT_MAX_RECENTLY_USED
+            : self.DEFAULT_MAX_PER_CATEGORIES;
+          if (counter[moduleCategory] >= defaultMax) {
+            isVisible &= self.currentCategoryDisplay[moduleCategory];
           }
 
           counter[moduleCategory] += 1;
@@ -495,6 +518,8 @@ class AdminModuleController {
     if (self.currentTagsList.length) {
       $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
     }
+
+    self.updateTotalResults();
   }
 
   initPageChangeProtection() {
@@ -1159,6 +1184,67 @@ class AdminModuleController {
     $(`#module-sort-${switchTo}`).addClass('module-sort-active');
     this.currentDisplay = switchTo;
     this.updateModuleVisibility();
+  }
+
+  initializeSeeMore() {
+    const self = this;
+
+    $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
+      self.currentCategoryDisplay[$(this).data('category')] = true;
+      $(this).addClass('d-none');
+      $(this).closest(self.moduleShortList).find(self.seeLessSelector).removeClass('d-none');
+      self.updateModuleVisibility();
+    });
+
+    $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
+      self.currentCategoryDisplay[$(this).data('category')] = false;
+      $(this).addClass('d-none');
+      $(this).closest(self.moduleShortList).find(self.seeMoreSelector).removeClass('d-none');
+      self.updateModuleVisibility();
+    });
+  }
+
+  updateTotalResults() {
+    const self = this;
+    const replaceFirstWordBy = (element, value) => {
+      const explodedText = element.text().split(' ');
+      explodedText[0] = value;
+      element.text(explodedText.join(' '));
+    };
+
+    // If there are some shortlist: each shortlist count the modules on the next container.
+    const $shortLists = $('.module-short-list');
+    if ($shortLists.length > 0) {
+      $shortLists.each(function shortLists() {
+        const $this = $(this);
+        replaceFirstWordBy(
+          $this.find('.module-search-result-wording'),
+          $this.next('.modules-list').find('.module-item').length,
+        );
+      });
+
+      // If there is no shortlist: the wording directly update from the only module container.
+    } else {
+      const modulesCount = $('.modules-list').find('.module-item').length;
+      replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
+
+      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST)
+        ? this.addonItemListSelector
+        : this.addonItemGridSelector;
+      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
+
+      if (modulesCount === 0) {
+        $('.module-addons-search-link').attr(
+          'href',
+          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`,
+        );
+      }
+    }
+  }
+
+  isModulesPage() {
+    return $(this.upgradeContainer).length === 0
+      && $(this.notificationContainer).length === 0;
   }
 }
 

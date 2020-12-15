@@ -746,7 +746,7 @@ class ToolsCore
      * @see PrestaShop\PrestaShop\Core\Localization\Locale
      *
      * @param float $price Product price
-     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+     * @param int|Currency|array|null $currency Current currency (object, id_currency, NULL => context currency)
      * @param bool $no_utf8 Not used anymore
      * @param Context|null $context
      *

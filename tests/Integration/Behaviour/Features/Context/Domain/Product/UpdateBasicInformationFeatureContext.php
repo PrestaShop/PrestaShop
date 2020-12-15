@@ -43,12 +43,12 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductBasicInfo(string $productReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
         $command = new UpdateProductBasicInformationCommand($productId);
 
         if (isset($data['name'])) {
-            $command->setLocalizedNames($this->parseLocalizedArray($data['name']));
+            $command->setLocalizedNames($data['name']);
         }
 
         if (isset($data['is_virtual'])) {
@@ -56,11 +56,11 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['description'])) {
-            $command->setLocalizedDescriptions($this->parseLocalizedArray($data['description']));
+            $command->setLocalizedDescriptions($data['description']);
         }
 
         if (isset($data['description_short'])) {
-            $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
+            $command->setLocalizedShortDescriptions($data['description_short']);
         }
 
         try {

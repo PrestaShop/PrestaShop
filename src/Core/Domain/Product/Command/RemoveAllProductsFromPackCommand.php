@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
 
 /**
  * Removes all products from provided pack
+ *
+ * @todo this should be moved into a new PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command namespace
  */
 class RemoveAllProductsFromPackCommand
 {

@@ -97,6 +97,8 @@ class MetaController extends FrameworkBundleAdminController
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
         );
 
+        $doesMainShopUrlExist = $this->get('prestashop.adapter.shop.shop_url')->doesMainShopUrlExist();
+
         return $this->render(
             '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig',
             [
@@ -121,6 +123,7 @@ class MetaController extends FrameworkBundleAdminController
                 'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
                 'isShopFeatureActive' => $isShopFeatureActive,
                 'isHostMode' => $hostingInformation->isHostMode(),
+                'doesMainShopUrlExist' => $doesMainShopUrlExist,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),

@@ -135,6 +135,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                                 'extra_route_params' => [
                                     'back' => $this->backUrl,
                                 ],
+                                'clickable_row' => true,
                             ])
                     )
                     ->add(

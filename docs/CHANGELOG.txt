@@ -23,16 +23,220 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+
 ####################################
-#   v1.7.6.8 - (2020-09-24)
+#   v1.7.7.0 - (2020-12-02)
 ####################################
+
+- Back Office:
+  - Bug fix:
+    - #22191: Validate currency localized names (by @jolelievre)
+    - #22013: Handle parallel updates from CartRules when updating a product in Order (by @jolelievre)
+    - #22018: Order zero ratio for order detail tax (by @matks)
+    - #21781: Remove gifted quantity from product order quantity (by @sowbiba)
+    - #21994: Remove or cancel all products (by @jolelievre)
+    - #21721: Handle Shop context override in order editing (by @jolelievre)
+    - #21816: Remove useless logic Product customization images in Order Page and handle exotic chars in name (by @matks)
+    - #21853: Add missing use in CancelOrderProductHandler (by @matks)
+    - #21830: Correctly generate cart error messages (by @jolelievre)
+    - #21555: Fixed increment button when adding a product out of stock and with allow order (by @Progi1984)
+    - #21526: Improved Error message in New Order Page when adding a minimal product (by @Progi1984)
+    - #21557: Fix product pagination when adding a product in an empty order (by @atomiix)
+- Front Office:
+  - Bug fix:
+    - #21981: Make sure favicon, stores_icon and logo are correctly settled for themes (by @PierreRambaud)
+- Core:
+  - Bug fix:
+    - #22178: Set numeric_iso_code & precision in currency from CLDR when upgrading (by @atomiix)
+    - #22182: Update pear/archive_tar to 1.4.11 (by @PierreRambaud)
+    - #22174: Use displayHeader hook instead of Header (by @atomiix)
+    - #22164: Fix upgrade script from < 1.7.6.0 to 1.7.7.0 (by @atomiix)
+    - #22146: Remove --classmap-authoritative when building release (by @atomiix)
+    - #22130: Fix dependency which is targeting the v1.3.0 instead of the 1.3 branch (by @PierreRambaud)
+    - #21975: Correctly substring fields before update, remove duplicates and add missing sql queries (by @PierreRambaud)
+- Installer:
+  - Improvement:
+    - #21957: Update latest native modules (by @jolelievre)
+  - Bug fix:
+    - #21953: Fix "column count doesn't match value count" error during upgrade (by @okom3pom)
+- Localization:
+  - Improvement:
+    - #22063: Last translation updates (by @jolelievre)
+- Tests:
+  - Refactoring:
+    - #22055: Delete spaces in the end of title name in faker for UI tests (by @boubkerbribri)
+
+####################################
+#   v1.7.7.0-rc.1 - (2020-11-03)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #21435:  Add hooks for the AdminLoginController, AdminController, FrontController and Controller (by @PierreRambaud)
+    - #20903: [BC Break] Update Order amount when its addresses are modified (by @jolelievre)
+    - #21203:  Build assets for 177 (by @jolelievre)
+    - #21190:  Add missing security annotation on new 177 routes (by @jolelievre)
+    - #21025:  Make legacy parameters from routing accessible in migrated pages (by @jolelievre)
+  - Bug fix:
+    - #21666:  Recompute price tax excluded only when the price is different from catalog (by @jolelievre)
+    - #21574:  Allow ContextStateManager to stash contexts (by @jolelievre)
+    - #21523:  Several fixes found via PHPStan while mergin to develop (by @jolelievre)
+    - #21447:  Synchronize OrderDetail with Cart when removing a voucher (by @PierreRambaud)
+    - #21467:  Fix help link in Create order (by @atomiix)
+    - #21458:  Two Time actionAdminLoginControllerResetBefore (by @okom3pom)
+    - #21432:  Fixed Configuration when Disabling/Enabling Shop (by @Progi1984)
+    - #21326:  Set order currency to  added cart rule (by @sowbiba)
+    - #21331:  Enable Gift and Recycled Packaging switches (by @matks)
+    - #21232:  Fix tab modules list (by @sowbiba)
+    - #21343:  Fix status dropdown of order listing page not being well displayed using rtl language (by @NeOMakinG)
+    - #21317:  Notifications bell icon read fix (Backport) (by @okom3pom)
+    - #21344:  Move product search controller that was not in the right place (by @jolelievre)
+    - #20882:  Recompute specific price tax excluded when mismatch with price tax included (by @matthieu-rolland)
+    - #21310:  Fix delete order state confirmation (by @sowbiba)
+    - #21195:  Replaced SQL query to fetch modules hooked on stat hook by Hook function to have a singl Source of Truth (by @matks)
+    - #20760:  Add Order - View customer details : Check if nav-bar exist to avoid console errors (by @sowbiba)
+    - #20628:  Restore selectors in Order Page for GDPR to make GDPR module compliant with 1.7.7.0 (by @matks)
+    - #21045:  Fix Features page throwing an exception after specific steps are made (by @atomiix)
+    - #21031:  Fix bad range error when setting free shipping on a previously not free shipping carrier (by @atomiix)
+    - #21048:  Fix [BO- Stores page] Sort by post code not working (by @PululuK)
+    - #20911:  Fix glyph.png asset path (by @okom3pom)
+    - #20960:  Fix bulk actions in Carriers page (by @atomiix)
+    - #20936:  Fix navbar scroll on mobile display (by @sowbiba)
+    - #20902:  Keep order detail from being updated in BO > Order detail page, when product doesn't exist anymore (by @matthieu-rolland)
+    - #20906:  Duplicate product in order invoices (by @jolelievre)
+    - #20796:  Fix OrderReturnState should not use soft delete (by @atomiix)
+    - #20798:  Do not recalculate shipping if PS_ORDER_RECALCULATE_SHIPPING is false (by @atomiix)
+    - #20792:  Fix cannot add twice a product out of stock but allowed to be ordered (by @atomiix)
+    - #20757:  Save customer message on order creation from BO (by @sowbiba)
+    - #20734:  Allow to create Order from BO using soft deleted address (by @matks)
+    - #20704:  Expose missing route (by @atomiix)
+    - #20603:  Redirect to customer when canceling new customer address creation (by @ks129)
+    - #20714:  Fix max attribute on qty input of an out of stock attribute available on create order (by @NeOMakinG)
+    - #20684:  Fix empty optional customization exception when creating BO order (by @atomiix)
+    - #20145:  Product management and specific prices new rules in Order (by @jolelievre)
+    - #20755:  Fix free shipping cart rules not added/deleted in create order (by @atomiix)
+    - #20729:  Fix price width is too small on some devices by setting a min-width (by @NeOMakinG)
+    - #20644:  Check for address id before creating CartAddress (by @atomiix)
+    - #20626:  Fix duplicate ids in order page (by @PierreRambaud)
+- Front Office:
+  - Improvement:
+    - #21507:  Build core assets (by @jolelievre)
+    - #20920:  Fix jquery migrate being loaded two times in FO (by @matthieu-rolland)
+  - Bug fix:
+    - #21362:  Possibility to check if we're in product quick view mode (by @kpodemski)
+    - #20927:  Avoid possible notice due to breaking change (by @kpodemski)
+    - #21297:  Fix variable name in order_customer_comment.html.twig (by @okom3pom)
+    - #21266:  Fix wrong combination image shown when clicking to zoom (by @atomiix)
+    - #20598:  Do not reconvert discounts (by @atomiix)
 - Core:
   - Improvement:
+    - #21449:  Update modules (blockreassurance/dashtrends/ps_checkpayment/welcome) (by @Progi1984)
+    - #21138:  Add changelog for the 1.7.6.8 version (by @PierreRambaud)
     - #21124:  Bump version to 1.7.6.8, bump contactform version (by @PierreRambaud)
+    - #20794:  Send an 'action' parameter to actionProductCancel hook (by @matthieu-rolland)
+    - #20738:  Disable jquery migrate deprecation messages when prestashop debug mode is off (by @matthieu-rolland)
   - Bug fix:
-    - #GHSA-rc8c-v7rq-q392: Stored XSS in upload files (by @PierreRambaud)
-    - #GHSA-5cp2-r794-w37w: Potential XSS injection with contact form (by @PierreRambaud)
-    - #GHSA-fghq-8h87-826g: Blind SQLi in Catalog Product edition (by @PierreRambaud)
+    - #21609:  Make PrestaShop compatible with composer 2.0 (by @atomiix)
+    - #21390:  Fix getting proper cover for image (by @kpodemski)
+    - #GHSA-rc8c-v7rq-q392:  Stored XSS in upload files (by @PierreRambaud)
+    - #GHSA-5cp2-r794-w37w:  Potential XSS injection with contact form (by @PierreRambaud)
+    - #GHSA-fghq-8h87-826g:  Blind SQLi in Catalog Product edition (by @PierreRambaud)
+    - #20992:  Update live polyfill in BO, FO core theme, and remove it from FO classic theme (by @matthieu-rolland)
+    - #20741:  Fix cumulative free gift + percentage discounts (by @atomiix)
+    - #20693:  Cancel/Refunds... adding missing hooks and cancel product refactor (by @matthieu-rolland)
+    - #20758:  Fix cumulative percentage behat test (by @matthieu-rolland)
+  - Refactoring:
+    - #20378:  Use Computing precision instead of hardcoded 2 (by @matks)
+- Installer:
+  - Improvement:
+    - #21178:  Update modules for 177 (by @jolelievre)
+  - Bug fix:
+    - #20201:  Fix throw InstallControllerHttpSystem::trans during installation process (by @mushroot)
+- Localization:
+  - Improvement:
+    - #21607:  Update translation catalogs (by @jolelievre)
+    - #21509:  Update catalog with latest wordings (by @jolelievre)
+    - #21179:  Update translation catalogues for 177 (by @jolelievre)
+- Tests:
+  - Improvement:
+    - #21497:  Improve behat config which did not use appropriate format for paths (by @jolelievre)
+    - #20850:  Add behat tests for order shipping computing, and add new carriers fixtures (by @jolelievre)
+  - Bug fix:
+    - #21532:  Update behat and gerkhin to allow debugging in PHPStorm (by @jolelievre)
+  - Refactoring:
+    - #21544:  Fix image name for CRUD title test (by @boubkerbribri)
+    - #21512:  Add tests 'Helper card' for catalog pages (by @boubkerbribri)
+    - #21508:  Add test 'CRUD search engines' (by @boubkerbribri)
+    - #21505:  Add test pagination stores (by @boubkerbribri)
+    - #21481:  Add test 'Sort and pagination price rule' (by @nesrineabdmouleh)
+    - #21473:  Add test 'Filter sort and pagination order status' (by @nesrineabdmouleh)
+    - #21462:  Add var for visible selectors in methods (by @nesrineabdmouleh)
+    - #21459:  Add test 'CRUD order status' (by @nesrineabdmouleh)
+    - #21452:  Fix page name in orders tests (by @boubkerbribri)
+    - #21399:  Add test 'Help card on attributes page' (by @boubkerbribri)
+    - #21405:  Add test 'Filter, sort and pagination search engines' (by @boubkerbribri)
+    - #21403:  Add test 'Sort and pagination countries table' (by @nesrineabdmouleh)
+    - #21411:  Add test 'Sort and pagination states table' (by @nesrineabdmouleh)
+    - #21415:  Add test 'Filter, sort and pagination tax rules group' (by @nesrineabdmouleh)
+    - #21433:  Fix a small error in nightly 14-10-2020 (by @nesrineabdmouleh)
+    - #21402:  Add test 'Sort and pagination zones table' (by @nesrineabdmouleh)
+    - #21385:  Add test 'Filter and bulk actions catalog price rules' (by @nesrineabdmouleh)
+    - #21396:  Add navigation when selecting pagination limit (by @boubkerbribri)
+    - #21367:  Add test 'CRUD catalog price rule' (by @nesrineabdmouleh)
+    - #21334:  Create state with only iso code that does not exist (by @boubkerbribri)
+    - #21341:  Fix test 'CRUD carrier' in nightly 07/10/2020 (by @nesrineabdmouleh)
+    - #21339:  Delete all references to ttc in UI folder (by @boubkerbribri)
+    - #21327:  Create first test 'Computing precision set to 3' for UI tests new campaign  'Regression' (by @boubkerbribri)
+    - #21324:  Add new test 'Change position for attributes and values' (by @boubkerbribri)
+    - #21308:  Fix tests errors in nightly 04/10/2020 (by @nesrineabdmouleh)
+    - #21302:  Change UI tests workflow name (by @boubkerbribri)
+    - #21255:  Add test 'Sort and pagination shopping carts' (by @nesrineabdmouleh)
+    - #21265:  Fix tests errors in nightly 02/10/2020 (by @nesrineabdmouleh)
+    - #21256:  Fix test 'Filter shopping carts' (by @nesrineabdmouleh)
+    - #21188:  Refactoring create cart rule and faker in tests  (by @boubkerbribri)
+    - #21225:  Add test 'Filter shopping carts' (by @nesrineabdmouleh)
+    - #21147:  Add test 'Filter sort and pagination carriers' (by @nesrineabdmouleh)
+    - #21184:  Avoid creating new state with existing iso code (by @boubkerbribri)
+    - #21162:  Add a DB_SERVER global variable for tests (by @SD1982)
+    - #21182:  Add test 'Pagination and sort cart rule' (by @nesrineabdmouleh)
+    - #21122:  Add github action to check eslint and step identifier doubles for UI tests (by @boubkerbribri)
+    - #21139:  Change faker for locations tests (by @boubkerbribri)
+    - #21123:  Add test 'Sort and pagination attributes' (by @nesrineabdmouleh)
+    - #21064:  Add test 'Crud carrier' (by @nesrineabdmouleh)
+    - #21116:  Fix Error in last PR to force playwright@1.0.2 (by @boubkerbribri)
+    - #20935:  Add test 'Bulk actions countries' (by @boubkerbribri)
+    - #21097:  Downgrade playwright to version 1.0.2 (by @boubkerbribri)
+    - #21090:  Unskip test 'Sort by post code' in stores page after fixing issue (by @boubkerbribri)
+    - #21089:  Increase timeout for 'Sort' tests (by @boubkerbribri)
+    - #21043:  Fix test context in 'Sort and pagination image settings' (by @nesrineabdmouleh)
+    - #21056:  Fix tests errors in nightly 18-09-20 (by @boubkerbribri)
+    - #21040:  Add test 'Sort Stores' (by @boubkerbribri)
+    - #20847:  Add test 'Configure contact details' (by @nesrineabdmouleh)
+    - #20997:  Add test 'Sort and pagination image settings' (by @nesrineabdmouleh)
+    - #21029:  Delete force install playwright on docker (by @boubkerbribri)
+    - #20988:  Fix 'CRUD Cart Rule' Test (by @boubkerbribri)
+    - #20932:  Add test 'Bulk actions states' (by @boubkerbribri)
+    - #20961:  Add test 'Filter, quick edit and bulk actions cart rules' (by @boubkerbribri)
+    - #20922:  Add test 'CRUD states' (by @boubkerbribri)
+    - #20919:  Add test 'Bulk actions zones' (by @boubkerbribri)
+    - #20913:  Avoid creating the same name for different values using faker (by @boubkerbribri)
+    - #20899:  Add test 'CRUD Zone' (by @boubkerbribri)
+    - #20896:  Add test 'Filter and quick edit states' (by @boubkerbribri)
+    - #20876:  Add test 'Filter and quick edit zone' (by @boubkerbribri)
+    - #20873:  Improve pagination on customers test (by @boubkerbribri)
+    - #20883:  Fix duplicates steps identifiers in UI tests (by @boubkerbribri)
+    - #20881:  Add test 'Filter and quick edit countries' (by @boubkerbribri)
+    - #20859:  Add test 'CRUD tax Rule' (by @nesrineabdmouleh)
+    - #20831:  Add test 'CRUD country' (by @nesrineabdmouleh)
+    - #20802:  Add test 'CRUD cart rule' (by @nesrineabdmouleh)
+    - #20759:  Add test 'Bulk delete attributes' (by @boubkerbribri)
+    - #20724:  Add test  'Default pack stock management' (by @nesrineabdmouleh)
+    - #20749:  Add tests 'Filter features' and 'Filter feature values' (by @boubkerbribri)
+    - #20735:  Add test 'CRUD attributes and values' (by @boubkerbribri)
+    - #20692:  Add tests 'Filter attributes' and 'Filter attribute values' (by @boubkerbribri)
+    - #20683:  Fix faker data - Title's name should take at most 20 characters  (by @boubkerbribri)
+    - #20599:  Functional tests -  Add CRUD and Bulk actions tests for image types (by @boubkerbribri)
+    - #20551:  Functional tests - Add tests 'CRUD and bulk delete Groups' (by @boubkerbribri)
 
 ####################################
 #   v1.7.7.0-beta.2 - (2020-08-18)
@@ -262,40 +466,6 @@ Release Notes for PrestaShop 1.7
     - #18878: Functional tests - Change selectors for international pages (by @boubkerbribri)
     - #18866: Functional tests - Fix adding customer to voucher (by @boubkerbribri)
     - #18849: Functional tests - Change selectors for catalog pages (by @boubkerbribri)
-
-####################################
-#   v1.7.6.6 - (2020-07-01)
-####################################
-- Back Office:
-  - Bug fix:
-    - #19814: Change buttons in modal bulk of module page to avoid black color (by @NeOMakinG)
-    - #18975: BO - Customer View page - Added Green alert when editing a voucher (by @Progi1984)
-    - #19942: Cast changelogs to array for twig - Backport of #19778 (by @atomiix)
-    - #19718: Remove i18n access restrictions (by @PierreRambaud)
-    - #19990: Fix BO page Module permission checks (by @jolelievre)
-- Front Office:
-  - Improvement:
-    - #19800: Add a new selector in order to select the product page more precisely (by @NeOMakinG)
-- Core:
-  - Improvement:
-    - #19943: Update Composer dependencies and prestashop module versions (by @PierreRambaud)
-    - #19980: Update version number to 1.7.6.6 (by @matks)
-    - #19979: Update outdated assets in 176x (by @matks)
-    - #19984: Update license headers for PS 1.7.6.6 (by @matks)
-  - Bug fix:
-    - #19010: Added missing required_once for Datas class (by @atomiix)
-    - #19986: Fix php7-only code into 1766 (by @matks)
-    - #20018: Remove COLLATION placeholder from 1.7.6.6.sql (by @matks)
-    - #GHSA-mc98-xjm3-c4fm - External control of configuration setting in the dashboard (by @PierreRambaud)
-    - #GHSA-997j-f42g-x57c - Information exposure in upload directory (by @PierreRambaud)
-    - #GHSA-492w-2pp5-xhvg - Information disclosure in release archive (by @PierreRambaud)
-    - #GHSA-ccvh-jh5x-mpg4 - Improper authentication (by @PierreRambaud)
-    - #GHSA-xp3x-3h8q-c386 - Improper access controls in Carrier page, Module Manager and Module Positions (by @PierreRambaud)
-    - #GHSA-qgh4-95j7-p3vj - Reflected XSS in product page (by @PierreRambaud)
-    - #GHSA-v4pg-q2cv-f7x4 - Stored XSS in AdminQuickAccesses (by @PierreRambaud)
-- Web Services:
-  - Bug fix:
-    - #18969: Make api backward compatible for Currencies (by @atomiix)
 
 ####################################
 #   v1.7.7.0-beta.1 - (2020-05-13)
@@ -1291,11 +1461,63 @@ Release Notes for PrestaShop 1.7
     - #13772: Correct usage of fixtures on behat tests for taxes (by @tomlev)
 
 ####################################
+#   v1.7.6.9 - (2020-11-16)
+####################################
+- Core:
+  - Bug fix:
+    - #GHSA-frf2-c9q3-qg9m:  Improper Access Control with submitReorder function (by @PierreRambaud)
+
+####################################
+#   v1.7.6.8 - (2020-09-24)
+####################################
+- Core:
+  - Improvement:
+    - #21124:  Bump version to 1.7.6.8, bump contactform version (by @PierreRambaud)
+  - Bug fix:
+    - #GHSA-rc8c-v7rq-q392: Stored XSS in upload files (by @PierreRambaud)
+    - #GHSA-5cp2-r794-w37w: Potential XSS injection with contact form (by @PierreRambaud)
+    - #GHSA-fghq-8h87-826g: Blind SQLi in Catalog Product edition (by @PierreRambaud)
+
+####################################
 #   v1.7.6.7 - (2020-07-03)
 ####################################
 - Front Office:
   - Bug fix:
     - #20052: Fix product page event theme sided not getting fired  (by @NeOMakinG)
+
+####################################
+#   v1.7.6.6 - (2020-07-01)
+####################################
+- Back Office:
+  - Bug fix:
+    - #19814: Change buttons in modal bulk of module page to avoid black color (by @NeOMakinG)
+    - #18975: BO - Customer View page - Added Green alert when editing a voucher (by @Progi1984)
+    - #19942: Cast changelogs to array for twig - Backport of #19778 (by @atomiix)
+    - #19718: Remove i18n access restrictions (by @PierreRambaud)
+    - #19990: Fix BO page Module permission checks (by @jolelievre)
+- Front Office:
+  - Improvement:
+    - #19800: Add a new selector in order to select the product page more precisely (by @NeOMakinG)
+- Core:
+  - Improvement:
+    - #19943: Update Composer dependencies and prestashop module versions (by @PierreRambaud)
+    - #19980: Update version number to 1.7.6.6 (by @matks)
+    - #19979: Update outdated assets in 176x (by @matks)
+    - #19984: Update license headers for PS 1.7.6.6 (by @matks)
+  - Bug fix:
+    - #19010: Added missing required_once for Datas class (by @atomiix)
+    - #19986: Fix php7-only code into 1766 (by @matks)
+    - #20018: Remove COLLATION placeholder from 1.7.6.6.sql (by @matks)
+    - #GHSA-mc98-xjm3-c4fm - External control of configuration setting in the dashboard (by @PierreRambaud)
+    - #GHSA-997j-f42g-x57c - Information exposure in upload directory (by @PierreRambaud)
+    - #GHSA-492w-2pp5-xhvg - Information disclosure in release archive (by @PierreRambaud)
+    - #GHSA-ccvh-jh5x-mpg4 - Improper authentication (by @PierreRambaud)
+    - #GHSA-xp3x-3h8q-c386 - Improper access controls in Carrier page, Module Manager and Module Positions (by @PierreRambaud)
+    - #GHSA-qgh4-95j7-p3vj - Reflected XSS in product page (by @PierreRambaud)
+    - #GHSA-v4pg-q2cv-f7x4 - Stored XSS in AdminQuickAccesses (by @PierreRambaud)
+- Web Services:
+  - Bug fix:
+    - #18969: Make api backward compatible for Currencies (by @atomiix)
 
 ####################################
 #   v1.7.6.5 - (2020-04-17)

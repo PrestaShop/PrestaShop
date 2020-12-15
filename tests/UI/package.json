@@ -14,7 +14,7 @@
     "sanity-travis": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
     "functional-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/*",
     "regression-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/regression/*",
-    "step-idenfiers-checker": "node campaigns/tools/stepIdentifiersChecker.js "
+    "step-identifiers-checker": "node campaigns/tools/stepIdentifiersChecker.js "
   },
   "_moduleAliases": {
     "@pages": "pages",

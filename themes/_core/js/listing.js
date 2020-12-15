@@ -25,8 +25,8 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
-$(document).ready(function () {
-  $('body').on('click', prestashop.selectors.listing.quickview, function (event) {
+$(document).ready(() => {
+  $('body').on('click', prestashop.selectors.listing.quickview, (event) => {
     prestashop.emit('clickQuickView', {
       dataset: $(event.target).closest(prestashop.selectors.product.miniature).data(),
     });

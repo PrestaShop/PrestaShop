@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2019 Unicode, Inc.
+<!-- Copyright © 1991-2020 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -52,6 +52,7 @@ annotations.
 			<language type="arp">Arapaho</language>
 			<language type="arq">Algerian Arabic</language>
 			<language type="ars">Najdi Arabic</language>
+			<language type="ars" alt="menu">Arabic, Najdi</language>
 			<language type="arw">Arawak</language>
 			<language type="ary">Moroccan Arabic</language>
 			<language type="arz">Egyptian Arabic</language>
@@ -126,6 +127,8 @@ annotations.
 			<language type="chy">Cheyenne</language>
 			<language type="cic">Chickasaw</language>
 			<language type="ckb">Central Kurdish</language>
+			<language type="ckb" alt="menu">Kurdish, Central</language>
+			<language type="ckb" alt="variant">Kurdish, Sorani</language>
 			<language type="co">Corsican</language>
 			<language type="cop">Coptic</language>
 			<language type="cps">Capiznon</language>
@@ -662,6 +665,7 @@ annotations.
 			<script type="Ahom">Ahom</script>
 			<script type="Arab">Arabic</script>
 			<script type="Arab" alt="variant">Perso-Arabic</script>
+			<script type="Aran">Nastaliq</script>
 			<script type="Armi">Imperial Aramaic</script>
 			<script type="Armn">Armenian</script>
 			<script type="Avst">Avestan</script>
@@ -683,12 +687,14 @@ annotations.
 			<script type="Cari">Carian</script>
 			<script type="Cham">Cham</script>
 			<script type="Cher">Cherokee</script>
+			<script type="Chrs">Chorasmian</script>
 			<script type="Cirt">Cirth</script>
 			<script type="Copt">Coptic</script>
 			<script type="Cprt">Cypriot</script>
 			<script type="Cyrl">Cyrillic</script>
 			<script type="Cyrs">Old Church Slavonic Cyrillic</script>
 			<script type="Deva">Devanagari</script>
+			<script type="Diak">Dives Akuru</script>
 			<script type="Dogr">Dogra</script>
 			<script type="Dsrt">Deseret</script>
 			<script type="Dupl">Duployan shorthand</script>
@@ -735,6 +741,7 @@ annotations.
 			<script type="Khar">Kharoshthi</script>
 			<script type="Khmr">Khmer</script>
 			<script type="Khoj">Khojki</script>
+			<script type="Kits">Khitan small script</script>
 			<script type="Knda">Kannada</script>
 			<script type="Kore">Korean</script>
 			<script type="Kpel">Kpelle</script>
@@ -842,6 +849,7 @@ annotations.
 			<script type="Xpeo">Old Persian</script>
 			<script type="Xsux">Sumero-Akkadian Cuneiform</script>
 			<script type="Xsux" alt="short">S-A Cuneiform</script>
+			<script type="Yezi">Yezidi</script>
 			<script type="Yiii">Yi</script>
 			<script type="Zanb">Zanabazar Square</script>
 			<script type="Zinh">Inherited</script>
@@ -942,6 +950,7 @@ annotations.
 			<territory type="CR">Costa Rica</territory>
 			<territory type="CU">Cuba</territory>
 			<territory type="CV">Cape Verde</territory>
+			<territory type="CV" alt="variant">Cabo Verde</territory>
 			<territory type="CW">Curaçao</territory>
 			<territory type="CX">Christmas Island</territory>
 			<territory type="CY">Cyprus</territory>
@@ -1234,6 +1243,7 @@ annotations.
 			<key type="colStrength">Sorting Strength</key>
 			<key type="currency">Currency</key>
 			<key type="d0">Transform Destination</key>
+			<key type="dx">Dictionary Break Exclusions</key>
 			<key type="em">Emoji Presentation Style</key>
 			<key type="fw">First day of week</key>
 			<key type="h0">Mixed-in</key>
@@ -1439,6 +1449,7 @@ annotations.
 			<type key="numbers" type="cham">Cham Digits</type>
 			<type key="numbers" type="cyrl">Cyrillic Numerals</type>
 			<type key="numbers" type="deva">Devanagari Digits</type>
+			<type key="numbers" type="diak">Dives Akuru Digits</type>
 			<type key="numbers" type="ethi">Ethiopic Numerals</type>
 			<type key="numbers" type="finance">Financial Numerals</type>
 			<type key="numbers" type="fullwide">Full-Width Digits</type>
@@ -1494,6 +1505,7 @@ annotations.
 			<type key="numbers" type="roman">Roman Numerals</type>
 			<type key="numbers" type="romanlow">Roman Lowercase Numerals</type>
 			<type key="numbers" type="saur">Saurashtra Digits</type>
+			<type key="numbers" type="segment">Segmented Digits</type>
 			<type key="numbers" type="shrd">Sharada Digits</type>
 			<type key="numbers" type="sind">Khudawadi Digits</type>
 			<type key="numbers" type="sinh">Sinhala Lith Digits</type>
@@ -4002,7 +4014,9 @@ annotations.
 			</metazone>
 			<metazone type="Norfolk">
 				<long>
-					<standard>Norfolk Island Time</standard>
+					<generic>Norfolk Island Time</generic>
+					<standard>Norfolk Island Standard Time</standard>
+					<daylight>Norfolk Island Daylight Time</daylight>
 				</long>
 			</metazone>
 			<metazone type="Noronha">
@@ -5945,15 +5959,112 @@ annotations.
 	</numbers>
 	<units>
 		<unitLength type="long">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>deci{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>centi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>milli{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>micro{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>nano{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>pico{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>femto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>atto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>zepto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>yocto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>deka{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>hecto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>kilo{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>mega{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>giga{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>tera{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>peta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>exa{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>zetta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>yotta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p1">
+				<unitPrefixPattern>kibi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p2">
+				<unitPrefixPattern>mebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p3">
+				<unitPrefixPattern>gibi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p4">
+				<unitPrefixPattern>tebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p5">
+				<unitPrefixPattern>pebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p6">
+				<unitPrefixPattern>exbi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p7">
+				<unitPrefixPattern>zebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p8">
+				<unitPrefixPattern>yobi{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0} per {1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="power2">
+				<compoundUnitPattern1>square {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">square {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">square {0}</compoundUnitPattern1>
+			</compoundUnit>
+			<compoundUnit type="power3">
+				<compoundUnitPattern1>cubic {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">cubic {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">cubic {0}</compoundUnitPattern1>
+			</compoundUnit>
+			<compoundUnit type="times">
+				<compoundUnitPattern>{0}-{1}</compoundUnitPattern>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>g-force</displayName>
 				<unitPattern count="one">{0} g-force</unitPattern>
 				<unitPattern count="other">{0} g-force</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>meters per second squared</displayName>
 				<unitPattern count="one">{0} meter per second squared</unitPattern>
 				<unitPattern count="other">{0} meters per second squared</unitPattern>
@@ -6053,7 +6164,7 @@ annotations.
 				<unitPattern count="one">{0} millimole per liter</unitPattern>
 				<unitPattern count="other">{0} millimoles per liter</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>parts per million</displayName>
 				<unitPattern count="one">{0} part per million</unitPattern>
 				<unitPattern count="other">{0} parts per million</unitPattern>
@@ -6083,7 +6194,7 @@ annotations.
 				<unitPattern count="one">{0} liter per kilometer</unitPattern>
 				<unitPattern count="other">{0} liters per kilometer</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>liters per 100 kilometers</displayName>
 				<unitPattern count="one">{0} liter per 100 kilometers</unitPattern>
 				<unitPattern count="other">{0} liters per 100 kilometers</unitPattern>
@@ -6350,6 +6461,16 @@ annotations.
 				<unitPattern count="one">{0} dot per inch</unitPattern>
 				<unitPattern count="other">{0} dots per inch</unitPattern>
 			</unit>
+			<unit type="graphics-dot">
+				<displayName>dot</displayName>
+				<unitPattern count="one">{0} dot</unitPattern>
+				<unitPattern count="other">{0} dot</unitPattern>
+			</unit>
+			<unit type="length-earth-radius">
+				<displayName>earth radius</displayName>
+				<unitPattern count="one">{0} earth radius</unitPattern>
+				<unitPattern count="other">{0} earth radius</unitPattern>
+			</unit>
 			<unit type="length-kilometer">
 				<displayName>kilometers</displayName>
 				<unitPattern count="one">{0} kilometer</unitPattern>
@@ -6465,6 +6586,16 @@ annotations.
 				<unitPattern count="one">{0} lux</unitPattern>
 				<unitPattern count="other">{0} lux</unitPattern>
 			</unit>
+			<unit type="light-candela">
+				<displayName>candela</displayName>
+				<unitPattern count="one">{0} candela</unitPattern>
+				<unitPattern count="other">{0} candela</unitPattern>
+			</unit>
+			<unit type="light-lumen">
+				<displayName>lumen</displayName>
+				<unitPattern count="one">{0} lumen</unitPattern>
+				<unitPattern count="other">{0} lumen</unitPattern>
+			</unit>
 			<unit type="light-solar-luminosity">
 				<displayName>solar luminosities</displayName>
 				<unitPattern count="one">{0} solar luminosity</unitPattern>
@@ -6544,6 +6675,11 @@ annotations.
 				<unitPattern count="one">{0} solar mass</unitPattern>
 				<unitPattern count="other">{0} solar masses</unitPattern>
 			</unit>
+			<unit type="mass-grain">
+				<displayName>grain</displayName>
+				<unitPattern count="one">{0} grain</unitPattern>
+				<unitPattern count="other">{0} grain</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>gigawatts</displayName>
 				<unitPattern count="one">{0} gigawatt</unitPattern>
@@ -6574,17 +6710,17 @@ annotations.
 				<unitPattern count="one">{0} horsepower</unitPattern>
 				<unitPattern count="other">{0} horsepower</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>millimeters of mercury</displayName>
 				<unitPattern count="one">{0} millimeter of mercury</unitPattern>
 				<unitPattern count="other">{0} millimeters of mercury</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
-				<displayName>pounds per square inch</displayName>
-				<unitPattern count="one">{0} pound per square inch</unitPattern>
-				<unitPattern count="other">{0} pounds per square inch</unitPattern>
+			<unit type="pressure-pound-force-per-square-inch">
+				<displayName>pounds-force per square inch</displayName>
+				<unitPattern count="one">{0} pound-force per square inch</unitPattern>
+				<unitPattern count="other">{0} pounds-force per square inch</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>inches of mercury</displayName>
 				<unitPattern count="one">{0} inch of mercury</unitPattern>
 				<unitPattern count="other">{0} inches of mercury</unitPattern>
@@ -6644,6 +6780,10 @@ annotations.
 				<unitPattern count="one">{0} knot</unitPattern>
 				<unitPattern count="other">{0} knots</unitPattern>
 			</unit>
+			<unit type="temperature-generic">
+				<unitPattern count="one" draft="provisional">{0} degree</unitPattern>
+				<unitPattern count="other" draft="provisional">{0} degrees</unitPattern>
+			</unit>
 			<unit type="temperature-celsius">
 				<displayName>degrees Celsius</displayName>
 				<unitPattern count="one">{0} degree Celsius</unitPattern>
@@ -6659,10 +6799,10 @@ annotations.
 				<unitPattern count="one">{0} kelvin</unitPattern>
 				<unitPattern count="other">{0} kelvins</unitPattern>
 			</unit>
-			<unit type="torque-pound-foot">
+			<unit type="torque-pound-force-foot">
 				<displayName>pound-feet</displayName>
-				<unitPattern count="one">{0} pound-foot</unitPattern>
-				<unitPattern count="other">{0} pound-feet</unitPattern>
+				<unitPattern count="one">{0} pound-force-foot</unitPattern>
+				<unitPattern count="other">{0} pound-force-feet</unitPattern>
 			</unit>
 			<unit type="torque-newton-meter">
 				<displayName>newton-meters</displayName>
@@ -6809,6 +6949,41 @@ annotations.
 				<unitPattern count="one">{0} barrel</unitPattern>
 				<unitPattern count="other">{0} barrels</unitPattern>
 			</unit>
+			<unit type="volume-dessert-spoon">
+				<displayName>dessert spoon</displayName>
+				<unitPattern count="one">{0} dessert spoon</unitPattern>
+				<unitPattern count="other">{0} dessert spoon</unitPattern>
+			</unit>
+			<unit type="volume-dessert-spoon-imperial">
+				<displayName>Imp. dessert spoon</displayName>
+				<unitPattern count="one">{0} Imp. dessert spoon</unitPattern>
+				<unitPattern count="other">{0} Imp. dessert spoon</unitPattern>
+			</unit>
+			<unit type="volume-drop">
+				<displayName>drop</displayName>
+				<unitPattern count="one">{0} drop</unitPattern>
+				<unitPattern count="other">{0} drop</unitPattern>
+			</unit>
+			<unit type="volume-dram">
+				<displayName>dram</displayName>
+				<unitPattern count="one">{0} dram</unitPattern>
+				<unitPattern count="other">{0} dram</unitPattern>
+			</unit>
+			<unit type="volume-jigger">
+				<displayName>jigger</displayName>
+				<unitPattern count="one">{0} jigger</unitPattern>
+				<unitPattern count="other">{0} jigger</unitPattern>
+			</unit>
+			<unit type="volume-pinch">
+				<displayName>pinch</displayName>
+				<unitPattern count="one">{0} pinch</unitPattern>
+				<unitPattern count="other">{0} pinch</unitPattern>
+			</unit>
+			<unit type="volume-quart-imperial">
+				<displayName>Imp. quart</displayName>
+				<unitPattern count="one">{0} Imp. quart</unitPattern>
+				<unitPattern count="other">{0} Imp. quart</unitPattern>
+			</unit>
 			<coordinateUnit>
 				<displayName>cardinal direction</displayName>
 				<coordinateUnitPattern type="east">{0} east</coordinateUnitPattern>
@@ -6826,7 +7001,7 @@ annotations.
 				<unitPattern count="one">{0} G</unitPattern>
 				<unitPattern count="other">{0} G</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>meters/sec²</displayName>
 				<unitPattern count="one">{0} m/s²</unitPattern>
 				<unitPattern count="other">{0} m/s²</unitPattern>
@@ -6926,7 +7101,7 @@ annotations.
 				<unitPattern count="one">{0} mmol/L</unitPattern>
 				<unitPattern count="other">{0} mmol/L</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>parts/million</displayName>
 				<unitPattern count="one">{0} ppm</unitPattern>
 				<unitPattern count="other">{0} ppm</unitPattern>
@@ -6956,7 +7131,7 @@ annotations.
 				<unitPattern count="one">{0} L/km</unitPattern>
 				<unitPattern count="other">{0} L/km</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>L/100 km</displayName>
 				<unitPattern count="one">{0} L/100 km</unitPattern>
 				<unitPattern count="other">{0} L/100 km</unitPattern>
@@ -7084,9 +7259,9 @@ annotations.
 				<unitPattern count="other">{0} ms</unitPattern>
 			</unit>
 			<unit type="duration-microsecond">
-				<displayName>μsecs</displayName>
-				<unitPattern count="one">{0} μs</unitPattern>
-				<unitPattern count="other">{0} μs</unitPattern>
+				<displayName>µsecs</displayName>
+				<unitPattern count="one">{0} µs</unitPattern>
+				<unitPattern count="other">{0} µs</unitPattern>
 			</unit>
 			<unit type="duration-nanosecond">
 				<displayName>nanosecs</displayName>
@@ -7447,17 +7622,17 @@ annotations.
 				<unitPattern count="one">{0} hp</unitPattern>
 				<unitPattern count="other">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>mmHg</displayName>
 				<unitPattern count="one">{0} mmHg</unitPattern>
 				<unitPattern count="other">{0} mmHg</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>psi</displayName>
 				<unitPattern count="one">{0} psi</unitPattern>
 				<unitPattern count="other">{0} psi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>inHg</displayName>
 				<unitPattern count="one">{0} inHg</unitPattern>
 				<unitPattern count="other">{0} inHg</unitPattern>
@@ -7465,7 +7640,7 @@ annotations.
 			<unit type="pressure-bar">
 				<displayName>bar</displayName>
 				<unitPattern count="one">{0} bar</unitPattern>
-				<unitPattern count="other">{0} bars</unitPattern>
+				<unitPattern count="other">{0} bar</unitPattern>
 			</unit>
 			<unit type="pressure-millibar">
 				<displayName>mbar</displayName>
@@ -7532,7 +7707,7 @@ annotations.
 				<unitPattern count="one">{0} K</unitPattern>
 				<unitPattern count="other">{0} K</unitPattern>
 			</unit>
-			<unit type="torque-pound-foot">
+			<unit type="torque-pound-force-foot">
 				<displayName>lbf⋅ft</displayName>
 				<unitPattern count="one">{0} lbf⋅ft</unitPattern>
 				<unitPattern count="other">{0} lbf⋅ft</unitPattern>
@@ -7692,7 +7867,7 @@ annotations.
 				<unitPattern count="one">{0}G</unitPattern>
 				<unitPattern count="other">{0}Gs</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>m/s²</displayName>
 				<unitPattern count="one">{0}m/s²</unitPattern>
 				<unitPattern count="other">{0}m/s²</unitPattern>
@@ -7722,10 +7897,22 @@ annotations.
 				<unitPattern count="one">{0}″</unitPattern>
 				<unitPattern count="other">{0}″</unitPattern>
 			</unit>
+			<unit type="area-square-kilometer">
+				<displayName>km²</displayName>
+				<unitPattern count="one">{0}km²</unitPattern>
+				<unitPattern count="other">{0}km²</unitPattern>
+				<perUnitPattern>{0}/km²</perUnitPattern>
+			</unit>
 			<unit type="area-hectare">
 				<displayName>hectare</displayName>
 				<unitPattern count="one">{0}ha</unitPattern>
 				<unitPattern count="other">{0}ha</unitPattern>
+			</unit>
+			<unit type="area-square-meter">
+				<displayName>meters²</displayName>
+				<unitPattern count="one">{0}m²</unitPattern>
+				<unitPattern count="other">{0}m²</unitPattern>
+				<perUnitPattern>{0}/m²</perUnitPattern>
 			</unit>
 			<unit type="area-square-centimeter">
 				<displayName>cm²</displayName>
@@ -7778,7 +7965,7 @@ annotations.
 				<unitPattern count="one">{0}mmol/L</unitPattern>
 				<unitPattern count="other">{0}mmol/L</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>ppm</displayName>
 				<unitPattern count="one">{0}ppm</unitPattern>
 				<unitPattern count="other">{0}ppm</unitPattern>
@@ -7808,7 +7995,7 @@ annotations.
 				<unitPattern count="one">{0}L/km</unitPattern>
 				<unitPattern count="other">{0}L/km</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>L/100km</displayName>
 				<unitPattern count="one">{0}L/100km</unitPattern>
 				<unitPattern count="other">{0}L/100km</unitPattern>
@@ -7824,52 +8011,52 @@ annotations.
 				<unitPattern count="other">{0}m/gUK</unitPattern>
 			</unit>
 			<unit type="digital-petabyte">
-				<displayName>PByte</displayName>
+				<displayName>PB</displayName>
 				<unitPattern count="one">{0}PB</unitPattern>
 				<unitPattern count="other">{0}PB</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
-				<displayName>TByte</displayName>
+				<displayName>TB</displayName>
 				<unitPattern count="one">{0}TB</unitPattern>
 				<unitPattern count="other">{0}TB</unitPattern>
 			</unit>
 			<unit type="digital-terabit">
-				<displayName>Tbit</displayName>
+				<displayName>Tb</displayName>
 				<unitPattern count="one">{0}Tb</unitPattern>
 				<unitPattern count="other">{0}Tb</unitPattern>
 			</unit>
 			<unit type="digital-gigabyte">
-				<displayName>GByte</displayName>
+				<displayName>GB</displayName>
 				<unitPattern count="one">{0}GB</unitPattern>
 				<unitPattern count="other">{0}GB</unitPattern>
 			</unit>
 			<unit type="digital-gigabit">
-				<displayName>Gbit</displayName>
+				<displayName>Gb</displayName>
 				<unitPattern count="one">{0}Gb</unitPattern>
 				<unitPattern count="other">{0}Gb</unitPattern>
 			</unit>
 			<unit type="digital-megabyte">
-				<displayName>MByte</displayName>
+				<displayName>MB</displayName>
 				<unitPattern count="one">{0}MB</unitPattern>
 				<unitPattern count="other">{0}MB</unitPattern>
 			</unit>
 			<unit type="digital-megabit">
-				<displayName>Mbit</displayName>
+				<displayName>Mb</displayName>
 				<unitPattern count="one">{0}Mb</unitPattern>
 				<unitPattern count="other">{0}Mb</unitPattern>
 			</unit>
 			<unit type="digital-kilobyte">
-				<displayName>kByte</displayName>
+				<displayName>kB</displayName>
 				<unitPattern count="one">{0}kB</unitPattern>
 				<unitPattern count="other">{0}kB</unitPattern>
 			</unit>
 			<unit type="digital-kilobit">
-				<displayName>kbit</displayName>
+				<displayName>kb</displayName>
 				<unitPattern count="one">{0}kb</unitPattern>
 				<unitPattern count="other">{0}kb</unitPattern>
 			</unit>
 			<unit type="digital-byte">
-				<displayName>byte</displayName>
+				<displayName>B</displayName>
 				<unitPattern count="one">{0}B</unitPattern>
 				<unitPattern count="other">{0}B</unitPattern>
 			</unit>
@@ -7877,6 +8064,11 @@ annotations.
 				<displayName>bit</displayName>
 				<unitPattern count="one">{0}bit</unitPattern>
 				<unitPattern count="other">{0}bit</unitPattern>
+			</unit>
+			<unit type="duration-century">
+				<displayName>c</displayName>
+				<unitPattern count="one">{0}c</unitPattern>
+				<unitPattern count="other">{0}c</unitPattern>
 			</unit>
 			<unit type="duration-decade">
 				<displayName>dec</displayName>
@@ -7925,8 +8117,8 @@ annotations.
 			</unit>
 			<unit type="duration-microsecond">
 				<displayName>μsec</displayName>
-				<unitPattern count="one">{0}μs</unitPattern>
-				<unitPattern count="other">{0}μs</unitPattern>
+				<unitPattern count="one">{0}µs</unitPattern>
+				<unitPattern count="other">{0}µs</unitPattern>
 			</unit>
 			<unit type="duration-nanosecond">
 				<displayName>ns</displayName>
@@ -8063,6 +8255,16 @@ annotations.
 				<unitPattern count="one">{0}dpi</unitPattern>
 				<unitPattern count="other">{0}dpi</unitPattern>
 			</unit>
+			<unit type="graphics-dot">
+				<displayName>dot</displayName>
+				<unitPattern count="one">{0}dot</unitPattern>
+				<unitPattern count="other">{0}dot</unitPattern>
+			</unit>
+			<unit type="length-earth-radius">
+				<displayName>R⊕</displayName>
+				<unitPattern count="one">{0}R⊕</unitPattern>
+				<unitPattern count="other">{0}R⊕</unitPattern>
+			</unit>
 			<unit type="length-kilometer">
 				<displayName>km</displayName>
 				<unitPattern count="one">{0}km</unitPattern>
@@ -8173,6 +8375,16 @@ annotations.
 				<unitPattern count="one">{0}lx</unitPattern>
 				<unitPattern count="other">{0}lx</unitPattern>
 			</unit>
+			<unit type="light-candela">
+				<displayName>cd</displayName>
+				<unitPattern count="one">{0}cd</unitPattern>
+				<unitPattern count="other">{0}cd</unitPattern>
+			</unit>
+			<unit type="light-lumen">
+				<displayName>lm</displayName>
+				<unitPattern count="one">{0}lm</unitPattern>
+				<unitPattern count="other">{0}lm</unitPattern>
+			</unit>
 			<unit type="light-solar-luminosity">
 				<displayName>L☉</displayName>
 				<unitPattern count="one">{0}L☉</unitPattern>
@@ -8248,6 +8460,11 @@ annotations.
 				<unitPattern count="one">{0}M☉</unitPattern>
 				<unitPattern count="other">{0}M☉</unitPattern>
 			</unit>
+			<unit type="mass-grain">
+				<displayName>gr</displayName>
+				<unitPattern count="one">{0}gr</unitPattern>
+				<unitPattern count="other">{0}gr</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>GW</displayName>
 				<unitPattern count="one">{0}GW</unitPattern>
@@ -8278,17 +8495,17 @@ annotations.
 				<unitPattern count="one">{0}hp</unitPattern>
 				<unitPattern count="other">{0}hp</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>mmHg</displayName>
 				<unitPattern count="one">{0}mmHg</unitPattern>
 				<unitPattern count="other">{0}mmHg</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>psi</displayName>
 				<unitPattern count="one">{0}psi</unitPattern>
 				<unitPattern count="other">{0}psi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>″ Hg</displayName>
 				<unitPattern count="one">{0}″ Hg</unitPattern>
 				<unitPattern count="other">{0}″ Hg</unitPattern>
@@ -8296,7 +8513,7 @@ annotations.
 			<unit type="pressure-bar">
 				<displayName>bar</displayName>
 				<unitPattern count="one">{0}bar</unitPattern>
-				<unitPattern count="other">{0}bars</unitPattern>
+				<unitPattern count="other">{0}bar</unitPattern>
 			</unit>
 			<unit type="pressure-millibar">
 				<displayName>mbar</displayName>
@@ -8363,7 +8580,7 @@ annotations.
 				<unitPattern count="one">{0}K</unitPattern>
 				<unitPattern count="other">{0}K</unitPattern>
 			</unit>
-			<unit type="torque-pound-foot">
+			<unit type="torque-pound-force-foot">
 				<displayName>lbf⋅ft</displayName>
 				<unitPattern count="one">{0}lbf⋅ft</unitPattern>
 				<unitPattern count="other">{0}lbf⋅ft</unitPattern>
@@ -8512,6 +8729,41 @@ annotations.
 				<displayName>bbl</displayName>
 				<unitPattern count="one">{0}bbl</unitPattern>
 				<unitPattern count="other">{0}bbl</unitPattern>
+			</unit>
+			<unit type="volume-dessert-spoon">
+				<displayName>dsp</displayName>
+				<unitPattern count="one">{0}dsp</unitPattern>
+				<unitPattern count="other">{0}dsp</unitPattern>
+			</unit>
+			<unit type="volume-dessert-spoon-imperial">
+				<displayName>dsp Imp</displayName>
+				<unitPattern count="one">{0}dsp-Imp</unitPattern>
+				<unitPattern count="other">{0}dsp-Imp</unitPattern>
+			</unit>
+			<unit type="volume-drop">
+				<displayName>dr</displayName>
+				<unitPattern count="one">{0}dr</unitPattern>
+				<unitPattern count="other">{0}dr</unitPattern>
+			</unit>
+			<unit type="volume-dram">
+				<displayName>fl.dr.</displayName>
+				<unitPattern count="one">{0}fl.dr.</unitPattern>
+				<unitPattern count="other">{0}fl.dr.</unitPattern>
+			</unit>
+			<unit type="volume-jigger">
+				<displayName>jigger</displayName>
+				<unitPattern count="one">{0}jigger</unitPattern>
+				<unitPattern count="other">{0}jigger</unitPattern>
+			</unit>
+			<unit type="volume-pinch">
+				<displayName>pn</displayName>
+				<unitPattern count="one">{0}pn</unitPattern>
+				<unitPattern count="other">{0}pn</unitPattern>
+			</unit>
+			<unit type="volume-quart-imperial">
+				<displayName>qt Imp</displayName>
+				<unitPattern count="one">{0}qt-Imp.</unitPattern>
+				<unitPattern count="other">{0}qt-Imp.</unitPattern>
 			</unit>
 			<coordinateUnit>
 				<coordinateUnitPattern type="east">{0}E</coordinateUnitPattern>

@@ -127,6 +127,8 @@
       </div>
     {% endif %}
   </div>
+
+  {{ block('form_help') }}
 {%- endblock money_widget %}
 
 {% block percent_widget -%}
@@ -191,7 +193,7 @@
   {{- parent() -}}
 {%- endblock %}
 
-{#{% block checkbox_widget -%}
+{# {% block checkbox_widget -%}
   {% set parent_label_class = parent_label_class|default('') -%}
   {% if 'checkbox-inline' in parent_label_class %}
     {{- form_label(form, null, { widget: parent() }) -}}
@@ -358,7 +360,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
@@ -396,7 +398,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item"
                   data-locale="{{ locale.iso_code }}"
@@ -729,7 +731,7 @@
         >
           {{ form.vars.default_locale.iso_code }}
         </button>
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
@@ -749,9 +751,9 @@
       <div {{ block('widget_container_attributes') -}}>
     {%- endif %}
 
-    {% set yearWidget = '<div class="col pl-0">' ~ form_widget(form.year) ~ '</div>'|raw %}
-    {% set monthWidget = '<div class="col">' ~ form_widget(form.month) ~ '</div>'|raw %}
-    {% set dayWidget = '<div class="col pr-0">' ~ form_widget(form.day) ~ '</div>'|raw %}
+    {% set yearWidget = '<div class="col pl-0 birthday-select-container">' ~ form_widget(form.year) ~ '</div>'|raw %}
+    {% set monthWidget = '<div class="col birthday-select-container">' ~ form_widget(form.month) ~ '</div>'|raw %}
+    {% set dayWidget = '<div class="col pr-0 birthday-select-container">' ~ form_widget(form.day) ~ '</div>'|raw %}
 
     {{- date_pattern|replace({
       '{{ year }}': yearWidget,

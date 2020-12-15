@@ -196,6 +196,14 @@ class TabCore extends ObjectModel
     }
 
     /**
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        self::$_getIdFromClassName = null;
+    }
+
+    /**
      * Get tab id.
      *
      * @return int tab id

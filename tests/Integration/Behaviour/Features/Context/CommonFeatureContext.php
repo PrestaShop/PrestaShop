@@ -26,22 +26,98 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Access;
 use Address;
+use AddressFormat;
+use Alias;
 use AppKernel;
+use Attachment;
+use Attribute;
+use AttributeGroup;
 use Cache;
 use Carrier;
 use Cart;
 use CartRule;
 use Category;
+use CMS;
+use CMSCategory;
+use CMSRole;
+use Configuration;
+use Connection;
+use ConnectionsSource;
+use Contact;
 use Context;
 use Currency;
+use CustomerMessage;
+use CustomerSession;
+use CustomerThread;
+use CustomizationField;
+use DateRange;
 use Employee;
+use EmployeeSession;
+use Feature;
+use FeatureValue;
+use Gender;
+use Group;
+use GroupReduction;
+use Hook;
+use Image;
+use ImageType;
 use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Mail;
+use Manufacturer;
+use Message;
+use Meta;
+use OrderCartRule;
+use OrderHistory;
+use OrderInvoice;
+use OrderMessage;
+use OrderPayment;
+use OrderReturn;
+use OrderReturnState;
+use OrderSlip;
+use OrderState;
 use Pack;
+use Page;
 use Product;
+use ProductDownload;
+use ProductSupplier;
+use Profile;
+use QuickAccess;
+use RangePrice;
+use RangeWeight;
+use Referrer;
+use RequestSql;
+use Risk;
+use SearchEngine;
+use Shop;
+use ShopGroup;
+use ShopUrl;
+use SpecificPrice;
+use State;
+use Stock;
+use StockAvailable;
+use StockMvt;
+use StockMvtReason;
+use StockMvtWS;
+use Store;
+use Supplier;
+use SupplyOrder;
+use SupplyOrderDetail;
+use SupplyOrderHistory;
+use SupplyOrderState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tab;
+use Tag;
+use Tax;
 use TaxManagerFactory;
+use TaxRule;
+use TaxRulesGroup;
+use Tests\Resources\ResourceResetter;
+use WarehouseProductLocation;
+use WebserviceKey;
+use Zone;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -83,17 +159,23 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * This hook can be used to flag a feature for kernel reboot, this is useful
-     * to force recreation of services (e.g: when you add some currencies in the
-     * database, you may need to reset the CLDR related services to use the new ones)
+     * This hook can be used to flag a feature for kernel reboot
      *
      * @BeforeFeature @reboot-kernel-before-feature
      */
     public static function rebootKernelPrepareFeature()
     {
-        $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
-        $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
-        self::$kernel->reboot($warmupDir);
+        self::rebootKernel();
+    }
+
+    /**
+     * This hook can be used to flag a scenario for kernel reboot
+     *
+     * @BeforeScenario @reboot-kernel-before-scenario
+     */
+    public static function rebootKernelBeforeScenario()
+    {
+        self::rebootKernel();
     }
 
     /**
@@ -107,20 +189,19 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @AfterFeature @clear-downloads-after-feature
+     * @AfterFeature @reset-downloads-after-feature
      */
-    public static function clearDownloads(): void
+    public static function resetDownloads(): void
     {
-        $filesToSkip = [
-            _PS_DOWNLOAD_DIR_ . 'index.php',
-            _PS_DOWNLOAD_DIR_ . '.htaccess',
-        ];
+        (new ResourceResetter())->resetDownloads();
+    }
 
-        foreach (glob(_PS_DOWNLOAD_DIR_ . '*') as $file) {
-            if (is_file($file) && !in_array($file, $filesToSkip)) {
-                unlink($file);
-            }
-        }
+    /**
+     * @AfterFeature @reset-img-after-feature
+     */
+    public static function resetImgDir(): void
+    {
+        (new ResourceResetter())->resetImages();
     }
 
     /**
@@ -180,6 +261,26 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given I reboot kernel
+     */
+    public function rebootKernelOnDemand()
+    {
+        self::rebootKernel();
+    }
+
+    /**
+     * This method reboots Symfony kernel, this is used to force recreation of services
+     * (e.g: when you add some currencies in the database, you may need to reset the CLDR
+     * related services to use the new ones)
+     */
+    private static function rebootKernel(): void
+    {
+        $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
+        $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
+        self::$kernel->reboot($warmupDir);
+    }
+
+    /**
      * Clears cache
      */
     private static function clearCache(): void
@@ -195,6 +296,81 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Language::resetCache();
         Currency::resetStaticCache();
         TaxManagerFactory::resetStaticCache();
+        Group::clearCachedValues();
+        Access::resetStaticCache();
+        AddressFormat::resetStaticCache();
+        Alias::resetStaticCache();
+        Attachment::resetStaticCache();
+        Attribute::resetStaticCache();
+        AttributeGroup::resetStaticCache();
+        CMS::resetStaticCache();
+        CMSCategory::resetStaticCache();
+        CMSRole::resetStaticCache();
+        Configuration::resetStaticCache();
+        Connection::resetStaticCache();
+        ConnectionsSource::resetStaticCache();
+        Contact::resetStaticCache();
+        CustomerMessage::resetStaticCache();
+        CustomerSession::resetStaticCache();
+        CustomerThread::resetStaticCache();
+        CustomizationField::resetStaticCache();
+        DateRange::resetStaticCache();
+        EmployeeSession::resetStaticCache();
+        Feature::resetStaticCache();
+        FeatureValue::resetStaticCache();
+        Gender::resetStaticCache();
+        GroupReduction::resetStaticCache();
+        Hook::resetStaticCache();
+        Image::resetStaticCache();
+        ImageType::resetStaticCache();
+        Mail::resetStaticCache();
+        Manufacturer::resetStaticCache();
+        Message::resetStaticCache();
+        Meta::resetStaticCache();
+        Page::resetStaticCache();
+        ProductDownload::resetStaticCache();
+        ProductSupplier::resetStaticCache();
+        Profile::resetStaticCache();
+        QuickAccess::resetStaticCache();
+        Referrer::resetStaticCache();
+        RequestSql::resetStaticCache();
+        Risk::resetStaticCache();
+        SearchEngine::resetStaticCache();
+        State::resetStaticCache();
+        Store::resetStaticCache();
+        Supplier::resetStaticCache();
+        Tab::resetStaticCache();
+        Tag::resetStaticCache();
+        Zone::resetStaticCache();
+        OrderCartRule::resetStaticCache();
+        OrderHistory::resetStaticCache();
+        OrderInvoice::resetStaticCache();
+        OrderMessage::resetStaticCache();
+        OrderPayment::resetStaticCache();
+        OrderReturn::resetStaticCache();
+        OrderReturnState::resetStaticCache();
+        OrderSlip::resetStaticCache();
+        OrderState::resetStaticCache();
+        RangePrice::resetStaticCache();
+        RangeWeight::resetStaticCache();
+        Shop::resetStaticCache();
+        ShopGroup::resetStaticCache();
+        ShopUrl::resetStaticCache();
+        Stock::resetStaticCache();
+        StockAvailable::resetStaticCache();
+        StockMvt::resetStaticCache();
+        StockMvtReason::resetStaticCache();
+        StockMvtWS::resetStaticCache();
+        SupplyOrder::resetStaticCache();
+        SupplyOrderDetail::resetStaticCache();
+        SupplyOrderHistory::resetStaticCache();
+        SupplyOrderState::resetStaticCache();
+        WarehouseProductLocation::resetStaticCache();
+        Tax::resetStaticCache();
+        TaxRule::resetStaticCache();
+        TaxRulesGroup::resetStaticCache();
+        WebserviceKey::resetStaticCache();
+        SpecificPrice::flushCache();
         SharedStorage::getStorage()->clean();
     }
 }

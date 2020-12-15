@@ -1,9 +1,11 @@
 #block-reassurance {
   margin-top: 2rem;
+
   img {
     width: 1.563rem;
     margin-right: 0.625rem;
   }
+
   li {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 
@@ -11,12 +13,15 @@
       border: 0;
     }
   }
+
   li .block-reassurance-item {
     padding: 1rem 1.5rem;
   }
+
   #product & {
     @include box-shadow();
     background: #fff;
+
     span {
       font-weight: 700;
     }

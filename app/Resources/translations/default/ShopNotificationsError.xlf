@@ -339,12 +339,12 @@
       <trans-unit id="56ca67fde405db4d75fb5fc3350db81b">
         <source>Sorry. We cannot renew your order.</source>
         <target>Sorry. We cannot renew your order.</target>
-        <note>Line: 65</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="b22604f6ddd3fb79ff38568a5a0141e0">
         <source>Some items are no longer available, and we are unable to renew your order.</source>
         <target>Some items are no longer available, and we are unable to renew your order.</target>
-        <note>Line: 68</note>
+        <note>Line: 71</note>
       </trans-unit>
     </body>
   </file>

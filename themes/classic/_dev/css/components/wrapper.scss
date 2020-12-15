@@ -1,0 +1,52 @@
+#wrapper {
+  padding-top: 1.563rem;
+  background: $gray-lighter;
+  box-shadow: inset 0 2px 5px 0 rgba(0, 0, 0, 0.11);
+
+  .banner {
+    display: block;
+    margin-bottom: 1.5rem;
+
+    img {
+      box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .breadcrumb {
+    padding: 0;
+    background: transparent;
+
+    &[data-depth="1"] {
+      display: none;
+    }
+
+    ol {
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+
+    li {
+      display: inline;
+
+      &::after {
+        margin: 0.3125rem;
+        color: $gray;
+        content: "/";
+      }
+
+      &:last-child {
+        margin: 0;
+        color: $gray;
+        content: "/";
+
+        &::after {
+          content: "";
+        }
+      }
+
+      a {
+        color: $gray-darker;
+      }
+    }
+  }
+}

@@ -29,15 +29,28 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 use Product;
@@ -68,21 +81,88 @@ class ProductRepository extends AbstractObjectModelRepository
     private $defaultCategoryId;
 
     /**
+     * @var TaxRulesGroupRepository
+     */
+    private $taxRulesGroupRepository;
+
+    /**
+     * @var ManufacturerRepository
+     */
+    private $manufacturerRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
      * @param int $defaultCategoryId
+     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     * @param ManufacturerRepository $manufacturerRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
-        int $defaultCategoryId
+        int $defaultCategoryId,
+        TaxRulesGroupRepository $taxRulesGroupRepository,
+        ManufacturerRepository $manufacturerRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
         $this->defaultCategoryId = $defaultCategoryId;
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+        $this->manufacturerRepository = $manufacturerRepository;
+    }
+
+    /**
+     * Duplicates product entity without relations
+     *
+     * @param Product $product
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     * @throws CannotDuplicateProductException
+     * @throws ProductConstraintException
+     * @throws ProductException
+     */
+    public function duplicate(Product $product): Product
+    {
+        unset($product->id, $product->id_product);
+
+        $this->productValidator->validateCreation($product);
+        $this->productValidator->validate($product);
+        $this->addObjectModel($product, CannotDuplicateProductException::class);
+
+        return $product;
+    }
+
+    /**
+     * Gets product price by provided shop
+     *
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return DecimalNumber|null
+     */
+    public function getPriceByShop(ProductId $productId, ShopId $shopId): ?DecimalNumber
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('price')
+            ->from($this->dbPrefix . 'product_shop')
+            ->where('id_product = :productId')
+            ->andWhere('id_shop = :shopId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new DecimalNumber($result['price']);
     }
 
     /**
@@ -169,6 +249,16 @@ class ProductRepository extends AbstractObjectModelRepository
             ProductNotFoundException::class
         );
 
+        try {
+            $product->loadStockData();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to load Product stock #%d', $productId->getValue()),
+                0,
+                $e
+            );
+        }
+
         return $product;
     }
 
@@ -201,9 +291,24 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param int $errorCode
      *
      * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {
+        $taxRulesGroupIdIsBeingUpdated = in_array('id_tax_rules_group', $propertiesToUpdate, true);
+        $taxRulesGroupId = (int) $product->id_tax_rules_group;
+        $manufacturerIdIsBeingUpdated = in_array('id_manufacturer', $propertiesToUpdate, true);
+        $manufacturerId = (int) $product->id_manufacturer;
+
+        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
+            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
+        }
+        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
+            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
+        }
+
         $this->productValidator->validate($product);
         $this->partiallyUpdateObjectModel(
             $product,

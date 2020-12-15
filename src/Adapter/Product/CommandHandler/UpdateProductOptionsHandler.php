@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -85,6 +83,11 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     {
         $updatableProperties = [];
 
+        if (null !== $command->isActive()) {
+            $product->active = $command->isActive();
+            $updatableProperties[] = 'active';
+        }
+
         if (null !== $command->getVisibility()) {
             $product->visibility = $command->getVisibility()->getValue();
             $updatableProperties[] = 'visibility';
@@ -110,48 +113,17 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
             $updatableProperties[] = 'condition';
         }
 
-        if (null !== $command->getEan13()) {
-            $product->ean13 = $command->getEan13()->getValue();
-            $updatableProperties[] = 'ean13';
-        }
-
-        if (null !== $command->getIsbn()) {
-            $product->isbn = $command->getIsbn()->getValue();
-            $updatableProperties[] = 'isbn';
-        }
-
-        if (null !== $command->getMpn()) {
-            $product->mpn = $command->getMpn();
-            $updatableProperties[] = 'mpn';
-        }
-
-        if (null !== $command->getReference()) {
-            $product->reference = $command->getReference()->getValue();
-            $updatableProperties[] = 'reference';
-        }
-
-        if (null !== $command->getUpc()) {
-            $product->upc = $command->getUpc()->getValue();
-            $updatableProperties[] = 'upc';
+        if (null !== $command->showCondition()) {
+            $product->show_condition = $command->showCondition();
+            $updatableProperties[] = 'show_condition';
         }
 
         $manufacturerId = $command->getManufacturerId();
         if (null !== $manufacturerId) {
-            $this->assertManufacturerExists($manufacturerId);
             $product->id_manufacturer = $manufacturerId->getValue();
             $updatableProperties[] = 'id_manufacturer';
         }
 
         return $updatableProperties;
-    }
-
-    /**
-     * @param ManufacturerIdInterface $manufacturerId
-     */
-    private function assertManufacturerExists(ManufacturerIdInterface $manufacturerId): void
-    {
-        if ($manufacturerId instanceof ManufacturerId) {
-            $this->manufacturerRepository->assertManufacturerExists($manufacturerId);
-        }
     }
 }

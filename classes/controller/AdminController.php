@@ -1282,7 +1282,7 @@ class AdminControllerCore extends Controller
                         $parent_id = (int) Tools::getValue('id_parent', 1);
                         // Specific back redirect
                         if ($back = Tools::getValue('back')) {
-                            $this->redirect_after = urldecode($back) . '&conf=4';
+                            $this->redirect_after = rawurldecode($back) . '&conf=4';
                         }
                         // Save and stay on same form
                         // @todo on the to following if, we may prefer to avoid override redirect_after previous value
@@ -2521,7 +2521,7 @@ class AdminControllerCore extends Controller
             $helper->tpl_vars = $this->getTemplateFormVars();
             $helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
-            $back = urldecode(Tools::getValue('back', ''));
+            $back = rawurldecode(Tools::getValue('back', ''));
             if (empty($back)) {
                 $back = self::$currentIndex . '&token=' . $this->token;
             }
@@ -4176,8 +4176,21 @@ class AdminControllerCore extends Controller
                 /** @var ObjectModel $object */
                 $object = new $this->className((int) $id);
                 $object->active = (int) $status;
-                $result &= $object->update();
+                $isUpdated = (bool) $object->update();
+                $result &= $isUpdated;
+
+                if (!$isUpdated) {
+                    $this->errors[] = $this->trans('Can\'t update #%id% status', ['%id%' => (int) $id], 'Admin.Notifications.Error');
+                }
             }
+
+            if ($result) {
+                $this->redirect_after = self::$currentIndex . '&conf=5&token=' . $this->token;
+            } else {
+                $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
+            }
+        } else {
+            $this->errors[] = $this->trans('You need to select at least one item to use the bulk action.', [], 'Admin.Notifications.Error');
         }
 
         return $result;

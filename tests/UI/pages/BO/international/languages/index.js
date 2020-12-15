@@ -202,6 +202,7 @@ class Languages extends LocalizationBasePage {
   async setStatus(page, row, valueWanted = true) {
     if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.statusColumn(row));
+
       return true;
     }
 

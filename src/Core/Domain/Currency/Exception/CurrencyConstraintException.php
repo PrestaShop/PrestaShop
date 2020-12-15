@@ -80,12 +80,27 @@ class CurrencyConstraintException extends CurrencyException
     const INVALID_PRECISION = 8;
 
     /**
+     * Code used when an invalid name is used
+     */
+    const INVALID_NAME = 9;
+
+    /**
+     * Code used when an invalid symbol is used
+     */
+    const INVALID_SYMBOL = 10;
+
+    /**
+     * Code used when an invalid pattern is used
+     */
+    const INVALID_PATTERN = 11;
+
+    /**
      * @var int Code is used when empty data is used when deleting currencies
      */
-    const EMPTY_BULK_DELETE = 9;
+    const EMPTY_BULK_DELETE = 12;
 
     /**
      * @var int Code is used when empty data is used when toggling currencies
      */
-    const EMPTY_BULK_TOGGLE = 10;
+    const EMPTY_BULK_TOGGLE = 13;
 }

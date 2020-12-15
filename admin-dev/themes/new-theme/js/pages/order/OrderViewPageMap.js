@@ -31,6 +31,7 @@ export default {
   orderPaymentFormAmountInput: '#order_payment_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',
   viewOrderPaymentsBlock: '#view_order_payments_block',
+  viewOrderPaymentsAlert: '.js-view-order-payments-alert',
   privateNoteToggleBtn: '.js-private-note-toggle-btn',
   privateNoteBlock: '.js-private-note-block',
   privateNoteInput: '#private_note_note',

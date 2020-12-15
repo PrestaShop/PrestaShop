@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
+use Shop;
 use Tools;
 use Validate;
 
@@ -104,6 +105,7 @@ class OrderAmountUpdater
             ->setCustomer(new Customer($cart->id_customer))
             ->setLanguage(new Language($cart->id_lang))
             ->setCountry($cart->getTaxCountry())
+            ->setShop(new Shop($cart->id_shop))
         ;
 
         try {
@@ -282,7 +284,7 @@ class OrderAmountUpdater
                     $orderDetail->product_price = $orderDetail->unit_price_tax_excl = Tools::ps_round($unitPriceTaxExcl, $computingPrecision);
                     $orderDetail->unit_price_tax_incl = Tools::ps_round($unitPriceTaxIncl, $computingPrecision);
                     $orderDetail->total_price_tax_excl = $orderDetail->unit_price_tax_excl * $orderDetail->product_quantity;
-                    $orderDetail->total_price_tax_incl = $orderDetail->total_price_tax_incl * $orderDetail->product_quantity;
+                    $orderDetail->total_price_tax_incl = $orderDetail->unit_price_tax_incl * $orderDetail->product_quantity;
 
                     break;
             }
@@ -423,9 +425,6 @@ class OrderAmountUpdater
             if (!empty($orderProduct['id_order_invoice'])) {
                 $invoiceProducts[$orderProduct['id_order_invoice']][] = $orderProduct;
             }
-        }
-        if (empty($invoiceProducts)) {
-            return;
         }
 
         $invoiceCollection = $order->getInvoicesCollection();

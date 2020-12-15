@@ -31,7 +31,9 @@
   <thead class="thead-default">
   {% block grid_table_head %}
     {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
-    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+    {% if grid.actions.bulk|length > 0 or grid.filter_form|length > 1 %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+    {% endif %}
   {% endblock %}
   </thead>
   <tbody>

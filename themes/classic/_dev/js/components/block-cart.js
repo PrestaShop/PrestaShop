@@ -33,7 +33,7 @@ prestashop.blockcart.showModal = (html) => {
   }
 
   let $blockCartModal = getBlockCartModal();
-  if ($blockCartModal.length){
+  if ($blockCartModal.length) {
     $blockCartModal.remove();
   }
 
@@ -43,8 +43,7 @@ prestashop.blockcart.showModal = (html) => {
   $blockCartModal.modal('show').on('hidden.bs.modal', (event) => {
     prestashop.emit('updateProduct', {
       reason: event.currentTarget.dataset,
-      event: event
+      event,
     });
   });
 };
-

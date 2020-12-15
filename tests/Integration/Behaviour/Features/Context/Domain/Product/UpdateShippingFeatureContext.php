@@ -50,7 +50,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductShipping(string $productReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
@@ -59,7 +59,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
 
             Assert::assertEmpty(
                 $unhandledData,
-                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData))
+                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData, true))
             );
 
             $this->getCommandBus()->handle($command);
@@ -73,7 +73,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductHasNoCarriers(string $productReference)
+    public function assertProductHasNoCarriers(string $productReference): void
     {
         $productForEditing = $this->getProductForEditing($productReference);
 
@@ -91,7 +91,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      */
     public function assertShippingInformation(string $productReference, TableNode $tableNode): void
     {
-        $data = $tableNode->getRowsHash();
+        $data = $this->localizeByRows($tableNode);
         $productShippingInformation = $this->getProductForEditing($productReference)->getShippingInformation();
 
         if (isset($data['carriers'])) {
@@ -120,7 +120,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      * @param array $expectedValues
      * @param ProductShippingInformation $actualValues
      */
-    private function assertNumberShippingFields(array &$expectedValues, ProductShippingInformation $actualValues)
+    private function assertNumberShippingFields(array &$expectedValues, ProductShippingInformation $actualValues): void
     {
         $numberShippingFields = [
             'width',
@@ -152,7 +152,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      * @param array $data
      * @param ProductShippingInformation $productShippingInformation
      */
-    private function assertDeliveryTimeNotes(array &$data, ProductShippingInformation $productShippingInformation)
+    private function assertDeliveryTimeNotes(array &$data, ProductShippingInformation $productShippingInformation): void
     {
         $notesTypeNamedValues = [
             'none' => DeliveryTimeNotesType::TYPE_NONE,
@@ -169,10 +169,9 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['delivery time in stock notes'])) {
-            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time in stock notes']);
             $actualLocalizedOutOfStockNotes = $productShippingInformation->getLocalizedDeliveryTimeInStockNotes();
             Assert::assertEquals(
-                $expectedLocalizedOutOfStockNotes,
+                $data['delivery time in stock notes'],
                 $actualLocalizedOutOfStockNotes,
                 'Unexpected product delivery time in stock notes'
             );
@@ -181,10 +180,9 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['delivery time out of stock notes'])) {
-            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time out of stock notes']);
             $actualLocalizedOutOfStockNotes = $productShippingInformation->getLocalizedDeliveryTimeOutOfStockNotes();
             Assert::assertEquals(
-                $expectedLocalizedOutOfStockNotes,
+                $data['delivery time out of stock notes'],
                 $actualLocalizedOutOfStockNotes,
                 'Unexpected product delivery time out of stock notes'
             );
@@ -234,16 +232,12 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['delivery time in stock notes'])) {
-            $command->setLocalizedDeliveryTimeInStockNotes(
-                $this->parseLocalizedArray($data['delivery time in stock notes'])
-            );
+            $command->setLocalizedDeliveryTimeInStockNotes($data['delivery time in stock notes']);
             unset($unhandledValues['delivery time in stock notes']);
         }
 
         if (isset($data['delivery time out of stock notes'])) {
-            $command->setLocalizedDeliveryTimeOutOfStockNotes(
-                $this->parseLocalizedArray($data['delivery time out of stock notes'])
-            );
+            $command->setLocalizedDeliveryTimeOutOfStockNotes($data['delivery time out of stock notes']);
             unset($unhandledValues['delivery time out of stock notes']);
         }
 

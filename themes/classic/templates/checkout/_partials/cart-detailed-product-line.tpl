@@ -132,6 +132,8 @@
                 data-update-url="{$product.update_quantity_url}"
                 data-product-id="{$product.id_product}"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
               />

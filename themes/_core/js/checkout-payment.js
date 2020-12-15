@@ -36,7 +36,7 @@ class Payment {
   }
 
   init() {
-    let $body = $('body');
+    const $body = $('body');
 
     $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
@@ -66,7 +66,7 @@ class Payment {
   }
 
   toggleOrderButton() {
-    var show = true;
+    let show = true;
     $(`${this.conditionsSelector} input[type="checkbox"]`).each((_, checkbox) => {
       if (!checkbox.checked) {
         show = false;
@@ -79,7 +79,7 @@ class Payment {
 
     this.collapseOptions();
 
-    var selectedOption = this.getSelectedOption();
+    const selectedOption = this.getSelectedOption();
     if (!selectedOption) {
       show = false;
     }
@@ -90,7 +90,7 @@ class Payment {
     $(prestashop.selectors.checkout.paymentBinary).hide();
 
     if ($(`#${selectedOption}`).hasClass('binary')) {
-      var paymentOption = this.getPaymentOptionSelector(selectedOption);
+      const paymentOption = this.getPaymentOptionSelector(selectedOption);
       this.hideConfirmation();
       $(paymentOption).show();
 
@@ -120,7 +120,7 @@ class Payment {
   }
 
   getPaymentOptionSelector(option) {
-    var moduleName = $(`#${option}`).data('module-name');
+    const moduleName = $(`#${option}`).data('module-name');
 
     return `.js-payment-${moduleName}`;
   }
@@ -147,7 +147,7 @@ class Payment {
 }
 
 export default function () {
-  let payment = new Payment();
+  const payment = new Payment();
   payment.init();
 
   return payment;

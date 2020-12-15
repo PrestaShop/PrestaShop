@@ -241,7 +241,7 @@ class WebService extends BOBasePage {
       page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(page, this.deleteModal),
     ]);
-    await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
+    await this.confirmDeleteWebService(page, this.modalDeleteButton);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
@@ -250,7 +250,7 @@ class WebService extends BOBasePage {
    * Enable / disable by Bulk Actions
    * @param page
    * @param enable
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
@@ -267,9 +267,6 @@ class WebService extends BOBasePage {
 
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-
-    // Validation message not displayed, skipping it
-    // return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**

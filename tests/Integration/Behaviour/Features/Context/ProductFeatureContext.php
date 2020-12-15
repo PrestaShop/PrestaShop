@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use Cart;
+use Cache;
 use Combination;
 use Configuration;
 use Customization;
@@ -92,6 +92,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function getProductWithName($productName)
     {
         return $this->products[$productName];
+    }
+
+    /**
+     * @param string $productName
+     * @param string $combinationName
+     *
+     * @return Combination
+     */
+    public function getCombinationWithName(string $productName, string $combinationName): Combination
+    {
+        return $this->combinations[$productName][$combinationName];
     }
 
     /**
@@ -215,6 +226,10 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 
         // Fix issue pack cache is set when adding products.
         Pack::resetStaticCache();
+        // Fix issue related to modules hooked on `actionProductSave` and calling `Product::priceCalculation()`
+        // leading to cache issues later
+        Product::resetStaticCache();
+        Cache::clear();
     }
 
     /**
@@ -255,6 +270,19 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->products[$productName]->weight = $weight;
+        $this->products[$productName]->save();
+    }
+
+    /**
+     * @Given /^the product "(.+)" minimal quantity is (\d+)$/
+     *
+     * @param string $productName
+     * @param int $minimalQty
+     */
+    public function setProductMinimalQuantity(string $productName, int $minimalQty)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->minimal_quantity = $minimalQty;
         $this->products[$productName]->save();
     }
 
@@ -412,6 +440,22 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $combination->add();
         StockAvailable::setQuantity((int) $this->products[$productName]->id, $combination->id, $combination->quantity);
         $this->combinations[$productName][$combinationName] = $combination;
+    }
+
+    /**
+     * @Given /^the combination "(.+)" of the product "(.+)" has a minimal quantity of (\d+)$/
+     *
+     * @param string $combinationName
+     * @param string $productName
+     * @param int $minimalQty
+     */
+    public function setProductCombinationMinimalQuantity(string $combinationName, string $productName, int $minimalQty)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+
+        $this->combinations[$productName][$combinationName]->minimal_quantity = $minimalQty;
+        $this->combinations[$productName][$combinationName]->save();
     }
 
     /**

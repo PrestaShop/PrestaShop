@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
@@ -83,8 +84,10 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductCategories(string $productReference, TableNode $table)
     {
+        Cache::clear();
         $data = $table->getRowsHash();
         $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+
         $actualCategoryIds = $productForEditing->getCategoriesInformation()->getCategoryIds();
         sort($actualCategoryIds);
 
@@ -98,7 +101,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
         $actualDefaultCategoryId = $productForEditing->getCategoriesInformation()->getDefaultCategoryId();
 
         Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
-        Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
+        Assert::assertEquals($expectedCategoryIds, $actualCategoryIds, 'Unexpected categories assigned to product');
     }
 
     /**

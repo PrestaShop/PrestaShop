@@ -2,7 +2,7 @@ module.exports = {
   Carriers: {
     default: {
       id: 1,
-      name: global.INSTALL.SHOPNAME,
+      name: global.INSTALL.SHOP_NAME,
       delay: 'Pick up in-store',
       status: true,
       freeShipping: true,

@@ -1,13 +1,14 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags specific-price-priorities
 @reset-database-before-feature
+@clear-cache-before-feature
 @specific-price-priorities
 Feature: Set Specific Price priorities from Back Office (BO).
   As an employee I want to be able to set specific price priorities to single product and to all products
 
   Scenario: I set specific price priorities to single product
     Given I add product "product1" with following information:
-      | name       | en-US:pocket watch |
-      | is_virtual | false              |
+      | name[en-US] | pocket watch |
+      | is_virtual  | false        |
     And product "product1" should have following specific price priorities:
       | id_shop | id_currency | id_country | id_group |
     When I set following specific price priorities for product "product1":
@@ -21,11 +22,11 @@ Feature: Set Specific Price priorities from Back Office (BO).
 
   Scenario: I set specific price priorities to all products
     Given I add product "product2" with following information:
-      | name       | en-US:golden wrist watch |
-      | is_virtual | false                    |
+      | name[en-US] | golden wrist watch |
+      | is_virtual  | false              |
     And I add product "product3" with following information:
-      | name       | en-US:silver wrist watch |
-      | is_virtual | false                    |
+      | name[en-US] | silver wrist watch |
+      | is_virtual  | false              |
     And product "product2" should have following specific price priorities:
       | id_shop | id_currency | id_country | id_group |
     And product "product3" should have following specific price priorities:

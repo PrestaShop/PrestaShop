@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -42,6 +43,8 @@ class BulkDeleteProductCommand
 
     /**
      * @param int[] $productIds
+     *
+     * @throws ProductConstraintException
      */
     public function __construct(array $productIds)
     {

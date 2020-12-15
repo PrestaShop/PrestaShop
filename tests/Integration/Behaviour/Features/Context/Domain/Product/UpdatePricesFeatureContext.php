@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
@@ -48,7 +49,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateProductPrices(string $productReference, TableNode $table)
+    public function updateProductPrices(string $productReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
         $command = new UpdateProductPricesCommand($this->getSharedStorage()->get($productReference));
@@ -80,6 +81,26 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
         try {
             $this->getQueryBus()->handle($command);
         } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I update product :productReference prices and apply non-existing tax rules group
+     *
+     * @param string $productReference
+     */
+    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $command = new UpdateProductPricesCommand($productId);
+        // this id value does not exist, it is used on purpose.
+        $command->setTaxRulesGroupId(50000000);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (DomainException $e) {
             $this->setLastException($e);
         }
     }
@@ -131,7 +152,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      * @param array $data
      * @param ProductPricesInformation $pricesInfo
      */
-    private function assertTaxRulesGroup(array &$data, ProductPricesInformation $pricesInfo)
+    private function assertTaxRulesGroup(array &$data, ProductPricesInformation $pricesInfo): void
     {
         if (!isset($data['tax rules group'])) {
             return;

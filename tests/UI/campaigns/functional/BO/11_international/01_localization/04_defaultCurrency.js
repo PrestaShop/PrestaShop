@@ -125,6 +125,7 @@ describe('Update default currency', async () => {
 
         const textResult = await localizationPage.setDefaultCurrency(page, test.args.defaultCurrency);
         await expect(textResult).to.contain(localizationPage.successfulSettingsUpdateMessage);
+        await expect(textResult).contain(localizationPage.successfulSettingsUpdateMessage);
       });
 
       it('should go to FO and check the existence of currency', async function () {

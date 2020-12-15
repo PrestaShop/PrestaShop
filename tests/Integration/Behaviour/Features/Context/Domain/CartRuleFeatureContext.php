@@ -55,16 +55,9 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
-use Tests\Integration\Behaviour\Features\Transform\CurrencyTransform;
-use Tests\Integration\Behaviour\Features\Transform\SharedStorageTransform;
-use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
 class CartRuleFeatureContext extends AbstractDomainFeatureContext
 {
-    use SharedStorageTransform;
-    use StringToBooleanTransform;
-    use CurrencyTransform;
-
     private $cartRuleStorageProperty = 'add_cart_rule';
 
     /**
@@ -259,6 +252,13 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $properties['discount_application_type'] ?? null,
             $properties['discount_product_id'] ?? null
         );
+
+        if ($properties['code']) {
+            SharedStorage::getStorage()->set(
+                $properties['code'],
+                $cartRuleId->getValue()
+            );
+        }
 
         SharedStorage::getStorage()->set(
             sprintf('cart_rule_object_%s', $properties['name']),

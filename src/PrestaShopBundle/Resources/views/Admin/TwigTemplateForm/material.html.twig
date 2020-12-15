@@ -87,14 +87,15 @@
 {% endblock material_choice_tree_item_checkbox_widget %}
 
 {% block material_choice_tree_item_radio_widget %}
-  <div class="radio js-input-wrapper">
-    <label>
+  <div class="radio js-input-wrapper form-check form-check-radio">
+    <label class="form-check-label">
       <input type="radio"
              name="{{ form.vars.full_name }}"
              value="{{ choice[choice_value] }}"
              {% if choice[choice_value] in selected_values %}checked{% endif %}
              {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
       >
+      <i class="form-check-round"></i>
       {{ choice[choice_label] }}
     </label>
   </div>

@@ -848,6 +848,7 @@ class Install extends AbstractInstall
 
                 return false;
             }
+            Context::getContext()->employee = $employee;
         } else {
             $this->setError($this->translator->trans('Cannot create admin account', [], 'Install'));
 
@@ -857,6 +858,7 @@ class Install extends AbstractInstall
         // Update default contact
         if (isset($data['admin_email'])) {
             Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
+            Configuration::updateGlobalValue('PS_LOGS_EMAIL_RECEIVERS', $data['admin_email']);
 
             $contacts = new PrestaShopCollection('Contact');
             /** @var \Contact $contact */
@@ -1124,8 +1126,8 @@ class Install extends AbstractInstall
             }
         } else {
             $xml_loader = new XmlLoader();
-            $xml_loader->setTranslator($this->translator);
         }
+        $xml_loader->setTranslator($this->translator);
 
         // Install XML data (data/xml/ folder)
         $xml_loader->setFixturesPath($fixtures_path);

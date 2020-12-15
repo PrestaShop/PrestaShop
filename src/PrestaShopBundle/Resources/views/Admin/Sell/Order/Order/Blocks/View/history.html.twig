@@ -59,7 +59,7 @@
 <div class="row">
   <div class="col-sm-6 offset-sm-6">
     {{ form_start(updateOrderStatusForm, {'action': path('admin_orders_update_status',  {'orderId': orderForViewing.id}), 'attr': {'class': 'card-details-form'}, }) }}
-      <div class="input-group card-details-actions">
+      <div class="form-group card-details-actions">
         {{ form_widget(updateOrderStatusForm.new_order_status_id) }}
 
         <button class="btn btn-primary ml-3">

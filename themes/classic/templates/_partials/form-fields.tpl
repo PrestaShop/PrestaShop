@@ -138,6 +138,7 @@
               name="{$field.name}"
               title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
               type="password"
+              {if $field.autocomplete}autocomplete="{$field.autocomplete}"{/if}
               value=""
               pattern=".{literal}{{/literal}5,{literal}}{/literal}"
               {if $field.required}required{/if}
@@ -164,6 +165,7 @@
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
+            {if $field.autocomplete}autocomplete="{$field.autocomplete}"{/if}
             {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
             {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
             {if $field.required}required{/if}

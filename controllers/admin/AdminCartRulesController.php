@@ -239,7 +239,7 @@ class AdminCartRulesControllerCore extends AdminController
     {
         $res = parent::processDelete();
         if (Tools::isSubmit('delete' . $this->table)) {
-            $back = urldecode(Tools::getValue('back', ''));
+            $back = rawurldecode(Tools::getValue('back', ''));
             if (!empty($back)) {
                 $this->redirect_after = $back;
             }

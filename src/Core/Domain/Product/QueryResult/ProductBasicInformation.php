@@ -54,21 +54,29 @@ class ProductBasicInformation
     private $localizedShortDescriptions;
 
     /**
+     * @var LocalizedTags[]
+     */
+    private $localizedTags;
+
+    /**
      * @param ProductType $type
      * @param string[] $localizedNames
      * @param string[] $localizedDescriptions
      * @param string[] $localizedShortDescriptions
+     * @param LocalizedTags[] $localizedTags
      */
     public function __construct(
         ProductType $type,
         array $localizedNames,
         array $localizedDescriptions,
-        array $localizedShortDescriptions
+        array $localizedShortDescriptions,
+        array $localizedTags
     ) {
         $this->type = $type;
         $this->localizedNames = $localizedNames;
         $this->localizedDescriptions = $localizedDescriptions;
         $this->localizedShortDescriptions = $localizedShortDescriptions;
+        $this->localizedTags = $localizedTags;
     }
 
     /**
@@ -101,5 +109,13 @@ class ProductBasicInformation
     public function getLocalizedShortDescriptions(): array
     {
         return $this->localizedShortDescriptions;
+    }
+
+    /**
+     * @return LocalizedTags[]
+     */
+    public function getLocalizedTags(): array
+    {
+        return $this->localizedTags;
     }
 }

@@ -66,7 +66,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-2 col-md-offset-1 {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+              <div class="col-md-2 col-md-offset-1 {% if configuration('PS_USE_ECOTAX') != 1 %}hide{% endif %}">
                 <label class="form-control-label">{{ pricingForm.ecotax.vars.label }}</label>
                 {{ form_errors(pricingForm.ecotax) }}
                 {{ form_widget(pricingForm.ecotax) }}

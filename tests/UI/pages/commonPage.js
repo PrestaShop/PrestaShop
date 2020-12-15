@@ -312,10 +312,15 @@ module.exports = class CommonPage {
    * @param isFloat
    * @return {Promise<*>}
    */
-  async sortArray(arrayToSort, isFloat = false) {
+  async sortArray(arrayToSort, isFloat = false, isDate = false) {
     if (isFloat) {
       return arrayToSort.sort((a, b) => a - b);
     }
+
+    if (isDate) {
+      return arrayToSort.sort((a, b) => new Date(a) - new Date(b));
+    }
+
     return arrayToSort.sort((a, b) => a.localeCompare(b));
   }
 
@@ -368,5 +373,16 @@ module.exports = class CommonPage {
     const number = Number(text.replace(/[^0-9.-]+/g, ''));
 
     return parseFloat(number);
+  }
+
+  /**
+   * Get parent element from selector
+   * @param page
+   * @param selector
+   * @return {Promise<ElementHandle>}
+   */
+  getParentElement(page, selector) {
+    /* eslint-env browser */
+    return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
   }
 };

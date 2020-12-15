@@ -129,7 +129,7 @@ class LinkCore
      * @param string|null $ean13
      * @param int|null $idLang
      * @param int|null $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
-     * @param int|null $ipa ID product attribute
+     * @param int|null $idProductAttribute ID product attribute
      * @param bool $force_routes
      * @param bool $relativeProtocol
      * @param bool $addAnchor
@@ -146,7 +146,7 @@ class LinkCore
         $ean13 = null,
         $idLang = null,
         $idShop = null,
-        $ipa = null,
+        $idProductAttribute = null,
         $force_routes = false,
         $relativeProtocol = false,
         $addAnchor = false,
@@ -176,10 +176,10 @@ class LinkCore
         }
 
         //Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
-        if (empty($ipa)) {
-            $ipa = null;
+        if (empty($idProductAttribute)) {
+            $idProductAttribute = null;
         }
-        $params['id_product_attribute'] = $ipa;
+        $params['id_product_attribute'] = $idProductAttribute;
         if (!$alias) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
@@ -241,10 +241,10 @@ class LinkCore
             }
             $params['categories'] = implode('/', $cats);
         }
-        if ($ipa) {
+        if ($idProductAttribute) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
-        $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $addAnchor) : '';
+        $anchor = $idProductAttribute ? $product->getAnchor((int) $idProductAttribute, (bool) $addAnchor) : '';
 
         return $url . $dispatcher->createUrl('product_rule', $idLang, array_merge($params, $extraParams), $force_routes, $anchor, $idShop);
     }
@@ -394,8 +394,8 @@ class LinkCore
     public function getCategoryObject($category, $idLang)
     {
         if (!is_object($category)) {
-            if (is_array($category) && isset($category['id_category'])) {
-                $category = new Category($category, $idLang);
+            if (isset($category['id_category'])) {
+                $category = new Category($category['id_category'], $idLang);
             } elseif ((int) $category) {
                 $category = new Category((int) $category, $idLang);
             } else {
@@ -436,11 +436,14 @@ class LinkCore
 
         // Set available keywords
         $params = [];
-
-        if (!is_object($category)) {
-            $params['id'] = $category;
-        } else {
+        if (Validate::isLoadedObject($category)) {
             $params['id'] = $category->id;
+        } elseif (isset($category['id_category'])) {
+            $params['id'] = $category['id_category'];
+        } elseif (is_int($category) or ctype_digit($category)) {
+            $params['id'] = (int) $category;
+        } else {
+            throw new \InvalidArgumentException('Invalid category parameter');
         }
 
         // Selected filters is used by the module ps_facetedsearch

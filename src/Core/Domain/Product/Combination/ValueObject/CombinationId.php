@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
  *  Holds product combination identification data
@@ -45,8 +46,6 @@ class CombinationId
 
     /**
      * @param int $combinationId
-     *
-     * @throws CombinationConstraintException
      */
     public function __construct(int $combinationId)
     {
@@ -65,7 +64,7 @@ class CombinationId
     /**
      * @param int $value
      *
-     * @throws CombinationConstraintException
+     * @throws ProductConstraintException
      */
     private function assertValueIsPositive(int $value)
     {

@@ -204,6 +204,7 @@ class Pages extends BOBasePage {
   async setStatus(page, table, row, valueWanted = true) {
     if (await this.getStatus(page, table, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.listTableStatusColumn(table, row));
+
       return true;
     }
 

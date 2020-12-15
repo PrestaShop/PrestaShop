@@ -153,10 +153,10 @@ export default class ProductRenderer {
   /**
    * Renders available fields related to selected product
    *
-   * @param product
+   * @param {object} product
    */
   renderProductMetadata(product) {
-    this.renderStock(product.stock, product.stock === 0 && product.availableOutOfStock);
+    this.renderStock(product.stock, product.availableOutOfStock || (product.stock <= 0));
     this.renderCombinations(product.combinations);
     this.renderCustomizations(product.customizationFields);
   }
@@ -164,7 +164,8 @@ export default class ProductRenderer {
   /**
    * Updates stock text helper value
    *
-   * @param stock
+   * @param {number} stock
+   * @param {boolean} infinitMax
    */
   renderStock(stock, infinitMax) {
     $(createOrderMap.inStockCounter).text(stock);

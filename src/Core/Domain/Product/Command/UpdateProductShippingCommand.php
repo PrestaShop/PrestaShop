@@ -276,7 +276,7 @@ class UpdateProductShippingCommand
      *
      * @return UpdateProductShippingCommand
      */
-    public function setLocalizedDeliveryTimeOutOfStockNotes(array $localizedDeliveryTimeOutOfStockNotes)
+    public function setLocalizedDeliveryTimeOutOfStockNotes(array $localizedDeliveryTimeOutOfStockNotes): UpdateProductShippingCommand
     {
         $this->localizedDeliveryTimeOutOfStockNotes = $localizedDeliveryTimeOutOfStockNotes;
 

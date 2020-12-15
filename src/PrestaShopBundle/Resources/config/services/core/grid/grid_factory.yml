@@ -6,7 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.logs'
-            - '@prestashop.core.grid.data_factory.log'
+            - '@prestashop.core.grid.data.factory.log_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 

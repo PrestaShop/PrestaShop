@@ -143,7 +143,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         await expect(numberOfCategoriesInGrid).to.be.at.most(numberOfCategories);
 
         for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-          const categoryStatus = await categoriesPage.getStatus(page, 1);
+          const categoryStatus = await categoriesPage.getStatus(page, i);
           await expect(categoryStatus).to.equal(test.args.enabledValue);
         }
       });

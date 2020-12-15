@@ -48,7 +48,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      */
     public function createSupplier(string $supplierReference, TableNode $table)
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         try {
             /** @var SupplierId $supplierId */
@@ -58,10 +58,10 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
                 $data['city'],
                 $this->getCountryIdByName($data['country']),
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
-                $this->parseLocalizedArray($data['description']),
-                $this->parseLocalizedArray($data['meta title']),
-                $this->parseLocalizedArray($data['meta description']),
-                $this->parseLocalizedArray($data['meta keywords']),
+                $data['description'],
+                $data['meta title'],
+                $data['meta description'],
+                $data['meta keywords'],
                 $this->getShopIdsByReferences($data['shops']),
                 $data['address2'] ?? null,
                 $data['post code'] ?? null,
@@ -87,7 +87,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
     public function assertSupplierProperties(string $supplierReference, TableNode $table)
     {
         $editableSupplier = $this->getEditableSupplier($supplierReference);
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         Assert::assertEquals($data['name'], $editableSupplier->getName(), 'Unexpected supplier name');
         Assert::assertEquals($data['address'], $editableSupplier->getAddress(), 'Unexpected supplier address');
@@ -104,22 +104,22 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
             sprintf('Expected supplier to be %s', $expectedEnabled ? 'enabled' : 'disabled')
         );
         Assert::assertEquals(
-            $this->parseLocalizedArray($data['description']),
+            $data['description'],
             $editableSupplier->getLocalizedDescriptions(),
             'Unexpected supplier localized descriptions'
         );
         Assert::assertEquals(
-            $this->parseLocalizedArray($data['meta title']),
+            $data['meta title'],
             $editableSupplier->getLocalizedMetaTitles(),
             'Unexpected supplier localized meta titles'
         );
         Assert::assertEquals(
-            $this->parseLocalizedArray($data['meta description']),
+            $data['meta description'],
             $editableSupplier->getLocalizedMetaDescriptions(),
             'Unexpected supplier localized meta descriptions'
         );
         Assert::assertEquals(
-            $this->parseLocalizedArray($data['meta keywords']),
+            $data['meta keywords'],
             $editableSupplier->getLocalizedMetaKeywords(),
             'Unexpected supplier localized meta keywords'
         );

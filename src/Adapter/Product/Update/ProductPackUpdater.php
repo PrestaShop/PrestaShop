@@ -32,8 +32,8 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -70,7 +70,8 @@ class ProductPackUpdater
      * @param PackId $packId
      * @param QuantifiedProduct[] $productsForPacking
      *
-     * @throws ProductException
+     * @throws CoreException
+     * @throws ProductPackConstraintException
      * @throws ProductPackException
      */
     public function setPackProducts(PackId $packId, array $productsForPacking): void
@@ -99,15 +100,16 @@ class ProductPackUpdater
     /**
      * @param int $productId
      *
-     * @throws ProductPackException
+     * @throws CoreException
+     * @throws ProductPackConstraintException
      */
     private function assertProductIsAvailableForPacking(int $productId): void
     {
         try {
             if (Pack::isPack($productId)) {
-                throw new ProductPackException(
+                throw new ProductPackConstraintException(
                     sprintf('Product #%d is a pack itself. It cannot be packed', $productId),
-                    ProductPackException::CANNOT_ADD_PACK_INTO_PACK
+                    ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
                 );
             }
         } catch (PrestaShopException $e) {

@@ -116,6 +116,26 @@ abstract class QueryParamsCollection
 
     /**
      * @param array $queryParams
+     * @param array $allParams
+     *
+     * @return $this
+     */
+    public function fromArray(array $queryParams, array $allParams = []): QueryParamsCollection
+    {
+        $queryParams = $this->excludeUnknownParams($queryParams);
+        $queryParams = $this->parsePaginationParams($queryParams);
+        $queryParams = $this->parseOrderParams($queryParams);
+
+        if (empty($allParams)) {
+            $allParams = $queryParams;
+        }
+        $this->queryParams = $this->parseFilterParamsArray($queryParams, $allParams);
+
+        return $this;
+    }
+
+    /**
+     * @param array $queryParams
      *
      * @return mixed
      */
@@ -150,6 +170,17 @@ abstract class QueryParamsCollection
             $request->query->all()
         );
 
+        return $this->parseFilterParamsArray($queryParams, $allParameters);
+    }
+
+    /**
+     * @param array $queryParams
+     * @param array $allParameters
+     *
+     * @return array
+     */
+    protected function parseFilterParamsArray(array $queryParams, array $allParameters): array
+    {
         $filters = array_filter(array_keys($allParameters), function ($filter) {
             return in_array($filter, $this->getValidFilterParams());
         });

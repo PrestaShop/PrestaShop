@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Testwork\Tester\Result\TestResult;
 use Configuration;
@@ -64,9 +65,10 @@ abstract class AbstractDomainFeatureContext implements Context
     public function checkLastException(AfterScenarioScope $scope)
     {
         $e = $this->getLastException();
+        $this->cleanLastException();
 
         if (TestResult::FAILED === $scope->getTestResult()->getResultCode() && null !== $e) {
-            throw new RuntimeException(sprintf('Might be related to the last exception: %s %s', get_class($e), $e->getTraceAsString()));
+            throw new RuntimeException(sprintf('Might be related to the last exception: %s: %s Use -vvv for additional stack trace info', get_class($e), $e->getMessage()), 0, $e);
         }
     }
 
@@ -151,31 +153,33 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * Parse a localized string into a localized array, the expected format can be:
-     *   fr-FR:valueFr;en-EN:valueEn:{localeCode}:{localeValue}
-     *   1:valueFr;2:valueEn:{langId}:{localeValue}
-     * and will be converted into an array indexed by language id
-     *
-     * @param string $parsedArray
+     * @param TableNode $tableNode
      *
      * @return array
      */
-    protected function parseLocalizedArray(string $parsedArray): array
+    protected function localizeByRows(TableNode $tableNode): array
     {
-        $arrayValues = array_map('trim', explode(';', $parsedArray));
-        $localizedArray = [];
-        foreach ($arrayValues as $arrayValue) {
-            $data = explode(':', $arrayValue);
-            $langKey = $data[0];
-            $langValue = $data[1];
-            if (ctype_digit($langKey)) {
-                $localizedArray[$langKey] = $langValue;
-            } else {
-                $localizedArray[Language::getIdByLocale($langKey, true)] = $langValue;
+        return $this->parseLocalizedRow($tableNode->getRowsHash());
+    }
+
+    /**
+     * @param TableNode $table
+     *
+     * @return array
+     */
+    protected function localizeByColumns(TableNode $table): array
+    {
+        $rows = [];
+        foreach ($table->getColumnsHash() as $key => $column) {
+            $row = [];
+            foreach ($column as $columnName => $value) {
+                $row[$columnName] = $value;
             }
+
+            $rows[] = $this->parseLocalizedRow($row);
         }
 
-        return $localizedArray;
+        return $rows;
     }
 
     /**
@@ -184,5 +188,36 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getDefaultLangId(): int
     {
         return (int) Configuration::get('PS_LANG_DEFAULT');
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return array
+     */
+    private function parseLocalizedRow(array $row): array
+    {
+        $parsedRow = [];
+        foreach ($row as $key => $value) {
+            $localeMatch = preg_match('/\[.*?\]/', $key, $matches) ? reset($matches) : null;
+
+            if (!$localeMatch) {
+                $parsedRow[$key] = $value;
+                continue;
+            }
+
+            $propertyName = str_replace($localeMatch, '', $key);
+            $locale = str_replace(['[', ']'], '', $localeMatch);
+
+            $langId = (int) Language::getIdByLocale($locale, true);
+
+            if (!$langId) {
+                throw new RuntimeException(sprintf('Language by locale "%s" was not found', $locale));
+            }
+
+            $parsedRow[$propertyName][$langId] = $value;
+        }
+
+        return $parsedRow;
     }
 }

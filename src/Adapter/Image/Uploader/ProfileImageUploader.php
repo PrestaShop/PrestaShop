@@ -28,13 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Profile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Uploads profile logo image
  */
-final class ProfileImageUploader extends AbstractImageUploader
+final class ProfileImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
      * @var string

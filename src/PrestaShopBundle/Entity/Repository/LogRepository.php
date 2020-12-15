@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
+ * This class should not be used as a Grid query builder. @see LogQueryBuilder
  */
 class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
@@ -183,10 +184,15 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @param SearchCriteriaInterface $searchCriteria
      *
+     * @deprecated deprecated since 1.7.8.0
+     * @see LogQueryBuilder::getSearchQueryBuilder
+     *
      * @return QueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         $qb = $this->buildGridQuery($searchCriteria);
         $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee');
 
@@ -202,10 +208,15 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @param SearchCriteriaInterface $searchCriteria
      *
+     * @deprecated deprecated since 1.7.8.0
+     * @see LogQueryBuilder::getCountQueryBuilder
+     *
      * @return QueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         $qb = $this->buildGridQuery($searchCriteria);
         $qb->select('COUNT(*)');
 
@@ -217,14 +228,18 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @param SearchCriteriaInterface $searchCriteria
      *
+     * @deprecated deprecated since 1.7.8.0
+     * @see LogQueryBuilder::buildGridQuery
+     *
      * @return QueryBuilder
      */
     private function buildGridQuery(SearchCriteriaInterface $searchCriteria)
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         $allowedFilters = [
             'id_log',
-            'firstname',
-            'lastname',
+            'employee',
             'severity',
             'message',
             'object_type',
@@ -254,7 +269,12 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
 
             if ('employee' == $filterName) {
-                $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
+                $qb->andWhere(
+                    'e.lastname LIKE :employee
+                    OR e.firstname LIKE :employee
+                    OR CONCAT(e.firstname, \' \', e.lastname) LIKE :employee
+                    OR CONCAT(e.lastname, \' \', e.firstname) LIKE :employee'
+                );
                 $qb->setParameter('employee', '%' . $filterValue . '%');
 
                 continue;

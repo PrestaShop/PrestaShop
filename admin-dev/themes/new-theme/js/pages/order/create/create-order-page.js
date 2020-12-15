@@ -25,6 +25,7 @@
 
 import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
+import _ from 'lodash';
 import createOrderMap from './create-order-map';
 import CustomerManager from './customer-manager';
 import ShippingRenderer from './shipping-renderer';
@@ -257,7 +258,18 @@ export default class CreateOrderPage {
     );
 
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this.initProductChangePrice(e));
-    this.$container.on('change', createOrderMap.listedProductQtyInput, (e) => this.initProductChangeQty(e));
+    this.$container.on(
+      'change',
+      createOrderMap.listedProductQtyInput,
+      _.debounce((e) => {
+        const inputsQty = document.querySelectorAll(createOrderMap.listedProductQtyInput);
+
+        inputsQty.forEach((inputQty) => {
+          inputQty.setAttribute('disabled', true);
+        });
+        this.initProductChangeQty(e);
+      }, 500),
+    );
     this.$container.on('change', createOrderMap.addressSelect, () => this.changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, (e) => this.initProductRemoveFromCart(e));
   }
@@ -309,6 +321,7 @@ export default class CreateOrderPage {
   onCartAddressesChanged() {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
@@ -442,9 +455,10 @@ export default class CreateOrderPage {
       this.cartRuleManager.addCartRuleToCart(cartRuleId, this.cartId);
 
       // manually fire blur event after cart rule is selected.
-    }).on('click', createOrderMap.foundCartRuleListItem, () => {
-      $(createOrderMap.cartRuleSearchInput).blur();
-    });
+    })
+      .on('click', createOrderMap.foundCartRuleListItem, () => {
+        $(createOrderMap.cartRuleSearchInput).blur();
+      });
   }
 
   /**
@@ -506,7 +520,6 @@ export default class CreateOrderPage {
       customizationId: $(event.currentTarget).data('customization-id'),
       price: $(event.currentTarget).val(),
     };
-
     this.productManager.changeProductPrice(this.cartId, this.customerId, product);
   }
 
@@ -526,7 +539,20 @@ export default class CreateOrderPage {
       prevQty: $(event.currentTarget).data('prev-qty'),
     };
 
-    this.productManager.changeProductQty(this.cartId, product);
+    if (
+      typeof product.productId !== 'undefined'
+      && product.productId !== null
+      && typeof product.attributeId !== 'undefined'
+      && product.attributeId !== null
+    ) {
+      this.productManager.changeProductQty(this.cartId, product);
+    } else {
+      const inputsQty = document.querySelectorAll(createOrderMap.listedProductQtyInput);
+
+      inputsQty.forEach((inputQty) => {
+        inputQty.disabled = false;
+      });
+    }
   }
 
   /**

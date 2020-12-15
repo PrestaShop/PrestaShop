@@ -40,7 +40,7 @@
                     <th class="hidden-xs hidden-sm">
                         {{ "Price"|trans({}, 'Admin.Global') }}
                     </th>
-                    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                    {% if configuration('PS_STOCK_MANAGEMENT') %}
                         <th class="hidden-xs">
                             {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                         </th>
@@ -59,7 +59,7 @@
                         <td class="hidden-xs hidden-sm">
                             <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
                         </td>
-                        {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                        {% if configuration('PS_STOCK_MANAGEMENT') %}
                             <td class="hidden-xs product-sav-quantity"
                                 productquantityvalue="{{ product.sav_quantity|default('') }}">
                                 <a href="{{ product.url|default('') }}#tab-step3">

@@ -778,6 +778,7 @@ abstract class DbCore
      *
      * @param string $string SQL data which will be injected into SQL query
      * @param bool $html_ok Does data contain HTML code ? (optional)
+     * @param bool $bq_sql Escape backticks
      *
      * @return string Sanitized data
      */

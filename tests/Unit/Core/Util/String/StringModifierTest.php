@@ -26,11 +26,22 @@
 
 namespace Tests\Unit\Core\Util\String;
 
+use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 
 class StringModifierTest extends TestCase
 {
+    /**
+     * @var StringModifier
+     */
+    private $stringModifier;
+
+    public function setUp()
+    {
+        $this->stringModifier = new StringModifier();
+    }
+
     public function testItTransformsCamelCaseToSplitWords()
     {
         $data = [
@@ -56,12 +67,55 @@ class StringModifierTest extends TestCase
             ],
         ];
 
-        $stringModifier = new StringModifier();
-
         foreach ($data as $item) {
-            $result = $stringModifier->splitByCamelCase($item['string']);
+            $result = $this->stringModifier->splitByCamelCase($item['string']);
 
             $this->assertEquals($item['expects'], $result);
         }
+    }
+
+    /**
+     * @dataProvider getTooLongStringsForEndCutting
+     *
+     * @param string $string
+     * @param int $length
+     * @param string $expectedOutput
+     */
+    public function testItCutsStringEndIfItIsTooLong(string $string, int $length, string $expectedOutput): void
+    {
+        $output = $this->stringModifier->cutEnd($string, $length);
+        $this->assertEquals($expectedOutput, $output);
+    }
+
+    /**
+     * @dataProvider getNotTooLongStringsForEndCutting
+     *
+     * @param string $string
+     * @param int $length
+     */
+    public function testItDoesNotCutStringEndIfItsNotTooLong(string $string, int $length): void
+    {
+        $output = $this->stringModifier->cutEnd($string, $length);
+        $this->assertEquals($string, $output);
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getTooLongStringsForEndCutting(): Generator
+    {
+        yield ['test', 3, 'tes'];
+        yield ['testable', 7, 'testabl'];
+        yield ['hello world 899', 13, 'hello world 8'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getNotTooLongStringsForEndCutting(): Generator
+    {
+        yield ['test', 4];
+        yield ['testable', 20];
+        yield ['good bye cruel world 10.99', 128];
     }
 }

@@ -25,7 +25,7 @@
       <name>displayCartModalFooter</name>
       <title>Bottom of Add-to-cart modal</title>
       <description>This hook displays content in the bottom of window that appears after adding product to cart</description>
-    </hook>     
+    </hook>
     <hook id="displayProductPageDrawer">
       <name>displayProductPageDrawer</name>
       <title>Product Page Drawer</title>
@@ -81,8 +81,8 @@
       <title>Homepage content</title>
       <description>This hook displays new elements on the homepage</description>
     </hook>
-    <hook id="Header">
-      <name>Header</name>
+    <hook id="displayHeader">
+      <name>displayHeader</name>
       <title>Pages html head section</title>
       <description>This hook adds additional elements in the head section of your pages (head section of html)</description>
     </hook>
@@ -2834,6 +2834,11 @@
       <name>actionProductSearchProviderRunQueryAfter</name>
       <title>Runs an action after ProductSearchProviderInterface::RunQuery()</title>
       <description>Required to return a previous state of an SQL query or/and to change a result of the SQL query after executing it</description>
+    </hook>
+    <hook id="actionFrontControllerSetVariables">
+      <name>actionFrontControllerSetVariables</name>
+      <title>Add variables in JavaScript object and Smarty templates</title>
+      <description>Add variables to javascript object that is available in Front Office. These are also available in smarty templates in modules.your_module_name.</description>
     </hook>
   </entities>
 </entity_hook>

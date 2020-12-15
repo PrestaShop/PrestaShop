@@ -31,6 +31,8 @@ use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
 use Symfony\Component\Process\Process;
+use Tests\Resources\ResourceResetter;
+use Tab;
 
 class DatabaseCreator
 {
@@ -68,10 +70,15 @@ class DatabaseCreator
             'configuration_agrement' => true,
         ));
         $install->installFixtures();
+        Tab::resetStaticCache();
         $install->installTheme();
         $install->installModules();
 
         DatabaseDump::create();
+
+        $resourceResetter = new ResourceResetter();
+        $resourceResetter->backupImages();
+        $resourceResetter->backupDownloads();
     }
 
     /**

@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageException;
 
-class ImageUploadException extends CoreException
+class ImageUploadException extends ImageException
 {
 }

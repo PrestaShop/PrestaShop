@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fee5073ca1bb1008de481af152233c52",
+    "content-hash": "4a73079487d679518abd2315f102b619",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -332,32 +332,34 @@
         },
         {
             "name": "csa/guzzle-bundle",
-            "version": "v1.3.0",
+            "version": "dev-compat-php",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/CsaGuzzleBundle.git",
-                "reference": "079fc43d6ce7fb738d5dd742a21220da3f9b632b"
+                "reference": "7282d89834960347c830efd43dcd788f09a9959a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/CsaGuzzleBundle/zipball/079fc43d6ce7fb738d5dd742a21220da3f9b632b",
-                "reference": "079fc43d6ce7fb738d5dd742a21220da3f9b632b",
+                "url": "https://api.github.com/repos/PrestaShop/CsaGuzzleBundle/zipball/7282d89834960347c830efd43dcd788f09a9959a",
+                "reference": "7282d89834960347c830efd43dcd788f09a9959a",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "~4.0|~5.0",
-                "guzzlehttp/log-subscriber": "~1.0",
-                "php": ">=5.4.0",
-                "symfony/expression-language": "~2.4|~3.0",
-                "symfony/framework-bundle": "~2.3|~3.0",
-                "twig/twig": "~1.12"
+                "guzzlehttp/guzzle": "^5.3",
+                "guzzlehttp/log-subscriber": "^1.0",
+                "php": "^7.1",
+                "symfony/dependency-injection": "^3.4",
+                "symfony/expression-language": "^3.4",
+                "symfony/framework-bundle": "^3.4",
+                "symfony/http-kernel": "^3.4",
+                "twig/twig": "^1.34|^2.4"
             },
             "require-dev": {
-                "doctrine/cache": "~1.1",
-                "guzzlehttp/guzzle-services": "~0.3",
-                "phpunit/phpunit": "~4.0",
-                "symfony/phpunit-bridge": "~2.7|~3.0",
-                "symfony/web-profiler-bundle": "~2.3"
+                "doctrine/cache": "^1.1",
+                "guzzlehttp/guzzle-services": "^0.6",
+                "phpunit/phpunit": "^7",
+                "symfony/web-profiler-bundle": "^3.4",
+                "symfony/yaml": "^3.4"
             },
             "suggest": {
                 "doctrine/cache": "Allows caching of responses",
@@ -385,9 +387,9 @@
             ],
             "description": "A bundle integrating GuzzleHttp >= 4.0",
             "support": {
-                "source": "https://github.com/PrestaShop/CsaGuzzleBundle/tree/v1.3.0"
+                "source": "https://github.com/PrestaShop/CsaGuzzleBundle/tree/compat-php"
             },
-            "time": "2015-06-12T13:09:26+00:00"
+            "time": "2020-11-26T16:15:58+00:00"
         },
         {
             "name": "cssjanus/cssjanus",
@@ -1625,6 +1627,7 @@
                 "reflection",
                 "static"
             ],
+            "abandoned": "roave/better-reflection",
             "time": "2020-03-27T11:06:43+00:00"
         },
         {
@@ -3430,16 +3433,16 @@
         },
         {
             "name": "pear/archive_tar",
-            "version": "1.4.9",
+            "version": "1.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Archive_Tar.git",
-                "reference": "c5b00053770e1d72128252c62c2c1a12c26639f0"
+                "reference": "17d355cb7d3c4ff08e5729f29cd7660145208d9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/c5b00053770e1d72128252c62c2c1a12c26639f0",
-                "reference": "c5b00053770e1d72128252c62c2c1a12c26639f0",
+                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/17d355cb7d3c4ff08e5729f29cd7660145208d9d",
+                "reference": "17d355cb7d3c4ff08e5729f29cd7660145208d9d",
                 "shasum": ""
             },
             "require": {
@@ -3492,7 +3495,11 @@
                 "archive",
                 "tar"
             ],
-            "time": "2019-12-04T10:17:28+00:00"
+            "support": {
+                "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Archive_Tar",
+                "source": "https://github.com/pear/Archive_Tar"
+            },
+            "time": "2020-11-19T22:10:24+00:00"
         },
         {
             "name": "pear/console_getopt",
@@ -3855,6 +3862,9 @@
             ],
             "description": "PrestaShop module blockreassurance",
             "homepage": "https://github.com/PrestaShop/blockreassurance",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockreassurance/tree/v5.0.0"
+            },
             "time": "2020-07-17T14:12:46+00:00"
         },
         {
@@ -3944,6 +3954,9 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
+            "support": {
+                "source": "https://github.com/PrestaShop/contactform/tree/v4.3.0"
+            },
             "time": "2020-09-15T09:37:15+00:00"
         },
         {
@@ -3976,6 +3989,9 @@
             ],
             "description": "PrestaShop module dashactivity",
             "homepage": "https://github.com/PrestaShop/dashactivity",
+            "support": {
+                "source": "https://github.com/PrestaShop/dashactivity/tree/master"
+            },
             "time": "2017-12-08T11:06:01+00:00"
         },
         {
@@ -4008,6 +4024,9 @@
             ],
             "description": "PrestaShop module dashgoals",
             "homepage": "https://github.com/PrestaShop/dashgoals",
+            "support": {
+                "source": "https://github.com/PrestaShop/dashgoals/tree/v2.0.2"
+            },
             "time": "2018-01-29T17:51:57+00:00"
         },
         {
@@ -4040,6 +4059,9 @@
             ],
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
+            "support": {
+                "source": "https://github.com/PrestaShop/dashproducts/tree/v2.1.1"
+            },
             "time": "2020-09-28T11:23:29+00:00"
         },
         {
@@ -4080,6 +4102,9 @@
             ],
             "description": "PrestaShop module dashtrends",
             "homepage": "https://github.com/PrestaShop/dashtrends",
+            "support": {
+                "source": "https://github.com/PrestaShop/dashtrends/tree/v2.0.3"
+            },
             "time": "2020-10-14T13:35:03+00:00"
         },
         {
@@ -4164,6 +4189,9 @@
             ],
             "description": "PrestaShop module graphnvd3",
             "homepage": "https://github.com/PrestaShop/graphnvd3",
+            "support": {
+                "source": "https://github.com/PrestaShop/graphnvd3/tree/v2.0.1"
+            },
             "time": "2019-04-03T08:19:54+00:00"
         },
         {
@@ -4196,6 +4224,9 @@
             ],
             "description": "PrestaShop module gridhtml",
             "homepage": "https://github.com/PrestaShop/gridhtml",
+            "support": {
+                "source": "https://github.com/PrestaShop/gridhtml/tree/dev"
+            },
             "time": "2017-02-22T11:03:13+00:00"
         },
         {
@@ -4228,6 +4259,9 @@
             ],
             "description": "PrestaShop module gsitemap",
             "homepage": "https://github.com/PrestaShop/gsitemap",
+            "support": {
+                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.2.0"
+            },
             "time": "2020-06-23T05:58:30+00:00"
         },
         {
@@ -4260,20 +4294,23 @@
             ],
             "description": "PrestaShop module pagesnotfound",
             "homepage": "https://github.com/PrestaShop/pagesnotfound",
+            "support": {
+                "source": "https://github.com/PrestaShop/pagesnotfound/tree/dev"
+            },
             "time": "2017-02-20T11:14:52+00:00"
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v4.1.0",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "2570d246ba8bd540b03b6c1e564b27e925e70d2d"
+                "reference": "c56e3e9495c4a0a9c1e7dc43e1bb0fcad2796dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/2570d246ba8bd540b03b6c1e564b27e925e70d2d",
-                "reference": "2570d246ba8bd540b03b6c1e564b27e925e70d2d",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/c56e3e9495c4a0a9c1e7dc43e1bb0fcad2796dbf",
+                "reference": "c56e3e9495c4a0a9c1e7dc43e1bb0fcad2796dbf",
                 "shasum": ""
             },
             "require": {
@@ -4305,7 +4342,10 @@
             ],
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
-            "time": "2020-08-11T15:16:38+00:00"
+            "support": {
+                "source": "https://github.com/PrestaShop/productcomments/tree/v4.2.0"
+            },
+            "time": "2020-11-16T13:13:36+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -4337,6 +4377,9 @@
             ],
             "description": "PrestaShop module ps_banner",
             "homepage": "https://github.com/PrestaShop/ps_banner",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_banner/tree/dev"
+            },
             "time": "2018-02-05T21:44:48+00:00"
         },
         {
@@ -4369,6 +4412,10 @@
             ],
             "description": "PrestaShop category tree links",
             "homepage": "https://github.com/PrestaShop/ps_categorytree",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_categorytree/issues",
+                "source": "https://github.com/PrestaShop/ps_categorytree/tree/dev"
+            },
             "time": "2017-02-01T09:28:43+00:00"
         },
         {
@@ -4410,6 +4457,9 @@
             ],
             "description": "PrestaShop module ps_checkpayment",
             "homepage": "https://github.com/PrestaShop/ps_checkpayment",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_checkpayment/tree/v2.0.5"
+            },
             "time": "2020-10-16T07:20:00+00:00"
         },
         {
@@ -4442,6 +4492,9 @@
             ],
             "description": "PrestaShop module ps_contactinfo",
             "homepage": "https://github.com/PrestaShop/ps_contactinfo",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_contactinfo/tree/master"
+            },
             "time": "2020-05-28T12:57:52+00:00"
         },
         {
@@ -4474,6 +4527,10 @@
             ],
             "description": "PrestaShop - Cross selling",
             "homepage": "https://github.com/PrestaShop/ps_crossselling",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_crossselling/issues",
+                "source": "https://github.com/PrestaShop/ps_crossselling/tree/v2.0.0"
+            },
             "time": "2017-06-23T09:47:31+00:00"
         },
         {
@@ -4510,6 +4567,9 @@
             ],
             "description": "PrestaShop module ps_currencyselector",
             "homepage": "https://github.com/PrestaShop/ps_currencyselector",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_currencyselector/tree/master"
+            },
             "time": "2019-12-31T16:04:31+00:00"
         },
         {
@@ -4542,6 +4602,9 @@
             ],
             "description": "PrestaShop module ps_customeraccountlinks",
             "homepage": "https://github.com/PrestaShop/ps_customeraccountlinks",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_customeraccountlinks/tree/master"
+            },
             "time": "2017-12-08T10:53:29+00:00"
         },
         {
@@ -4582,6 +4645,9 @@
             ],
             "description": "PrestaShop - Customer 'Sign in' link",
             "homepage": "https://github.com/PrestaShop/ps_customersignin",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_customersignin/tree/v2.0.3"
+            },
             "time": "2020-09-18T07:24:23+00:00"
         },
         {
@@ -4623,6 +4689,9 @@
             ],
             "description": "PrestaShop module ps_customtext",
             "homepage": "https://github.com/PrestaShop/ps_customtext",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_customtext/tree/v4.1.1"
+            },
             "time": "2020-09-17T10:27:07+00:00"
         },
         {
@@ -4655,6 +4724,10 @@
             ],
             "description": "PrestaShop - Data privacy",
             "homepage": "https://github.com/PrestaShop/ps_dataprivacy",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_dataprivacy/issues",
+                "source": "https://github.com/PrestaShop/ps_dataprivacy/tree/v2.0.0"
+            },
             "time": "2017-06-23T09:45:26+00:00"
         },
         {
@@ -4687,6 +4760,9 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v2.6.0"
+            },
             "time": "2020-06-18T06:13:36+00:00"
         },
         {
@@ -4736,6 +4812,9 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.6.0"
+            },
             "time": "2020-09-08T07:05:01+00:00"
         },
         {
@@ -4777,6 +4856,9 @@
             ],
             "description": "PrestaShop - Favicon notification BO",
             "homepage": "https://github.com/PrestaShop/ps_faviconnotificationbo",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_faviconnotificationbo/tree/v2.1.0"
+            },
             "time": "2020-06-09T08:08:54+00:00"
         },
         {
@@ -4809,6 +4891,9 @@
             ],
             "description": "PrestaShop - Featured products",
             "homepage": "https://github.com/PrestaShop/ps_featuredproducts",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.0"
+            },
             "time": "2020-07-22T16:21:40+00:00"
         },
         {
@@ -4841,6 +4926,9 @@
             ],
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_imageslider/tree/master"
+            },
             "time": "2020-06-01T13:57:45+00:00"
         },
         {
@@ -4873,6 +4961,9 @@
             ],
             "description": "PrestaShop module ps_languageselector",
             "homepage": "https://github.com/PrestaShop/ps_languageselector",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_languageselector/tree/v2.1.0"
+            },
             "time": "2020-06-26T07:00:29+00:00"
         },
         {
@@ -4917,6 +5008,10 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_linklist/issues",
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/master"
+            },
             "time": "2020-07-10T07:10:55+00:00"
         },
         {
@@ -4949,6 +5044,9 @@
             ],
             "description": "PrestaShop - Main menu",
             "homepage": "https://github.com/PrestaShop/ps_mainmenu",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_mainmenu/tree/v2.2.0"
+            },
             "time": "2020-07-10T14:25:07+00:00"
         },
         {
@@ -4981,6 +5079,10 @@
             ],
             "description": "PrestaShop module ps_searchbar",
             "homepage": "https://github.com/PrestaShop/ps_searchbar",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_searchbar/issues",
+                "source": "https://github.com/PrestaShop/ps_searchbar/tree/dev"
+            },
             "time": "2017-03-23T10:36:40+00:00"
         },
         {
@@ -5013,6 +5115,9 @@
             ],
             "description": "PrestaShop module ps_sharebuttons",
             "homepage": "https://github.com/PrestaShop/ps_sharebuttons",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_sharebuttons/tree/master"
+            },
             "time": "2020-05-20T12:16:49+00:00"
         },
         {
@@ -5049,6 +5154,10 @@
             ],
             "description": "PrestaShop module ps_shoppingcart",
             "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_shoppingcart/issues",
+                "source": "https://github.com/PrestaShop/ps_shoppingcart/tree/master"
+            },
             "time": "2019-10-30T14:07:17+00:00"
         },
         {
@@ -5081,6 +5190,10 @@
             ],
             "description": "PrestaShop module ps_socialfollow",
             "homepage": "https://github.com/PrestaShop/ps_socialfollow",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_socialfollow/issues",
+                "source": "https://github.com/PrestaShop/ps_socialfollow/tree/v2.1.0"
+            },
             "time": "2020-04-15T15:03:48+00:00"
         },
         {
@@ -5123,6 +5236,9 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_themecusto/tree/v1.2.0"
+            },
             "time": "2020-04-29T06:18:04+00:00"
         },
         {
@@ -5158,6 +5274,9 @@
             ],
             "description": "PrestaShop module ps_wirepayment",
             "homepage": "https://github.com/PrestaShop/ps_wirepayment",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_wirepayment/tree/master"
+            },
             "time": "2020-06-24T19:32:51+00:00"
         },
         {
@@ -5190,6 +5309,9 @@
             ],
             "description": "PrestaShop module sekeywords",
             "homepage": "https://github.com/PrestaShop/sekeywords",
+            "support": {
+                "source": "https://github.com/PrestaShop/sekeywords/tree/dev"
+            },
             "time": "2017-01-30T15:46:25+00:00"
         },
         {
@@ -5222,6 +5344,9 @@
             ],
             "description": "PrestaShop module statsbestcategories",
             "homepage": "https://github.com/PrestaShop/statsbestcategories",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestcategories/tree/master"
+            },
             "time": "2017-12-08T14:47:07+00:00"
         },
         {
@@ -5254,6 +5379,9 @@
             ],
             "description": "PrestaShop module statsbestcustomers",
             "homepage": "https://github.com/PrestaShop/statsbestcustomers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestcustomers/tree/v2.0.2"
+            },
             "time": "2018-01-29T17:21:50+00:00"
         },
         {
@@ -5286,6 +5414,9 @@
             ],
             "description": "PrestaShop module statsbestmanufacturers",
             "homepage": "https://github.com/PrestaShop/statsbestmanufacturers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestmanufacturers/tree/dev"
+            },
             "time": "2017-01-31T17:03:07+00:00"
         },
         {
@@ -5318,6 +5449,9 @@
             ],
             "description": "PrestaShop module statsbestproducts",
             "homepage": "https://github.com/PrestaShop/statsbestproducts",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestproducts/tree/dev"
+            },
             "time": "2017-01-30T16:33:56+00:00"
         },
         {
@@ -5350,6 +5484,9 @@
             ],
             "description": "PrestaShop module statsbestsuppliers",
             "homepage": "https://github.com/PrestaShop/statsbestsuppliers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestsuppliers/tree/dev"
+            },
             "time": "2017-01-30T16:34:19+00:00"
         },
         {
@@ -5382,6 +5519,9 @@
             ],
             "description": "PrestaShop module statsbestvouchers",
             "homepage": "https://github.com/PrestaShop/statsbestvouchers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestvouchers/tree/dev"
+            },
             "time": "2017-01-30T16:34:41+00:00"
         },
         {
@@ -5414,6 +5554,9 @@
             ],
             "description": "PrestaShop module statscarrier",
             "homepage": "https://github.com/PrestaShop/statscarrier",
+            "support": {
+                "source": "https://github.com/PrestaShop/statscarrier/tree/dev"
+            },
             "time": "2017-01-30T17:03:51+00:00"
         },
         {
@@ -5446,6 +5589,9 @@
             ],
             "description": "PrestaShop module statscatalog",
             "homepage": "https://github.com/PrestaShop/statscatalog",
+            "support": {
+                "source": "https://github.com/PrestaShop/statscatalog/tree/dev"
+            },
             "time": "2017-02-02T08:39:32+00:00"
         },
         {
@@ -5478,6 +5624,9 @@
             ],
             "description": "PrestaShop module statscheckup",
             "homepage": "https://github.com/PrestaShop/statscheckup",
+            "support": {
+                "source": "https://github.com/PrestaShop/statscheckup/tree/master"
+            },
             "time": "2018-12-17T09:59:57+00:00"
         },
         {
@@ -5510,6 +5659,9 @@
             ],
             "description": "PrestaShop module statsdata",
             "homepage": "https://github.com/PrestaShop/statsdata",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsdata/tree/master"
+            },
             "time": "2020-07-15T13:10:39+00:00"
         },
         {
@@ -5542,6 +5694,9 @@
             ],
             "description": "PrestaShop module statsequipment",
             "homepage": "https://github.com/PrestaShop/statsequipment",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsequipment/tree/dev"
+            },
             "time": "2017-01-31T17:01:36+00:00"
         },
         {
@@ -5574,6 +5729,9 @@
             ],
             "description": "PrestaShop module statsforecast",
             "homepage": "https://github.com/PrestaShop/statsforecast",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsforecast/tree/dev"
+            },
             "time": "2018-01-29T18:37:54+00:00"
         },
         {
@@ -5606,6 +5764,9 @@
             ],
             "description": "PrestaShop module statslive",
             "homepage": "https://github.com/PrestaShop/statslive",
+            "support": {
+                "source": "https://github.com/PrestaShop/statslive/tree/master"
+            },
             "time": "2020-03-24T08:54:00+00:00"
         },
         {
@@ -5638,6 +5799,9 @@
             ],
             "description": "PrestaShop module statsnewsletter",
             "homepage": "https://github.com/PrestaShop/statsnewsletter",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsnewsletter/tree/v2.0.2"
+            },
             "time": "2018-01-29T18:39:03+00:00"
         },
         {
@@ -5670,6 +5834,9 @@
             ],
             "description": "PrestaShop module statsorigin",
             "homepage": "https://github.com/PrestaShop/statsorigin",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsorigin/tree/v2.0.2"
+            },
             "time": "2018-01-29T19:17:31+00:00"
         },
         {
@@ -5702,6 +5869,9 @@
             ],
             "description": "PrestaShop module statspersonalinfos",
             "homepage": "https://github.com/PrestaShop/statspersonalinfos",
+            "support": {
+                "source": "https://github.com/PrestaShop/statspersonalinfos/tree/master"
+            },
             "time": "2020-06-01T12:28:27+00:00"
         },
         {
@@ -5734,6 +5904,9 @@
             ],
             "description": "PrestaShop module statsproduct",
             "homepage": "https://github.com/PrestaShop/statsproduct",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsproduct/tree/master"
+            },
             "time": "2018-01-29T18:57:47+00:00"
         },
         {
@@ -5766,6 +5939,9 @@
             ],
             "description": "PrestaShop module statsregistrations",
             "homepage": "https://github.com/PrestaShop/statsregistrations",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsregistrations/tree/master"
+            },
             "time": "2017-01-31T17:22:19+00:00"
         },
         {
@@ -5798,6 +5974,9 @@
             ],
             "description": "PrestaShop module statssales",
             "homepage": "https://github.com/PrestaShop/statssales",
+            "support": {
+                "source": "https://github.com/PrestaShop/statssales/tree/dev"
+            },
             "time": "2017-01-31T17:23:19+00:00"
         },
         {
@@ -5830,6 +6009,9 @@
             ],
             "description": "PrestaShop module statssearch",
             "homepage": "https://github.com/PrestaShop/statssearch",
+            "support": {
+                "source": "https://github.com/PrestaShop/statssearch/tree/master"
+            },
             "time": "2017-12-08T12:37:58+00:00"
         },
         {
@@ -5862,20 +6044,23 @@
             ],
             "description": "PrestaShop module statsstock",
             "homepage": "https://github.com/PrestaShop/statsstock",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsstock/tree/dev"
+            },
             "time": "2017-01-31T17:24:06+00:00"
         },
         {
             "name": "prestashop/statsvisits",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsvisits.git",
-                "reference": "c6255d571d3b1d2e8863d87482e0df42de862f96"
+                "reference": "95aa7494f4329dcf8e0dd0386eb6513eb2976f44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/c6255d571d3b1d2e8863d87482e0df42de862f96",
-                "reference": "c6255d571d3b1d2e8863d87482e0df42de862f96",
+                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/95aa7494f4329dcf8e0dd0386eb6513eb2976f44",
+                "reference": "95aa7494f4329dcf8e0dd0386eb6513eb2976f44",
                 "shasum": ""
             },
             "require": {
@@ -5894,34 +6079,37 @@
             ],
             "description": "PrestaShop module statsvisits",
             "homepage": "https://github.com/PrestaShop/statsvisits",
-            "time": "2018-01-29T18:08:52+00:00"
+            "support": {
+                "source": "https://github.com/PrestaShop/statsvisits/tree/v2.0.3"
+            },
+            "time": "2020-11-06T09:13:57+00:00"
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v4.0.3",
+            "version": "v4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "ba663b159bd560a2b570766ff5610c81f2462035"
+                "reference": "9da37780f6004271616579365238d9421a2d1b97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/ba663b159bd560a2b570766ff5610c81f2462035",
-                "reference": "ba663b159bd560a2b570766ff5610c81f2462035",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/9da37780f6004271616579365238d9421a2d1b97",
+                "reference": "9da37780f6004271616579365238d9421a2d1b97",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^4",
                 "php": ">=7.1",
                 "smarty/smarty": "^3.1",
-                "symfony/twig-bridge": "^3.4",
-                "twig/twig": "^1.34|^2.4"
+                "symfony/twig-bridge": "^3.4 || ^4.4 || ^5.0",
+                "twig/twig": "^1.38 || ^2.7 || ^3.0"
             },
             "require-dev": {
                 "doctrine/common": "~2.10.0",
-                "phpunit/phpunit": "^5.7",
-                "symfony/framework-bundle": "^3.4",
-                "symfony/translation": "^3.4"
+                "phpunit/phpunit": "^7.5 || ^8.5",
+                "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0",
+                "symfony/translation": "^3.4 || ^4.4 || ^5.0"
             },
             "type": "bundle",
             "autoload": {
@@ -5935,16 +6123,12 @@
             ],
             "authors": [
                 {
-                    "name": "Mickaël Andrieu",
-                    "email": "andrieu.travail@gmail.com"
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
                 },
                 {
-                    "name": "Nawo Mbechezi",
-                    "email": "mlanawo.mbechezi@ikimea.com"
-                },
-                {
-                    "name": "Jérémie Tabet",
-                    "email": "master@jeremietabet.com"
+                    "name": "PrestaShop Community",
+                    "homepage": "http://contributors.prestashop.com/"
                 }
             ],
             "description": "Translation tools for PrestaShop",
@@ -5953,7 +6137,11 @@
                 "prestashop",
                 "translation"
             ],
-            "time": "2019-09-30T14:09:36+00:00"
+            "support": {
+                "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v4.0.4"
+            },
+            "time": "2020-11-13T08:11:44+00:00"
         },
         {
             "name": "prestashop/welcome",
@@ -5994,6 +6182,9 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
+            "support": {
+                "source": "https://github.com/PrestaShop/welcome/tree/v6.0.3"
+            },
             "time": "2020-10-19T13:11:06+00:00"
         },
         {
@@ -10218,24 +10409,25 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
+        "csa/guzzle-bundle": 20,
         "cssjanus/cssjanus": 20,
         "phake/phake": 0
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.1.3",
         "ext-curl": "*",
+        "ext-dom": "*",
         "ext-fileinfo": "*",
-        "ext-intl": "*",
-        "ext-mbstring": "*",
-        "ext-zip": "*",
-        "ext-iconv": "*",
-        "ext-json": "*",
         "ext-gd": "*",
-        "ext-dom": "*"
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "platform-overrides": {

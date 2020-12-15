@@ -9,6 +9,11 @@
       font-weight: 600;
       line-height: 1.5;
     }
+
+    .card-details-actions {
+      display: flex;
+      align-items: center;
+    }
   }
 
   .add-product {
@@ -311,6 +316,18 @@
     .table {
       display: block;
     }
+
+    #view_order_payments_block {
+      .table {
+        overflow: scroll;
+
+        &-head {
+          &-invoice {
+            min-width: auto;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -332,8 +349,6 @@
   }
 
   #order-view-page {
-    padding: 0 10px;
-
     .card-details {
       &-form {
         width: 100%;

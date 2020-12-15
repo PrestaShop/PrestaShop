@@ -831,7 +831,7 @@
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
-        <note>Line: 580</note>
+        <note>Line: 591</note>
       </trans-unit>
     </body>
   </file>
@@ -840,7 +840,7 @@
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>Line: 1524</note>
+        <note>Line: 1531</note>
       </trans-unit>
     </body>
   </file>

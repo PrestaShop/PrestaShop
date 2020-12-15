@@ -35,7 +35,7 @@ class Monitoring extends BOBasePage {
     this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
     } a.grid-delete-row-link`;
     this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
-    this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
+    this.deleteModeInput = position => `#delete_categories_delete_mode_${position} + i`;
     this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
     this.submitDeleteCategoryButton = `${this.deleteModeCategoryModal} button.js-submit-delete-categories`;
     // Sort Selectors

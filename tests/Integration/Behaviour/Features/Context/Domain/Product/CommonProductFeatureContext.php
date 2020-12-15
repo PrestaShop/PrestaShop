@@ -24,18 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
+use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -69,17 +70,20 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
-     * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/
+     * @Then /^product "(.+)" localized "(.+)" should be:$/
+     * @Given /^product "(.+)" localized "(.+)" is:$/
+     *
+     * localizedValues transformation handled by
+     *
+     * @see LocalizedArrayTransformContext
      *
      * @param string $productReference
      * @param string $fieldName
-     * @param string $localizedValues
+     * @param array $expectedLocalizedValues
      */
-    public function assertLocalizedProperty(string $productReference, string $fieldName, string $localizedValues)
+    public function assertLocalizedProperty(string $productReference, string $fieldName, array $expectedLocalizedValues)
     {
         $productForEditing = $this->getProductForEditing($productReference);
-        $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
         if ('tags' === $fieldName) {
             UpdateTagsFeatureContext::assertLocalizedTags(
@@ -89,6 +93,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
             return;
         }
+
+        $htmlEncodedProperties = ['description', 'description_short'];
 
         foreach ($expectedLocalizedValues as $langId => $expectedValue) {
             $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
@@ -102,7 +108,10 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
                 ));
             }
 
-            $actualValue = $actualValues[$langId];
+            $actualValue = in_array($fieldName, $htmlEncodedProperties) ?
+                html_entity_decode($actualValues[$langId]) :
+                $actualValues[$langId]
+            ;
 
             if ($expectedValue !== $actualValue) {
                 throw new RuntimeException(
@@ -130,26 +139,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             throw new RuntimeException(sprintf('Product "%s" was not expected to exist, but it was found', $reference));
         } catch (ProductNotFoundException $e) {
             // intentional. Means product is not found and test should pass
-        }
-    }
-
-    /**
-     * @When I update product :productReference prices and apply non-existing tax rules group
-     *
-     * @param string $productReference
-     */
-    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
-    {
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        $command = new UpdateProductPricesCommand($productId);
-        // this id value does not exist, it is used on purpose.
-        $command->setTaxRulesGroupId(50000000);
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
         }
     }
 
@@ -209,7 +198,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
-            'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
             'tag' => ProductConstraintException::INVALID_TAG,
             'width' => ProductConstraintException::INVALID_WIDTH,
             'height' => ProductConstraintException::INVALID_HEIGHT,
@@ -223,6 +211,13 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'meta_title' => ProductConstraintException::INVALID_META_TITLE,
             'meta_description' => ProductConstraintException::INVALID_META_DESCRIPTION,
             'link_rewrite' => ProductConstraintException::INVALID_LINK_REWRITE,
+            'minimal_quantity' => ProductConstraintException::INVALID_MINIMAL_QUANTITY,
+            'location' => ProductConstraintException::INVALID_LOCATION,
+            'available_now_labels' => ProductConstraintException::INVALID_AVAILABLE_NOW,
+            'available_later_labels' => ProductConstraintException::INVALID_AVAILABLE_LATER,
+            'available_date' => ProductConstraintException::INVALID_AVAILABLE_DATE,
+            'low_stock_threshold' => ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD,
+            'low_stock_alert' => ProductConstraintException::INVALID_LOW_STOCK_ALERT,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

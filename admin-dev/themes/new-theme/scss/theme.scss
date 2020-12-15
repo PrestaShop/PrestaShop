@@ -68,6 +68,8 @@
 @import "pages/attribute";
 @import "pages/customer_thread";
 @import "pages/customer";
+@import "pages/compromised";
+@import "pages/improve";
 
 // Main Layout
 @import "pages/modules";
@@ -148,5 +150,20 @@ table.table {
 .translations-app {
   .modal-header {
     display: initial;
+  }
+}
+
+.birthday-select-container {
+  .custom-select.form-control {
+    width: 100%;
+  }
+}
+
+/// Need this in order for material choice table select boxes to be aligned correctly
+.choice-table {
+  .table {
+    .form-check {
+      padding-left: 0;
+    }
   }
 }

@@ -28,9 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
+use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
@@ -39,6 +42,28 @@ use Product;
  */
 class ProductValidator extends AbstractObjectModelValidator
 {
+    /**
+     * @var bool
+     */
+    private $advancedStockEnabled;
+
+    /**
+     * @var int
+     */
+    private $defaultPackStockType;
+
+    /**
+     * @param bool $advancedStockEnabled
+     * @param int $defaultPackStockType
+     */
+    public function __construct(
+        bool $advancedStockEnabled,
+        int $defaultPackStockType
+    ) {
+        $this->advancedStockEnabled = $advancedStockEnabled;
+        $this->defaultPackStockType = $defaultPackStockType;
+    }
+
     /**
      * This method is specific for product creation only.
      *
@@ -60,6 +85,10 @@ class ProductValidator extends AbstractObjectModelValidator
      *
      * @param Product $product
      *
+     * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
      * @throws ProductConstraintException
      * @throws ProductException
      */
@@ -68,8 +97,11 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateCustomizability($product);
         $this->validateBasicInfo($product);
         $this->validateOptions($product);
+        $this->validateDetails($product);
         $this->validateShipping($product);
-        //@todo; more properties when refactoring other handlers to use updater/validator
+        $this->validateStock($product);
+        $this->validateSeo($product);
+        $this->validatePrices($product);
     }
 
     /**
@@ -79,9 +111,9 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateCustomizability(Product $product): void
     {
-        $this->validateProductProperty($product, 'customizable');
-        $this->validateProductProperty($product, 'text_fields');
-        $this->validateProductProperty($product, 'uploadable_files');
+        $this->validateProductProperty($product, 'customizable', ProductConstraintException::INVALID_CUSTOMIZABILITY);
+        $this->validateProductProperty($product, 'text_fields', ProductConstraintException::INVALID_TEXT_FIELDS_COUNT);
+        $this->validateProductProperty($product, 'uploadable_files', ProductConstraintException::INVALID_UPLOADABLE_FILES_COUNT);
     }
 
     /**
@@ -103,12 +135,23 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateOptions(Product $product): void
     {
-        $this->validateProductProperty($product, 'available_for_order');
-        $this->validateProductProperty($product, 'online_only');
-        $this->validateProductProperty($product, 'show_price');
-        $this->validateProductProperty($product, 'id_manufacturer');
+        $this->validateProductProperty($product, 'available_for_order', ProductConstraintException::INVALID_AVAILABLE_FOR_ORDER);
+        $this->validateProductProperty($product, 'online_only', ProductConstraintException::INVALID_ONLINE_ONLY);
+        $this->validateProductProperty($product, 'show_price', ProductConstraintException::INVALID_SHOW_PRICE);
+        $this->validateProductProperty($product, 'id_manufacturer', ProductConstraintException::INVALID_MANUFACTURER_ID);
         $this->validateProductProperty($product, 'visibility', ProductConstraintException::INVALID_VISIBILITY);
         $this->validateProductProperty($product, 'condition', ProductConstraintException::INVALID_CONDITION);
+        $this->validateProductProperty($product, 'show_condition', ProductConstraintException::INVALID_SHOW_CONDITION);
+        $this->validateProductProperty($product, 'active', ProductConstraintException::INVALID_STATUS);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateDetails(Product $product): void
+    {
         $this->validateProductProperty($product, 'ean13', ProductConstraintException::INVALID_EAN_13);
         $this->validateProductProperty($product, 'isbn', ProductConstraintException::INVALID_ISBN);
         $this->validateProductProperty($product, 'mpn', ProductConstraintException::INVALID_MPN);
@@ -128,9 +171,135 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'depth', ProductConstraintException::INVALID_DEPTH);
         $this->validateProductProperty($product, 'weight', ProductConstraintException::INVALID_WEIGHT);
         $this->validateProductProperty($product, 'additional_shipping_cost', ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST);
-        $this->validateProductProperty($product, 'additional_delivery_times');
+        $this->validateProductProperty($product, 'additional_delivery_times', ProductConstraintException::INVALID_ADDITIONAL_DELIVERY_TIME_NOTES_TYPE);
         $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
         $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validatePrices(Product $product): void
+    {
+        if ($product->unit_price < 0) {
+            throw new ProductConstraintException(
+                sprintf('Invalid product unit_price. Got "%s"', $product->unit_price),
+                ProductConstraintException::INVALID_UNIT_PRICE
+            );
+        }
+
+        $this->validateProductProperty($product, 'price', ProductConstraintException::INVALID_PRICE);
+        $this->validateProductProperty($product, 'unity', ProductConstraintException::INVALID_UNITY);
+        $this->validateProductProperty($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
+        $this->validateProductProperty($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
+     */
+    private function validateStock(Product $product): void
+    {
+        if ($this->advancedStockEnabled) {
+            $this->validateAdvancedStock($product);
+        } else {
+            $this->validateClassicStock($product);
+        }
+
+        $this->validateProductProperty($product, 'low_stock_threshold', ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD);
+        $this->validateProductProperty($product, 'low_stock_alert', ProductConstraintException::INVALID_LOW_STOCK_ALERT);
+        $this->validateProductProperty($product, 'available_date', ProductConstraintException::INVALID_AVAILABLE_DATE);
+        $this->validateProductProperty($product, 'minimal_quantity', ProductConstraintException::INVALID_MINIMAL_QUANTITY);
+        $this->validateProductProperty($product, 'location', ProductConstraintException::INVALID_LOCATION);
+        $this->validateProductLocalizedProperty($product, 'available_later', ProductConstraintException::INVALID_AVAILABLE_LATER);
+        $this->validateProductLocalizedProperty($product, 'available_now', ProductConstraintException::INVALID_AVAILABLE_NOW);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductStockConstraintException
+     */
+    private function validateClassicStock(Product $product): void
+    {
+        // Depends on stock is only available in advanced mode
+        if ((bool) $product->depends_on_stock) {
+            throw new ProductStockConstraintException(
+                'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
+                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
+            );
+        }
+
+        if ((bool) $product->advanced_stock_management) {
+            throw new ProductStockConstraintException(
+                'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
+                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
+            );
+        }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
+     */
+    private function validateAdvancedStock(Product $product): void
+    {
+        if ((bool) $product->depends_on_stock && !(bool) $product->advanced_stock_management) {
+            throw new ProductStockConstraintException(
+                'You cannot perform this action when advanced_stock_management is disabled on the product',
+                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
+            );
+        }
+
+        $this->checkPackStockType($product);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductPackConstraintException
+     */
+    private function checkPackStockType(Product $product): void
+    {
+        // If the product doesn't depend on stock or is not a Pack no problem
+        if (!$product->depends_on_stock || !Pack::isPack($product->id)) {
+            return;
+        }
+
+        // Get pack stock type (or default configuration if needed)
+        $packStockType = $product->pack_stock_type;
+        if ($packStockType === Pack::STOCK_TYPE_DEFAULT) {
+            $packStockType = $this->defaultPackStockType;
+        }
+
+        // Either the pack has its own stock, or else ALL products from the pack must depend on the stock as well
+        if ($packStockType === Pack::STOCK_TYPE_PACK_ONLY || Pack::allUsesAdvancedStockManagement($product->id)) {
+            return;
+        }
+
+        throw new ProductPackConstraintException(
+            'You cannot link your pack to product stock because one of them has no advanced stock enabled',
+            ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
+        );
+    }
+
+    /**
+     * @param Product $product
+     */
+    private function validateSeo(Product $product): void
+    {
+        $this->validateProductProperty($product, 'redirect_type', ProductConstraintException::INVALID_REDIRECT_TYPE);
+        $this->validateProductProperty($product, 'id_type_redirected', ProductConstraintException::INVALID_REDIRECT_TARGET);
+        $this->validateProductLocalizedProperty($product, 'meta_description', ProductConstraintException::INVALID_META_DESCRIPTION);
+        $this->validateProductLocalizedProperty($product, 'meta_title', ProductConstraintException::INVALID_META_TITLE);
+        $this->validateProductLocalizedProperty($product, 'link_rewrite', ProductConstraintException::INVALID_LINK_REWRITE);
     }
 
     /**

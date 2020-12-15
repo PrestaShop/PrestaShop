@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DuplicateOrderCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateOrderCartException;
+use Shop;
 
 /**
  * @internal
@@ -66,6 +67,7 @@ final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterf
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
             ->setLanguage(new Language($cart->id_lang))
+            ->setShop(new Shop($cart->id_shop))
         ;
         $result = $cart->duplicate();
 

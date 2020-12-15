@@ -75,8 +75,8 @@ Feature: Cancel Order Product from Back Office (BO)
       | total_refunded_tax_excl     | 0.000000    |
       | total_refunded_tax_incl     | 0.000000    |
     And there are 2 more "Mug The best is yet to come" in stock
-    And there are 1 more "Mug Today is a good day" in stock
-    And there are 1 more "Customizable mug" in stock
+    And there is 1 more "Mug Today is a good day" in stock
+    And there is 1 more "Customizable mug" in stock
     And order "bo_order_cancel_product" should have following details:
       | total_products           | 73.40  |
       | total_products_wt        | 77.80  |
@@ -99,6 +99,30 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 5 products "Mug The best is yet to come"
     And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
     And order "bo_order_cancel_product" should contain 2 products "Customizable mug"
+    When I generate invoice for "bo_order_cancel_product" order
+    Then order "bo_order_cancel_product" should have 1 invoices
+    And order "bo_order_cancel_product" should have following details:
+      | total_products           | 123.00 |
+      | total_products_wt        | 130.38 |
+      | total_discounts_tax_excl | 0.000  |
+      | total_discounts_tax_incl | 0.000  |
+      | total_paid_tax_excl      | 130.00 |
+      | total_paid_tax_incl      | 137.80 |
+      | total_paid               | 137.80 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the first invoice from order "bo_order_cancel_product" should have following details:
+      | total_products          | 123.00 |
+      | total_products_wt       | 130.38 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 130.00 |
+      | total_paid_tax_incl     | 137.80 |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    Then order "bo_order_cancel_product" has status "Awaiting check payment"
+    And order "bo_order_cancel_product" has 1 status in history
     When I cancel the following products from order "bo_order_cancel_product":
       | product_name                | quantity |
       | Mug The best is yet to come | 5        |
@@ -109,6 +133,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 0 products "Mug Today is a good day"
     And order "bo_order_cancel_product" should contain 0 products "Customizable mug"
     And order "bo_order_cancel_product" has status "Canceled"
+    And order "bo_order_cancel_product" has 2 statuses in history
     And order "bo_order_cancel_product" should have following details:
       | total_products           | 0.0000 |
       | total_products_wt        | 0.0000 |
@@ -120,6 +145,15 @@ Feature: Cancel Order Product from Back Office (BO)
       | total_paid_tax_incl      | 0.0000 |
       | total_paid               | 0.0000 |
       | total_paid_real          | 0.0    |
+    And the first invoice from order "bo_order_cancel_product" should have following details:
+      | total_products          | 0.000 |
+      | total_products_wt       | 0.000 |
+      | total_discount_tax_excl | 0.0   |
+      | total_discount_tax_incl | 0.0   |
+      | total_paid_tax_excl     | 0.000 |
+      | total_paid_tax_incl     | 0.000 |
+      | total_shipping_tax_excl | 0.000 |
+      | total_shipping_tax_incl | 0.000 |
 
   Scenario: Quantity is required
     Given I add order "bo_order_cancel_product" with the following details:

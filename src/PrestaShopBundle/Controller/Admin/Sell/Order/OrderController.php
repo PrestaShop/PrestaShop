@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Currency;
 use Exception;
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -73,7 +73,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
@@ -959,6 +958,11 @@ class OrderController extends FrameworkBundleAdminController
             return $item->getOrderDetailId() == $orderDetailId ? $item : $result;
         });
 
+        // The whole product row has been removed so we return an empty response
+        if (null === $product) {
+            return new Response('');
+        }
+
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
@@ -1174,7 +1178,10 @@ class OrderController extends FrameworkBundleAdminController
         $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
 
         return $this->json(
-            $this->getQueryBus()->handle(new GetCartInformation($cartId))
+            $this->getQueryBus()->handle(
+                (new GetCartForOrderCreation($cartId))
+                    ->setHideDiscounts(true)
+            )
         );
     }
 
@@ -1453,6 +1460,31 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function getPaymentsAction(int $orderId): Response
+    {
+        try {
+            /** @var OrderForViewing $orderForViewing */
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+            return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig', [
+                'payments' => $orderForViewing->getPayments(),
+                'linkedOrders' => $orderForViewing->getLinkedOrders(),
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    /**
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to generate this."
@@ -1573,17 +1605,15 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $orderId
-     * @param int $type
      * @param string $name
      * @param string $value
      *
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function displayCustomizationImageAction(int $orderId, int $type, string $name, string $value)
+    public function displayCustomizationImageAction(int $orderId, string $name, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
-        $customizationForViewing = new OrderProductCustomizationForViewing($type, $name, $value);
-        $filePath = $uploadDir . $customizationForViewing->getValue();
+        $filePath = $uploadDir . $value;
         $filesystem = new Filesystem();
 
         try {

@@ -326,3 +326,10 @@ services:
         - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
       public: true
+
+    prestashop.core.grid.query_builder.log:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\LogQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        public: true
