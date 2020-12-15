@@ -1,7 +1,7 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-class createAccount extends FOBasePage {
+class CreateAccount extends FOBasePage {
   constructor() {
     super();
 
@@ -101,4 +101,4 @@ class createAccount extends FOBasePage {
   }
 }
 
-module.exports = new createAccount();
+module.exports = new CreateAccount();
