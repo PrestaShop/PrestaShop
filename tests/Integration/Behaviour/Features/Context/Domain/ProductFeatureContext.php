@@ -59,7 +59,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then The category of product :productName has reduction of :reductionPercent% for the customer :customerReference
+     * @Given The category of product :productName has reduction of :reductionPercent% for the customer :customerReference
      */
     public function addReductionOnProductCategoryForCustomerGroup(string $productName, float $reductionPercent, string $customerReference)
     {
@@ -90,7 +90,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then The category of product :productName has no reduction
+     * @Given The category of product :productName has no reduction
      */
     public function deleteReductionOnProductCategory(string $productName)
     {
