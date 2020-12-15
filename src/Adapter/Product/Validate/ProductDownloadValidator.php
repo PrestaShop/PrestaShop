@@ -43,7 +43,7 @@ class ProductDownloadValidator extends AbstractObjectModelValidator
      */
     public function validate(ProductDownload $productDownload): void
     {
-        $this->validateProductDownloadProperty($productDownload, 'id_product', VirtualProductFileConstraintException::INVALID_PRODUCT_ID);
+        $this->validateProductDownloadProperty($productDownload, 'id_product');
         $this->validateProductDownloadProperty($productDownload, 'display_filename', VirtualProductFileConstraintException::INVALID_DISPLAY_NAME);
         $this->validateProductDownloadProperty($productDownload, 'filename', VirtualProductFileConstraintException::INVALID_FILENAME);
         $this->validateProductDownloadProperty($productDownload, 'date_add', VirtualProductFileConstraintException::INVALID_CREATION_DATE);

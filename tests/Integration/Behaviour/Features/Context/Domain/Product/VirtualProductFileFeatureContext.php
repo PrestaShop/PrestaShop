@@ -82,6 +82,29 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then I should get error that product file :propertyName is invalid
+     *
+     * @param string $propertyName
+     */
+    public function assertLastConstraintError(string $propertyName): void
+    {
+        $errorCodeByPropertyMap = [
+            'display name' => VirtualProductFileConstraintException::INVALID_DISPLAY_NAME,
+            'access days' => VirtualProductFileConstraintException::INVALID_ACCESS_DAYS,
+            'download times limit' => VirtualProductFileConstraintException::INVALID_DOWNLOAD_TIMES_LIMIT,
+        ];
+
+        if (!isset($errorCodeByPropertyMap[$propertyName])) {
+            throw new RuntimeException(sprintf('Error code is not set for property "%s"', $propertyName));
+        }
+
+        $this->assertLastErrorIs(
+            VirtualProductFileConstraintException::class,
+            $errorCodeByPropertyMap[$propertyName]
+        );
+    }
+
+    /**
      * @Then I should get error that only virtual product can have file
      */
     public function assertInvalidProductTypeError(): void

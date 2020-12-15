@@ -91,3 +91,25 @@ Feature: Add virtual product file from BO (Back Office).
       | access days          | 0                                  |
       | download times limit | 0                                  |
       | expiration date      |                                    |
+
+  Scenario: I should not be able to add a file with invalid details
+    Given I add product product6 with following information:
+      | name[en-US] | puffin zip 6 |
+      | is_virtual  | true         |
+    And product product6 type should be virtual
+    And product "product6" should not have a file
+    When I add virtual product file "file6" to "product6" with following details:
+      | file name    | dummy_zip.zip |
+      | display name | {my filename} |
+    Then I should get error that product file "display name" is invalid
+    When I add virtual product file "file6" to "product6" with following details:
+      | file name    | dummy_zip.zip                       |
+      | display name | zipped files pack for sixth product |
+      | access days  | -1                                  |
+    Then I should get error that product file "access days" is invalid
+    When I add virtual product file "file6" to "product6" with following details:
+      | file name            | dummy_zip.zip                       |
+      | display name         | zipped files pack for sixth product |
+      | download times limit | -10                                 |
+    Then I should get error that product file "download times limit" is invalid
+    And product "product6" should not have a file
