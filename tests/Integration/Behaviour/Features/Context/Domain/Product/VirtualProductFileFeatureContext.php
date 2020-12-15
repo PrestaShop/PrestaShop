@@ -34,6 +34,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Tests\Resources\DummyFileUploader;
@@ -144,15 +145,25 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         );
         unset($dataRows['download times limit']);
 
-        $actualExpirationDate = $actualFile->getExpirationDate() ?
-            $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) :
-            DateTimeUtil::NULL_VALUE
-        ;
-        Assert::assertEquals($dataRows['expiration date'], $actualExpirationDate, 'Unexpected file expiration date');
+        $this->assertExpirationDate($dataRows, $actualFile);
         unset($dataRows['expiration date']);
 
         if (!empty($dataRows)) {
             throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_dump($dataRows)));
         }
+    }
+
+    /**
+     * @param array $dataRows
+     * @param VirtualProductFileForEditing $actualFile
+     */
+    private function assertExpirationDate(array $dataRows, VirtualProductFileForEditing $actualFile): void
+    {
+        $expectedExpiration = $dataRows['expiration date'] !== '' ? $dataRows['expiration date'] : null;
+        $actualExpiration = $actualFile->getExpirationDate() ?
+            $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) :
+            null
+        ;
+        Assert::assertEquals($expectedExpiration, $actualExpiration, 'Unexpected file expiration date');
     }
 }
