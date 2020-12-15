@@ -12,20 +12,7 @@ class Login extends FOBasePage {
     this.emailInput = `${this.loginForm} input[name='email']`;
     this.passwordInput = `${this.loginForm} input[name='password']`;
     this.signInButton = `${this.loginForm} button#submit-login`;
-    this.displayRegisterFormLink = '#content a[data-link-action=\'display-register-form\']';
-    // Selectors for create account form
-    this.createAccountForm = '#customer-form';
-    this.genderRadioButton = id => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
-    this.firstNameInput = `${this.createAccountForm} input[name='firstname']`;
-    this.lastNameInput = `${this.createAccountForm} input[name='lastname']`;
-    this.newEmailInput = `${this.createAccountForm} input[name='email']`;
-    this.newPasswordInput = `${this.createAccountForm} input[name='password']`;
-    this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
-    this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
-    this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
-    this.partnerOfferCheckbox = `${this.createAccountForm} input[name='optin']`;
-    this.companyInput = `${this.createAccountForm} input[name='company']`;
-    this.saveButton = `${this.createAccountForm} .form-control-submit`;
+    this.displayRegisterFormLink = 'div.no-account a[data-link-action=\'display-register-form\']';
   }
 
   /*
