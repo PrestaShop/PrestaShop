@@ -9,7 +9,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 150
@@ -29,7 +29,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 150
@@ -50,7 +50,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product in the catalog named "product1" with a price of 149.0 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 10000
@@ -69,7 +69,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product in the catalog named "product1" with a price of 149.0 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 150
@@ -91,7 +91,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product in the catalog named "product1" with a price of 149.0 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 10000
@@ -110,7 +110,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 150
@@ -133,7 +133,7 @@ Feature: Cart calculation with cart rules giving gift
     Given there is a product in the catalog named "product1" with a price of 151.0 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a carrier named "carrier1"
     Given carrier "carrier1" applies shipping fees of 5.0 in zone "zone1" for price between 0 and 150

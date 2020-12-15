@@ -138,16 +138,26 @@ export default class ProductManager {
    * @private
    */
   onProductQtyChange() {
+    const enableQtyInputs = () => {
+      const inputsQty = document.querySelectorAll(createOrderMap.listedProductQtyInput);
+
+      inputsQty.forEach((inputQty) => {
+        inputQty.disabled = false;
+      });
+    };
+
     // on success
     EventEmitter.on(eventMap.productQtyChanged, (data) => {
       this.productRenderer.cleanCartBlockAlerts();
       this.updateStockOnQtyChange(data.product);
       EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
+      enableQtyInputs();
     });
 
     // on failure
     EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
       this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
+      enableQtyInputs();
     });
   }
 
@@ -282,7 +292,7 @@ export default class ProductManager {
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(
       combination.stock,
-      this.selectedProduct.availableOutOfStock || (combination.stock <= 0),
+      this.selectedProduct.availableOutOfStock || combination.stock <= 0,
     );
 
     return combination;
