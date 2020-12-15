@@ -109,6 +109,9 @@ class ProductSupplierUpdater
         $product->wholesale_price = '0';
         $product->id_supplier = 0;
 
+        // Important for ps_facetedsearch module, without this it raises caching issues by invoking Product::priceCalculation()
+        Product::flushPriceCache();
+
         $this->productRepository->partialUpdate(
             $product,
             ['supplier_reference', 'wholesale_price', 'id_supplier'],
