@@ -80,6 +80,8 @@ function populateTab()
         $languages[$lang['id_lang']] = $lang['iso_code'];
     }
 
+    // Because we use 1.7.7+ files but with a not-yet migrated Tab entity, we need to use
+    // a custom XmlLoader to remove the `enabled` key before inserting to the DB
     $xml_loader = new \XmlLoader1700();
     $xml_loader->setTranslator(Context::getContext()->getTranslator());
     $xml_loader->setLanguages($languages);

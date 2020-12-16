@@ -37,9 +37,19 @@ function ps_1770_update_charset()
                 'SELECT count(filter_id) FROM ' . _DB_PREFIX_ . 'admin_filter'
             );
         }
+    } catch (Exception $e) {
+
+    }
+
+    try {
         $moduleHistoryTableExists = (bool) Db::getInstance()->executeS(
             'SELECT count(*) FROM ' . _DB_PREFIX_ . 'module_history'
         );
+    } catch (Exception $e) {
+
+    }
+
+    try {
         $translationTableExists = (bool) Db::getInstance()->executeS(
             'SELECT count(*) FROM ' . _DB_PREFIX_ . 'translation'
         );
