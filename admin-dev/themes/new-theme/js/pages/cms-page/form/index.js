@@ -53,6 +53,7 @@ $(() => {
     $('#serp-app').data('cms-url'),
   );
 
+  /** @todo do with components */
   new TranslatableField();
   new TinyMCEEditor();
 
