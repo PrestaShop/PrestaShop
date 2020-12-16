@@ -19,32 +19,32 @@ Feature: Update product stock from Back Office (BO)
       | name[en-US] | Presta camera |
       | is_virtual  | false         |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | false      |
-      | depends_on_stock              | false      |
-      | pack_stock_type               | default    |
-      | out_of_stock_type             | default    |
-      | quantity                      | 0          |
-      | minimal_quantity              | 1          |
-      | location                      |            |
-      | low_stock_threshold           | 0          |
-      | low_stock_alert               | false      |
-      | available_date                | 0000-00-00 |
+      | use_advanced_stock_management | false   |
+      | depends_on_stock              | false   |
+      | pack_stock_type               | default |
+      | out_of_stock_type             | default |
+      | quantity                      | 0       |
+      | minimal_quantity              | 1       |
+      | location                      |         |
+      | low_stock_threshold           | 0       |
+      | low_stock_alert               | false   |
+      | available_date                |         |
 
   Scenario: I check default stock values for virtual product
     When I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | is_virtual  | true          |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | false      |
-      | depends_on_stock              | false      |
-      | pack_stock_type               | default    |
-      | out_of_stock_type             | available  |
-      | quantity                      | 0          |
-      | minimal_quantity              | 1          |
-      | location                      |            |
-      | low_stock_threshold           | 0          |
-      | low_stock_alert               | false      |
-      | available_date                | 0000-00-00 |
+      | use_advanced_stock_management | false     |
+      | depends_on_stock              | false     |
+      | pack_stock_type               | default   |
+      | out_of_stock_type             | available |
+      | quantity                      | 0         |
+      | minimal_quantity              | 1         |
+      | location                      |           |
+      | low_stock_threshold           | 0         |
+      | low_stock_alert               | false     |
+      | available_date                |           |
 
   Scenario: I update product stock management
     Given I add product "product1" with following information:
@@ -152,32 +152,17 @@ Feature: Update product stock from Back Office (BO)
       | quantity | 42 |
     And product "product1" last stock movement decreased by 9
 
-  Scenario: I update product quantity specifying if movement must be added or not
-    Given I add product "product1" with following information:
-      | name[en-US] | Presta camera |
-      | is_virtual  | false         |
-    And product "product1" should have following stock information:
-      | quantity | 0 |
-    When I update product "product1" stock with following information:
-      | quantity     | 51    |
-    Then product "product1" last stock movement increased by 51
-    When I update product "product1" stock with following information:
-      | quantity     | 42   |
-    Then product "product1" should have following stock information:
-      | quantity | 42 |
-    And product "product1" last stock movement decreased by 9
-
   Scenario: I update product simple stock fields
     Given language "french" with locale "fr-FR" exists
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | is_virtual  | false         |
     And product "product1" should have following stock information:
-      | minimal_quantity    | 1          |
-      | location            |            |
-      | low_stock_threshold | 0          |
-      | low_stock_alert     | false      |
-      | available_date      | 0000-00-00 |
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+      | available_date      |       |
     And product "product1" localized "available_now_labels" should be:
       | locale | value |
       | en-US  |       |
@@ -240,12 +225,12 @@ Feature: Update product stock from Back Office (BO)
       | name[en-US] | Presta camera |
       | is_virtual  | false         |
     And product "product1" should have following stock information:
-      | quantity            | 0          |
-      | minimal_quantity    | 1          |
-      | location            |            |
-      | low_stock_threshold | 0          |
-      | low_stock_alert     | false      |
-      | available_date      | 0000-00-00 |
+      | quantity            | 0     |
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+      | available_date      |       |
     And product "product1" localized "available_now_labels" should be:
       | locale | value |
       | en-US  |       |
@@ -264,12 +249,12 @@ Feature: Update product stock from Back Office (BO)
       | available_later_labels[en-US] | too late bro<3 |
     Then I should get error that product available_later_labels is invalid
     And product "product1" should have following stock information:
-      | quantity            | 0          |
-      | minimal_quantity    | 1          |
-      | location            |            |
-      | low_stock_threshold | 0          |
-      | low_stock_alert     | false      |
-      | available_date      | 0000-00-00 |
+      | quantity            | 0     |
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+      | available_date      |       |
     And product "product1" localized "available_now_labels" should be:
       | locale | value |
       | en-US  |       |

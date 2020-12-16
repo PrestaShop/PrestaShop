@@ -41,7 +41,6 @@ ALTER TABLE `PREFIX_log`
   ADD `in_all_shops` TINYINT(1) unsigned NOT NULL DEFAULT '0'
 ;
 
-ALTER TABLE `PREFIX_stock_available` MODIFY COLUMN `location` VARCHAR(255) NOT NULL DEFAULT '';
 UPDATE `PREFIX_product` SET `location` = '' WHERE `location` IS NULL;
 ALTER TABLE `PREFIX_product` MODIFY COLUMN `location` VARCHAR(255) NOT NULL DEFAULT '';
 UPDATE `PREFIX_product_attribute` SET `location` = '' WHERE `location` IS NULL;

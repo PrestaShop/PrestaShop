@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use RuntimeException;
@@ -128,20 +127,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $this->assertStringProperty($productForEditing, $data, 'location');
         $this->assertIntegerProperty($productForEditing, $data, 'low_stock_threshold');
         $this->assertBoolProperty($productForEditing, $data, 'low_stock_alert');
-
-        if (isset($data['available_date'])) {
-            if (DateTimeUtil::NULL_DATE !== $data['available_date']) {
-                $this->assertDateProperty($productForEditing, $data, 'available_date');
-            } else {
-                $actualAvailableDate = $productForEditing->getStockInformation()->getAvailableDate();
-                Assert::assertEquals(
-                    null,
-                    $actualAvailableDate,
-                    sprintf('Expected available_date NULL, got "%s"', var_export($actualAvailableDate, true))
-                );
-                unset($data['available_date']);
-            }
-        }
+        $this->assertDateTimeProperty($productForEditing, $data, 'available_date');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field

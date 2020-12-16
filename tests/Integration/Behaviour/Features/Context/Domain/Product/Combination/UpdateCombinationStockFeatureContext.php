@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -68,9 +67,9 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             (int) $dataRows['quantity'],
             (int) $dataRows['minimal quantity'],
             (int) $dataRows['low stock threshold'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is on']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']),
             $dataRows['location'],
-            DateTimeUtil::NULL_DATE === $dataRows['available date'] ? null : new DateTime($dataRows['available date'])
+            '' === $dataRows['available date'] ? null : new DateTime($dataRows['available date'])
         );
     }
 
@@ -79,8 +78,6 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
      *
      * @param string $combinationReference
      * @param CombinationStock $expectedStock
-     *
-     * @throws CombinationConstraintException
      */
     public function assertStockDetails(string $combinationReference, CombinationStock $expectedStock): void
     {
@@ -102,6 +99,11 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             sprintf('Unexpected combination "%s" low stock threshold', $combinationReference)
         );
         Assert::assertSame(
+            $expectedStock->isLowStockAlertEnabled(),
+            $actualStock->isLowStockAlertEnabled(),
+            sprintf('Unexpected combination "%s" low stock alert', $combinationReference)
+        );
+        Assert::assertSame(
             $expectedStock->getLocation(),
             $actualStock->getLocation(),
             sprintf('Unexpected combination "%s" location', $combinationReference)
@@ -113,7 +115,7 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
                 $actualStock->getAvailableDate(),
                 sprintf('Unexpected combination "%s" availability date. Expected NULL, got "%s"',
                     $combinationReference,
-                    var_export($actualStock->getAvailableDate())
+                    var_export($actualStock->getAvailableDate(), true)
                 )
             );
         } else {
@@ -143,8 +145,8 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
         if (isset($dataRows['low stock threshold'])) {
             $command->setLowStockThreshold((int) $dataRows['low stock threshold']);
         }
-        if (isset($dataRows['low stock alert is on'])) {
-            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is on']));
+        if (isset($dataRows['low stock alert is enabled'])) {
+            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']));
         }
         if (isset($dataRows['available date'])) {
             $command->setAvailableDate(new DateTime($dataRows['available date']));
