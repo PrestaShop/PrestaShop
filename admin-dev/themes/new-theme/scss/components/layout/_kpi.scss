@@ -1,11 +1,12 @@
 .kpi-container {
   position: relative;
   display: block;
-  padding-top: .9375rem;
-  padding-bottom: .9375rem;
+  padding-top: 0.9375rem;
+  padding-bottom: 0.9375rem;
   text-align: center;
   text-decoration: none;
   background: #fff;
+  @include border-radius($card-border-radius);
 
   &:hover {
     text-decoration: none;
@@ -49,8 +50,8 @@
   .title,
   .subtitle,
   .value {
-    padding-left: .125rem;
-    font-size: .75rem;
+    padding-left: 0.125rem;
+    font-size: 0.75rem;
     color: $gray-dark;
   }
 
