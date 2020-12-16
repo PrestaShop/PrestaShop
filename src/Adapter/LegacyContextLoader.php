@@ -106,7 +106,7 @@ namespace PrestaShop\PrestaShop\Adapter {
     /**
      * Helps loading specific context, for example in CLI context
      */
-    class ContextLoadHelper
+    class LegacyContextLoader
     {
         /**
          * @var Context
@@ -114,11 +114,11 @@ namespace PrestaShop\PrestaShop\Adapter {
         private $context;
 
         /**
-         * @param LegacyContext $context
+         * @param Context $context
          */
-        public function __construct(LegacyContext $context)
+        public function __construct(Context $context)
         {
-            $this->context = $context->getContext();
+            $this->context = $context;
         }
 
         /**
@@ -127,6 +127,8 @@ namespace PrestaShop\PrestaShop\Adapter {
          * @param int|null $employeeId
          * @param int|null $shopId
          * @param int|null $shopGroupId
+         *
+         * @return self
          */
         public function loadGenericContext(
             ?string $controllerClassName = null,
@@ -145,17 +147,21 @@ namespace PrestaShop\PrestaShop\Adapter {
             if (null !== $shopGroupId) {
                 $this->loadShopGroupId($shopGroupId);
             }
+
+            return $this;
         }
 
         /**
          * @param string|null $controllerClassName
+         *
+         * @return self
          */
         public function loadControllerContext(?string $controllerClassName = null)
         {
             if (null === $controllerClassName) {
                 $this->context->controller = new DummyControllerCore();
 
-                return;
+                return $this;
             }
 
             if (!class_exists($controllerClassName)) {
@@ -168,10 +174,14 @@ namespace PrestaShop\PrestaShop\Adapter {
             }
 
             $this->context->controller = new $controllerClassName();
+
+            return $this;
         }
 
         /**
          * @param int|null $currencyId
+         *
+         * @return self
          */
         public function loadCurrencyContext(?int $currencyId = null)
         {
@@ -181,31 +191,45 @@ namespace PrestaShop\PrestaShop\Adapter {
             }
 
             $this->context->currency = $currency;
+
+            return $this;
         }
 
         /**
          * @param int|null $employeeId
+         *
+         * @return self
          */
         public function loadEmployeeContext(?int $employeeId = null)
         {
             $this->context->employee = new Employee($employeeId);
+
+            return $this;
         }
 
         /**
          * @param int $shopId
+         *
+         * @return self
          */
         public function loadShopContext(int $shopId = 1)
         {
             $this->context->shop = new Shop($shopId);
             Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+
+            return $this;
         }
 
         /**
          * @param int $shopGroupId
+         *
+         * @return self
          */
         public function loadShopGroupId(int $shopGroupId)
         {
             Shop::setContext(Shop::CONTEXT_GROUP, $shopGroupId);
+
+            return $this;
         }
     }
 }
