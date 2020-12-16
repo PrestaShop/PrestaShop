@@ -24,35 +24,51 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\DateTime;
+declare(strict_types=1);
 
-use RuntimeException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 
 /**
- * Defines reusable values for DateTime
+ * Holds virtual product file identification value
  */
-final class DateTime
+class VirtualProductFileId
 {
     /**
-     * Default format for date string
+     * @var int
      */
-    public const DEFAULT_DATE_FORMAT = 'Y-m-d';
+    private $value;
 
     /**
-     * Default format for date time string
+     * @param int $virtualProductFileId
      */
-    public const DEFAULT_DATETIME_FORMAT = 'Y-m-d H:i:s';
-
-    /**
-     * DateTime value which should be considered same as null
-     */
-    public const NULL_VALUE = '0000-00-00 00:00:00';
-
-    /**
-     * This class only defines constants and has no reason to be initialized
-     */
-    public function __construct()
+    public function __construct(int $virtualProductFileId)
     {
-        throw new RuntimeException(sprintf('This class purpose is to define constants only. You might have mistaken it with "%s"', \DateTime::class));
+        $this->assertValueIsGreaterThanZero($virtualProductFileId);
+        $this->value = $virtualProductFileId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws VirtualProductFileConstraintException
+     */
+    private function assertValueIsGreaterThanZero(int $value): void
+    {
+        if (0 > $value) {
+            throw new VirtualProductFileConstraintException(
+                sprintf('Invalid virtual product file id "%d" value', $value),
+                VirtualProductFileConstraintException::INVALID_ID
+            );
+        }
     }
 }

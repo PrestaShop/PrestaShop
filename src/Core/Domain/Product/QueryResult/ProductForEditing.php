@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+
 /**
  * Product information for editing
  */
@@ -89,6 +91,11 @@ class ProductForEditing
     private $stockInformation;
 
     /**
+     * @var VirtualProductFileForEditing|null
+     */
+    private $virtualProductFile;
+
+    /**
      * @param int $productId
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
@@ -100,6 +107,7 @@ class ProductForEditing
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
      * @param ProductStockInformation $stockInformation
+     * @param VirtualProductFileForEditing|null $virtualProductFile
      */
     public function __construct(
         int $productId,
@@ -112,7 +120,8 @@ class ProductForEditing
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
-        ProductStockInformation $stockInformation
+        ProductStockInformation $stockInformation,
+        ?VirtualProductFileForEditing $virtualProductFile
     ) {
         $this->productId = $productId;
         $this->customizationOptions = $customizationOptions;
@@ -125,6 +134,7 @@ class ProductForEditing
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
         $this->stockInformation = $stockInformation;
+        $this->virtualProductFile = $virtualProductFile;
     }
 
     /**
@@ -213,5 +223,13 @@ class ProductForEditing
     public function getStockInformation(): ProductStockInformation
     {
         return $this->stockInformation;
+    }
+
+    /**
+     * @return VirtualProductFileForEditing|null
+     */
+    public function getVirtualProductFile(): ?VirtualProductFileForEditing
+    {
+        return $this->virtualProductFile;
     }
 }

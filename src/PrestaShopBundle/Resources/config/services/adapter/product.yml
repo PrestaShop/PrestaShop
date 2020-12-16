@@ -71,6 +71,7 @@ services:
         arguments:
             - '@prestashop.core.util.number.number_extractor'
             - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.repository.product_download_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
@@ -551,3 +552,37 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationPricesCommand
+
+    prestashop.adapter.file.validator.virtual_product_file_validator:
+        class: PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_ATTACHMENT_MAXIMUM_SIZE")'
+
+    prestashop.adapter.file.uploader.virtual_product_file_uploader:
+        class: PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader
+        arguments:
+            - '@prestashop.adapter.file.validator.virtual_product_file_validator'
+            - !php/const _PS_DOWNLOAD_DIR_
+
+    prestashop.adapter.product.validate.product_download_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductDownloadValidator
+
+    prestashop.adapter.product.repository.product_download_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository
+        arguments:
+            - '@prestashop.adapter.product.validate.product_download_validator'
+
+    prestashop.adapter.product.update.virtual_product_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\VirtualProductUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.file.uploader.virtual_product_file_uploader'
+            - '@prestashop.adapter.product.repository.product_download_repository'
+
+    prestashop.adapter.product.command_handler.add_virtual_product_file_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddVirtualProductFileHandler
+        arguments:
+            - '@prestashop.adapter.product.update.virtual_product_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand

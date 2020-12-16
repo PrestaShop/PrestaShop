@@ -24,35 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\DateTime;
+declare(strict_types=1);
 
-use RuntimeException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
- * Defines reusable values for DateTime
+ * Base exception for virtual product file errors
  */
-final class DateTime
+class VirtualProductFileException extends ProductException
 {
-    /**
-     * Default format for date string
-     */
-    public const DEFAULT_DATE_FORMAT = 'Y-m-d';
-
-    /**
-     * Default format for date time string
-     */
-    public const DEFAULT_DATETIME_FORMAT = 'Y-m-d H:i:s';
-
-    /**
-     * DateTime value which should be considered same as null
-     */
-    public const NULL_VALUE = '0000-00-00 00:00:00';
-
-    /**
-     * This class only defines constants and has no reason to be initialized
-     */
-    public function __construct()
-    {
-        throw new RuntimeException(sprintf('This class purpose is to define constants only. You might have mistaken it with "%s"', \DateTime::class));
-    }
 }

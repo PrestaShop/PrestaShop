@@ -24,35 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\DateTime;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler;
 
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 
 /**
- * Defines reusable values for DateTime
+ * Defines contract to handle @see AddVirtualProductFileCommand
  */
-final class DateTime
+interface AddVirtualProductFileHandlerInterface
 {
     /**
-     * Default format for date string
+     * @param AddVirtualProductFileCommand $command
      */
-    public const DEFAULT_DATE_FORMAT = 'Y-m-d';
-
-    /**
-     * Default format for date time string
-     */
-    public const DEFAULT_DATETIME_FORMAT = 'Y-m-d H:i:s';
-
-    /**
-     * DateTime value which should be considered same as null
-     */
-    public const NULL_VALUE = '0000-00-00 00:00:00';
-
-    /**
-     * This class only defines constants and has no reason to be initialized
-     */
-    public function __construct()
-    {
-        throw new RuntimeException(sprintf('This class purpose is to define constants only. You might have mistaken it with "%s"', \DateTime::class));
-    }
+    public function handle(AddVirtualProductFileCommand $command): VirtualProductFileId;
 }
