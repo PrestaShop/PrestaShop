@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -62,7 +62,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var ConfigurableFormChoiceProviderInterface
      */
     private $languageChoiceProvider;
 
@@ -70,13 +70,13 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetActionUrl
      * @param string $redirectionUrl
-     * @param FormChoiceProviderInterface $languageChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $languageChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $resetActionUrl,
         $redirectionUrl,
-        FormChoiceProviderInterface $languageChoiceProvider
+        ConfigurableFormChoiceProviderInterface $languageChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->resetActionUrl = $resetActionUrl;
