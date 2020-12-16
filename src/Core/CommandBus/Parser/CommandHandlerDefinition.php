@@ -69,7 +69,13 @@ class CommandHandlerDefinition
     private $handlerInterfaces;
 
     /**
+     * @var string
+     */
+    private $domain;
+
+    /**
      * @param string $type command or query
+     * @param string $domain
      * @param string $handlerClass
      * @param string $commandClass
      * @param array $commandConstructorParams
@@ -79,6 +85,7 @@ class CommandHandlerDefinition
      */
     public function __construct(
         string $type,
+        string $domain,
         string $handlerClass,
         string $commandClass,
         array $commandConstructorParams,
@@ -87,6 +94,7 @@ class CommandHandlerDefinition
         array $handlerInterfaces
     ) {
         $this->type = $type;
+        $this->domain = $domain;
         $this->handlerClass = $handlerClass;
         $this->commandClass = $commandClass;
         $this->commandConstructorParams = $commandConstructorParams;
@@ -101,6 +109,14 @@ class CommandHandlerDefinition
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain(): string
+    {
+        return $this->domain;
     }
 
     /**
