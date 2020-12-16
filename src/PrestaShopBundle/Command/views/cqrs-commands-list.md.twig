@@ -1,17 +1,25 @@
 ## {{ domain }} domain
 
 ### {{ domain }} Commands
-| Nr. | Command class | Command Constructor | Handler class | Description | Return type |
-| --- | ------------- | ------------------- | ------------- | ----------- | ----------- |
-{% for index, definition in commandDefinitions.command %}
-{% set nr = index + 1 %}
-| {{ nr }} | {{ definition.commandClass }} | <ul>{% for argument in definition.commandConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <p> Implements: </p> <ul> {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {{ definition.description }} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
+
+{% for definition in definitionsByType.command %}
+#### {{ definition.commandClass }}
+
+_{{ definition.description }}_
+
+| Command Constructor | Handler class | Return type |
+| ------------------- | ------------- | ----------- |
+| <ul>{% for argument in definition.commandConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <p> Implements: </p> <ul> {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
 {% endfor %}
 
 ### {{ domain }} Queries
-| Nr. | Query class | Command Constructor | Handler class | Description | Return type |
-| --- | ----------- | ------------------- | ------------- | ----------- | ----------- |
-{% for index, queryDefinition in commandDefinitions.query %}
-{% set nr = index + 1 %}
-| {{ nr }} | {{ definition.commandClass }} | <ul>{% for argument in definition.commandConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <ul> Implements: {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {{ definition.description }} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
+
+{% for definition in definitionsByType.query %}
+#### {{ definition.queryClass }}
+
+_{{ definition.description }}_
+
+| query Constructor | Handler class | Return type |
+| ------------------- | ------------- | ----------- |
+| <ul>{% for argument in definition.queryConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <p> Implements: </p> <ul> {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
 {% endfor %}
