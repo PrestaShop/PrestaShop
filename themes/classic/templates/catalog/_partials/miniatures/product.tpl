@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {block name='product_miniature_item'}
-<div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+<div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
   {if isset($position)}<meta itemprop="position" content="{$position}" />{/if}
-  <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="http://schema.org/Product">
+  <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="https://schema.org/Product">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
         {if $product.cover}
@@ -78,7 +78,7 @@
                 {/if}
               </span>
 
-              <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="invisible">
+              <div itemprop="offers" itemscope itemtype="https://schema.org/Offer" class="invisible">
                 <meta itemprop="priceCurrency" content="{$currency.iso_code}" />
                 <meta itemprop="price" content="{$product.price_amount}" />
               </div>
