@@ -1,4 +1,6 @@
-### Commands
+## {{ domain }} domain
+
+### {{ domain }} Commands
 | Nr. | Command class | Command Constructor | Handler class | Description | Return type |
 | --- | ------------- | ------------------- | ------------- | ----------- | ----------- |
 {% for index, definition in commandDefinitions.command %}
@@ -6,7 +8,7 @@
 | {{ nr }} | {{ definition.commandClass }} | <ul>{% for argument in definition.commandConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <p> Implements: </p> <ul> {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {{ definition.description }} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
 {% endfor %}
 
-### Queries
+### {{ domain }} Queries
 | Nr. | Query class | Command Constructor | Handler class | Description | Return type |
 | --- | ----------- | ------------------- | ------------- | ----------- | ----------- |
 {% for index, queryDefinition in commandDefinitions.query %}

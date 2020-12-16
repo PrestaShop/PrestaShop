@@ -7,5 +7,6 @@ services:
         arguments:
             - '@filesystem'
             - '@prestashop.bundle.twig.native_filesystem_environment'
+            - '@prestashop.core.util.string.string_modifier'
         tags:
             - console.command
