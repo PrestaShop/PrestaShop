@@ -1103,7 +1103,7 @@ class AdminModuleController {
           closeButtonLabel: window.moduleTranslations.moduleModalUpdateCancel,
           confirmButtonLabel: isMaintenanceMode
             ? window.moduleTranslations.moduleModalUpdateUpgrade
-            : window.moduleTranslations.multipleModuleModalUpdateUpgrade,
+            : window.moduleTranslations.upgradeAnywayButtonText,
           confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
           confirmMessage: isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
           closable: true,
