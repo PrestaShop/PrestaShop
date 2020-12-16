@@ -344,56 +344,57 @@ class CartRow
         // it expects a reference.
         $specificPriceOutput = null;
 
-        $priceTaxIncl = $this->priceCalculator->priceCalculation(
-            $shopId,
-            (int) $productId,
-            (int) $rowData['id_product_attribute'],
-            $countryId,
-            $stateId,
-            $zipCode,
-            $currencyId,
-            $groupId,
-            $quantity,
-            true,
-            6,
-            false,
-            true,
-            $this->useEcotax,
-            $specificPriceOutput,
-            true,
-            (int) $cart->id_customer ? (int) $cart->id_customer : null,
-            true,
-            (int) $cart->id,
-            $cartQuantity,
-            (int) $rowData['id_customization'],
-            $this->orderId
-        );
-        $priceTaxExcl = $this->priceCalculator->priceCalculation(
-            $shopId,
-            (int) $productId,
-            (int) $rowData['id_product_attribute'],
-            $countryId,
-            $stateId,
-            $zipCode,
-            $currencyId,
-            $groupId,
-            $quantity,
-            false,
-            6,
-            false,
-            true,
-            $this->useEcotax,
-            $specificPriceOutput,
-            true,
-            (int) $cart->id_customer ? (int) $cart->id_customer : null,
-            true,
-            (int) $cart->id,
-            $cartQuantity,
-            (int) $rowData['id_customization'],
-            $this->orderId
-        );
+        $productPrices = [
+            'price_tax_included' => [
+                'withTaxes' => true,
+            ],
+            'price_tax_excluded' => [
+                'withTaxes' => false,
+            ],
+        ];
+        foreach ($productPrices as $productPrice => $computationParameters) {
+            $productPrices[$productPrice]['value'] = null;
+            if (null !== $this->orderId) {
+                $productPrices[$productPrice]['value'] = $this->priceCalculator->getOrderPrice(
+                    $this->orderId,
+                    (int) $productId,
+                    (int) $rowData['id_product_attribute'],
+                    $computationParameters['withTaxes'],
+                    true,
+                    $this->useEcotax
+                );
+            }
+            if (null === $productPrices[$productPrice]['value']) {
+                $productPrices[$productPrice]['value'] = $this->priceCalculator->priceCalculation(
+                    $shopId,
+                    (int) $productId,
+                    (int) $rowData['id_product_attribute'],
+                    $countryId,
+                    $stateId,
+                    $zipCode,
+                    $currencyId,
+                    $groupId,
+                    $quantity,
+                    $computationParameters['withTaxes'],
+                    6,
+                    false,
+                    true,
+                    $this->useEcotax,
+                    $specificPriceOutput,
+                    true,
+                    (int) $cart->id_customer ? (int) $cart->id_customer : null,
+                    true,
+                    (int) $cart->id,
+                    $cartQuantity,
+                    (int) $rowData['id_customization']
+                );
+            }
+        }
 
-        return new AmountImmutable($priceTaxIncl, $priceTaxExcl);
+        return new AmountImmutable(
+            $productPrices['price_tax_included']['value'],
+            $productPrices['price_tax_excluded']['value']
+        );
     }
 
     /**
