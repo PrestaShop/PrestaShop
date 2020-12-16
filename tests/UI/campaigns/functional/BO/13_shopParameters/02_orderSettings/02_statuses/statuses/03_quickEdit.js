@@ -87,19 +87,48 @@ describe('Quick edit order status in BO', async () => {
   });
 
   const statuses = [
-    {args: {status: 'disable', enable: false, columnName: 'Send email to customer', columnID: 4}},
-    {args: {status: 'enable', enable: true, columnName: 'Send email to customer', columnID: 4}},
-    {args: {status: 'disable', enable: false, columnName: 'Delivery', columnID: 5}},
-    {args: {status: 'enable', enable: true, columnName: 'Delivery', columnID: 5}},
-    {args: {status: 'disable', enable: false, columnName: 'Invoice', columnID: 6}},
-    {args: {status: 'enable', enable: true, columnName: 'Invoice', columnID: 6}},
+    {
+      args: {
+        status: 'disable', enable: false, columnName: 'Send email to customer', columnID: 4,
+      },
+    },
+    {
+      args: {
+        status: 'enable', enable: true, columnName: 'Send email to customer', columnID: 4,
+      },
+    },
+    {
+      args: {
+        status: 'disable', enable: false, columnName: 'Delivery', columnID: 5,
+      },
+    },
+    {
+      args: {
+        status: 'enable', enable: true, columnName: 'Delivery', columnID: 5,
+      },
+    },
+    {
+      args: {
+        status: 'disable', enable: false, columnName: 'Invoice', columnID: 6,
+      },
+    },
+    {
+      args: {
+        status: 'enable', enable: true, columnName: 'Invoice', columnID: 6,
+      },
+    },
   ];
 
   statuses.forEach((orderStatus, index) => {
     it(`should ${orderStatus.args.status} ${orderStatus.args.columnName} by quick edit`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${orderStatus.args.status}${index}`, baseContext);
 
-      const isActionPerformed = await statusesPage.setStatus(page, 1, orderStatus.args.columnID, orderStatus.args.enable);
+      const isActionPerformed = await statusesPage.setStatus(
+        page,
+        1,
+        orderStatus.args.columnID,
+        orderStatus.args.enable,
+      );
 
       if (isActionPerformed) {
         const resultMessage = await statusesPage.getGrowlMessageContent(page);
