@@ -134,9 +134,8 @@ class CombinationCore extends ObjectModel
             return;
         }
 
-        // Default product quantity is available quantity to sell in current shop
         $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id_product, $this->id);
-        $this->location = StockAvailable::getLocation($this->id);
+        $this->location = StockAvailable::getLocation($this->id_product, $this->id);
     }
 
     /**
