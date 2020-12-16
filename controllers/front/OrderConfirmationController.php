@@ -70,13 +70,13 @@ class OrderConfirmationControllerCore extends FrontController
 
         // free order uses -1 as id_module, it has a special check here
         if ($this->id_module == -1) {
-            if ($order->module != 'free_order') {
+            if ($order->module !== 'free_order') {
                 Tools::redirect($redirectLink);
             }
         } else {
             // and the normal check that module matches
             $module = Module::getInstanceById((int) ($this->id_module));
-            if ($order->module != $module->name) {
+            if ($order->module !== $module->name) {
                 Tools::redirect($redirectLink);
             }
         }
@@ -174,7 +174,7 @@ class OrderConfirmationControllerCore extends FrontController
         // note the id_module parameter with value -1
         // it acts as a marker for the module check to use "free_payment"
         // for the check
-        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . $order->currentOrder . '&key=' . $cart->secure_key);
+        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . (int) $order->currentOrder . '&key=' . $cart->secure_key);
     }
 
     public function getBreadcrumbLinks()
