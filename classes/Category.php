@@ -2448,8 +2448,8 @@ class CategoryCore extends ObjectModel
      *
      * @return bool
      */
-    public function isRootCategory()
+    public function isRootCategory(): bool
     {
-        return 0 === (int) $this->id_parent || null === $this->id_parent;
+        return 0 === (int) $this->id_parent;
     }
 }
