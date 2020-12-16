@@ -33,8 +33,8 @@ use ReflectionMethod;
 
 class CommandHandlerDefinitionParser
 {
-    public const HANDLER_METHOD_NAME = 'handle';
-    public const RETURN_TAG = '@return';
+    private const HANDLER_METHOD_NAME = 'handle';
+    private const RETURN_TAG = '@return';
 
     /**
      * @param string $handlerClass
@@ -49,6 +49,7 @@ class CommandHandlerDefinitionParser
 
         return new CommandHandlerDefinition(
             $this->parseType($commandClass),
+            $this->parseDomain($commandClass),
             $handlerClass,
             $commandClass,
             $this->parseCommandConstructorParams($commandReflection),
@@ -178,12 +179,24 @@ class CommandHandlerDefinitionParser
      *
      * @return string command|query
      */
-    private function parseType($commandName): string
+    private function parseType(string $commandName): string
     {
         if (strpos($commandName, '\Command\\')) {
             return CommandHandlerDefinition::TYPE_COMMAND;
         }
 
         return CommandHandlerDefinition::TYPE_QUERY;
+    }
+
+    /**
+     * @param string $commandClass
+     *
+     * @return string
+     */
+    private function parseDomain(string $commandClass): string
+    {
+        preg_match('/PrestaShop\\\\PrestaShop\\\\Core\\\\Domain\\\\([a-zA-Z]+)\\\\/', $commandClass, $matches);
+
+        return $matches[1];
     }
 }
