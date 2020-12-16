@@ -55,7 +55,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
             throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue()));
         }
 
-        // Root category means here REAL ROOT category, not the HOME of the shop
         if ($category->isRootCategory()) {
             throw new CannotEditRootCategoryException();
         }

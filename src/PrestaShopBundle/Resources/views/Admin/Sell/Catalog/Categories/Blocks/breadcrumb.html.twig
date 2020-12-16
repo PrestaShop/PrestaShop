@@ -33,7 +33,7 @@
             {% if isRootCategory and isSingleShopContext %}
               {% if category.id_category == currentCategoryView.id %}
                 <span>{{ category.name }}</span>
-                  {%  if not isRootCategory %}
+                  {% if not isRootCategory %}
                     <a href="{{ path('admin_categories_edit', {'categoryId': category.id_category}) }}">
                       <i style="font-size: 16px;" class="material-icons">edit</i>
                       {{ 'Edit'|trans({}, 'Admin.Actions') }}
@@ -46,7 +46,7 @@
               {% endif %}
             {% elseif category.id_category == currentCategoryView.id %}
               <span>{{ category.name }}</span>
-                {%  if not isRootCategory %}
+                {% if not isRootCategory %}
                   <a href="{{ path('admin_categories_edit', {'categoryId': category.id_category}) }}">
                     <i style="font-size: 16px;" class="material-icons">edit</i>
                     {{ 'Edit'|trans({}, 'Admin.Actions') }}

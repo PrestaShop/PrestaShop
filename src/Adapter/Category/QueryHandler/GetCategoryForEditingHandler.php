@@ -73,7 +73,6 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             throw new CategoryNotFoundException($query->getCategoryId(), sprintf('Category with id "%s" was not found', $query->getCategoryId()->getValue()));
         }
 
-        // Root category means here REAL ROOT category, not the HOME of the shop
         if ($category->isRootCategory()) {
             throw new CannotEditRootCategoryException();
         }
