@@ -57,4 +57,12 @@ final class StringModifier implements StringModifierInterface
 
         return $string;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convertCamelCaseToKebabCase(string $string): string
+    {
+        return strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $string));
+    }
 }

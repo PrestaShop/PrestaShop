@@ -117,8 +117,11 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         }
 
         $this->filesystem->remove($filePath);
+
+        $definitions = $this->getCommandHandlerDefinitions();
         $content = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-list.md.twig', [
-            'commandDefinitions' => $this->getCommandHandlerDefinitions(),
+            'commandDefinitions' => $definitions['command_definitions'],
+            'domains' => $definitions['domains'],
         ]);
 
         $this->filesystem->dumpFile($filePath, $content);
@@ -136,18 +139,26 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         /** @var CommandHandlerDefinitionParser $commandHandlerDefinitionParser */
         $commandHandlerDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_handler_definition_parser');
 
-        $commandDefinitions = [];
+        $commandDefinitionsByDomain = [];
+        $domains = [];
         foreach ($handlerDefinitions as $handlerClass => $commandClass) {
             $commandDefinition = $commandHandlerDefinitionParser->parseDefinition($handlerClass, $commandClass);
+            $domain = $commandDefinition->getDomain();
+            $domains[$domain] = $domain;
             if ($commandDefinition->getType() === CommandHandlerDefinition::TYPE_QUERY) {
-                $commandDefinitions[CommandHandlerDefinition::TYPE_QUERY][] = $commandDefinition;
+                $commandDefinitionsByDomain[$commandDefinition->getDomain()][CommandHandlerDefinition::TYPE_QUERY][] = $commandDefinition;
                 continue;
             }
 
-            $commandDefinitions[CommandHandlerDefinition::TYPE_COMMAND][] = $commandDefinition;
+            $commandDefinitionsByDomain[$commandDefinition->getDomain()][CommandHandlerDefinition::TYPE_COMMAND][] = $commandDefinition;
         }
 
-        return $commandDefinitions;
+        sort($domains);
+
+        return [
+            'domains' => $domains,
+            'command_definitions' => $commandDefinitionsByDomain,
+        ];
     }
 
     /**

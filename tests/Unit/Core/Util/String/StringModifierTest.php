@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\Util\String;
 
 use Generator;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 
@@ -117,5 +118,32 @@ class StringModifierTest extends TestCase
         yield ['test', 4];
         yield ['testable', 20];
         yield ['good bye cruel world 10.99', 128];
+    }
+
+    /**
+     * @dataProvider getDataForCamelCaseToKebabCaseConversion
+     *
+     * @param string $input
+     * @param string $expectedOutput
+     */
+    public function testItConvertsCamelCaseToKebabCase(string $input, string $expectedOutput): void
+    {
+        $output = $this->stringModifier->convertCamelCaseToKebabCase($input);
+
+        Assert::assertSame($expectedOutput, $output);
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getDataForCamelCaseToKebabCaseConversion(): Generator
+    {
+        yield ['HelloWorld', 'hello-world'];
+        yield ['helloWorld', 'hello-world'];
+        yield ['goodbyecruelWorld', 'goodbyecruel-world'];
+        yield ['goodbyecruelWORLD', 'goodbyecruel-world'];
+        yield ['GoodBYEcruelWORLD', 'good-byecruel-world'];
+        yield ['Sun-shine', 'sun-shine'];
+        yield ['moon-light', 'moon-light'];
     }
 }

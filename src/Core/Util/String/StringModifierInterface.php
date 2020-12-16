@@ -47,4 +47,11 @@ interface StringModifierInterface
      * @return string
      */
     public function cutEnd(string $string, int $expectedLength): string;
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public function convertCamelCaseToKebabCase(string $string): string;
 }
