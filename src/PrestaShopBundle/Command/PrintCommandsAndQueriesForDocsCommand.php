@@ -177,12 +177,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         $commandDefinitionsByDomain = [];
         foreach ($handlerDefinitions as $handlerClass => $commandClass) {
             $commandDefinition = $commandHandlerDefinitionParser->parseDefinition($handlerClass, $commandClass);
-            if ($commandDefinition->getType() === CommandHandlerDefinition::TYPE_QUERY) {
-                $commandDefinitionsByDomain[$commandDefinition->getDomain()][CommandHandlerDefinition::TYPE_QUERY][] = $commandDefinition;
-                continue;
-            }
-
-            $commandDefinitionsByDomain[$commandDefinition->getDomain()][CommandHandlerDefinition::TYPE_COMMAND][] = $commandDefinition;
+            $commandDefinitionsByDomain[$commandDefinition->getDomain()][$commandDefinition->getType()][] = $commandDefinition;
         }
 
         return $commandDefinitionsByDomain;
