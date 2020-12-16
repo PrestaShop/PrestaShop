@@ -19,7 +19,7 @@ _{{ definition.description }}_
 
 _{{ definition.description }}_
 
-| query Constructor | Handler class | Return type |
+| Query Constructor | Handler class | Return type |
 | ------------------- | ------------- | ----------- |
 | <ul>{% for argument in definition.queryConstructorParams%} <li>{{ argument }}</li> {% endfor%}</ul> | {{ definition.handlerClass }} {% if definition.handlerInterfaces is not empty %} <p> Implements: </p> <ul> {% for interface in definition.handlerInterfaces %} <li>{{ interface }}</li> {% endfor%}{% endif%} | {% if definition.returnType %} {{ definition.returnType }} {% else %} not defined {% endif %} |
 {% endfor %}
