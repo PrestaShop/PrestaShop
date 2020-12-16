@@ -238,6 +238,7 @@ class CmsPageType extends TranslatorAwareType
                     ],
                 ],
             ])
+            /** @todo change to TranslatableType once it works with formatted form area */
             ->add('content', TranslateType::class, [
                 'label' => $this->trans('Page content', 'Admin.Design.Feature'),
                 'type' => FormattedTextareaType::class,
