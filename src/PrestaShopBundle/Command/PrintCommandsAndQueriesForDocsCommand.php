@@ -137,7 +137,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         foreach ($definitions as $domain => $definitionsByType) {
             $content = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-list.md.twig', [
                 'domain' => $domain,
-                'commandDefinitions' => $definitionsByType,
+                'definitionsByType' => $definitionsByType,
             ]);
 
             $this->filesystem->dumpFile($this->getTargetFilePath($targetDir, $domain), $content);
