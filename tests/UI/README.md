@@ -1,5 +1,12 @@
 # PrestaShop UI Tests
 
+## Requirement
+
+Before begin working on tests, make sure you have installed 
+
+* [nodejs](https://nodejs.org/) v10.x or newer
+* [npm](https://www.npmjs.com/) v6.x or newer
+
 ## How to install your environment
 
 ```bash
