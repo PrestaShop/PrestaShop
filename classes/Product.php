@@ -3583,7 +3583,7 @@ class ProductCore extends ObjectModel
         }
         $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
         $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        $res = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
         if (!is_array($res) || empty($res)) {
             return null;
         }

@@ -650,7 +650,7 @@ class CartCore extends ObjectModel
      *
      * @return array Products
      */
-    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true, $keepOrderPrices = false)
+    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true, bool $keepOrderPrices = false)
     {
         if (!$this->id) {
             return [];
@@ -871,7 +871,7 @@ class CartCore extends ObjectModel
      *
      * @return mixed
      */
-    protected function applyProductCalculations($row, $shopContext, $productQuantity = null, $keepOrderPrices = false)
+    protected function applyProductCalculations($row, $shopContext, $productQuantity = null, bool $keepOrderPrices = false)
     {
         if (null === $productQuantity) {
             $productQuantity = (int) $row['cart_quantity'];
@@ -2065,7 +2065,7 @@ class CartCore extends ObjectModel
         $products = null,
         $id_carrier = null,
         $use_cache = false,
-        $keepOrderPrices = false
+        bool $keepOrderPrices = false
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
@@ -2190,7 +2190,7 @@ class CartCore extends ObjectModel
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, $keepOrderPrices = false)
+    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, bool $keepOrderPrices = false)
     {
         $orderId = null;
         if ($keepOrderPrices) {
@@ -3518,7 +3518,7 @@ class CartCore extends ObjectModel
         Country $default_country = null,
         $product_list = null,
         $id_zone = null,
-        $keepOrderPrices = false
+        bool $keepOrderPrices = false
     ) {
         if ($this->isVirtualCart()) {
             return 0;

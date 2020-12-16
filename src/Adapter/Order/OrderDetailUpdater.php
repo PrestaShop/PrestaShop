@@ -95,7 +95,7 @@ class OrderDetailUpdater
             $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
             $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
 
-            $this->applyPriceUpdate(
+            $this->applyOrderDetailPriceUpdate(
                 $orderDetail,
                 $precisePriceTaxExcluded,
                 $precisePriceTaxIncluded,
@@ -116,7 +116,7 @@ class OrderDetailUpdater
      *
      * @throws OrderException
      */
-    public function updateIdenticalOrderDetails(
+    public function updateOrderDetailsForProduct(
         Order $order,
         int $productId,
         int $combinationId,
@@ -126,7 +126,7 @@ class OrderDetailUpdater
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
-            $this->applyIdenticalUpdates(
+            $this->applyUpdatesForProduct(
                 $order,
                 $productId,
                 $combinationId,
@@ -245,7 +245,7 @@ class OrderDetailUpdater
      *
      * @throws OrderException
      */
-    private function applyPriceUpdate(
+    private function applyOrderDetailPriceUpdate(
         OrderDetail $orderDetail,
         Number $priceTaxExcluded,
         Number $priceTaxIncluded,
@@ -296,7 +296,7 @@ class OrderDetailUpdater
      *
      * @throws OrderException
      */
-    private function applyIdenticalUpdates(
+    private function applyUpdatesForProduct(
         Order $order,
         int $productId,
         int $combinationId,
@@ -306,7 +306,7 @@ class OrderDetailUpdater
         int $computingPrecision,
         Address $taxAddress
     ): void {
-        $identicalOrderDetails = $this->getIdenticalOrderDetails($order, $productId, $combinationId);
+        $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId);
         if (empty($identicalOrderDetails)) {
             return;
         }
@@ -317,7 +317,7 @@ class OrderDetailUpdater
         $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
 
         foreach ($identicalOrderDetails as $identicalOrderDetail) {
-            $this->applyPriceUpdate(
+            $this->applyOrderDetailPriceUpdate(
                 $identicalOrderDetail,
                 $precisePriceTaxExcluded,
                 $precisePriceTaxIncluded,
@@ -334,7 +334,7 @@ class OrderDetailUpdater
      *
      * @return array
      */
-    private function getIdenticalOrderDetails(
+    private function getOrderDetailsForProduct(
         Order $order,
         int $productId,
         int $combinationId

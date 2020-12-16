@@ -104,7 +104,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             );
 
             // We also need to update all identical OrderDetails to be sure that Cart will get the correct price
-            $this->orderDetailUpdater->updateIdenticalOrderDetails(
+            $this->orderDetailUpdater->updateOrderDetailsForProduct(
                 $order,
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,

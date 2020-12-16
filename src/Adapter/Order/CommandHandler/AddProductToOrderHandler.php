@@ -202,7 +202,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             );
 
             // Once OrderDetail has been created we update it (and identical ones) with the correct price
-            $this->orderDetailUpdater->updateIdenticalOrderDetails(
+            $this->orderDetailUpdater->updateOrderDetailsForProduct(
                 $order,
                 $command->getProductId()->getValue(),
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
