@@ -51,9 +51,9 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     protected static $defaultName = 'prestashop:print-docs:commands-and-queries';
 
     /**
-     * Option name for providing destination file path
+     * Option name for providing destination directory path
      */
-    private const FILE_PATH_OPTION_NAME = 'file';
+    private const DESTINATION_DIR_OPTION_NAME = 'dir';
 
     /**
      * Option name for forcing command (remove all confirmations)
@@ -99,7 +99,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         $this
             ->setDescription('Prints available CQRS commands and queries to a file prepared for documentation')
             ->addOption(
-                self::FILE_PATH_OPTION_NAME,
+                self::DESTINATION_DIR_OPTION_NAME,
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Path to file into which all commands and queries should be printed'
@@ -121,15 +121,15 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        $targetDir = $this->getTargetDir($input);
+        $destinationDir = $this->getDestinationDir($input);
 
-        if (!$this->confirmExistingFileWillBeLost($targetDir, $input, $output)) {
+        if (!$this->confirmExistingFileWillBeLost($destinationDir, $input, $output)) {
             $output->writeln('<comment>Cancelled</comment>');
 
             return null;
         }
 
-        $this->filesystem->remove($targetDir);
+        $this->filesystem->remove($destinationDir);
 
         $definitions = $this->getCommandHandlerDefinitions();
         ksort($definitions);
@@ -140,12 +140,12 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
                 'definitionsByType' => $definitionsByType,
             ]);
 
-            $this->filesystem->dumpFile($this->getTargetFilePath($targetDir, $domain), $content);
+            $this->filesystem->dumpFile($this->getDestinationFilePath($destinationDir, $domain), $content);
         }
 
         $indexFileContent = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-index.md.twig');
-        $this->filesystem->dumpFile(sprintf('%s/_index.md', $targetDir), $indexFileContent);
-        $output->writeln(sprintf('<info>dumped commands & queries to %s</info>', $targetDir));
+        $this->filesystem->dumpFile(sprintf('%s/_index.md', $destinationDir), $indexFileContent);
+        $output->writeln(sprintf('<info>dumped commands & queries to %s</info>', $destinationDir));
 
         return 0;
     }
@@ -156,7 +156,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      *
      * @return string
      */
-    private function getTargetFilePath(string $targetDir, string $domain): string
+    private function getDestinationFilePath(string $targetDir, string $domain): string
     {
         return sprintf(
             '%s/%s.md',
@@ -217,24 +217,24 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      *
      * @return string
      */
-    private function getTargetDir(InputInterface $input): string
+    private function getDestinationDir(InputInterface $input): string
     {
-        $filePath = $input->getOption(self::FILE_PATH_OPTION_NAME);
+        $destinationPath = $input->getOption(self::DESTINATION_DIR_OPTION_NAME);
 
-        if (!$filePath || !$this->filesystem->isAbsolutePath($filePath)) {
+        if (!$destinationPath || !$this->filesystem->isAbsolutePath($destinationPath)) {
             throw new InvalidOptionException(sprintf(
                 'Option --%s is required. It should contain absolute path to a destination directory',
-                self::FILE_PATH_OPTION_NAME
+                self::DESTINATION_DIR_OPTION_NAME
             ));
         }
 
-        if ($this->filesystem->exists($filePath) && !is_dir($filePath)) {
+        if ($this->filesystem->exists($destinationPath) && !is_dir($destinationPath)) {
             throw new InvalidOptionException(sprintf(
                 '"%s" is not a directory',
-                self::FILE_PATH_OPTION_NAME
+                self::DESTINATION_DIR_OPTION_NAME
             ));
         }
 
-        return $filePath;
+        return $destinationPath;
     }
 }
