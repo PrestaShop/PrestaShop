@@ -2670,8 +2670,8 @@ class ToolsCore
                         fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]' . PHP_EOL);
                     }
 
-                    // Rewrite product images < 100 millions
-                    for ($i = 1; $i <= 8; ++$i) {
+                    // Rewrite product images < 10 millions
+                    for ($i = 1; $i <= 7; ++$i) {
                         $img_path = $img_name = '';
                         for ($j = 1; $j <= $i; ++$j) {
                             $img_path .= '$' . $j . '/';
