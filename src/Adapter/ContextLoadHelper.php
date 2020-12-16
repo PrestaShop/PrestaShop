@@ -26,116 +26,186 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter;
+namespace CommandLineUtils\Controller {
+    use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
-use Context;
-use Currency;
-use DummyController;
-use Employee;
-use Shop;
-
-/**
- * Helps loading specific context, for example in CLI context
- */
-class ContextLoadHelper
-{
-    /**
-     * @var Context
-     */
-    private $context;
-
-    /**
-     * @param LegacyContext $context
-     */
-    public function __construct(LegacyContext $context)
+    class DummyControllerCore extends \ControllerCore
     {
-        $this->context = $context->getContext();
-    }
+        public function __construct()
+        {
+            parent::__construct();
 
-    /**
-     * @param string|null $controllerClassName
-     * @param int|null $currencyId
-     * @param int|null $employeeId
-     * @param int|null $shopId
-     * @param int|null $shopGroupId
-     */
-    public function loadGenericContext(
-        ?string $controllerClassName = null,
-        ?int $currencyId = null,
-        ?int $employeeId = null,
-        ?int $shopId = null,
-        ?int $shopGroupId = null
-    ) {
-        $this->loadCurrencyContext($currencyId);
-        $this->loadControllerContext($controllerClassName);
-        $this->loadEmployeeContext($employeeId);
-
-        if (null !== $shopId) {
-            $this->loadShopContext($shopId);
-        }
-        if (null !== $shopGroupId) {
-            $this->loadShopGroupId($shopGroupId);
-        }
-    }
-
-    /**
-     * @param string|null $controllerClassName
-     */
-    public function loadControllerContext(?string $controllerClassName = null)
-    {
-        if (null === $controllerClassName) {
-            $this->context->controller = new DummyController();
-
-            return;
+            $this->id = 0;
+            $this->controller_type = 'dummy';
         }
 
-        if (!class_exists($controllerClassName)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Cannot load controller context for classname %s',
-                    $controllerClassName
-                )
-            );
+        public function checkAccess()
+        {
+            return true;
         }
 
-        $this->context->controller = new $controllerClassName();
-    }
-
-    /**
-     * @param int|null $currencyId
-     */
-    public function loadCurrencyContext(?int $currencyId = null)
-    {
-        $currency = new Currency($currencyId);
-        if (null === $currencyId) {
-            $currency->precision = 2;
+        public function viewAccess()
+        {
+            return true;
         }
 
-        $this->context->currency = $currency;
+        public function postProcess()
+        {
+            return null;
+        }
+
+        public function display()
+        {
+            return '';
+        }
+
+        public function setMedia()
+        {
+            return null;
+        }
+
+        public function initHeader()
+        {
+            return '';
+        }
+
+        public function initContent()
+        {
+            return '';
+        }
+
+        public function initCursedPage()
+        {
+            return '';
+        }
+
+        public function initFooter()
+        {
+            return '';
+        }
+
+        protected function redirect()
+        {
+            return '';
+        }
+
+        protected function buildContainer()
+        {
+            return SymfonyContainer::getInstance();
+        }
     }
+}
+
+namespace PrestaShop\PrestaShop\Adapter {
+    use CommandLineUtils\Controller\DummyControllerCore;
+    use Context;
+    use Currency;
+    use Employee;
+    use Shop;
 
     /**
-     * @param int|null $employeeId
+     * Helps loading specific context, for example in CLI context
      */
-    public function loadEmployeeContext(?int $employeeId = null)
+    class ContextLoadHelper
     {
-        $this->context->employee = new Employee($employeeId);
-    }
+        /**
+         * @var Context
+         */
+        private $context;
 
-    /**
-     * @param int $shopId
-     */
-    public function loadShopContext(int $shopId = 1)
-    {
-        $this->context->shop = new Shop($shopId);
-        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
-    }
+        /**
+         * @param LegacyContext $context
+         */
+        public function __construct(LegacyContext $context)
+        {
+            $this->context = $context->getContext();
+        }
 
-    /**
-     * @param int $shopGroupId
-     */
-    public function loadShopGroupId(int $shopGroupId)
-    {
-        Shop::setContext(Shop::CONTEXT_GROUP, $shopGroupId);
+        /**
+         * @param string|null $controllerClassName
+         * @param int|null $currencyId
+         * @param int|null $employeeId
+         * @param int|null $shopId
+         * @param int|null $shopGroupId
+         */
+        public function loadGenericContext(
+            ?string $controllerClassName = null,
+            ?int $currencyId = null,
+            ?int $employeeId = null,
+            ?int $shopId = null,
+            ?int $shopGroupId = null
+        ) {
+            $this->loadCurrencyContext($currencyId);
+            $this->loadControllerContext($controllerClassName);
+            $this->loadEmployeeContext($employeeId);
+
+            if (null !== $shopId) {
+                $this->loadShopContext($shopId);
+            }
+            if (null !== $shopGroupId) {
+                $this->loadShopGroupId($shopGroupId);
+            }
+        }
+
+        /**
+         * @param string|null $controllerClassName
+         */
+        public function loadControllerContext(?string $controllerClassName = null)
+        {
+            if (null === $controllerClassName) {
+                $this->context->controller = new DummyControllerCore();
+
+                return;
+            }
+
+            if (!class_exists($controllerClassName)) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Cannot load controller context for classname %s',
+                        $controllerClassName
+                    )
+                );
+            }
+
+            $this->context->controller = new $controllerClassName();
+        }
+
+        /**
+         * @param int|null $currencyId
+         */
+        public function loadCurrencyContext(?int $currencyId = null)
+        {
+            $currency = new Currency($currencyId);
+            if (null === $currencyId) {
+                $currency->precision = 2;
+            }
+
+            $this->context->currency = $currency;
+        }
+
+        /**
+         * @param int|null $employeeId
+         */
+        public function loadEmployeeContext(?int $employeeId = null)
+        {
+            $this->context->employee = new Employee($employeeId);
+        }
+
+        /**
+         * @param int $shopId
+         */
+        public function loadShopContext(int $shopId = 1)
+        {
+            $this->context->shop = new Shop($shopId);
+            Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+        }
+
+        /**
+         * @param int $shopGroupId
+         */
+        public function loadShopGroupId(int $shopGroupId)
+        {
+            Shop::setContext(Shop::CONTEXT_GROUP, $shopGroupId);
+        }
     }
 }
