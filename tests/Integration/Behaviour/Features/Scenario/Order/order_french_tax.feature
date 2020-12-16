@@ -46,6 +46,17 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 11.90 |
       | total_price_tax_incl        | 28.56 |
       | total_price_tax_excl        | 23.80 |
+    And order "bo_order1" should have following details:
+      | total_products           | 23.80 |
+      | total_products_wt        | 28.56 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 28.80 |
+      | total_paid_tax_incl      | 34.56 |
+      | total_paid               | 34.56 |
+      | total_paid_real          | 0.00  |
+      | total_shipping_tax_excl  | 5.00  |
+      | total_shipping_tax_incl  | 6.00  |
     # Edit with two values that match (with computed tax values)
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount         | 2                       |
