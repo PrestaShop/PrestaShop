@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinition;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinitionParser;
+use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -69,13 +70,25 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     private $twigEnv;
 
+    /**
+     * @var StringModifierInterface
+     */
+    private $stringModifier;
+
+    /**
+     * @param Filesystem $filesystem
+     * @param Environment $twigEnv
+     * @param StringModifierInterface $stringModifier
+     */
     public function __construct(
         Filesystem $filesystem,
-        Environment $twigEnv
+        Environment $twigEnv,
+        StringModifierInterface $stringModifier
     ) {
         parent::__construct();
         $this->filesystem = $filesystem;
         $this->twigEnv = $twigEnv;
+        $this->stringModifier = $stringModifier;
     }
 
     /**
@@ -108,26 +121,48 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        $filePath = $this->getFilePath($input);
+        $targetDir = $this->getTargetDir($input);
 
-        if (!$this->confirmExistingFileWillBeLost($filePath, $input, $output)) {
+        if (!$this->confirmExistingFileWillBeLost($targetDir, $input, $output)) {
             $output->writeln('<comment>Cancelled</comment>');
 
             return null;
         }
 
-        $this->filesystem->remove($filePath);
+        $this->filesystem->remove($targetDir);
 
         $definitions = $this->getCommandHandlerDefinitions();
-        $content = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-list.md.twig', [
-            'commandDefinitions' => $definitions['command_definitions'],
-            'domains' => $definitions['domains'],
-        ]);
+        ksort($definitions);
 
-        $this->filesystem->dumpFile($filePath, $content);
-        $output->writeln(sprintf('<info>dumped commands & queries to %s</info>', $filePath));
+        foreach ($definitions as $domain => $definitionsByType) {
+            $content = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-list.md.twig', [
+                'domain' => $domain,
+                'commandDefinitions' => $definitionsByType,
+            ]);
+
+            $this->filesystem->dumpFile($this->getTargetFilePath($targetDir, $domain), $content);
+        }
+
+        $indexFileContent = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-index.md.twig');
+        $this->filesystem->dumpFile(sprintf('%s/_index.md', $targetDir), $indexFileContent);
+        $output->writeln(sprintf('<info>dumped commands & queries to %s</info>', $targetDir));
 
         return 0;
+    }
+
+    /**
+     * @param string $targetDir
+     * @param string $domain
+     *
+     * @return string
+     */
+    private function getTargetFilePath(string $targetDir, string $domain): string
+    {
+        return sprintf(
+            '%s/%s.md',
+            $targetDir,
+            $this->stringModifier->convertCamelCaseToKebabCase($domain)
+        );
     }
 
     /**
@@ -140,11 +175,8 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         $commandHandlerDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_handler_definition_parser');
 
         $commandDefinitionsByDomain = [];
-        $domains = [];
         foreach ($handlerDefinitions as $handlerClass => $commandClass) {
             $commandDefinition = $commandHandlerDefinitionParser->parseDefinition($handlerClass, $commandClass);
-            $domain = $commandDefinition->getDomain();
-            $domains[$domain] = $domain;
             if ($commandDefinition->getType() === CommandHandlerDefinition::TYPE_QUERY) {
                 $commandDefinitionsByDomain[$commandDefinition->getDomain()][CommandHandlerDefinition::TYPE_QUERY][] = $commandDefinition;
                 continue;
@@ -153,33 +185,28 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
             $commandDefinitionsByDomain[$commandDefinition->getDomain()][CommandHandlerDefinition::TYPE_COMMAND][] = $commandDefinition;
         }
 
-        sort($domains);
-
-        return [
-            'domains' => $domains,
-            'command_definitions' => $commandDefinitionsByDomain,
-        ];
+        return $commandDefinitionsByDomain;
     }
 
     /**
-     * @param string $filePath
+     * @param string $targetDir
      * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return bool
      */
-    private function confirmExistingFileWillBeLost(string $filePath, InputInterface $input, OutputInterface $output): bool
+    private function confirmExistingFileWillBeLost(string $targetDir, InputInterface $input, OutputInterface $output): bool
     {
         $force = $input->getOption(self::FORCE_OPTION_NAME);
 
-        if ($force || !$this->filesystem->exists($filePath) || !filesize($filePath)) {
+        if ($force || (!$this->filesystem->exists($targetDir))) {
             return true;
         }
 
         $helper = $this->getHelper('question');
         $confirmation = new ConfirmationQuestion(sprintf(
-            '<question>File "%s" is not empty. All data will be lost. Proceed?</question>',
-            $filePath
+            '<question>All data in directory "%s" will be lost. Proceed?</question>',
+            $targetDir
         ));
 
         return (bool) $helper->ask($input, $output, $confirmation);
@@ -190,13 +217,20 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
      *
      * @return string
      */
-    private function getFilePath(InputInterface $input): string
+    private function getTargetDir(InputInterface $input): string
     {
         $filePath = $input->getOption(self::FILE_PATH_OPTION_NAME);
 
         if (!$filePath || !$this->filesystem->isAbsolutePath($filePath)) {
             throw new InvalidOptionException(sprintf(
-                'Option --%s is required. It should contain absolute path to a destination file',
+                'Option --%s is required. It should contain absolute path to a destination directory',
+                self::FILE_PATH_OPTION_NAME
+            ));
+        }
+
+        if ($this->filesystem->exists($filePath) && !is_dir($filePath)) {
+            throw new InvalidOptionException(sprintf(
+                '"%s" is not a directory',
                 self::FILE_PATH_OPTION_NAME
             ));
         }
