@@ -50,7 +50,7 @@ class CombinationStock
     /**
      * @var bool
      */
-    private $lowStockAlertOn;
+    private $lowStockAlertEnabled;
 
     /**
      * @var string
@@ -66,7 +66,7 @@ class CombinationStock
      * @param int $quantity
      * @param int $minimalQuantity
      * @param int $lowStockThreshold
-     * @param bool $lowStockAlertOn
+     * @param bool $lowStockAlertEnabled
      * @param string $location
      * @param DateTimeInterface|null $availableDate
      */
@@ -74,7 +74,7 @@ class CombinationStock
         int $quantity,
         int $minimalQuantity,
         int $lowStockThreshold,
-        bool $lowStockAlertOn,
+        bool $lowStockAlertEnabled,
         string $location,
         ?DateTimeInterface $availableDate
     ) {
@@ -82,7 +82,7 @@ class CombinationStock
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
-        $this->lowStockAlertOn = $lowStockAlertOn;
+        $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
     }
 
@@ -121,9 +121,9 @@ class CombinationStock
     /**
      * @return bool
      */
-    public function isLowStockAlertOn(): bool
+    public function isLowStockAlertEnabled(): bool
     {
-        return $this->lowStockAlertOn;
+        return $this->lowStockAlertEnabled;
     }
 
     /**

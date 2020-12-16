@@ -36,53 +36,53 @@ Feature: Update product combination stock information in Back Office (BO)
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
     And combination "product1SBlack" should have following stock details:
-      | combination stock detail | value      |
-      | quantity                 | 0          |
-      | minimal quantity         | 1          |
-      | low stock threshold      | 0          |
-      | low stock alert is on    | false      |
-      | location                 |            |
-      | available date           | 0000-00-00 |
+      | combination stock detail   | value |
+      | quantity                   | 0     |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
     When I update combination "product1SBlack" stock with following details:
-      | quantity              | 100         |
-      | minimal quantity      | 10          |
-      | location              | Storage nr1 |
-      | low stock threshold   | 10          |
-      | low stock alert is on | true        |
-      | available date        | 2021-10-10  |
+      | quantity                   | 100         |
+      | minimal quantity           | 10          |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | available date             | 2021-10-10  |
     Then combination "product1SBlack" should have following stock details:
-      | combination stock detail | value       |
-      | quantity                 | 100         |
-      | minimal quantity         | 10          |
-      | low stock threshold      | 10          |
-      | low stock alert is on    | true        |
-      | location                 | Storage nr1 |
-      | available date           | 2021-10-10  |
+      | combination stock detail   | value       |
+      | quantity                   | 100         |
+      | minimal quantity           | 10          |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | location                   | Storage nr1 |
+      | available date             | 2021-10-10  |
     When I update combination "product1SBlack" stock with following details:
       | quantity            | 100         |
       | minimal quantity    | 1           |
       | location            | Storage nr2 |
       | low stock threshold | 10          |
     Then combination "product1SBlack" should have following stock details:
-      | combination stock detail | value       |
-      | quantity                 | 100         |
-      | minimal quantity         | 1           |
-      | low stock threshold      | 10          |
-      | low stock alert is on    | true        |
-      | location                 | Storage nr2 |
-      | available date           | 2021-10-10  |
+      | combination stock detail   | value       |
+      | quantity                   | 100         |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | location                   | Storage nr2 |
+      | available date             | 2021-10-10  |
     When I update combination "product1SBlack" stock with following details:
-      | quantity              | 0          |
-      | minimal quantity      | 0          |
-      | location              |            |
-      | low stock threshold   | 0          |
-      | low stock alert is on | false      |
-      | available date        | 2020-01-01 |
+      | quantity                   | 0          |
+      | minimal quantity           | 0          |
+      | location                   |            |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | available date             | 2020-01-01 |
     Then combination "product1SBlack" should have following stock details:
-      | combination stock detail | value      |
-      | quantity                 | 0          |
-      | minimal quantity         | 0          |
-      | low stock threshold      | 0          |
-      | low stock alert is on    | false      |
-      | location                 |            |
-      | available date           | 2020-01-01 |
+      | combination stock detail   | value      |
+      | quantity                   | 0          |
+      | minimal quantity           | 0          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | location                   |            |
+      | available date             | 2020-01-01 |

@@ -73,7 +73,7 @@ class ProductStockInformation
     /**
      * @var bool
      */
-    private $lowStockAlert;
+    private $lowStockAlertEnabled;
 
     /**
      * @var string[] key value pairs where key is the id of language
@@ -103,7 +103,7 @@ class ProductStockInformation
      * @param int $quantity
      * @param int $minimalQuantity
      * @param int $lowStockThreshold
-     * @param bool $lowStockAlert
+     * @param bool $lowStockAlertEnabled
      * @param array $localizedAvailableNowLabels
      * @param array $localizedAvailableLaterLabels
      * @param string $location
@@ -117,7 +117,7 @@ class ProductStockInformation
         int $quantity,
         int $minimalQuantity,
         int $lowStockThreshold,
-        bool $lowStockAlert,
+        bool $lowStockAlertEnabled,
         array $localizedAvailableNowLabels,
         array $localizedAvailableLaterLabels,
         string $location,
@@ -131,7 +131,7 @@ class ProductStockInformation
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
-        $this->lowStockAlert = $lowStockAlert;
+        $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
         $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
         $this->availableDate = $availableDate;
@@ -196,9 +196,9 @@ class ProductStockInformation
     /**
      * @return bool
      */
-    public function hasLowStockAlert(): bool
+    public function isLowStockAlertEnabled(): bool
     {
-        return $this->lowStockAlert;
+        return $this->lowStockAlertEnabled;
     }
 
     /**

@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use DateTime;
 use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
@@ -144,26 +146,37 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param array $data
      * @param string $propertyName
      */
-    protected function assertDateProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertDateTimeProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
-        if (isset($data[$propertyName])) {
-            $expectedValue = PrimitiveUtils::castElementInType($data[$propertyName], PrimitiveUtils::TYPE_DATETIME);
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+        if (!isset($data[$propertyName])) {
+            return;
+        }
+
+        $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+        if ('' === $data[$propertyName]) {
+            Assert::assertEquals(
+                null,
+                $actualValue,
+                sprintf('Unexpected available_date. Expected NULL, got "%s"', var_export($actualValue, true))
+            );
+        } else {
+            $expectedDateTime = new DateTime($data[$propertyName]);
             if (!($actualValue instanceof DateTimeInterface)) {
                 throw new RuntimeException(sprintf('Unexpected type %s, expected DateTimeInterface', get_class($actualValue)));
             }
 
-            $formattedExpectedDate = $expectedValue->format('Y-m-d');
-            $formattedActualDate = $actualValue->format('Y-m-d');
+            $formattedExpectedDate = $expectedDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $formattedActualDate = $actualValue->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
             Assert::assertSame(
                 $formattedExpectedDate,
                 $formattedActualDate,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
             );
-
-            // Unset the checked field from array so we can validate they havel all been asserted
-            unset($data[$propertyName]);
         }
+
+        // Unset the checked field from array so we can validate they havel all been asserted
+        unset($data[$propertyName]);
     }
 
     /**
@@ -205,7 +218,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'minimal_quantity' => 'stockInformation.minimalQuantity',
             'location' => 'stockInformation.location',
             'low_stock_threshold' => 'stockInformation.lowStockThreshold',
-            'low_stock_alert' => 'stockInformation.lowStockAlert',
+            'low_stock_alert' => 'stockInformation.isLowStockAlertEnabled',
             'available_now_labels' => 'stockInformation.localizedAvailableNowLabels',
             'available_later_labels' => 'stockInformation.localizedAvailableLaterLabels',
             'available_date' => 'stockInformation.availableDate',
