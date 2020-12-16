@@ -124,6 +124,7 @@ class WebserviceKeyType extends TranslatorAwareType
                 'multiple_choices' => $this->getPermissionChoicesForResources(),
                 'scrollable' => false,
                 'headers_to_disable' => ['all'],
+                'headers_fixed' => true,
             ])
         ;
 
