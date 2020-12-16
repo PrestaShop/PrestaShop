@@ -50,7 +50,8 @@ class Search extends BOBasePage {
     this.tableColumnAliases = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnSearch = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnStatusCheckIcon = row => `${this.tableColumnStatus(row)} i.icon-check`;
+    this.tableColumnStatusEnabledIcon = row => `${this.tableColumnStatus(row)}.action-enabled`;
+    this.tableColumnStatusDisabledIcon = row => `${this.tableColumnStatus(row)}.action-disabled`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -269,7 +270,27 @@ class Search extends BOBasePage {
    * @return {Promise<boolean>}
    */
   getStatus(page, row) {
-    return this.elementVisible(page, this.tableColumnStatusCheckIcon(row), 500);
+    return this.elementVisible(page, this.tableColumnStatusEnabledIcon(row), 500);
+  }
+
+  /**
+   * Quick edit toggle column value
+   * @param page
+   * @param row, row in table
+   * @param valueWanted, Value wanted in column
+   * @returns {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async setStatus(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumnStatus(row), 2000);
+    if (await this.getStatus(page, row) !== valueWanted) {
+      page.click(this.tableColumnStatus(row));
+      await this.waitForVisibleSelector(
+        page,
+        (valueWanted ? this.tableColumnStatusEnabledIcon(row) : this.tableColumnStatusDisabledIcon(row)),
+      );
+      return true;
+    }
+    return false;
   }
 }
 
