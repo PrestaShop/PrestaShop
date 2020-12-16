@@ -162,7 +162,6 @@ CREATE TABLE `PREFIX_cart` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `checkout_session_data` MEDIUMTEXT NULL,
-  `reference_order` VARCHAR(9) DEFAULT NULL,
   PRIMARY KEY (`id_cart`),
   KEY `cart_customer` (`id_customer`),
   KEY `id_address_delivery` (`id_address_delivery`),
