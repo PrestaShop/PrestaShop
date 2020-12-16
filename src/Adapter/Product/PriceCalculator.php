@@ -59,7 +59,6 @@ class PriceCalculator
      * @param Context|null $context
      * @param bool $useCustomerPrice
      * @param int|null $idCustomization
-     * @param int|false|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      *
      * @return float Product price
      */
@@ -81,8 +80,7 @@ class PriceCalculator
         $useGroupReduction = true,
         Context $context = null,
         $useCustomerPrice = true,
-        $idCustomization = null,
-        $orderId = false
+        $idCustomization = null
     ) {
         return Product::getPriceStatic(
             $idProduct,
@@ -102,8 +100,7 @@ class PriceCalculator
             $useGroupReduction,
             $context,
             $useCustomerPrice,
-            $idCustomization,
-            $orderId
+            $idCustomization
         );
     }
 
@@ -132,7 +129,6 @@ class PriceCalculator
      * @param int $idCart
      * @param int $realQuantity
      * @param int $idCustomization
-     * @param int|false|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      *
      * @return float Product price
      **/
@@ -157,8 +153,7 @@ class PriceCalculator
         $useCustomerPrice = true,
         $idCart = 0,
         $realQuantity = 0,
-        $idCustomization = 0,
-        $orderId = false
+        $idCustomization = 0
     ) {
         return Product::priceCalculation(
             $idShop,
@@ -181,8 +176,37 @@ class PriceCalculator
             $useCustomerPrice,
             $idCart,
             $realQuantity,
-            $idCustomization,
-            $orderId
+            $idCustomization
+        );
+    }
+
+    /**
+     * @param int $orderId Order id
+     * @param int $productId Product id
+     * @param int $combinationId Combination (Product attribute) id
+     * @param bool $withTaxes With or without taxes
+     * @param bool $useReduction With or without reduction
+     * @param bool $withEcoTax With or without ecto tax
+     *
+     * @return float|null
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getOrderPrice(
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax
+    ): ?float {
+        return Product::getPriceFromOrder(
+            $orderId,
+            $productId,
+            $combinationId,
+            $withTaxes,
+            $useReduction,
+            $withEcoTax
         );
     }
 }

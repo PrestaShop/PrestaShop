@@ -3150,7 +3150,6 @@ class ProductCore extends ObjectModel
      * @param bool $use_group_reduction
      * @param Context $context
      * @param bool $use_customer_price
-     * @param int|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      *
      * @return float Product price
      */
@@ -3172,8 +3171,7 @@ class ProductCore extends ObjectModel
         $use_group_reduction = true,
         Context $context = null,
         $use_customer_price = true,
-        $id_customization = null,
-        $orderId = null
+        $id_customization = null
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -3278,8 +3276,7 @@ class ProductCore extends ObjectModel
             $use_customer_price,
             $id_cart,
             $cart_quantity,
-            $id_customization,
-            $orderId
+            $id_customization
         );
 
         return $return;
@@ -3309,7 +3306,6 @@ class ProductCore extends ObjectModel
      * @param bool $use_customer_price
      * @param int $id_cart
      * @param int $real_quantity
-     * @param int|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      *
      * @return float Product price
      **/
@@ -3334,8 +3330,7 @@ class ProductCore extends ObjectModel
         $use_customer_price = true,
         $id_cart = 0,
         $real_quantity = 0,
-        $id_customization = 0,
-        $orderId = null
+        $id_customization = 0
     ) {
         static $address = null;
         static $context = null;
@@ -3368,7 +3363,7 @@ class ProductCore extends ObjectModel
         $cache_id = (int) $id_product . '-' . (int) $id_shop . '-' . (int) $id_currency . '-' . (int) $id_country . '-' . $id_state . '-' . $zipcode . '-' . (int) $id_group .
             '-' . (int) $quantity . '-' . (int) $id_product_attribute . '-' . (int) $id_customization .
             '-' . (int) $with_ecotax . '-' . (int) $id_customer . '-' . (int) $use_group_reduction . '-' . (int) $id_cart . '-' . (int) $real_quantity .
-            '-' . ($only_reduc ? '1' : '0') . '-' . ($use_reduc ? '1' : '0') . '-' . ($use_tax ? '1' : '0') . '-' . (int) $decimals . '-' . (int) $orderId;
+            '-' . ($only_reduc ? '1' : '0') . '-' . ($use_reduc ? '1' : '0') . '-' . ($use_tax ? '1' : '0') . '-' . (int) $decimals;
 
         // reference parameter is filled before any returns
         $specific_price = SpecificPrice::getSpecificPrice(
@@ -3383,41 +3378,6 @@ class ProductCore extends ObjectModel
             $id_cart,
             $real_quantity
         );
-
-        // If orderId is specified we want the price from OrderDetails
-        // This use case was not handled when only reduction is requested as the use case was not necessary, this could
-        // be improved someday though
-        if (!empty($orderId) && !$only_reduc) {
-            $sql = new DbQuery();
-            $sql->select('od.*, t.rate AS tax_rate');
-            $sql->from('order_detail', 'od');
-            $sql->where('od.`id_order` = ' . (int) $orderId);
-            $sql->where('od.`product_id` = ' . (int) $id_product);
-            if (Combination::isFeatureActive()) {
-                $sql->where('od.`product_attribute_id` = ' . (int) $id_product_attribute);
-            }
-            $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
-            $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
-            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-            if (is_array($res) && !empty($res)) {
-                $orderDetail = $res[0];
-                if ($use_reduc) {
-                    $price = $use_tax ? $orderDetail['unit_price_tax_incl'] : $orderDetail['unit_price_tax_excl'];
-                } else {
-                    // Without reduction we use the original product price
-                    $tax_rate = $use_tax ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
-                    $price = $orderDetail['original_product_price'] * $tax_rate;
-                }
-                $ecotax = 0;
-                if ($with_ecotax) {
-                    $ecotax = $use_tax ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
-                }
-                $price += $ecotax;
-
-                // Cache the price from OrderDetail so it is returned right away
-                self::$_prices[$cache_id] = $price;
-            }
-        }
 
         if (isset(self::$_prices[$cache_id])) {
             return self::$_prices[$cache_id];
@@ -3591,6 +3551,59 @@ class ProductCore extends ObjectModel
         self::$_prices[$cache_id] = $price;
 
         return self::$_prices[$cache_id];
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $productId
+     * @param int $combinationId
+     * @param bool $withTaxes
+     * @param bool $useReduction
+     * @param bool $withEcoTax
+     *
+     * @return float|null
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getPriceFromOrder(
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax
+    ): ?float {
+        $sql = new DbQuery();
+        $sql->select('od.*, t.rate AS tax_rate');
+        $sql->from('order_detail', 'od');
+        $sql->where('od.`id_order` = ' . $orderId);
+        $sql->where('od.`product_id` = ' . $productId);
+        if (Combination::isFeatureActive()) {
+            $sql->where('od.`product_attribute_id` = ' . $combinationId);
+        }
+        $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
+        $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        if (!is_array($res) || empty($res)) {
+            return null;
+        }
+
+        $orderDetail = $res[0];
+        if ($useReduction) {
+            // If we want price with reduction it is already the one stored in OrderDetail
+            $price = $withTaxes ? $orderDetail['unit_price_tax_incl'] : $orderDetail['unit_price_tax_excl'];
+        } else {
+            // Without reduction we use the original product price to compute the original price
+            $tax_rate = $withTaxes ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
+            $price = $orderDetail['original_product_price'] * $tax_rate;
+        }
+        $ecoTaxValue = 0;
+        if ($withEcoTax) {
+            $ecoTaxValue = $withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
+        }
+        $price += $ecoTaxValue;
+
+        return $price;
     }
 
     public static function convertAndFormatPrice($price, $currency = false, Context $context = null)
