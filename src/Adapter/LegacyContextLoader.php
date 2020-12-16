@@ -28,8 +28,9 @@ declare(strict_types=1);
 
 namespace CommandLineUtils\Controller {
     use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-    class DummyControllerCore extends \ControllerCore
+    class DummyControllerCore extends \AdminControllerCore
     {
         public function __construct()
         {
@@ -44,7 +45,7 @@ namespace CommandLineUtils\Controller {
             return true;
         }
 
-        public function viewAccess()
+        public function viewAccess($disable = false)
         {
             return true;
         }
@@ -59,7 +60,7 @@ namespace CommandLineUtils\Controller {
             return '';
         }
 
-        public function setMedia()
+        public function setMedia($isNewTheme = false)
         {
             return null;
         }
@@ -89,6 +90,9 @@ namespace CommandLineUtils\Controller {
             return '';
         }
 
+        /**
+         * @return ContainerBuilder
+         */
         protected function buildContainer()
         {
             return SymfonyContainer::getInstance();
