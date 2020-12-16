@@ -12,6 +12,7 @@ const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings'
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -88,11 +89,11 @@ describe('Enable ask for birth date', async () => {
       await loginFOPage.goToCreateAccountPage(page);
 
       // Check birthday
-      const isBirthDateInputVisible = await loginFOPage.isBirthDateVisible(page);
+      const isBirthDateInputVisible = await foCreateAccountPage.isBirthDateVisible(page);
       await expect(isBirthDateInputVisible).to.be.equal(test.args.enable);
 
       // Go back to BO
-      page = await loginFOPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
     });
   });
 });

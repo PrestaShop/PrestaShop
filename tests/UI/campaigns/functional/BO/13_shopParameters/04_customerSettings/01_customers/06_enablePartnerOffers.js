@@ -12,6 +12,7 @@ const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings'
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -88,11 +89,11 @@ describe('Enable partner offer', async () => {
       await loginFOPage.goToCreateAccountPage(page);
 
       // Check partner offer
-      const isPartnerOfferVisible = await loginFOPage.isPartnerOfferVisible(page);
+      const isPartnerOfferVisible = await foCreateAccountPage.isPartnerOfferVisible(page);
       await expect(isPartnerOfferVisible).to.be.equal(test.args.enable);
 
       // Go back to BO
-      page = await loginFOPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
     });
   });
 });
