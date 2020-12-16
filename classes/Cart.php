@@ -650,7 +650,7 @@ class CartCore extends ObjectModel
      *
      * @return array Products
      */
-    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true, $keepOrderPrices = true)
+    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true, $keepOrderPrices = false)
     {
         if (!$this->id) {
             return [];
@@ -871,7 +871,7 @@ class CartCore extends ObjectModel
      *
      * @return mixed
      */
-    protected function applyProductCalculations($row, $shopContext, $productQuantity = null, $keepOrderPrices = true)
+    protected function applyProductCalculations($row, $shopContext, $productQuantity = null, $keepOrderPrices = false)
     {
         if (null === $productQuantity) {
             $productQuantity = (int) $row['cart_quantity'];
@@ -920,93 +920,13 @@ class CartCore extends ObjectModel
             $orderId = (int) $orderId ?: null;
         }
 
-        $row['price_without_reduction'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            true,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            false,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization'],
-            $orderId
-        );
-
-        $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            false,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            false,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization'],
-            $orderId
-        );
-
-        $row['price_with_reduction'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            true,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            true,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization'],
-            $orderId
-        );
-
-        $row['price'] = $row['price_with_reduction_without_tax'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            false,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            true,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization'],
-            $orderId
-        );
+        if (null !== $orderId) {
+            $orderPrices = $this->getOrderPrices($row, $orderId, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            $row = array_merge($row, $orderPrices);
+        } else {
+            $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            $row = array_merge($row, $cartPrices);
+        }
 
         switch (Configuration::get('PS_ROUND_TYPE')) {
             case Order::ROUND_TOTAL:
@@ -1062,6 +982,200 @@ class CartCore extends ObjectModel
         }
 
         return Product::getTaxesInformations($row, $shopContext);
+    }
+
+    /**
+     * @param array $productRow
+     * @param int $orderId
+     * @param int $productQuantity
+     * @param int $addressId
+     * @param Context $shopContext
+     * @param array|null $specificPriceOutput
+     *
+     * @return array
+     */
+    private function getOrderPrices(
+        array $productRow,
+        int $orderId,
+        int $productQuantity,
+        int $addressId,
+        Context $shopContext,
+        ?array &$specificPriceOutput
+    ): array {
+        $orderPrices = [];
+        $orderPrices['price_without_reduction'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            true,
+            false,
+            true
+        );
+
+        $orderPrices['price_without_reduction_without_tax'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            false,
+            false,
+            true
+        );
+
+        $orderPrices['price_with_reduction'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            true,
+            true,
+            true
+        );
+
+        $orderPrices['price'] = $orderPrices['price_with_reduction_without_tax'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            false,
+            true,
+            true
+        );
+
+        // If the product price was not found in the order, use cart prices as fallback
+        if (false !== array_search(null, $orderPrices)) {
+            $cartPrices = $this->getCartPrices(
+                $productRow,
+                $productQuantity,
+                $addressId,
+                $shopContext,
+                $specificPriceOutput
+            );
+            foreach ($orderPrices as $orderPrice => $value) {
+                if (null === $value) {
+                    $orderPrices[$orderPrice] = $cartPrices[$orderPrice];
+                }
+            }
+        }
+
+        return $orderPrices;
+    }
+
+    /**
+     * @param array $productRow
+     * @param int $productQuantity
+     * @param int $addressId
+     * @param Context $shopContext
+     * @param array|null $specificPriceOutput
+     *
+     * @return array
+     */
+    private function getCartPrices(
+        array $productRow,
+        int $productQuantity,
+        int $addressId,
+        Context $shopContext,
+        ?array &$specificPriceOutput
+    ): array {
+        $cartPrices = [];
+        $cartPrices['price_without_reduction'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            true,
+            false,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        $cartPrices['price_without_reduction_without_tax'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            false,
+            false,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        $cartPrices['price_with_reduction'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            true,
+            true,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        $cartPrices['price'] = $cartPrices['price_with_reduction_without_tax'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            false,
+            true,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        return $cartPrices;
+    }
+
+    /**
+     * @param int $productId
+     * @param int $combinationId
+     * @param int $customizationId
+     * @param bool $withTaxes
+     * @param bool $useReduction
+     * @param bool $withEcoTax
+     * @param int $productQuantity
+     * @param int $addressId
+     * @param Context $shopContext
+     * @param array|null $specificPriceOutput
+     *
+     * @return float
+     */
+    private function getCartPriceFromCatalog(
+        int $productId,
+        int $combinationId,
+        int $customizationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax,
+        int $productQuantity,
+        int $addressId,
+        Context $shopContext,
+        ?array &$specificPriceOutput
+    ): float {
+        return Product::getPriceStatic(
+            $productId,
+            $withTaxes,
+            $combinationId,
+            6,
+            null,
+            false,
+            $useReduction,
+            $productQuantity,
+            false,
+            (int) $this->id_customer ? (int) $this->id_customer : null,
+            (int) $this->id,
+            $addressId,
+            $specificPriceOutput,
+            $withEcoTax,
+            true,
+            $shopContext,
+            true,
+            $customizationId
+        );
     }
 
     public static function cacheSomeAttributesLists($ipa_list, $id_lang)
@@ -1951,7 +2065,7 @@ class CartCore extends ObjectModel
         $products = null,
         $id_carrier = null,
         $use_cache = false,
-        $keepOrderPrices = true
+        $keepOrderPrices = false
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
@@ -1994,7 +2108,7 @@ class CartCore extends ObjectModel
 
         // filter products
         if (null === $products) {
-            $products = $this->getProducts();
+            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
         }
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
@@ -2076,14 +2190,14 @@ class CartCore extends ObjectModel
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, $keepOrderPrices = true)
+    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, $keepOrderPrices = false)
     {
         $orderId = null;
         if ($keepOrderPrices) {
             $orderId = Order::getIdByCartId($this->id);
             $orderId = (int) $orderId ?: null;
         }
-        $calculator = new Calculator($this, $id_carrier, $computePrecision);
+        $calculator = new Calculator($this, $id_carrier, $computePrecision, $orderId);
 
         /** @var PriceCalculator $priceCalculator */
         $priceCalculator = ServiceLocator::get(PriceCalculator::class);
@@ -3394,11 +3508,18 @@ class CartCore extends ObjectModel
      * @param array|null $product_list list of product concerned by the shipping.
      *                                 If null, all the product of the cart are used to calculate the shipping cost
      * @param int|null $id_zone Zone ID
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return float|bool Shipping total, false if not possible to ship with the given carrier
      */
-    public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
-    {
+    public function getPackageShippingCost(
+        $id_carrier = null,
+        $use_tax = true,
+        Country $default_country = null,
+        $product_list = null,
+        $id_zone = null,
+        $keepOrderPrices = false
+    ) {
         if ($this->isVirtualCart()) {
             return 0;
         }
@@ -3408,7 +3529,7 @@ class CartCore extends ObjectModel
         }
 
         if (null === $product_list) {
-            $products = $this->getProducts(false, false, null, true);
+            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
         } else {
             foreach ($product_list as $key => $value) {
                 if ($value['is_virtual'] == 1) {
@@ -3446,7 +3567,7 @@ class CartCore extends ObjectModel
         }
 
         // Order total in default currency without fees
-        $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
+        $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list, $id_carrier, false, $keepOrderPrices);
 
         // Start with shipping cost at 0
         $shipping_cost = 0;
