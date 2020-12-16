@@ -50,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerComma
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryHandler\GetManufacturerForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
-use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand;
@@ -117,8 +116,8 @@ class CommandHandlerDefinitionParserTest extends TestCase
      */
     public function getDataForClassNamesAssertion(): Generator
     {
-        yield [EditTaxHandler::class, EditTaxCommand::class, [EditTaxHandlerInterface::class]];
-        yield [EditMetaHandler::class, EditMetaCommand::class, [EditMetaHandlerInterface::class]];
+        yield [EditTaxHandler::class, EditTaxCommand::class];
+        yield [EditMetaHandler::class, EditMetaCommand::class];
     }
 
     /**
