@@ -91,6 +91,8 @@ describe('Quick edit order status in BO', async () => {
     {args: {status: 'enable', enable: true, columnName: 'Send email to customer', columnID: 4}},
     {args: {status: 'disable', enable: false, columnName: 'Delivery', columnID: 5}},
     {args: {status: 'enable', enable: true, columnName: 'Delivery', columnID: 5}},
+    {args: {status: 'disable', enable: false, columnName: 'Invoice', columnID: 6}},
+    {args: {status: 'enable', enable: true, columnName: 'Invoice', columnID: 6}},
   ];
 
   statuses.forEach((orderStatus, index) => {
