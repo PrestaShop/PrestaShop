@@ -59,6 +59,7 @@ $(() => {
     grid.addExtension(new LinkRowActionExtension());
   });
 
+  /** @todo use components */
   new TranslatableInput();
   new TranslatableField();
   new TinyMCEEditor();
