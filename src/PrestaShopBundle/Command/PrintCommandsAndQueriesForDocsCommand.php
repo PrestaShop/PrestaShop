@@ -166,7 +166,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return array<string, array<int, CommandHandlerDefinition>>
+     * @return array<string, array<string, array<int, CommandHandlerDefinition>>>
      */
     private function getCommandHandlerDefinitions(): array
     {
