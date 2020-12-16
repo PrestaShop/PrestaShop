@@ -1,5 +1,4 @@
 /* PHP:ps_1771_update_customer_note(); */;
-/* PHP:ps_1771_update_cart_reference_order(); */;
 
 SET SESSION sql_mode='';
 SET NAMES 'utf8';
