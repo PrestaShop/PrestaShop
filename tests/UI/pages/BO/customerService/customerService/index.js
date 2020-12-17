@@ -133,7 +133,7 @@ class CustomerService extends BOBasePage {
         columnSelector = this.tableColumnPrivate(row);
         break;
 
-      case 'active':
+      case 'date':
         columnSelector = this.tableColumnDate(row);
         break;
 

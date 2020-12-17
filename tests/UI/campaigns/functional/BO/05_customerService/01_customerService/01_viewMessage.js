@@ -25,6 +25,8 @@ const ContactUsFakerData = require('@data/faker/contactUs');
 let browserContext;
 let page;
 const contactUsData = new ContactUsFakerData({subject: 'Customer service'});
+let idCustomer = 0;
+let messageDateTime = '';
 
 /*
 Send message by customer to customer service in FO
@@ -99,6 +101,15 @@ describe('View customer service message', async () => {
     await expect(textEmail).to.contains(contactUsData.emailAddress);
   });
 
+  it('should get the customer service id and the date', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
+
+    idCustomer = await customerServicePage.getTextColumn(page, 1, 'id_customer_thread');
+    await expect(parseInt(idCustomer, 10)).to.be.at.least(0);
+
+    messageDateTime = await customerServicePage.getTextColumn(page, 1, 'date');
+  });
+
   it('should go to view message page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
 
@@ -106,5 +117,19 @@ describe('View customer service message', async () => {
 
     const pageTitle = await viewPage.getPageTitle(page);
     await expect(pageTitle).to.contains(viewPage.pageTitle);
+  });
+
+  it('should check the thread form', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
+
+    const badgeNumber = await viewPage.getBadgeNumber(page);
+    await expect(badgeNumber).to.contains(idCustomer);
+
+    const text = await viewPage.getCustomerMessage(page);
+    expect(text).to.contains(contactUsData.emailAddress);
+    expect(text).to.contains(contactUsData.subject);
+    expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
+    expect(text).to.contains('Attachment');
+    expect(text).to.contains(contactUsData.message);
   });
 });
