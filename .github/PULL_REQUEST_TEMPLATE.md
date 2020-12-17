@@ -17,5 +17,7 @@ https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/#pull-requ
 | Deprecations? | yes / no
 | Fixed ticket? | Fixes #{issue number here}.
 | How to test?  | Please indicate how to best verify that this PR is correct.
+| What are the parts of PrestaShop are modified this PR?  | Please indicate what parts of the software we need to verify to check everything is allright
+
 
 <!-- Click the form's "Preview" button to make sure the table is functional in GitHub. Thank you! -->
