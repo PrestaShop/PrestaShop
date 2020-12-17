@@ -63,7 +63,7 @@ describe('View customer service message', async () => {
     await expect(pageTitle).to.equal(contactUsPage.pageTitle);
   });
 
-  it('should send message to customer service', async function (){
+  it('should send message to customer service', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
     const validationMessage = await contactUsPage.sendMessage(page, contactUsData);
@@ -85,5 +85,16 @@ describe('View customer service message', async () => {
 
     const pageTitle = await customerServicePage.getPageTitle(page);
     await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+  });
+
+  it('should filter by email', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
+
+    await customerServicePage.resetFilter(page);
+
+    await customerServicePage.filterTable(page, 'input', 'a!email', contactUsData.emailAddress);
+
+    const textEmail = await customerServicePage.getTextColumn(page, 1, 'a!email');
+    await expect(textEmail).to.contains(contactUsData.emailAddress);
   });
 });
