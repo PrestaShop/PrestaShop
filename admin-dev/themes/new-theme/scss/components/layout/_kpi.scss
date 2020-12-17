@@ -18,7 +18,7 @@
       min-width: 13rem;
       padding: 1rem;
       background-color: #fff;
-      box-shadow: 0 8px 16px 0 rgba(#000, .1);
+      box-shadow: 0 8px 16px 0 rgba(#000, 0.1);
       @include border-radius($card-border-radius);
     }
 
@@ -26,13 +26,12 @@
       padding-left: 35px;
 
       .title {
-        font-size: .875rem;
+        font-size: 0.875rem;
       }
 
       .kpi-description {
-
         .value {
-          font-size: .875rem;
+          font-size: 0.875rem;
         }
       }
     }
@@ -43,14 +42,14 @@
       align-items: center;
       // stylelint-disable
       justify-content: flex-start !important;
-      // stylelint-enable
       padding: 1.1rem 0;
-      padding-top: .5rem;
+      padding-top: 0.5rem;
       margin: 0 -0.5rem !important;
       overflow: scroll;
+      // stylelint-enable
 
       > div {
-        margin: 0 .5rem;
+        margin: 0 0.5rem;
 
         i {
           font-size: 1.5rem;
