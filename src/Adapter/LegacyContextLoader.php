@@ -27,10 +27,11 @@
 declare(strict_types=1);
 
 namespace CommandLineUtils\Controller {
+    use AdminController;
     use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
     use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-    class DummyControllerCore extends \AdminControllerCore
+    class DummyControllerCore extends AdminController
     {
         public function __construct()
         {
@@ -52,7 +53,7 @@ namespace CommandLineUtils\Controller {
 
         public function postProcess()
         {
-            return null;
+            return true;
         }
 
         public function display()
@@ -95,7 +96,8 @@ namespace CommandLineUtils\Controller {
          */
         protected function buildContainer()
         {
-            return SymfonyContainer::getInstance();
+            /** @var ContainerBuilder $container */
+            return $container = SymfonyContainer::getInstance();
         }
     }
 }
@@ -140,7 +142,7 @@ namespace PrestaShop\PrestaShop\Adapter {
             ?int $employeeId = null,
             ?int $shopId = null,
             ?int $shopGroupId = null
-        ) {
+        ): self {
             $this->loadCurrencyContext($currencyId);
             $this->loadControllerContext($controllerClassName);
             $this->loadEmployeeContext($employeeId);
@@ -160,7 +162,7 @@ namespace PrestaShop\PrestaShop\Adapter {
          *
          * @return self
          */
-        public function loadControllerContext(?string $controllerClassName = null)
+        public function loadControllerContext(?string $controllerClassName = null): self
         {
             if (null === $controllerClassName) {
                 $this->context->controller = new DummyControllerCore();
@@ -187,7 +189,7 @@ namespace PrestaShop\PrestaShop\Adapter {
          *
          * @return self
          */
-        public function loadCurrencyContext(?int $currencyId = null)
+        public function loadCurrencyContext(?int $currencyId = null): self
         {
             $currency = new Currency($currencyId);
             if (null === $currencyId) {
@@ -204,7 +206,7 @@ namespace PrestaShop\PrestaShop\Adapter {
          *
          * @return self
          */
-        public function loadEmployeeContext(?int $employeeId = null)
+        public function loadEmployeeContext(?int $employeeId = null): self
         {
             $this->context->employee = new Employee($employeeId);
 
@@ -216,7 +218,7 @@ namespace PrestaShop\PrestaShop\Adapter {
          *
          * @return self
          */
-        public function loadShopContext(int $shopId = 1)
+        public function loadShopContext(int $shopId = 1): self
         {
             $this->context->shop = new Shop($shopId);
             Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
@@ -229,7 +231,7 @@ namespace PrestaShop\PrestaShop\Adapter {
          *
          * @return self
          */
-        public function loadShopGroupId(int $shopGroupId)
+        public function loadShopGroupId(int $shopGroupId): self
         {
             Shop::setContext(Shop::CONTEXT_GROUP, $shopGroupId);
 

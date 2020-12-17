@@ -24,14 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\PrestaShopBundle\Command;
 
+use Product;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
+use TypeError;
 
 class LoadLegacyClassesinCommandTest extends KernelTestCase
 {
@@ -46,7 +50,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
     public function testLoadLegacyCommandWithoutContextFails()
     {
-        $this->expectException(\TypeError::class, 'Not enough arguments (missing: "theme, locale").');
+        $this->expectException(TypeError::class, 'Not enough arguments (missing: "theme, locale").');
 
         $application = new Application(static::$kernel);
         $application->add(new class() extends ContainerAwareCommand {
@@ -57,7 +61,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
             protected function execute(InputInterface $input, OutputInterface $output)
             {
-                $products = \Product::getNewProducts(1);
+                $products = Product::getNewProducts(1);
             }
         });
 
@@ -80,8 +84,8 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
             protected function execute(InputInterface $input, OutputInterface $output)
             {
-                $this->getContainer()->get('prestashop.adapter.context_load_helper')->loadGenericContext();
-                $products = \Product::getNewProducts(1);
+                $this->getContainer()->get('prestashop.adapter.legacy_context_loader')->loadGenericContext();
+                $products = Product::getNewProducts(1);
             }
         });
 
