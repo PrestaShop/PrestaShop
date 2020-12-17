@@ -66,7 +66,6 @@ Feature: Order from Back Office (BO)
       | amount        | 2                  |
       | price         | 16                 |
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices
@@ -98,7 +97,6 @@ Feature: Order from Back Office (BO)
       | amount        | 2                  |
       | price         | 16                 |
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices

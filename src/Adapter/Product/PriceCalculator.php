@@ -179,4 +179,34 @@ class PriceCalculator
             $idCustomization
         );
     }
+
+    /**
+     * @param int $orderId Order id
+     * @param int $productId Product id
+     * @param int $combinationId Combination (Product attribute) id
+     * @param bool $withTaxes With or without taxes
+     * @param bool $useReduction With or without reduction
+     * @param bool $withEcoTax With or without ecto tax
+     *
+     * @return float|null
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getOrderPrice(
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax
+    ): ?float {
+        return Product::getPriceFromOrder(
+            $orderId,
+            $productId,
+            $combinationId,
+            $withTaxes,
+            $useReduction,
+            $withEcoTax
+        );
+    }
 }
