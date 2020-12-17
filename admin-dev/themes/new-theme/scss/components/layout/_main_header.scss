@@ -287,6 +287,14 @@ $header-text-color: #4e6167 !default;
         left: 0.3125rem;
       }
     }
+
+    &.gamification-component {
+      @include media-breakpoint-down("sm") {
+        // stylelint-disable-next-line
+        display: none !important;
+      }
+    }
+
     > .stores .ps-dropdown-menu {
       right: 0;
       left: auto;
