@@ -80,6 +80,11 @@ class MaintenanceType extends TranslatorAwareType
                         'multistore_configuration_key' => 'PS_SHOP_ENABLE',
                         'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_SHOP_ENABLE'),
                     ],
+                    'label' => $this->trans('Enable Shop', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).',
+                        'Admin.Shopparameters.Help'
+                    ),
                 ]
             )
             ->add(
@@ -93,6 +98,11 @@ class MaintenanceType extends TranslatorAwareType
                         'multistore_configuration_key' => 'PS_MAINTENANCE_IP',
                         'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_IP'),
                     ],
+                    'label' => $this->trans('Maintenance IP', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).',
+                        'Admin.Shopparameters.Help'
+                    ),
                 ]
             )
             ->add(
@@ -111,6 +121,11 @@ class MaintenanceType extends TranslatorAwareType
                         'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
                         'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_TEXT'),
                     ],
+                    'label' => $this->trans('Custom maintenance text', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Custom text displayed on maintenance page while shop is deactivated.',
+                        'Admin.Shopparameters.Help'
+                    ),
                 ]
             );
     }
