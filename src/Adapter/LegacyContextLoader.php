@@ -96,8 +96,8 @@ namespace CommandLineUtils\Controller {
          */
         protected function buildContainer()
         {
-            /** @var ContainerBuilder $container */
-            return $container = SymfonyContainer::getInstance();
+            /* @phpstan-ignore-next-line */
+            return SymfonyContainer::getInstance();
         }
     }
 }
