@@ -776,7 +776,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
@@ -796,7 +796,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
@@ -814,7 +814,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
