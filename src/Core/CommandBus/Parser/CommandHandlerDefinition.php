@@ -136,6 +136,14 @@ class CommandHandlerDefinition
     }
 
     /**
+     * @return string
+     */
+    public function getSimpleCommandClass(): string
+    {
+        return substr($this->commandClass, strrpos($this->commandClass, '\\') + 1);
+    }
+
+    /**
      * @return array
      */
     public function getCommandConstructorParams(): array

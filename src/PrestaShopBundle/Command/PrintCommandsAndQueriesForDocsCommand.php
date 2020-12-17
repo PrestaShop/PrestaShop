@@ -97,7 +97,10 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-            ->setDescription('Prints available CQRS commands and queries to a file prepared for documentation')
+            ->setDescription(
+                'Prints available CQRS commands and queries to a file prepared for documentation' . PHP_EOL . PHP_EOL .
+                'Example: php ./bin/console prestashop:print-docs:commands-and-queries --dir=/path/to/doc_project/src/content/1.7/development/architecture/domain/references'
+            )
             ->addOption(
                 self::DESTINATION_DIR_OPTION_NAME,
                 null,
@@ -194,7 +197,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
     {
         $force = $input->getOption(self::FORCE_OPTION_NAME);
 
-        if ($force || (!$this->filesystem->exists($targetDir))) {
+        if ($force || !$this->filesystem->exists($targetDir)) {
             return true;
         }
 

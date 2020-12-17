@@ -79,7 +79,9 @@ class CommandHandlerDefinitionParser
             }
 
             if ($parameter->isOptional()) {
-                $parameter->allowsNull() ? $param = sprintf('?%s', $param) : null;
+                if ($parameter->allowsNull()) {
+                    $param = sprintf('?%s', $param);
+                }
                 $param = sprintf('%s = %s', $param, var_export($parameter->getDefaultValue(), true));
             }
             $params[] = $param;
