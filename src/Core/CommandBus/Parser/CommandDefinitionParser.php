@@ -32,7 +32,7 @@ use ReflectionException;
 /**
  * Parses commands and queries definitions
  *
- * @deprecated
+ * @deprecated Since 1.7.8.0, use CommandHandlerDefinitionParser instead.
  * @see CommandHandlerDefinitionParser
  */
 final class CommandDefinitionParser
