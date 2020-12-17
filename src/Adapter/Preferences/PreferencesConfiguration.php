@@ -71,6 +71,16 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
+        if (false === $this->validateConfiguration($configuration)) {
+            return [
+                [
+                    'key' => 'Invalid configuration',
+                    'domain' => 'Admin.Advparameters.Notification',
+                    'parameters' => [],
+                ],
+            ];
+        }
+
         if ($this->validateSameSiteConfiguration($configuration)) {
             return [
                 [
@@ -81,20 +91,18 @@ class PreferencesConfiguration implements DataConfigurationInterface
             ];
         }
 
-        if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
-            $this->configuration->set('PS_SSL_ENABLED_EVERYWHERE', $configuration['enable_ssl_everywhere']);
-            $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
-            $this->configuration->set('PS_ALLOW_HTML_IFRAME', $configuration['allow_html_iframes']);
-            $this->configuration->set('PS_USE_HTMLPURIFIER', $configuration['use_htmlpurifier']);
-            $this->configuration->set('PS_PRICE_ROUND_MODE', $configuration['price_round_mode']);
-            $this->configuration->set('PS_ROUND_TYPE', $configuration['price_round_type']);
-            $this->configuration->set('PS_DISPLAY_SUPPLIERS', $configuration['display_suppliers']);
-            $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
-            $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
-            $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
-            $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
-        }
+        $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
+        $this->configuration->set('PS_SSL_ENABLED_EVERYWHERE', $configuration['enable_ssl_everywhere']);
+        $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
+        $this->configuration->set('PS_ALLOW_HTML_IFRAME', $configuration['allow_html_iframes']);
+        $this->configuration->set('PS_USE_HTMLPURIFIER', $configuration['use_htmlpurifier']);
+        $this->configuration->set('PS_PRICE_ROUND_MODE', $configuration['price_round_mode']);
+        $this->configuration->set('PS_ROUND_TYPE', $configuration['price_round_type']);
+        $this->configuration->set('PS_DISPLAY_SUPPLIERS', $configuration['display_suppliers']);
+        $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
+        $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
+        $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
+        $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
 
         return [];
     }
