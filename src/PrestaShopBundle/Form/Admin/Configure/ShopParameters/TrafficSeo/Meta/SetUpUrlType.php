@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -54,12 +53,14 @@ class SetUpUrlType extends TranslatorAwareType
      */
     private $isHostMode;
 
-    /*
-    * @var Tools
-    */
-    private $tools;
+    /**
+     * @var bool
+     */
+    private $isModRewriteActive;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $doesMainShopUrlExist;
 
     /**
@@ -70,7 +71,7 @@ class SetUpUrlType extends TranslatorAwareType
      * @param array $canonicalUrlChoices
      * @param bool $isHtaccessFileWritable
      * @param bool $isHostMode
-     * @param Tools $tools
+     * @param bool $doesMainShopUrlExist
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -85,7 +86,6 @@ class SetUpUrlType extends TranslatorAwareType
         $this->canonicalUrlChoices = $canonicalUrlChoices;
         $this->isHtaccessFileWritable = $isHtaccessFileWritable;
         $this->isHostMode = $isHostMode;
-        $this->tools = $tools;
         $this->doesMainShopUrlExist = $doesMainShopUrlExist;
     }
 
@@ -99,7 +99,7 @@ class SetUpUrlType extends TranslatorAwareType
             'Admin.Shopparameters.Help'
         );
 
-        if (!$this->tools->isModRewriteActive()) {
+        if (!$this->isModRewriteActive) {
             $friendlyUrlHelp .=
                 '<br/>' . $this->trans(
                 'URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.',

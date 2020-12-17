@@ -64,7 +64,7 @@ class MetaController extends FrameworkBundleAdminController
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {
@@ -243,7 +243,7 @@ class MetaController extends FrameworkBundleAdminController
         );
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {
@@ -271,7 +271,7 @@ class MetaController extends FrameworkBundleAdminController
             'ShopUrls'
         );
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {
@@ -323,7 +323,7 @@ class MetaController extends FrameworkBundleAdminController
             $this->getSeoOptionsFormHandler(),
             'SeoOptions'
         );
-        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_REWRITING_SETTINGS');
+        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
         if ($isRewriteSettingEnabled) {

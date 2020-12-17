@@ -56,7 +56,7 @@ class ShopUrlType extends TranslatorAwareType
     /**
      * ShopUrlType constructor.
      *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param TranslatorInterface $translator
      * @param array $locales
      * @param bool $isHostMode
      * @param bool $isShopFeatureActive
@@ -65,9 +65,9 @@ class ShopUrlType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        $isHostMode,
-        $isShopFeatureActive,
-        $doesMainShopUrlExist
+        bool $isHostMode,
+        bool $isShopFeatureActive,
+        bool $doesMainShopUrlExist
     ) {
         parent::__construct($translator, $locales);
         $this->isHostMode = $isHostMode;
