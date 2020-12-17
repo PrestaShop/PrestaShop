@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
-use PrestaShopBundle\Form\Admin\Type\ConfigurationType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\IpAddressType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -148,8 +148,13 @@ class MaintenanceType extends TranslatorAwareType
         return 'maintenance_general_block';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
     public function getParent(): string
     {
-        return ConfigurationType::class;
+        return MultistoreConfigurationType::class;
     }
 }

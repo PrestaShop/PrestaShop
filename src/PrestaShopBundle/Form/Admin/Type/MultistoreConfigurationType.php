@@ -28,6 +28,6 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
 
-class ConfigurationType extends AbstractType
+class MultistoreConfigurationType extends AbstractType
 {
 }

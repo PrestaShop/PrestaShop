@@ -31,14 +31,14 @@ namespace PrestaShopBundle\Form\Admin\Extension;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
-use PrestaShopBundle\Form\Admin\Type\ConfigurationType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class ConfigurationTypeExtension extends AbstractTypeExtension
+class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
 {
     /**
      * @var FeatureInterface
@@ -68,11 +68,12 @@ class ConfigurationTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $addMultistoreConfig = $this->multistoreFeature->isUsed() && !$this->multistoreContext->isAllShopContext();
+        if (!$addMultistoreConfig) {
+            return;
+        }
+
         $configuration = $this->configuration;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($addMultistoreConfig, $configuration) {
-            if (!$addMultistoreConfig) {
-                return;
-            }
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($configuration) {
 
             $form = $event->getForm();
             foreach ($form->all() as $child) {
@@ -102,6 +103,6 @@ class ConfigurationTypeExtension extends AbstractTypeExtension
      */
     public function getExtendedType(): string
     {
-        return ConfigurationType::class;
+        return MultistoreConfigurationType::class;
     }
 }
