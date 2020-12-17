@@ -34,7 +34,7 @@ export default class OrderPaymentsRefresher {
   }
 
   refresh(orderId) {
-    $.getJSON(this.router.generate('admin_orders_get_payments', {orderId}))
+    $.ajax(this.router.generate('admin_orders_get_payments', {orderId}))
         .then(
         response => {
             $(OrderViewPageMap.viewOrderPaymentsAlert).remove();
