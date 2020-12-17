@@ -994,15 +994,14 @@ services:
 
     form.type.sell.supplier:
         class: 'PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType'
-        parent: 'form.type.translatable.aware'
-        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoicesAttributes()'
             - '@prestashop.adapter.form.choice_provider.country_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+            - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
-            - '@router'
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
         tags:
           - { name: form.type }
 
