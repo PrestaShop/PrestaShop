@@ -68,11 +68,13 @@
 
     .form-control-label.disabled {
       opacity: 0.4;
+      cursor: not-allowed;
     }
   }
 
   .col-sm.disabled {
     opacity: 0.4;
+    cursor: not-allowed;
   }
 
   // make ps-switch align with label
