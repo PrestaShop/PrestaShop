@@ -25,7 +25,6 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-import InvoiceNoteManager from '../invoice-note-manager';
 
 const $ = window.$;
 
