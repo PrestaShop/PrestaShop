@@ -12,6 +12,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const homePage = require('@pages/FO/home');
 const contactUsPage = require('@pages/FO/contactUs');
 const customerServicePage = require('@pages/BO/customerService/customerService');
+const viewPage = require('@pages/BO/customerService/customerService/view');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -96,5 +97,14 @@ describe('View customer service message', async () => {
 
     const textEmail = await customerServicePage.getTextColumn(page, 1, 'a!email');
     await expect(textEmail).to.contains(contactUsData.emailAddress);
+  });
+
+  it('should go to view message page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
+
+    await customerServicePage.goToViewMessagePage(page);
+
+    const pageTitle = await viewPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(viewPage.pageTitle);
   });
 });

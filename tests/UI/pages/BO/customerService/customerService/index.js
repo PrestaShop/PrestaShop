@@ -27,6 +27,10 @@ class CustomerService extends BOBasePage {
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
+    // Actions buttons in Row
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a[title='View']`;
+
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnCustomer = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
@@ -138,6 +142,16 @@ class CustomerService extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Go to view message page
+   * @param page
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToViewMessagePage(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 }
 
