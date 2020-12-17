@@ -57,32 +57,30 @@ class PreferencesConfigurationTest extends TestCase
 
     public function testGetConfiguration()
     {
-        $this->mockConfiguration->method('get')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['PS_PRICE_ROUND_MODE', null, null, 'test'],
-                        ['PS_ROUND_TYPE', null, null, 'test'],
-                        ['PS_SHOP_ACTIVITY', null, null, 'test'],
-                    ]
-                )
+        $this->mockConfiguration
+            ->method('get')
+            ->willReturnMap(
+                [
+                    ['PS_PRICE_ROUND_MODE', null, null, 'test'],
+                    ['PS_ROUND_TYPE', null, null, 'test'],
+                    ['PS_SHOP_ACTIVITY', null, null, 'test'],
+                ]
             );
 
-        $this->mockConfiguration->method('getBoolean')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['PS_SSL_ENABLED', false, true],
-                        ['PS_SSL_ENABLED_EVERYWHERE', false, true],
-                        ['PS_TOKEN_ENABLE', false, true],
-                        ['PS_ALLOW_HTML_IFRAME', false, true],
-                        ['PS_USE_HTMLPURIFIER', false, true],
-                        ['PS_DISPLAY_SUPPLIERS', false, false],
-                        ['PS_DISPLAY_MANUFACTURERS', false, true],
-                        ['PS_DISPLAY_BEST_SELLERS', false, false],
-                        ['PS_MULTISHOP_FEATURE_ACTIVE', false, true],
-                    ]
-                )
+        $this->mockConfiguration
+            ->method('getBoolean')
+            ->willReturnMap(
+                [
+                    ['PS_SSL_ENABLED', false, true],
+                    ['PS_SSL_ENABLED_EVERYWHERE', false, true],
+                    ['PS_TOKEN_ENABLE', false, true],
+                    ['PS_ALLOW_HTML_IFRAME', false, true],
+                    ['PS_USE_HTMLPURIFIER', false, true],
+                    ['PS_DISPLAY_SUPPLIERS', false, false],
+                    ['PS_DISPLAY_MANUFACTURERS', false, true],
+                    ['PS_DISPLAY_BEST_SELLERS', false, false],
+                    ['PS_MULTISHOP_FEATURE_ACTIVE', false, true],
+                ]
             );
 
         $result = $this->object->getConfiguration();
@@ -121,13 +119,12 @@ class PreferencesConfigurationTest extends TestCase
 
     public function testUpdateConfigurationWithInvalidSSLConfiguration()
     {
-        $this->mockConfiguration->method('get')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
-                    ]
-                )
+        $this->mockConfiguration
+            ->method('get')
+            ->willReturnMap(
+                [
+                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                ]
             );
 
         $this->assertSame(
@@ -160,32 +157,30 @@ class PreferencesConfigurationTest extends TestCase
 
     public function testUpdateConfiguration()
     {
-        $this->mockConfiguration->method('get')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
-                    ]
-                )
+        $this->mockConfiguration
+            ->method('get')
+            ->willReturnMap(
+                [
+                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                ]
             );
-        $this->mockConfiguration->method('set')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['PS_SSL_ENABLED', true],
-                        ['PS_SSL_ENABLED_EVERYWHERE', true],
-                        ['PS_TOKEN_ENABLE', true],
-                        ['PS_ALLOW_HTML_IFRAME', true],
-                        ['PS_USE_HTMLPURIFIER', true],
-                        ['PS_DISPLAY_SUPPLIERS', false],
-                        ['PS_DISPLAY_MANUFACTURERS', true],
-                        ['PS_DISPLAY_BEST_SELLERS', false],
-                        ['PS_MULTISHOP_FEATURE_ACTIVE', true],
-                        ['PS_PRICE_ROUND_MODE', 'test'],
-                        ['PS_ROUND_TYPE', 'test'],
-                        ['PS_SHOP_ACTIVITY', 'test'],
-                    ]
-                )
+        $this->mockConfiguration
+            ->method('set')
+            ->willReturnMap(
+                [
+                    ['PS_SSL_ENABLED', true],
+                    ['PS_SSL_ENABLED_EVERYWHERE', true],
+                    ['PS_TOKEN_ENABLE', true],
+                    ['PS_ALLOW_HTML_IFRAME', true],
+                    ['PS_USE_HTMLPURIFIER', true],
+                    ['PS_DISPLAY_SUPPLIERS', false],
+                    ['PS_DISPLAY_MANUFACTURERS', true],
+                    ['PS_DISPLAY_BEST_SELLERS', false],
+                    ['PS_MULTISHOP_FEATURE_ACTIVE', true],
+                    ['PS_PRICE_ROUND_MODE', 'test'],
+                    ['PS_ROUND_TYPE', 'test'],
+                    ['PS_SHOP_ACTIVITY', 'test'],
+                ]
             );
 
         $this->assertSame(
