@@ -64,9 +64,8 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
         foreach ($commands as $handlerName => $commandName) {
             $commandDefinition = $handlerDefinitionParser->parseDefinition($handlerName, $commandName);
 
-            if (empty($commandDefinition->getHandlerInterfaces())) {
-                $interfaces = '';
-            } else {
+            $interfaces = '';
+            if (!empty($commandDefinition->getHandlerInterfaces())) {
                 $interfaces = sprintf('(Implements: %s)', implode(', ', $commandDefinition->getHandlerInterfaces()));
             }
 

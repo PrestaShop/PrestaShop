@@ -11,6 +11,10 @@ services:
         parent: 'prestashop.core.command_bus'
         public: true
 
+    prestashop.core.provider.command_definition_parser:
+        class: 'PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser'
+        deprecated: 'The "%service_id%" service is deprecated. Use "prestashop.core.provider.command_handler_definition_parser" instead'
+
     prestashop.core.provider.command_handler_definition_parser:
         class: 'PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandHandlerDefinitionParser'
 
