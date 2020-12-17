@@ -29,7 +29,6 @@
 {% block content %}
   {{ form_start(generalForm, {'attr' : {'class': 'form', 'id': 'form-maintenance'} }) }}
     <div class="row justify-content-center">
-      {% block maintenance_form_general %}
         <div class="col-xl-10">
           <div class="card">
             <h3 class="card-header">
@@ -37,10 +36,10 @@
             </h3>
             <div class="card-block row">
               <div class="card-text">
-                {{ ps.multistore_config_row(isMultishopConfigEnabled, generalForm.enable_shop) }}
-                {{ ps.multistore_config_row(isMultishopConfigEnabled, generalForm.maintenance_ip, { 'currentIp': currentIp}) }}
-                {{ ps.multistore_config_row(isMultishopConfigEnabled, generalForm.maintenance_text) }}
-                {{ form_rest(generalForm) }}
+                  {{ ps.multistore_config_row(generalForm.enable_shop) }}
+                  {{ ps.multistore_config_row(generalForm.maintenance_ip, { 'currentIp': currentIp}) }}
+                  {{ ps.multistore_config_row(generalForm.maintenance_text) }}
+                  {{ form_rest(generalForm) }}
               </div>
             </div>
             <div class="card-footer">
@@ -50,7 +49,6 @@
             </div>
           </div>
         </div>
-      {% endblock %}
     </div>
   {{ form_end(generalForm) }}
 {% endblock %}
