@@ -149,5 +149,11 @@
         <span class="input-group-text js-countable-text">{{ current_length }}</span>
       </div>
     {% endif %}
+
+    {%- block integer_widget -%}
+      {%- set type = type|default('number') -%}
+      {{ block('form_widget_simple') }}
+      {{- block('form_help') -}}
+    {%- endblock integer_widget -%}
   </div>
 {% endblock text_with_length_counter_widget %}
