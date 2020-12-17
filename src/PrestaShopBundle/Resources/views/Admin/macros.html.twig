@@ -359,7 +359,7 @@
   {% import '@PrestaShop/Admin/macros.html.twig' as self %}
 
   <div class="form-group row">
-    {% if isMultishopConfigEnabled %}
+    {% if isMultishopConfigEnabled and form.vars.attr.multistore_configuration_key is defined %}
       {% set multistoreCheckboxName = 'multistore_' ~ form.vars.name %}
       {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
       {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
