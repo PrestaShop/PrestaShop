@@ -56,6 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
@@ -209,39 +210,63 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity customized products with reference :productReference to the cart :reference
+     * @When /^(?:I )?add (\d+) customized products? with reference "(.+)" with(out)? all its customizations to the cart "(.+)"$/
      */
-    public function addCustomizedProductToCarts(int $quantity, $productReference, $reference)
-    {
+    public function addCustomizedProductToCartsWithCustomization(
+        int $quantity,
+        string $productReference,
+        string $withCombinations,
+        string $reference
+    ) {
+        $hasCombinations = ($withCombinations === '');
+        $cartId = (int) SharedStorage::getStorage()->get($reference);
         $productId = (int) Product::getIdByReference($productReference);
         $product = new Product($productId);
         $customizationFields = $product->getCustomizationFieldIds();
-        $customizations = [];
-        foreach ($customizationFields as $customizationField) {
-            $customizationFieldId = (int) $customizationField['id_customization_field'];
-            if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
-                $customizations[$customizationFieldId] = 'Toto';
-            }
+        if (empty($customizationFields)) {
+            throw new Exception('The product has no customizables fields');
         }
 
-        $cartId = (int) SharedStorage::getStorage()->get($reference);
+        $customizationId = null;
+        if ($hasCombinations) {
+            $customizations = [];
+            foreach ($customizationFields as $customizationField) {
+                $customizationFieldId = (int) $customizationField['id_customization_field'];
+                if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
+                    $customizations[$customizationFieldId] = 'Toto';
+                }
+            }
 
-        /** @var CustomizationId $customizationId */
-        $customizationId = $this->getCommandBus()->handle(new AddCustomizationCommand(
-            $cartId,
-            $productId,
-            $customizations
-        ));
-
-        $this->getCommandBus()->handle(
-            new UpdateProductQuantityInCartCommand(
+            /** @var CustomizationId $customizationId */
+            $customizationId = $this->getCommandBus()->handle(new AddCustomizationCommand(
                 $cartId,
                 $productId,
-                $quantity,
-                null,
-                $customizationId->getValue()
-            )
-        );
+                $customizations
+            ));
+            $customizationId = $customizationId->getValue();
+        }
+
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    $cartId,
+                    $productId,
+                    $quantity,
+                    null,
+                    $customizationId
+                )
+            );
+        } catch (Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then I should get an error that the product is customizable and the customization is not provided
+     */
+    public function assertLastErrorIsProductCustomizationNotFoundException()
+    {
+        $this->assertLastErrorIs(ProductCustomizationNotFoundException::class);
     }
 
     /**
