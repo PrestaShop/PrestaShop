@@ -234,9 +234,13 @@ class AddressCore extends ObjectModel
 
             return parent::delete();
         } else {
-            $this->deleted = true;
-
-            return $this->update();
+            return Db::getInstance()->update(
+                $this->def['table'],
+                [
+                    'deleted' => 1,
+                ],
+                ' ' . $this->def['primary'] . ' = ' . (int)$this->id
+            );
         }
     }
 
@@ -443,8 +447,8 @@ class AddressCore extends ObjectModel
     public static function addressExists($id_address)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_address` 
-            FROM ' . _DB_PREFIX_ . 'address a 
+            'SELECT `id_address`
+            FROM ' . _DB_PREFIX_ . 'address a
             WHERE a.`id_address` = ' . (int) $id_address,
             false
         );
