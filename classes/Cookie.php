@@ -87,9 +87,7 @@ class CookieCore
             $this->_path = '/' . $this->_path;
         }
         $this->_path = rawurlencode($this->_path);
-        $this->_path = str_replace('%2F', '/', $this->_path);
-        $this->_path = str_replace('%7E', '~', $this->_path);
-        $this->_path = str_replace('%2B', '+', $this->_path);
+        $this->_path = str_replace(['%2F', '%7E', '%2B', '%26'], ['/', '~', '+', '&'], $this->_path);
         $this->_domain = $this->getDomain($shared_urls);
         $this->_name = 'PrestaShop-' . md5(($this->_standalone ? '' : _PS_VERSION_) . $name . $this->_domain);
         $this->_allow_writing = true;
