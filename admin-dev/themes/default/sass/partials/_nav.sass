@@ -57,7 +57,18 @@
 		.employee_avatar
 			text-decoration: none
 			text-align: center
+			padding-left: 1.5rem
 			padding-top: 1rem
+
+			+media-breakpoint-down(md)
+				display: flex
+				align-items: center
+
+			> .employee_avatar
+				  +media-breakpoint-down(md)
+					  padding-top: 0 
+					  padding-left: 0 
+					  margin-right: 1rem 
 
 			.material-icons
 				line-height: 3.75rem
@@ -73,11 +84,16 @@
 				margin-bottom: 0.625rem
 
 				+media-breakpoint-down(md)
-					font-size: 1.09375rem
+					font-size: 1rem
+					font-weight: 500
 
 			img
 				width: 3.75rem
 				height: 3.75rem
+
+				+media-breakpoint-down(md)
+					width: 2.25rem; 
+					height: 2.25rem; 
 
 				&.img-thumbnail
 					border-radius: 36px
@@ -163,17 +179,26 @@
 		$padding-size: 1.25rem
 		display: block
 
+		#header_logout
+      color: #F44336
+      margin-top: 1rem
+
+      i
+        color: #F44336
+        margin-right: .625rem
+
 		&[data-submenu]
 			+media-breakpoint-down(md)
 				a.link
-					font-size: 1.25rem
-					padding-top: 1.25rem
-					padding-bottom: 1.25rem
+					font-size: 1rem
+					padding-top: .5rem
+					padding-bottom: .5rem
+					padding-left: 1.5rem
 					line-height: inherit
 
 					.material-icons
-						font-size: 2rem
-						line-height: 2rem
+						font-size: 1.25rem
+						line-height: 1.4rem
 
 						&.sub-tabs-arrow
 							padding-right: 1.2rem
@@ -250,8 +275,9 @@
 			& > li
 				+media-breakpoint-down(md)
 					a.link
-						padding-top: 0.75rem
-						padding-bottom: 0.75rem
+						color: #BEBEBE
+						padding-top: 0.5rem
+						padding-bottom: 0.5rem
 
 				&:first-of-type
 					padding-top: .625rem
@@ -264,9 +290,6 @@
 
 					+media-breakpoint-down(md)
 						padding-bottom: 0
-
-						a.link
-							padding-bottom: 1.5rem
 
 		&.ul-open,
 		&.link-active
@@ -307,9 +330,12 @@
 	margin: 1.813rem 0 0 .938rem
 	padding: .875rem 0 .750rem 0
 
-
 	+media-breakpoint-down(md)
-		display: none
+    line-height: 1.25rem
+    margin-top: 0
+    border-top: none
+    padding-bottom: .25rem
+    font-weight: normal
 
 	& > .title
 		color: white
