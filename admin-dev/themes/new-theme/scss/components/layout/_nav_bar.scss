@@ -40,6 +40,22 @@
     margin-top: $size-header-height + ($header-mobile-padding-y * 2);
     margin-left: -100%;
 
+    &::before {
+      position: fixed;
+      top: 5rem;
+      left: 75%;
+      display: block;
+      font-family: "Material Icons", sans-serif;
+      font-size: 1.5rem;
+      color: #fff;
+      pointer-events: none;
+      content: "\e5cd";
+
+      @include media-breakpoint-only(md) {
+        left: 50%;
+      }
+    }
+
     @include media-breakpoint-only(sm) {
       width: 60%;
     }
@@ -553,7 +569,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 501;
+  z-index: 998;
   display: none;
   width: 100%;
   height: 100%;

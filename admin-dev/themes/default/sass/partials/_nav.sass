@@ -35,6 +35,20 @@
 		width: 70%
 		margin-top: $size-header-height + (.625rem * 2)
 
+		&::before
+			content: '\e5cd'
+			position: fixed
+			left: 75%
+			top: 5rem
+			font-size: 1.5rem
+			color: #ffffff
+			font-family: 'Material Icons'
+			display: block
+			pointer-events: none;
+
+			+media-breakpoint-only(md)
+				left: 50%
+
 		+media-breakpoint-only(sm)
 			width: 60%
 
@@ -52,7 +66,7 @@
 			padding-left: 0
 
 			.link-leveltwo .link
-				padding-left: 0.75rem
+				padding-left: 1rem
 
 		.employee_avatar
 			text-decoration: none
