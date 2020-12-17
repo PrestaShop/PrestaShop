@@ -29,7 +29,7 @@ const {$} = window;
 
 $(() => {
   $('.multistore-checkbox').on('change', function () {
-    const input = $(this).closest('.form-group').find('input:not(.multistore-checkbox)');
+    const input = $(this).closest('.form-group').find(':input:not(.multistore-checkbox)');
     const inputContainer = $(this).closest('.form-group').find('.col-sm');
     const labelContainer = $(this).closest('.form-group').find('.form-control-label');
     if ($(this).is(':checked') === false) {
