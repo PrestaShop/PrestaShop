@@ -79,7 +79,6 @@ class SetUpUrlType extends TranslatorAwareType
         array $canonicalUrlChoices,
         $isHtaccessFileWritable,
         $isHostMode,
-        $tools,
         $doesMainShopUrlExist
     ) {
         parent::__construct($translator, $locales);
