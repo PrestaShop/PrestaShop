@@ -79,7 +79,8 @@ class StockType extends TranslatorAwareType
                 'help' => $this->trans(
                         'Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)',
                         'Admin.Shopparameters.Help'
-                    ) . '</br>' . $this->trans('Leave empty to disable.', 'Admin.Shopparameters.Feature'),                'type' => TextType::class,
+                    ) . '</br>' . $this->trans('Leave empty to disable.', 'Admin.Shopparameters.Help'),
+                'type' => TextType::class,
                 'only_enabled_locales' => false,
             ])
             ->add('oos_delivery_time', TranslatableType::class, [
