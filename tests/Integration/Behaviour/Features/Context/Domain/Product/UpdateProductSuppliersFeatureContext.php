@@ -44,11 +44,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSuppli
 class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I delete all product :productReference suppliers
+     * @When I remove all associated product :productReference suppliers
      *
      * @param string $productReference
      */
-    public function deleteAllProductSuppliers(string $productReference): void
+    public function removeAssociatedProductSuppliers(string $productReference): void
     {
         try {
             $this->getCommandBus()->handle(new RemoveAllAssociatedProductSuppliersCommand(

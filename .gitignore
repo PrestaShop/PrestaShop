@@ -103,6 +103,9 @@ tests-legacy/resources/modules/ps_categorytree
 tests-legacy/resources/modules/ps_facetedsearch
 tests-legacy/resources/modules/ps_sharebuttons
 
+# Installed with test data maybe via API push
+tests-legacy/resources/modules/ps_reminder
+
 tests/Resources/img/l/*
 !tests/Resources/img/l/.gitkeep
 tests/Resources/img/p/*

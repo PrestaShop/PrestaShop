@@ -33,6 +33,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
@@ -67,6 +68,11 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         foreach ($combinations as $combination) {
             $this->getSharedStorage()->set($combination->reference, (int) $combination->id);
         }
+
+        // Product class has a lot of cache that is set as soon as the product is created, including for prices
+        // which are cached for each combinations. Since it was cached when the combinations did not exist we need
+        // to clear it so that the newly created combinations' prices are correctly computed next time they are needed.
+        Product::resetStaticCache();
     }
 
     /**
