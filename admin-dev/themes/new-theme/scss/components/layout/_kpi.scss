@@ -8,16 +8,53 @@
   background: #fff;
 
   @include media-breakpoint-down(sm) {
+    background: none;
+
+    &:not(.box-stats) {
+      padding: 0;
+    }
+
+    &.box-stats {
+      min-width: 13rem;
+      padding: 1rem;
+      background-color: #fff;
+      box-shadow: 0 8px 16px 0 rgba(#000, .1);
+      @include border-radius($card-border-radius);
+    }
+
+    .kpi-content {
+      padding-left: 35px;
+
+      .title {
+        font-size: .875rem;
+      }
+
+      .kpi-description {
+
+        .value {
+          font-size: .875rem;
+        }
+      }
+    }
+
     > .row {
       display: flex;
       flex-wrap: nowrap;
-      // stylelint-disable-next-line
+      align-items: center;
+      // stylelint-disable
       justify-content: flex-start !important;
+      // stylelint-enable
+      padding: 1.1rem 0;
+      padding-top: .5rem;
+      margin: 0 -0.5rem !important;
       overflow: scroll;
 
       > div {
-        min-width: 10rem;
-        margin: 0 1rem;
+        margin: 0 .5rem;
+
+        i {
+          font-size: 1.5rem;
+        }
       }
     }
   }
@@ -35,8 +72,7 @@
 
   @include media-breakpoint-down(sm) {
     button {
-      padding: 0.3rem;
-      font-size: 0.75rem;
+      display: none;
     }
   }
 }
@@ -113,5 +149,13 @@
   > .kpi-container {
     padding-right: 1rem;
     padding-left: 1rem;
+  }
+}
+
+.card-kpis {
+  @include media-breakpoint-down(sm) {
+    background-color: inherit;
+    border: none;
+    box-shadow: inherit;
   }
 }
