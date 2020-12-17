@@ -58,7 +58,7 @@ class ContextCore
     /** @var Country */
     public $country;
 
-    /** @var Employee */
+    /** @var Employee|null */
     public $employee;
 
     /** @var AdminController|FrontController */
@@ -70,13 +70,13 @@ class ContextCore
     /** @var Language|InstallLanguage */
     public $language;
 
-    /** @var Currency */
+    /** @var Currency|null */
     public $currency;
 
     /**
      * Current locale instance.
      *
-     * @var Locale
+     * @var Locale|null
      */
     public $currentLocale;
 
@@ -245,7 +245,7 @@ class ContextCore
     }
 
     /**
-     * @return Locale
+     * @return Locale|null
      */
     public function getCurrentLocale()
     {
@@ -287,7 +287,7 @@ class ContextCore
     /**
      * Get a singleton instance of Context object.
      *
-     * @return Context
+     * @return Context|null
      */
     public static function getContext()
     {

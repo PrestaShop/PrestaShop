@@ -515,7 +515,7 @@ class TranslationsExtension extends Twig_Extension
     /**
      * @param array $subtree
      *
-     * @return mixed
+     * @return string
      */
     protected function parseDomain($subtree)
     {
@@ -541,7 +541,7 @@ class TranslationsExtension extends Twig_Extension
     /**
      * @param string $subject
      * @param bool $isLastChild
-     * @param null $id
+     * @param string|null $id
      *
      * @return string
      */

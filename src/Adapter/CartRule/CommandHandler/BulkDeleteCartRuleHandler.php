@@ -50,7 +50,7 @@ final class BulkDeleteCartRuleHandler extends AbstractCartRuleHandler implements
             try {
                 $cartRule = $this->getCartRule($cartRuleId);
 
-                if (null === $this->deleteCartRule($cartRule)) {
+                if (!$this->deleteCartRule($cartRule)) {
                     $errors[] = $cartRuleId->getValue();
                 }
             } catch (CartRuleException $e) {

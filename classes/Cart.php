@@ -1328,7 +1328,7 @@ class CartCore extends ObjectModel
      * @param bool $skipAvailabilityCheckOutOfStock
      * @param bool $preserveGiftRemoval
      *
-     * @return bool Whether the quantity has been successfully updated
+     * @return bool|int Whether the quantity has been successfully updated
      */
     public function updateQty(
         $quantity,
@@ -4268,7 +4268,7 @@ class CartCore extends ObjectModel
     /**
      * Duplicate this Cart in the database.
      *
-     * @return array Duplicated cart, with success bool
+     * @return array|bool Duplicated cart, with success bool
      */
     public function duplicate()
     {

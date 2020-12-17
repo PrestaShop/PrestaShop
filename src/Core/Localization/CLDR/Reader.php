@@ -205,12 +205,7 @@ class Reader implements ReaderInterface
         // The common case with truncation
         $pos = strrpos($localeCode, '_');
         if (false !== $pos) {
-            $parent = substr($localeCode, 0, $pos);
-            if (false === $parent) {
-                throw new LocalizationException(sprintf('Invalid locale code: "%s"', $localeCode));
-            }
-
-            return $parent;
+            return substr($localeCode, 0, $pos);
         }
 
         // The "top level" case. When only language code is left in $localeCode: 'en', 'fr'... then parent is "root".
@@ -410,8 +405,7 @@ class Reader implements ReaderInterface
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
-                if ($alias
-                    && preg_match(
+                if (isset($alias['path']) && preg_match(
                         "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
                         (string) $alias['path'],
                         $matches
@@ -443,8 +437,7 @@ class Reader implements ReaderInterface
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
-                if ($alias
-                    && preg_match(
+                if (isset($alias['path']) && preg_match(
                         "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
                         (string) $alias['path'],
                         $matches
@@ -479,8 +472,7 @@ class Reader implements ReaderInterface
                 $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
-                if ($alias
-                    && preg_match(
+                if (isset($alias['path']) && preg_match(
                         "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
                         (string) $alias['path'],
                         $matches
