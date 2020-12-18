@@ -1228,9 +1228,9 @@ i.mce-i-resize {
     border-left: 1px solid transparent;
 
     &.mce-active {
-      /* stylelint-disable */
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-      /* stylelint-enable */
+      /* stylelint-disable-next-line */
+      box-shadow:
+ inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
     }
   }
 
