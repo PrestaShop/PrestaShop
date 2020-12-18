@@ -156,7 +156,7 @@ class ViewCustomer extends BOBasePage {
   async setPrivateNote(page, note) {
     await this.setValue(page, this.privateNoteTextArea, note);
     await page.click(this.privateNoteSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**

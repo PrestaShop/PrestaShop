@@ -283,7 +283,7 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableFriendlyURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
@@ -295,7 +295,7 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableAccentedURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
@@ -307,7 +307,7 @@ class SeoAndUrls extends BOBasePage {
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchDisplayAttributesLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 
