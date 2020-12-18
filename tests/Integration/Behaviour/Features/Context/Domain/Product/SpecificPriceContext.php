@@ -34,7 +34,10 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\SpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
@@ -119,10 +122,12 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      */
     public function countProductSpecificPrices(string $productReference, int $expectedCount): void
     {
-        $productForEditing = $this->getProductForEditing($productReference);
-        $productSpecificPrices = $productForEditing->getSpecificPrices();
+        $productId = (int) $this->getSharedStorage()->get($productReference);
+        /** @var SpecificPriceListForEditing $productSpecificPrices */
+        $productSpecificPrices = $this->getQueryBus()->handle(new GetEditableSpecificPricesList($productId));
 
-        Assert::assertEquals($expectedCount, count($productSpecificPrices));
+        Assert::assertEquals($expectedCount, $productSpecificPrices->getTotalSpecificPricesCount());
+        Assert::assertEquals($expectedCount, count($productSpecificPrices->getSpecificPrices()));
     }
 
     /**
@@ -135,24 +140,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     public function assertProductSpecificPrice(string $specificPriceReference, string $productReference, SpecificPriceForEditing $expectedSpecificPrice): void
     {
         $specificPriceId = (int) $this->getSharedStorage()->get($specificPriceReference);
-        $productForEditing = $this->getProductForEditing($productReference);
-        $productSpecificPrices = $productForEditing->getSpecificPrices();
-
-        $productSpecificPrice = array_reduce($productSpecificPrices, function ($carry, $item) use ($specificPriceId) {
-            if (null !== $carry) {
-                return $carry;
-            }
-
-            return $item->getSpecificPriceId() === $specificPriceId ? $item : null;
-        });
-
-        if (null === $productSpecificPrice) {
-            throw new \RuntimeException(sprintf(
-                'Could not find specific price %s for product %s',
-                $specificPriceReference,
-                $productReference
-            ));
-        }
+        $productSpecificPrice = $this->getQueryBus()->handle(new GetSpecificPriceForEditing($specificPriceId));
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
