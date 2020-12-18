@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Translation\Translator;
+
 /**
  * Class CombinationCore.
  */
@@ -37,6 +39,7 @@ class CombinationCore extends ObjectModel
     /** @var string */
     public $supplier_reference;
 
+    /** @var string */
     public $location = '';
 
     public $ean13;
@@ -115,20 +118,21 @@ class CombinationCore extends ObjectModel
     ];
 
     /**
-     * @param null $id
-     * @param null $id_lang
-     * @param null $id_shop
+     * @param int|null $id
+     * @param int|null $id_lang
+     * @param int|null $id_shop
+     * @param Translator|null $translator
      */
-    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    public function __construct(?int $id = null, ?int $id_lang = null, ?int $id_shop = null, ?Translator $translator = null)
     {
-        parent::__construct($id, $id_lang, $id_shop);
+        parent::__construct($id, $id_lang, $id_shop, $translator);
         $this->loadStockData();
     }
 
     /**
      * Fill the variables used for stock management.
      */
-    public function loadStockData()
+    public function loadStockData(): void
     {
         if (false === Validate::isLoadedObject($this)) {
             return;
