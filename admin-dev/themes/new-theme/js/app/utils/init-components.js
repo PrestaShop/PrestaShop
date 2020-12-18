@@ -34,6 +34,7 @@ import GeneratableInput from '@js/components/generatable-input.js';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import MultistoreConfigField from '@js/components/form/multistore-config-field.js';
 import {EventEmitter} from '@components/event-emitter';
 
 const initPrestashopComponents = () => {
@@ -89,6 +90,7 @@ const initPrestashopComponents = () => {
     CountryStateSelectionToggler,
     CountryDniRequiredToggler,
     TextWithLengthCounter,
+    MultistoreConfigField,
   };
 };
 export default initPrestashopComponents;
