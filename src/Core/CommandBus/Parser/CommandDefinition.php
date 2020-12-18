@@ -56,6 +56,14 @@ class CommandDefinition
      */
     public function __construct($className, $commandType, $description)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since 1.7.8.0 use %s instead',
+                self::class,
+                CommandHandlerDefinition::class
+            )
+        );
+
         $this->className = $className;
         $this->commandType = $commandType;
         $this->description = $description;
