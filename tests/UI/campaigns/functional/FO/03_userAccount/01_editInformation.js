@@ -10,11 +10,14 @@ const loginCommon = require('@commonTests/loginBO');
 const FakerCustomer = require('@data/faker/customer');
 
 const createCustomerData = new FakerCustomer();
+const editCustomerData = new FakerCustomer();
 
 // Importing pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
+const foMyAccountPage = require('@pages/FO/myAccount');
+const foAccountIdentityPage = require('@pages/FO/myAccount/identity');
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 
@@ -106,6 +109,89 @@ describe('Create an account in FO and edit its information', async () => {
 
       const textColumn = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textColumn).to.equal(createCustomerData.email);
+    });
+
+    after(async () => {
+      page = await customersPage.closePage(browserContext, page, 0);
+    });
+  });
+
+  describe('Edit the created account in FO', async () => {
+    it('should go to FO home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+
+      await foHomePage.goToMyAccountPage(page);
+      const pageTitle = await foMyAccountPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+    });
+
+    it('should go account information page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
+
+      await foMyAccountPage.goToInformationPage(page);
+
+      const pageTitle = await foAccountIdentityPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(foAccountIdentityPage.pageTitle);
+    });
+
+    it('should edit the account', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
+
+      const textResult = await foAccountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData);
+      await expect(textResult).to.be.equal(foAccountIdentityPage.successfulUpdateMessage);
+    });
+
+    it('should check that the account is still connected after update', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'connectedUpdatedAccount', baseContext);
+
+      const isCustomerConnected = await foAccountIdentityPage.isCustomerConnected(page);
+      await expect(isCustomerConnected).to.be.true;
+    });
+  });
+
+  describe('Go to BO and check the account after update', async () => {
+    before(async () => {
+      page = await helper.newTab(browserContext);
+    });
+
+    it('should go to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBoAfterUpdate');
+
+      await dashboardPage.goTo(page, global.BO.URL);
+      const pageTitle = await dashboardPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    });
+
+    it('should go to customers page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageAfterUpdate', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customersParentLink,
+        dashboardPage.customersLink,
+      );
+
+      await customersPage.closeSfToolBar(page);
+
+      const pageTitle = await customersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customersPage.pageTitle);
+    });
+
+    it('should check that the updated customer exist', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditedCustomer', baseContext);
+
+      await customersPage.resetFilter(page);
+      await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
+
+      const textColumn = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      await expect(textColumn).to.equal(editCustomerData.email);
+    });
+
+    it('should delete the account', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAccount', baseContext);
+
+      const textResult = await customersPage.deleteCustomer(page, 1);
+      await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
     });
 
     after(async () => {
