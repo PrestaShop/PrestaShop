@@ -336,7 +336,7 @@ class Categories extends BOBasePage {
       this.categoriesListTableDraggableColumn(categoryRow),
       this.categoriesListTableDraggableColumn(position),
     );
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 
   /* Sort methods */

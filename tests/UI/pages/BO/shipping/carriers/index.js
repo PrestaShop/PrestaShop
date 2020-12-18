@@ -426,7 +426,7 @@ class Carriers extends BOBasePage {
       this.tableColumnPosition(newPosition),
     );
 
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 }
 

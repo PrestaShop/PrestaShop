@@ -185,10 +185,7 @@ describe('Filter And Quick Edit Categories', async () => {
         );
 
         if (isActionPerformed) {
-          const resultMessage = await categoriesPage.getTextContent(
-            page,
-            categoriesPage.growlMessageBlock,
-          );
+          const resultMessage = await categoriesPage.getGrowlMessageContent(page);
 
           await expect(resultMessage).to.contains(categoriesPage.successfulUpdateStatusMessage);
         }
