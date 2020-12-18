@@ -53,19 +53,20 @@
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">settings</i> {{ cardHeaderLabel }}
+
+        <span
+          class="help-box"
+          data-container="body"
+          data-toggle="popover"
+          data-trigger="hover"
+          data-placement="right"
+          data-content="{{ 'Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.'|trans({}, 'Admin.Shopparameters.Notification') }}"
+          title=""
+        >
+        </span>
       </h3>
       <div class="card-block row">
         <div class="card-text">
-            <div class="row">
-              <div class="col-sm">
-                <div class="alert alert-info" role="alert">
-                  <div class="alert-text">
-                    {{ 'Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.'|trans({}, 'Admin.Shopparameters.Notification') }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div class="form-group row">
               <label class="form-control-label">
                 {{ 'Shop domain'|trans }}
