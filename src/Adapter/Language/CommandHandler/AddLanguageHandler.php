@@ -48,7 +48,6 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
     {
         $this->assertLanguageWithIsoCodeDoesNotExist($command->getIsoCode());
 
-
         $language = $this->createLegacyLanguageObjectFromCommand($command);
 
         $this->copyNoPictureImage(
