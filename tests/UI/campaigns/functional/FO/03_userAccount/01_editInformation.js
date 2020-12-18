@@ -135,7 +135,7 @@ describe('Create an account in FO and edit its information', async () => {
     });
 
     it('should edit the account', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'editAccount', baseContext);
 
       const textResult = await foAccountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData);
       await expect(textResult).to.be.equal(foAccountIdentityPage.successfulUpdateMessage);
