@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\Kpi\ShoppingCartTotalKpi;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -1023,6 +1025,17 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     [$this->context->language->id => strtotime('+1 day')]
                 );
 
+                break;
+
+            case 'shopping_cart_total':
+                $cartId = Tools::getValue('cartId');
+                $cart = new Cart((int) $cartId);
+                if ($cart) {
+                    $value = $this->context->getCurrentLocale()->formatPrice(
+                        ShoppingCartTotalKpi::getCartTotalPrice($cart),
+                        Currency::getIsoCodeById((int) $cart->id_currency)
+                    );
+                }
                 break;
 
             default:

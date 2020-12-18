@@ -26,22 +26,20 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% if liteDisplay is not defined or liteDisplay is sameas(false) %}
-    {% block cart_kpis %}
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="row">
-              {{ render(controller(
-                'PrestaShopBundle:Admin\\Common:renderKpiRow',
-                { 'kpiRow': cartKpi }
-              )) }}
-            </div>
+  {% block cart_kpis %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="row">
+            {{ render(controller(
+              'PrestaShopBundle:Admin\\Common:renderKpiRow',
+              { 'kpiRow': cartKpi }
+            )) }}
           </div>
         </div>
       </div>
-    {% endblock %}
-  {% endif %}
+    </div>
+  {% endblock %}
 
   <div class="row">
     <div class="col">

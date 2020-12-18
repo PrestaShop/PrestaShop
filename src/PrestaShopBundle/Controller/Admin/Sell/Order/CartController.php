@@ -91,7 +91,6 @@ class CartController extends FrameworkBundleAdminController
             'cartView' => $cartView,
             'layoutTitle' => $this->trans('View', 'Admin.Actions'),
             'enableSidebar' => true,
-            'liteDisplay' => 1 === (int) $request->query->get('liteDisplaying'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartKpi' => $kpiRowFactory->build(),
             'createOrderFromCartLink' => $this->generateUrl('admin_orders_create', [

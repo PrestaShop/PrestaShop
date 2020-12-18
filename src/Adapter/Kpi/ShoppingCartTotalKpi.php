@@ -74,10 +74,10 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $helper->title = $translator->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = $this->locale->formatPrice(
-            $this->getCartTotalPrice($cart),
+            self::getCartTotalPrice($cart),
             Currency::getIsoCodeById((int) $cart->id_currency)
         );
-        $helper->source = Context::getContext()->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=average_order_value';
+        $helper->source = Context::getContext()->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=shopping_cart_total&cartId=' . $cart->id;
 
         return $helper->generate();
     }
@@ -97,7 +97,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
      *
      * @return float
      */
-    private function getCartTotalPrice(Cart $cart)
+    public static function getCartTotalPrice(Cart $cart)
     {
         $summary = $cart->getSummaryDetails();
 
