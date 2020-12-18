@@ -74,7 +74,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $helper->title = $translator->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = $this->locale->formatPrice(
-            self::getCartTotalPrice($cart),
+            $cart->getCartTotalPrice(),
             Currency::getIsoCodeById((int) $cart->id_currency)
         );
         $helper->source = Context::getContext()->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=shopping_cart_total&cartId=' . $cart->id;
@@ -90,30 +90,5 @@ final class ShoppingCartTotalKpi implements KpiInterface
     public function setOptions(array $options)
     {
         $this->options = $options;
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return float
-     */
-    public static function getCartTotalPrice(Cart $cart)
-    {
-        $summary = $cart->getSummaryDetails();
-
-        $id_order = (int) Order::getIdByCartId($cart->id);
-        $order = new Order($id_order);
-
-        if (Validate::isLoadedObject($order)) {
-            $taxCalculationMethod = $order->getTaxCalculationMethod();
-        } else {
-            $taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
-        }
-
-        $totalPrice = $taxCalculationMethod == PS_TAX_EXC ?
-            $summary['total_price_without_tax'] :
-            $summary['total_price'];
-
-        return $totalPrice;
     }
 }
