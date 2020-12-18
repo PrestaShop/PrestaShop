@@ -26,17 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
-use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\IpAddressType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class returning the content of the form in the maintenance page.
@@ -44,27 +41,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class MaintenanceType extends TranslatorAwareType
 {
-    /**
-     * @var ShopConfigurationInterface
-     */
-    private $shopConfiguration;
-
-    /**
-     * @var bool
-     */
-    private $isAllShopContext;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        ShopConfigurationInterface $shopConfiguration,
-        MultistoreContextCheckerInterface $multistoreContext
-    ) {
-        parent::__construct($translator, $locales);
-        $this->shopConfiguration = $shopConfiguration;
-        $this->isAllShopContext = $multistoreContext->isAllShopContext();
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -78,7 +54,6 @@ class MaintenanceType extends TranslatorAwareType
                     'required' => true,
                     'attr' => [
                         'multistore_configuration_key' => 'PS_SHOP_ENABLE',
-                        'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_SHOP_ENABLE'),
                     ],
                     'label' => $this->trans('Enable Shop', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
@@ -96,7 +71,6 @@ class MaintenanceType extends TranslatorAwareType
                     'attr' => [
                         'class' => 'col-md-5',
                         'multistore_configuration_key' => 'PS_MAINTENANCE_IP',
-                        'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_IP'),
                     ],
                     'label' => $this->trans('Maintenance IP', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
@@ -119,7 +93,6 @@ class MaintenanceType extends TranslatorAwareType
                     'disabled' => true,
                     'attr' => [
                         'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
-                        'disabled' => !$this->isAllShopContext && !$this->shopConfiguration->isOverridenByCurrentContext('PS_MAINTENANCE_TEXT'),
                     ],
                     'label' => $this->trans('Custom maintenance text', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(

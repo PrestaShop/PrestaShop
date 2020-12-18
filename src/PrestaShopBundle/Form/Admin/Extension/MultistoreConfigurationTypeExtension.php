@@ -67,20 +67,27 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $addMultistoreConfig = $this->multistoreFeature->isUsed() && !$this->multistoreContext->isAllShopContext();
-        if (!$addMultistoreConfig) {
+        if (!$this->multistoreFeature->isUsed() || $this->multistoreContext->isAllShopContext()) {
             return;
         }
-
+        $isAllShopContext = $this->multistoreContext->isAllShopContext();
         $configuration = $this->configuration;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($configuration) {
 
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($configuration, $isAllShopContext) {
             $form = $event->getForm();
             foreach ($form->all() as $child) {
                 $options = $child->getConfig()->getOptions();
                 if (!isset($options['attr']['multistore_configuration_key'])) {
                     continue;
                 }
+
+                // update current field with disabled attribute
+                $options['attr']['disabled'] = !$isAllShopContext && !$configuration->isOverridenByCurrentContext($options['attr']['multistore_configuration_key']);
+                $form->add(
+                    $child->getName(),
+                    get_class($child->getConfig()->getType()->getInnerType()),
+                    $options
+                );
 
                 // for each field in the configuration form, we add a multistore checkbox
                 $fieldName = 'multistore_' . $child->getName();
