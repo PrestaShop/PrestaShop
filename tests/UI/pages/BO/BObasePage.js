@@ -352,4 +352,13 @@ module.exports = class BOBasePage extends CommonPage {
   getAlertSuccessBlockContent(page) {
     return this.getTextContent(page, this.alertSuccessBlock);
   }
+
+  /**
+   * Get text content of alert success block paragraph
+   * @param page
+   * @return {Promise<string>}
+   */
+  getAlertSuccessBlockParagraphContent(page) {
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
 };

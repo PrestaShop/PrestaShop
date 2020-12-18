@@ -106,7 +106,7 @@ class SeoAndUrls extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Column methods */
@@ -163,7 +163,7 @@ class SeoAndUrls extends BOBasePage {
       ),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */

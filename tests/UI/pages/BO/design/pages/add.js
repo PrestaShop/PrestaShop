@@ -39,7 +39,7 @@ class AddPage extends BOBasePage {
     await page.click(this.indexation(pageData.indexation ? 1 : 0));
     await page.click(this.displayed(pageData.displayed ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.savePageButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

@@ -55,7 +55,7 @@ class LinkWidgets extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(hookId, row)}[aria-expanded='true']`),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(hookId, row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

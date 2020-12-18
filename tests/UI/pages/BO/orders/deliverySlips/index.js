@@ -109,7 +109,7 @@ class DeliverySlips extends BOBasePage {
    */
   async saveDeliverySlipOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveDeliverySlipOptionsButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 module.exports = new DeliverySlips();

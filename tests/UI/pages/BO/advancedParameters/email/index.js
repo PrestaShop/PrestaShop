@@ -159,7 +159,7 @@ class Email extends BOBasePage {
   async deleteEmailLog(page, row) {
     this.dialogListener(page, true);
     await this.waitForSelectorAndClick(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -181,7 +181,7 @@ class Email extends BOBasePage {
     ]);
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -316,7 +316,7 @@ class Email extends BOBasePage {
     await page.click(this.gridActionButton);
     await this.waitForSelectorAndClick(page, this.eraseAllButton);
 
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

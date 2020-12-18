@@ -64,7 +64,7 @@ class AddBrand extends BOBasePage {
     await page.click(this.enabledSwitchLabel(brandData.enabled ? 1 : 0));
     // Save Created brand
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

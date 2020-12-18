@@ -122,7 +122,7 @@ class Pages extends BOBasePage {
     // Click on delete and wait for modal
     this.dialogListener(page);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(table, row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -150,7 +150,7 @@ class Pages extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDeleteWithBulkActions(page, table);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -220,7 +220,7 @@ class Pages extends BOBasePage {
       page,
       enable ? this.bulkActionsEnableButton(table) : this.bulkActionsDisableButton(table),
     );
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

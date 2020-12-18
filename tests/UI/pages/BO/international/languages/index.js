@@ -164,7 +164,7 @@ class Languages extends LocalizationBasePage {
       ),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 
@@ -214,7 +214,7 @@ class Languages extends LocalizationBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -239,7 +239,7 @@ class Languages extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteLanguages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

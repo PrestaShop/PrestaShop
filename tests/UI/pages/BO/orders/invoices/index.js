@@ -143,7 +143,7 @@ class Invoice extends BOBasePage {
    */
   async saveInvoiceOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveInvoiceOptionsButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
