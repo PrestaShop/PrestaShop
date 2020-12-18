@@ -116,7 +116,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
             $this->getProductStockInformation($product),
-            $this->getVirtualProductFile($product)
+            $this->getVirtualProductFile($product),
             $this->getProductSpecificPrices($product)
         );
     }

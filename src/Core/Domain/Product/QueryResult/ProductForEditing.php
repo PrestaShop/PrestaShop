@@ -127,7 +127,7 @@ class ProductForEditing
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
         ProductStockInformation $stockInformation,
-        ?VirtualProductFileForEditing $virtualProductFile
+        ?VirtualProductFileForEditing $virtualProductFile,
         array $specificPrices
     ) {
         $this->productId = $productId;
