@@ -1487,7 +1487,7 @@ class LinkCore
             'relative_protocol' => true,
             'with_id_in_anchor' => false,
             'extra_params' => [],
-            'add_anchor' => true
+            'add_anchor' => true,
         ];
         $params = array_merge($default, $params);
 
