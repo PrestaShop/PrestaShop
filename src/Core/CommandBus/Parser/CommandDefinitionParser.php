@@ -46,6 +46,14 @@ final class CommandDefinitionParser
      */
     public function parseDefinition($commandName)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since 1.7.8.0 use %s instead',
+                __METHOD__,
+                CommandHandlerDefinitionParser::class . '::parseDefinition()'
+            )
+        );
+
         return new CommandDefinition(
             $commandName,
             $this->parseType($commandName),

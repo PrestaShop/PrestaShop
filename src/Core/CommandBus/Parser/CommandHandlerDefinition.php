@@ -140,7 +140,7 @@ class CommandHandlerDefinition
      */
     public function getSimpleCommandClass(): string
     {
-        return substr($this->commandClass, strrpos($this->commandClass, '\\') + 1);
+        return substr($this->getCommandClass(), strrpos($this->getCommandClass(), '\\') + 1);
     }
 
     /**
