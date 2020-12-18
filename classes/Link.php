@@ -1485,6 +1485,9 @@ class LinkCore
             'alias' => null,
             'ssl' => null,
             'relative_protocol' => true,
+            'with_id_in_anchor' => false,
+            'extra_params' => [],
+            'add_anchor' => true
         ];
         $params = array_merge($default, $params);
 
@@ -1505,7 +1508,10 @@ class LinkCore
                     $params['id_shop'],
                     (isset($params['ipa']) ? (int) $params['ipa'] : 0),
                     false,
-                    $params['relative_protocol']
+                    $params['relative_protocol'],
+                    $params['with_id_in_anchor'],
+                    $params['extra_params'],
+                    $params['add_anchor']
                 );
 
                 break;
