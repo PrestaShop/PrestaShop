@@ -57,7 +57,7 @@ describe('View customer service message', async () => {
   });
 
   it('should go on contact us page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
     // Go to contact us page
     await homePage.goToContactUsPage(page);
@@ -141,7 +141,7 @@ describe('View customer service message', async () => {
     expect(text).to.contains('Dear Customer, Regards, Customer service Send');
   });
 
-  it('should check orders and messages timeline', async function(){
+  it('should check orders and messages timeline', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
 
     const text = await viewPage.getOrdersAndMessagesTimeline(page);
