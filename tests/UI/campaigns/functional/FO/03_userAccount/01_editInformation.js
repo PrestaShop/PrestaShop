@@ -117,7 +117,7 @@ describe('Create an account in FO and edit its information', async () => {
   });
 
   describe('Edit the created account in FO', async () => {
-    it('should go to FO home page', async function () {
+    it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
