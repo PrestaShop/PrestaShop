@@ -58,7 +58,7 @@ class CombinationStock
     private $location;
 
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     private $availableDate;
 
