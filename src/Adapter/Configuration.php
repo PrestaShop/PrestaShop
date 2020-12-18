@@ -288,16 +288,6 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function isOverridenByCurrentContext(string $key): bool
-    {
-        return ConfigurationLegacy::isOverridenByCurrentContext($key);
-    }
-
-    /**
      * Get localized configuration in all languages
      *
      * @param string $key
