@@ -14,3 +14,9 @@ parameters:
 		- Order
 		- OrderInvoice
 		- Product
+
+services:
+	-
+		class: Tests\PHPStan\UseStrictTypesForNewClassesRule
+		tags:
+			- phpstan.rules.rule
