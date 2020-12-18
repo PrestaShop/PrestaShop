@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,27 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
-export default class MultistoreConfigField {
-  constructor() {
-    this.updateMultistoreFieldOnChange();
-  }
-
-  updateMultistoreFieldOnChange() {
-    $('.multistore-checkbox').on('change', function () {
-      const input = $(this).closest('.form-group').find(':input:not(.multistore-checkbox)');
-      const inputContainer = $(this).closest('.form-group').find('.col-sm');
-      const labelContainer = $(this).closest('.form-group').find('.form-control-label');
-      if ($(this).is(':checked') === false) {
-        inputContainer.addClass('disabled');
-        labelContainer.addClass('disabled');
-        input.prop('disabled', true);
-      } else {
-        inputContainer.removeClass('disabled');
-        labelContainer.removeClass('disabled');
-        input.prop('disabled', false);
-      }
-    });
-  }
+interface MultiStoreConfiguratorInterface extends DataConfigurationInterface
+{
+    /**
+     * Remove fields that are disabled (multistore checkbox unchecked)
+     *
+     * @param array $configuration
+     *
+     * @return array
+     */
+    public function removeDisabledFields(array $configuration): array;
 }
