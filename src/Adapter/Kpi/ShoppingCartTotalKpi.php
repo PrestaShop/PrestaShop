@@ -29,12 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use Cart;
 use Context;
 use Currency;
-use Group;
 use HelperKpi;
-use Order;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use Validate;
 
 /**
  * {@inheritdoc}
