@@ -27,13 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\MultiStoreConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
  */
-class MaintenanceConfiguration implements DataConfigurationInterface
+class MaintenanceConfiguration implements MultiStoreConfiguratorInterface
 {
     /**
      * @var Configuration
@@ -99,7 +99,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
      *
      * @return array
      */
-    private function removeDisabledFields(array $configuration): array
+    public function removeDisabledFields(array $configuration): array
     {
         if ($this->shopContext->isAllShopContext()) {
             return $configuration;
