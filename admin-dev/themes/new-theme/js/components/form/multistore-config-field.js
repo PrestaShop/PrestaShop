@@ -25,11 +25,25 @@
 
 const {$} = window;
 
-$(() => {
-  window.prestashop.component.initComponents(
-    [
-      'MultistoreConfigField',
-      'TinyMCEEditor',
-    ],
-  );
-});
+export default class MultistoreConfigField {
+  constructor() {
+    this.updateMultistoreFieldOnChange();
+  }
+
+  updateMultistoreFieldOnChange() {
+    $('.multistore-checkbox').on('change', function() {
+      const input = $(this).closest('.form-group').find(':input:not(.multistore-checkbox)');
+      const inputContainer = $(this).closest('.form-group').find('.col-sm');
+      const labelContainer = $(this).closest('.form-group').find('.form-control-label');
+      if ($(this).is(':checked') === false) {
+        inputContainer.addClass('disabled');
+        labelContainer.addClass('disabled');
+        input.prop('disabled', true);
+      } else {
+        inputContainer.removeClass('disabled');
+        labelContainer.removeClass('disabled');
+        input.prop('disabled', false);
+      }
+    });
+  }  
+}
