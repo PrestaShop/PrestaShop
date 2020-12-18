@@ -1519,11 +1519,25 @@ class OrderController extends FrameworkBundleAdminController
         }
         sort($paginationNumOptions);
 
+        $isColumnLocationDisplayed = false;
+        $isColumnRefundedDisplayed = false;
+
+        foreach (array_slice($orderForViewing->getProducts()->getProducts(), $paginationNum) as $product) {
+            if (!empty($product->getLocation())) {
+                $isColumnLocationDisplayed = true;
+            }
+            if ($product->getQuantityRefunded() > 0) {
+                $isColumnRefundedDisplayed = true;
+            }
+        }
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig', [
             'orderForViewing' => $orderForViewing,
             'cancelProductForm' => $cancelProductForm->createView(),
             'orderCurrency' => $orderCurrency,
             'paginationNum' => $paginationNum,
+            'isColumnLocationDisplayed' => $isColumnLocationDisplayed,
+            'isColumnRefundedDisplayed' => $isColumnRefundedDisplayed,
         ]);
     }
 
