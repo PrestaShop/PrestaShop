@@ -354,20 +354,3 @@
   {% endif %}
   </div>
 {% endmacro %}
-
-{% macro multistore_config_row(form, options = {}) %}
-  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
-
-  <div class="form-group row">
-      {% set multistoreCheckboxName = 'multistore_' ~ form.vars.name %}
-      {% if attribute(form.parent, multistoreCheckboxName) is defined %}
-        {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
-        {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
-      {% endif %}
-      {{ self.label_with_help(form.vars.label, form.vars.help) }}
-    <div class="col-sm{% if form.vars.attr.disabled is defined and form.vars.attr.disabled %} disabled{% endif %}">
-      {{ form_errors(form) }}
-      {{ form_widget(form, options) }}
-    </div>
-  </div>
-{% endmacro %}

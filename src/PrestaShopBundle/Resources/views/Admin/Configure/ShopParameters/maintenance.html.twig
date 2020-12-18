@@ -25,6 +25,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme generalForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block content %}
   {{ form_start(generalForm, {'attr' : {'class': 'form', 'id': 'form-maintenance'} }) }}
@@ -36,9 +37,9 @@
             </h3>
             <div class="card-block row">
               <div class="card-text">
-                  {{ ps.multistore_config_row(generalForm.enable_shop) }}
-                  {{ ps.multistore_config_row(generalForm.maintenance_ip, { 'currentIp': currentIp}) }}
-                  {{ ps.multistore_config_row(generalForm.maintenance_text) }}
+                  {{ form_row(generalForm.enable_shop) }}
+                  {{ form_row(generalForm.maintenance_ip, { 'currentIp': currentIp}) }}
+                  {{ form_row(generalForm.maintenance_text) }}
                   {{ form_rest(generalForm) }}
               </div>
             </div>
