@@ -17,7 +17,7 @@ const viewPage = require('@pages/BO/customerService/customerService/view');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerService_orderMessages_viewCustomerMessage';
+const baseContext = 'functional_BO_customerService_orderMessages_viewCustomerService';
 
 // Import data
 const ContactUsFakerData = require('@data/faker/contactUs');
@@ -32,7 +32,7 @@ let messageDateTime = '';
 Send message by customer to customer service in FO
 View customer message in BO
  */
-describe('View customer service message', async () => {
+describe('View customer service messages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
