@@ -71,7 +71,7 @@
         <th class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
           <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
         </th>
-        <th>
+        <th {% if not isAvailableQuantityDisplayed %}class="d-none"{% endif %}>
           <p>{{ 'Available'|trans({}, 'Admin.Global') }}</p>
         </th>
         <th>
