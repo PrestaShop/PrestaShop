@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Customization;
 use DateTime;
 use Pack;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
@@ -51,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
@@ -59,7 +57,6 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
-use SpecificPrice;
 use Tag;
 
 /**
@@ -116,8 +113,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
             $this->getProductStockInformation($product),
-            $this->getVirtualProductFile($product),
-            $this->getProductSpecificPrices($product)
+            $this->getVirtualProductFile($product)
         );
     }
 
@@ -374,37 +370,5 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (int) $productDownload->nb_downloadable,
             $productDownload->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($productDownload->date_expiration)
         );
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return SpecificPriceForEditing[]
-     */
-    private function getProductSpecificPrices(Product $product): array
-    {
-        return array_map(function ($specificPrice): SpecificPriceForEditing {
-            $dateFrom = DateTimeUtil::NULL_VALUE !== $specificPrice['from'] ? new DateTime($specificPrice['from']) : null;
-            $dateTo = DateTimeUtil::NULL_VALUE !== $specificPrice['to'] ? new DateTime($specificPrice['to']) : null;
-
-            return new SpecificPriceForEditing(
-                (int) $specificPrice['id_specific_price'],
-                $specificPrice['reduction_type'],
-                new DecimalNumber($specificPrice['reduction']),
-                (bool) $specificPrice['reduction_tax'],
-                new DecimalNumber($specificPrice['price']),
-                (int) $specificPrice['from_quantity'],
-                $dateFrom,
-                $dateTo,
-                $specificPrice['id_shop_group'] ?: null,
-                $specificPrice['id_shop'] ?: null,
-                $specificPrice['id_cart'] ?: null,
-                $specificPrice['id_currency'] ?: null,
-                $specificPrice['id_specific_price_rule'] ?: null,
-                $specificPrice['id_country'] ?: null,
-                $specificPrice['id_group'] ?: null,
-                $specificPrice['id_customer'] ?: null
-            );
-        }, SpecificPrice::getByProductId($product->id, false));
     }
 }
