@@ -1,14 +1,3 @@
-{% set isColumnLocationDisplayed = false %}
-{% set isColumnRefundedDisplayed = false %}
-{% for product in orderForViewing.products.products|slice(0, paginationNum) %}
-    {% if product.location is not empty %}
-        {% set isColumnLocationDisplayed = true %}
-    {% endif %}
-    {% if product.quantityRefunded > 0 %}
-        {% set isColumnRefundedDisplayed = true %}
-    {% endif %}
-{% endfor %}
-
 {% for product in orderForViewing.products.products %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
         'product': product,
