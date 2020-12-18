@@ -53,12 +53,12 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $this->assertLanguageWithIsoCodeDoesNotExist($language, $command);
         $this->assertDefaultLanguageIsNotDisabled($command);
 
-        $this->copyNoPictureIfChanged($language, $command);
         $this->updateEmployeeLanguage($command);
         $this->moveTranslationsIfIsoChanged($language, $command);
 
         $this->updateLanguageWithCommandData($language, $command);
         $this->updateShopAssociationIfChanged($language, $command);
+        $this->copyNoPictureIfChanged($language, $command);
         $this->uploadFlagImageIfChanged($language, $command);
     }
 
