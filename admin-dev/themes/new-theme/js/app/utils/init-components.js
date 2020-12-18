@@ -31,6 +31,7 @@ import ChoiceTable from '@js/components/choice-table.js';
 import ChoiceTree from '@js/components/form/choice-tree.js';
 import MultipleChoiceTable from '@js/components/multiple-choice-table.js';
 import GeneratableInput from '@js/components/generatable-input.js';
+import MultistoreConfigField from '@js/components/form/multistore-config-field.js';
 import {EventEmitter} from '@components/event-emitter';
 
 const initPrestashopComponents = () => {
@@ -83,6 +84,7 @@ const initPrestashopComponents = () => {
     ChoiceTree,
     MultipleChoiceTable,
     GeneratableInput,
+    MultistoreConfigField,
   };
 };
 export default initPrestashopComponents;
