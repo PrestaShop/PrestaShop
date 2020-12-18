@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
@@ -70,10 +71,11 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
         if (!$this->multistoreFeature->isUsed() || $this->multistoreContext->isAllShopContext()) {
             return;
         }
-        $isAllShopContext = $this->multistoreContext->isAllShopContext();
-        $configuration = $this->configuration;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($configuration, $isAllShopContext) {
+        $configuration = $this->configuration;
+        $multistoreContext = $this->multistoreContext;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($configuration, $multistoreContext) {
             $form = $event->getForm();
             foreach ($form->all() as $child) {
                 $options = $child->getConfig()->getOptions();
@@ -81,8 +83,16 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
                     continue;
                 }
 
+                // Check if current configuration is overidden by current shop / group shop context
+                $shopConstraint = new ShopConstraint(
+                    $multistoreContext->getContextShopId(),
+                    $multistoreContext->getContextShopGroup()->id,
+                    true
+                );
+                $isOveriddenInCurrentContext = $configuration->has($options['attr']['multistore_configuration_key'], $shopConstraint);
+
                 // update current field with disabled attribute
-                $options['attr']['disabled'] = !$isAllShopContext && !$configuration->isOverridenByCurrentContext($options['attr']['multistore_configuration_key']);
+                $options['attr']['disabled'] = !$multistoreContext->isAllShopContext() && !$isOveriddenInCurrentContext;
                 $form->add(
                     $child->getName(),
                     get_class($child->getConfig()->getType()->getInnerType()),
@@ -93,7 +103,7 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
                 $fieldName = 'multistore_' . $child->getName();
                 $form->add($fieldName, CheckboxType::class, [
                     'required' => false,
-                    'data' => $configuration->isOverridenByCurrentContext($options['attr']['multistore_configuration_key']),
+                    'data' => $isOveriddenInCurrentContext,
                     'label' => false,
                     'attr' => [
                         'material_design' => true,
