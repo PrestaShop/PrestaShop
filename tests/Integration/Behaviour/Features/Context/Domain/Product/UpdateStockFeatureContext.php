@@ -76,7 +76,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param int $length
      */
-    public function updateLocationWithTooLongName(string $productReference, int $length)
+    public function updateLocationWithTooLongName(string $productReference, int $length): void
     {
         $this->cleanLastException();
         $command = new UpdateProductStockInformationCommand($this->getSharedStorage()->get($productReference));
