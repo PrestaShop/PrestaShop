@@ -132,4 +132,22 @@ describe('View customer service message', async () => {
     expect(text).to.contains('Attachment');
     expect(text).to.contains(contactUsData.message);
   });
+
+  it('should check your answer form', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkYourAnswerForm', baseContext);
+
+    const text = await viewPage.getYourAnswerContent(page);
+    expect(text).to.contains(`Your answer to ${contactUsData.emailAddress}`);
+    expect(text).to.contains('Dear Customer, Regards, Customer service Send');
+  });
+
+  it('should check orders and messages timeline', async function(){
+    await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersAndMessagesForm', baseContext);
+
+    const text = await viewPage.getOrdersAndMessagesTimeline(page);
+    expect(text).to.contains('Orders and messages timeline');
+    expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
+    expect(text).to.contains(`Message to: ${contactUsData.subject}`);
+    expect(text).to.contains(contactUsData.message);
+  });
 });
