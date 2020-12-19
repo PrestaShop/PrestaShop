@@ -83,10 +83,19 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     }
 
     /**
-     * {@inheritdoc}
+     * Get query that searches grid rows.
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @deprecated deprecated since 1.7.8.0
+     * @see RequestSql::getSearchQueryBuilder
+     *
+     * @return QueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         $searchQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
 
         return $searchQueryBuilder
@@ -97,10 +106,19 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     }
 
     /**
-     * {@inheritdoc}
+     * Get query that counts grid rows.
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @deprecated deprecated since 1.7.8.0
+     * @see RequestSql::getCountQueryBuilder
+     *
+     * @return QueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         $countQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
         $countQueryBuilder->select('COUNT(rs.id_request_sql)');
 
@@ -112,10 +130,15 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
      *
      * @param SearchCriteriaInterface $criteria
      *
+     * @deprecated deprecated since 1.7.8.0
+     * @see RequestSql::buildQueryBySearchCriteria
+     *
      * @return QueryBuilder
      */
     private function buildQueryBySearchCriteria(SearchCriteriaInterface $criteria)
     {
+        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->requestSqlTable, 'rs');
 
