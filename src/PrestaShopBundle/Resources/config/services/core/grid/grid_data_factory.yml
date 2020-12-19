@@ -28,7 +28,7 @@ services:
     prestashop.core.grid.data_factory.request_sql:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
-            - '@prestashop.core.admin.request_sql.repository'
+            - '@prestashop.core.grid.query_builder.request_sql'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'request_sql'
