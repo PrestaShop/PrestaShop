@@ -339,7 +339,13 @@ $header-text-color: #4e6167 !default;
       > .material-icons {
         padding-right: 0.3125rem;
         font-size: 1.25rem;
-        color: $primary;
+        color: $medium-gray;
+      }
+
+      &:hover {
+        .material-icons {
+          color: $primary;
+        }
       }
     }
 
