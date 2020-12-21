@@ -118,7 +118,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
      * @param SearchCriteriaInterface $searchCriteria
      *
      * @deprecated since 1.7.8.0
-     * @see RequestSqlQueryBuilder::getCountQueryBuilder
+     * @see RequestSqlQueryBuilder::getCountQueryBuilder()
      *
      * @return QueryBuilder
      */
