@@ -283,7 +283,7 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableFriendlyURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
