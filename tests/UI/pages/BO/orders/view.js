@@ -262,6 +262,15 @@ class Order extends BOBasePage {
     return this.downloadDocument(page, 3);
     /* eslint-enable no-return-assign, no-param-reassign */
   }
+
+  /**
+   * Is return products button visible
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isReturnProductsButtonVisible(page){
+    return this.elementVisible(page, '#order-view-page button.btn.btn-action.return-product-display');
+  }
 }
 
 module.exports = new Order();

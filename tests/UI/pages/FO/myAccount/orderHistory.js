@@ -37,6 +37,16 @@ class OrderHistory extends FOBasePage {
   getOrderStatus(page, orderRow = 1) {
     return this.getTextContent(page, `${this.orderTableColumn(orderRow, 5)} span`);
   }
+
+  /**
+   *
+   * @param page
+   * @param orderRow
+   * @returns {Promise<void>}
+   */
+  async goToDetailsPage(page, orderRow = 1){
+     await this.clickAndWaitForNavigation(page, '#content > table > tbody > tr:nth-child(1) > td.text-sm-center.order-actions > a:nth-child(1)')
+  }
 }
 
 module.exports = new OrderHistory();
