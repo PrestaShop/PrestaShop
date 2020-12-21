@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\SpecificPrice\AbstractSpecificPriceHandler;
-use PrestaShop\PrestaShop\Adapter\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\AddSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -43,19 +42,6 @@ use SpecificPrice;
 final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler implements AddSpecificPriceHandlerInterface
 {
     /**
-     * @var SpecificPriceRepository
-     */
-    private $specificPriceRepository;
-
-    /**
-     * @param SpecificPriceRepository $specificPriceRepository
-     */
-    public function __construct(SpecificPriceRepository $specificPriceRepository)
-    {
-        $this->specificPriceRepository = $specificPriceRepository;
-    }
-
-    /**
      * @param AddSpecificPriceCommand $command
      *
      * @return SpecificPriceId
@@ -65,9 +51,21 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
      */
     public function handle(AddSpecificPriceCommand $command): SpecificPriceId
     {
-        $specificPrice = $this->createSpecificPriceFromCommand($command);
+        try {
+            $specificPrice = $this->createSpecificPriceFromCommand($command);
 
-        return $this->specificPriceRepository->add($specificPrice);
+            if (false === $specificPrice->validateFields(false)) {
+                throw new SpecificPriceConstraintException('Specific price contains invalid field values');
+            }
+
+            if (!$specificPrice->add()) {
+                throw new SpecificPriceException('Failed to add new specific price');
+            }
+        } catch (PrestaShopException $e) {
+            throw new SpecificPriceException('An error occurred when trying to add new specific price');
+        }
+
+        return new SpecificPriceId($specificPrice->id);
     }
 
     /**
@@ -93,7 +91,7 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
         $specificPrice->id_shop_group = $command->getShopGroupId() ?? 0;
         $specificPrice->id_shop = $command->getShopId() ?? 0;
         $specificPrice->id_cart = $command->getCartId() ?? 0;
-        $specificPrice->id_product_attribute = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
+        $specificPrice->id_product_attribute = $command->getProductAttributeId() ?? 0;
         $specificPrice->id_currency = $command->getCurrencyId() ?? 0;
         $specificPrice->id_specific_price_rule = $command->getCatalogPriceRuleId() ?? 0;
         $specificPrice->id_country = $command->getCountryId() ?? 0;
@@ -103,11 +101,16 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
         $specificPrice->to = DateTime::NULL_DATETIME;
 
         $from = $command->getDateTimeFrom();
+        $to = $command->getDateTimeTo();
+
+        if ($from && $to) {
+            $this->assertDateRangeIsNotInverse($from, $to);
+        }
+
         if ($from) {
             $specificPrice->from = $from->format('Y-m-d H:i:s');
         }
 
-        $to = $command->getDateTimeTo();
         if ($to) {
             $specificPrice->to = $to->format('Y-m-d H:i:s');
         }

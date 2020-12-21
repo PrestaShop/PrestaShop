@@ -4,8 +4,7 @@ services:
 
     prestashop.adapter.specific_price.command_handler.add_specific_price:
         class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\AddSpecificPriceHandler
-        arguments:
-            - '@prestashop.adapter.specific_price.repository.specific_price_repository'
+        deprecated: The "%service_id%" service is deprecated. You should use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand instead.
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand
