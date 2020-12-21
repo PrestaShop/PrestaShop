@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\RequestSqlQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Query\RequestSqlQueryBuilder;
 
 /**
  * Class RequestSqlRepository is responsible for retrieving RequestSql data from database.
