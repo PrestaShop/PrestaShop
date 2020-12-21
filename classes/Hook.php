@@ -204,7 +204,7 @@ class HookCore extends ObjectModel
 
         $hook_ids = static::getAllHookIds($withAliases, $refreshCache);
 
-        return isset($hook_ids[$hookName]) ? $hook_ids[$hookName] : false;
+        return $hook_ids[$hookName] ?? false;
     }
 
     /**
@@ -1032,8 +1032,8 @@ class HookCore extends ObjectModel
         $customer = $context->customer;
 
         $cache_id = self::MODULE_LIST_BY_HOOK_KEY
-            . ($shop instanceof Shop && isset($shop->id) ? '_' . $shop->id : '')
-            . ($customer instanceof Customer ? '_' . $customer->id : '');
+            . (isset($shop->id) ? '_' . $shop->id : '')
+            . (isset($customer->id) ? '_' . $customer->id : '');
 
         $useCache = (
             !in_array(
