@@ -97,10 +97,10 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     {
         @trigger_error(
             sprintf(
-                'The "%s()" method is deprecated since 1.7.8.0. Use %s instead.', 
-                __METHOD__, 
+                'The "%s()" method is deprecated since 1.7.8.0. Use %s instead.',
+                __METHOD__,
                 RequestSqlQueryBuilder::class . '::getSearchQueryBuilder()'
-            ), 
+            ),
             E_USER_DEPRECATED
         );
 
@@ -127,10 +127,10 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     {
         @trigger_error(
             sprintf(
-                'The "%s()" method is deprecated since 1.7.8.0. Use %s instead.', 
-                __METHOD__, 
+                'The "%s()" method is deprecated since 1.7.8.0. Use %s instead.',
+                __METHOD__,
                 RequestSqlQueryBuilder::class . '::getCountQueryBuilder()'
-            ), 
+            ),
             E_USER_DEPRECATED
         );
 
@@ -154,10 +154,10 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     {
         @trigger_error(
             sprintf(
-                'The "%s()" method is deprecated since 1.7.8.0. Use %s instead.', 
-                __METHOD__, 
+                'The "%s()" method is deprecated since 1.7.8.0. Use %s instead.',
+                __METHOD__,
                 RequestSqlQueryBuilder::class . '::buildQueryBySearchCriteria()'
-            ), 
+            ),
             E_USER_DEPRECATED
         );
 
