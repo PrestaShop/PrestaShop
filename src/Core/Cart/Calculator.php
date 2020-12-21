@@ -47,6 +47,11 @@ class Calculator
     protected $id_carrier;
 
     /**
+     * @var int|null
+     */
+    protected $orderId;
+
+    /**
      * @var CartRowCollection collection of cart content row (product+qty)
      */
     protected $cartRows;
@@ -78,12 +83,19 @@ class Calculator
      */
     protected $computePrecision;
 
-    public function __construct(Cart $cart, $carrierId, ?int $computePrecision = null)
+    /**
+     * @param Cart $cart
+     * @param $carrierId
+     * @param int|null $computePrecision
+     * @param int|null $orderId
+     */
+    public function __construct(Cart $cart, $carrierId, ?int $computePrecision = null, ?int $orderId = null)
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);
+        $this->orderId = $orderId;
         $this->cartRows = new CartRowCollection();
-        $this->fees = new Fees();
+        $this->fees = new Fees($this->orderId);
         $this->cartRules = new CartRuleCollection();
         $this->cartRuleCalculator = new CartRuleCalculator();
 

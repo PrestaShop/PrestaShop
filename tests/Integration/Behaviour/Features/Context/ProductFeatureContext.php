@@ -274,6 +274,23 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^product "(.+)" price is (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param float $price
+     */
+    public function setProductPrice(string $productName, float $price)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->price = $price;
+        $this->products[$productName]->save();
+
+        Product::flushPriceCache();
+        Product::resetStaticCache();
+        Cart::resetStaticCache();
+    }
+
+    /**
      * @Given /^the product "(.+)" minimal quantity is (\d+)$/
      *
      * @param string $productName

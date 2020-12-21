@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -51,7 +52,7 @@ class FrameworkBundleAdminController extends Controller
     const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
-     * @var Configuration
+     * @var ConfigurationInterface|Configuration
      */
     protected $configuration;
 

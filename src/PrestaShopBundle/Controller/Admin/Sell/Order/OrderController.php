@@ -233,7 +233,11 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         $summaryForm = $this->createForm(CartSummaryType::class);
-        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
+        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices(
+            [
+                'shop_id' => $shopContextChecker->getContextShopID(),
+            ]
+        );
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
@@ -533,6 +537,7 @@ class OrderController extends FrameworkBundleAdminController
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
             'paginationNum' => $paginationNum,
             'paginationNumOptions' => $paginationNumOptions,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
             'internalNoteForm' => $internalNoteForm->createView(),
         ]);
     }
@@ -646,7 +651,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
     {
-        $isStockManagementEnabled = $this->configuration->get('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
         if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
             return;
         }
@@ -733,6 +738,7 @@ class OrderController extends FrameworkBundleAdminController
                 'product' => $newProduct,
                 'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
                 'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
+                'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
                 'cancelProductForm' => $cancelProductForm->createView(),
                 'orderCurrency' => $orderCurrency,
             ]);
@@ -973,6 +979,7 @@ class OrderController extends FrameworkBundleAdminController
             'cancelProductForm' => $cancelProductForm->createView(),
             'isColumnLocationDisplayed' => $product->getLocation() !== '',
             'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
@@ -1455,6 +1462,7 @@ class OrderController extends FrameworkBundleAdminController
             'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThanZero(),
             'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
+            'shippingTotalDisplayed' => $orderForViewingPrices->getShippingPriceRaw()->isGreaterThanZero(),
             'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
         ]);
     }

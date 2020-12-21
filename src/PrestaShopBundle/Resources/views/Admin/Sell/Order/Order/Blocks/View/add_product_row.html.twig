@@ -55,7 +55,7 @@
   </td>
   <td id="addProductLocation" class="cellProductLocation"></td>
   <td id="addProductRefunded" class="cellProductRefunded"></td>
-  <td id="addProductAvailable"></td>
+  <td id="addProductAvailable"{% if not isAvailableQuantityDisplayed %} class="d-none"{% endif %}></td>
   <td id="addProductTotalPrice"></td>
   {% if orderForViewing.hasInvoice() %}
     <td class="addProductInvoice pr-2">

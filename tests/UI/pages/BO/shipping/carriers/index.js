@@ -9,6 +9,8 @@ class Carriers extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
+    this.growlMessageBlock = '#growls .growl-message:last-of-type';
+
     // Header links
     this.addNewCarrierLink = '#page-header-desc-carrier-new_carrier';
 
@@ -347,12 +349,12 @@ class Carriers extends BOBasePage {
   }
 
   /**
-   * Bulk enable/disable carriers
+   * Bulk set carriers status
    * @param page
    * @param action
-   * @returns {Promise<unknown>}
+   * @returns {Promise<void>}
    */
-  async bulkEnableDisableCarriers(page, action) {
+  async bulkSetStatus(page, action) {
     // Select all rows
     await Promise.all([
       page.click(this.bulkActionMenuButton),
@@ -382,29 +384,48 @@ class Carriers extends BOBasePage {
   }
 
   /**
-   * Get toggle column value for a row
+   * Get carrier status
    * @param page
    * @param row
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row = 1) {
+  async getStatus(page, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
   }
 
   /**
-   * Update Enable column for the value wanted in Brands list
+   * Set carriers status
    * @param page
    * @param row
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row = 1, valueWanted = true) {
+  async setStatus(page, row = 1, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+
+    if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.tableColumnActive(row));
       return true;
     }
+
     return false;
+  }
+
+  /**
+   * Change carrier position
+   * @param page
+   * @param actualPosition
+   * @param newPosition
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return this.getTextContent(page, this.growlMessageBlock);
   }
 }
 
