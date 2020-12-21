@@ -98,6 +98,15 @@
     </div>
   {{ form_end(currencyForm) }}
 
+  {% if languageDataError is defined and languageDataError %}
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-danger">
+          {{ 'Could not display symbol and format customization:'|trans({}, 'Admin.International.Feature') }} {{ languageDataError }}
+        </div>
+      </div>
+    </div>
+{% else %}
   <!-- Modal -->
   <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -114,4 +123,5 @@
       </div>
     </div>
   </div>
+  {% endif %}
 {% endblock %}
