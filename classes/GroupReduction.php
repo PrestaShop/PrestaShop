@@ -291,6 +291,6 @@ class GroupReductionCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
-        GroupReduction::$reduction_cache = [];
+        static::$reduction_cache = [];
     }
 }

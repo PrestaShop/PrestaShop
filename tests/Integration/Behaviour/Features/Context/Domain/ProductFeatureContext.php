@@ -59,9 +59,9 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given The category of product :productName has reduction of :reductionPercent% for the customer :customerReference
+     * @Given The default category of product :productName has a group reduction of :reductionPercent% for the customer :customerReference
      */
-    public function addReductionOnProductCategoryForCustomerGroup(string $productName, float $reductionPercent, string $customerReference)
+    public function addGroupReductionOnProductDefaultCategoryForCustomerGroup(string $productName, float $reductionPercent, string $customerReference)
     {
         $productId = $this->getProductIdByName($productName);
 
@@ -90,9 +90,9 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given The category of product :productName has no reduction
+     * @Given The default category of product :productName has no group reduction
      */
-    public function deleteReductionOnProductCategory(string $productName)
+    public function deleteGroupReductionOnProductDefaultCategory(string $productName)
     {
         $productId = $this->getProductIdByName($productName);
 

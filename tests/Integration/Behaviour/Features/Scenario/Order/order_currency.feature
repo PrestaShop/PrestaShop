@@ -31,7 +31,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I update the cart "dummy_cart" currency to "currency2"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
-    And the category of product "Mug The best is yet to come" has no reduction
+    And the default category of product "Mug The best is yet to come" has no group reduction
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
@@ -220,7 +220,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_incl  | 74.20  |
 
   Scenario: Update product quantity in order with secondary currency when its category has discount
-    Given the category of product "Mug The best is yet to come" has reduction of 50.00% for the customer "testCustomer"
+    Given the default category of product "Mug The best is yet to come" has a group reduction of 50.00% for the customer "testCustomer"
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 3                       |
       | price         | 11.90                   |
