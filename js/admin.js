@@ -364,6 +364,7 @@ function gencode(size)
   var chars = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
   for (var i = 1; i <= size; ++i)
     getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
+  getE('cart-rules-highlight').style.display = '';
 }
 
 var tpl_viewing_window = null;
