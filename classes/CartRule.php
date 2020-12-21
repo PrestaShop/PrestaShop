@@ -393,7 +393,8 @@ class CartRuleCore extends ObjectModel
         }
 
         $sql = '(SELECT SQL_NO_CACHE ' . $sql_part1 . '
-            WHERE cr.`id_customer` = ' . (int) $id_customer . ' OR cr.`highlight` = 1 OR cr.`code` = ""
+            WHERE (cr.`id_customer` = ' . (int) $id_customer . '
+            OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))
             ' . $sql_part2 . ')';
         if ($includeGeneric && (int) $id_customer != 0) {
             $sql .= ' UNION (SELECT ' . $sql_part1 . ' WHERE cr.`id_customer` = 0 ' . $sql_part2 . ')';
