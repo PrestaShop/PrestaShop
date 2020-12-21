@@ -154,11 +154,6 @@ module.exports = class BOBasePage extends CommonPage {
     this.alertDangerBlockParagraph = `${this.alertDangerBlock} div.alert-text p`;
     this.alertInfoBlockParagraph = `${this.alertInfoBlock} div.alert-text p`;
 
-    // Alert Box
-    this.alertBoxBloc = 'div.alert-box';
-    this.alertBoxTextSpan = `${this.alertBoxBloc} p.alert-text span`;
-    this.alertBoxButtonClose = `${this.alertBoxBloc} button.close`;
-
     // Modal dialog
     this.confirmationModal = '#confirmation_modal.show';
     this.modalDialog = `${this.confirmationModal} .modal-dialog`;
