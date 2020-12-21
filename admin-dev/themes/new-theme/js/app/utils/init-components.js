@@ -56,6 +56,14 @@ const initPrestashopComponents = () => {
           return;
         }
 
+        // EventEmitter is a special case it has no constructor and could be used via
+        // window.prestashop.component.EventEmitter straight away
+        if (component === 'EventEmitter') {
+          window.prestashop.instance[componentInstanceName] = window.prestashop.component[component];
+
+          return;
+        }
+
         window.prestashop.instance[componentInstanceName] = new window.prestashop.component[component]();
       });
 
