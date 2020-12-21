@@ -66,7 +66,7 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null): QueryBuilder
     {
         $searchQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
 
