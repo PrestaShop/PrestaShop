@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Currency;
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
@@ -80,7 +81,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
@@ -220,7 +220,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        /** @var MultistoreContextCheckerInterface $shopContextChecker */
+        /** @var ShopContext $shopContextChecker */
         $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
 
         if (!$shopContextChecker->isSingleShopContext()) {

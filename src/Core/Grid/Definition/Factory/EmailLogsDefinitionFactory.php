@@ -202,7 +202,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_lang', ChoiceType::class))
                     ->setTypeOptions([
                         'required' => false,
-                        'choices' => $this->languageChoiceProvider->getChoices(),
+                        'choices' => $this->languageChoiceProvider->getChoices([]),
                         'choice_translation_domain' => false,
                     ])
                     ->setAssociatedColumn('language')
