@@ -38,7 +38,7 @@ class ShopParamsGeneral extends BOBasePage {
   async setDisplaySuppliers(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.displaySuppliersLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -50,7 +50,7 @@ class ShopParamsGeneral extends BOBasePage {
   async setDisplayBrands(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.displayBrandsLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -62,7 +62,7 @@ class ShopParamsGeneral extends BOBasePage {
   async setMultiStoreStatus(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.enableMultiStoreLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

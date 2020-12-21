@@ -206,7 +206,7 @@ class Email extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.logEmailsLabel(toEnable ? 1 : 0));
     await page.$eval(this.saveEmailFormButton, el => el.click());
     await page.waitForNavigation();
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

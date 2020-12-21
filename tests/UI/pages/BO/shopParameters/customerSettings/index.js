@@ -76,7 +76,7 @@ class CustomerSettings extends BOBasePage {
     }
     await this.waitForSelectorAndClick(page, selector(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

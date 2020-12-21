@@ -199,7 +199,7 @@ describe('Filter and quick edit languages', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMainLanguage', baseContext);
 
       await languagesPage.setStatus(page, 1, false);
-      const textError = await languagesPage.getAlertDangerMessage(page);
+      const textError = await languagesPage.getAlertDangerBlockParagraphContent(page);
       await expect(textError).to.equal(languagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
     });
 

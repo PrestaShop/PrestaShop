@@ -146,11 +146,13 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
-    this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertBlock = 'div.alert';
+    this.alertSuccessBlock = `${this.alertBlock}.alert-success`;
+    this.alertDangerBlock = `${this.alertBlock}.alert-danger`;
+    this.alertInfoBlock = `${this.alertBlock}.alert-info`;
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
-    this.alertDangerBlock = 'div.alert.alert-danger';
     this.alertDangerBlockParagraph = `${this.alertDangerBlock} div.alert-text p`;
-    this.alertTextBlock = '.alert-text';
+    this.alertInfoBlockParagraph = `${this.alertInfoBlock} div.alert-text p`;
 
     // Alert Box
     this.alertBoxBloc = 'div.alert-box';
@@ -340,7 +342,7 @@ module.exports = class BOBasePage extends CommonPage {
    * @param page
    * @return {Promise<string>}
    */
-  getAlertDangerMessage(page) {
+  getAlertDangerBlockParagraphContent(page) {
     return this.getTextContent(page, this.alertDangerBlockParagraph);
   }
 
@@ -360,5 +362,14 @@ module.exports = class BOBasePage extends CommonPage {
    */
   getAlertSuccessBlockParagraphContent(page) {
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get text content of alert success block paragraph
+   * @param page
+   * @return {Promise<string>}
+   */
+  getAlertInfoBlockParagraphContent(page) {
+    return this.getTextContent(page, this.alertInfoBlockParagraph);
   }
 };

@@ -51,7 +51,7 @@ class Import extends BOBasePage {
     await this.selectByVisibleText(page, this.fileTypeSelector, dropdownValue);
     await page.setInputFiles(this.fileInputField, filePath);
 
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

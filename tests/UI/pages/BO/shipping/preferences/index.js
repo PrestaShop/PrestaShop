@@ -27,7 +27,7 @@ class Preferences extends BOBasePage {
 
     // Save configuration and return successful message
     await this.clickAndWaitForNavigation(page, this.saveCarrierOptionsButton);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

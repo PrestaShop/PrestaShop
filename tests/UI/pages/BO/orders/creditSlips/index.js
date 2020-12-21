@@ -143,7 +143,7 @@ class CreditSlips extends BOBasePage {
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
     await page.click(this.generatePdfByDateButton);
-    return this.getTextContent(page, this.alertTextBlock);
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
