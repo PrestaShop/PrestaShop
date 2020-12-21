@@ -39,9 +39,9 @@ class Suppliers extends BOBasePage {
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.editRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-edit-row-link`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
-    // enable column
-    this.enableColumn = row => this.tableColumn(row, 'active');
-    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    // Column status
+    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -118,7 +118,15 @@ class Suppliers extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getStatus(page, row = 1) {
-    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.statusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -129,9 +137,8 @@ class Suppliers extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row = 1, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.enableColumn(row));
+      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
       return true;
     }
 

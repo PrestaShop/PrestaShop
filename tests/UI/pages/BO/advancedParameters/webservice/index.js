@@ -18,6 +18,8 @@ class WebService extends BOBasePage {
     this.webserviceListForm = '#webservice_key_grid';
     this.webserviceListTableRow = row => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
     this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow(row)} td.column-${column}`;
+    this.webserviceListTableStatusColumn = row => `${this.webserviceListTableColumn(row, 'active')} .ps-switch`;
+    this.webserviceListTableStatusColumnToggleInput = row => `${this.webserviceListTableStatusColumn(row)} input`;
     this.webserviceListTableColumnAction = row => this.webserviceListTableColumn(row, 'actions');
     this.webserviceListTableToggleDropDown = row => `${this.webserviceListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
@@ -147,7 +149,15 @@ class WebService extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async getStatus(page, row) {
-    return this.elementVisible(page, this.webserviceListColumnValidIcon(row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.webserviceListTableStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -158,15 +168,11 @@ class WebService extends BOBasePage {
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.webserviceListTableColumn(row, 'active'), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(this.webserviceListTableColumn(row, 'active'));
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.webserviceListColumnValidIcon(row) : this.webserviceListColumnNotValidIcon(row)),
-      );
+      await this.clickAndWaitForNavigation(page, this.webserviceListTableStatusColumn(row));
       return true;
     }
+
     return false;
   }
 

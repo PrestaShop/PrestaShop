@@ -41,29 +41,36 @@ export default class AsyncToggleColumnExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getContainer().find('.js-grid-table').on('click', '.ps-togglable-row', (event) => {
-      event.preventDefault();
+    grid
+      .getContainer()
+      .find('.js-grid-table')
+      .on('click', '.ps-togglable-row', (event) => {
+        const $button = $(event.currentTarget);
 
-      const $button = $(event.currentTarget);
-
-      $.post({
-        url: $button.data('toggle-url'),
-      }).then((response) => {
-        if (response.status) {
-          window.showSuccessMessage(response.message);
-
-          this.toggleButtonDisplay($button);
-
-          return;
+        if (!$button.hasClass('ps-switch')) {
+          event.preventDefault();
         }
 
-        window.showErrorMessage(response.message);
-      }).catch((error) => {
-        const response = error.responseJSON;
+        $.post({
+          url: $button.data('toggle-url'),
+        })
+          .then((response) => {
+            if (response.status) {
+              window.showSuccessMessage(response.message);
 
-        window.showErrorMessage(response.message);
+              this.toggleButtonDisplay($button);
+
+              return;
+            }
+
+            window.showErrorMessage(response.message);
+          })
+          .catch((error) => {
+            const response = error.responseJSON;
+
+            window.showErrorMessage(response.message);
+          });
       });
-    });
   }
 
   /**
@@ -82,6 +89,9 @@ export default class AsyncToggleColumnExtension {
 
     $button.removeClass(classToRemove);
     $button.addClass(classToAdd);
-    $button.text(icon);
+
+    if ($button.hasClass('material-icons')) {
+      $button.text(icon);
+    }
   }
 }

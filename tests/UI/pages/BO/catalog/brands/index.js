@@ -52,9 +52,8 @@ class Brands extends BOBasePage {
 
     // Brands list Selectors
     this.brandsTableColumnLogoImg = row => `${this.tableColumn('manufacturer', row, 'logo')} img`;
-    this.brandsTableEnableColumn = row => `${this.tableColumn('manufacturer', row, 'active')}`;
-    this.brandsEnableColumnValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-valid`;
-    this.brandsEnableColumnNotValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-not-valid`;
+    this.brandsTableColumnStatus = row => `${this.tableColumn('manufacturer', row, 'active')} .ps-switch`;
+    this.brandsTableColumnStatusToggleInput = row => `${this.brandsTableColumnStatus(row)} input`;
     this.viewBrandLink = row => `${this.actionsColumn('manufacturer', row)} a.grid-view-row-link`;
     this.editBrandLink = row => `${this.dropdownToggleMenu('manufacturer', row)} a.grid-edit-row-link`;
     this.bulkActionsEnableButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_enable_selection`;
@@ -185,7 +184,15 @@ class Brands extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getBrandStatus(page, row) {
-    return this.elementVisible(page, this.brandsEnableColumnValidIcon(row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.brandsTableColumnStatusToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -196,9 +203,8 @@ class Brands extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setBrandStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.brandsTableEnableColumn(row), 2000);
     if (await this.getBrandStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.brandsTableEnableColumn(row));
+      await this.clickAndWaitForNavigation(page, this.brandsTableColumnStatus(row));
       return true;
     }
 

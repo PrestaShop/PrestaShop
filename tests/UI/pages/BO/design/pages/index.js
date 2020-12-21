@@ -27,11 +27,8 @@ class Pages extends BOBasePage {
     this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
     this.listTableRow = (table, row) => `${this.listForm(table)} tbody tr:nth-child(${row})`;
     this.listTableColumn = (table, row, column) => `${this.listTableRow(table, row)} td.column-${column}`;
-    this.columnValidIcon = (table, row) => `${this.listTableColumn(table, row, 'active')}`
-      + ' i.grid-toggler-icon-valid';
-
-    this.columnNotValidIcon = (table, row) => `${this.listTableColumn(table, row, 'active')}`
-      + ' i.grid-toggler-icon-not-valid';
+    this.listTableStatusColumn = (table, row) => `${this.listTableColumn(table, row, 'active')} .ps-switch`;
+    this.listTableStatusColumnToggleInput = (table, row) => `${this.listTableStatusColumn(table, row)} input`;
 
     // Bulk Actions
     this.selectAllRowsLabel = table => `${this.listForm(table)} tr.column-filters .grid_bulk_action_select_all`;
@@ -185,7 +182,15 @@ class Pages extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getStatus(page, table, row) {
-    return this.elementVisible(page, this.columnValidIcon(table, row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.listTableStatusColumnToggleInput(table, row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -197,13 +202,8 @@ class Pages extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, table, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.listTableColumn(table, row, 'active'), 2000);
     if (await this.getStatus(page, table, row) !== valueWanted) {
-      page.click(this.listTableColumn(table, row, 'active'));
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)(table, row),
-      );
+      await this.clickAndWaitForNavigation(page, this.listTableStatusColumn(table, row));
 
       return true;
     }
