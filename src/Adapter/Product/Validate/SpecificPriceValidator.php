@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\Validate;
+namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
@@ -56,16 +56,16 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->validateSpecificPriceProperty($specificPrice, 'to', SpecificPriceConstraintException::INVALID_TO_DATETIME);
         $this->assertDateRangeIsNotInverse($specificPrice);
 
-        $this->validateSpecificPriceProperty($specificPrice, 'id_cart', SpecificPriceConstraintException::INVALID_CART_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_country', SpecificPriceConstraintException::INVALID_COUNTRY_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_currency', SpecificPriceConstraintException::INVALID_CURRENCY_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_customer', SpecificPriceConstraintException::INVALID_CUSTOMER_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_group', SpecificPriceConstraintException::INVALID_GROUP_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_product', SpecificPriceConstraintException::INVALID_PRODUCT_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_product_attribute', SpecificPriceConstraintException::INVALID_COMBINATION_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_shop', SpecificPriceConstraintException::INVALID_SHOP_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_shop_group', SpecificPriceConstraintException::INVALID_SHOP_GROUP_ID);
-        $this->validateSpecificPriceProperty($specificPrice, 'id_specific_price_rule', SpecificPriceConstraintException::INVALID_CATALOG_PRICE_RULE_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_cart', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_country', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_currency', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_customer', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_group', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_product', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_product_attribute', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_shop', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_shop_group', SpecificPriceConstraintException::INVALID_RELATION_ID);
+        $this->validateSpecificPriceProperty($specificPrice, 'id_specific_price_rule', SpecificPriceConstraintException::INVALID_RELATION_ID);
     }
 
     /**

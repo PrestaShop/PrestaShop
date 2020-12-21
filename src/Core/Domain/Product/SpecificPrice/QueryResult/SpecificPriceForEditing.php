@@ -51,7 +51,7 @@ class SpecificPriceForEditing
     /**
      * @var bool
      */
-    private $includeTax;
+    private $includesTax;
 
     /**
      * @var DecimalNumber
@@ -117,7 +117,7 @@ class SpecificPriceForEditing
      * @param int $specificPriceId
      * @param string $reductionType
      * @param DecimalNumber $reductionAmount
-     * @param bool $includeTax
+     * @param bool $includesTax
      * @param DecimalNumber $price
      * @param int $fromQuantity
      * @param int|null $shopGroupId
@@ -135,7 +135,7 @@ class SpecificPriceForEditing
         int $specificPriceId,
         string $reductionType,
         DecimalNumber $reductionAmount,
-        bool $includeTax,
+        bool $includesTax,
         DecimalNumber $price,
         int $fromQuantity,
         ?DateTime $dateTimeFrom,
@@ -152,7 +152,7 @@ class SpecificPriceForEditing
         $this->specificPriceId = $specificPriceId;
         $this->reductionType = $reductionType;
         $this->reductionAmount = $reductionAmount;
-        $this->includeTax = $includeTax;
+        $this->includesTax = $includesTax;
         $this->price = $price;
         $this->fromQuantity = $fromQuantity;
         $this->shopGroupId = $shopGroupId;
@@ -194,9 +194,9 @@ class SpecificPriceForEditing
     /**
      * @return bool
      */
-    public function isIncludeTax(): bool
+    public function includesTax(): bool
     {
-        return $this->includeTax;
+        return $this->includesTax;
     }
 
     /**

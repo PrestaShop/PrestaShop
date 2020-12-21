@@ -36,6 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
+/**
+ * Add specific price to a Product
+ */
 class AddProductSpecificPriceCommand
 {
     /**

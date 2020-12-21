@@ -13,7 +13,7 @@ Feature: Update product options from Back Office (BO)
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | amount |
       | reduction value       | 12.56  |
-      | include tax           | true   |
+      | includes tax          | true   |
       | price                 | 45.78  |
       | from quantity         | 1      |
     Then product "product1" should have 1 specific prices
@@ -21,7 +21,7 @@ Feature: Update product options from Back Office (BO)
       | specific price detail | value  |
       | reduction type        | amount |
       | reduction value       | 12.56  |
-      | include tax           | true   |
+      | includes tax          | true   |
       | price                 | 45.78  |
       | from quantity         | 1      |
 
@@ -33,7 +33,7 @@ Feature: Update product options from Back Office (BO)
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | percentage |
       | reduction value       | 12.56      |
-      | include tax           | false      |
+      | includes tax          | false      |
       | price                 | -12.78     |
       | from quantity         | 1          |
     Then product "product1" should have 1 specific prices
@@ -41,7 +41,7 @@ Feature: Update product options from Back Office (BO)
       | specific price detail | value      |
       | reduction type        | percentage |
       | reduction value       | 12.56      |
-      | include tax           | false      |
+      | includes tax          | false      |
       | price                 | -12.78     |
       | from quantity         | 1          |
 
@@ -53,28 +53,28 @@ Feature: Update product options from Back Office (BO)
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | invalid |
       | reduction value       | 12.56   |
-      | include tax           | false   |
+      | includes tax          | false   |
       | price                 | 0       |
       | from quantity         | 1       |
     Then I should get error that specific price reduction_type is invalid
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | percentage |
       | reduction value       | -12.56     |
-      | include tax           | false      |
+      | includes tax          | false      |
       | price                 | 0          |
       | from quantity         | 1          |
     Then I should get error that specific price reduction_percentage is invalid
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | amount     |
       | reduction value       | -12.56     |
-      | include tax           | false      |
+      | includes tax          | false      |
       | price                 | 0          |
       | from quantity         | 1          |
     Then I should get error that specific price reduction_amount is invalid
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | percentage |
       | reduction value       | 12.56      |
-      | include tax           | false      |
+      | includes tax          | false      |
       | price                 | 0          |
       | from quantity         | -1         |
     Then I should get error that specific price from_quantity is invalid
