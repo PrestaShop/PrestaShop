@@ -259,15 +259,6 @@ class Suppliers extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
-  /**
-   * Get alert text message
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getAlertTextMessage(page) {
-    return this.getTextContent(page, this.alertTextBlock);
-  }
-
   // Sort methods
   /**
    * Get content from all rows

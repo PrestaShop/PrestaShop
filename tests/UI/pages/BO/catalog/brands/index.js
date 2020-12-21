@@ -486,15 +486,6 @@ class Brands extends BOBasePage {
     return this.sortTable(page, 'manufacturer_address', sortBy, sortDirection);
   }
 
-  /**
-   * Get alert text message
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getAlertTextMessage(page) {
-    return this.getTextContent(page, this.alertTextBlock);
-  }
-
   // Export methods
   /**
    * Click on lint to export categories to a csv file
