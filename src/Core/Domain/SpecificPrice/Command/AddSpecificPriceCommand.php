@@ -30,13 +30,14 @@ use DateTime;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Adds specific price
+ *
+ * @deprecated since 1.7.8.0 Use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand
  */
 class AddSpecificPriceCommand
 {
@@ -81,9 +82,9 @@ class AddSpecificPriceCommand
     private $cartId;
 
     /**
-     * @var CombinationId|null
+     * @var int|null
      */
-    private $combinationId;
+    private $productAttributeId;
 
     /**
      * @var int|null
@@ -250,43 +251,19 @@ class AddSpecificPriceCommand
     }
 
     /**
-     * @deprecated Use getCombinationId instead
-     *
      * @return int|null
      */
     public function getProductAttributeId(): ?int
     {
-        return null !== $this->combinationId ? $this->combinationId->getValue() : null;
+        return $this->productAttributeId;
     }
 
     /**
-     * @deprecated Use setCombinationId instead
-     *
      * @param int $productAttributeId
      */
     public function setProductAttributeId(int $productAttributeId): void
     {
-        $this->setCombinationId($productAttributeId);
-    }
-
-    /**
-     * @return CombinationId|null
-     */
-    public function getCombinationId(): ?CombinationId
-    {
-        return $this->combinationId;
-    }
-
-    /**
-     * @param int $combinationId
-     *
-     * @return AddSpecificPriceCommand
-     */
-    public function setCombinationId(int $combinationId): AddSpecificPriceCommand
-    {
-        $this->combinationId = new CombinationId($combinationId);
-
-        return $this;
+        $this->productAttributeId = $productAttributeId;
     }
 
     /**
