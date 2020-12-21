@@ -76,17 +76,7 @@ class SpecificPriceForEditing
     /**
      * @var int|null
      */
-    private $cartId;
-
-    /**
-     * @var int|null
-     */
     private $currencyId;
-
-    /**
-     * @var int|null
-     */
-    private $catalogPriceRuleId;
 
     /**
      * @var int|null
@@ -122,9 +112,7 @@ class SpecificPriceForEditing
      * @param int $fromQuantity
      * @param int|null $shopGroupId
      * @param int|null $shopId
-     * @param int|null $cartId
      * @param int|null $currencyId
-     * @param int|null $catalogPriceRuleId
      * @param int|null $countryId
      * @param int|null $groupId
      * @param int|null $customerId
@@ -142,9 +130,7 @@ class SpecificPriceForEditing
         ?DateTime $dateTimeTo,
         ?int $shopGroupId,
         ?int $shopId,
-        ?int $cartId,
         ?int $currencyId,
-        ?int $catalogPriceRuleId,
         ?int $countryId,
         ?int $groupId,
         ?int $customerId
@@ -157,9 +143,7 @@ class SpecificPriceForEditing
         $this->fromQuantity = $fromQuantity;
         $this->shopGroupId = $shopGroupId;
         $this->shopId = $shopId;
-        $this->cartId = $cartId;
         $this->currencyId = $currencyId;
-        $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->countryId = $countryId;
         $this->groupId = $groupId;
         $this->customerId = $customerId;
@@ -234,25 +218,9 @@ class SpecificPriceForEditing
     /**
      * @return int|null
      */
-    public function getCartId(): ?int
-    {
-        return $this->cartId;
-    }
-
-    /**
-     * @return int|null
-     */
     public function getCurrencyId(): ?int
     {
         return $this->currencyId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCatalogPriceRuleId(): ?int
-    {
-        return $this->catalogPriceRuleId;
     }
 
     /**

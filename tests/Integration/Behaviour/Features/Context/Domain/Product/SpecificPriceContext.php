@@ -79,9 +79,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $to,
             $this->getStoredId($dataRows, 'shop group'),
             $this->getStoredId($dataRows, 'shop'),
-            $this->getStoredId($dataRows, 'cart'),
             $this->getStoredId($dataRows, 'currency'),
-            $this->getStoredId($dataRows, 'catalog price rule'),
             $this->getStoredId($dataRows, 'country'),
             $this->getStoredId($dataRows, 'group'),
             $this->getStoredId($dataRows, 'customer')
@@ -132,13 +130,12 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then specific price :specificPriceReference from product :productReference should have following details:
+     * @Then specific price :specificPriceReference should have following details:
      *
      * @param string $specificPriceReference
-     * @param string $productReference
      * @param SpecificPriceForEditing $expectedSpecificPrice
      */
-    public function assertProductSpecificPrice(string $specificPriceReference, string $productReference, SpecificPriceForEditing $expectedSpecificPrice): void
+    public function assertProductSpecificPrice(string $specificPriceReference, SpecificPriceForEditing $expectedSpecificPrice): void
     {
         $specificPriceId = (int) $this->getSharedStorage()->get($specificPriceReference);
         $productSpecificPrice = $this->getQueryBus()->handle(new GetSpecificPriceForEditing($specificPriceId));
@@ -147,8 +144,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
         $specificPricePropertyNames = [
             'reductionType', 'includesTax', 'fromQuantity', 'shopGroupId',
-            'shopId', 'cartId', 'currencyId', 'catalogPriceRuleId', 'countryId',
-            'groupId', 'customerId',
+            'shopId', 'currencyId', 'countryId', 'groupId', 'customerId',
         ];
         foreach ($specificPricePropertyNames as $propertyName) {
             Assert::assertSame(
@@ -296,6 +292,14 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     {
         if (empty($dataRows[$fieldId])) {
             return null;
+        }
+
+        if (ctype_digit($dataRows[$fieldId])) {
+            return (int) $dataRows[$fieldId];
+        }
+
+        if (!$this->getSharedStorage()->exists($dataRows[$fieldId])) {
+            throw new RuntimeException(sprintf('Trying to access to non saved id with key %s', $dataRows[$fieldId]));
         }
 
         return (int) $this->getSharedStorage()->get($dataRows[$fieldId]);

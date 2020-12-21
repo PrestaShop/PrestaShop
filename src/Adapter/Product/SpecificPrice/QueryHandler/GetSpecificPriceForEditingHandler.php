@@ -36,6 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpec
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
+/**
+ * Handles @see GetSpecificPriceForEditing using legacy object model
+ */
 class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHandlerInterface
 {
     /**
@@ -71,14 +74,12 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             (int) $specificPrice->from_quantity,
             $dateFrom,
             $dateTo,
-            $specificPrice->id_shop_group ?: null,
-            $specificPrice->id_shop ?: null,
-            $specificPrice->id_cart ?: null,
-            $specificPrice->id_currency ?: null,
-            $specificPrice->id_specific_price_rule ?: null,
-            $specificPrice->id_country ?: null,
-            $specificPrice->id_group ?: null,
-            $specificPrice->id_customer ?: null
+            (int) $specificPrice->id_shop_group ?: null,
+            (int) $specificPrice->id_shop ?: null,
+            (int) $specificPrice->id_currency ?: null,
+            (int) $specificPrice->id_country ?: null,
+            (int) $specificPrice->id_group ?: null,
+            (int) $specificPrice->id_customer ?: null
         );
     }
 }

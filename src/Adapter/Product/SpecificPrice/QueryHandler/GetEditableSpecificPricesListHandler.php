@@ -94,14 +94,12 @@ class GetEditableSpecificPricesListHandler implements GetEditableSpecificPricesL
                 (int) $specificPrice['from_quantity'],
                 $dateFrom,
                 $dateTo,
-                $specificPrice['id_shop_group'] ?: null,
-                $specificPrice['id_shop'] ?: null,
-                $specificPrice['id_cart'] ?: null,
-                $specificPrice['id_currency'] ?: null,
-                $specificPrice['id_specific_price_rule'] ?: null,
-                $specificPrice['id_country'] ?: null,
-                $specificPrice['id_group'] ?: null,
-                $specificPrice['id_customer'] ?: null
+                (int) $specificPrice['id_shop_group'] ?: null,
+                (int) $specificPrice['id_shop'] ?: null,
+                (int) $specificPrice['id_currency'] ?: null,
+                (int) $specificPrice['id_country'] ?: null,
+                (int) $specificPrice['id_group'] ?: null,
+                (int) $specificPrice['id_customer'] ?: null
             );
         }, $specificPrices);
     }
