@@ -6,8 +6,10 @@ class CreateAccount extends FOBasePage {
     super();
 
     this.pageTitle = 'Login';
+    this.formTitle = 'Create an account';
 
     // Selectors
+    this.pageHeaderTitle = '#main .page-header h1';
     this.createAccountForm = '#customer-form';
     this.genderRadioButton = id => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
     this.firstNameInput = `${this.createAccountForm} input[name='firstname']`;
@@ -27,15 +29,12 @@ class CreateAccount extends FOBasePage {
    */
 
   /**
-   * Login in FO
+   * Get form header title
    * @param page
-   * @param customer
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async customerLogin(page, customer) {
-    await this.setValue(page, this.emailInput, customer.email);
-    await this.setValue(page, this.passwordInput, customer.password);
-    await this.clickAndWaitForNavigation(page, this.signInButton);
+  getHeaderTitle(page) {
+    return this.getTextContent(page, this.pageHeaderTitle);
   }
 
   /**

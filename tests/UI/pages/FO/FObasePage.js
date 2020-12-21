@@ -12,6 +12,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.cartProductsCount = '#_desktop_cart span.cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
+    this.accountLink = `${this.userInfoLink} .user-info a.account`;
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
     this.contactLink = '#contact-link';
     this.categoryMenu = id => `#category-${id} a`;
@@ -81,6 +82,15 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async isCustomerConnected(page) {
     return this.elementVisible(page, this.logoutLink, 1000);
+  }
+
+  /**
+   * Click on link to go to account page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToMyAccountPage(page) {
+    await this.clickAndWaitForNavigation(page, this.accountLink);
   }
 
   /**
