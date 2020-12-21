@@ -188,8 +188,6 @@ class CurrencyController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
-
-
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
