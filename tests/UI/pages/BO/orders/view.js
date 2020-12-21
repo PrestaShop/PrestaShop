@@ -24,6 +24,7 @@ class Order extends BOBasePage {
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
+    this.returnProductsButton = '#order-view-page button.return-product-display';
 
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -269,7 +270,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isReturnProductsButtonVisible(page) {
-    return this.elementVisible(page, '#order-view-page button.btn.btn-action.return-product-display');
+    return this.elementVisible(page, this.returnProductsButton);
   }
 }
 

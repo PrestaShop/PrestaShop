@@ -19,6 +19,7 @@ const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
 
 // Import data
 const {DefaultAccount} = require('@data/demo/customer');
+const {Statuses} = require('@data/demo/orderStatuses');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -91,13 +92,13 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should filter the Orders table by the default customer \'J. DOE\' and check the result', async function () {
+    it(`should filter the Orders table by the default customer ${DefaultAccount.lastName} and check the result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', 'J. DOE');
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultAccount.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains('J. DOE');
+      await expect(textColumn).to.contains(DefaultAccount.lastName);
     });
 
     it('should go to the first order page', async function () {
@@ -110,11 +111,11 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
 
-    it('should change the order status to \'Shipped\' and check it', async function () {
+    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, 'Shipped');
-      await expect(result).to.equal('Shipped');
+      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should check that the button \'Return products\' is visible', async function () {
