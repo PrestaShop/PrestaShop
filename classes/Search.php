@@ -182,15 +182,17 @@ class SearchCore
             $words = explode(' ', $string);
             $processed_words = [];
             // search for aliases for each word of the query
-            foreach ($words as $word) {
-                $alias = new Alias(null, $word);
-                if (Validate::isLoadedObject($alias)) {
-                    $processed_words[] = $alias->search;
-                } else {
-                    $processed_words[] = $word;
-                }
+            $aliases = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+				SELECT a.alias, a.search
+				FROM `' . _DB_PREFIX_ . 'alias` a
+				WHERE \'' . pSQL($string) . '\' LIKE CONCAT(\'%\', alias, \'%\') AND `active` = 1');
+
+            foreach ($aliases  as $alias) {
+                $processed_words = array_merge($processed_words, explode(' ', $alias['search']));
+                // delete words that are being replaced with aliases
+                $words = array_diff($words, explode(' ', $alias['alias']));
             }
-            $string = implode(' ', $processed_words);
+            $string = implode(' ', array_unique(array_merge($processed_words, $words)));
             $string = str_replace(['.', '_'], '', $string);
             if (!$keepHyphens) {
                 $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' ' . $string));
