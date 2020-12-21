@@ -30,7 +30,6 @@ class MerchandiseReturns extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
-
 }
 
 module.exports = new MerchandiseReturns();

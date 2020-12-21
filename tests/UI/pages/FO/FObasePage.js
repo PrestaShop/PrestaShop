@@ -232,7 +232,7 @@ module.exports = class FOBasePage extends CommonPage {
    * @param page
    * @returns {Promise<void>}
    */
-  async goToYourAccountPage(page){
+  async goToYourAccountPage(page) {
     await this.clickAndWaitForNavigation(page, this.viewMyCustomerAccountLink);
   }
 };
