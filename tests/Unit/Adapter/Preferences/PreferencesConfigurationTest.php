@@ -109,7 +109,7 @@ class PreferencesConfigurationTest extends TestCase
             [
                 [
                     'key' => 'Invalid configuration',
-                    'domain' => 'Admin.Advparameters.Notification',
+                    'domain' => 'Admin.Notifications.Warning',
                     'parameters' => [],
                 ],
             ],
