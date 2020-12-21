@@ -222,7 +222,9 @@ class HookCore extends ObjectModel
 							WHERE `id_hook` = ' . (int) $hook_id);
 
             if (false === $result) {
-                throw new PrestaShopObjectNotFoundException('The hook id #%s does not exist in database', $hook_id);
+                throw new PrestaShopObjectNotFoundException(
+                    sprintf('The hook id #%d does not exist in database', $hook_id)
+                );
             }
 
             Cache::store($cache_id, $result);
