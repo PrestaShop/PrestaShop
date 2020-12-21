@@ -227,19 +227,19 @@ Feature: Multiple currencies for Order in Back Office (BO)
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3     |
-      | product_price               | 59.50 |
-      | unit_price_tax_incl         | 63.07 |
-      | unit_price_tax_excl         | 59.50 |
-      | total_price_tax_incl        | 189.21 |
-      | total_price_tax_excl        | 178.50 |
+      | product_price               | 11.90 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.90 |
+      | total_price_tax_incl        | 37.84 |
+      | total_price_tax_excl        | 35.70 |
     And order "bo_order1" should have following details:
-      | total_products           | 178.50 |
-      | total_products_wt        | 189.21 |
+      | total_products           | 35.70 |
+      | total_products_wt        | 37.84 |
       | total_discounts_tax_excl | 0.00   |
       | total_discounts_tax_incl | 0.00   |
-      | total_paid_tax_excl      | 248.50 |
-      | total_paid_tax_incl      | 263.41 |
-      | total_paid               | 263.41 |
+      | total_paid_tax_excl      | 105.70 |
+      | total_paid_tax_incl      | 112.04 |
+      | total_paid               | 112.04 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
