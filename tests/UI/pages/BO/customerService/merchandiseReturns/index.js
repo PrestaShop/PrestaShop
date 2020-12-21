@@ -6,11 +6,12 @@ class MerchandiseReturns extends BOBasePage {
     super();
 
     this.pageTitle = 'Merchandise Returns •';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // Options
     this.generalForm = '#order_return_fieldset_general';
-    this.enableOrderReturnLabel = toggle => `${this.generalForm} label[for='PS_ORDER_RETURN_${toggle}'}`;
+    this.enableOrderReturnLabel = toggle => `${this.generalForm} label[for='PS_ORDER_RETURN_${toggle}']`;
     this.saveButton = `${this.generalForm} button[name='submitOptionsorder_return']`;
   }
 
