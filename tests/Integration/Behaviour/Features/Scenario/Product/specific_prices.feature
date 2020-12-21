@@ -1,6 +1,6 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags specific-price
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags product-specific-prices
 @reset-database-before-feature
-@specific-price
+@product-specific-prices
 Feature: Update product options from Back Office (BO)
   As a BO user
   I need to be able to update product options from BO

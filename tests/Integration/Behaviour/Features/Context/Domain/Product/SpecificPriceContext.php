@@ -33,12 +33,13 @@ use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
@@ -237,14 +238,15 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      * @param int $productId
      * @param TableNode $tableNode
      *
-     * @return AddSpecificPriceCommand
+     * @return AddProductSpecificPriceCommand
      *
      * @throws DomainConstraintException
+     * @throws ProductConstraintException
      */
-    private function createAddSpecificPriceCommand(int $productId, TableNode $tableNode): AddSpecificPriceCommand
+    private function createAddSpecificPriceCommand(int $productId, TableNode $tableNode): AddProductSpecificPriceCommand
     {
         $dataRows = $tableNode->getRowsHash();
-        $addCommand = new AddSpecificPriceCommand(
+        $addCommand = new AddProductSpecificPriceCommand(
             $productId,
             $dataRows['reduction type'],
             (float) $dataRows['reduction value'],
@@ -262,14 +264,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         if (!empty($dataRows['shop'])) {
             $addCommand->setShopId($this->getStoredId($dataRows, 'shop'));
         }
-        if (!empty($dataRows['cart'])) {
-            $addCommand->setCartId($this->getStoredId($dataRows, 'cart'));
-        }
         if (!empty($dataRows['currency'])) {
             $addCommand->setCurrencyId($this->getStoredId($dataRows, 'currency'));
-        }
-        if (!empty($dataRows['catalog price rule'])) {
-            $addCommand->setCatalogPriceRuleId($this->getStoredId($dataRows, 'catalog price rule'));
         }
         if (!empty($dataRows['country'])) {
             $addCommand->setCountryId($this->getStoredId($dataRows, 'country'));

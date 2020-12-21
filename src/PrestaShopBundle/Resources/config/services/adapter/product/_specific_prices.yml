@@ -18,6 +18,14 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing
 
+    prestashop.adapter.product.specific_price.command_handler.add_product_specific_price:
+        class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandler
+        arguments:
+            - '@prestashop.adapter.specific_price.repository.specific_price_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand
+
     prestashop.adapter.specific_price.update.specific_price_priority_updater:
         class: PrestaShop\PrestaShop\Adapter\SpecificPrice\Update\SpecificPricePriorityUpdater
 
