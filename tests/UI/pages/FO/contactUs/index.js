@@ -26,10 +26,12 @@ class ContactUs extends FOBasePage {
    * @param contactUsData
    * @returns {Promise<string>}
    */
-  async sendMessage(page, contactUsData) {
+  async sendMessage(page, contactUsData, file = null) {
     await this.selectByVisibleText(page, this.subjectSelect, contactUsData.subject);
     await this.setValue(page, this.emailAddressInput, contactUsData.emailAddress);
-    await this.uploadFile(page, this.attachmentLabel, `${contactUsData.fileName}.jpg`);
+    if (file) {
+      await this.uploadFile(page, this.attachmentLabel, file);
+    }
     await this.setValue(page, this.messageTextarea, contactUsData.message);
     await page.click(this.sendButton);
 

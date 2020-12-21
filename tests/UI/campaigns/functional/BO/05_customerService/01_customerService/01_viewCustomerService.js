@@ -69,7 +69,7 @@ describe('View customer service messages', async () => {
   it('should send message to customer service', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-    const validationMessage = await contactUsPage.sendMessage(page, contactUsData);
+    const validationMessage = await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
     await expect(validationMessage).to.equal(contactUsPage.validationMessage);
   });
 

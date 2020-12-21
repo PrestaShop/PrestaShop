@@ -38,11 +38,21 @@ class ViewCustomer extends BOBasePage {
   }
 
   // Your answer form
+  /**
+   * Get your answer form content
+   * @param page
+   * @returns {Promise<string>}
+   */
   getYourAnswerContent(page) {
     return this.getTextContent(page, this.yourAnswerForm);
   }
 
   // Orders and messages timeline form
+  /**
+   * Get orders and messages form content
+   * @param page
+   * @returns {Promise<string>}
+   */
   getOrdersAndMessagesTimeline(page) {
     return this.getTextContent(page, this.ordersAndMessagesForm);
   }
