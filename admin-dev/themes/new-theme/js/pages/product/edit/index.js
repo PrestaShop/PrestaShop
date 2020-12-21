@@ -34,14 +34,15 @@ $(() => {
       'TranslatableField',
       'TinyMCEEditor',
       'TranslatableInput',
+      'EventEmitter',
     ],
   );
 
   const $productForm = $(ProductMap.productForm);
 
-  // Form has productId data means that we are in edtion/update mode
+  // Form has productId data means that we are in edit mode
   if ($productForm.data('productId')) {
     const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
-    new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
+    new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
   }
 });

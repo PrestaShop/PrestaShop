@@ -36,7 +36,13 @@ const {$} = window;
  * modified by the user.
  */
 export default class ProductPartialUpdater {
-  constructor($productForm, $productFormSubmitButton) {
+  /**
+   * @param eventEmitter {EventEmitter}
+   * @param $productForm {jQuery}
+   * @param $productFormSubmitButton {jQuery}
+   */
+  constructor(eventEmitter, $productForm, $productFormSubmitButton) {
+    this.eventEmitter = eventEmitter;
     this.$productForm = $productForm;
     this.$productFormSubmitButton = $productFormSubmitButton;
   }
@@ -50,6 +56,16 @@ export default class ProductPartialUpdater {
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit((e) => this.updatePartialForm(e));
     this.$productForm.on('change', ':input', () => this.updateSubmitButtonState());
+    this.initFormattedTextarea();
+  }
+
+  /**
+   * Rich editors apply a layer over initial textarea fields therefore they need to be watched differently.
+   */
+  initFormattedTextarea() {
+    this.eventEmitter.on('tinymceEditorSetup', (event) => {
+      event.editor.on('change', () => this.updateSubmitButtonState());
+    });
   }
 
   /**

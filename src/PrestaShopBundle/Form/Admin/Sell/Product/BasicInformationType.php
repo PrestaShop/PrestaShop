@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -70,15 +71,13 @@ class BasicInformationType extends TranslatorAwareType
                     new DefaultLanguage(),
                 ],
             ])
-            // @todo: This should be FormattedTextAreaType, waiting for #21115
             ->add('description_short', TranslatableType::class, [
                 'label' => $this->trans('Summary', 'Admin.Global'),
-                'type' => TextareaType::class,
+                'type' => FormattedTextareaType::class,
             ])
-            // @todo: This should be FormattedTextAreaType, waiting for #21115
             ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
-                'type' => TextareaType::class,
+                'type' => FormattedTextareaType::class,
             ])
         ;
     }
