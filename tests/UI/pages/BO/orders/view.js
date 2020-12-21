@@ -268,7 +268,7 @@ class Order extends BOBasePage {
    * @param page
    * @returns {Promise<boolean>}
    */
-  isReturnProductsButtonVisible(page){
+  isReturnProductsButtonVisible(page) {
     return this.elementVisible(page, '#order-view-page button.btn.btn-action.return-product-display');
   }
 }

@@ -12,6 +12,7 @@ class OrderHistory extends FOBasePage {
     this.ordersTableRow = row => `${this.ordersTable} tbody tr:nth-child(${row})`;
     this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
     this.reorderLink = id => `${this.ordersTable} td.order-actions a[href*='Reorder=&id_order=${id}']`;
+    this.detailsLink = row => `${this.ordersTableRow(row)} a[data-link-action='view-order-details']`;
   }
 
   /*
@@ -39,13 +40,13 @@ class OrderHistory extends FOBasePage {
   }
 
   /**
-   *
+   * Go to details page
    * @param page
    * @param orderRow
    * @returns {Promise<void>}
    */
-  async goToDetailsPage(page, orderRow = 1){
-     await this.clickAndWaitForNavigation(page, '#content > table > tbody > tr:nth-child(1) > td.text-sm-center.order-actions > a:nth-child(1)')
+  async goToDetailsPage(page, orderRow = 1) {
+    await this.clickAndWaitForNavigation(page, this.detailsLink(orderRow));
   }
 }
 

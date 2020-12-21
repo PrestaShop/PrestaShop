@@ -57,7 +57,7 @@ describe('Activate/Deactivate merchandise return', async () => {
 
   tests.forEach((test, index) => {
     it('should go to merchandise returns page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -91,7 +91,7 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should filter the Orders table by the default customer 'J. DOE' and check the result`, async function () {
+    it('should filter the Orders table by the default customer \'J. DOE\' and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', 'J. DOE');
@@ -110,14 +110,14 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
 
-    it(`should change the order status to 'Shipped' and check it`, async function () {
+    it('should change the order status to \'Shipped\' and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
       const result = await viewOrderPage.modifyOrderStatus(page, 'Shipped');
       await expect(result).to.equal('Shipped');
     });
 
-    it(`should check that the button 'Return products' is visible`, async function () {
+    it('should check that the button \'Return products\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkReturnProductsButton${index}`, baseContext);
 
       const result = await viewOrderPage.isReturnProductsButtonVisible(page);
@@ -154,7 +154,7 @@ describe('Activate/Deactivate merchandise return', async () => {
       }
     });
 
-    it(`should go to 'Order history and details' page`, async function () {
+    it('should go to \'Order history and details\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToOrderHistoryPage${index}`, baseContext);
 
       await myAccountPage.goToHistoryAndDetailsPage(page);
