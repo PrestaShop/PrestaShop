@@ -75,7 +75,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             return [
                 [
                     'key' => 'Invalid configuration',
-                    'domain' => 'Admin.Advparameters.Notification',
+                    'domain' => 'Admin.Notifications.Warning',
                     'parameters' => [],
                 ],
             ];
