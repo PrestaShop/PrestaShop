@@ -72,7 +72,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             42, // The ID does not matter we don't check it
             $dataRows['reduction type'],
             new DecimalNumber($dataRows['reduction value']),
-            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['include tax']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             new DecimalNumber($dataRows['price']),
             (int) $dataRows['from quantity'],
             $from,
@@ -146,7 +146,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         $specificPricePropertyNames = [
-            'reductionType', 'includeTax', 'fromQuantity', 'shopGroupId',
+            'reductionType', 'includesTax', 'fromQuantity', 'shopGroupId',
             'shopId', 'cartId', 'currencyId', 'catalogPriceRuleId', 'countryId',
             'groupId', 'customerId',
         ];
@@ -250,7 +250,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $productId,
             $dataRows['reduction type'],
             (float) $dataRows['reduction value'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['include tax']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             (float) $dataRows['price'],
             (int) $dataRows['from quantity']
         );

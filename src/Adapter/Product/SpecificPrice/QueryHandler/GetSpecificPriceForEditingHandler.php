@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;

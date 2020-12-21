@@ -26,12 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Adapter\SpecificPrice\Validate\SpecificPriceValidator;
+use PrestaShop\PrestaShop\Adapter\Product\Validate\SpecificPriceValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\CannotAddSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
