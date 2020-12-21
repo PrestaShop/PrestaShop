@@ -283,7 +283,7 @@ class HookCore extends ObjectModel
             $hookAliases = [];
             if ($hookAliasList) {
                 foreach ($hookAliasList as $ha) {
-                    $hookAliases[$ha['name']][] = $ha['alias'];
+                    $hookAliases[strtolower($ha['name'])][] = $ha['alias'];
                 }
             }
             Cache::store($cacheId, $hookAliases);
@@ -312,7 +312,7 @@ class HookCore extends ObjectModel
 
         $allAliases = Hook::getAllHookAliases();
 
-        $aliases = $allAliases[$canonicalHookName] ?? [];
+        $aliases = $allAliases[strtolower($canonicalHookName)] ?? [];
 
         Cache::store($cacheId, $aliases);
 
