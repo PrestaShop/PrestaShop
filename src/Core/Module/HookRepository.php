@@ -67,7 +67,7 @@ class HookRepository
             'title' => $this->db->escape($title),
             'description' => $this->db->escape($description),
             'position' => $this->db->escape($position),
-        ], false, true, Db::REPLACE);
+        ], false, true, Db::INSERT);
 
         return $this->getIdByName($hook_name);
     }
