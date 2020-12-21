@@ -94,7 +94,14 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.8.0', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(
+            sprintf(
+                'The "%s()" method is deprecated since 1.7.8.0. Use %s instead.', 
+                __METHOD__, 
+                RequestSqlQueryBuilder::class . '::getSearchQueryBuilder()'
+            ), 
+            E_USER_DEPRECATED
+        );
 
         $searchQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
 
