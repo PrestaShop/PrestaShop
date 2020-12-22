@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;

@@ -26,36 +26,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\Update\SpecificPricePriorityUpdater;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
 /**
- * Handles @see SetGlobalSpecificPricePriorityCommand using legacy object model
+ * Transfer SpecificPrice list data
  */
-final class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPricePriorityHandlerInterface
+class SpecificPriceListForEditing
 {
     /**
-     * @var SpecificPricePriorityUpdater
+     * @var SpecificPriceForEditing[]
      */
-    private $specificPricePriorityUpdater;
+    private $specificPrices;
 
     /**
-     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
+     * @var int
      */
+    private $totalSpecificPricesCount;
+
     public function __construct(
-        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+        array $specificPrices,
+        int $totalSpecificPricesCount
     ) {
-        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
+        $this->specificPrices = $specificPrices;
+        $this->totalSpecificPricesCount = $totalSpecificPricesCount;
     }
 
     /**
-     * {@inheritdoc}
+     * @return SpecificPriceForEditing[]
      */
-    public function handle(SetGlobalSpecificPricePriorityCommand $command): void
+    public function getSpecificPrices(): array
     {
-        $this->specificPricePriorityUpdater->setGlobalPriorities($command->getPriorityList());
+        return $this->specificPrices;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalSpecificPricesCount(): int
+    {
+        return $this->totalSpecificPricesCount;
     }
 }

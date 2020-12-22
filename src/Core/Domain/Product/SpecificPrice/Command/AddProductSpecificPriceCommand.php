@@ -24,22 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
-use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
- * Adds specific price
- *
- * @deprecated since 1.7.8.0 Use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand
+ * Add specific price to a Product
  */
-class AddSpecificPriceCommand
+class AddProductSpecificPriceCommand
 {
     /**
      * @var ProductId
@@ -54,7 +54,7 @@ class AddSpecificPriceCommand
     /**
      * @var bool
      */
-    private $includeTax;
+    private $includesTax;
 
     /**
      * @var DecimalNumber
@@ -77,24 +77,14 @@ class AddSpecificPriceCommand
     private $shopId;
 
     /**
-     * @var int|null
+     * @var CombinationId|null
      */
-    private $cartId;
-
-    /**
-     * @var int|null
-     */
-    private $productAttributeId;
+    private $combinationId;
 
     /**
      * @var int|null
      */
     private $currencyId;
-
-    /**
-     * @var int|null
-     */
-    private $catalogPriceRuleId;
 
     /**
      * @var int|null
@@ -130,6 +120,7 @@ class AddSpecificPriceCommand
      * @param int $fromQuantity
      *
      * @throws DomainConstraintException
+     * @throws ProductConstraintException
      */
     public function __construct(
         int $productId,
@@ -141,7 +132,7 @@ class AddSpecificPriceCommand
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
-        $this->includeTax = $includeTax;
+        $this->includesTax = $includeTax;
         $this->price = new DecimalNumber((string) $price);
         $this->fromQuantity = $fromQuantity;
     }
@@ -165,9 +156,9 @@ class AddSpecificPriceCommand
     /**
      * @return bool
      */
-    public function isIncludeTax(): bool
+    public function includesTax(): bool
     {
-        return $this->includeTax;
+        return $this->includesTax;
     }
 
     /**
@@ -196,10 +187,14 @@ class AddSpecificPriceCommand
 
     /**
      * @param DateTime|null $dateTimeFrom
+     *
+     * @return $this
      */
-    public function setDateTimeFrom(?DateTime $dateTimeFrom): void
+    public function setDateTimeFrom(?DateTime $dateTimeFrom): self
     {
-        $this->dateTimeFrom = $this->createDateTime($dateTimeFrom);
+        $this->dateTimeFrom = $dateTimeFrom;
+
+        return $this;
     }
 
     /**
@@ -212,10 +207,14 @@ class AddSpecificPriceCommand
 
     /**
      * @param int $shopGroupId
+     *
+     * @return $this
      */
-    public function setShopGroupId(int $shopGroupId): void
+    public function setShopGroupId(int $shopGroupId): self
     {
         $this->shopGroupId = $shopGroupId;
+
+        return $this;
     }
 
     /**
@@ -228,42 +227,34 @@ class AddSpecificPriceCommand
 
     /**
      * @param int $shopId
+     *
+     * @return $this
      */
-    public function setShopId(int $shopId): void
+    public function setShopId(int $shopId): self
     {
         $this->shopId = $shopId;
+
+        return $this;
     }
 
     /**
-     * @return int|null
+     * @return CombinationId|null
      */
-    public function getCartId(): ?int
+    public function getCombinationId(): ?CombinationId
     {
-        return $this->cartId;
+        return $this->combinationId;
     }
 
     /**
-     * @param int $cartId
+     * @param int $combinationId
+     *
+     * @return $this
      */
-    public function setCartId(int $cartId): void
+    public function setCombinationId(int $combinationId): self
     {
-        $this->cartId = $cartId;
-    }
+        $this->combinationId = new CombinationId($combinationId);
 
-    /**
-     * @return int|null
-     */
-    public function getProductAttributeId(): ?int
-    {
-        return $this->productAttributeId;
-    }
-
-    /**
-     * @param int $productAttributeId
-     */
-    public function setProductAttributeId(int $productAttributeId): void
-    {
-        $this->productAttributeId = $productAttributeId;
+        return $this;
     }
 
     /**
@@ -276,46 +267,14 @@ class AddSpecificPriceCommand
 
     /**
      * @param int $currencyId
+     *
+     * @return $this
      */
-    public function setCurrencyId(int $currencyId): void
+    public function setCurrencyId(int $currencyId): self
     {
         $this->currencyId = $currencyId;
-    }
 
-    /**
-     * @return int|null
-     *
-     * @deprecated use getCatalogPriceRuleId() instead. (wrong naming used in migration process)
-     */
-    public function getCartRuleId(): ?int
-    {
-        return $this->catalogPriceRuleId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCatalogPriceRuleId(): ?int
-    {
-        return $this->catalogPriceRuleId;
-    }
-
-    /**
-     * @param int $cartRuleId
-     *
-     * @deprecated use setCatalogPriceRuleId() instead. (wrong naming used in migration process)
-     */
-    public function setCartRuleId(int $cartRuleId): void
-    {
-        $this->catalogPriceRuleId = $cartRuleId;
-    }
-
-    /**
-     * @param int $catalogPriceRuleId
-     */
-    public function setCatalogPriceRuleId(int $catalogPriceRuleId): void
-    {
-        $this->catalogPriceRuleId = $catalogPriceRuleId;
+        return $this;
     }
 
     /**
@@ -328,10 +287,14 @@ class AddSpecificPriceCommand
 
     /**
      * @param int $countryId
+     *
+     * @return $this
      */
-    public function setCountryId(int $countryId): void
+    public function setCountryId(int $countryId): self
     {
         $this->countryId = $countryId;
+
+        return $this;
     }
 
     /**
@@ -344,10 +307,14 @@ class AddSpecificPriceCommand
 
     /**
      * @param int $groupId
+     *
+     * @return $this
      */
-    public function setGroupId(int $groupId): void
+    public function setGroupId(int $groupId): self
     {
         $this->groupId = $groupId;
+
+        return $this;
     }
 
     /**
@@ -360,10 +327,14 @@ class AddSpecificPriceCommand
 
     /**
      * @param int $customerId
+     *
+     * @return $this
      */
-    public function setCustomerId(int $customerId): void
+    public function setCustomerId(int $customerId): self
     {
         $this->customerId = $customerId;
+
+        return $this;
     }
 
     /**
@@ -376,25 +347,13 @@ class AddSpecificPriceCommand
 
     /**
      * @param DateTime|null $dateTimeTo
+     *
+     * @return $this
      */
-    public function setDateTimeTo(?DateTime $dateTimeTo): void
+    public function setDateTimeTo(?DateTime $dateTimeTo): self
     {
-        $this->dateTimeTo = $this->createDateTime($dateTimeTo);
-    }
+        $this->dateTimeTo = $dateTimeTo;
 
-    /**
-     * @param string $dateTime
-     *
-     * @return DateTime
-     *
-     * @throws SpecificPriceConstraintException
-     */
-    private function createDateTime(string $dateTime): DateTime
-    {
-        try {
-            return new DateTime($dateTime);
-        } catch (Exception $e) {
-            throw new SpecificPriceConstraintException('An error occurred when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
-        }
+        return $this;
     }
 }

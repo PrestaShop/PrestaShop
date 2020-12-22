@@ -26,36 +26,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\SpecificPricePriorityUpdater;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 
 /**
- * Handles @see SetGlobalSpecificPricePriorityCommand using legacy object model
+ * Query which provides specific price for editing
  */
-final class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPricePriorityHandlerInterface
+class GetSpecificPriceForEditing
 {
     /**
-     * @var SpecificPricePriorityUpdater
+     * @var SpecificPriceId
      */
-    private $specificPricePriorityUpdater;
+    private $specificPriceId;
 
     /**
-     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
+     * @param int $specificPriceId
      */
     public function __construct(
-        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+        int $specificPriceId
     ) {
-        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
+        $this->specificPriceId = new SpecificPriceId($specificPriceId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return SpecificPriceId
      */
-    public function handle(SetGlobalSpecificPricePriorityCommand $command): void
+    public function getSpecificPriceId(): SpecificPriceId
     {
-        $this->specificPricePriorityUpdater->setGlobalPriorities($command->getPriorityList());
+        return $this->specificPriceId;
     }
 }

@@ -396,6 +396,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $deleteSpecificPriceCommand = new DeleteSpecificPriceByCartProductCommand($cartId, $productId);
 
+            // @todo: this shouldn't be used use UpdateProductPriceInCartCommand
             $addSpecificPriceCommand = new AddSpecificPriceCommand(
                 $productId,
                 Reduction::TYPE_AMOUNT,

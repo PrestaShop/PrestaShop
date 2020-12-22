@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\SpecificPrice\Update\SpecificPricePriorityUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\SetSpecificPricePriorityForProductHandlerInterface;
 
