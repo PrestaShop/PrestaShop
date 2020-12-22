@@ -25,6 +25,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
+    this.contactUsLink = '#link-static-page-contact-2';
     // footer links
     this.footerLinksDiv = '#footer div.links';
     this.wrapperDiv = position => `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(${position})`;
@@ -234,5 +235,14 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToSitemapPage(page) {
     await this.clickAndWaitForNavigation(page, this.siteMapLink);
+  }
+
+  /**
+   * CLick on contact us link on footer and go to page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToContactUsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.contactUsLink);
   }
 };

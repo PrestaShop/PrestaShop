@@ -61,6 +61,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Customer Service
     this.customerServiceParentLink = '#subtab-AdminParentCustomerThreads';
+    this.customerServiceLink = '#subtab-AdminCustomerThreads';
     // Order Messages
     this.orderMessagesLink = '#subtab-AdminOrderMessage';
 
