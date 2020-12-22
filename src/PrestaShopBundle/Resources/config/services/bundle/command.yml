@@ -6,7 +6,7 @@ services:
         class: PrestaShopBundle\Command\PrintCommandsAndQueriesForDocsCommand
         arguments:
             - '@filesystem'
-            - '@prestashop.bundle.twig.native_filesystem_environment'
+            - '@twig'
             - '@prestashop.core.util.string.string_modifier'
         tags:
             - console.command
