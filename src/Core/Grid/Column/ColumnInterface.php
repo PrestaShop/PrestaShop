@@ -69,6 +69,13 @@ interface ColumnInterface
     public function getOptions();
 
     /**
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getOption(string $name);
+
+    /**
      * Set column options.
      *
      * @param array $options
