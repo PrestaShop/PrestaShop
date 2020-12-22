@@ -34,7 +34,7 @@ class AddSearchEngine extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

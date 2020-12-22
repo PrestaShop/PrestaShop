@@ -231,7 +231,7 @@ class Order extends BOBasePage {
       page,
       this.updateStatusInTableDropdownChoice(row, status.id),
     );
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -325,7 +325,7 @@ class Order extends BOBasePage {
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
     await this.clickAndWaitForNavigation(page, this.updateOrdersStatusModalButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 

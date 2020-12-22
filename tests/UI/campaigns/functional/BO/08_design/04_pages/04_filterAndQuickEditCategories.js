@@ -242,10 +242,7 @@ describe('Filter And Quick Edit Categories', async () => {
           );
 
           if (isActionPerformed) {
-            const resultMessage = await pagesPage.getTextContent(
-              page,
-              pagesPage.alertSuccessBlockParagraph,
-            );
+            const resultMessage = await pagesPage.getAlertSuccessBlockParagraphContent(page);
             await expect(resultMessage).to.contains(pagesPage.successfulUpdateStatusMessage);
           }
 

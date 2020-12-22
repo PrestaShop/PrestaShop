@@ -38,7 +38,7 @@ class AddFile extends BOBasePage {
     await fileInputElement.setInputFiles(fileData.filename);
     // Save Supplier
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

@@ -425,7 +425,7 @@ class Product extends BOBasePage {
     // Duplicate product and go to add product page
     await this.clickAndWaitForNavigation(page, this.dropdownMenuDuplicateLink(row));
 
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -450,7 +450,7 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -476,7 +476,7 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -497,7 +497,7 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, status ? this.productBulkEnableLink : this.productBulkDisableLink);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

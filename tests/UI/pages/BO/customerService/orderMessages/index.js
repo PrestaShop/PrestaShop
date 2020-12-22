@@ -129,7 +129,7 @@ class OrderMessages extends BOBasePage {
       ),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -167,7 +167,7 @@ class OrderMessages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.confirmDeleteOrderMessages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

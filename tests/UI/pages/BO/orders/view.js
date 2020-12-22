@@ -246,7 +246,7 @@ class Order extends BOBasePage {
       await this.setValue(page, this.refundShippingCost(productRow), shipping.toString());
     }
     await this.clickAndWaitForNavigation(page, this.partialRefundSubmitButton);
-    return this.getTextContent(page, this.alertTextBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

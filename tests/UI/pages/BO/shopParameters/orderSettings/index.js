@@ -46,7 +46,7 @@ class OrderSettings extends BOBasePage {
   async setFinalSummaryStatus(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.enableFinalSummaryLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -58,7 +58,7 @@ class OrderSettings extends BOBasePage {
   async setGuestCheckoutStatus(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.enableGuestCheckoutLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -70,7 +70,7 @@ class OrderSettings extends BOBasePage {
   async setReorderOptionStatus(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.disableReorderingLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -82,7 +82,7 @@ class OrderSettings extends BOBasePage {
   async setMinimumPurchaseRequiredTotal(page, value) {
     await this.setValue(page, this.minimumPurchaseRequiredValue, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -98,7 +98,7 @@ class OrderSettings extends BOBasePage {
       await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -119,7 +119,7 @@ class OrderSettings extends BOBasePage {
 
     await page.click(this.recycledPackagingToggle(recyclePackagingStatus ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

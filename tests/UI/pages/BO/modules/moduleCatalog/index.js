@@ -40,7 +40,7 @@ class ModuleCatalog extends BOBasePage {
    */
   async installModule(page, moduleName) {
     await page.click(this.installModuleButton(moduleName));
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 }
 

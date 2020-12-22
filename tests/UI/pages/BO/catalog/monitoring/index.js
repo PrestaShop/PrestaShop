@@ -138,7 +138,7 @@ class Monitoring extends BOBasePage {
     this.dialogListener(page, true);
     await this.openDropdownMenu(page, table, row);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(table, row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Categories methods */
@@ -160,7 +160,7 @@ class Monitoring extends BOBasePage {
     // choose deletion mode
     await page.click(this.deleteModeInput(deletionModePosition));
     await this.clickAndWaitForNavigation(page, this.submitDeleteModeButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
