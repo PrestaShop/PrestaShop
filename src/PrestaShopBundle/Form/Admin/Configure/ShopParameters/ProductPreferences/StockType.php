@@ -77,7 +77,7 @@ class StockType extends TranslatorAwareType
             ->add('delivery_time', TranslatableType::class, [
                 'label' => $this->trans('Delivery time of in-stock products', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                        'Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)',
+                        'Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days).',
                         'Admin.Shopparameters.Help'
                     ) . '</br>' . $this->trans('Leave empty to disable.', 'Admin.Shopparameters.Help'),
                 'type' => TextType::class,
@@ -85,7 +85,7 @@ class StockType extends TranslatorAwareType
             ])
             ->add('oos_delivery_time', TranslatableType::class, [
                 'label' => $this->trans('Delivery time of out-of-stock products with allowed backorders', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days).', 'Admin.Shopparameters.Help'),
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
             ])
