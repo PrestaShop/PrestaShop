@@ -86,7 +86,12 @@ describe('Enable terms of service', async () => {
 
   tests.forEach((test, index) => {
     it(`should ${test.args.action} terms of service`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}TermsOfService${index}`, baseContext);
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        `${test.args.action}TermsOfService${index}`,
+        baseContext,
+      );
 
       const result = await orderSettingsPage.setTermsOfService(page, test.args.enable, test.args.pageName);
       await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
