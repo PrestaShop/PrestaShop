@@ -28,12 +28,12 @@
       <trans-unit id="ffd818d6203d29bd38114292a759cb7d">
         <source>You cannot set a negative position, the minimum for a position is 0.</source>
         <target>You cannot set a negative position, the minimum for a position is 0.</target>
-        <note>Line: 6162</note>
+        <note>Line: 6217</note>
       </trans-unit>
       <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
         <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
         <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
-        <note>Line: 6171</note>
+        <note>Line: 6226</note>
       </trans-unit>
     </body>
   </file>
@@ -43,6 +43,20 @@
         <source>Error on image caption: "%1s" is not a valid caption.</source>
         <target>Error on image caption: "%1s" is not a valid caption.</target>
         <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/QqUploadedFileXhr.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
+        <source>Cannot add image because product creation failed.</source>
+        <target>Cannot add image because product creation failed.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
+        <source>Error while creating additional image</source>
+        <target>Error while creating additional image</target>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -128,6 +142,11 @@
         <target>Unable to initialize these parameters. A combination is missing or an object cannot be loaded.</target>
         <note>Line: 171</note>
       </trans-unit>
+      <trans-unit id="de2a79b3b161c486acb8f80861cd107c">
+        <source>This feature has been disabled. You can activate it here: %link%.</source>
+        <target>This feature has been disabled. You can activate it here: %link%.</target>
+        <note>Line: 238</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -151,11 +170,6 @@
         <source>Failed to delete the attribute.</source>
         <target>Failed to delete the attribute.</target>
         <note>Line: 780</note>
-      </trans-unit>
-      <trans-unit id="de2a79b3b161c486acb8f80861cd107c">
-        <source>This feature has been disabled. You can activate it here: %link%.</source>
-        <target>This feature has been disabled. You can activate it here: %link%.</target>
-        <note>Line: 509</note>
       </trans-unit>
     </body>
   </file>
@@ -493,16 +507,6 @@
         <target>An error occurred while attempting to add products to the pack.</target>
         <note>Line: 3147</note>
       </trans-unit>
-      <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
-        <source>Cannot add image because product creation failed.</source>
-        <target>Cannot add image because product creation failed.</target>
-        <note>Line: 2804</note>
-      </trans-unit>
-      <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
-        <source>Error while creating additional image</source>
-        <target>Error while creating additional image</target>
-        <note>Line: 2837</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -828,19 +832,24 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
-        <source>There are not enough products in stock.</source>
-        <target>There are not enough products in stock.</target>
-        <note>Line: 591</note>
+      <trans-unit id="891d308560a0cca2452fd2f482dded8c">
+        <source><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></source>
+        <target><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></target>
+        <note>Line: 592</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
+        <source>There are not enough products in stock.</source>
+        <target>There are not enough products in stock.</target>
+        <note>Line: 1791</note>
+      </trans-unit>
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>Line: 1531</note>
+        <note>Line: 1564</note>
       </trans-unit>
     </body>
   </file>
@@ -1058,17 +1067,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4f11b2e8a220dab912231e74a3dfea5d">
         <source>What do you want to do with the products associated with this category?</source>
         <target>What do you want to do with the products associated with this category?</target>
-        <note>Line: 31</note>
+        <note>Line: 28</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="332a0777d848606eb5f63149d0bb1105">
         <source>Note that if they have another category, your products will logically remain associated with it.</source>
         <target>Note that if they have another category, your products will logically remain associated with it.</target>
@@ -1112,12 +1117,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_4_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
         <source>There is no attachment yet.</source>
         <target>There is no attachment yet.</target>
-        <note>Line: 473</note>
+        <note>Line: 399</note>
       </trans-unit>
     </body>
   </file>

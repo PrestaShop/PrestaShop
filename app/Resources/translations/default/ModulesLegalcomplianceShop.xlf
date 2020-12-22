@@ -95,6 +95,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayFooterAfter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5fb4f05f62f9967052977077d783fc2d">
@@ -121,15 +130,6 @@
         <source>shipping excluded</source>
         <target>shipping excluded</target>
         <note>Line: 41</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
-        <source>Information</source>
-        <target>Information</target>
-        <note>Line: 29</note>
       </trans-unit>
     </body>
   </file>

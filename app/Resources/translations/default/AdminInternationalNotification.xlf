@@ -45,20 +45,54 @@
         <target>%s at least, or you will have to edit the translation files manually.</target>
         <note>Line: 47</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
         <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
         <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
-        <note>Line: 33</note>
+        <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="1f0f8b59397f34d499b181297714713a">
         <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
         <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
-        <note>Line: 39</note>
+        <note>Line: 37</note>
       </trans-unit>
+      <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
+        <source>Please ask your hosting provider to increase the Suhosin limit to</source>
+        <target>Please ask your hosting provider to increase the Suhosin limit to</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="5ad040870ae5ccaeb2d57e4d052163a4">
+        <source>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</source>
+        <target>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
+        <source>for max_input_vars.</source>
+        <target>for max_input_vars.</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="6e709babf4b5a0ed4194ad5240e1be2c">
+        <source>Please ask your hosting provider to increase this limit to</source>
+        <target>Please ask your hosting provider to increase this limit to</target>
+        <note>Line: 45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
+        <source>%s at least, or you will have to edit the translation files.</source>
+        <target>%s at least, or you will have to edit the translation files.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
+        <source>This expression uses a special syntax:</source>
+        <target>This expression uses a special syntax:</target>
+        <note>Line: 133</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
         <target>%limit% for suhosin.post.max_vars.</target>
@@ -69,40 +103,6 @@
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 42</note>
       </trans-unit>
-      <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
-        <source>Please ask your hosting provider to increase the Suhosin limit to</source>
-        <target>Please ask your hosting provider to increase the Suhosin limit to</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="5ad040870ae5ccaeb2d57e4d052163a4">
-        <source>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</source>
-        <target>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
-        <source>for max_input_vars.</source>
-        <target>for max_input_vars.</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="6e709babf4b5a0ed4194ad5240e1be2c">
-        <source>Please ask your hosting provider to increase this limit to</source>
-        <target>Please ask your hosting provider to increase this limit to</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
-        <source>%s at least, or you will have to edit the translation files.</source>
-        <target>%s at least, or you will have to edit the translation files.</target>
-        <note>Line: 49</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
-        <source>This expression uses a special syntax:</source>
-        <target>This expression uses a special syntax:</target>
-        <note>Line: 140</note>
-      </trans-unit>
     </body>
   </file>
   <file original="classes/Language.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -110,29 +110,29 @@
       <trans-unit id="87c6e26b4d5c8e6c145691758c25b769">
         <source>Fatal error: IETF code %s is not correct</source>
         <target>Fatal error: IETF code %s is not correct</target>
-        <note>Line: 894</note>
+        <note>Line: 899</note>
       </trans-unit>
       <trans-unit id="bec88b0b441e9deb3008eb5b2a57ec70">
         <source>Sorry this language is not available</source>
         <target>Sorry this language is not available</target>
-        <note>Line: 1151</note>
+        <note>Line: 1156</note>
       </trans-unit>
       <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
         <source>Server does not have permissions for writing.</source>
         <target>Server does not have permissions for writing.</target>
-        <note>Line: 1177
+        <note>Line: 1182
 Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
         <source>Language pack unavailable.</source>
         <target>Language pack unavailable.</target>
-        <note>Line: 1190
+        <note>Line: 1195
 Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
         <source>An error occurred while creating the language: %s</source>
         <target>An error occurred while creating the language: %s</target>
-        <note>Line: 1260</note>
+        <note>Line: 1265</note>
       </trans-unit>
     </body>
   </file>
@@ -191,47 +191,47 @@ Comment: @todo Throw exception</note>
       <trans-unit id="19f29a24f0ccb9b96b37182473b27d63">
         <source>Invalid currency properties.</source>
         <target>Invalid currency properties.</target>
-        <note>Line: 343</note>
+        <note>Line: 344</note>
       </trans-unit>
       <trans-unit id="0e7c10cc4eabebc9bd8f1b9cb8b81bb6">
         <source>An error occurred while importing the currency: %s</source>
         <target>An error occurred while importing the currency: %s</target>
-        <note>Line: 349</note>
+        <note>Line: 350</note>
       </trans-unit>
       <trans-unit id="4a11be1a3905ec59ca2d35a068de6f2e">
         <source>Localization pack corrupted: wrong unit type.</source>
         <target>Localization pack corrupted: wrong unit type.</target>
-        <note>Line: 489</note>
+        <note>Line: 490</note>
       </trans-unit>
       <trans-unit id="28194875b1f41da98a320b0c31e658a2">
         <source>An error occurred while setting the units.</source>
         <target>An error occurred while setting the units.</target>
-        <note>Line: 494</note>
+        <note>Line: 495</note>
       </trans-unit>
       <trans-unit id="0964494eb4e763fd08c6004a31b4b8a7">
         <source>An error occurred while installing the module: %s</source>
         <target>An error occurred while installing the module: %s</target>
-        <note>Line: 528</note>
+        <note>Line: 529</note>
       </trans-unit>
       <trans-unit id="e9b1cabd191f8141419c43cc46802e35">
         <source>An error occurred while uninstalling the module: %s</source>
         <target>An error occurred while uninstalling the module: %s</target>
-        <note>Line: 533</note>
+        <note>Line: 534</note>
       </trans-unit>
       <trans-unit id="e7ae5e7fbebb7b087110d07b06bd2418">
         <source>An error occurred during the configuration setup: %1$s</source>
         <target>An error occurred during the configuration setup: %1$s</target>
-        <note>Line: 567</note>
+        <note>Line: 568</note>
       </trans-unit>
       <trans-unit id="b34f6454b80599ab92262b1da79a9edb">
         <source>An error occurred during the default group update</source>
         <target>An error occurred during the default group update</target>
-        <note>Line: 605</note>
+        <note>Line: 606</note>
       </trans-unit>
       <trans-unit id="09a0fad4c9a9702b2db457f6bff88f3d">
         <source>An error has occurred during the default group update</source>
         <target>An error has occurred during the default group update</target>
-        <note>Line: 609</note>
+        <note>Line: 610</note>
       </trans-unit>
     </body>
   </file>
@@ -621,32 +621,32 @@ Comment: @todo Throw exception</note>
       <trans-unit id="8246d0c794e7db090587c4797b2a234f">
         <source>You cannot delete the default currency</source>
         <target>You cannot delete the default currency</target>
-        <note>Line: 540</note>
+        <note>Line: 547</note>
       </trans-unit>
       <trans-unit id="7c77e53206853cb381e91e037554faa3">
         <source>You cannot disable the default currency</source>
         <target>You cannot disable the default currency</target>
-        <note>Line: 544</note>
+        <note>Line: 551</note>
       </trans-unit>
       <trans-unit id="9289665482a13fc74be054caef49b63e">
         <source>This currency already exists.</source>
         <target>This currency already exists.</target>
-        <note>Line: 500</note>
+        <note>Line: 507</note>
       </trans-unit>
       <trans-unit id="0bb1c64dda8dcd3473e0eee6c06c8a4e">
         <source>%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association</source>
         <target>%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association</target>
-        <note>Line: 515</note>
+        <note>Line: 522</note>
       </trans-unit>
       <trans-unit id="d51f13fb7e04f0002b08f14370e565a9">
         <source>%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled</source>
         <target>%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled</target>
-        <note>Line: 523</note>
+        <note>Line: 530</note>
       </trans-unit>
       <trans-unit id="32308f335c5aca97078cb283ce88f9d3">
         <source>Oops... it looks like this ISO code already exists. If you are: [1][2]trying to create an alternative currency, you must type a different ISO code[/2][2]trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box[/2][/1]</source>
         <target>Oops... it looks like this ISO code already exists. If you are: [1][2]trying to create an alternative currency, you must type a different ISO code[/2][2]trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box[/2][/1]</target>
-        <note>Line: 548</note>
+        <note>Line: 555</note>
       </trans-unit>
     </body>
   </file>

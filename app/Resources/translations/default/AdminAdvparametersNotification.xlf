@@ -540,11 +540,6 @@
         <target>URL rewriting failed to auto-generate a friendly URL for: %category_name%</target>
         <note>Line: 350</note>
       </trans-unit>
-      <trans-unit id="4798b868d51d8e259321deff0452c0f9">
-        <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
-        <target>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</target>
-        <note>Line: 364</note>
-      </trans-unit>
       <trans-unit id="a118c8120ef45c8b1bed36f341fa45f1">
         <source>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</source>
         <target>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</target>
@@ -569,6 +564,11 @@
   </file>
   <file original="src/Adapter/Import/Handler/ProductImportHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4798b868d51d8e259321deff0452c0f9">
+        <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
+        <target>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</target>
+        <note>Line: 758</note>
+      </trans-unit>
       <trans-unit id="2666baaca25feea0b2dc641cfab50d8a">
         <source>Unknown tax rule group ID. You need to create a group with this ID first.</source>
         <target>Unknown tax rule group ID. You need to create a group with this ID first.</target>
@@ -1065,11 +1065,6 @@
         <target>The import directory must be writable (CHMOD 755 / 777).</target>
         <note>Line: 391</note>
       </trans-unit>
-      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
-        <source>To proceed, please upload a file first.</source>
-        <target>To proceed, please upload a file first.</target>
-        <note>Line: 277</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportDataConfigurationController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1115,11 +1110,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="155657899b93f70358eed115631fdb04">
-        <source>Key length must be 32 character long.</source>
-        <target>Key length must be 32 character long.</target>
-        <note>Line: 360</note>
-      </trans-unit>
       <trans-unit id="441006dbdaef41a163047624fe1241ab">
         <source>This key already exists.</source>
         <target>This key already exists.</target>
@@ -1148,6 +1138,24 @@
         <source>(you must install the [a]Xcache extension[/a])</source>
         <target>(you must install the [a]Xcache extension[/a])</target>
         <note>Line: 148</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
+        <source>To proceed, please upload a file first.</source>
+        <target>To proceed, please upload a file first.</target>
+        <note>Line: 87</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="155657899b93f70358eed115631fdb04">
+        <source>Key length must be 32 character long.</source>
+        <target>Key length must be 32 character long.</target>
+        <note>Line: 95</note>
       </trans-unit>
     </body>
   </file>

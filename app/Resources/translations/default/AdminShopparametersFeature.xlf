@@ -292,16 +292,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Image height</target>
         <note>Line: 166</note>
       </trans-unit>
-      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
-        <source>Male</source>
-        <target>Male</target>
-        <note>Line: 136</note>
-      </trans-unit>
-      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
-        <source>Female</source>
-        <target>Female</target>
-        <note>Line: 141</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -385,16 +375,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="controllers/admin/AdminReferrersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
-        <source>Visitors</source>
-        <target>Visitors</target>
-        <note>Line: 501</note>
-      </trans-unit>
-      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
-        <source>Visits</source>
-        <target>Visits</target>
-        <note>Line: 502</note>
-      </trans-unit>
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
         <target>Pages</target>
@@ -514,11 +494,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Registration rate</source>
         <target>Registration rate</target>
         <note>Line: 507</note>
-      </trans-unit>
-      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
-        <source>Registrations</source>
-        <target>Registrations</target>
-        <note>Line: 504</note>
       </trans-unit>
     </body>
   </file>
@@ -708,11 +683,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Add new search engine</target>
         <note>Line: 93</note>
       </trans-unit>
-      <trans-unit id="b6f05e5ddde1ec63d992d61144452dfa">
-        <source>Referrer</source>
-        <target>Referrer</target>
-        <note>Line: 64</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -865,11 +835,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e93c33bd1341ab74195430daeb63db13">
-        <source>Shop name</source>
-        <target>Shop name</target>
-        <note>Line: 449</note>
-      </trans-unit>
       <trans-unit id="57034def557be4e71accee021e74ce5b">
         <source>Add new store</source>
         <target>Add new store</target>
@@ -996,8 +961,31 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/dashproducts/dashproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
+        <source>Search</source>
+        <target>Search</target>
+        <note>Line: 384</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mainmenu/ps_mainmenu.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e93c33bd1341ab74195430daeb63db13">
+        <source>Shop name</source>
+        <target>Shop name</target>
+        <note>Line: 1361</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/statsforecast/statsforecast.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
+        <source>Registrations</source>
+        <target>Registrations</target>
+        <note>Line: 222</note>
+      </trans-unit>
       <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
         <source>Unknown</source>
         <target>Unknown</target>
@@ -1007,6 +995,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="modules/statslive/statslive.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b6f05e5ddde1ec63d992d61144452dfa">
+        <source>Referrer</source>
+        <target>Referrer</target>
+        <note>Line: 198</note>
+      </trans-unit>
       <trans-unit id="a55533db46597bee3cd16899c007257e">
         <source>There are no visitors online.</source>
         <target>There are no visitors online.</target>
@@ -1016,6 +1009,43 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Undefined</source>
         <target>Undefined</target>
         <note>Line: 207</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statspersonalinfos/statspersonalinfos.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
+        <source>Male</source>
+        <target>Male</target>
+        <note>Line: 217</note>
+      </trans-unit>
+      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
+        <source>Female</source>
+        <target>Female</target>
+        <note>Line: 218</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsproduct/statsproduct.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="df644ae155e79abf54175bd15d75f363">
+        <source>Product name</source>
+        <target>Product name</target>
+        <note>Line: 290</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsvisits/statsvisits.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
+        <source>Visitors</source>
+        <target>Visitors</target>
+        <note>Line: 142</note>
+      </trans-unit>
+      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
+        <source>Visits</source>
+        <target>Visits</target>
+        <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
@@ -1044,15 +1074,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Alias</source>
         <target>Alias</target>
         <note>Line: 58</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/EntityField/Provider/AliasFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
-        <source>Search</source>
-        <target>Search</target>
-        <note>Line: 59</note>
       </trans-unit>
     </body>
   </file>
@@ -1174,6 +1195,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Page for terms and conditions</target>
         <note>Line: 125</note>
       </trans-unit>
+      <trans-unit id="c6ca929dc4c8193ad6cd154e9e075ac9">
+        <source>Minimum purchase total required in order to validate the order</source>
+        <target>Minimum purchase total required in order to validate the order</target>
+        <note>Line: 93</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GiftOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1200,22 +1226,8 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c6ca929dc4c8193ad6cd154e9e075ac9">
-        <source>Minimum purchase total required in order to validate the order</source>
-        <target>Minimum purchase total required in order to validate the order</target>
-        <note>Line: 126</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="df644ae155e79abf54175bd15d75f363">
-        <source>Product name</source>
-        <target>Product name</target>
-        <note>Line: 50</note>
-      </trans-unit>
       <trans-unit id="290b7c47045d269e2ccfa69e6477acfe">
         <source>Product price</source>
         <target>Product price</target>

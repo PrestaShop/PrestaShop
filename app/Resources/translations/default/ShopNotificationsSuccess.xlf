@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/checkout/CheckoutAddressesStep.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2e3e7c5849ac5eefe1cc6c4c73f182af">
+        <source>Address successfully deleted!</source>
+        <target>Address successfully deleted!</target>
+        <note>Line: 145</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e8699fcc0a32d2a30f1506e3ab4e3c5f">
@@ -11,11 +20,6 @@
         <source>Address successfully added!</source>
         <target>Address successfully added!</target>
         <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="2e3e7c5849ac5eefe1cc6c4c73f182af">
-        <source>Address successfully deleted!</source>
-        <target>Address successfully deleted!</target>
-        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>

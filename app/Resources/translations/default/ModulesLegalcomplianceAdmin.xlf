@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_legalcompliance/controllers/AdminAEUCController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/ps_legalcompliance.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="de2cd9f1dfad85516edd95679af377fd">
         <source>Legal Compliance</source>
         <target>Legal Compliance</target>
-        <note>Line: 33</note>
+        <note>Line: 79</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_legalcompliance/ps_legalcompliance.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="3abc778d1eb09576ba6b26848520bbdd">
         <source>This module helps merchants comply with applicable e-commerce laws.</source>
         <target>This module helps merchants comply with applicable e-commerce laws.</target>

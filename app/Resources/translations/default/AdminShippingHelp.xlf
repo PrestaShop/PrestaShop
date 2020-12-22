@@ -110,35 +110,35 @@
         <target>Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.</target>
         <note>Line: 415</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="07b693f09040dc64d3c36b5daf95caae">
         <source>Allowed characters: letters, spaces and "%special_chars%".</source>
         <target>Allowed characters: letters, spaces and "%special_chars%".</target>
-        <note>Line: 175</note>
+        <note>Line: 188</note>
       </trans-unit>
       <trans-unit id="a788f81b3aa0ef9c9efcb1fb67708d82">
         <source>For in-store pickup, enter 0 to replace the carrier name with your shop name.</source>
         <target>For in-store pickup, enter 0 to replace the carrier name with your shop name.</target>
-        <note>Line: 177</note>
+        <note>Line: 190</note>
       </trans-unit>
       <trans-unit id="4ca4a355318f45dac9fb0ee632d8dc3c">
         <source>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</source>
         <target>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</target>
-        <note>Line: 200</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="d7049d8a068769eb32177e404639b8ce">
         <source>Mark the groups that are allowed access to this carrier.</source>
         <target>Mark the groups that are allowed access to this carrier.</target>
-        <note>Line: 224</note>
+        <note>Line: 422</note>
       </trans-unit>
       <trans-unit id="1c6c9d089ce4b751673e3dd09e97b935">
         <source>Enable the carrier in the front office.</source>
         <target>Enable the carrier in the front office.</target>
-        <note>Line: 245</note>
+        <note>Line: 471</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="3194ebe40c7a8c29c78ea79066b6e05c">
         <source>Carrier name displayed during checkout</source>
         <target>Carrier name displayed during checkout</target>

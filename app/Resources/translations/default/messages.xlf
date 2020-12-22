@@ -207,6 +207,11 @@
         <target>Real Time</target>
         <note>Line: 62</note>
       </trans-unit>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Read more</target>
+        <note>Line: 30</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -354,11 +359,6 @@
         <source>Manage hooks</source>
         <target>Manage hooks</target>
         <note>Line: 107</note>
-      </trans-unit>
-      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
-        <source>Uninstall</source>
-        <target>Uninstall</target>
-        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -555,6 +555,11 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
+        <source>Uninstall</source>
+        <target>Uninstall</target>
+        <note>Line: 99</note>
+      </trans-unit>
       <trans-unit id="4f9b5fa08f2ef86fdc5d0ceefc271981">
         <source>Remove from Favorites</source>
         <target>Remove from Favorites</target>
@@ -630,69 +635,10 @@
         <target>Free</target>
         <note>Line: 84</note>
       </trans-unit>
-      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
-        <source>Read more</source>
-        <target>Read more</target>
-        <note>Line: 73</note>
-      </trans-unit>
       <trans-unit id="349838fb1d851d3e2014b9fe39203275">
         <source>Install</source>
         <target>Install</target>
         <note>Line: 115</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/login_addons.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ee0e3cf3fd1a733924756c6534826843">
-        <source>If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:</source>
-        <target>If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="c84172ea13aaad319bfb3324c8fda5ed">
-        <source>Enable PHP's allow_url_fopen setting</source>
-        <target>Enable PHP's allow_url_fopen setting</target>
-        <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="27d8cabeab5ec86130d0e9048a085b57">
-        <source>Enable PHP's OpenSSL extension</source>
-        <target>Enable PHP's OpenSSL extension</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="40218c0320e986d6b29fde4259ac43c2">
-        <source>Connect your shop to PrestaShop's marketplace in order to automatically import all your Addons purchases.</source>
-        <target>Connect your shop to PrestaShop's marketplace in order to automatically import all your Addons purchases.</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="a5f61298da21626d0f490ebd06ecd811">
-        <source>Don't have an account?</source>
-        <target>Don't have an account?</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="030547d47b4cb2e88a3c9a581a61487a">
-        <source>Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity</source>
-        <target>Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="74ec9ffc8d108924d191065b416d8544">
-        <source>Connect to PrestaShop Addons</source>
-        <target>Connect to PrestaShop Addons</target>
-        <note>Line: 50</note>
-      </trans-unit>
-      <trans-unit id="b05d72142020283dc6812fd3a9bc691c">
-        <source>I forgot my password</source>
-        <target>I forgot my password</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="2fe4fe0a0ebea41ce43eb3dc3fce4ea3">
-        <source>Create an Account</source>
-        <target>Create an Account</target>
-        <note>Line: 72</note>
-      </trans-unit>
-      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
-        <source>Sign in</source>
-        <target>Sign in</target>
-        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>
@@ -753,6 +699,21 @@
         <target>Back</target>
         <note>Line: 88</note>
       </trans-unit>
+      <trans-unit id="6754e4799f554bcdf4fef4782bf4d7de">
+        <source>This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.</source>
+        <target>This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="a517747c3d12f99244ae598910d979c5">
+        <source>Author</source>
+        <target>Author</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="249212ebba2907c6087887db076179e6">
+        <source>Back to modules list</source>
+        <target>Back to modules list</target>
+        <note>Line: 54</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/modal_not_trusted_blocked.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -776,21 +737,6 @@
         <source>[1]Click here to browse our catalog on PrestaShop Addons[/1].</source>
         <target>[1]Click here to browse our catalog on PrestaShop Addons[/1].</target>
         <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="6754e4799f554bcdf4fef4782bf4d7de">
-        <source>This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.</source>
-        <target>This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.</target>
-        <note>Line: 30</note>
-      </trans-unit>
-      <trans-unit id="a517747c3d12f99244ae598910d979c5">
-        <source>Author</source>
-        <target>Author</target>
-        <note>Line: 44</note>
-      </trans-unit>
-      <trans-unit id="249212ebba2907c6087887db076179e6">
-        <source>Back to modules list</source>
-        <target>Back to modules list</target>
-        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -909,15 +855,15 @@
         <target>All</target>
         <note>Line: 110</note>
       </trans-unit>
-      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
-        <source>Add a new module</source>
-        <target>Add a new module</target>
-        <note>Line: 42</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/page_header_toolbar-legacy.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="96e36efe70e72835ae51946e2650f9e7">
+        <source>Add a new module</source>
+        <target>Add a new module</target>
+        <note>Line: 70</note>
+      </trans-unit>
       <trans-unit id="28080c3603fb7e10f228381b181cae2c">
         <source>List of modules</source>
         <target>List of modules</target>
@@ -1396,7 +1342,7 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
         <source>%limit% for suhosin.post.max_vars.</source>
@@ -1408,19 +1354,19 @@
         <target>%limit% for suhosin.request.max_vars.</target>
         <note>Line: 40</note>
       </trans-unit>
+      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
+        <source>%d</source>
+        <target>%d</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="f324bbd9de83d61ccb5f7d5593aec5b3">
         <source>You MUST use this syntax in your translations. Here are several examples:</source>
         <target>You MUST use this syntax in your translations. Here are several examples:</target>
         <note>Line: 86</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a7bd935a88c629dc11c52e0c16c2a8a0">
-        <source>%d</source>
-        <target>%d</target>
-        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -1695,6 +1641,11 @@
         <target>Dec</target>
         <note>Line: 117</note>
       </trans-unit>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>Line: 87</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/helpers/dataviz/graph.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1737,6 +1688,11 @@
         <source>Group:</source>
         <target>Group:</target>
         <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="804ccd6219996d12eda865d1c0707423">
+        <source>All shops</source>
+        <target>All shops</target>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -1928,11 +1884,6 @@
         <target>and stay</target>
         <note>Line: 203</note>
       </trans-unit>
-      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
-        <source>From</source>
-        <target>From</target>
-        <note>Line: 343</note>
-      </trans-unit>
       <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
         <source>Reset</source>
         <target>Reset</target>
@@ -2036,20 +1987,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="804ccd6219996d12eda865d1c0707423">
-        <source>All shops</source>
-        <target>All shops</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
-        <source>%s group</source>
-        <target>%s group</target>
-        <note>Line: 42</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/helpers/tree/tree_node_folder_checkbox.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="24fc6fbf93a9d551ea7da4cd69f3da3e">
@@ -2109,20 +2046,20 @@
         <target>Remove file</target>
         <note>Line: 178</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/uploader/simple.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="1908624a0bca678cd26b99bfd405324e">
         <source>File size</source>
         <target>File size</target>
-        <note>Line: 39</note>
+        <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
         <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
         <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
-        <note>Line: 56</note>
+        <note>Line: 48</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/helpers/uploader/simple.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="d39ec66f08507e26fe86aa5325d070df">
         <source>Add files</source>
         <target>Add files</target>
@@ -2362,6 +2299,60 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/new-theme/template/controllers/modules/login_addons.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ee0e3cf3fd1a733924756c6534826843">
+        <source>If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:</source>
+        <target>If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="c84172ea13aaad319bfb3324c8fda5ed">
+        <source>Enable PHP's allow_url_fopen setting</source>
+        <target>Enable PHP's allow_url_fopen setting</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="27d8cabeab5ec86130d0e9048a085b57">
+        <source>Enable PHP's OpenSSL extension</source>
+        <target>Enable PHP's OpenSSL extension</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="40218c0320e986d6b29fde4259ac43c2">
+        <source>Connect your shop to PrestaShop's marketplace in order to automatically import all your Addons purchases.</source>
+        <target>Connect your shop to PrestaShop's marketplace in order to automatically import all your Addons purchases.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="a5f61298da21626d0f490ebd06ecd811">
+        <source>Don't have an account?</source>
+        <target>Don't have an account?</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="030547d47b4cb2e88a3c9a581a61487a">
+        <source>Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity</source>
+        <target>Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="74ec9ffc8d108924d191065b416d8544">
+        <source>Connect to PrestaShop Addons</source>
+        <target>Connect to PrestaShop Addons</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="b05d72142020283dc6812fd3a9bc691c">
+        <source>I forgot my password</source>
+        <target>I forgot my password</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="2fe4fe0a0ebea41ce43eb3dc3fce4ea3">
+        <source>Create an Account</source>
+        <target>Create an Account</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
+        <source>Sign in</source>
+        <target>Sign in</target>
+        <note>Line: 84</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/new-theme/template/error.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ecdb1f330299c20ac9897cd73f92c8cd">
@@ -2452,6 +2443,15 @@
         <source>Search for a product</source>
         <target>Search for a product</target>
         <note>Line: 78</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
+        <source>%s group</source>
+        <target>%s group</target>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>

@@ -733,12 +733,12 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fcf3b725bb6ebb0e635b0f0902ade451">
         <source><![CDATA[Theme & Logo]]></source>
         <target><![CDATA[Theme & Logo]]></target>
-        <note>Line: 28</note>
+        <note>Line: 29</note>
       </trans-unit>
     </body>
   </file>

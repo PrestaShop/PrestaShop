@@ -18,15 +18,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
-        <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</target>
-        <note>Line: 84</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/invalid_token.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="db26e10564e958809d798e8048fcbc0a">
@@ -46,6 +37,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+        <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
+        <target>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</target>
+        <note>Line: 77</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/gsitemap/gsitemap.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
@@ -55,12 +55,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/EmailLogsDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/AttributeGroupGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
-        <note>Line: 285</note>
+        <note>Line: 237</note>
       </trans-unit>
     </body>
   </file>

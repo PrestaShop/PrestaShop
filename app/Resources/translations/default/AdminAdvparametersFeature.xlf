@@ -314,11 +314,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="224154fa6f3601b7de4690ba6a9ad8b4">
-        <source>Multistore tree</source>
-        <target>Multistore tree</target>
-        <note>Line: 111</note>
-      </trans-unit>
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
         <target>Shop group</target>
@@ -373,6 +368,11 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="224154fa6f3601b7de4690ba6a9ad8b4">
+        <source>Multistore tree</source>
+        <target>Multistore tree</target>
+        <note>Line: 367</note>
+      </trans-unit>
       <trans-unit id="4a4d1260782270739eeeef6d58db0f73">
         <source>Shop URL ID</source>
         <target>Shop URL ID</target>
@@ -467,6 +467,24 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/statslive/statslive.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
+        <source>Customer ID</source>
+        <target>Customer ID</target>
+        <note>Line: 159</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsnewsletter/statsnewsletter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="130c5b3473c57faa76e2a1c54e26f88e">
+        <source>Both</source>
+        <target>Both</target>
+        <note>Line: 125</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Email/EmailConfigurationTester.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="94fc5d3be31c72a400c50aae395f1f1f">
@@ -548,12 +566,12 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/AddressGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/AttributeGroupGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
         <source>Refresh list</source>
         <target>Refresh list</target>
-        <note>Line: 267</note>
+        <note>Line: 166</note>
       </trans-unit>
     </body>
   </file>
@@ -640,34 +658,14 @@ Comment: voluntary do affectation here</note>
         <target>Customer email</target>
         <note>Line: 60</note>
       </trans-unit>
-      <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
-        <source>Customer ID</source>
-        <target>Customer ID</target>
-        <note>Line: 61</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Import/EntityField/Provider/CategoryFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f8a0fa3674c3336359b77bbe8e942a2c">
-        <source>ID / Name of shop</source>
-        <target>ID / Name of shop</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="fd0dcc6233b026d257763713c133cf72">
-        <source>Active (0/1)</source>
-        <target>Active (0/1)</target>
-        <note>Line: 58</note>
-      </trans-unit>
       <trans-unit id="6c7c9fbb27699c4018dc15744547b4a4">
         <source>Root category (0/1)</source>
         <target>Root category (0/1)</target>
         <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="427b6d816d7fdd86cabe48d8180a3cc9">
-        <source>Image URL</source>
-        <target>Image URL</target>
-        <note>Line: 71</note>
       </trans-unit>
     </body>
   </file>
@@ -756,6 +754,16 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/Core/Import/EntityField/Provider/ProductFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="f8a0fa3674c3336359b77bbe8e942a2c">
+        <source>ID / Name of shop</source>
+        <target>ID / Name of shop</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="fd0dcc6233b026d257763713c133cf72">
+        <source>Active (0/1)</source>
+        <target>Active (0/1)</target>
+        <note>Line: 58</note>
+      </trans-unit>
       <trans-unit id="52eb5928a34db3e3da7ba52b0644273b">
         <source>EAN13</source>
         <target>EAN13</target>
@@ -955,6 +963,11 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/Core/Import/EntityField/Provider/StoreContactFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="427b6d816d7fdd86cabe48d8180a3cc9">
+        <source>Image URL</source>
+        <target>Image URL</target>
+        <note>Line: 73</note>
+      </trans-unit>
       <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
         <source>Address (2)</source>
         <target>Address (2)</target>
@@ -983,15 +996,6 @@ Comment: voluntary do affectation here</note>
         <source>ID / Name of group shop</source>
         <target>ID / Name of group shop</target>
         <note>Line: 68</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
-        <source>Clear cache</source>
-        <target>Clear cache</target>
-        <note>Line: 58</note>
       </trans-unit>
     </body>
   </file>
@@ -1120,6 +1124,11 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/SmartyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Line: 89</note>
+      </trans-unit>
       <trans-unit id="770d85a02ce8841bd4dac97b57c7fa17">
         <source>Template compilation</source>
         <target>Template compilation</target>
@@ -1193,11 +1202,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/EmailConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="130c5b3473c57faa76e2a1c54e26f88e">
-        <source>Both</source>
-        <target>Both</target>
-        <note>Line: 91</note>
-      </trans-unit>
       <trans-unit id="970e79a141128a95d3c2f35f622b6710">
         <source>Send email in HTML format</source>
         <target>Send email in HTML format</target>
@@ -2128,12 +2132,12 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/logo_image.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1908624a0bca678cd26b99bfd405324e">
         <source>File size</source>
         <target>File size</target>
-        <note>Line: 33</note>
+        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>

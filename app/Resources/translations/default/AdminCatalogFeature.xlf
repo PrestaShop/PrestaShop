@@ -234,6 +234,11 @@
         <target>Minute</target>
         <note>Line: 67</note>
       </trans-unit>
+      <trans-unit id="229eb04083e06f419f9ac494329f957d">
+        <source>Conditions</source>
+        <target>Conditions</target>
+        <note>Line: 33</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/cart_rules/informations.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -279,11 +284,6 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="229eb04083e06f419f9ac494329f957d">
-        <source>Conditions</source>
-        <target>Conditions</target>
-        <note>Line: 37</note>
-      </trans-unit>
       <trans-unit id="6982640121765cb57f29e6fe170caadc">
         <source>Add a new condition group</source>
         <target>Add a new condition group</target>
@@ -1025,22 +1025,8 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fd380496c889dcb05d6e996fd1ecaf0b">
-        <source>Choose a value</source>
-        <target>Choose a value</target>
-        <note>Line: 58</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/ProductImageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b3d4e2bcdbf72f5828b3ef09b238c072">
-        <source>Please select a file</source>
-        <target>Please select a file</target>
-        <note>Line: 63</note>
-      </trans-unit>
       <trans-unit id="272ba7d164aa836995be6319a698be84">
         <source>Caption</source>
         <target>Caption</target>
@@ -1069,11 +1055,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Api/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0826c628f8c5f6895c8a1e27e99457fb">
-        <source>Send me an email when the quantity is below or equals this level</source>
-        <target>Send me an email when the quantity is below or equals this level</target>
-        <note>Line: 187</note>
-      </trans-unit>
       <trans-unit id="5321a616e36742f66aa933956e839217">
         <source>Combination name</source>
         <target>Combination name</target>
@@ -1107,6 +1088,11 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Feature/ProductFeature.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="fd380496c889dcb05d6e996fd1ecaf0b">
+        <source>Choose a value</source>
+        <target>Choose a value</target>
+        <note>Line: 152</note>
+      </trans-unit>
       <trans-unit id="5ebd6e1c1cdeac7a7c1896ab842d98da">
         <source>Choose a feature</source>
         <target>Choose a feature</target>
@@ -1124,8 +1110,22 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductAttachement.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b3d4e2bcdbf72f5828b3ef09b238c072">
+        <source>Please select a file</source>
+        <target>Please select a file</target>
+        <note>Line: 71</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCombination.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0826c628f8c5f6895c8a1e27e99457fb">
+        <source>Send me an email when the quantity is below or equals this level</source>
+        <target>Send me an email when the quantity is below or equals this level</target>
+        <note>Line: 178</note>
+      </trans-unit>
       <trans-unit id="cc11780aa5b292dfe984aefc0d76bfad">
         <source>ISBN code</source>
         <target>ISBN code</target>
@@ -1156,20 +1156,40 @@
         <target>Final price</target>
         <note>Line: 217</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCombinationBulk.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="2438bf77baed0680f816ca0f4a7d0321">
         <source>Availability date</source>
         <target>Availability date</target>
-        <note>Line: 91</note>
+        <note>Line: 185</note>
       </trans-unit>
       <trans-unit id="152feab7588733220c3720773724c8d5">
         <source>Impact on price (tax incl.)</source>
         <target>Impact on price (tax incl.)</target>
-        <note>Line: 86</note>
+        <note>Line: 130</note>
       </trans-unit>
+      <trans-unit id="5bb4529a7441854e00e00f8ed0096756">
+        <source>UPC barcode</source>
+        <target>UPC barcode</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="c8effe37e0fefd95ff0cc4873de6e6a6">
+        <source>EAN-13 or JAN barcode</source>
+        <target>EAN-13 or JAN barcode</target>
+        <note>Line: 85</note>
+      </trans-unit>
+      <trans-unit id="c265e7bd60b9bf0470d39a8ef87e0727">
+        <source>Ecotax (tax incl.)</source>
+        <target>Ecotax (tax incl.)</target>
+        <note>Line: 136</note>
+      </trans-unit>
+      <trans-unit id="cdba184783a0253218efd734da81a9da">
+        <source>Stock location</source>
+        <target>Stock location</target>
+        <note>Line: 162</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCombinationBulk.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="2a84584d4f095b4f6e660db58b9576d3">
         <source>Cost Price</source>
         <target>Cost Price</target>
@@ -1228,16 +1248,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5bb4529a7441854e00e00f8ed0096756">
-        <source>UPC barcode</source>
-        <target>UPC barcode</target>
-        <note>Line: 173</note>
-      </trans-unit>
-      <trans-unit id="c8effe37e0fefd95ff0cc4873de6e6a6">
-        <source>EAN-13 or JAN barcode</source>
-        <target>EAN-13 or JAN barcode</target>
-        <note>Line: 182</note>
-      </trans-unit>
       <trans-unit id="13787cfb1a15ae6690a29d3895c54de9">
         <source>Everywhere</source>
         <target>Everywhere</target>
@@ -1307,11 +1317,6 @@
         <target>No tax</target>
         <note>Line: 89</note>
       </trans-unit>
-      <trans-unit id="c265e7bd60b9bf0470d39a8ef87e0727">
-        <source>Ecotax (tax incl.)</source>
-        <target>Ecotax (tax incl.)</target>
-        <note>Line: 120</note>
-      </trans-unit>
       <trans-unit id="133bc9aa44eaaf809041c01ea1361a07">
         <source>Display the "On sale!" flag on the product page, and on product listings.</source>
         <target>Display the "On sale!" flag on the product page, and on product listings.</target>
@@ -1331,11 +1336,6 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="cdba184783a0253218efd734da81a9da">
-        <source>Stock location</source>
-        <target>Stock location</target>
-        <note>Line: 166</note>
-      </trans-unit>
       <trans-unit id="b2c80334809f9130d46e89b66b6d8544">
         <source>Create combinations</source>
         <target>Create combinations</target>
@@ -1534,6 +1534,11 @@
         <target>Delivered within 3-4 days</target>
         <note>Line: 203</note>
       </trans-unit>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Line: 164</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductSpecificPrice.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1673,6 +1678,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
+        <source>Category</source>
+        <target>Category</target>
+        <note>Line: 44</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="77eb276f5dcdf4fbca854e908216f7b2">
@@ -1680,10 +1694,10 @@
         <target>Price (tax incl.)</target>
         <note>Line: 60</note>
       </trans-unit>
-      <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
-        <source>Category</source>
-        <target>Category</target>
-        <note>Line: 54</note>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -1735,11 +1749,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Blocks/tabs.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
-        <source>Shipping</source>
-        <target>Shipping</target>
-        <note>Line: 33</note>
-      </trans-unit>
       <trans-unit id="93d74901738e996378295fb0a59bb977">
         <source>Basic settings</source>
         <target>Basic settings</target>
@@ -1759,6 +1768,11 @@
         <source>Modules</source>
         <target>Modules</target>
         <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="623a9a1f669b091dd76bead27c3252ed">
+        <source>Quantities</source>
+        <target>Quantities</target>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -1838,6 +1852,11 @@
         <target>Images</target>
         <note>Line: 237</note>
       </trans-unit>
+      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
+        <source>Stock</source>
+        <target>Stock</target>
+        <note>Line: 106</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1882,6 +1901,11 @@
         <target>Final price (tax excl.)</target>
         <note>Line: 89</note>
       </trans-unit>
+      <trans-unit id="b9208b03bcc9eb4a336258dcdcb66207">
+        <source>Combinations</source>
+        <target>Combinations</target>
+        <note>Line: 87</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations_bulk.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1914,11 +1938,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_manufacturer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
-        <source>Brand</source>
-        <target>Brand</target>
-        <note>Line: 26</note>
-      </trans-unit>
       <trans-unit id="b7dcc53b5fa2ee513b3eac152af1c8d1">
         <source>Add a brand</source>
         <target>Add a brand</target>
@@ -2033,20 +2052,10 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_supplier_combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e192956d901dff59c35fd2c477ed28d6">
-        <source>Price (tax excl.)</source>
-        <target>Price (tax excl.)</target>
-        <note>Line: 50</note>
-      </trans-unit>
       <trans-unit id="e84e4bed9536affd3b2db4c43cb39f29">
         <source>Supplier reference(s)</source>
         <target>Supplier reference(s)</target>
         <note>Line: 26</note>
-      </trans-unit>
-      <trans-unit id="8284ae5df53e6e7ffc1f2cc67ae68765">
-        <source>Supplier reference</source>
-        <target>Supplier reference</target>
-        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
@@ -2064,22 +2073,8 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
-        <source>Stock</source>
-        <target>Stock</target>
-        <note>Line: 54</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/essentials.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 196</note>
-      </trans-unit>
       <trans-unit id="290612199861c31d1036b185b4e69b75">
         <source>Summary</source>
         <target>Summary</target>
@@ -2134,6 +2129,11 @@
         <source>Product with combinations</source>
         <target>Product with combinations</target>
         <note>Line: 167</note>
+      </trans-unit>
+      <trans-unit id="c795dfff10a7c952f4c5438951e9ece9">
+        <source>Cover</source>
+        <target>Cover</target>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>
@@ -2267,16 +2267,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b9208b03bcc9eb4a336258dcdcb66207">
-        <source>Combinations</source>
-        <target>Combinations</target>
-        <note>Line: 348</note>
-      </trans-unit>
-      <trans-unit id="c795dfff10a7c952f4c5438951e9ece9">
-        <source>Cover</source>
-        <target>Cover</target>
-        <note>Line: 344</note>
-      </trans-unit>
       <trans-unit id="23470f2faa48c53e6fb5fad4e3de3cdd">
         <source>Virtual product</source>
         <target>Virtual product</target>
@@ -2332,11 +2322,6 @@
         <target>To manage all your modules go to the [1]Installed module page[/1]</target>
         <note>Line: 197</note>
       </trans-unit>
-      <trans-unit id="623a9a1f669b091dd76bead27c3252ed">
-        <source>Quantities</source>
-        <target>Quantities</target>
-        <note>Line: 347</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/ProductImage/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2382,6 +2367,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/CatalogPriceRule/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e192956d901dff59c35fd2c477ed28d6">
+        <source>Price (tax excl.)</source>
+        <target>Price (tax excl.)</target>
+        <note>Line: 63</note>
+      </trans-unit>
       <trans-unit id="fc7b398d4af2074cfe73febdb5971153">
         <source>From quantity</source>
         <target>From quantity</target>
@@ -2496,6 +2486,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/Address/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
+        <source>Brand</source>
+        <target>Brand</target>
+        <note>Line: 38</note>
+      </trans-unit>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
         <target>Addresses</target>
@@ -2530,6 +2525,26 @@
         <target>MPN:</target>
         <note>Line: 97</note>
       </trans-unit>
+      <trans-unit id="f8a09f634b7b3ede2da34607da2aaebe">
+        <source>Available quantity</source>
+        <target>Available quantity</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="1caa6ff629641a4eb20f190f7a0539ca">
+        <source>Attribute name</source>
+        <target>Attribute name</target>
+        <note>Line: 65</note>
+      </trans-unit>
+      <trans-unit id="52eb5928a34db3e3da7ba52b0644273b">
+        <source>EAN13</source>
+        <target>EAN13</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
+        <source>UPC</source>
+        <target>UPC</target>
+        <note>Line: 68</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Manufacturer/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2543,6 +2558,11 @@
         <source>Short description</source>
         <target>Short description</target>
         <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
+        <source>Meta title</source>
+        <target>Meta title</target>
+        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>
@@ -2576,39 +2596,15 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Suppliers/Blocks/View/products.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f8a09f634b7b3ede2da34607da2aaebe">
-        <source>Available quantity</source>
-        <target>Available quantity</target>
-        <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="1caa6ff629641a4eb20f190f7a0539ca">
-        <source>Attribute name</source>
-        <target>Attribute name</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="52eb5928a34db3e3da7ba52b0644273b">
-        <source>EAN13</source>
-        <target>EAN13</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
-        <source>UPC</source>
-        <target>UPC</target>
-        <note>Line: 46</note>
+      <trans-unit id="8284ae5df53e6e7ffc1f2cc67ae68765">
+        <source>Supplier reference</source>
+        <target>Supplier reference</target>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="c804723ccdde3d7a46933b208c6f928d">
         <source>Wholesale price</source>
         <target>Wholesale price</target>
         <note>Line: 43</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Suppliers/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
-        <source>Meta title</source>
-        <target>Meta title</target>
-        <note>Line: 118</note>
       </trans-unit>
     </body>
   </file>
@@ -2640,7 +2636,35 @@
       <trans-unit id="8c1279db4db86553e4b9682f78cf500e">
         <source>Expiration date</source>
         <target>Expiration date</target>
-        <note>Line: 103</note>
+        <note>Line: 83</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
+        <source>Shipping</source>
+        <target>Shipping</target>
+        <note>Line: 186</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_4_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
+        <source>Type</source>
+        <target>Type</target>
+        <note>Line: 409</note>
+      </trans-unit>
+      <trans-unit id="1a6570d1068d7dd6f811ff022da8f76d">
+        <source>Main category</source>
+        <target>Main category</target>
+        <note>Line: 176</note>
+      </trans-unit>
+      <trans-unit id="df211c3d69ca4c3564b6ac95d368dc2e">
+        <source>[1][/1] of [2][/2] characters used (recommended)</source>
+        <target>[1][/1] of [2][/2] characters used (recommended)</target>
+        <note>Line: 783</note>
       </trans-unit>
     </body>
   </file>
@@ -2650,25 +2674,6 @@
         <source>[1][/1] of [2][/2] characters allowed</source>
         <target>[1][/1] of [2][/2] characters allowed</target>
         <note>Line: 37</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
-        <source>Type</source>
-        <target>Type</target>
-        <note>Line: 483</note>
-      </trans-unit>
-      <trans-unit id="1a6570d1068d7dd6f811ff022da8f76d">
-        <source>Main category</source>
-        <target>Main category</target>
-        <note>Line: 250</note>
-      </trans-unit>
-      <trans-unit id="df211c3d69ca4c3564b6ac95d368dc2e">
-        <source>[1][/1] of [2][/2] characters used (recommended)</source>
-        <target>[1][/1] of [2][/2] characters used (recommended)</target>
-        <note>Line: 802</note>
       </trans-unit>
     </body>
   </file>
@@ -2683,11 +2688,6 @@
   </file>
   <file original="src/PrestaShopBundle/Translation/Api/StockApi.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
-        <source>None</source>
-        <target>None</target>
-        <note>Line: 65</note>
-      </trans-unit>
       <trans-unit id="5f89a705df3646f402ca886e3c01b034">
         <source>Use checkboxes to bulk edit quantities</source>
         <target>Use checkboxes to bulk edit quantities</target>

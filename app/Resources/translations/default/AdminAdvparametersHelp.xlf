@@ -123,11 +123,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/Core/Import/EntityField/Provider/CategoryFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="11cd708df7411da4546d8580356e711a">
-        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
-        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
-        <note>Line: 75</note>
-      </trans-unit>
       <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
         <source>A category root is where a category tree can begin. This is used with multistore.</source>
         <target>A category root is where a category tree can begin. This is used with multistore.</target>
@@ -146,6 +141,11 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/Core/Import/EntityField/Provider/ProductFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="11cd708df7411da4546d8580356e711a">
+        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
+        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
+        <note>Line: 147</note>
+      </trans-unit>
       <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
         <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
         <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>

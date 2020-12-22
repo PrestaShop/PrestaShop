@@ -646,17 +646,21 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/dashactivity/dashactivity.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="14542f5997c4a02d4276da364657f501">
+        <source>Direct link</source>
+        <target>Direct link</target>
+        <note>Line: 372</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Customer/QueryHandler/GetCustomerForViewingHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bde13610a2ae2521b30aa7821d553862">
         <source>There is no status defined for this order.</source>
         <target>There is no status defined for this order.</target>
         <note>Line: 268</note>
-      </trans-unit>
-      <trans-unit id="14542f5997c4a02d4276da364657f501">
-        <source>Direct link</source>
-        <target>Direct link</target>
-        <note>Line: 497</note>
       </trans-unit>
     </body>
   </file>
@@ -679,7 +683,7 @@
       <trans-unit id="6a94d8492279c2bfd3e81f3158658980">
         <source>[Generated] CartRule for Free Shipping</source>
         <target>[Generated] CartRule for Free Shipping</target>
-        <note>Line: 423</note>
+        <note>Line: 441</note>
       </trans-unit>
     </body>
   </file>
@@ -701,12 +705,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/PDF/DeliverySlipPdfGenerator.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/PDF/OrderInvoicePdfGenerator.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1244f34e7f971d0b80cd2fd7cbbfb22c">
         <source>The order cannot be found within your database.</source>
         <target>The order cannot be found within your database.</target>
-        <note>Line: 71</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -776,7 +780,7 @@
       <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
         <source>You must add a minimum quantity of %d</source>
         <target>You must add a minimum quantity of %d</target>
-        <note>Line: 609</note>
+        <note>Line: 614</note>
       </trans-unit>
     </body>
   </file>
@@ -794,7 +798,7 @@
       <trans-unit id="1923e1e610686f1182bf54f573b86921">
         <source>A partial refund was successfully created.</source>
         <target>A partial refund was successfully created.</target>
-        <note>Line: 558</note>
+        <note>Line: 563</note>
       </trans-unit>
       <trans-unit id="aea807cc550550acd7b8d9a7bc469f6a">
         <source>You have to select a shop before creating new orders.</source>
@@ -804,22 +808,22 @@
       <trans-unit id="409f3dfd9f910287f86fd6c25c94c4d8">
         <source>Order #%d has already been assigned this status.</source>
         <target>Order #%d has already been assigned this status.</target>
-        <note>Line: 1850</note>
+        <note>Line: 1883</note>
       </trans-unit>
       <trans-unit id="18893a82469e2cd9492fc8d46fa8ac01">
         <source>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</source>
         <target>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</target>
-        <note>Line: 1839</note>
+        <note>Line: 1872</note>
       </trans-unit>
       <trans-unit id="561918c3c49ff748f543e28f5c405d3c">
         <source>An error occurred while sending an email to the customer.</source>
         <target>An error occurred while sending an email to the customer.</target>
-        <note>Line: 1228</note>
+        <note>Line: 1235</note>
       </trans-unit>
       <trans-unit id="fded441ef916f653d49abf142b535b52">
         <source>An error occurred while sending the e-mail to the customer.</source>
         <target>An error occurred while sending the e-mail to the customer.</target>
-        <note>Line: 1697</note>
+        <note>Line: 1730</note>
       </trans-unit>
       <trans-unit id="aeddc664f1e95691c69ea44a5c1c18f5">
         <source>This product is out of stock: </source>
@@ -829,12 +833,12 @@
       <trans-unit id="4174f012bc63b679f092acd1a933bf5c">
         <source>The email was sent to your customer.</source>
         <target>The email was sent to your customer.</target>
-        <note>Line: 1498</note>
+        <note>Line: 1531</note>
       </trans-unit>
       <trans-unit id="50c5ffd8dadba5bcc7b83cfe3d874f54">
         <source>A standard refund was successfully created.</source>
         <target>A standard refund was successfully created.</target>
-        <note>Line: 591</note>
+        <note>Line: 596</note>
       </trans-unit>
       <trans-unit id="676add5006e766a2f0bf5ba22e231e09">
         <source>A return product was successfully created.</source>
@@ -849,47 +853,47 @@
       <trans-unit id="918093e8ad4567f6b99e9851eab8bc69">
         <source>Order #%d cannot be loaded.</source>
         <target>Order #%d cannot be loaded.</target>
-        <note>Line: 1863</note>
+        <note>Line: 1896</note>
       </trans-unit>
       <trans-unit id="2a11327ffe3e46a9ffadddf38b4b9fff">
         <source>Please enter a maximum quantity of [1].</source>
         <target>Please enter a maximum quantity of [1].</target>
-        <note>Line: 1736</note>
+        <note>Line: 1769</note>
       </trans-unit>
       <trans-unit id="97f014aa339f5b37951f100fb1a086d8">
         <source>Please select at least one product.</source>
         <target>Please select at least one product.</target>
-        <note>Line: 1741</note>
+        <note>Line: 1774</note>
       </trans-unit>
       <trans-unit id="d31c479bcda04bd5b859f7cff371c3d0">
         <source>Please enter a positive amount.</source>
         <target>Please enter a positive amount.</target>
-        <note>Line: 1745</note>
+        <note>Line: 1778</note>
       </trans-unit>
       <trans-unit id="4b0c5f16b969b647ff0b63481af6c3e5">
         <source>Please generate at least one credit slip or voucher.</source>
         <target>Please generate at least one credit slip or voucher.</target>
-        <note>Line: 1749</note>
+        <note>Line: 1782</note>
       </trans-unit>
       <trans-unit id="282426403b9a14678d5dd35e024ec84c">
         <source>This product is out of stock:</source>
         <target>This product is out of stock:</target>
-        <note>Line: 652</note>
+        <note>Line: 657</note>
       </trans-unit>
       <trans-unit id="265b2b7a9f792e941faac362bc37f30b">
         <source>The product was successfully returned.</source>
         <target>The product was successfully returned.</target>
-        <note>Line: 624</note>
+        <note>Line: 629</note>
       </trans-unit>
       <trans-unit id="f77fd3f9865f0c725901d48dbc00619f">
         <source>You cannot edit the cart once the order delivered.</source>
         <target>You cannot edit the cart once the order delivered.</target>
-        <note>Line: 1689</note>
+        <note>Line: 1722</note>
       </trans-unit>
       <trans-unit id="f131fb3c210a32ca24a4910b42b6e2ef">
         <source>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</source>
         <target>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</target>
-        <note>Line: 1705</note>
+        <note>Line: 1738</note>
       </trans-unit>
       <trans-unit id="dfa3f525e479dd1038c7947c62b9341a">
         <source>It looks like the value is invalid:</source>
@@ -904,47 +908,47 @@
       <trans-unit id="7f35d95de964c02a558f322bf683ff93">
         <source>Percent value cannot exceed 100.</source>
         <target>Percent value cannot exceed 100.</target>
-        <note>Line: 1714</note>
+        <note>Line: 1747</note>
       </trans-unit>
       <trans-unit id="bd69d7116253ba1407fa8f2611ea6866">
         <source>Discount value cannot exceed the total price of this order.</source>
         <target>Discount value cannot exceed the total price of this order.</target>
-        <note>Line: 1722</note>
+        <note>Line: 1755</note>
       </trans-unit>
       <trans-unit id="c3cb19afc3cf5cd7d07346dcd3504fe2">
         <source>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</source>
         <target>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</target>
-        <note>Line: 1818</note>
+        <note>Line: 1851</note>
       </trans-unit>
       <trans-unit id="7b310c5ac94a5e50139d50574395683b">
         <source>Percent value must be greater than 0.</source>
         <target>Percent value must be greater than 0.</target>
-        <note>Line: 1710</note>
+        <note>Line: 1743</note>
       </trans-unit>
       <trans-unit id="2b0c8d4ac85a4f8ddf1427f7ad537f55">
         <source>Amount value must be greater than 0.</source>
         <target>Amount value must be greater than 0.</target>
-        <note>Line: 1718</note>
+        <note>Line: 1751</note>
       </trans-unit>
       <trans-unit id="0e6becfb4c6566c35a8fda2d94891c70">
         <source>Shipping discount value cannot exceed the total price of this order.</source>
         <target>Shipping discount value cannot exceed the total price of this order.</target>
-        <note>Line: 1726</note>
+        <note>Line: 1759</note>
       </trans-unit>
       <trans-unit id="500f3380713af59cab7bdd14d8fefea2">
         <source>You must choose a payment module to create the order.</source>
         <target>You must choose a payment module to create the order.</target>
-        <note>Line: 1754</note>
+        <note>Line: 1787</note>
       </trans-unit>
       <trans-unit id="b2f61848a1b9245fb4d79db939e04c02">
         <source>You must choose an order status to create the order.</source>
         <target>You must choose an order status to create the order.</target>
-        <note>Line: 1783</note>
+        <note>Line: 1816</note>
       </trans-unit>
       <trans-unit id="53efa65204c54a806b9df6707fc8a326">
         <source>The order message given is invalid.</source>
         <target>The order message given is invalid.</target>
-        <note>Line: 1790</note>
+        <note>Line: 1823</note>
       </trans-unit>
     </body>
   </file>
@@ -1003,12 +1007,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/carts.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/groups.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1c28cbdd010068123432a5885ebfdb65">
         <source>No cart is available</source>
         <target>No cart is available</target>
-        <note>Line: 73</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -1120,11 +1124,6 @@
         <target>Are you sure you want to create a new invoice?</target>
         <note>Line: 67</note>
       </trans-unit>
-      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
-        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
-        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
-        <note>Line: 71</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/documents.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1133,6 +1132,15 @@
         <source>There is no available document</source>
         <target>There is no available document</target>
         <note>Line: 135</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ca4c54eff098a5785c2016718a00ef1f">
+        <source>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</source>
+        <target>Are you sure you want to edit this product price? It will be applied to all invoices of this order.</target>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
@@ -1159,22 +1167,22 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="153c7809e6b00b6cbfa01b8aa9db43e3">
         <source>paid instead of</source>
         <target>paid instead of</target>
-        <note>Line: 39</note>
+        <note>Line: 6</note>
       </trans-unit>
       <trans-unit id="0f9e99e69b4986359118744a2a670fed">
         <source>This warning also concerns order:</source>
         <target>This warning also concerns order:</target>
-        <note>Line: 44</note>
+        <note>Line: 11</note>
       </trans-unit>
       <trans-unit id="804e12a31196cf44ec13212952a59158">
         <source>This warning also concerns the following orders:</source>
         <target>This warning also concerns the following orders:</target>
-        <note>Line: 46</note>
+        <note>Line: 13</note>
       </trans-unit>
     </body>
   </file>
@@ -1183,17 +1191,17 @@
       <trans-unit id="c4832c266d52c6cef340a9c656ddda26">
         <source>Error. You cannot refund a negative amount.</source>
         <target>Error. You cannot refund a negative amount.</target>
-        <note>Line: 257</note>
+        <note>Line: 250</note>
       </trans-unit>
       <trans-unit id="49641a1085f245fe45d45881544d1cec">
         <source>For this customer group, prices are displayed as: [1]%tax_method%[/1]</source>
         <target>For this customer group, prices are displayed as: [1]%tax_method%[/1]</target>
-        <note>Line: 226</note>
+        <note>Line: 219</note>
       </trans-unit>
       <trans-unit id="ef5f330df17f8c955005c26466c2463c">
         <source>Merchandise returns are disabled</source>
         <target>Merchandise returns are disabled</target>
-        <note>Line: 233</note>
+        <note>Line: 226</note>
       </trans-unit>
     </body>
   </file>

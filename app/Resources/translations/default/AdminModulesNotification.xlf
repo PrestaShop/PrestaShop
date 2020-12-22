@@ -40,6 +40,11 @@
         <target>Please specify module URL</target>
         <note>Line: 77</note>
       </trans-unit>
+      <trans-unit id="8095c31813f8e77d292bf6bec964169b">
+        <source>Unknown archive type.</source>
+        <target>Unknown archive type.</target>
+        <note>Line: 79</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -390,11 +395,6 @@
         <target>The following module(s) could not be installed properly: %s.</target>
         <note>Line: 1041</note>
       </trans-unit>
-      <trans-unit id="8095c31813f8e77d292bf6bec964169b">
-        <source>Unknown archive type.</source>
-        <target>Unknown archive type.</target>
-        <note>Line: 605</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -616,16 +616,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="src/PrestaShopBundle/Command/ModuleCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
-        <source>Cannot %action% module %module%. %error_details%</source>
-        <target>Cannot %action% module %module%. %error_details%</target>
-        <note>Line: 179</note>
-      </trans-unit>
-      <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
-        <source>%action% action on module %module% succeeded.</source>
-        <target>%action% action on module %module% succeeded.</target>
-        <note>Line: 165</note>
-      </trans-unit>
       <trans-unit id="6867740141667a3da88ac51e48ed1d9d">
         <source>Unknown module action. It must be one of these values: %actions%</source>
         <target>Unknown module action. It must be one of these values: %actions%</target>
@@ -674,6 +664,16 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
+        <source>Cannot %action% module %module%. %error_details%</source>
+        <target>Cannot %action% module %module%. %error_details%</target>
+        <note>Line: 424</note>
+      </trans-unit>
+      <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
+        <source>%action% action on module %module% succeeded.</source>
+        <target>%action% action on module %module% succeeded.</target>
+        <note>Line: 405</note>
+      </trans-unit>
       <trans-unit id="385b04e1b2442530341b51c2d3b216a3">
         <source>Cannot get catalog data, please try again later. Reason: %error_details%</source>
         <target>Cannot get catalog data, please try again later. Reason: %error_details%</target>

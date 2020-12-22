@@ -154,6 +154,20 @@ Comment: Set the modules categories</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/productcomments/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="25131b831e5832d70365d17471b6326d">
+        <source>Discover all modules</source>
+        <target>Discover all modules</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
+        <source>Want to go further?</source>
+        <target>Want to go further?</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_buybuttonlite/ps_buybuttonlite.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="76e60dee2f9ea84713034839f1974d60">
@@ -189,16 +203,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
   </file>
   <file original="modules/watermark/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="25131b831e5832d70365d17471b6326d">
-        <source>Discover all modules</source>
-        <target>Discover all modules</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
-        <source>Want to go further?</source>
-        <target>Want to go further?</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="7c6a169b9017895a118d7cb18b7b788e">
         <source>To go further:</source>
         <target>To go further:</target>
@@ -258,6 +262,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="90406afefae30826692e7f7480f7467c">
+        <source>Toggle Dropdown</source>
+        <target>Toggle Dropdown</target>
+        <note>Line: 86</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2693dd71600631eed47725291fe5da19">
@@ -274,30 +287,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>Discover</target>
         <note>Line: 37</note>
       </trans-unit>
-      <trans-unit id="90406afefae30826692e7f7480f7467c">
-        <source>Toggle Dropdown</source>
-        <target>Toggle Dropdown</target>
-        <note>Line: 53</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
-        <source>PrestaShop Addons Marketplace</source>
-        <target>PrestaShop Addons Marketplace</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="24a25a6b874647087c51ea00b7992def">
-        <source>Exit to PrestaShop Addons Marketplace</source>
-        <target>Exit to PrestaShop Addons Marketplace</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="754475030b0733378b9347e8f9da8bf9">
-        <source>See all results for your search on</source>
-        <target>See all results for your search on</target>
-        <note>Line: 30</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -311,6 +300,34 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Service by %author%</source>
         <target>Service by %author%</target>
         <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
+        <source>PrestaShop Addons Marketplace</source>
+        <target>PrestaShop Addons Marketplace</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="24a25a6b874647087c51ea00b7992def">
+        <source>Exit to PrestaShop Addons Marketplace</source>
+        <target>Exit to PrestaShop Addons Marketplace</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="754475030b0733378b9347e8f9da8bf9">
+        <source>See all results for your search on</source>
+        <target>See all results for your search on</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1ad8e342d5f04a220e73a90d33d98c2a">
+        <source>Recently Used</source>
+        <target>Recently Used</target>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
@@ -353,15 +370,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Discover the best-selling modules of this category in the %link% page.</source>
         <target>Discover the best-selling modules of this category in the %link% page.</target>
         <note>Line: 30</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/grid_manage_recently_used.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1ad8e342d5f04a220e73a90d33d98c2a">
-        <source>Recently Used</source>
-        <target>Recently Used</target>
-        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>
@@ -426,6 +434,11 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>Yes, reset it</target>
         <note>Line: 115</note>
       </trans-unit>
+      <trans-unit id="27788383c9407ea06c2c275ee21c86c5">
+        <source>Optional: delete module folder after uninstall.</source>
+        <target>Optional: delete module folder after uninstall.</target>
+        <note>Line: 66</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_bulk_action.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -439,11 +452,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Yes, I want to do it</source>
         <target>Yes, I want to do it</target>
         <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="27788383c9407ea06c2c275ee21c86c5">
-        <source>Optional: delete module folder after uninstall.</source>
-        <target>Optional: delete module folder after uninstall.</target>
-        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

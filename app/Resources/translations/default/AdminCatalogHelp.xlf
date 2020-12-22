@@ -314,6 +314,15 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCombination.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
+        <source>Leave empty to disable</source>
+        <target>Leave empty to disable</target>
+        <note>Line: 171</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
@@ -362,11 +371,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
         <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
         <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
-        <source>Leave empty to disable</source>
-        <target>Leave empty to disable</target>
-        <note>Line: 175</note>
       </trans-unit>
     </body>
   </file>
@@ -511,6 +515,21 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</target>
         <note>Line: 150</note>
       </trans-unit>
+      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
+        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
+        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="1914ce33841a6e52c0577751d9004159">
+        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
+        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
+        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
+        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
+        <note>Line: 215</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -654,16 +673,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</target>
         <note>Line: 132</note>
       </trans-unit>
-      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
-        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
-        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="1914ce33841a6e52c0577751d9004159">
-        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
-        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
-        <note>Line: 74</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/essentials.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -736,11 +745,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <source>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</source>
         <target>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</target>
         <note>Line: 136</note>
-      </trans-unit>
-      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
-        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
-        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
-        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="c268a2747d5680c617c361cd505c4576">
         <source>MPN is used internationally to identify the Manufacturer Part Number.</source>

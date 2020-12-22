@@ -72,16 +72,6 @@
   </file>
   <file original="controllers/front/DiscountController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
-        <source>Tax included</source>
-        <target>Tax included</target>
-        <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
-        <source>Tax excluded</source>
-        <target>Tax excluded</target>
-        <note>Line: 128</note>
-      </trans-unit>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
@@ -95,6 +85,20 @@
         <source>Guest order tracking</source>
         <target>Guest order tracking</target>
         <note>Line: 153</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/ps_legalcompliance.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
+        <source>Tax included</source>
+        <target>Tax included</target>
+        <note>Line: 960</note>
+      </trans-unit>
+      <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
+        <source>Tax excluded</source>
+        <target>Tax excluded</target>
+        <note>Line: 962</note>
       </trans-unit>
     </body>
   </file>
@@ -653,6 +657,11 @@ File: themes/StarterTheme/templates/checkout/order-confirmation.tpl:62</note>
         <target>Expiration date</target>
         <note>Line: 88</note>
       </trans-unit>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Line: 72</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/customer/history.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -725,15 +734,6 @@ File: themes/StarterTheme/templates/checkout/order-confirmation.tpl:62</note>
         <source>Tracking number</source>
         <target>Tracking number</target>
         <note>Line: 200</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/order-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
-        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>

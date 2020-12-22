@@ -242,24 +242,24 @@
         <target>1) Create a blank robots.txt file in your root directory.</target>
         <note>Line: 47</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="73ca86c0d6a5d58e868c54c3a1524c6c">
         <source>Before you can use this tool, you need to:</source>
         <target>Before you can use this tool, you need to:</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="636fc324804393cc1d3306a541cc871f">
-        <source>1) Create a blank .htaccess file in your root directory.</source>
-        <target>1) Create a blank .htaccess file in your root directory.</target>
-        <note>Line: 44</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="1a53c64bc79e181125e94976211eb401">
         <source>2) Give it write permissions (CHMOD 666 on Unix system).</source>
         <target>2) Give it write permissions (CHMOD 666 on Unix system).</target>
-        <note>Line: 46</note>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="636fc324804393cc1d3306a541cc871f">
+        <source>1) Create a blank .htaccess file in your root directory.</source>
+        <target>1) Create a blank .htaccess file in your root directory.</target>
+        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>

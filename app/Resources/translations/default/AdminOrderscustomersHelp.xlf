@@ -355,7 +355,7 @@
       <trans-unit id="f9a5775d7def0b6c57393fc86bb7a730">
         <source>Do not forget to update your exchange rate before making this change.</source>
         <target>Do not forget to update your exchange rate before making this change.</target>
-        <note>Line: 168</note>
+        <note>Line: 148</note>
       </trans-unit>
     </body>
   </file>
@@ -364,7 +364,7 @@
       <trans-unit id="5728ff6d5efd64ef7db72028eefc7262">
         <source>(Max %amount_refundable% %tax_method%)</source>
         <target>(Max %amount_refundable% %tax_method%)</target>
-        <note>Line: 138</note>
+        <note>Line: 139</note>
       </trans-unit>
     </body>
   </file>
