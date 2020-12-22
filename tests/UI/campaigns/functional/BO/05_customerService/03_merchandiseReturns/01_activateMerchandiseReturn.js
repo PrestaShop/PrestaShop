@@ -138,6 +138,7 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
     });
 
+    // Go to My account page by login the first time and click on account link the second time
     if (index === 0) {
       it('should login', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
