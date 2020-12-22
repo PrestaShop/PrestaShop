@@ -231,7 +231,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<text>}
    */
   async getTermsOfServicePageTitle(page) {
-    await page.click(this.termsOfServiceLink);
+    await page.clickAndWaitForNavigation(page, this.termsOfServiceLink);
     return this.getTextContent(page, this.termsOfServiceModalDiv);
   }
 
