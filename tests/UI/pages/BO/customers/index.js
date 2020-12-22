@@ -155,6 +155,37 @@ class Customers extends BOBasePage {
   }
 
   /**
+   * Get customer status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getCustomerStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'active');
+  }
+
+  /**
+   * Get newsletter status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getNewsletterStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'newsletter');
+  }
+
+  /**
+   * Get partner offers status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getPartnerOffersStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'optin');
+  }
+
+
+  /**
    * Quick edit toggle column value
    * @param page
    * @param row, row in table
@@ -169,6 +200,39 @@ class Customers extends BOBasePage {
     }
 
     return false;
+  }
+
+  /**
+   * Set customer status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setCustomerStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'active', valueWanted);
+  }
+
+  /**
+   * Set newsletter status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setNewsletterStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'newsletter', valueWanted);
+  }
+
+  /**
+   * Set partner offers status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setPartnerOffersStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'optin', valueWanted);
   }
 
   /**
@@ -198,9 +262,9 @@ class Customers extends BOBasePage {
       lastName: await this.getTextColumnFromTableCustomers(page, row, 'lastname'),
       email: await this.getTextColumnFromTableCustomers(page, row, 'email'),
       sales: await this.getTextColumnFromTableCustomers(page, row, 'total_spent'),
-      status: await this.getToggleColumnValue(page, row, 'active'),
-      newsletter: await this.getToggleColumnValue(page, row, 'newsletter'),
-      partnerOffers: await this.getToggleColumnValue(page, row, 'optin'),
+      status: await this.getCustomerStatus(page, row),
+      newsletter: await this.getNewsletterStatus(page, row),
+      partnerOffers: await this.getPartnerOffersStatus(page, row),
     };
   }
 
@@ -309,7 +373,11 @@ class Customers extends BOBasePage {
    */
   async chooseRegistrationAndDelete(page, allowRegistrationAfterDelete) {
     // Choose deletion method
-    await page.check(this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
+    if (allowRegistrationAfterDelete) {
+      await page.click(this.deleteCustomerModalMethodInput(0));
+    } else {
+      await page.click(this.deleteCustomerModalMethodInput(1));
+    }
 
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);
@@ -474,3 +542,4 @@ class Customers extends BOBasePage {
 }
 
 module.exports = new Customers();
+

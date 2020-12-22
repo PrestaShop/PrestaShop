@@ -121,7 +121,6 @@ Feature: Order from Back Office (BO)
       | amount        | 2                  |
       | price         | 16                 |
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices
@@ -197,8 +196,15 @@ Feature: Order from Back Office (BO)
       | amount        | 2                       |
       | price         | 16                      |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    And product "Mug Today is a good day" in order "bo_order1" should have specific price 16.0
     And order "bo_order1" should have 2 invoices
+    And the product "Mug Today is a good day" in the second invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 2     |
+      | product_price               | 16.00 |
+      | original_product_price      | 11.90 |
+      | unit_price_tax_incl         | 16.96 |
+      | unit_price_tax_excl         | 16.00 |
+      | total_price_tax_incl        | 33.92 |
+      | total_price_tax_excl        | 32.00 |
     And order "bo_order1" should have following details:
       | total_products           | 55.80 |
       | total_products_wt        | 59.15 |
@@ -279,7 +285,6 @@ Feature: Order from Back Office (BO)
       | amount        | 2                  |
       | price         | 16                 |
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices
@@ -503,7 +508,7 @@ Feature: Order from Back Office (BO)
       | product_quantity            | 1         |
       | product_price               | 94.34     |
       | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_incl         | 100.00    |
       | unit_price_tax_excl         | 94.339622 |
       | total_price_tax_incl        | 100       |
       | total_price_tax_excl        | 94.34     |
@@ -528,7 +533,7 @@ Feature: Order from Back Office (BO)
       | product_quantity            | 1         |
       | product_price               | 94.34     |
       | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_incl         | 100.00    |
       | unit_price_tax_excl         | 94.339622 |
       | total_price_tax_incl        | 100       |
       | total_price_tax_excl        | 94.34     |
@@ -536,7 +541,7 @@ Feature: Order from Back Office (BO)
       | product_quantity            | 1         |
       | product_price               | 94.34     |
       | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_incl         | 100.00    |
       | unit_price_tax_excl         | 94.339622 |
       | total_price_tax_incl        | 100       |
       | total_price_tax_excl        | 94.34     |

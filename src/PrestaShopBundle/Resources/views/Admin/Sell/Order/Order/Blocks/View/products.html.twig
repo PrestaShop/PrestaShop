@@ -72,7 +72,7 @@
             <th class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
               <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
             </th>
-            <th>
+            <th {% if not isAvailableQuantityDisplayed %}class="d-none"{% endif %}>
               <p>{{ 'Available'|trans({}, 'Admin.Global') }}</p>
             </th>
             <th>
@@ -182,8 +182,7 @@
                   </div>
                 {% endif %}
 
-                {% if orderForViewing.prices.shippingPriceRaw.greaterThan(number(0)) %}
-                  <div class="col-sm text-center">
+                  <div id="order-shipping-total-container" class="col-sm text-center{% if not orderForViewing.prices.shippingPriceRaw.greaterThan((number(0))) %} d-none{% endif %}">
                     <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
                     <div class="shipping-price">
                       <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
@@ -198,12 +197,6 @@
                       </div>
                     </div>
                   </div>
-                {% else %}
-                  {# No shippping, the form field is hidden in this div to avoid it being displayed through automatic form_rest #}
-                  <div class="d-none">
-                    {{ form_widget(cancelProductForm.shipping_amount) }}
-                  </div>
-                {% endif %}
 
                 {% if not orderForViewing.taxIncluded %}
                   <div class="col-sm text-center">
