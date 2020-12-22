@@ -133,7 +133,7 @@ class SupplierType extends TranslatorAwareType
 
         $invalidGenericNameHint = sprintf(
             '%s <>={}',
-            $this->trans('Invalid characters:', 'Admin.Notifications.Info')
+            $this->trans('Invalid characters:', 'Admin.Global')
         );
 
         $keywordHint = sprintf(
