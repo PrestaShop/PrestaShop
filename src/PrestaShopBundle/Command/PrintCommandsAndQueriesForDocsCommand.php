@@ -138,7 +138,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         ksort($definitions);
 
         foreach ($definitions as $domain => $definitionsByType) {
-            $content = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-list.md.twig', [
+            $content = $this->twigEnv->render('@PrestaShop/Command/CQRS/cqrs-commands-list.md.twig', [
                 'domain' => $domain,
                 'definitionsByType' => $definitionsByType,
             ]);
@@ -146,7 +146,7 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
             $this->filesystem->dumpFile($this->getDestinationFilePath($destinationDir, $domain), $content);
         }
 
-        $indexFileContent = $this->twigEnv->render('src/PrestaShopBundle/Command/views/cqrs-commands-index.md.twig');
+        $indexFileContent = $this->twigEnv->render('@PrestaShop/Command/CQRS/cqrs-commands-index.md.twig');
         $this->filesystem->dumpFile(sprintf('%s/_index.md', $destinationDir), $indexFileContent);
         $output->writeln(sprintf('<info>dumped commands & queries to %s</info>', $destinationDir));
 
@@ -180,8 +180,18 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
         $commandDefinitionsByDomain = [];
         foreach ($handlerDefinitions as $handlerClass => $commandClass) {
             $commandDefinition = $commandHandlerDefinitionParser->parseDefinition($handlerClass, $commandClass);
+
+            // Always preset command and wuery fields, this avoids bugs or additional checks in the twig template
+            if (!isset($commandDefinitionsByDomain[$commandDefinition->getDomain()])) {
+                $commandDefinitionsByDomain[$commandDefinition->getDomain()] = [
+                    CommandHandlerDefinition::TYPE_COMMAND => [],
+                    CommandHandlerDefinition::TYPE_QUERY => [],
+                ];
+            }
+
             $commandDefinitionsByDomain[$commandDefinition->getDomain()][$commandDefinition->getType()][] = $commandDefinition;
         }
+
 
         return $commandDefinitionsByDomain;
     }
