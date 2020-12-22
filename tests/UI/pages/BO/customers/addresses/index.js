@@ -164,7 +164,7 @@ class Addresses extends BOBasePage {
     ]);
     // Click on delete
     await page.click(this.addressesListTableDeleteLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -189,7 +189,7 @@ class Addresses extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
     await page.click(this.deleteCustomerModalDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */

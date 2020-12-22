@@ -78,7 +78,8 @@ class DbBackup extends BOBasePage {
       page.waitForSelector(this.tableRow(1), {state: 'visible'}),
       page.waitForSelector(this.downloadBackupButton, {state: 'visible'}),
     ]);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -107,7 +108,7 @@ class DbBackup extends BOBasePage {
       page.waitForSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -129,7 +130,7 @@ class DbBackup extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */

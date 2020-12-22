@@ -182,7 +182,7 @@ class WebService extends BOBasePage {
     ]);
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.webserviceListTableDeleteLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -191,7 +191,7 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   getValidationMessage(page) {
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -215,7 +215,7 @@ class WebService extends BOBasePage {
 
     await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
 
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

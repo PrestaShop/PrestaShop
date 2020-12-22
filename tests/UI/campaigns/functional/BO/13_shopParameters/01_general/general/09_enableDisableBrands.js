@@ -80,7 +80,7 @@ describe('Enable display brands', async () => {
     it(`should check that the message alert contains '${test.args.action}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
 
-      const text = await brandsPage.getAlertTextMessage(page);
+      const text = await brandsPage.getAlertInfoBlockParagraphContent(page);
       await expect(text).to.contains(test.args.action);
     });
 

@@ -329,7 +329,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -355,7 +355,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -396,7 +396,7 @@ class Customers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */
@@ -444,7 +444,7 @@ class Customers extends BOBasePage {
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Export methods

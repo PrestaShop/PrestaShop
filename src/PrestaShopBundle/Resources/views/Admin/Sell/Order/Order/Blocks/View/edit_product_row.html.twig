@@ -35,7 +35,7 @@
   </td>
   <td class="editProductLocation cellProductLocation"></td>
   <td class="editProductRefunded cellProductRefunded"></td>
-  <td class="editProductAvailable"></td>
+  <td class="editProductAvailable{% if not isAvailableQuantityDisplayed %} d-none{% endif %}"></td>
   <td class="editProductTotalPrice"></td>
   {% if orderForViewing.hasInvoice() %}
     <td class="cellProductInvoice">
