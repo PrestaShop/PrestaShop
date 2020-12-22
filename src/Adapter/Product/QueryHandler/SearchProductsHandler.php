@@ -197,7 +197,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
             $this->tools->round($priceTaxExcluded, $computingPrecision),
             $product->getTaxesRate($address),
             Product::getQuantity($product->id),
-            $product->location,
+            $product->location ?: '',
             (bool) Product::isAvailableWhenOutOfStock($product->out_of_stock),
             $this->getProductCombinations($product, $isoCodeCurrency, $computingPrecision, $order),
             $this->getProductCustomizationFields($product)
