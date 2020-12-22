@@ -483,6 +483,7 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+            - '@prestashop.adapter.product.validate.stock_available_validator'
 
     prestashop.adapter.product.update.product_stock_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater
@@ -530,6 +531,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetCombinationForEditingHandler
         arguments:
             - '@prestashop.adapter.product.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.stock_available_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
@@ -586,3 +588,22 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
+
+    prestashop.adapter.product.update.combination_stock_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\CombinationStockUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.repository.combination_repository'
+            - '@prestashop.core.stock.stock_manager'
+
+    prestashop.adapter.product.command.update_combination_stock_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCombinationStockHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.combination_repository'
+            - '@prestashop.adapter.product.update.combination_stock_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand
+
+    prestashop.adapter.product.validate.stock_available_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Validate\StockAvailableValidator

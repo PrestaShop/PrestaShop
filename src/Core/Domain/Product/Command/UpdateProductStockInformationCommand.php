@@ -88,7 +88,7 @@ class UpdateProductStockInformationCommand
     /**
      * @var bool|null
      */
-    private $lowStockAlert;
+    private $lowStockAlertEnabled;
 
     /**
      * @var string[]|null key value pairs where key is the id of language
@@ -104,11 +104,6 @@ class UpdateProductStockInformationCommand
      * @var DateTime|null
      */
     private $availableDate;
-
-    /**
-     * @var bool
-     */
-    private $addMovement = true;
 
     /**
      * @param int $productId
@@ -293,19 +288,19 @@ class UpdateProductStockInformationCommand
     /**
      * @return bool|null
      */
-    public function getLowStockAlert(): ?bool
+    public function isLowStockAlertEnabled(): ?bool
     {
-        return $this->lowStockAlert;
+        return $this->lowStockAlertEnabled;
     }
 
     /**
-     * @param bool $lowStockAlert
+     * @param bool $enabled
      *
      * @return UpdateProductStockInformationCommand
      */
-    public function setLowStockAlert(bool $lowStockAlert): UpdateProductStockInformationCommand
+    public function setLowStockAlert(bool $enabled): UpdateProductStockInformationCommand
     {
-        $this->lowStockAlert = $lowStockAlert;
+        $this->lowStockAlertEnabled = $enabled;
 
         return $this;
     }
@@ -366,26 +361,6 @@ class UpdateProductStockInformationCommand
     public function setAvailableDate(DateTime $availableDate): UpdateProductStockInformationCommand
     {
         $this->availableDate = $availableDate;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function addMovement(): bool
-    {
-        return $this->addMovement;
-    }
-
-    /**
-     * @param bool $addMovement
-     *
-     * @return UpdateProductStockInformationCommand
-     */
-    public function setAddMovement(bool $addMovement): UpdateProductStockInformationCommand
-    {
-        $this->addMovement = $addMovement;
 
         return $this;
     }

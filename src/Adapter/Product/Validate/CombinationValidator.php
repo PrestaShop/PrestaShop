@@ -45,6 +45,7 @@ class CombinationValidator extends AbstractObjectModelValidator
     {
         $this->validateDetails($combination);
         $this->validatePrices($combination);
+        $this->validateStock($combination);
     }
 
     /**
@@ -69,12 +70,26 @@ class CombinationValidator extends AbstractObjectModelValidator
      * @throws CoreException
      * @throws ProductConstraintException
      */
-    private function validatePrices(Combination $combination)
+    private function validatePrices(Combination $combination): void
     {
         $this->validateCombinationProperty($combination, 'price', ProductConstraintException::INVALID_PRICE);
         $this->validateCombinationProperty($combination, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
         $this->validateCombinationProperty($combination, 'unit_price_impact', ProductConstraintException::INVALID_UNIT_PRICE);
         $this->validateCombinationProperty($combination, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
+    }
+
+    /**
+     * @param Combination $combination
+     *
+     * @throws CoreException
+     * @throws ProductConstraintException
+     */
+    private function validateStock(Combination $combination): void
+    {
+        $this->validateCombinationProperty($combination, 'minimal_quantity', ProductConstraintException::INVALID_MINIMAL_QUANTITY);
+        $this->validateCombinationProperty($combination, 'low_stock_threshold', ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD);
+        $this->validateCombinationProperty($combination, 'low_stock_alert', ProductConstraintException::INVALID_LOW_STOCK_ALERT);
+        $this->validateCombinationProperty($combination, 'available_date', ProductConstraintException::INVALID_AVAILABLE_DATE);
     }
 
     /**

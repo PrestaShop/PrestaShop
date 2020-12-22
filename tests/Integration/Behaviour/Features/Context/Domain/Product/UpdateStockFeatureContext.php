@@ -71,6 +71,36 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I update product :productReference location with value of :length symbols length
+     *
+     * @param string $productReference
+     * @param int $length
+     */
+    public function updateLocationWithTooLongName(string $productReference, int $length): void
+    {
+        $this->cleanLastException();
+        $command = new UpdateProductStockInformationCommand($this->getSharedStorage()->get($productReference));
+        $command->setLocation(PrimitiveUtils::generateRandomString($length));
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductStockConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get error that product stock location is invalid
+     */
+    public function assertLastErrorIsInvalidStockLocation(): void
+    {
+        $this->assertLastErrorIs(
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INVALID_LOCATION
+        );
+    }
+
+    /**
      * @Then product :productReference should have following stock information:
      *
      * @param string $productReference
@@ -97,7 +127,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $this->assertStringProperty($productForEditing, $data, 'location');
         $this->assertIntegerProperty($productForEditing, $data, 'low_stock_threshold');
         $this->assertBoolProperty($productForEditing, $data, 'low_stock_alert');
-        $this->assertDateProperty($productForEditing, $data, 'available_date');
+        $this->assertDateTimeProperty($productForEditing, $data, 'available_date');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
@@ -257,11 +287,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         if (isset($data['quantity'])) {
             $command->setQuantity((int) $data['quantity']);
             unset($data['quantity']);
-        }
-
-        if (isset($data['add_movement'])) {
-            $command->setAddMovement(PrimitiveUtils::castStringBooleanIntoBoolean($data['add_movement']));
-            unset($data['add_movement']);
         }
 
         if (isset($data['minimal_quantity'])) {

@@ -192,82 +192,77 @@ class ProductConstraintException extends ProductException
     public const INVALID_MINIMAL_QUANTITY = 320;
 
     /**
-     * When product location is invalid
-     */
-    public const INVALID_LOCATION = 330;
-
-    /**
      * When product available later labels are invalid
      */
-    public const INVALID_AVAILABLE_LATER = 340;
+    public const INVALID_AVAILABLE_LATER = 330;
 
     /**
      * When product available now labels are is invalid
      */
-    public const INVALID_AVAILABLE_NOW = 350;
+    public const INVALID_AVAILABLE_NOW = 340;
 
     /**
      * When product available date is invalid
      */
-    public const INVALID_AVAILABLE_DATE = 360;
+    public const INVALID_AVAILABLE_DATE = 350;
 
     /**
      * When product low stock alert is invalid
      */
-    public const INVALID_LOW_STOCK_ALERT = 370;
+    public const INVALID_LOW_STOCK_ALERT = 360;
 
     /**
      * When product low stock threshold is invalid
      */
-    public const INVALID_LOW_STOCK_THRESHOLD = 380;
+    public const INVALID_LOW_STOCK_THRESHOLD = 370;
 
     /**
      * When available for order option is invalid
      */
-    public const INVALID_AVAILABLE_FOR_ORDER = 390;
+    public const INVALID_AVAILABLE_FOR_ORDER = 380;
 
     /**
      * When online only option is invalid
      */
-    public const INVALID_ONLINE_ONLY = 400;
+    public const INVALID_ONLINE_ONLY = 390;
 
     /**
      * When show price option is invalid
      */
-    public const INVALID_SHOW_PRICE = 410;
+    public const INVALID_SHOW_PRICE = 400;
 
     /**
      * When manufacturer id option is invalid
      */
-    public const INVALID_MANUFACTURER_ID = 420;
+    public const INVALID_MANUFACTURER_ID = 410;
 
     /**
      * When customizability is invalid
      */
-    public const INVALID_CUSTOMIZABILITY = 430;
+    public const INVALID_CUSTOMIZABILITY = 420;
 
     /**
      * When customizable text fields count is invalid
      */
-    public const INVALID_TEXT_FIELDS_COUNT = 440;
+    public const INVALID_TEXT_FIELDS_COUNT = 430;
 
     /**
      * When uploaded files count for customization is invalid
      */
-    public const INVALID_UPLOADABLE_FILES_COUNT = 450;
+    public const INVALID_UPLOADABLE_FILES_COUNT = 440;
 
     /**
      * When additional delivery time notes type is invalid
      */
-    public const INVALID_ADDITIONAL_DELIVERY_TIME_NOTES_TYPE = 460;
+    public const INVALID_ADDITIONAL_DELIVERY_TIME_NOTES_TYPE = 450;
 
     /**
      * When product status is invalid
      */
-    public const INVALID_STATUS = 470;
+    public const INVALID_STATUS = 460;
 
     /**
      * When show_condition is invalid
      */
-    public const INVALID_SHOW_CONDITION = 480;
+    public const INVALID_SHOW_CONDITION = 470;
 }

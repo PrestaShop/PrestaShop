@@ -78,8 +78,8 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
             $cartRuleInformation,
             $cartRuleConditions,
             $cartRuleActions,
-            $dateAdd !== DateTimeUtils::NULL_VALUE ? new DateTime($dateAdd) : null,
-            $dateUpd !== DateTimeUtils::NULL_VALUE ? new DateTime($dateUpd) : null
+            $dateAdd !== DateTimeUtils::NULL_DATETIME ? new DateTime($dateAdd) : null,
+            $dateUpd !== DateTimeUtils::NULL_DATETIME ? new DateTime($dateUpd) : null
         );
     }
 
@@ -121,8 +121,8 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
 
         return new EditableCartRuleConditions(
             $customerId,
-            $dateFrom !== DateTimeUtils::NULL_VALUE ? new DateTime($dateFrom) : null,
-            $dateTo !== DateTimeUtils::NULL_VALUE ? new DateTime($dateTo) : null,
+            $dateFrom !== DateTimeUtils::NULL_DATETIME ? new DateTime($dateFrom) : null,
+            $dateTo !== DateTimeUtils::NULL_DATETIME ? new DateTime($dateTo) : null,
             (int) $cartRule->quantity,
             (int) $cartRule->quantity_per_user,
             $cartRuleMinimum,

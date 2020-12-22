@@ -26,35 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
 use DateTimeInterface;
 
-/**
- * Transfers data about Product stock information
- */
-class ProductStockInformation
+class CombinationStock
 {
-    /**
-     * @var bool
-     */
-    private $useAdvancedStockManagement;
-
-    /**
-     * @var bool
-     */
-    private $dependsOnStock;
-
-    /**
-     * @var int
-     */
-    private $packStockType;
-
-    /**
-     * @var int
-     */
-    private $outOfStockType;
-
     /**
      * @var int
      */
@@ -76,16 +53,6 @@ class ProductStockInformation
     private $lowStockAlertEnabled;
 
     /**
-     * @var string[] key value pairs where key is the id of language
-     */
-    private $localizedAvailableNowLabels;
-
-    /**
-     * @var string[] key value pairs where key is the id of language
-     */
-    private $localizedAvailableLaterLabels;
-
-    /**
      * @var string
      */
     private $location;
@@ -96,77 +63,27 @@ class ProductStockInformation
     private $availableDate;
 
     /**
-     * @param bool $useAdvancedStockManagement
-     * @param bool $dependsOnStock
-     * @param int $packStockType
-     * @param int $outOfStockType
      * @param int $quantity
      * @param int $minimalQuantity
      * @param int $lowStockThreshold
      * @param bool $lowStockAlertEnabled
-     * @param array $localizedAvailableNowLabels
-     * @param array $localizedAvailableLaterLabels
      * @param string $location
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        bool $useAdvancedStockManagement,
-        bool $dependsOnStock,
-        int $packStockType,
-        int $outOfStockType,
         int $quantity,
         int $minimalQuantity,
         int $lowStockThreshold,
         bool $lowStockAlertEnabled,
-        array $localizedAvailableNowLabels,
-        array $localizedAvailableLaterLabels,
         string $location,
         ?DateTimeInterface $availableDate
     ) {
-        $this->useAdvancedStockManagement = $useAdvancedStockManagement;
-        $this->dependsOnStock = $dependsOnStock;
-        $this->packStockType = $packStockType;
-        $this->outOfStockType = $outOfStockType;
         $this->quantity = $quantity;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
-        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
-        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
         $this->availableDate = $availableDate;
-    }
-
-    /**
-     * @return bool
-     */
-    public function useAdvancedStockManagement(): bool
-    {
-        return $this->useAdvancedStockManagement;
-    }
-
-    /**
-     * @return bool
-     */
-    public function dependsOnStock(): bool
-    {
-        return $this->dependsOnStock;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPackStockType(): int
-    {
-        return $this->packStockType;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOutOfStockType(): int
-    {
-        return $this->outOfStockType;
     }
 
     /**
@@ -186,6 +103,14 @@ class ProductStockInformation
     }
 
     /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
+    }
+
+    /**
      * @return int
      */
     public function getLowStockThreshold(): int
@@ -199,30 +124,6 @@ class ProductStockInformation
     public function isLowStockAlertEnabled(): bool
     {
         return $this->lowStockAlertEnabled;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedAvailableNowLabels(): array
-    {
-        return $this->localizedAvailableNowLabels;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedAvailableLaterLabels(): array
-    {
-        return $this->localizedAvailableLaterLabels;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocation(): string
-    {
-        return $this->location;
     }
 
     /**

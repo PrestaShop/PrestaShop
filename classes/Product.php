@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class ProductCore extends ObjectModel
 {
@@ -135,7 +136,7 @@ class ProductCore extends ObjectModel
     public $supplier_reference;
 
     /** @var string Location */
-    public $location;
+    public $location = '';
 
     /** @var string|float Width in default width unit */
     public $width = 0;
@@ -213,7 +214,7 @@ class ProductCore extends ObjectModel
     public $available_for_order = true;
 
     /** @var string Available for order date in mysql format Y-m-d */
-    public $available_date = '0000-00-00';
+    public $available_date = DateTimeUtil::NULL_DATE;
 
     /** @var bool Will the condition select should be visible for this product ? */
     public $show_condition = false;
@@ -422,7 +423,7 @@ class ProductCore extends ObjectModel
             'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
             'supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'width' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'height' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'depth' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],

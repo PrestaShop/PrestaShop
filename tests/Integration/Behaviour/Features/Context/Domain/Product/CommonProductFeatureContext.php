@@ -216,7 +216,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'meta_description' => ProductConstraintException::INVALID_META_DESCRIPTION,
             'link_rewrite' => ProductConstraintException::INVALID_LINK_REWRITE,
             'minimal_quantity' => ProductConstraintException::INVALID_MINIMAL_QUANTITY,
-            'location' => ProductConstraintException::INVALID_LOCATION,
             'available_now_labels' => ProductConstraintException::INVALID_AVAILABLE_NOW,
             'available_later_labels' => ProductConstraintException::INVALID_AVAILABLE_LATER,
             'available_date' => ProductConstraintException::INVALID_AVAILABLE_DATE,
