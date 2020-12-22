@@ -66,22 +66,6 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
-      const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      let numPages = $tablePagination.data('numPages');
-      const numRowsPerPage = $tablePagination.data('numPerPage');
-      const numRows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length;
-      let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
-      const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-      if ((numProducts - 1) % numRowsPerPage === 0) {
-        this.orderProductRenderer.paginationRemovePage(numPages);
-      }
-      if (numRows === 1 && currentPage === numPages) {
-        currentPage -= 1;
-      }
-      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: currentPage
-      });
-
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderPaymentsRefresher.refresh(event.orderId);
       this.refreshProductsList(event.orderId);
@@ -136,11 +120,6 @@ export default class OrderViewPage {
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
-
-      // Move to first page to see the added product
-      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: 1
-      });
     });
   }
 
@@ -373,7 +352,7 @@ export default class OrderViewPage {
             });
           }
 
-          // Move to page of the deleted item
+          // Move to page of the modified item
           EventEmitter.emit(OrderViewEventMap.productListPaginated, {
             numPage: numPage
           });

@@ -251,5 +251,7 @@ export default class OrderProductRenderer {
       $linkPagination.find('span').html(i);
       $linkPaginationTemplate.before($linkPagination.removeClass('d-none'));
     }
+
+    this.togglePaginationControls();
   }
 }
