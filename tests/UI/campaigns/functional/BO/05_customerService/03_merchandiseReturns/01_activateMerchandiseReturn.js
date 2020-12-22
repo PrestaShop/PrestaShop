@@ -92,7 +92,7 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should filter the Orders table by the default customer ${DefaultAccount.lastName} and check the result`, async function () {
+    it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', DefaultAccount.lastName);
