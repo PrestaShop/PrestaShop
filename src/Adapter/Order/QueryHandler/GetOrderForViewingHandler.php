@@ -45,6 +45,7 @@ use OrderState;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -185,7 +186,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
-            $this->getOrderProducts($query->getOrderId()),
+            $this->getOrderProducts($query->getOrderId(), $query->getProductsSorting()->getValue()),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
             $this->getOrderShipping($order),
@@ -790,15 +791,17 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
     /**
      * @param OrderId $orderId
+     * @param string $productsOrder
      *
      * @return OrderProductsForViewing
      *
      * @throws OrderException
+     * @throws InvalidSortingException
      */
-    private function getOrderProducts(OrderId $orderId): OrderProductsForViewing
+    private function getOrderProducts(OrderId $orderId, string $productsOrder): OrderProductsForViewing
     {
         return $this->getOrderProductsForViewingHandler->handle(
-            GetOrderProductsForViewing::all($orderId->getValue())
+            GetOrderProductsForViewing::all($orderId->getValue(), $productsOrder)
         );
     }
 }

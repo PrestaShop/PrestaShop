@@ -197,47 +197,8 @@ export default class OrderProductRenderer {
   }
 
   updateNumPerPage(numPerPage) {
-    if (numPerPage < 1) {
-      numPerPage = 1;
-    }
-    const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
-    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-    const numPages = Math.ceil($rows.length / numPerPage);
-
-    // Update table data fields
-    $tablePagination.data('numPages', numPages);
-    $tablePagination.data('numPerPage', numPerPage);
-
-    // Clean all page links, reinsert the removed template
-    const $linkPaginationTemplate = $(OrderViewPageMap.productsTablePaginationTemplate);
-    $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page])`).remove();
-    $(OrderViewPageMap.productsTablePaginationNext).before($linkPaginationTemplate);
-
-    // Add appropriate pages
-    for (let i = 1; i <= numPages; ++i) {
-      const $linkPagination = $linkPaginationTemplate.clone();
-      $linkPagination.find('span').attr('data-page', i);
-      $linkPagination.find('span').html(i);
-      $linkPaginationTemplate.before($linkPagination.removeClass('d-none'));
-    }
-  }
-
-  paginationAddPage(numPage) {
-    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-    $tablePagination.data('numPages', numPage);
-    const $linkPagination = $(OrderViewPageMap.productsTablePaginationTemplate).clone();
-    $linkPagination.find('span').attr('data-page', numPage);
-    $linkPagination.find('span').html(numPage);
-    $(OrderViewPageMap.productsTablePaginationTemplate).before($linkPagination.removeClass('d-none'));
-    this.togglePaginationControls();
-  }
-
-  paginationRemovePage(numPage) {
-    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-    const numPages = $tablePagination.data('numPages');
-    $tablePagination.data('numPages', numPages - 1);
-    $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page="${numPage}"])`).remove();
-    this.togglePaginationControls();
+    $(OrderViewPageMap.productsTablePagination).data('numPerPage', numPerPage);
+    this.updatePaginationControls();
   }
 
   togglePaginationControls() {
@@ -267,5 +228,30 @@ export default class OrderProductRenderer {
       isColumnDisplayed = forceDisplay;
     }
     $(target).toggleClass('d-none', !isColumnDisplayed);
+  }
+
+  updatePaginationControls() {
+    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
+    const numPerPage = $tablePagination.data('numPerPage');
+    const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
+    const numPages = Math.ceil($rows.length / numPerPage);
+
+    // Update table data fields
+    $tablePagination.data('numPages', numPages);
+
+    // Clean all page links, reinsert the removed template
+    const $linkPaginationTemplate = $(OrderViewPageMap.productsTablePaginationTemplate);
+    $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page])`).remove();
+    $(OrderViewPageMap.productsTablePaginationNext).before($linkPaginationTemplate);
+
+    // Add appropriate pages
+    for (let i = 1; i <= numPages; ++i) {
+      const $linkPagination = $linkPaginationTemplate.clone();
+      $linkPagination.find('span').attr('data-page', i);
+      $linkPagination.find('span').html(i);
+      $linkPaginationTemplate.before($linkPagination.removeClass('d-none'));
+    }
+
+    this.togglePaginationControls();
   }
 }

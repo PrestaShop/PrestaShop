@@ -41,6 +41,9 @@
   </div>
 
   <div class="card-body">
+    <div class="spinner-order-products-container" id="orderProductsLoading">
+      <div class="spinner spinner-primary"></div>
+    </div>
     {% set formOptions = {
       'attr': {
         'data-order-id': orderForViewing.id,
@@ -94,15 +97,7 @@
       </tr>
       </thead>
       <tbody>
-      {% for product in orderForViewing.products.products %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
-          'product': product,
-          'productIndex': loop.index,
-          'paginationNum': paginationNum,
-          'isColumnLocationDisplayed': isColumnLocationDisplayed,
-          'isColumnRefundedDisplayed': isColumnRefundedDisplayed
-        } %}
-      {% endfor %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
       </tbody>
