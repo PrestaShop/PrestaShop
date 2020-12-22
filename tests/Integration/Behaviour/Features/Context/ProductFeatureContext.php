@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
+use Cart;
 use Combination;
 use Configuration;
 use Customization;

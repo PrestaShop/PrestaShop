@@ -1,10 +1,10 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-to-cart
 @reset-database-before-feature
+@order-to-cart
 Feature: Check order to cart data copy
   As a BO user
   I must be able to duplicate a cart from an existing order
 
-  @order-to-cart
   Scenario: Duplicate an order from Back Office
     Given I am logged in as "test@prestashop.com" employee
     And the current currency is "USD"
@@ -22,7 +22,6 @@ Feature: Check order to cart data copy
     When I duplicate "bo_order_for_customization" to create cart "duplicated_bo_order_for_customization"
     # Additional checks should be added to validate the cart is correctly duplicated (even customization address)
 
-  @order-to-cart
   Scenario: Add a customized product without its customization
     Given there is customer "customer_for_customization" with email "pub@prestashop.com"
     And customer "customer_for_customization" has address in "US" country

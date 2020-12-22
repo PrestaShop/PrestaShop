@@ -282,7 +282,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^(?:I )?add (\d+) customized products? with reference "(.+)" with(out)? all its customizations to the cart "(.+)"$/
+     * @When /^(?:I )?add (\d+) customized products? with reference "(.+)" (with|without)? all its customizations to the cart "(.+)"$/
      */
     public function addCustomizedProductToCartsWithCustomization(
         int $quantity,
@@ -290,7 +290,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $withCombinations,
         string $reference
     ) {
-        $hasCombinations = ($withCombinations === '');
+        $hasCombinations = ($withCombinations === 'with');
         $cartId = (int) SharedStorage::getStorage()->get($reference);
         $productId = (int) Product::getIdByReference($productReference);
         $product = new Product($productId);
@@ -329,7 +329,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
