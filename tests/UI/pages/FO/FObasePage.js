@@ -14,6 +14,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.userInfoLink = '#_desktop_user_info';
     this.accountLink = `${this.userInfoLink} .user-info a.account`;
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
+    this.viewMyCustomerAccountLink = `${this.userInfoLink} .account`;
     this.contactLink = '#contact-link';
     this.categoryMenu = id => `#category-${id} a`;
     this.languageSelectorDiv = '#_desktop_language_selector';
@@ -244,5 +245,14 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToContactUsPage(page) {
     await this.clickAndWaitForNavigation(page, this.contactUsLink);
+  }
+
+  /**
+   * Go to your account page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToYourAccountPage(page) {
+    await this.clickAndWaitForNavigation(page, this.viewMyCustomerAccountLink);
   }
 };

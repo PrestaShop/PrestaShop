@@ -24,6 +24,7 @@ class Order extends BOBasePage {
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
+    this.returnProductsButton = '#order-view-page button.return-product-display';
 
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -262,6 +263,15 @@ class Order extends BOBasePage {
     // Delete the target because a new tab is opened when downloading the file
     return this.downloadDocument(page, 3);
     /* eslint-enable no-return-assign, no-param-reassign */
+  }
+
+  /**
+   * Is return products button visible
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isReturnProductsButtonVisible(page) {
+    return this.elementVisible(page, this.returnProductsButton);
   }
 }
 
