@@ -220,15 +220,6 @@ final class EmployeeType extends TranslatorAwareType
         }
 
         $builder
-            ->add('default_page', ChoiceType::class, [
-                'choices' => $this->tabChoices,
-                'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
-                'row_attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => '2',
-                ],
-            ])
             ->add('language', ChoiceType::class, [
                 'label' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->languagesChoices,
@@ -267,6 +258,18 @@ final class EmployeeType extends TranslatorAwareType
                     'required' => false,
                 ]);
             }
+
+            $builder
+                ->add('default_page', ChoiceType::class, [
+                    'choices' => $this->tabChoices,
+                    'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
+                    'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
+                    'row_attr' => [
+                        'data-minimumResultsForSearch' => '7',
+                        'data-toggle' => '2',
+                    ],
+                ])
+            ;
         }
     }
 
