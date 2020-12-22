@@ -73,7 +73,13 @@ class PageType extends TranslatorAwareType
                 'help' => $this->trans('If an attribute is not available in every product combination, it will not be displayed.', 'Admin.Shopparameters.Help'),
             ])
             ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
-                'label' => $this->trans('Display the "%add_to_cart_label%" button when a product has attributes', 'Admin.Shopparameters.Help'),
+                'label' => $this->trans(
+                    'Display the "%add_to_cart_label%" button when a product has attributes',
+                    'Admin.Shopparameters.Feature',
+                    [
+                        '%add_to_cart_label%' => $this->trans('Add to cart', 'Shop.Theme.Actions'),
+                    ]
+                ),
                 'help' => $this->trans('Note that this setting does not work with the default theme anymore', 'Admin.Shopparameters.Help'),
             ])
             ->add('attribute_anchor_separator', ChoiceType::class, [
