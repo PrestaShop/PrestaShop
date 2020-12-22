@@ -128,7 +128,7 @@ class SupplierType extends TranslatorAwareType
 
         $invalidCharsText = sprintf(
             '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,
-            $this->trans('Invalid characters:', 'Admin.Notifications.Info')
+            $this->trans('Invalid characters:', 'Admin.Global')
         );
 
         $invalidGenericNameHint = sprintf(
