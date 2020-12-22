@@ -125,7 +125,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                         [
                             'value' => 0,
                             'message' => $this->trans(
-                                'Invoice number is invalid. Please enter a positive integer.',
+                                'The field is invalid. Please enter a positive integer number.',
                                 'Admin.Orderscustomers.Notification',
                                 ['%number%' => $this->nextInvoiceNumber]
                             ),
