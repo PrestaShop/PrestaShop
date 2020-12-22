@@ -191,13 +191,11 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
-                'help' => $this->trans('Phone number for this supplier.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('mobile_phone', TextType::class, [
                 'label' => $this->trans('Mobile phone', 'Admin.Global'),
-                'help' => $this->trans('Mobile phone number for this supplier.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
