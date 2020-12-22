@@ -228,7 +228,7 @@
     <value>1</value>
   </configuration>
   <configuration id="PS_ATTRIBUTE_CATEGORY_DISPLAY" name="PS_ATTRIBUTE_CATEGORY_DISPLAY">
-    <value>1</value>
+    <value>0</value>
   </configuration>
   <configuration id="PS_CUSTOMER_SERVICE_FILE_UPLOAD" name="PS_CUSTOMER_SERVICE_FILE_UPLOAD">
     <value>1</value>
