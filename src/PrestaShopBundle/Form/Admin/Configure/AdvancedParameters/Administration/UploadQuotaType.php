@@ -30,8 +30,6 @@ use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 class UploadQuotaType extends TranslatorAwareType
 {
@@ -40,14 +38,24 @@ class UploadQuotaType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $configuration = $this->getConfiguration();
         $builder
             ->add(
                 'max_size_attached_files',
                 TextWithUnitType::class,
                 [
                     'required' => true,
-                    'label' => $this->trans('Maximum size for attached files', 'Admin.Advparameters.Feature'),
-                    'help' => $this->trans('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).', 'Admin.Advparameters.Help'),
+                    'label' => $this->trans(
+                        'Maximum size for attached files',
+                        'Admin.Advparameters.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).',
+                        'Admin.Advparameters.Help',
+                        [
+                            '%size%' => $configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE')
+                        ]
+                    ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
                 ]
             )
@@ -56,8 +64,17 @@ class UploadQuotaType extends TranslatorAwareType
                 TextWithUnitType::class,
                 [
                     'required' => true,
-                    'label' => $this->trans('Maximum size for a downloadable product', 'Admin.Advparameters.Feature'),
-                    'help' => $this->trans('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).', 'Admin.Advparameters.Help'),
+                    'label' => $this->trans(
+                        'Maximum size for a downloadable product',
+                        'Admin.Advparameters.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).',
+                        'Admin.Advparameters.Help',
+                        [
+                            '%size%' => $configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE')
+                        ]
+                    ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
                 ]
             )
@@ -66,8 +83,17 @@ class UploadQuotaType extends TranslatorAwareType
                 TextWithUnitType::class,
                 [
                     'required' => true,
-                    'label' => $this->trans('Maximum size for a product\'s image', 'Admin.Advparameters.Feature'),
-                    'help' => $this->trans('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).', 'Admin.Advparameters.Help'),
+                    'label' => $this->trans(
+                        'Maximum size for a product\'s image',
+                        'Admin.Advparameters.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).',
+                        'Admin.Advparameters.Help',
+                        [
+                            '%size%' => $configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE')
+                        ]
+                    ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
                 ]
             );
