@@ -80,7 +80,7 @@ class PageType extends TranslatorAwareType
                         '%add_to_cart_label%' => $this->trans('Add to cart', 'Shop.Theme.Actions'),
                     ]
                 ),
-                'help' => $this->trans('Note that this setting does not work with the default theme anymore', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Note that this setting does not work with the default theme anymore.', 'Admin.Shopparameters.Help'),
             ])
             ->add('attribute_anchor_separator', ChoiceType::class, [
                 'choices' => [
