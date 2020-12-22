@@ -213,7 +213,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
             } catch (\Exception $e) {
                 $conn->rollBack();
 
-                throw($e);
+                throw ($e);
             }
         }
         $conn->commit();

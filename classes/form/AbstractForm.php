@@ -238,6 +238,6 @@ abstract class AbstractFormCore implements FormInterface
     {
         $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
 
-        return  !$error;
+        return !$error;
     }
 }
