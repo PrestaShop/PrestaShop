@@ -79,11 +79,13 @@ class SetUpUrlType extends TranslatorAwareType
         array $canonicalUrlChoices,
         $isHtaccessFileWritable,
         $isHostMode,
+        $isModRewriteActive,
         $doesMainShopUrlExist
     ) {
         parent::__construct($translator, $locales);
         $this->canonicalUrlChoices = $canonicalUrlChoices;
         $this->isHtaccessFileWritable = $isHtaccessFileWritable;
+        $this->isModRewriteActive = $isModRewriteActive;
         $this->isHostMode = $isHostMode;
         $this->doesMainShopUrlExist = $doesMainShopUrlExist;
     }
