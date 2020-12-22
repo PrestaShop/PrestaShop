@@ -192,7 +192,6 @@ class PrintCommandsAndQueriesForDocsCommand extends ContainerAwareCommand
             $commandDefinitionsByDomain[$commandDefinition->getDomain()][$commandDefinition->getType()][] = $commandDefinition;
         }
 
-
         return $commandDefinitionsByDomain;
     }
 
