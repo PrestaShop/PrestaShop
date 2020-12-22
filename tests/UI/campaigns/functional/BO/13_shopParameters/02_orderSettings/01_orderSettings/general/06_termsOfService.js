@@ -86,7 +86,7 @@ describe('Enable terms of service', async () => {
 
   tests.forEach((test, index) => {
     it(`should ${test.args.action} terms of service`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}TermsOfService`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}TermsOfService${index}`, baseContext);
 
       const result = await orderSettingsPage.setTermsOfService(page, test.args.enable, test.args.pageName);
       await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
@@ -140,7 +140,7 @@ describe('Enable terms of service', async () => {
     }
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `checkAndBackToBO${index}`, baseContext);
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 
