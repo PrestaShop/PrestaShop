@@ -12,6 +12,8 @@ class Checkout extends FOBasePage {
       + `[data-module-name='${name}']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
+    this.termsOfServiceLink = '#cta-terms-and-conditions-0';
+    this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -221,6 +223,11 @@ class Checkout extends FOBasePage {
    */
   isConditionToApproveCheckboxVisible(page) {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
+  }
+
+  async getTermsOfServicePageTitle(page) {
+    await page.click(this.termsOfServiceLink);
+    return this.getTextContent(page, this.termsOfServiceModalDiv);
   }
 
   /**

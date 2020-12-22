@@ -57,7 +57,31 @@ describe('Enable terms of service', async () => {
 
   const tests = [
     {args: {action: 'disable', enable: false, pageName: ''}},
-    {args: {action: 'enable', enable: true, pageName: 'Terms and conditions of use'}},
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Delivery', title: 'Shipments and returns',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Legal Notice', title: 'Legal',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Terms and conditions of use', title: 'Terms and conditions of use',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'About us', title: 'About us',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Secure payment', title: 'Secure payment',
+      },
+    },
   ];
 
   tests.forEach((test, index) => {
@@ -69,12 +93,7 @@ describe('Enable terms of service', async () => {
     });
 
     it('should check terms of service checkbox', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkTermsOfService${orderSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
@@ -110,6 +129,15 @@ describe('Enable terms of service', async () => {
       const isVisible = await checkoutPage.isConditionToApproveCheckboxVisible(page);
       await expect(isVisible).to.be.equal(test.args.enable);
     });
+
+    if (test.args.enable) {
+      it('should check the terms of service page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfServicePage${index}`, baseContext);
+
+        const pageName = await checkoutPage.getTermsOfServicePageTitle(page);
+        await expect(pageName).to.contains(test.args.title);
+      });
+    }
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
