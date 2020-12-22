@@ -142,8 +142,16 @@ class Customers extends BOBasePage {
    * @param column, column to check
    * @return {Promise<boolean>}
    */
-  getToggleColumnValue(page, row, column) {
-    return this.elementVisible(page, this.customersListColumnValidIcon(row, column), 1000);
+  async getToggleColumnValue(page, row, column) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.customersListToggleColumnInput(row, column)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -255,8 +263,8 @@ class Customers extends BOBasePage {
       email: await this.getTextColumnFromTableCustomers(page, row, 'email'),
       sales: await this.getTextColumnFromTableCustomers(page, row, 'total_spent'),
       status: await this.getCustomerStatus(page, row),
-      newsletter: await this.getNewsletterStatus(page, row, 'newsletter'),
-      partnerOffers: await this.getPartnerOffersStatus(page, row, ''),
+      newsletter: await this.getNewsletterStatus(page, row),
+      partnerOffers: await this.getPartnerOffersStatus(page, row),
     };
   }
 
@@ -365,7 +373,11 @@ class Customers extends BOBasePage {
    */
   async chooseRegistrationAndDelete(page, allowRegistrationAfterDelete) {
     // Choose deletion method
-    await page.check(this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
+    if (allowRegistrationAfterDelete) {
+      await page.click(this.deleteCustomerModalMethodInput(0));
+    } else {
+      await page.click(this.deleteCustomerModalMethodInput(1));
+    }
 
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);
@@ -530,3 +542,4 @@ class Customers extends BOBasePage {
 }
 
 module.exports = new Customers();
+
