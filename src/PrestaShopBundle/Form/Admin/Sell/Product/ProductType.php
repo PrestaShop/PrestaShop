@@ -28,63 +28,63 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This is the parent product form type (for now it only contains example fields
- * but it will soon be improved with more accurate sub forms).
+ * This is the parent product form type
  */
-class ProductPriceType extends AbstractType
+class ProductType extends TranslatorAwareType
 {
-    /**
-     * @var array
-     */
-    private $taxRuleGroupChoices;
-
-    /**
-     * @var array
-     */
-    private $taxRuleGroupChoicesAttributes;
-
-    /**
-     * @param array $taxRuleGroupChoices
-     * @param array $taxRuleGroupChoicesAttributes
-     */
-    public function __construct(
-        array $taxRuleGroupChoices,
-        array $taxRuleGroupChoicesAttributes
-    ) {
-        $this->taxRuleGroupChoices = $taxRuleGroupChoices;
-        $this->taxRuleGroupChoicesAttributes = $taxRuleGroupChoicesAttributes;
-    }
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $editing = !empty($options['product_id']);
         $builder
-            ->add('price_tax_excluded', NumberType::class, [
+            ->add('basic', BasicInformationType::class)
+            ->add('price', PriceType::class)
+            ->add('save', SubmitType::class, [
+                'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
-                    'class' => 'product-price-tax-excl',
+                    'disabled' => $editing,
+                    'data-toggle' => 'pstooltip',
+                    'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
                 ],
-            ])
-            ->add('price_tax_included', NumberType::class, [
-                'attr' => [
-                    'class' => 'product-price-tax-incl',
-                ],
-            ])
-            ->add('tax_rule_group', ChoiceType::class, [
-                'attr' => [
-                    'class' => 'product-tax-rule-group-selection',
-                ],
-                'choices' => $this->taxRuleGroupChoices,
-                'choice_attr' => $this->taxRuleGroupChoicesAttributes,
             ])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        if (!empty($options['product_id'])) {
+            $view->vars = array_replace($view->vars, [
+                'attr' => [
+                    'data-product-id' => $options['product_id'],
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'product_id' => null,
+        ]);
+        $resolver->setAllowedTypes('product_id', ['null', 'int']);
     }
 }
