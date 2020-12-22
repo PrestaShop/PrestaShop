@@ -225,6 +225,11 @@ class Checkout extends FOBasePage {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
   }
 
+  /**
+   * Get terms of service page title
+   * @param page
+   * @returns {Promise<text>}
+   */
   async getTermsOfServicePageTitle(page) {
     await page.click(this.termsOfServiceLink);
     return this.getTextContent(page, this.termsOfServiceModalDiv);
