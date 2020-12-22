@@ -125,8 +125,8 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(result).to.equal(test.args.enable);
     });
 
-    it('should go to FO and login', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `openTheShop${index}`, baseContext);
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToFO${index}`, baseContext);
 
       // Click on view my shop
       page = await viewOrderPage.viewMyShop(page);
@@ -136,9 +136,12 @@ describe('Activate/Deactivate merchandise return', async () => {
 
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
 
-      if (index === 0) {
-        // Login FO
+    if (index === 0) {
+      it('should login', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
+
         await homePage.goToLoginPage(page);
         await foLoginPage.customerLogin(page, DefaultAccount);
 
@@ -147,13 +150,17 @@ describe('Activate/Deactivate merchandise return', async () => {
 
         const pageTitle = await myAccountPage.getPageTitle(page);
         await expect(pageTitle).to.contains(myAccountPage.pageTitle);
-      } else {
+      });
+    } else {
+      it('should go to account page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
+
         await homePage.goToYourAccountPage(page);
 
         const pageTitle = await myAccountPage.getPageTitle(page);
         await expect(pageTitle).to.contains(myAccountPage.pageTitle);
-      }
-    });
+      });
+    }
 
     it('should go to \'Order history and details\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToOrderHistoryPage${index}`, baseContext);
