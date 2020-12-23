@@ -4626,16 +4626,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.6.0",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "0f75dba2ee29de86cc75674b78e716ceadfaeaad"
+                "reference": "a889cce83d7df567e1f6d1b1ebf16915a102a5ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/0f75dba2ee29de86cc75674b78e716ceadfaeaad",
-                "reference": "0f75dba2ee29de86cc75674b78e716ceadfaeaad",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/a889cce83d7df567e1f6d1b1ebf16915a102a5ba",
+                "reference": "a889cce83d7df567e1f6d1b1ebf16915a102a5ba",
                 "shasum": ""
             },
             "require": {
@@ -4643,10 +4643,9 @@
                 "php": ">=5.6"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.14",
                 "mockery/mockery": "^1.2",
                 "phpunit/phpunit": "~5.7",
-                "prestashop/php-coding-standards": "dev-master"
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -4671,7 +4670,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2020-09-08T07:05:01+00:00"
+            "time": "2020-12-14T13:11:58+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
