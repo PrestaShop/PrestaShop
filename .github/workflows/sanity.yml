@@ -1,0 +1,33 @@
+name: CI
+
+on:
+    pull_request:
+        types: [ opened,edited,reopened,synchronize ]
+jobs:
+    test:
+        needs: build
+        runs-on: ubuntu-latest
+        container:
+            image: php:7.4-apache
+        services:
+            mysql:
+                image: mysql:5.7
+                env:
+                    MYSQL_ROOT_PASSWORD: ''
+                ports:
+                    - 32574:3306
+        steps:
+
+            - name: Checkout the repository
+              uses: actions/checkout@v2
+              working-directory: /var/www/html
+
+            - name: Run composer install and build assets
+              run: make install
+              working-directory: /var/www/html
+
+            - name: Restart apache server
+              run: service apache2 restart
+
+            - name: Check Prestashop is available
+              run: curl http://localhost/
