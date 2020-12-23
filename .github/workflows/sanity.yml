@@ -1,14 +1,14 @@
-name: CI
+name: UI Sanity tests
 
 on:
     pull_request:
-        types: [ opened,edited,reopened,synchronize ]
+        types: [opened,edited,reopened,synchronize]
 jobs:
     Sanity:
-        runs-on: ubuntu-latest
-        container:
-            image: php:7.4-apache
-        steps:
-            - name: Checkout the repository
-              uses: actions/checkout@v2
-              working-directory: /var/www/html
+      runs-on: ubuntu-latest
+      container:
+        image: php:7.4-apache
+      steps:
+        - name: Checkout the repository
+        uses: actions/checkout@v2
+        working-directory: /var/www/html
