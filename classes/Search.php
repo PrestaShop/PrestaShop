@@ -185,18 +185,21 @@ class SearchCore
             $query = '
 				SELECT a.alias, a.search
 				FROM `' . _DB_PREFIX_ . 'alias` a
-				WHERE \'' . pSQL($string) . '\' %s AND `active` = 1';
+				WHERE \'' . pSQL($string) . '\' %s AND `active` = 1
+            ';
 
-            try {
-                // if available, use '\b' in the REGEX (faster)
-                $aliases = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                    sprintf($query, 'REGEXP CONCAT(\'\\\\b\', alias, \'\\\\b\')')
-                );
-            } catch (PrestaShopDatabaseException $e) {
-                $aliases = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                    sprintf($query, 'REGEXP CONCAT(\'(^|[[:space:]])\', alias, \'([[:space:]]|$)\')')
-                );
-            }
+            // check if we can we use '\b' (faster)
+            $useICU = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
+            );
+            $aliases = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                sprintf(
+                    $query,
+                    $useICU
+                        ? 'REGEXP CONCAT(\'\\\\b\', alias, \'\\\\b\')'
+                        : 'REGEXP CONCAT(\'(^|[[:space:]]|[[:<:]])\', alias, \'([[:space:]]|[[:>:]]|$)\')'
+                )
+            );
 
             foreach ($aliases  as $alias) {
                 $processed_words = array_merge($processed_words, explode(' ', $alias['search']));
