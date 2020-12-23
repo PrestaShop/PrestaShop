@@ -6,7 +6,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./var/www/html
+    working-directory: var/www/html/
 
 jobs:
 
@@ -27,10 +27,10 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Checking files
-        run: ll
-      - name: Run composer install and build assets
-        run: make install
+      - name: Composer
+        run: composer install
+      - name: build assets
+        run: ./tools/assets/build.sh
       - name: Restart apache server
         run: service apache2 restart
       - name: Check Prestashop is available
