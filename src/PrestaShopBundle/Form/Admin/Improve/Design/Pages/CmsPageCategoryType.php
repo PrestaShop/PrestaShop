@@ -34,20 +34,18 @@ use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Defines form for Improve > Design > Pages > Categories create/edit actions
  */
-class CmsPageCategoryType extends AbstractType
+class CmsPageCategoryType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var array
      */
@@ -59,11 +57,14 @@ class CmsPageCategoryType extends AbstractType
     private $isShopFeatureEnabled;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $allCmsCategories
      * @param bool $isShopFeatureEnabled
      */
-    public function __construct(array $allCmsCategories, $isShopFeatureEnabled)
+    public function __construct(TranslatorInterface $translator, array $locales, array $allCmsCategories, $isShopFeatureEnabled)
     {
+        parent::__construct($translator, $locales);
         $this->allCmsCategories = $allCmsCategories;
         $this->isShopFeatureEnabled = $isShopFeatureEnabled;
     }
@@ -73,8 +74,12 @@ class CmsPageCategoryType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Notifications.Info') .  '<>;=#{}';
+        $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Notifications.Info') . '<>={}';
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->trans('Name', 'Admin.Global'),
+                'help' => $invalidCharactersForCatalogLabel,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
@@ -85,24 +90,27 @@ class CmsPageCategoryType extends AbstractType
                         ]),
                         new Length([
                             'max' => 64,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 64],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 64]
                             ),
                         ]),
                     ],
                 ],
             ])
             ->add('is_displayed', SwitchType::class, [
+                'label' => $this->trans('Displayed', 'Admin.Global'),
                 'required' => false,
             ])
             ->add('parent_category', MaterialChoiceTreeType::class, [
+                'label' => $this->trans('Parent category', 'Admin.Design.Feature'),
                 'required' => false,
                 'choices_tree' => $this->allCmsCategories,
                 'choice_value' => 'id_cms_category',
             ])
             ->add('description', TranslatableType::class, [
+                'label' => $this->trans('Description', 'Admin.Global'),
                 'required' => false,
                 'type' => TextareaType::class,
                 'options' => [
@@ -112,7 +120,9 @@ class CmsPageCategoryType extends AbstractType
                 ],
             ])
             ->add('meta_title', TranslatableType::class, [
+                'label' => $this->trans('Meta title', 'Admin.Global'),
                 'required' => false,
+                'help' => $invalidCharactersForNameLabel,
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
@@ -120,16 +130,18 @@ class CmsPageCategoryType extends AbstractType
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
                             ),
                         ]),
                     ],
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'label' => $this->trans('Meta description', 'Admin.Global'),
+                'help' => $invalidCharactersForNameLabel,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -138,16 +150,18 @@ class CmsPageCategoryType extends AbstractType
                         ]),
                         new Length([
                             'max' => 512,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 512],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 512]
                             ),
                         ]),
                     ],
                 ],
             ])
             ->add('meta_keywords', TranslatableType::class, [
+                'label' => $this->trans('Meta keywords', 'Admin.Global'),
+                'help' => $invalidCharactersForNameLabel,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -156,19 +170,21 @@ class CmsPageCategoryType extends AbstractType
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
                             ),
                         ]),
                     ],
                     'attr' => [
-                        'placeholder' => $this->trans('Add tag', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [
+                'label' => $this->trans('Friendly URL', 'Admin.Global'),
+                'help' => $this->trans('Only letters and the minus (-) character are allowed.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
@@ -177,10 +193,10 @@ class CmsPageCategoryType extends AbstractType
                         new IsUrlRewrite(),
                         new Length([
                             'max' => 64,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 64],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 64]
                             ),
                         ]),
                     ],
@@ -190,14 +206,15 @@ class CmsPageCategoryType extends AbstractType
 
         if ($this->isShopFeatureEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Shop association', [], 'Admin.Global')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Shop association', 'Admin.Global')),
+                            ]
                         ),
                     ]),
                 ],
