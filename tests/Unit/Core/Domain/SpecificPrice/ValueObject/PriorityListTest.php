@@ -30,8 +30,8 @@ namespace Tests\Unit\Core\Domain\SpecificPrice\ValueObject;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\PriorityList;
 
 class PriorityListTest extends TestCase
 {

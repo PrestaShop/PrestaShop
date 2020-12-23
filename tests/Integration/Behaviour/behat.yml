@@ -217,6 +217,7 @@ default:
             paths:
                 - %paths.base%/Features/Scenario/Product
                 - %paths.base%/Features/Scenario/Product/Combination
+                - %paths.base%/Features/Scenario/Product/SpecificPrice
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext

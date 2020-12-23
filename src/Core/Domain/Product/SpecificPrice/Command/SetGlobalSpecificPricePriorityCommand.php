@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\PriorityList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 
 /**
  * Sets global priorities for specific price

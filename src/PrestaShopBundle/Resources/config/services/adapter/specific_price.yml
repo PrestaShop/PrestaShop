@@ -14,19 +14,3 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand
-
-    prestashop.adapter.specific_price.command_handler.set_specific_price_priority_for_product_handler:
-        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\SetSpecificPricePriorityForProductHandler
-        arguments:
-            - '@prestashop.adapter.product.update.specific_price_priority_updater'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand
-
-    prestashop.adapter.specific_price.command_handler.set_global_specific_price_priority_handler:
-        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandler
-        arguments:
-            - '@prestashop.adapter.product.update.specific_price_priority_updater'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand

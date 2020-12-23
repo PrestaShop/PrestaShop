@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\PriorityList;
 
 /**
  * Sets specific price priority for provided product
