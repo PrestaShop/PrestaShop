@@ -32,6 +32,7 @@ use Context;
 use Currency;
 use DummyAdminController;
 use Employee;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 use Shop;
 
 /**
@@ -118,7 +119,7 @@ class LegacyContextLoader
     {
         $currency = new Currency($currencyId);
         if (null === $currencyId) {
-            $currency->precision = 2;
+            $currency->precision = Precision::DEFAULT_PRECISION;
         }
 
         $this->context->currency = $currency;
