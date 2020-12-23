@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Adapter\Product\Pack;
 
 use Pack;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;

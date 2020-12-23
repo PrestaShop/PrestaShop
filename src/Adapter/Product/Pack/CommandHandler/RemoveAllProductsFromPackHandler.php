@@ -26,17 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPackUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllProductsFromPackHandlerInterface;
 
 /**
- * Handles @see SetPackProductsCommand using legacy object model
+ * Handles @see RemoveAllProductsFromPackCommand using legacy object model
  */
-final class SetPackProductsHandler extends AbstractProductHandler implements SetPackProductsHandlerInterface
+final class RemoveAllProductsFromPackHandler extends AbstractProductHandler implements RemoveAllProductsFromPackHandlerInterface
 {
     /**
      * @var ProductPackUpdater
@@ -55,8 +55,8 @@ final class SetPackProductsHandler extends AbstractProductHandler implements Set
     /**
      * {@inheritdoc}
      */
-    public function handle(SetPackProductsCommand $command): void
+    public function handle(RemoveAllProductsFromPackCommand $command): void
     {
-        $this->productPackUpdater->setPackProducts($command->getPackId(), $command->getProducts());
+        $this->productPackUpdater->setPackProducts($command->getPackId(), []);
     }
 }
