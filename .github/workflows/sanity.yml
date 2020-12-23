@@ -27,9 +27,11 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+      - name: Checking files
+        run: ll
       - name: Run composer install and build assets
         run: make install
       - name: Restart apache server
         run: service apache2 restart
       - name: Check Prestashop is available
-        run: curl http://localhost/e
+        run: curl http://localhost/
