@@ -29,12 +29,13 @@ jobs:
         run: service apache2 restart
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Run composer install
+      - name: Install php extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           extensions: gd, intl, zip
           tools: composer:v2
+      - name: Run composer install
         run: composer install
       - name: build assets
         run: ./tools/assets/build.sh
