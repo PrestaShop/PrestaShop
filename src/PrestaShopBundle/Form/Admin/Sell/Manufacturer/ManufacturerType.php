@@ -32,7 +32,6 @@ use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -99,7 +98,7 @@ class ManufacturerType extends TranslatorAwareType
                 ],
             ])
             /** @todo change to TranslatableType */
-            ->add('short_description', TranslateType::class, [
+            ->add('short_description', TranslatableType::class, [
                 'label' => $this->trans('Short description', 'Admin.Catalog.Feature'),
                 'type' => FormattedTextareaType::class,
                 'locales' => $this->locales,
@@ -116,11 +115,9 @@ class ManufacturerType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('description', TranslateType::class, [
+            ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
-                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
