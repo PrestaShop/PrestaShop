@@ -631,7 +631,7 @@ abstract class PaymentModuleCore extends Module
                             '{total_shipping_tax_excl}' => Tools::displayPrice($order->total_shipping_tax_excl, $this->context->currency, false),
                             '{total_shipping_tax_incl}' => Tools::displayPrice($order->total_shipping_tax_incl, $this->context->currency, false),
                             '{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
-                            '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
+                            '{total_tax_paid}' => Tools::displayPrice((($order->total_products_wt - $order->total_products) - ($order->total_discounts_tax_incl - $order->total_discounts_tax_excl)) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
                         );
 
                         if (is_array($extra_vars)) {
