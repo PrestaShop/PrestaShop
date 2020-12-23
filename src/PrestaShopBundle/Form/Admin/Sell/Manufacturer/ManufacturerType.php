@@ -71,7 +71,7 @@ class ManufacturerType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') .  '<>;=#{}';
+        $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>;=#{}';
         $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>={}';
 
         $builder
@@ -97,7 +97,7 @@ class ManufacturerType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            /** @todo change to TranslatableType */
+            /* @todo change to TranslatableType */
             ->add('short_description', TranslatableType::class, [
                 'label' => $this->trans('Short description', 'Admin.Catalog.Feature'),
                 'type' => FormattedTextareaType::class,
