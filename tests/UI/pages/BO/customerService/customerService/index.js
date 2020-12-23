@@ -93,7 +93,7 @@ class CustomerService extends BOBasePage {
   async getTextColumn(page, row, columnName) {
     let i = 0;
     if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 2000)) {
-      i++;
+      i += 1;
     }
     let columnSelector;
 

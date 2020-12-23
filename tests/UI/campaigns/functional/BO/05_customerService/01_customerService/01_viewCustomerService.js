@@ -90,20 +90,6 @@ describe('View customer service messages', async () => {
     await expect(pageTitle).to.contains(customerServicePage.pageTitle);
   });
 
-  it('should filter by email', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
-
-    const result = await customerServicePage.elementVisible(page, customerServicePage.filterColumn('a!email'));
-    if (result) {
-      await customerServicePage.resetFilter(page);
-
-      await customerServicePage.filterTable(page, 'input', 'a!email', contactUsData.emailAddress);
-
-      const textEmail = await customerServicePage.getTextColumn(page, 1, 'a!email');
-      await expect(textEmail).to.contains(contactUsData.emailAddress);
-    }
-  });
-
   it('should get the customer service id and the date', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
 
@@ -154,7 +140,7 @@ describe('View customer service messages', async () => {
     expect(text).to.contains(contactUsData.message);
   });
 
-  it('should delete the message', async function(){
+  it('should delete the message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
 
     await dashboardPage.goToSubMenu(
