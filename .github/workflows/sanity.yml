@@ -31,6 +31,7 @@ jobs:
             chmod +x /usr/local/bin/install-php-extensions && sync \
             && install-php-extensions \
             mbstring intl gd xml dom json fileinfo curl zip iconv
+        working-directory: .
 
       - name: Restart apache server
         run: service apache2 restart
