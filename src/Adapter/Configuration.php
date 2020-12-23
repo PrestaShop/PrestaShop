@@ -274,7 +274,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      */
     public function combinationIsActive()
     {
-        return  Combination::isFeatureActive();
+        return Combination::isFeatureActive();
     }
 
     /**
