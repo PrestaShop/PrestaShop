@@ -25,20 +25,17 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Install php extensions
-        run: |
-          add-apt-repository ppa:ondrej/php
-          apt-get update
-          apt-get install -y php7.4-gd php7.4-intl php7.4-zip
-        env:
-          DEBIAN_FRONTEND: nointeractive
-        working-directory: .
       - name: Restart apache server
         run: service apache2 restart
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Composer
-        uses: MilesChou/composer-action/install@master
+      - name: Run composer install
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: gd, intl, zip
+          tools: composer:v2
+        run: composer install
       - name: build assets
         run: ./tools/assets/build.sh
       - name: Check Prestashop is available
