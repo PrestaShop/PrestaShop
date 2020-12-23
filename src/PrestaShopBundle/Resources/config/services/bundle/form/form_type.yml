@@ -585,15 +585,21 @@ services:
 
     form.type.shop.traffic_seo.meta.set_up_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.canonical_redirect_type").getChoices()'
             - '@=service("prestashop.core.util.url.url_file_checker").isHtaccessFileWritable()'
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
+            - '@=service("prestashop.adapter.tools").isModRewriteActive()'
+            - '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
         tags:
             - { name: form.type }
 
     form.type.shop.traffic_seo.meta.shop_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
@@ -603,8 +609,17 @@ services:
 
     form.type.shop.traffic_seo.meta.url_schema:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
-            - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
+            - '@prestashop.adapter.data_provider.default_route'
+        tags:
+            - { name: form.type }
+
+    form.type.shop.traffic_seo.meta.seo_options:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SEOOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
