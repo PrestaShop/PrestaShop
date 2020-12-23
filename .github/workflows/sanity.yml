@@ -26,6 +26,12 @@ jobs:
 
     steps:
 
+      - name: Install php extension
+        run:  |
+            chmod +x /usr/local/bin/install-php-extensions && sync \
+            && install-php-extensions \
+            mbstring intl gd xml dom json fileinfo curl zip iconv
+
       - name: Restart apache server
         run: service apache2 restart
         working-directory: .
@@ -35,13 +41,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install php extensions
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
-
-      - run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+      - name: Run composer install
+        uses: MilesChou/composer-action/install@master
 
       - name: build assets
         run: ./tools/assets/build.sh
