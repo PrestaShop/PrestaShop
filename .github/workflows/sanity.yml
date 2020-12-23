@@ -27,6 +27,7 @@ jobs:
     steps:
       - name: Restart apache server
         run: service apache2 restart
+        working-directory: .
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Install php extensions
