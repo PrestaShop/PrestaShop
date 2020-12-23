@@ -3,11 +3,30 @@ name: UI Sanity tests
 on:
   pull_request:
     types: [opened,edited,reopened,synchronize]
+
+defaults:
+  run:
+    working-directory: ./var/www/html
+
 jobs:
+
   sanity:
     runs-on: ubuntu-latest
     container:
       image: php:7.4-apache
+    services:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: ''
+        ports:
+          - 32574:3306
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+      - name: Run composer install and build assets
+        run: make install
+      - name: Restart apache server
+        run: service apache2 restart
+      - name: Check Prestashop is available
+        run: curl http://localhost/
