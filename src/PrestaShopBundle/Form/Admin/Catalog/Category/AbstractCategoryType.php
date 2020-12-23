@@ -30,8 +30,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -40,7 +38,6 @@ use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -115,10 +112,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     {
         $disableMenuThumbnailsUpload = false;
         if (null !== $options['id_category']) {
-            $categoryId = $options['id_category'];
-            /** @var EditableCategory $editableCategory */
-            $editableCategory = $this->queryBus->handle(new GetCategoryForEditing((int) $categoryId));
-            $disableMenuThumbnailsUpload = !$editableCategory->canContainMoreMenuThumbnails();
+            $disableMenuThumbnailsUpload = $options['disable_menu_thumbnails_upload'];
         }
         $genericCharactersHint = $this->trans('Invalid characters:', 'Admin.Global') . ' <>;=#{}';
 
@@ -139,12 +133,10 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('description', TranslateType::class, [
+            ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'help' => $genericCharactersHint,
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
-                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [

@@ -290,6 +290,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryFormOptions = [
             'id_category' => (int) $categoryId,
             'subcategories' => $editableCategory->getSubCategories(),
+            'disable_menu_thumbnails_upload' => !$editableCategory->canContainMoreMenuThumbnails()
         ];
 
         try {
