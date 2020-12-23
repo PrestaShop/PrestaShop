@@ -5895,16 +5895,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v6.0.3",
+            "version": "v6.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "af55f914a8ecf1ba55ae40ad84ebd9c01944c66e"
+                "reference": "2634da35dec6c52a8c3a18dfcf051dbbb6b48edc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/af55f914a8ecf1ba55ae40ad84ebd9c01944c66e",
-                "reference": "af55f914a8ecf1ba55ae40ad84ebd9c01944c66e",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/2634da35dec6c52a8c3a18dfcf051dbbb6b48edc",
+                "reference": "2634da35dec6c52a8c3a18dfcf051dbbb6b48edc",
                 "shasum": ""
             },
             "require": {
@@ -5932,7 +5932,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2020-10-19T13:11:06+00:00"
+            "time": "2020-12-03T15:11:16+00:00"
         },
         {
             "name": "psr/cache",
