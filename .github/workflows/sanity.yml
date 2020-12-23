@@ -26,7 +26,10 @@ jobs:
 
     steps:
       - name: Install php extensions
-        run: apt-get install -y php7.4-gd php7.4-intl php7.4-zip
+        run: |
+          add-apt-repository ppa:ondrej/php
+          apt-get update
+          apt-get install -y php7.4-gd php7.4-intl php7.4-zip
         env:
           DEBIAN_FRONTEND: nointeractive
         working-directory: .
