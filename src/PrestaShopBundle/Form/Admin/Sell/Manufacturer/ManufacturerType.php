@@ -101,8 +101,6 @@ class ManufacturerType extends TranslatorAwareType
             ->add('short_description', TranslatableType::class, [
                 'label' => $this->trans('Short description', 'Admin.Catalog.Feature'),
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
-                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
