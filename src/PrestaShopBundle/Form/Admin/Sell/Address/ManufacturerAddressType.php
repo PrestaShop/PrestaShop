@@ -288,7 +288,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 ],
             ])
             ->add('home_phone', TextType::class, [
-                'label' => $this->trans('Home phone', 'Admin.Global'),
+                'label' => $this->trans('Phone', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '',
                 'constraints' => [
