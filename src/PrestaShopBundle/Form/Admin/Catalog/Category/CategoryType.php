@@ -72,8 +72,10 @@ class CategoryType extends AbstractCategoryType
             ->setDefaults([
                 'id_category' => null,
                 'subcategories' => [],
+                'disable_menu_thumbnails_upload' => null
             ])
             ->setAllowedTypes('subcategories', ['array'])
-            ->setAllowedTypes('id_category', ['int', 'null']);
+            ->setAllowedTypes('id_category', ['int', 'null'])
+            ->setAllowedTypes('disable_menu_thumbnails_upload', ['bool', 'null']);
     }
 }
