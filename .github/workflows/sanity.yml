@@ -4,8 +4,7 @@ on:
     pull_request:
         types: [ opened,edited,reopened,synchronize ]
 jobs:
-    test:
-        needs: build
+    Sanity:
         runs-on: ubuntu-latest
         container:
             image: php:7.4-apache
