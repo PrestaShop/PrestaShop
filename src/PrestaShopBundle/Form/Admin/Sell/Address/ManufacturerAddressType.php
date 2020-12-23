@@ -108,11 +108,11 @@ class ManufacturerAddressType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $nameHint = $this->trans('Invalid characters:', 'Admin.Notifications.Info') . ' 0-9!<>,;?=+()@#"�{}_$%:';
+        $nameHint = $this->trans('Invalid characters:', 'Admin.Global') . ' 0-9!<>,;?=+()@#"�{}_$%:';
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
         $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
-        $otherHint = $this->trans('Invalid characters:', 'Admin.Notifications.Info') . ' <>{}';
+        $otherHint = $this->trans('Invalid characters:', 'Admin.Global') . ' <>{}';
 
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
@@ -128,7 +128,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new TypedRegex([
@@ -150,7 +150,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new TypedRegex([
@@ -201,7 +201,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 ],
             ])
             ->add('post_code', TextType::class, [
-                'label' => $this->trans('Zip/postal code', 'Admin.Global'),
+                'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '',
                 'constraints' => [
@@ -223,7 +223,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new TypedRegex([
@@ -250,7 +250,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
