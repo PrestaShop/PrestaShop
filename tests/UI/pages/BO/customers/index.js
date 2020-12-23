@@ -373,11 +373,7 @@ class Customers extends BOBasePage {
    */
   async chooseRegistrationAndDelete(page, allowRegistrationAfterDelete) {
     // Choose deletion method
-    if (allowRegistrationAfterDelete) {
-      await page.click(this.deleteCustomerModalMethodInput(0));
-    } else {
-      await page.click(this.deleteCustomerModalMethodInput(1));
-    }
+    await page.check(this.deleteCustomerModalMethodInput(allowRegistrationAfterDelete ? 0 : 1));
 
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);
@@ -542,4 +538,3 @@ class Customers extends BOBasePage {
 }
 
 module.exports = new Customers();
-
