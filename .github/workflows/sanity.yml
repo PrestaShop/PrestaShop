@@ -29,6 +29,7 @@ jobs:
         run: sudo apt-get install -y php7.4-gd php7.4-intl php7.4-zip
         env:
           DEBIAN_FRONTEND: nointeractive
+        working-directory: .
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Composer
