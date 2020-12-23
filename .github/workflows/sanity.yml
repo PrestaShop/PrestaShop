@@ -30,13 +30,13 @@ jobs:
         env:
           DEBIAN_FRONTEND: nointeractive
         working-directory: .
+      - name: Restart apache server
+        run: service apache2 restart
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Composer
         uses: MilesChou/composer-action/install@master
       - name: build assets
         run: ./tools/assets/build.sh
-      - name: Restart apache server
-        run: service apache2 restart
       - name: Check Prestashop is available
         run: curl http://localhost/
