@@ -104,14 +104,17 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $command = $this->createEditCategoryCommand($categoryId, $data);
 
         $this->commandBus->handle($command);
-
+        $menuThumbnailImages = [];
+        if (isset($data['menu_thumbnail_images']) && $data['menu_thumbnail_images']) {
+            $menuThumbnailImages = $data['menu_thumbnail_images'];
+        }
         $categoryId = new CategoryId((int) $categoryId);
 
         $this->uploadImages(
             $categoryId,
             $data['cover_image'],
             $data['thumbnail_image'],
-            $data['menu_thumbnail_images']
+            $menuThumbnailImages
         );
     }
 
