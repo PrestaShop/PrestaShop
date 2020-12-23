@@ -36,7 +36,7 @@ jobs:
         run:  |
             chmod +x /usr/local/bin/install-php-extensions && sync \
             && install-php-extensions \
-            mbstring intl gd xml dom json fileinfo curl zip iconv
+            mbstring intl gd xml dom json fileinfo curl zip iconvc @composer
         working-directory: .
 
       - name: Restart apache server
@@ -48,8 +48,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run composer install
-        uses: MilesChou/composer-action/install@master
+      - run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
 
       - name: build assets
         run: ./tools/assets/build.sh
