@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: php:7.4-apache
-      options: --user root
+      options: --user root -v ${{ github.workspace }}./PrestaShop/PrestaShop/:rw
     services:
       mysql:
         image: mysql:5.7
