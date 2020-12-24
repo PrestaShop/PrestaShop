@@ -28,8 +28,9 @@ jobs:
           url: "https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions"
           target: /usr/local/bin/
 
-      - name: Install php extension
+      - name: Install git and php extensions
         run:  |
+            apt-get install -y git && \
             chmod +x /usr/local/bin/install-php-extensions && sync \
             && install-php-extensions \
             mbstring intl gd xml dom json fileinfo curl zip iconv @composer
