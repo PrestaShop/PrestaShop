@@ -1,9 +1,9 @@
 <VirtualHost *:80>
 
     ServerName localhost
-    DocumentRoot ./
+    DocumentRoot %BUILD_DIR%
 
-    <Directory "./">
+    <Directory "%BUILD_DIR%">
         Options FollowSymLinks MultiViews ExecCGI
         AllowOverride All
         Require all granted

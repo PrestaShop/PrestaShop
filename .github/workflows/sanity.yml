@@ -17,8 +17,11 @@ jobs:
           run: |
             sudo apt-get update && sudo apt-get install apache2 && \
             sudo cp -f ./tests/github-action-apache-vhost /etc/apache2/sites-available/000-default.conf && \
+            sudo sed -e "s?%BUILD_DIR%?$(workspace)?g" --in-place /etc/apache2/sites-available/000-default.conf && \
             sudo chmod 777 -R ${{ github.workspace }} && \
             sudo service apache2 restart
+          env:
+            workspace: ${{ GITHUB_WORKSPACE }}
 
         - name: Setup PHP
           uses: shivammathur/setup-php@v2
