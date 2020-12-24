@@ -76,7 +76,7 @@ class DeliveryOptionsFinderCore
         $include_taxes = !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer) && (int) Configuration::get('PS_TAX');
         $display_taxes_label = (Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'));
 
-        $carriers_available = array();
+        $carriers_available = [];
 
         if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
             foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $id_carriers_list => $carriers_list) {
@@ -87,28 +87,29 @@ class DeliveryOptionsFinderCore
                             $delay = $carrier['delay'][$this->context->language->id];
                             unset($carrier['instance'], $carrier['delay']);
                             $carrier['delay'] = $delay;
+
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
                                     'Free',
-                                    array(),
+                                    [],
                                     'Shop.Theme.Checkout'
                                 );
                             } else {
                                 if ($include_taxes) {
-                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_with_tax']);
+                                    $carrier['price'] = $this->priceFormatter->format($carrier['price_with_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
                                             '%price% tax incl.',
-                                            array('%price%' => $carrier['price']),
+                                            ['%price%' => $carrier['price']],
                                             'Shop.Theme.Checkout'
                                         );
                                     }
                                 } else {
-                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_without_tax']);
+                                    $carrier['price'] = $this->priceFormatter->format($carrier['price_without_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
                                             '%price% tax excl.',
-                                            array('%price%' => $carrier['price']),
+                                            ['%price%' => $carrier['price']],
                                             'Shop.Theme.Checkout'
                                         );
                                     }
@@ -123,13 +124,14 @@ class DeliveryOptionsFinderCore
 
                             // If carrier related to a module, check for additionnal data to display
                             $carrier['extraContent'] = '';
+
                             if ($carrier['is_module']) {
                                 if ($moduleId = Module::getModuleIdByName($carrier['external_module_name'])) {
-                                    $carrier['extraContent'] = Hook::exec('displayCarrierExtraContent', array('carrier' => $carrier), $moduleId);
+                                    $carrier['extraContent'] = Hook::exec('displayCarrierExtraContent', ['carrier' => $carrier], $moduleId);
                                 }
                             }
 
-                            $carriers_available[$id_carriers_list] = $carrier;
+                            $carriers_available[$id_carriers_list][$carrier['id']] = $carrier;
                         }
                     }
                 }

@@ -40,39 +40,43 @@
         <div class="form-fields">
           {block name='delivery_options'}
             <div class="delivery-options">
-              {foreach from=$delivery_options item=carrier key=carrier_id}
+              {foreach from=$delivery_options item=carriers key=carrier_key}
                   <div class="row delivery-option">
                     <div class="col-sm-1">
                       <span class="custom-radio float-xs-left">
-                        <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
+                        <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier_key}" value="{$carrier_key}"{if $delivery_option == $carrier_key} checked{/if}>
                         <span></span>
                       </span>
                     </div>
-                    <label for="delivery_option_{$carrier.id}" class="col-sm-11 delivery-option-2">
-                      <div class="row">
-                        <div class="col-sm-5 col-xs-12">
+                    <div class="col-sm-11">
+                      {foreach from=$carriers item=carrier key=carrier_id}
+                        <label for="delivery_option_{$carrier_key}" class="col-sm-11 delivery-option-2">
                           <div class="row">
-                            {if $carrier.logo}
-                            <div class="col-xs-3">
-                                <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                            <div class="col-sm-5 col-xs-12">
+                              <div class="row">
+                                {if $carrier.logo}
+                                <div class="col-xs-3">
+                                    <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                                </div>
+                                {/if}
+                                <div class="{if $carrier.logo}col-xs-9{else}col-xs-12{/if}">
+                                  <span class="h6 carrier-name">{$carrier.name}</span>
+                                </div>
+                              </div>
                             </div>
-                            {/if}
-                            <div class="{if $carrier.logo}col-xs-9{else}col-xs-12{/if}">
-                              <span class="h6 carrier-name">{$carrier.name}</span>
+                            <div class="col-sm-4 col-xs-12">
+                              <span class="carrier-delay">{$carrier.delay}</span>
+                            </div>
+                            <div class="col-sm-3 col-xs-12">
+                              <span class="carrier-price">{$carrier.price}</span>
                             </div>
                           </div>
+                        </label>
+                        <div class="row carrier-extra-content"{if $delivery_option != $carrier_key} style="display:none;"{/if}>
+                          {$carrier.extraContent nofilter}
                         </div>
-                        <div class="col-sm-4 col-xs-12">
-                          <span class="carrier-delay">{$carrier.delay}</span>
-                        </div>
-                        <div class="col-sm-3 col-xs-12">
-                          <span class="carrier-price">{$carrier.price}</span>
-                        </div>
-                      </div>
-                    </label>
-                  </div>
-                  <div class="row carrier-extra-content"{if $delivery_option != $carrier_id} style="display:none;"{/if}>
-                    {$carrier.extraContent nofilter}
+                      {/foreach}
+                    </div>
                   </div>
                   <div class="clearfix"></div>
               {/foreach}

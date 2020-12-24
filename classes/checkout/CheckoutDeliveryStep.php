@@ -109,10 +109,10 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 
             return $this->getTranslator()->trans(
                 ' (additional cost of %giftcost% %taxlabel%)',
-                array(
+                [
                     '%giftcost%' => $priceFormatter->convertAndFormat($this->getGiftCost()),
                     '%taxlabel%' => $taxLabel,
-                ),
+                ],
                 'Shop.Theme.Checkout'
             );
         }
@@ -120,7 +120,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
         return '';
     }
 
-    public function handleRequest(array $requestParams = array())
+    public function handleRequest(array $requestParams = [])
     {
         if (isset($requestParams['delivery_option'])) {
             $this->setComplete(false);
@@ -158,36 +158,36 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             );
         }
 
-        $this->setTitle($this->getTranslator()->trans('Shipping Method', array(), 'Shop.Theme.Checkout'));
+        $this->setTitle($this->getTranslator()->trans('Shipping Method', [], 'Shop.Theme.Checkout'));
 
-        Hook::exec('actionCarrierProcess', array('cart' => $this->getCheckoutSession()->getCart()));
+        Hook::exec('actionCarrierProcess', ['cart' => $this->getCheckoutSession()->getCart()]);
     }
 
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
             $this->getTemplate(),
             $extraParams,
-            array(
-                'hookDisplayBeforeCarrier' => Hook::exec('displayBeforeCarrier', array('cart' => $this->getCheckoutSession()->getCart())),
-                'hookDisplayAfterCarrier' => Hook::exec('displayAfterCarrier', array('cart' => $this->getCheckoutSession()->getCart())),
+            [
+                'hookDisplayBeforeCarrier' => Hook::exec('displayBeforeCarrier', ['cart' => $this->getCheckoutSession()->getCart()]),
+                'hookDisplayAfterCarrier' => Hook::exec('displayAfterCarrier', ['cart' => $this->getCheckoutSession()->getCart()]),
                 'id_address' => $this->getCheckoutSession()->getIdAddressDelivery(),
                 'delivery_options' => $this->getCheckoutSession()->getDeliveryOptions(),
                 'delivery_option' => $this->getCheckoutSession()->getSelectedDeliveryOption(),
                 'recyclable' => $this->getCheckoutSession()->isRecyclable(),
                 'recyclablePackAllowed' => $this->isRecyclablePackAllowed(),
                 'delivery_message' => $this->getCheckoutSession()->getMessage(),
-                'gift' => array(
+                'gift' => [
                     'allowed' => $this->isGiftAllowed(),
                     'isGift' => $this->getCheckoutSession()->getGift()['isGift'],
                     'label' => $this->getTranslator()->trans(
                         'I would like my order to be gift wrapped %cost%',
-                        array('%cost%' => $this->getGiftCostForLabel()),
+                        ['%cost%' => $this->getGiftCostForLabel()],
                         'Shop.Theme.Checkout'
                     ),
                     'message' => $this->getCheckoutSession()->getGift()['message'],
-                ),
-            )
+                ],
+            ]
         );
     }
 
@@ -195,18 +195,27 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     {
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $currentDeliveryOption = $deliveryOptions[$this->getCheckoutSession()->getSelectedDeliveryOption()];
-        if (!$currentDeliveryOption['is_module']) {
+
+        $isModule = false;
+
+        foreach ($currentDeliveryOption as $option) {
+            if ($option['is_module']) {
+                $isModule = true;
+            }
+        }
+
+        if (!$isModule) {
             return true;
         }
 
         $isComplete = true;
         Hook::exec(
             'actionValidateStepComplete',
-            array(
+            [
                 'step_name' => 'delivery',
                 'request_params' => $requestParams,
                 'completed' => &$isComplete,
-            ),
+            ],
             Module::getModuleIdByName($currentDeliveryOption['external_module_name'])
         );
 
