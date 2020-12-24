@@ -66,14 +66,14 @@ jobs:
         - name: Composer install and build assets
           run: make install
 
-        - uses: actions/upload-artifact@v2
-          with:
-            name: Download-desktop-screenshots
-            path: ./tests/UI/screenshots
-
         - name: Run sanity tests
           run: |
             npm install && \
             URL_FO=http://localhost/ DB_NAME='prestashop' DB_PASSWD='password' HEADLESS=true \
             npm run sanity-travis
           working-directory: ./tests/UI
+
+        - uses: actions/upload-artifact@v2
+          with:
+            name: Download-desktop-screenshots
+            path: ./tests/UI/screenshots
