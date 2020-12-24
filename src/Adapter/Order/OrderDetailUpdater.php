@@ -372,9 +372,16 @@ class OrderDetailUpdater
         Address $taxAddress
     ): Number {
         $productOriginalPrice = $this->getProductRegularPrice($order, $orderDetail, $taxAddress);
+        // Specific price, quantity dependent
+        $productOriginalPriceForQuantity = $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true);
 
-        // If provided price is equal to catalog price no need to recompute
+        // If provided price is equal to catalog price and specific price
+        // If equal to catalog price and not to specific price, we take the specific price tax excluded and compute taxes
         if ($productOriginalPrice->equals($priceTaxExcluded)) {
+            if (!$productOriginalPriceForQuantity->equals($priceTaxExcluded)) {
+                $priceTaxExcluded = $productOriginalPriceForQuantity;
+            }
+
             return $priceTaxExcluded;
         }
 
@@ -412,9 +419,16 @@ class OrderDetailUpdater
         Address $taxAddress
     ): Number {
         $productOriginalPrice = $this->getProductRegularPrice($order, $orderDetail, $taxAddress);
+        // Specific price, quantity dependent
+        $productOriginalPriceForQuantity = $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true);
 
         // If provided price is different from the catalog price we use the input price tax included as a base
-        if (!$productOriginalPrice->equals($priceTaxExcluded)) {
+        // If provided price is equal the catalog price we use the catalog price (depending on the quantity if relevant)
+        if ($productOriginalPrice->equals($priceTaxExcluded)) {
+            if (!$productOriginalPriceForQuantity->equals($priceTaxExcluded)) {
+                $priceTaxExcluded = $productOriginalPriceForQuantity;
+            }
+        } else {
             return $priceTaxIncluded;
         }
 
@@ -428,13 +442,15 @@ class OrderDetailUpdater
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param Address $taxAddress
+     * @param bool $quantityDependent
      *
      * @return Number
      */
     private function getProductRegularPrice(
         Order $order,
         OrderDetail $orderDetail,
-        Address $taxAddress
+        Address $taxAddress,
+        bool $quantityDependent = false
     ): Number {
         // Get price via getPriceStatic so that the catalog price rules are applied
 
@@ -446,7 +462,7 @@ class OrderDetailUpdater
             null,
             false,
             true,
-            1,
+            $quantityDependent ? $orderDetail->product_quantity : 1,
             false,
             $order->id_customer, // We still use the customer ID in case this customer has some special prices
             null, // But we keep the cart null as we don't want this order overridden price
