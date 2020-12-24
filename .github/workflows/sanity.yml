@@ -41,16 +41,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Copy files to web root
-        run: |
-          cp -R ./ /var/www/html && \
-          chown -R www-data:www-data /var/www
-
-      - name: Restart apache server
-        run: service apache2 restart
-
       - run: composer install
-        working-directory: /var/www/html
 
       - uses: actions/setup-node@v2
         with:
@@ -58,7 +49,14 @@ jobs:
 
       - name: Build assets
         run: ./tools/assets/build.sh
-        working-directory: /var/www/html
+
+      - name: Copy files to web root
+        run: |
+          cp -R ./ /var/www/html && \
+          chown -R www-data:www-data /var/www
+
+      - name: Restart apache server
+        run: service apache2 restart
 
       - name: Check Prestashop is available
         run: curl http://localhost/
