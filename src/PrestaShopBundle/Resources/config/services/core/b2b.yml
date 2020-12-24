@@ -1,8 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  prestashop.core.b2b.b2b_feature:
-    class: 'PrestaShop\PrestaShop\Core\B2b\B2bFeature'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'

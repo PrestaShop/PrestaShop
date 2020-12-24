@@ -1,5 +1,0 @@
-**/*.min.css
-**/*.css
-**/dist/
-node_modules
-**/*.js

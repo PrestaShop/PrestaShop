@@ -1,8 +1,0 @@
-services:
-    _defaults:
-        public: true
-
-    prestashop.core.translation.locale.converter:
-        class: 'PrestaShop\PrestaShop\Core\Translation\Locale\Converter'
-        arguments:
-          - '%translations_dir%/../legacy-to-standard-locales.json'

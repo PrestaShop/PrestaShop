@@ -1,6 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  prestashop.core.string.character_cleaner:
-    class: 'PrestaShop\PrestaShop\Core\String\CharacterCleaner'

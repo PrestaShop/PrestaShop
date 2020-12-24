@@ -1,5 +1,0 @@
-api_stock_list_attributes:
-    path: /
-    methods: [GET]
-    defaults:
-        _controller: prestashop.core.api.attribute.controller:listAttributesAction

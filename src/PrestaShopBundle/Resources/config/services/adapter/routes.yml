@@ -1,6 +1,0 @@
-services:
-    _defaults:
-        public: true
-
-    prestashop.adapter.routes.route_validator:
-        class: 'PrestaShop\PrestaShop\Adapter\Routes\RouteValidator'
