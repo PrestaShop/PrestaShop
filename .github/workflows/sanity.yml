@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: php:7.4-apache
-      options: --user 1001
+      options: --user root
     services:
       mysql:
         image: mysql:5.7
