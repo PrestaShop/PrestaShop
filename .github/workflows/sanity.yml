@@ -49,10 +49,11 @@ jobs:
       - run: composer install
         working-directory: /var/www/html
 
-      - name: Build assets
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: '10'
+
+      - name: Build assets
         run: ./tools/assets/build.sh
         working-directory: /var/www/html
 
