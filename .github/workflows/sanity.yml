@@ -72,6 +72,7 @@ jobs:
             URL_FO=http://localhost/ DB_NAME='prestashop' DB_PASSWD='password' HEADLESS=true \
             npm run sanity-travis
           working-directory: ./tests/UI
+          continue-on-error: true
 
         - uses: actions/upload-artifact@v2
             with:
