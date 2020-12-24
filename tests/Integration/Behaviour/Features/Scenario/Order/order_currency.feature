@@ -31,6 +31,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I update the cart "dummy_cart" currency to "currency2"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And the default category of product "Mug The best is yet to come" has no group reduction
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
@@ -214,6 +215,53 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_paid_tax_excl      | 106.00 |
       | total_paid_tax_incl      | 112.36 |
       | total_paid               | 112.36 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+
+  Scenario: Update product quantity in order with secondary currency when its category has discount
+    Given the default category of product "Mug The best is yet to come" has a group reduction of 50.00% for the customer "testCustomer"
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 11.90                   |
+    Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 3     |
+      | product_price               | 11.90 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.90 |
+      | total_price_tax_incl        | 37.84 |
+      | total_price_tax_excl        | 35.70 |
+    And order "bo_order1" should have following details:
+      | total_products           | 35.70 |
+      | total_products_wt        | 37.84 |
+      | total_discounts_tax_excl | 0.00   |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 105.70 |
+      | total_paid_tax_incl      | 112.04 |
+      | total_paid               | 112.04 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 20.00                   |
+    Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 3     |
+      | product_price               | 20.00 |
+      | unit_price_tax_incl         | 21.20 |
+      | unit_price_tax_excl         | 20.00 |
+      | total_price_tax_incl        | 63.60 |
+      | total_price_tax_excl        | 60.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 60.00 |
+      | total_products_wt        | 63.60 |
+      | total_discounts_tax_excl | 0.00   |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 130.00 |
+      | total_paid_tax_incl      | 137.80 |
+      | total_paid               | 137.80 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
