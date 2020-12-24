@@ -29,9 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use Cart;
 use Context;
 use Currency;
+use Group;
 use HelperKpi;
+use Order;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use Validate;
 
 /**
  * {@inheritdoc}
@@ -71,10 +74,9 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $helper->title = $translator->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = $this->locale->formatPrice(
-            $cart->getCartTotalPrice(),
+            $this->getCartTotalPrice($cart),
             Currency::getIsoCodeById((int) $cart->id_currency)
         );
-        $helper->source = Context::getContext()->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=shopping_cart_total&cartId=' . $cart->id;
 
         return $helper->generate();
     }
@@ -87,5 +89,30 @@ final class ShoppingCartTotalKpi implements KpiInterface
     public function setOptions(array $options)
     {
         $this->options = $options;
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return float
+     */
+    private function getCartTotalPrice(Cart $cart)
+    {
+        $summary = $cart->getSummaryDetails();
+
+        $id_order = (int) Order::getIdByCartId($cart->id);
+        $order = new Order($id_order);
+
+        if (Validate::isLoadedObject($order)) {
+            $taxCalculationMethod = $order->getTaxCalculationMethod();
+        } else {
+            $taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+        }
+
+        $totalPrice = $taxCalculationMethod == PS_TAX_EXC ?
+            $summary['total_price_without_tax'] :
+            $summary['total_price'];
+
+        return $totalPrice;
     }
 }
