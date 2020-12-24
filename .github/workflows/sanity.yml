@@ -9,6 +9,10 @@ jobs:
   sanity:
     runs-on: ubuntu-latest
     steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+
         - name: Setup apache
           run: |
             sudo apt-get update && sudo apt-get install apache2 && \
@@ -33,9 +37,6 @@ jobs:
           uses: actions/setup-node@v2
           with:
             node-version: '10'
-        - uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
 
         - name: PrestaShop Configuration
           run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
