@@ -65,5 +65,13 @@ jobs:
         - name: Composer install and build assets
           run: make install
 
-        - name: Check Prestashop is available
-          run: curl http://localhost/
+        - name: Run sanity tests
+          run: |
+            npm install && \
+            npm run sanity-travis
+          working-directory: ./tests/UI
+          env:
+            URL_FO: 'http://localhost/'
+            DB_NAME: 'prestashop'
+            DB_PASSWD: 'password'
+            HEADLESS: true
