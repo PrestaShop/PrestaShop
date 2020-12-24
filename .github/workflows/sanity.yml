@@ -30,10 +30,10 @@ jobs:
 
       - name: Install git and php extensions
         run:  |
-            apt-get update && apt-get install -y git && \
-            chmod +x /usr/local/bin/install-php-extensions && sync \
-            && install-php-extensions \
-            mbstring intl gd xml dom json fileinfo curl zip iconv @composer
+          apt-get update && apt-get install -y git && \
+          chmod +x /usr/local/bin/install-php-extensions && sync \
+          && install-php-extensions \
+          mbstring intl gd xml dom json fileinfo curl zip iconv @composer
 
       - name: Restart apache server
         run: service apache2 restart
@@ -44,7 +44,9 @@ jobs:
           fetch-depth: 0
 
       - name: Copy files to web root
-        run: cp -R ./ /var/www/html
+        run: |
+          cp -R ./ /var/www/html && \
+          chown -R www-data:www-data /var/www
 
       - run: composer install
         working-directory: /var/www/html
