@@ -3,9 +3,10 @@
     ServerName localhost
     DocumentRoot ./
 
-    <Directory ./">
+    <Directory "./">
         Options FollowSymLinks MultiViews ExecCGI
         AllowOverride All
         Require all granted
     </Directory>
+
 </VirtualHost>
