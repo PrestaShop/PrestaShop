@@ -36,7 +36,7 @@ jobs:
         run:  |
             chmod +x /usr/local/bin/install-php-extensions && sync \
             && install-php-extensions \
-            mbstring intl gd xml dom json fileinfo curl zip iconvc
+            mbstring intl gd xml dom json fileinfo curl zip iconv @composer
         working-directory: .
 
       - name: Restart apache server
