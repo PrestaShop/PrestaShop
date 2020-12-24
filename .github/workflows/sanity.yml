@@ -48,7 +48,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+      - run: composer install
 
       - name: build assets
         run: ./tools/assets/build.sh
