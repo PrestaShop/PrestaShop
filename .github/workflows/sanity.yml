@@ -35,8 +35,6 @@ jobs:
           && install-php-extensions \
           mbstring intl gd xml dom json fileinfo curl zip iconv @composer
 
-      - name: Restart apache server
-        run: service apache2 restart
 
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -47,6 +45,9 @@ jobs:
         run: |
           cp -R ./ /var/www/html && \
           chown -R www-data:www-data /var/www
+
+      - name: Restart apache server
+        run: service apache2 restart
 
       - run: composer install
         working-directory: /var/www/html
