@@ -30,7 +30,7 @@ jobs:
 
       - name: Install git and php extensions
         run:  |
-            apt-get install -y git && \
+            apt install -y git-all && \
             chmod +x /usr/local/bin/install-php-extensions && sync \
             && install-php-extensions \
             mbstring intl gd xml dom json fileinfo curl zip iconv @composer
