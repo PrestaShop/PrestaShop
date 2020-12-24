@@ -66,19 +66,10 @@ jobs:
         - name: Composer install and build assets
           run: make install
 
-        - name: install puppeteer-headful
-          uses: mujo-code/puppeteer-headful@master
-          env:
-            CI: 'true'
-        - name: screenshots-desktop-facebook
-          uses: flameddd/screenshots-ci-action@v1.1.1
-          with:
-            url: http://localhost/
-
         - uses: actions/upload-artifact@v2
           with:
             name: Download-desktop-screenshots
-            path: screenshots
+            path: ./tests/UI/screenshots
 
         - name: Run sanity tests
           run: |
