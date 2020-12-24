@@ -84,7 +84,7 @@ describe('Install Prestashop', async () => {
       await installPage.nextStep(page);
     }
     // Add debug screenshot
-    await page.screenshot({path: './screenshot.png', fullPage: true});
+    await page.screenshot({path: './screenshots/screenshot.png', fullPage: true});
 
     const result = await installPage.checkStepTitle(
       page,
