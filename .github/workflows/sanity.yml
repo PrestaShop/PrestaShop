@@ -6,7 +6,7 @@ on:
 
 defaults:
   run:
-    working-directory: var/www/html/
+    working-directory: /var/www/html/
 
 jobs:
 
