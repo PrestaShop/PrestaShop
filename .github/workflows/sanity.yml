@@ -16,6 +16,7 @@ jobs:
         - name: Setup apache
           run: |
             sudo apt-get update && sudo apt-get install apache2 libapache2-mod-php7.4 && \
+            sudo a2enmod rewrite actions fastcgi alias && \
             sudo cp -f ./tests/github-action-apache-vhost /etc/apache2/sites-available/000-default.conf && \
             sudo sed -e "s?%BUILD_DIR%?$(echo $GITHUB_WORKSPACE)?g" --in-place /etc/apache2/sites-available/000-default.conf && \
             sudo chmod 777 -R ${{ github.workspace }} && \
@@ -65,6 +66,10 @@ jobs:
 
         - name: Composer install and build assets
           run: make install
+
+        - run: |
+            sudo chown www-data:www-data -R ${{ github.workspace }} && \
+            sudo service apache2 restart
 
         - name: Run sanity tests
           run: |
