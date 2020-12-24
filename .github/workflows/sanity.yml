@@ -74,6 +74,7 @@ jobs:
           working-directory: ./tests/UI
 
         - uses: actions/upload-artifact@v2
-          with:
+            with:
             name: Download-desktop-screenshots
             path: ./tests/UI/screenshots
+          if: ${{ always() }}
