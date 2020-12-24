@@ -29,6 +29,7 @@ describe('Install Prestashop', async () => {
   it('should open the Install page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToInstallPage', baseContext);
     await installPage.goTo(page, global.INSTALL.URL);
+
     const result = await installPage.checkStepTitle(
       page,
       installPage.firstStepPageTitle,
@@ -37,6 +38,7 @@ describe('Install Prestashop', async () => {
         installPage.firstStepEnTitle,
       ],
     );
+
     await expect(result).to.be.true;
   });
 
@@ -54,11 +56,13 @@ describe('Install Prestashop', async () => {
   it('should click on next and go to step \'License Agreements\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLicenseAgreements', baseContext);
     await installPage.nextStep(page);
+
     const result = await installPage.checkStepTitle(
       page,
       installPage.secondStepPageTitle,
       installPage.secondStepEnTitle,
     );
+
     await expect(result).to.be.true;
   });
 
@@ -66,12 +70,14 @@ describe('Install Prestashop', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSystemCompatibility', baseContext);
     await installPage.agreeToTermsAndConditions(page);
     await installPage.nextStep(page);
-    if (!installPage.elementVisible(page, installPage.thirdStepFinishedListItem)) {
+
+    if (!(await installPage.elementVisible(page, installPage.thirdStepFinishedListItem, 1000))) {
       const result = await installPage.checkStepTitle(
         page,
         installPage.thirdStepPageTitle,
         installPage.thirdStepEnTitle,
       );
+
       await expect(result).to.be.true;
     }
   });
@@ -90,6 +96,7 @@ describe('Install Prestashop', async () => {
       installPage.fourthStepPageTitle,
       installPage.fourthStepEnTitle,
     );
+
     await expect(result).to.be.true;
   });
 
@@ -97,11 +104,13 @@ describe('Install Prestashop', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDatabaseConfiguration', baseContext);
     await installPage.fillInformationForm(page);
     await installPage.nextStep(page);
+
     const result = await installPage.checkStepTitle(
       page,
       installPage.fifthStepPageTitle,
       installPage.fifthStepEnTitle,
     );
+
     await expect(result).to.be.true;
   });
 
