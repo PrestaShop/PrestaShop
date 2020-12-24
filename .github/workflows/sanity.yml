@@ -11,11 +11,11 @@ jobs:
     steps:
         - name: Setup apache
           run: |
-            apt-get update && apt-get install apache2 && \
-            a2enmod rewrite actions fastcgi alias && \
-            cp -f ./tests/github-action-apache-vhost /etc/apache2/sites-available/000-default.conf && \
-            chmod 777 -R ${{ github.workspace }} && \
-            service apache2 restart
+            sudo apt-get update && sudo apt-get install apache2 && \
+            sudo a2enmod rewrite actions fastcgi alias && \
+            sudo cp -f ./tests/github-action-apache-vhost /etc/apache2/sites-available/000-default.conf && \
+            sudo chmod 777 -R ${{ github.workspace }} && \
+            sudo service apache2 restart
 
         - name: Setup PHP
           uses: shivammathur/setup-php@v2
