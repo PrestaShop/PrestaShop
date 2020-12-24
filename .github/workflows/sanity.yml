@@ -4,10 +4,6 @@ on:
   pull_request:
     types: [opened,reopened,synchronize]
 
-defaults:
-  run:
-    working-directory: /var/www/html/
-
 jobs:
 
   sanity:
@@ -37,22 +33,24 @@ jobs:
             chmod +x /usr/local/bin/install-php-extensions && sync \
             && install-php-extensions \
             mbstring intl gd xml dom json fileinfo curl zip iconv @composer
-        working-directory: .
 
       - name: Restart apache server
         run: service apache2 restart
-        working-directory: .
 
       - name: Checkout the repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          path: /var/www/html/
+
+      - name: Copy files to web root
+        run: cp -R ./ /var/www/html
 
       - run: composer install
+        working-directory: /var/www/html
 
       - name: build assets
         run: ./tools/assets/build.sh
+        working-directory: /var/www/html
 
       - name: Check Prestashop is available
         run: curl http://localhost/
