@@ -1,4 +1,4 @@
-# This file is a used by travis install with specific setting.
+# This file is used by GitHub Actions.
 parameters:
     database_host:     localhost
     database_port:     ~
