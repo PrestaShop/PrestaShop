@@ -68,10 +68,6 @@ jobs:
         - name: Run sanity tests
           run: |
             npm install && \
+            URL_FO=http://localhost/ DB_NAME='prestashop' DB_PASSWD='password' HEADLESS=true \
             npm run sanity-travis
           working-directory: ./tests/UI
-          env:
-            URL_FO: 'http://localhost/'
-            DB_NAME: 'prestashop'
-            DB_PASSWD: 'password'
-            HEADLESS: true
