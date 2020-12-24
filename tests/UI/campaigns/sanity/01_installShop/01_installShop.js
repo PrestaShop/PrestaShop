@@ -79,12 +79,11 @@ describe('Install Prestashop', async () => {
   it('should click on next and go to step \'shop Information\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopInformation', baseContext);
 
-
+    // Add debug screenshot
+    await page.screenshot({path: './screenshots/screenshot.png', fullPage: true});
     if (!(await installPage.elementVisible(page, installPage.thirdStepFinishedListItem, 1000))) {
       await installPage.nextStep(page);
     }
-    // Add debug screenshot
-    await page.screenshot({path: './screenshots/screenshot.png', fullPage: true});
 
     const result = await installPage.checkStepTitle(
       page,
