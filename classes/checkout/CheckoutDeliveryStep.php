@@ -195,7 +195,16 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     {
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $currentDeliveryOption = $deliveryOptions[$this->getCheckoutSession()->getSelectedDeliveryOption()];
-        if (!$currentDeliveryOption['is_module']) {
+
+        $isModule = false;
+
+        foreach ($currentDeliveryOption as $option) {
+            if ($option['is_module']) {
+                $isModule = true;
+            }
+        }
+
+        if (!$isModule) {
             return true;
         }
 

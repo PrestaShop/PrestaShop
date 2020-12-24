@@ -87,6 +87,7 @@ class DeliveryOptionsFinderCore
                             $delay = $carrier['delay'][$this->context->language->id];
                             unset($carrier['instance'], $carrier['delay']);
                             $carrier['delay'] = $delay;
+
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
                                     'Free',
@@ -95,7 +96,8 @@ class DeliveryOptionsFinderCore
                                 );
                             } else {
                                 if ($include_taxes) {
-                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_with_tax']);
+                                    $carrier['price'] = $this->priceFormatter->format($carrier['price_with_tax']);
+
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
                                             '%price% tax incl.',
@@ -104,7 +106,8 @@ class DeliveryOptionsFinderCore
                                         );
                                     }
                                 } else {
-                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_without_tax']);
+                                    $carrier['price'] = $this->priceFormatter->format($carrier['price_without_tax']);
+
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
                                             '%price% tax excl.',
@@ -123,13 +126,14 @@ class DeliveryOptionsFinderCore
 
                             // If carrier related to a module, check for additionnal data to display
                             $carrier['extraContent'] = '';
+
                             if ($carrier['is_module']) {
                                 if ($moduleId = Module::getModuleIdByName($carrier['external_module_name'])) {
                                     $carrier['extraContent'] = Hook::exec('displayCarrierExtraContent', ['carrier' => $carrier], $moduleId);
                                 }
                             }
 
-                            $carriers_available[$id_carriers_list] = $carrier;
+                            $carriers_available[$id_carriers_list][$carrier['id']] = $carrier;
                         }
                     }
                 }
