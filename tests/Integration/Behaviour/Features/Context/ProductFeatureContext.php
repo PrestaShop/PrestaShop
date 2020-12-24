@@ -324,7 +324,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasASpecificPriceWithAmountDiscount($productName, $specificPriceName, $specificPriceDiscount)
     {
         if (isset($this->specificPrices[$productName][$specificPriceName])) {
-            throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
+            throw new \Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
         }
         $specificPrice = new SpecificPrice();
         $specificPrice->id_product = $this->products[$productName]->id;
@@ -350,7 +350,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasASpecificPriceWithPercentageDiscount(string $productName, string $specificPriceName, float $specificPricePercent)
     {
         if (isset($this->specificPrices[$productName][$specificPriceName])) {
-            throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
+            throw new \Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
         }
         $specificPrice = new SpecificPrice();
         $specificPrice->id_product = $this->products[$productName]->id;
@@ -359,6 +359,33 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $specificPrice->reduction_type = 'percentage';
         $specificPrice->reduction_tax = 1;
         $specificPrice->from_quantity = 1;
+        $specificPrice->from = '0000-00-00 00:00:00';
+        $specificPrice->to = '0000-00-00 00:00:00';
+        // set required values (no specific rules applied, the price is for everyone)
+        $specificPrice->id_shop = 0;
+        $specificPrice->id_currency = 0;
+        $specificPrice->id_country = 0;
+        $specificPrice->id_group = 0;
+        $specificPrice->id_customer = 0;
+        $specificPrice->add();
+        $this->specificPrices[$productName][$specificPriceName] = $specificPrice;
+    }
+
+    /**
+     * @Given /^product "(.+)" has a specific price named "(.+)" with a discount of (\d+\.\d+) percent from quantity (\d+)$/
+     */
+    public function productWithNameHasASpecificPriceWithPercentageDiscountFromQuantity(string $productName, string $specificPriceName, float $specificPricePercent, int $quantityThreshold)
+    {
+        if (isset($this->specificPrices[$productName][$specificPriceName])) {
+            throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
+        }
+        $specificPrice = new SpecificPrice();
+        $specificPrice->id_product = $this->products[$productName]->id;
+        $specificPrice->price = -1;
+        $specificPrice->reduction = $specificPricePercent / 100;
+        $specificPrice->reduction_type = 'percentage';
+        $specificPrice->reduction_tax = 1;
+        $specificPrice->from_quantity = $quantityThreshold;
         $specificPrice->from = '0000-00-00 00:00:00';
         $specificPrice->to = '0000-00-00 00:00:00';
         // set required values (no specific rules applied, the price is for everyone)

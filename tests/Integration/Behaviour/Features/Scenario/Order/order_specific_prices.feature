@@ -611,6 +611,200 @@ Feature: Order from Back Office (BO)
       | reduction_type | percentage |
       | reduction_tax  | 1          |
 
+  Scenario: Add product which has specific price rules for a discount with quantity threshold but keeps catalog price, then the order has its own specific price
+    Given order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 1                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 99
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 16.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 16.96 |
+      | unit_price_tax_excl         | 16.00 |
+      | total_price_tax_incl        | 16.96 |
+      | total_price_tax_excl        | 16.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 39.800 |
+      | total_products_wt        | 42.190 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 46.8   |
+      | total_paid_tax_incl      | 49.610 |
+      | total_paid               | 49.610 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    # quantity lower than threshold
+    When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
+      | amount        | 4                     |
+      | price         | 16                    |
+    Then order "bo_order1" should have 6 products in total
+    And order "bo_order1" should contain 4 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 4 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 96
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 4     |
+      | product_price               | 16.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 16.96 |
+      | unit_price_tax_excl         | 16.00 |
+      | total_price_tax_incl        | 67.84 |
+      | total_price_tax_excl        | 64.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 87.800  |
+      | total_products_wt        | 93.070  |
+      | total_discounts_tax_excl | 0.0000  |
+      | total_discounts_tax_incl | 0.0000  |
+      | total_paid_tax_excl      | 94.800  |
+      | total_paid_tax_incl      | 100.490 |
+      | total_paid               | 100.490 |
+      | total_paid_real          | 0.0     |
+      | total_shipping_tax_excl  | 7.0     |
+      | total_shipping_tax_incl  | 7.42    |
+    # quantity equal to threshold
+    When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
+      | amount        | 5                     |
+      | price         | 16                    |
+    Then order "bo_order1" should have 7 products in total
+    And order "bo_order1" should contain 5 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 5 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 95
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 5     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 63.60 |
+      | total_price_tax_excl        | 60.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 83.80   |
+      | total_products_wt        | 88.830  |
+      | total_discounts_tax_excl | 0.0000  |
+      | total_discounts_tax_incl | 0.0000  |
+      | total_paid_tax_excl      | 90.800  |
+      | total_paid_tax_incl      | 96.250  |
+      | total_paid               | 96.250  |
+      | total_paid_real          | 0.0     |
+      | total_shipping_tax_excl  | 7.0     |
+      | total_shipping_tax_incl  | 7.42    |
+    # quantity higher to threshold
+    When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
+      | amount        | 10                    |
+      | price         | 16                    |
+    Then order "bo_order1" should have 12 products in total
+    And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 90
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 10     |
+      | product_price               | 12.00  |
+      | original_product_price      | 16.00  |
+      | unit_price_tax_incl         | 12.72  |
+      | unit_price_tax_excl         | 12.00  |
+      | total_price_tax_incl        | 127.20 |
+      | total_price_tax_excl        | 120.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 143.80  |
+      | total_products_wt        | 152.430 |
+      | total_discounts_tax_excl | 0.0000  |
+      | total_discounts_tax_incl | 0.0000  |
+      | total_paid_tax_excl      | 150.800 |
+      | total_paid_tax_incl      | 159.850 |
+      | total_paid               | 159.850 |
+      | total_paid_real          | 0.0     |
+      | total_shipping_tax_excl  | 7.0     |
+      | total_shipping_tax_incl  | 7.42    |
+    # User specific price
+    When I edit product "Test Product With Percentage Discount" to order "bo_order1" with following products details:
+      | amount        | 10                    |
+      | price         | 50                    |
+    Then order "bo_order1" should have 12 products in total
+    And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 90
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 10     |
+      | product_price               | 50.00  |
+      | original_product_price      | 16.00  |
+      | unit_price_tax_incl         | 53.00  |
+      | unit_price_tax_excl         | 50.00  |
+      | total_price_tax_incl        | 530.00 |
+      | total_price_tax_excl        | 500.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 523.80   |
+      | total_products_wt        | 555.230  |
+      | total_discounts_tax_excl | 0.0000   |
+      | total_discounts_tax_incl | 0.0000   |
+      | total_paid_tax_excl      | 530.800  |
+      | total_paid_tax_incl      | 562.650  |
+      | total_paid               | 562.650  |
+      | total_paid_real          | 0.0      |
+      | total_shipping_tax_excl  | 7.0      |
+      | total_shipping_tax_incl  | 7.42     |
+
   Scenario: I create a cart with a specific price, it should be present when order is created and stays present even if product price is modified
     And I create an empty cart "customized_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "customized_cart"
