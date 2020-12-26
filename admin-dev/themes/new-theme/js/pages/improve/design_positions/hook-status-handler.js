@@ -73,8 +73,8 @@ class HookStatusHandler {
       headers: {'cache-control': 'no-cache'},
       url: $hookModuleElement.data('togglestatus-url'),
       data: {
-          hookId: $hookModuleElement.data('hook-id'),
-          moduleId: $hookModuleElement.data('module-id')
+        hookId: $hookModuleElement.data('hook-id'),
+        moduleId: $hookModuleElement.data('module-id'),
       },
       success(data) {
         if (data.status) {

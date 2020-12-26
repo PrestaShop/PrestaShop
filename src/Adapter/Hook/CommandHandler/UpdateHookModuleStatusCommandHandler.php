@@ -56,7 +56,7 @@ class UpdateHookModuleStatusCommandHandler implements UpdateHookModuleStatusComm
 
         if (!$hook->toggleHookModuleStatus($moduleId, $status)) {
             throw new CannotUpdateHookException(sprintf(
-                'Cannot update status for Hook module with id module "%d" and id hook',
+                'Cannot update status for Hook module with id module "%d" and id hook "%d%"',
                 $moduleId,
                 $hookId
               )

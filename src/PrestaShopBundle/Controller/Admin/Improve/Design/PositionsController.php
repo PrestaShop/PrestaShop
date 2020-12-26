@@ -313,7 +313,7 @@ class PositionsController extends FrameworkBundleAdminController
      * Bulk update hook module status
      *
      * @param Request $request
-     * @param int $status Hook module status
+     * @param bool $status Hook module status
      *
      * @return Response
      */

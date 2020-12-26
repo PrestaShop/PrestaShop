@@ -55,12 +55,12 @@ class PositionsListHandler {
 
     $(window).on('scroll', () => {
       const $scrollTop = $(window).scrollTop();
-      self.$formBulkActions.toggleClass('hooks-bulk-action-sticky', $scrollTop > 70 );
+      self.$formBulkActions.toggleClass('hooks-bulk-action-sticky', $scrollTop > 70);
     });
 
     self.$modulesList.on('change', () => {
       const $checkedCount = self.$modulesList.filter(':checked').length;
-      $('.hooks-bulk-action').prop("disabled", $checkedCount ? false : true);
+      $('.hooks-bulk-action').prop('disabled', $checkedCount > 0);
       self.$formBulkActions.find('#modules-position-selection-count').html($checkedCount);
     });
 
