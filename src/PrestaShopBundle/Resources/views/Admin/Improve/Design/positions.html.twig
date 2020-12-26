@@ -26,6 +26,7 @@
 {% trans_default_domain "Admin.Design.Feature" %}
 
 {% block content %}
+<div class='container'>
   <div class="row m-0">
     {% if not canMove %}
       <p class="alert alert-warning alert-can-move">
@@ -33,59 +34,88 @@
       </p>
     {% endif %}
 
-    <div class="card col-9">
-      <div class="card-body">
-        <div class="card">
-          <form class="mt-2" id="position-filters">
-            <div class="container">
-              <div class="row">
-                <div class="row col-md-12 col-lg-6">
-                  <label class="form-control-label col-4 text-left mt-1">{{ 'Show' | trans({}, 'Admin.Actions') }}</label>
-                  <div class="col-8">
-                    <select id="show-modules" class="filter">
-                      <option value="all">{{ 'All modules' | trans }}&nbsp;</option>
-                      {% for module in modules %}
-                        <option value="{{ module.id }}"{% if selectedModule == module.id %} selected="selected"{% endif %}>{{ module.displayName }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-
-                <div class="row col-md-12 col-lg-6">
-                  <label class="form-control-label col-5 text-center mt-1">{{ 'Search for a hook' | trans }}</label>
-                  <div class="input-group col-7">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <i class="material-icons">search</i>
-                      </div>
-                    </div>
-                    <input type="text" class="form-control" id="hook-search" name="hook-search" placeholder="">
-                  </div>
+      <form class="mt-3 container" id="position-filters">
+          <div class="mt-3">
+            <div class="row">
+              <div class="col-md-4">
+               <h3>{{ 'Show' | trans({}, 'Admin.Actions') }}</h3>
+               <select id='show-modules' class="filter">
+                   <option value="all">{{ 'All modules' | trans }}&nbsp;</option>
+                   {% for module in modules %}
+                       <option value="{{ module.id }}"{% if selectedModule == module.id %} selected="selected"{% endif %}>{{ module.displayName }}</option>
+                   {% endfor %}
+               </select>
+             </div>
+             <div class="col-md-8">
+                <h3>{{ 'Search for a hook' | trans }}</h3>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="hook-search" name="hook-search" placeholder="">
+                  <button type='button' class="btn btn-primary float-right search-button">
+                    <i class="material-icons">search</i>
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="container mt-3">
-              <div class="row">
-                <div class="col-lg-12">
-                  <p class="checkbox">
-                    <label class="form-control-label" for="hook-position">
-                      <input type="checkbox" id="hook-position" />
-                      <label class="selectbox" for="hook-position"><i class="material-icons done">done</i></label>
-                      {{ 'Display non-positionable hooks' | trans }}
-                    </label>
-                  </p>
-                </div>
+          <div class="mt-3">
+            <div class="row">
+              <div class="col-md-12">
+                <p class="checkbox">
+                  <label class="form-control-label" for="hook-position">
+                  <input type="checkbox" id="hook-position" />
+                  <label class="selectbox" for="hook-position"><i class="material-icons done">done</i></label>
+                    {{ 'Display non-positionable hooks' | trans }}
+                  </label>
+                </p>
               </div>
             </div>
-          </form>
-        </div>
-
-        <form id="module-positions-form" method="post" action="{{ path('admin_modules_positions_unhook') }}" data-update-url="{{ path('api_improve_design_positions_update') }}" data-togglestatus-url="{{ path('admin_modules_positions_toggle_status') }}">
+          </div>
+        </form>
+        <form
+            id="module-positions-form"
+            method="post"
+            action="{{ path('admin_modules_positions_form_actions_status') }}"
+            data-update-url="{{ path('api_improve_design_positions_update') }}"
+            data-togglestatus-url="{{ path('admin_modules_positions_toggle_status') }}"
+        >
+        {% if canMove %}
+            <div class="btn-group pl-10" id='group-bulk-actions'>
+                <button
+                    class="btn btn-secondary dropdown-toggle hooks-bulk-action"
+                    type="button"
+                    id="dropdownMenuButtonFormActions"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    disabled
+                >
+                    {{ 'Bulk actions' | trans({}, 'Admin.Global') }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonFormActions">
+                    <p class="text-center mt-1">
+                        <span id="modules-position-selection-count"></span> {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
+                    </p>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item btn btn-default" name="form_action" value="enable" form="module-positions-form">
+                        <i class="material-icons">radio_button_checked</i>{{ 'Activate selection' | trans({}, 'Admin.Actions') }}
+                    </button>
+                    <button class="dropdown-item btn btn-default" name="form_action" value="disable" form="module-positions-form">
+                        <i class="material-icons">radio_button_unchecked</i>{{ 'Deactivate selection' | trans({}, 'Admin.Actions') }}
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item btn btn-default" name="form_action" value="unhook" form="module-positions-form">
+                        <i class="material-icons">remove_circle</i>{{ 'Unkook selection' | trans({}, 'Admin.Actions') }}
+                    </button>
+                </div>
+            </div>
+          {% endif %}
           {% for hook in hooks %}
             <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}"{% if not hook['position'] %} style="display:none;"{% endif %}>
+            <div class="card">
+                <div class="card-body">
               <a name="{{ hook['name'] }}"></a>
-              <header class="hook-panel-header">
+              <header class="hook-panel-header mb-4">
                 <span class="hook-status">
                    <input
                       class="switch-input-md hook-switch-action"
@@ -162,19 +192,40 @@
                               {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
                             {% endif %}
 
-                            <a class="btn tooltip-link" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}" aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}" title="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
+                            <span class="hook-module-status">
+                               <input
+                                  class="switch-input-md hook-module-switch-action"
+                                  data-toggle="switch"
+                                  data-hook-id="{{ hook['id_hook'] }}"
+                                  data-module-id="{{ moduleInstance.id }}"
+                                  data-togglestatus-url="{{ path('admin_modules_positions_toggle_hookmodule_status') }}"
+                                  type="checkbox"
+                                  value="{{ module['active_in_hook'] }}"
+                                  {{ module['active_in_hook'] ? 'checked="checked"' : '' }}
+                                />
+                            </span>
+
+                            <a
+                                class="btn tooltip-link"
+                                href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}"
+                                data-toggle="pstooltip"
+                                data-placement="top"
+                                title="{{ 'Edit' | trans({}, 'Admin.Actions') }}"
+                                data-original-title="{{ 'Edit' | trans({}, 'Admin.Actions') }}"
+                            >
                               <i class="material-icons">edit</i>
                             </a>
 
-                            <a class="btn tooltip-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                            <a
+                                class="dropdown-item"
+                                href="{{ path('admin_modules_positions_unhook', {moduleId: moduleInstance.id, hookId: hook['id_hook']}) }}"
+                                data-toggle="pstooltip"
+                                data-placement="top"
+                                title="{{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}"
+                                data-original-title="{{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}"
+                            >
+                                <i class="material-icons">remove_circle</i>
                             </a>
-
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="{{ path('admin_modules_positions_unhook', {moduleId: moduleInstance.id, hookId: hook['id_hook']}) }}">
-                                <i class="material-icons">indeterminate_check_box</i>
-                                {{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}
-                              </a>
-                            </div>
                           </div>
                         </div>
 
@@ -184,38 +235,15 @@
                       </li>
                     {% endfor %}
                   </ul>
+                      </div>
+                   </div>
                 </section>
               {% endif %}
             </section>
           {% endfor %}
-
-          <div id="unhook-button-position-bottom">
-            <button type="submit" class="btn btn-default" name="unhookform">
-              <i class="material-icons">indeterminate_check_box</i>
-              {{ 'Unhook the selection' | trans({}, 'Admin.Design.Feature') }}
-            </button>
-          </div>
         </form>
-      </div>
-    </div>
-
-    <div class="col-3">
-      <div class="card" id="modules-position-selection-panel">
-        <h3 class="card-header"><i class="material-icons">checked</i> {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
-        <div class="card-body">
-          <p>
-            <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
-            <span id="modules-position-multiple-selection">
-              <span id="modules-position-selection-count"></span> {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
-            </span>
-          </p>
-          <div class="text-center">
-            <button class="btn btn-primary"><i class="icon-remove"></i> {{ 'Unhook the selection' | trans }}</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}

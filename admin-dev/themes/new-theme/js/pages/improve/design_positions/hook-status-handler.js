@@ -30,10 +30,16 @@ class HookStatusHandler {
     const self = this;
     self.$hookStatus = $('.hook-switch-action');
     self.$modulePositionsForm = $('#module-positions-form');
+    self.$hookModuleStatus = $('.hook-module-switch-action');
 
     self.$hookStatus.on('change', function (e) {
       e.stopImmediatePropagation();
       self.toogleHookStatus($(this));
+    });
+
+    self.$hookModuleStatus.on('change', function (e) {
+      e.stopImmediatePropagation();
+      self.toogleHookModuleStatus($(this));
     });
   }
 
@@ -51,6 +57,28 @@ class HookStatusHandler {
           window.showSuccessMessage(data.message);
           const $hookModulesList = $hookElement.closest('.hook-panel').find('.module-list, .module-list-disabled');
           $hookModulesList.fadeTo(500, data.hook_status ? 1 : 0.5);
+        } else {
+          window.showErrorMessage(data.message);
+        }
+      },
+    });
+  }
+
+  /**
+     * Toogle hook module status
+     */
+  toogleHookModuleStatus($hookModuleElement) {
+    $.ajax({
+      type: 'POST',
+      headers: {'cache-control': 'no-cache'},
+      url: $hookModuleElement.data('togglestatus-url'),
+      data: {
+          hookId: $hookModuleElement.data('hook-id'),
+          moduleId: $hookModuleElement.data('module-id')
+      },
+      success(data) {
+        if (data.status) {
+          window.showSuccessMessage(data.message);
         } else {
           window.showErrorMessage(data.message);
         }

@@ -33,17 +33,13 @@ class PositionsListHandler {
 
     const self = this;
     self.$panelSelection = $('#modules-position-selection-panel');
-    self.$panelSelectionSingleSelection = $('#modules-position-single-selection');
-    self.$panelSelectionMultipleSelection = $('#modules-position-multiple-selection');
-
-    self.$panelSelectionOriginalY = self.$panelSelection.offset().top;
     self.$showModules = $('#show-modules');
     self.$modulesList = $('.modules-position-checkbox');
     self.$hookPosition = $('#hook-position');
     self.$hookSearch = $('#hook-search');
     self.$modulePositionsForm = $('#module-positions-form');
-    self.$moduleUnhookButton = $('#unhook-button-position-bottom');
     self.$moduleButtonsUpdate = $('.module-buttons-update .btn');
+    self.$formBulkActions = $('#group-bulk-actions');
 
     self.handleList();
     self.handleSortable();
@@ -59,32 +55,13 @@ class PositionsListHandler {
 
     $(window).on('scroll', () => {
       const $scrollTop = $(window).scrollTop();
-      self.$panelSelection.css(
-        'top',
-        $scrollTop < 20 ? 0 : $scrollTop - self.$panelSelectionOriginalY,
-      );
+      self.$formBulkActions.toggleClass('hooks-bulk-action-sticky', $scrollTop > 70 );
     });
 
     self.$modulesList.on('change', () => {
       const $checkedCount = self.$modulesList.filter(':checked').length;
-
-      if ($checkedCount === 0) {
-        self.$moduleUnhookButton.hide();
-        self.$panelSelection.hide();
-        self.$panelSelectionSingleSelection.hide();
-        self.$panelSelectionMultipleSelection.hide();
-      } else if ($checkedCount === 1) {
-        self.$moduleUnhookButton.show();
-        self.$panelSelection.show();
-        self.$panelSelectionSingleSelection.show();
-        self.$panelSelectionMultipleSelection.hide();
-      } else {
-        self.$moduleUnhookButton.show();
-        self.$panelSelection.show();
-        self.$panelSelectionSingleSelection.hide();
-        self.$panelSelectionMultipleSelection.show();
-        $('#modules-position-selection-count').html($checkedCount);
-      }
+      $('.hooks-bulk-action').prop("disabled", $checkedCount ? false : true);
+      self.$formBulkActions.find('#modules-position-selection-count').html($checkedCount);
     });
 
     self.$panelSelection.find('button').click(() => {
