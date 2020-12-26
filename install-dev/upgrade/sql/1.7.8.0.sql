@@ -45,3 +45,5 @@ UPDATE `PREFIX_product` SET `location` = '' WHERE `location` IS NULL;
 ALTER TABLE `PREFIX_product` MODIFY COLUMN `location` VARCHAR(255) NOT NULL DEFAULT '';
 UPDATE `PREFIX_product_attribute` SET `location` = '' WHERE `location` IS NULL;
 ALTER TABLE `PREFIX_product_attribute` MODIFY COLUMN `location` VARCHAR(255) NOT NULL DEFAULT '';
+
+ALTER TABLE `PREFIX_hook_module` ADD `active` TINYINT(1) NOT NULL AFTER `position`;
