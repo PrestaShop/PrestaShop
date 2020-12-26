@@ -1286,15 +1286,14 @@ class HookCore extends ObjectModel
         int $id_module,
         int $id_hook,
         ?int $id_shop = null
-    ): bool
-    {
+    ): bool {
         $id_shop = $id_shop ?? (int) Context::getContext()->shop->id;
         $sql = new DbQuery();
         $sql->select('active');
         $sql->from('hook_module', 'hm');
         $sql->where('hm.id_module = ' . $id_module);
         $sql->where('hm.id_hook = ' . $id_hook);
-        $sql->where('hm.id_shop = '. $id_shop);
+        $sql->where('hm.id_shop = ' . $id_shop);
 
         return (bool) Db::getInstance()->getValue($sql);
     }
@@ -1312,16 +1311,16 @@ class HookCore extends ObjectModel
         int $id_module,
         ?bool $status = null,
         ?int $id_shop = null
-    ): bool
-    {
+    ): bool {
         $status = $status ?? !self::getHookModuleStatus($id_module, (int) $this->id);
         $id_shop = $id_shop ?? (int) Context::getContext()->shop->id;
+
         return (bool) Db::getInstance()->update(
             'hook_module',
             ['active' => $status],
-            ' id_module = '.$id_module.'
-                AND id_shop = '. $id_shop .'
-                AND id_hook = '.(int) $this->id
+            ' id_module = ' . $id_module . '
+                AND id_shop = ' . $id_shop . '
+                AND id_hook = ' . (int) $this->id
         );
     }
 }

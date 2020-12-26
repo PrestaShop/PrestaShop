@@ -28,8 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookModuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookException;
@@ -276,7 +276,7 @@ class PositionsController extends FrameworkBundleAdminController
 
         return $this->json($response);
     }
-    
+
     /**
      * Toggle hook module status
      *
@@ -308,7 +308,7 @@ class PositionsController extends FrameworkBundleAdminController
 
         return $this->json($response);
     }
-    
+
     /**
      * Bulk update hook module status
      *
@@ -321,14 +321,14 @@ class PositionsController extends FrameworkBundleAdminController
     {
         $parameterBag = $request->request;
         $unhooks = $parameterBag->get('unhooks');
-        
+
         if (empty($unhooks)) {
             $unhooks = [
                 sprintf(
-                    '%d_%d', 
-                    $parameterBag->get('hookId'), 
+                    '%d_%d',
+                    $parameterBag->get('hookId'),
                     $parameterBag->get('moduleId')
-                )
+                ),
             ];
         }
 
@@ -378,7 +378,7 @@ class PositionsController extends FrameworkBundleAdminController
     {
         $parameterBag = $request->request;
         $formAction = $parameterBag->has('form_action') ? $parameterBag->get('form_action') : '';
-        
+
         switch ($formAction) {
             case static::ACTION_ENABLE_HOOK_MODULE:
                 $this->bulkUpdateHookModuleStatus($request, true);

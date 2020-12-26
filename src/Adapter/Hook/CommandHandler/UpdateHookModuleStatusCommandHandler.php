@@ -47,7 +47,7 @@ class UpdateHookModuleStatusCommandHandler implements UpdateHookModuleStatusComm
         $hookId = $command->getHookId()->getValue();
         $moduleId = $command->getModuleId();
         $status = $command->getStatus();
-        
+
         $hook = new Hook($hookId);
 
         if ($hook->id !== $hookId) {

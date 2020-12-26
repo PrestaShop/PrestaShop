@@ -58,11 +58,10 @@ class UpdateHookModuleStatusCommand
      * @param bool|null $status
      */
     public function __construct(
-        int $hookId, 
-        int $moduleId, 
+        int $hookId,
+        int $moduleId,
         ?bool $status = null
-    )
-    {
+    ) {
         $this->hookId = new HookId($hookId);
         $this->moduleId = $moduleId;
         $this->status = $status;
@@ -83,7 +82,7 @@ class UpdateHookModuleStatusCommand
     {
         return $this->moduleId;
     }
-    
+
     /**
      * @return bool|null
      */
