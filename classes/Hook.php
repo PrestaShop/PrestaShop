@@ -486,7 +486,7 @@ class HookCore extends ObjectModel
         }
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
+            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active, hm.active as active_in_hook
             FROM `' . _DB_PREFIX_ . 'hook_module` hm
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
@@ -507,6 +507,7 @@ class HookCore extends ObjectModel
                 'id_module' => $result['id_module'],
                 'name' => $result['name'],
                 'active' => $result['active'],
+                'active_in_hook' => $result['active_in_hook'],
             ];
         }
         Cache::store($cache_id, $list);
@@ -856,6 +857,10 @@ class HookCore extends ObjectModel
         foreach ($module_list as $key => $hookRegistration) {
             // Check errors
             if ($id_module && $id_module != $hookRegistration['id_module']) {
+                continue;
+            }
+
+            if (!Hook::getHookModuleStatus($hookRegistration['id_module'], $id_hook)) {
                 continue;
             }
 
@@ -1273,23 +1278,50 @@ class HookCore extends ObjectModel
      *
      * @param int $id_module Module id
      * @param int $id_hook Hook id
-     * @param int $id_shop Shop id
+     * @param int|null $id_shop Shop id
      *
      * @return bool
      */
     public static function getHookModuleStatus(
         int $id_module,
         int $id_hook,
-        int $id_shop = null
+        ?int $id_shop = null
     ): bool
     {
+        $id_shop = $id_shop ?? (int) Context::getContext()->shop->id;
         $sql = new DbQuery();
         $sql->select('active');
         $sql->from('hook_module', 'hm');
         $sql->where('hm.id_module = ' . $id_module);
         $sql->where('hm.id_hook = ' . $id_hook);
-        $sql->where('hm.id_shop = '.$id_shop ?? (int) Context::getContext()->shop->id);
+        $sql->where('hm.id_shop = '. $id_shop);
 
         return (bool) Db::getInstance()->getValue($sql);
+    }
+
+    /**
+     * Toggles Hook module status in database.
+     *
+     * @param int $id_module Module id
+     * @param bool|null $status Hook module status
+     * @param int|null $id_shop Shop id
+     *
+     * @return bool Update result
+     */
+    public function toggleHookModuleStatus(
+        int $id_module,
+        ?bool $status = null,
+        ?int $id_shop = null
+    ): bool
+    {
+        $status = $status ?? !self::getHookModuleStatus($id_module, (int) $this->id);
+        $id_shop = $id_shop ?? (int) Context::getContext()->shop->id;
+        return (bool) Db::getInstance()->update(
+            'hook_module',
+            ['active' => $status],
+            ' id_module = '.$id_module.'
+                AND id_shop = '. $id_shop .'
+                AND id_hook = '.(int) $this->id
+        );
     }
 }
