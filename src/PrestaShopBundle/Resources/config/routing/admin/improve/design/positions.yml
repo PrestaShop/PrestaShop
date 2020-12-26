@@ -21,3 +21,19 @@ admin_modules_positions_toggle_status:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:toggleStatus'
         _legacy_controller: AdminModulesPositions
         _legacy_link: AdminModulesPositions
+
+admin_modules_positions_toggle_hookmodule_status:
+    path: /toggle-hookmodule-status
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:toggleHookModuleStatus'
+        _legacy_controller: AdminModulesPositions
+        _legacy_link: AdminModulesPositions
+
+admin_modules_positions_form_actions_status:
+    path: /form-actions-dispatcher
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:form'
+        _legacy_controller: AdminModulesPositions
+        _legacy_link: AdminModulesPositions

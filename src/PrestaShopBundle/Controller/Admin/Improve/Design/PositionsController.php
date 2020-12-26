@@ -29,9 +29,11 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -49,6 +51,10 @@ class PositionsController extends FrameworkBundleAdminController
      * @var int
      */
     protected $selectedModule = null;
+
+    public const ACTION_ENABLE_HOOK_MODULE = 'enable';
+    public const ACTION_DISABLE_HOOK_MODULE = 'disable';
+    public const ACTION_UNHOOK = 'unhook';
 
     /**
      * Display hooks positions.
@@ -270,6 +276,130 @@ class PositionsController extends FrameworkBundleAdminController
 
         return $this->json($response);
     }
+    
+    /**
+     * Toggle hook module status
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function toggleHookModuleStatusAction(Request $request)
+    {
+        $parameterBag = $request->request;
+        $hookId = (int) $parameterBag->get('hookId');
+        $moduleId = (int) $parameterBag->get('moduleId');
+        $hookStatus = false;
+
+        try {
+            $this->getCommandBus()->handle(new UpdateHookModuleStatusCommand($hookId, $moduleId, null));
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (HookException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ];
+        }
+
+        return $this->json($response);
+    }
+    
+    /**
+     * Bulk update hook module status
+     *
+     * @param Request $request
+     * @param int $status Hook module status
+     *
+     * @return Response
+     */
+    private function bulkUpdateHookModuleStatus(Request $request, bool $status)
+    {
+        $parameterBag = $request->request;
+        $unhooks = $parameterBag->get('unhooks');
+        
+        if (empty($unhooks)) {
+            $unhooks = [
+                sprintf(
+                    '%d_%d', 
+                    $parameterBag->get('hookId'), 
+                    $parameterBag->get('moduleId')
+                )
+            ];
+        }
+
+        $errors = [];
+        foreach ($unhooks as $unhook) {
+            $explode = explode('_', $unhook);
+            $hookId = (int) $explode[0] ?? 0;
+            $moduleId = (int) $explode[1] ?? 0;
+
+            try {
+                $this->getCommandBus()->handle(new UpdateHookModuleStatusCommand($hookId, $moduleId, $status));
+            } catch (HookException $e) {
+                $errors[] = $this->trans(
+                    'Hook cannot be loaded.',
+                    'Admin.Modules.Notification'
+                );
+            }
+        }
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans(
+                    'The module was successfully disabled from the hook.',
+                    'Admin.Modules.Notification'
+                )
+            );
+        }
+
+        return $this->redirect(
+            $this->generateUrl('admin_modules_positions')
+        );
+    }
+
+    /**
+     * Form actions dispact.
+     *
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function formAction(Request $request)
+    {
+        $parameterBag = $request->request;
+        $formAction = $parameterBag->has('form_action') ? $parameterBag->get('form_action') : '';
+        
+        switch ($formAction) {
+            case static::ACTION_ENABLE_HOOK_MODULE:
+                $this->bulkUpdateHookModuleStatus($request, true);
+                break;
+            case static::ACTION_DISABLE_HOOK_MODULE:
+                $this->bulkUpdateHookModuleStatus($request, false);
+                break;
+            case static::ACTION_UNHOOK:
+                $this->unhookAction($request);
+                break;
+            default:
+                $this->flashErrors($this->trans(
+                    'An error occurred while deleting the module from its hook.',
+                    'Admin.Modules.Notification'
+                ));
+        }
+
+        return $this->redirect(
+            $this->generateUrl('admin_modules_positions')
+        );
+    }
 
     /**
      * @return array
@@ -279,6 +409,7 @@ class PositionsController extends FrameworkBundleAdminController
         return [
             HookNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             HookUpdateHookException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+            HookUpdateHookModuleException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
         ];
     }
 }
