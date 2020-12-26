@@ -1007,6 +1007,7 @@ CREATE TABLE `PREFIX_hook_module` (
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_hook` int(10) unsigned NOT NULL,
   `position` tinyint(2) unsigned NOT NULL,
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (
     `id_module`, `id_hook`, `id_shop`
   ),
