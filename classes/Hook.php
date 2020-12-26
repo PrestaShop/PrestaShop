@@ -1267,4 +1267,29 @@ class HookCore extends ObjectModel
 
         return (bool) Db::getInstance()->getValue($sql);
     }
+
+    /**
+     * Return status from a given hook module id and hook id.
+     *
+     * @param int $id_module Module id
+     * @param int $id_hook Hook id
+     * @param int $id_shop Shop id
+     *
+     * @return bool
+     */
+    public static function getHookModuleStatus(
+        int $id_module,
+        int $id_hook,
+        int $id_shop = null
+    ): bool
+    {
+        $sql = new DbQuery();
+        $sql->select('active');
+        $sql->from('hook_module', 'hm');
+        $sql->where('hm.id_module = ' . $id_module);
+        $sql->where('hm.id_hook = ' . $id_hook);
+        $sql->where('hm.id_shop = '.$id_shop ?? (int) Context::getContext()->shop->id);
+
+        return (bool) Db::getInstance()->getValue($sql);
+    }
 }
