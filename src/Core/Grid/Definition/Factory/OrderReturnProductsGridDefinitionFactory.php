@@ -106,13 +106,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                     ])
             )
             ->add(
-                (new DataColumn('order_detail_id'))
-                    ->setName($this->trans('Order detail ID', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'id_order_detail',
-                    ])
-            )
-            ->add(
                 (new DataColumn('product_reference'))
                     ->setName($this->trans('Reference', [], 'Admin.Global'))
                     ->setOptions([
@@ -127,7 +120,7 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                     ])
             )
             ->add(
-                (new DataColumn('quantity'))
+                (new DataColumn('product_quantity'))
                     ->setName($this->trans('Quantity', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'product_quantity',
@@ -172,16 +165,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
     {
         return (new FilterCollection())
             ->add(
-                (new Filter('order_detail_id', TextType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search order detail ID', [], 'Admin.Actions'),
-                        ],
-                    ])
-                    ->setAssociatedColumn('id_order_detail')
-            )
-            ->add(
                 (new Filter('reference', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
@@ -202,14 +185,14 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                     ->setAssociatedColumn('product_name')
             )
             ->add(
-                (new Filter('quantity', TextType::class))
+                (new Filter('product_quantity', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
                             'placeholder' => $this->trans('Search quantity', [], 'Admin.Actions'),
                         ],
                     ])
-                    ->setAssociatedColumn('quantity')
+                    ->setAssociatedColumn('product_quantity')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
