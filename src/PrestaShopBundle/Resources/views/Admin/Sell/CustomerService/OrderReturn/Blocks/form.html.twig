@@ -72,6 +72,19 @@
         </div>
       </div>
 
+      {% if allowPrintingOrderReturnPdf %}
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Returns form'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </label>
+
+        <div class="col-sm form-control-value">
+          <a href="{{ path('admin_order_returns_generate_pdf', {'orderReturnId': editableOrderReturn.orderReturnId }) }}" class="btn btn-outline-secondary">
+            {{ 'Print out'|trans({}, 'Admin.Actions') }}
+          </a>
+        </div>
+      </div>
+      {% endif %}
       {% block order_return_form_rest %}
         {{ form_widget(orderReturnForm) }}
       {% endblock %}

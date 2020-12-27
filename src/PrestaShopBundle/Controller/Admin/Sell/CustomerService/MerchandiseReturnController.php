@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnExc
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
@@ -54,6 +55,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MerchandiseReturnController extends FrameworkBundleAdminController
 {
+    private const ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID = 2;
+
     /**
      * Render merchandise returns grid and options.
      *
@@ -137,6 +140,12 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_merchandise_returns_index');
         }
 
+        $allowPrintingOrderReturnPdf = false;
+
+        if ($editableOrderReturn->getOrderReturnStateId() === self::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID) {
+            $allowPrintingOrderReturnPdf = true;
+        }
+
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
@@ -144,7 +153,27 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'orderReturnForm' => $form->createView(),
             'editableOrderReturn' => $editableOrderReturn,
             'orderReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
+            'allowPrintingOrderReturnPdf' => $allowPrintingOrderReturnPdf,
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_returns_index")
+     *
+     * @param Request $request
+     * @param int $orderReturnId
+     *
+     * @return void
+     *
+     * @throws CoreException
+     */
+    public function generateOrderReturnPdfAction(Request $request, int $orderReturnId): void
+    {
+        $this->get('prestashop.adapter.pdf.order_return_pdf_generator')->generatePDF([$orderReturnId]);
+
+        // When using legacy generator,
+        // we want to be sure that displaying PDF is the last thing this controller will do
+        die();
     }
 
     /**
