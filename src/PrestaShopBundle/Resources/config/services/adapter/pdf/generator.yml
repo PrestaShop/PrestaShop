@@ -13,6 +13,11 @@ services:
     arguments:
       - '@translator'
 
+  prestashop.adapter.pdf.order_return_pdf_generator:
+    class: PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator
+    arguments:
+        - '@translator'
+
   prestashop.adapter.pdf.delivery_slip_pdf_generator:
     class: PrestaShop\PrestaShop\Adapter\PDF\DeliverySlipPdfGenerator
     arguments:
