@@ -85,6 +85,7 @@ install:
   - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
         make assets;
     fi
+  - bash travis-scripts/install-prestashop;
 
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
