@@ -55,9 +55,6 @@ class MaintenanceController extends FrameworkBundleAdminController
             $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         }
 
-        $isMultishopActive = $this->get('prestashop.adapter.multistore_feature')->isActive();
-        $isAllContext = $this->get('prestashop.adapter.shop.context')->isAllContext();
-
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
@@ -69,7 +66,6 @@ class MaintenanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'generalForm' => $form->createView(),
             'currentIp' => $request->getClientIp(),
-            'isMultishopConfigEnabled' => $isMultishopActive && !$isAllContext,
         ]);
     }
 
