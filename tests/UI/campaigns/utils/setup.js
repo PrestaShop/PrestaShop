@@ -3,6 +3,8 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
+let screenshotNumber = 1;
+
 /**
  * Create unique browser for all mocha run
  */
@@ -35,5 +37,25 @@ after(async function () {
 
     const reportName = await files.generateReportFilename();
     await files.createFile('.', `${reportName}.json`, JSON.stringify(browserErrors));
+  }
+});
+
+
+afterEach(async function () {
+  // Take screenshot if demanded after failed step
+  if (global.TAKE_SCREESHOT_AFTER_FAIL) {
+    if (this.currentTest.state === 'failed') {
+      const currentTab = await helper.getLastOpenedTab(this.browser);
+
+      // Take a screenshot
+      await currentTab.screenshot(
+        {
+          path: `./screenshots/fail_test_${screenshotNumber}.png`,
+          fullPage: true,
+        },
+      );
+
+      screenshotNumber += 1;
+    }
   }
 });

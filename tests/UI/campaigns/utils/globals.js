@@ -41,3 +41,5 @@ global.BROWSER = {
 };
 
 global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;
+
+global.TAKE_SCREESHOT_AFTER_FAIL = process.env.TAKE_SCREESHOT_AFTER_FAIL || false;

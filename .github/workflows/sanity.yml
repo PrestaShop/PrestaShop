@@ -78,4 +78,11 @@ jobs:
           DB_NAME: prestashop
           DB_PASSWD: password
           HEADLESS: true
+          TAKE_SCREESHOT_AFTER_FAIL: true
         working-directory: ./tests/UI
+
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: fail
+          path: ./tests/UI/screenshots/
