@@ -33,7 +33,6 @@ env:
     - DISABLE_DEBUG_TOOLBAR=1
   jobs:
     - PRESTASHOP_TEST_TYPE=unit
-    - PRESTASHOP_TEST_TYPE=integration
     - PRESTASHOP_TEST_TYPE=sanity
 
 stages:
@@ -83,7 +82,7 @@ before_install:
 
 install:
   - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
-  - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ] || [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
         make assets;
     fi
 
@@ -102,10 +101,6 @@ script:
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_unit.sh;
-    fi
-
-  - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
-        bash tests/check_integration.sh;
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
