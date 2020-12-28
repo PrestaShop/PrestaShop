@@ -78,5 +78,4 @@ jobs:
           DB_NAME: prestashop
           DB_PASSWD: password
           HEADLESS: true
-          SLOW_MO: 10
         working-directory: ./tests/UI
