@@ -198,16 +198,14 @@ class CarriersController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new ToggleCarrierIsFreeCommand($carrierId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CarrierException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-
-            return $this->redirectToRoute('admin_carriers_index');
         }
-
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
 
         return $this->redirectToRoute('admin_carriers_index');
     }
