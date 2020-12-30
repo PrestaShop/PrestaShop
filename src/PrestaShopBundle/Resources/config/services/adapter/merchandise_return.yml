@@ -13,6 +13,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandler'
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
         tags:
             - name: tactician.handler
               command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations'
