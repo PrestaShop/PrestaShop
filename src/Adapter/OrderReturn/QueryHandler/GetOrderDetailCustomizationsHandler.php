@@ -44,21 +44,14 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
     private $contextLangId;
 
     /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
      * GetOrderDetailCustomizationsHandler constructor.
      *
      * @param int $contextLangId
      */
     public function __construct(
-        int $contextLangId,
-        int $contextShopId
+        int $contextLangId
     ) {
         $this->contextLangId = $contextLangId;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
