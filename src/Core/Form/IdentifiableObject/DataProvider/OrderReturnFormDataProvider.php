@@ -58,7 +58,7 @@ final class OrderReturnFormDataProvider implements FormDataProviderInterface
         $editableOrderReturn = $this->queryBus->handle(new GetOrderReturnForEditing($orderReturnId));
 
         return [
-            'order_return_order_state' => $editableOrderReturn->getOrderReturnStateId(),
+            'order_return_state' => $editableOrderReturn->getOrderReturnStateId(),
         ];
     }
 
