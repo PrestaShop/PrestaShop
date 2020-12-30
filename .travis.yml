@@ -32,7 +32,6 @@ env:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
     - DISABLE_DEBUG_TOOLBAR=1
   jobs:
-    - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=sanity
 
 stages:
@@ -91,18 +90,6 @@ install:
     fi
 
 script:
-  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests/check_file_syntax.sh;
-    fi
-
-  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests-legacy/check_phpunit.sh;
-    fi
-
-  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests/check_unit.sh;
-    fi
-
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
         bash tests/check_sanity.sh;
     fi
