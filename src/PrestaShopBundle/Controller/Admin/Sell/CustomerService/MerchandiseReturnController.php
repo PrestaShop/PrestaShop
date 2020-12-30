@@ -29,16 +29,16 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\BulkDeleteProductFromMerchandiseReturnCommand;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\BulkDeleteMerchandiseReturnProductException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnProduct;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderReturnProductException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProduct;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnProductsFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -98,30 +98,30 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *     redirectRoute="admin_merchandise_returns_index"
      * )
      *
-     * @param int $merchandiseReturnId
+     * @param int $orderReturnId
      * @param Request $request
-     * @param MerchandiseReturnProductsFilters $filters
+     * @param OrderReturnProductsFilters $filters
      *
      * @return Response
      */
-    public function editAction(int $merchandiseReturnId, MerchandiseReturnProductsFilters $filters, Request $request): Response
+    public function editAction(int $orderReturnId, OrderReturnProductsFilters $filters, Request $request): Response
     {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.merchandise_return_form_builder');
-        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.merchandise_return_form_handler');
-        $gridFactory = $this->get('prestashop.core.grid.factory.merchandise_return_products');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_return_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
+        $gridFactory = $this->get('prestashop.core.grid.factory.order_return_products');
 
         try {
-            /** @var EditableMerchandiseReturn $editableMerchandiseReturn */
-            $editableMerchandiseReturn = $this->getQueryBus()->handle(
-                new GetMerchandiseReturnForEditing(
-                    $merchandiseReturnId
+            /** @var EditableOrderReturn $editableOrderReturn */
+            $editableOrderReturn = $this->getQueryBus()->handle(
+                new GetOrderReturnForEditing(
+                    $orderReturnId
                 )
             );
 
-            $form = $formBuilder->getFormFor($merchandiseReturnId);
+            $form = $formBuilder->getFormFor($orderReturnId);
             $form->handleRequest($request);
 
-            $result = $formHandler->handleFor($merchandiseReturnId, $form);
+            $result = $formHandler->handleFor($orderReturnId, $form);
 
             if ($result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
@@ -134,13 +134,13 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_merchandise_returns_index');
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature')),
-            'merchandiseReturnForm' => $form->createView(),
-            'editableMerchandiseReturn' => $editableMerchandiseReturn,
-            'merchandiseReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
+            'orderReturnForm' => $form->createView(),
+            'editableOrderReturn' => $editableOrderReturn,
+            'orderReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
         ]);
     }
 
@@ -148,17 +148,17 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_returns_index")
      *
      * @param Request $request
-     * @param int $merchandiseReturnId
-     * @param int $merchandiseReturnDetailId
+     * @param int $orderReturnId
+     * @param int $orderReturnDetailId
      * @param int $customizationId
      *
      * @return RedirectResponse
      */
-    public function deleteProductAction(Request $request, int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId): RedirectResponse
+    public function deleteProductAction(Request $request, int $orderReturnId, int $orderReturnDetailId, int $customizationId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(
-                new DeleteProductFromMerchandiseReturnCommand($merchandiseReturnId, $merchandiseReturnDetailId, $customizationId)
+                new DeleteProductFromOrderReturnCommand($orderReturnId, $orderReturnDetailId, $customizationId)
             );
 
             $this->addFlash(
@@ -170,9 +170,9 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute(
-                'admin_merchandise_returns_edit',
+                'admin_order_returns_edit',
                 [
-                    'merchandiseReturnId' => $merchandiseReturnId,
+                    'orderReturnId' => $orderReturnId,
                 ]
         );
     }
@@ -186,15 +186,15 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteProductAction(int $merchandiseReturnId, Request $request): RedirectResponse
+    public function bulkDeleteProductAction(int $orderReturnId, Request $request): RedirectResponse
     {
-        $merchandiseReturnProducts = $this->getBulkMerchandiseReturnProductsFromRequest($request);
+        $orderReturnProducts = $this->getBulkOrderReturnProductsFromRequest($request);
 
         try {
             $this->getCommandBus()->handle(
-                new BulkDeleteProductFromMerchandiseReturnCommand(
-                    $merchandiseReturnId,
-                    $merchandiseReturnProducts
+                new BulkDeleteProductFromOrderReturnCommand(
+                    $orderReturnId,
+                    $orderReturnProducts
                 )
             );
             $this->addFlash(
@@ -213,31 +213,31 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return MerchandiseReturnProduct[]
+     * @return OrderReturnProduct[]
      */
-    private function getBulkMerchandiseReturnProductsFromRequest(Request $request): array
+    private function getBulkOrderReturnProductsFromRequest(Request $request): array
     {
-        $merchandiseReturnDetailIds = $request->request->get('merchandise_return_products_merchandise_return_bulk');
-        $merchandiseReturnCustomizationIds = $request->request->get('merchandise_return_products_merchandise_return_bulk_id_customization');
-        if (!is_array($merchandiseReturnDetailIds)) {
+        $orderReturnDetailIds = $request->request->get('order_return_products_order_return_bulk');
+        $orderReturnCustomizationIds = $request->request->get('order_return_products_order_return_bulk_id_customization');
+        if (!is_array($orderReturnDetailIds)) {
             return [];
         }
 
-        $merchandiseReturnProducts = [];
+        $orderReturnProducts = [];
 
-        foreach ($merchandiseReturnDetailIds as $key => $merchandiseReturnDetailId) {
-            $merchandiseReturnProduct = new MerchandiseReturnProduct(
-                (int) $merchandiseReturnDetailId
+        foreach ($orderReturnDetailIds as $key => $orderReturnDetailId) {
+            $orderReturnProduct = new OrderReturnProduct(
+                (int) $orderReturnDetailId
             );
 
-            if ($merchandiseReturnCustomizationIds[$key]) {
-                $merchandiseReturnProduct->setCustomizationId((int) $merchandiseReturnCustomizationIds[$key]);
+            if ($orderReturnCustomizationIds[$key]) {
+                $orderReturnProduct->setCustomizationId((int) $orderReturnCustomizationIds[$key]);
             }
 
-            $merchandiseReturnProducts[] = $merchandiseReturnProduct;
+            $orderReturnProducts[] = $orderReturnProduct;
         }
 
-        return $merchandiseReturnProducts;
+        return $orderReturnProducts;
     }
 
     /**
@@ -256,19 +256,19 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     private function getErrorMessages(Exception $e = null): array
     {
         return [
-            MerchandiseReturnConstraintException::class => [
-                MerchandiseReturnConstraintException::INVALID_ID => $this->trans(
+            OrderReturnConstraintException::class => [
+                OrderReturnConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
                 ),
             ],
-            BulkDeleteMerchandiseReturnProductException::class => sprintf(
+            BulkDeleteOrderReturnProductException::class => sprintf(
                 '%s: %s',
                 $this->trans(
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof BulkDeleteMerchandiseReturnProductException ? implode(', ', $e->getMerchandiseReturnDetailIds()) : ''
+                $e instanceof BulkDeleteOrderReturnProductException ? implode(', ', $e->getOrderReturnDetailIds()) : ''
             ),
         ];
     }

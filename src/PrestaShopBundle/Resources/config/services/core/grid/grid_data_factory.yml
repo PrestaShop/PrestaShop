@@ -354,11 +354,11 @@ services:
       arguments:
         - '@prestashop.core.grid.data.factory.attribute_group'
 
-    prestashop.core.grid.data.factory.merchandise_return_products_decorator:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\MerchandiseReturnProductsGridDataFactory'
+    prestashop.core.grid.data.factory.order_return_products_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnProductsGridDataFactory'
       arguments:
-        - '@prestashop.core.grid.data.factory.merchandise_return_products'
-        - '@prestashop.adapter.merchandise_return.query_handler.get_order_detail_customization'
+        - '@prestashop.core.grid.data.factory.order_return_products'
+        - '@prestashop.adapter.order_return.query_handler.get_order_detail_customization'
 
     prestashop.core.grid.data_provider.merchandise_return:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
@@ -368,13 +368,13 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'merchandise_return'
 
-    prestashop.core.grid.data.factory.merchandise_return_products:
+    prestashop.core.grid.data.factory.order_return_products:
       class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
       arguments:
-        - '@prestashop.core.grid.query_builder.merchandise_return_products'
+        - '@prestashop.core.grid.query_builder.order_return_products'
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
-        - 'merchandise_return_products'
+        - 'order_return_products'
 
     prestashop.core.grid.data.factory.tax_rules_group:
       class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
