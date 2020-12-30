@@ -44,14 +44,21 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
     private $contextLangId;
 
     /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
      * GetOrderDetailCustomizationsHandler constructor.
      *
      * @param int $contextLangId
      */
     public function __construct(
-        int $contextLangId
+        int $contextLangId,
+        int $contextShopId
     ) {
         $this->contextLangId = $contextLangId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -67,7 +74,7 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
         $orderDetail = new OrderDetail($query->getOrderDetailId()->getValue());
         $order = new Order($orderDetail->id_order);
         $customizations = [];
-        $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $this->contextLangId, true, null, $orderDetail->id_customization);
+        $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $this->contextLangId, true, $order->id_shop, $orderDetail->id_customization);
         $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id] ?? null;
         if (!is_array($customizedDatas)) {
             return null;
