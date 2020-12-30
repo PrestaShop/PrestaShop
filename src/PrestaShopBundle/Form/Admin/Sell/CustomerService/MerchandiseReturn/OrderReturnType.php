@@ -68,7 +68,7 @@ class OrderReturnType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('order_return_order_state', ChoiceType::class, [
+            ->add('order_return_state', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->stateChoices,
                 'label' => $this->translator->trans('Order status', [], 'Admin.Shopparameters.Feature'),
