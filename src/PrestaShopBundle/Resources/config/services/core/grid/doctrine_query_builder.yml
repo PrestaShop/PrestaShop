@@ -284,8 +284,8 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
 
-    prestashop.core.grid.query_builder.merchandise_return_products:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Query\MerchandiseReturnProductsQueryBuilder'
+    prestashop.core.grid.query_builder.order_return_products:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\OrderReturnProductsQueryBuilder'
       parent: 'prestashop.core.grid.abstract_query_builder'
       public: true
       arguments:

@@ -24,64 +24,64 @@ admin_merchandise_returns_filter:
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn:submitFilterorder_return
 
-admin_merchandise_returns_products_filter:
-  path: /{merchandiseReturnId}/edit
+admin_order_returns_products_filter:
+  path: /{orderReturnId}/edit
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Common:searchGrid
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.merchandise_return_products
-    redirectRoute: admin_merchandise_returns_edit
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_return_products
+    redirectRoute: admin_order_returns_edit
     redirectQueryParamsToKeep:
-      - 'merchandiseReturnId'
+      - 'orderReturnId'
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn:submitFilterorder_return
   requirements:
-    merchandiseReturnId: \d+
+    orderReturnId: \d+
 
-admin_merchandise_returns_edit:
-  path: /{merchandiseReturnId}/edit
+admin_order_returns_edit:
+  path: /{orderReturnId}/edit
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:edit
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn:updateorder_return
 #    _legacy_parameters:
-#      id_order_return: merchandiseReturnId
+#      id_order_return: orderReturnId
   requirements:
-    merchandiseReturnId: \d+
+    orderReturnId: \d+
 
-admin_merchandise_returns_update:
-  path: /{merchandiseReturnId}/update
+admin_order_returns_update:
+  path: /{orderReturnId}/update
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:edit
     _legacy_controller: AdminReturn
   #    _legacy_link: AdminReturn:updateorder_return
   #    _legacy_parameters:
-  #      id_order_return: merchandiseReturnId
+  #      id_order_return: orderReturnId
   requirements:
-    merchandiseReturnId: \d+
+    orderReturnId: \d+
 
 # @todo is this a good way to pass customizationId?
-admin_merchandise_returns_delete_product:
-  path: /{merchandiseReturnId}/products/{merchandiseReturnDetailId}/delete/{customizationId}
+admin_order_returns_delete_product:
+  path: /{orderReturnId}/products/{orderReturnDetailId}/delete/{customizationId}
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProduct
     _legacy_controller: AdminReturn
   #    _legacy_link: AdminReturn:deleteorder_return_detail
   #    _legacy_parameters:
-  #      id_order_return: merchandiseReturnId
-  #      id_order_detail: merchandiseReturnDetailId
+  #      id_order_return: orderReturnId
+  #      id_order_detail: orderReturnDetailId
   requirements:
-    merchandiseReturnId: \d+
-    merchandiseReturnDetailId: \d+
+    orderReturnId: \d+
+    orderReturnDetailId: \d+
     customizationId: \d+
 
-admin_merchandise_returns_delete_product_bulk:
-  path: /{merchandiseReturnId}/products/bulk-delete
+admin_order_returns_delete_product_bulk:
+  path: /{orderReturnId}/products/bulk-delete
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:bulkDeleteProduct
   requirements:
-    merchandiseReturnId: \d+
+    orderReturnId: \d+
