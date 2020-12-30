@@ -65,12 +65,8 @@
         </div>
       </div>
 
-      {{ ps.form_group_row(merchandiseReturnForm.merchandise_return_order_state, {}, {
-        'label': 'Order status'|trans({}, 'Admin.Shopparameters.Feature')
-      }) }}
-
       {% block merchandise_return_form_rest %}
-        {{ form_rest(merchandiseReturnForm) }}
+        {{ form_widget(merchandiseReturnForm) }}
       {% endblock %}
     </div>
   </div>

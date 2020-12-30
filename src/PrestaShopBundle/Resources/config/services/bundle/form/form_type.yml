@@ -1180,6 +1180,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnType'
         arguments:
             - '@=service("prestashop.adapter.form.choice_provider.merchandise_return_state").getChoices()'
+            - '@translator'
         tags:
             - { name: form.type }
 
