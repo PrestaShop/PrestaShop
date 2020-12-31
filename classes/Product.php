@@ -2231,6 +2231,7 @@ class ProductCore extends ObjectModel
 
         $price = str_replace(',', '.', $price);
         $weight = str_replace(',', '.', $weight);
+        $ecotax = str_replace(',', '.', $ecotax);
 
         $combination = new Combination();
         $combination->id_product = (int) $this->id;
