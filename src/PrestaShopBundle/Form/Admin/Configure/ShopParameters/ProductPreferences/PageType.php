@@ -63,7 +63,7 @@ class PageType extends TranslatorAwareType
                     new GreaterThanOrEqual(
                         [
                             'value' => 0,
-                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer.', 'Admin.Notifications.Error'),
                         ]
                     ),
                 ],
