@@ -125,7 +125,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                         [
                             'value' => 0,
                             'message' => $this->trans(
-                                'The field is invalid. Please enter a positive integer number.',
+                                'Invoice number must be a positive integer, or 0 if you want to keep the current number.',
                                 'Admin.Orderscustomers.Notification',
                                 ['%number%' => $this->nextInvoiceNumber]
                             ),
@@ -134,10 +134,11 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans(
-                    'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).',
-                    'Admin.Orderscustomers.Help',
+                    'The next invoice number will begin with this number, and then increase with each additional invoice. Enter a positive integer greater than the last invoice number or set to 0 if you want to keep the current number (which is %number%).',
+                    'Admin.OrdersCustomers.Help',
                     ['%number%' => $this->nextInvoiceNumber]
-                ),            ])
+                ),
+            ])
             ->add('legal_free_text', TranslatableType::class, [
                 'required' => false,
                 'options' => [

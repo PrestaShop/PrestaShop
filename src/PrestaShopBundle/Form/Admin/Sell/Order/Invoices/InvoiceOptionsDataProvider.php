@@ -91,7 +91,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
 
         if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
             $errors[] = [
-                'key' => 'Invalid invoice number.',
+                'key' => 'Invoice number must be greater than the last invoice number, or 0 if you want to keep the current number.',
                 'domain' => 'Admin.Orderscustomers.Notification',
                 'parameters' => [],
             ];
