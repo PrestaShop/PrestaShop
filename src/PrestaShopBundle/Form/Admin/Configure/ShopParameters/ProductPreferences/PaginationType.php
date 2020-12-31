@@ -53,7 +53,7 @@ class PaginationType extends TranslatorAwareType
                     new Type(
                         [
                             'value' => 'numeric',
-                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer.', 'Admin.Notifications.Error'),
                         ]
                     ),
                     new GreaterThanOrEqual(
