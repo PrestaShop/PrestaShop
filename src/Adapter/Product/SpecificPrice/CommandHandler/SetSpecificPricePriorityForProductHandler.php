@@ -26,16 +26,16 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\SpecificPricePriorityUpdater;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\SetSpecificPricePriorityForProductHandlerInterface;
 
 /**
- * Handles @see SetGlobalSpecificPricePriorityCommand using legacy object model
+ * Handles @see SetSpecificPricePriorityForProductCommand using legacy obj model
  */
-final class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPricePriorityHandlerInterface
+final class SetSpecificPricePriorityForProductHandler implements SetSpecificPricePriorityForProductHandlerInterface
 {
     /**
      * @var SpecificPricePriorityUpdater
@@ -54,8 +54,11 @@ final class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPr
     /**
      * {@inheritdoc}
      */
-    public function handle(SetGlobalSpecificPricePriorityCommand $command): void
+    public function handle(SetSpecificPricePriorityForProductCommand $command): void
     {
-        $this->specificPricePriorityUpdater->setGlobalPriorities($command->getPriorityList());
+        $this->specificPricePriorityUpdater->setPrioritiesForProduct(
+            $command->getProductId(),
+            $command->getPriorityList()
+        );
     }
 }

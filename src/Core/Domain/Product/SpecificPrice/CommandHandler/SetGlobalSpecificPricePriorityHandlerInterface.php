@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
 
 /**
  * Defines contract for handling @see SetGlobalSpecificPricePriorityCommand
