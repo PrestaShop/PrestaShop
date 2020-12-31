@@ -62,13 +62,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer number greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer number greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
@@ -94,13 +94,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer number greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer number greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
@@ -125,13 +125,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer number greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer number greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
