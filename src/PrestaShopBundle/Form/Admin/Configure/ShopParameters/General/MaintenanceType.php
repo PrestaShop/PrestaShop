@@ -55,9 +55,9 @@ class MaintenanceType extends TranslatorAwareType
                     'attr' => [
                         'multistore_configuration_key' => 'PS_SHOP_ENABLE',
                     ],
-                    'label' => $this->trans('Enable Shop', 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Enable store', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).',
+                        'We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.',
                         'Admin.Shopparameters.Help'
                     ),
                 ]
@@ -74,7 +74,7 @@ class MaintenanceType extends TranslatorAwareType
                     ],
                     'label' => $this->trans('Maintenance IP', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).',
+                        'Allow IP addresses to access the store, even in maintenance mode. Use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).',
                         'Admin.Shopparameters.Help'
                     ),
                 ]
@@ -96,7 +96,7 @@ class MaintenanceType extends TranslatorAwareType
                     ],
                     'label' => $this->trans('Custom maintenance text', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Custom text displayed on maintenance page while shop is deactivated.',
+                        'Display a customized message when the store is disabled.',
                         'Admin.Shopparameters.Help'
                     ),
                 ]
