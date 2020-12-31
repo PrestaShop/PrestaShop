@@ -159,16 +159,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('active', SwitchType::class, [
-                'label' => $this->trans('Displayed', 'Admin.Global'),
-                /* IMO help here is not exactly clear. I don't understand what click on "displayed" means, maybe previously it was clickable but now isin't? */
+                'label' => $this->trans('Enabled', 'Admin.Global'),
                 'help' => $this->trans(
-                        'Click on "%displayed_label%" to index the category on your shop.',
-                        'Admin.Catalog.Help',
-                        [
-                            '%displayed_label%' => $this->trans('Displayed', 'Admin.Global'),
-                        ]
-                    ) . '<br>' .
-                    $this->trans(
                         'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.',
                         'Admin.Catalog.Help',
                         [
