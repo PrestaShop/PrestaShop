@@ -283,7 +283,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
-                'help' => $this->trans('Only letters, numbers, underscore (_) and the minus (-) character are allowed.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('Unless the \'Accented URL\' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.', 'Admin.Catalog.Help'),
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
