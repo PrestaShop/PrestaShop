@@ -691,7 +691,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // wash attributes list depending on available attributes depending on selected preceding attributes
             $current_selected_attributes = [];
             $count = 0;
-            foreach ($groups as &$group) {
+            foreach ($groups as $idAttributeGroup => &$group) {
                 ++$count;
                 if ($count > 1) {
                     //find attributes of current group, having a possible combination with current selected
@@ -725,7 +725,64 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             );
                         }
                     }
+					
+                    // Added empty attribute if current group attributes are irregular!
+                    // Irregular means when we have Product Attributes with and without
+                    // current group related attributes at the same time. for example:
+                    // 1. Size: S, Color: Green / 2. Size: S, Color: Green, Quality: High
+                    $cleanIdProductAttributes = array_filter($id_product_attributes);
+                    if (
+                        !empty($group['attributes']) &&
+                        count($group['attributes']) < count($cleanIdProductAttributes)
+                    ) {
+                        $idAttributesImploded = implode(',', array_map('intval', $id_attributes));
+                        $ipaImploded = implode(',', array_map('intval', $cleanIdProductAttributes));
+
+                        $independentIdAttribute = Db::getInstance()->getValue(
+                            '
+                            SELECT
+                                pac.`id_attribute`
+                            FROM
+                                `' . _DB_PREFIX_ . 'product_attribute_combination` pac
+                            WHERE
+                                pac.id_attribute NOT IN (' . $idAttributesImploded . ')
+                                AND pac.id_product_attribute IN (' . $ipaImploded . ')
+                            GROUP BY
+                                pac.`id_attribute`
+                            '
+                        );
+
+                        if (
+                            !empty($independentIdAttribute) &&
+                            !empty($product_for_template['attributes'])
+                        ) {
+                            $currentAttributes = array();
+                            foreach ($product_for_template['attributes'] as $attribute) {
+                                if (!empty($attribute['id_attribute'])) {
+                                    $currentAttributes[$attribute['id_attribute_group']] = $attribute['id_attribute'];
+                                }
+                            }
+
+                            if (in_array($independentIdAttribute, $currentAttributes)) {
+                                foreach ($group['attributes'] as $idAttribute => $value) {
+                                    if (empty($currentAttributes[$idAttributeGroup])) {
+                                        $group['attributes'][$idAttribute]['selected'] = false;
+                                    }
+                                }
+
+                                $group['attributes'] = [
+                                    [
+                                        'name' => '-',
+                                        'html_color_code' => '',
+                                        'texture' => '',
+                                        'selected' => empty($currentAttributes[$idAttributeGroup]) ? true : false,
+                                    ]
+                                ] + $group['attributes'];
+                            }
+                        }
+                    }
                 }
+				
                 //find selected attribute or first of group
                 $index = 0;
                 $current_selected_attribute = 0;

@@ -7329,13 +7329,56 @@ class ProductCore extends ObjectModel
             $idAttributes = [(int) $idAttributes];
         }
 
+        $emptyAttributeGroups = [];
+        foreach ($idAttributes as $idAttributeGroup => $idAttribute) {
+            if (is_numeric($idAttributeGroup) && empty($idAttribute)) {
+                $emptyAttributeGroups[] = (int)$idAttributeGroup;
+            }
+        }
+
+        $idAttributes = array_filter($idAttributes);
+
         if (!is_array($idAttributes) || empty($idAttributes)) {
             throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
         }
 
         $idAttributesImploded = implode(',', array_map('intval', $idAttributes));
+        $notInAdditionalWhere = ' AND pac.id_attribute NOT IN (' . $idAttributesImploded . ')';
+        if (!empty($emptyAttributeGroups)) {
+            $emptyGroupsImploded = implode(',', array_map('intval', $emptyAttributeGroups));
+            $notInAdditionalWhere = ' AND a.id_attribute_group IN (' . $emptyGroupsImploded . ')';
+        }
+
         $idProductAttribute = Db::getInstance()->getValue(
             '
+            SELECT
+                pac.`id_product_attribute`
+            FROM
+                `' . _DB_PREFIX_ . 'product_attribute_combination` pac
+                INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+				INNER JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.id_attribute = pac.id_attribute
+            WHERE
+                pa.id_product = ' . $idProduct . '
+                AND pac.id_attribute IN (' . $idAttributesImploded . ')
+                AND pac.id_product_attribute NOT IN (
+                    SELECT  
+                        pac.`id_product_attribute`
+                    FROM  
+                        `' . _DB_PREFIX_ . 'product_attribute_combination` pac 
+                        INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+						INNER JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.id_attribute = pac.id_attribute
+                    WHERE  
+                        pa.id_product = ' . $idProduct . ' ' . $notInAdditionalWhere . '
+                )
+            GROUP BY
+                pac.`id_product_attribute`
+            HAVING
+                COUNT(pa.id_product) = ' . count($idAttributes)
+        );
+
+        if ($idProductAttribute === false) {
+            $idProductAttribute = Db::getInstance()->getValue(
+                '
             SELECT
                 pac.`id_product_attribute`
             FROM
@@ -7348,7 +7391,8 @@ class ProductCore extends ObjectModel
                 pac.`id_product_attribute`
             HAVING
                 COUNT(pa.id_product) = ' . count($idAttributes)
-        );
+            );
+        }
 
         if ($idProductAttribute === false && $findBest) {
             //find the best possible combination
