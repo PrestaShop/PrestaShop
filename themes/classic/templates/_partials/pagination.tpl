@@ -31,11 +31,9 @@
 
   <div class="col-md-6 offset-md-2 pr-0">
     {block name='pagination_page_list'}
-     {if $pagination.should_be_displayed}
+      {if $pagination.should_be_displayed}
         <ul class="page-list clearfix text-sm-center">
           {foreach from=$pagination.pages item="page"}
-
-
             <li {if $page.current} class="current" {/if}>
               {if $page.type === 'spacer'}
                 <span class="spacer">&hellip;</span>
@@ -60,5 +58,4 @@
       {/if}
     {/block}
   </div>
-
 </nav>
