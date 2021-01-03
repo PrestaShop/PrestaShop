@@ -35,7 +35,7 @@ jobs:
                 run: |
                     echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-            -   name: Cache Composer Directory
+            -   name: Cache Node Directory
                 uses: actions/cache@v2
                 with:
                     path: ~/.npm
@@ -43,7 +43,7 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-node-
 
-            -   name: Cache Node Directory
+            -   name: Cache Composer Directory
                 uses: actions/cache@v2
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
