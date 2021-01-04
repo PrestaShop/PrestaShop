@@ -7343,10 +7343,9 @@ class ProductCore extends ObjectModel
         }
 
         $idAttributesImploded = implode(',', array_map('intval', $idAttributes));
-        $notInAdditionalWhere = ' AND pac.id_attribute NOT IN (' . $idAttributesImploded . ')';
+        $subQueryAdditionalWhere = ' AND pac.id_attribute NOT IN (' . $idAttributesImploded . ')';
         if (!empty($emptyAttributeGroups)) {
-            $emptyGroupsImploded = implode(',', array_map('intval', $emptyAttributeGroups));
-            $notInAdditionalWhere = ' AND a.id_attribute_group IN (' . $emptyGroupsImploded . ')';
+            $subQueryAdditionalWhere = ' AND a.id_attribute_group IN (' . implode(',', $emptyAttributeGroups) . ')';
         }
 
         $idProductAttribute = Db::getInstance()->getValue(
@@ -7368,7 +7367,7 @@ class ProductCore extends ObjectModel
                         INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
 						INNER JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.id_attribute = pac.id_attribute
                     WHERE  
-                        pa.id_product = ' . $idProduct . ' ' . $notInAdditionalWhere . '
+                        pa.id_product = ' . $idProduct . ' ' . $subQueryAdditionalWhere . '
                 )
             GROUP BY
                 pac.`id_product_attribute`
