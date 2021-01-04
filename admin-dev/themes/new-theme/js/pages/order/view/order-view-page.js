@@ -135,7 +135,6 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productAddedToOrder, (event) => {
-<<<<<<< HEAD
       const $tablePagination = $(OrderViewPageMap.productsTablePagination);
       const numRowsPerPage = $tablePagination.data('numPerPage');
       const initialNumProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
@@ -158,8 +157,6 @@ export default class OrderViewPage {
       }
 
       this.orderProductRenderer.updateNumProducts(newNumProducts);
-=======
->>>>>>> 427b3d42077ae0f25c00f19ee111731352c48c3b
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderPricesRefresher.refresh(event.orderId);
@@ -169,7 +166,6 @@ export default class OrderViewPage {
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
-<<<<<<< HEAD
 
       // Move to last page to see the added product
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
