@@ -28,15 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
@@ -59,6 +60,13 @@ class ShippingType extends TranslatorAwareType
      */
     private $deliveryTimeNoteTypesProvider;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param string $currencyIsoCode
+     * @param FormChoiceProviderInterface $carrierChoiceProvider
+     * @param FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -78,10 +86,11 @@ class ShippingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('width', NumberType::class, [
+            ->add('width', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Width', 'Admin.Catalog.Feature'),
                 'constraints' => [
+                    new NotBlank(),
                     new Type([
                         'type' => 'numeric',
                         'message' => $this->trans(
@@ -89,11 +98,13 @@ class ShippingType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new PositiveOrZero(),
                 ],
-            ])->add('height', NumberType::class, [
+            ])->add('height', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Height', 'Admin.Catalog.Feature'),
                 'constraints' => [
+                    new NotBlank(),
                     new Type([
                         'type' => 'numeric',
                         'message' => $this->trans(
@@ -101,11 +112,13 @@ class ShippingType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new PositiveOrZero(),
                 ],
-            ])->add('depth', NumberType::class, [
+            ])->add('depth', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Depth', 'Admin.Catalog.Feature'),
                 'constraints' => [
+                    new NotBlank(),
                     new Type([
                         'type' => 'numeric',
                         'message' => $this->trans(
@@ -113,11 +126,13 @@ class ShippingType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new PositiveOrZero(),
                 ],
-            ])->add('weight', NumberType::class, [
+            ])->add('weight', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Weight', 'Admin.Catalog.Feature'),
                 'constraints' => [
+                    new NotBlank(),
                     new Type([
                         'type' => 'numeric',
                         'message' => $this->trans(
@@ -125,6 +140,7 @@ class ShippingType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new PositiveOrZero(),
                 ],
             ])->add('delivery_time_note_type', ChoiceType::class, [
                 'choices' => $this->deliveryTimeNoteTypesProvider->getChoices(),
@@ -159,8 +175,9 @@ class ShippingType extends TranslatorAwareType
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
                 'currency' => $this->currencyIsoCode,
                 'constraints' => [
+                    new NotBlank(),
                     new Type([
-                        'type' => 'float',
+                        'type' => 'numeric',
                         'message' => $this->trans(
                             '%s is invalid.',
                             'Admin.Notifications.Error'
