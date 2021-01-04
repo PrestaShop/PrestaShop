@@ -118,16 +118,22 @@ class ShippingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Weight', 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Type('numeric'),
+                    new Type([
+                        'type' => 'numeric',
+                        'message' => $this->trans(
+                            '%s is invalid.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
                 ],
-            ])->add('additional_delivery_time_notes_type', ChoiceType::class, [
+            ])->add('delivery_time_note_type', ChoiceType::class, [
                 'choices' => $this->deliveryTimeNoteTypesProvider->getChoices(),
                 'placeholder' => false,
                 'expanded' => true,
                 'multiple' => false,
                 'required' => false,
                 'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
-            ])->add('delivery_in_stock_note', TranslatableType::class, [
+            ])->add('delivery_time_in_stock_note', TranslatableType::class, [
                 'label' => $this->trans('Delivery time of in-stock products:', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
                 'required' => false,
@@ -136,7 +142,7 @@ class ShippingType extends TranslatorAwareType
                         'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Catalog.Feature'),
                     ],
                 ],
-            ])->add('delivery_out_stock_note', TranslatableType::class, [
+            ])->add('delivery_time_out_stock_note', TranslatableType::class, [
                 'locales' => $this->locales,
                 'required' => false,
                 'label' => $this->trans(
