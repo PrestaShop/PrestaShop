@@ -44,7 +44,7 @@ Go to FO and check the carriers sort
 Go back to BO > shipping > Carriers
 Disable the 2 carriers 'My cheap carrier' and 'My light carrier'
  */
-describe('Update sort carriers by and check it in FO', async () => {
+describe('Update \'sort carriers by\' and check it in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
