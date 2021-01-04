@@ -1224,6 +1224,7 @@ services:
       tags:
         - { name: form.type }
 
+# todo?: this (and couple product type definitions bellow) should follow class ns -> form.type.sell.product.product_type
     form.type.sell.catalog.product.product_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
         parent: 'form.type.translatable.aware'
@@ -1248,6 +1249,13 @@ services:
       public: true
       tags:
           - { name: form.type }
+
+    form.type.sell.catalog.product.shipping_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
