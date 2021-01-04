@@ -43,7 +43,7 @@ after(async function () {
 
 afterEach(async function () {
   // Take screenshot if demanded after failed step
-  if (global.TAKE_SCREESHOT_AFTER_FAIL && this.currentTest.state === 'failed') {
+  if (global.TAKE_SCREENSHOT_AFTER_FAIL && this.currentTest.state === 'failed') {
     const currentTab = await helper.getLastOpenedTab(this.browser);
 
     // Take a screenshot
