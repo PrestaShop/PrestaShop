@@ -49,8 +49,8 @@ class Checkout extends FOBasePage {
     this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = id => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
     this.deliveryOptionNameSpan = id => `${this.deliveryOptionLabel(id)} span.carrier-name`;
-    this.deliveryOptionNameLabel = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
-    this.deliveryOptionPriceLabel = '#js-delivery .delivery-option span.carrier-price';
+    this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
+    this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
@@ -148,7 +148,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<[]>}
    */
   async getAllCarriersPrices(page) {
-    return page.$$eval(this.deliveryOptionPriceLabel, all => all.map(el => el.textContent));
+    return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
   }
 
   /**
@@ -157,7 +157,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<[]>}
    */
   async getAllCarriersNames(page) {
-    return page.$$eval(this.deliveryOptionNameLabel, all => all.map(el => el.textContent));
+    return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
   }
 
   /**
