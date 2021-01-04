@@ -56,28 +56,29 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        /** @var ProductForEditing $result */
-        $result = $this->queryBus->handle(new GetProductForEditing((int) $id));
+        /** @var ProductForEditing $product */
+        $product = $this->queryBus->handle(new GetProductForEditing((int) $id));
 
         return [
             'id' => $id,
             'basic' => [
-                'name' => $result->getBasicInformation()->getLocalizedNames(),
-                'type' => $result->getBasicInformation()->getType()->getValue(),
-                'description' => $result->getBasicInformation()->getLocalizedDescriptions(),
-                'description_short' => $result->getBasicInformation()->getLocalizedShortDescriptions(),
+                'name' => $product->getBasicInformation()->getLocalizedNames(),
+                'type' => $product->getBasicInformation()->getType()->getValue(),
+                'description' => $product->getBasicInformation()->getLocalizedDescriptions(),
+                'description_short' => $product->getBasicInformation()->getLocalizedShortDescriptions(),
             ],
             'price' => [
-                'price_tax_excluded' => (float) (string) $result->getPricesInformation()->getPrice(),
+                'price_tax_excluded' => (float) (string) $product->getPricesInformation()->getPrice(),
                 // @todo: we don't have the price tax included for now This should be computed by GetProductForEditing
-                'price_tax_included' => (float) (string) $result->getPricesInformation()->getPrice(),
-                'ecotax' => (float) (string) $result->getPricesInformation()->getEcotax(),
-                'tax_rules_group_id' => $result->getPricesInformation()->getTaxRulesGroupId(),
-                'on_sale' => $result->getPricesInformation()->isOnSale(),
-                'wholesale_price' => (float) (string) $result->getPricesInformation()->getWholesalePrice(),
-                'unit_price' => (float) (string) $result->getPricesInformation()->getUnitPrice(),
-                'unity' => $result->getPricesInformation()->getUnity(),
+                'price_tax_included' => (float) (string) $product->getPricesInformation()->getPrice(),
+                'ecotax' => (float) (string) $product->getPricesInformation()->getEcotax(),
+                'tax_rules_group_id' => $product->getPricesInformation()->getTaxRulesGroupId(),
+                'on_sale' => $product->getPricesInformation()->isOnSale(),
+                'wholesale_price' => (float) (string) $product->getPricesInformation()->getWholesalePrice(),
+                'unit_price' => (float) (string) $product->getPricesInformation()->getUnitPrice(),
+                'unity' => $product->getPricesInformation()->getUnity(),
             ],
+            'shipping' => $this->extractShippingData($product),
         ];
     }
 
@@ -96,6 +97,34 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'wholesale_price' => 0,
                 'unit_price' => 0,
             ],
+            'shipping' => [
+                'width' => 0,
+                'height' => 0,
+                'depth' => 0,
+                'weight' => 0,
+            ],
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractShippingData(ProductForEditing $productForEditing): array
+    {
+        $shipping = $productForEditing->getShippingInformation();
+
+        return [
+            'width' => (string) $shipping->getWidth(),
+            'height' => (string) $shipping->getHeight(),
+            'depth' => (string) $shipping->getDepth(),
+            'weight' => (string) $shipping->getWeight(),
+            'additional_shipping_cost' => (string) $shipping->getAdditionalShippingCost(),
+            'delivery_time_note_type' => $shipping->getDeliveryTimeNoteType(),
+            'delivery_time_in_stock_note' => $shipping->getLocalizedDeliveryTimeInStockNotes(),
+            'delivery_time_out_stock_note' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
+            'carriers' => $shipping->getCarrierReferences(),
         ];
     }
 }

@@ -77,7 +77,7 @@ final class ShippingCommandBuilder implements ProductCommandBuilderInterface
         }
 
         if (isset($shippingData['additional_shipping_cost'])) {
-            $command->setAdditionalShippingCost($shippingData['additional_shipping_cost']);
+            $command->setAdditionalShippingCost((string) $shippingData['additional_shipping_cost']);
         }
 
         if (isset($shippingData['carriers'])) {

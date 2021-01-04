@@ -162,7 +162,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
 
         if (isset($data['delivery time notes type'])) {
             $expectedType = $notesTypeNamedValues[$data['delivery time notes type']];
-            $actualType = $productShippingInformation->getDeliveryTimeNotesType();
+            $actualType = $productShippingInformation->getDeliveryTimeNoteType();
             Assert::assertEquals($expectedType, $actualType, 'Unexpected delivery time notes type value');
 
             unset($data['delivery time notes type']);
