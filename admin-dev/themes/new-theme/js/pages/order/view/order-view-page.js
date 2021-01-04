@@ -354,68 +354,64 @@ export default class OrderViewPage {
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = $tablePagination.data('numPerPage');
     const initialNumProducts = $(OrderViewPageMap.productsTableRows).length;
-    let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
+    const currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
 
     $.ajax(this.router.generate('admin_orders_get_products', {orderId}))
-        .done((response) => {
-          // Delete previous product lines
-          $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
+      .done((response) => {
+        // Delete previous product lines
+        $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
 
-          $(OrderViewPageMap.productsTable + ' tbody').prepend(response);
+        $(`${OrderViewPageMap.productsTable} tbody`).prepend(response);
 
-          $(OrderViewPageMap.refreshProductsListLoadingSpinner).hide();
+        $(OrderViewPageMap.refreshProductsListLoadingSpinner).hide();
 
-          const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
-          const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
+        const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
+        const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
 
-          this.orderProductRenderer.updateNumProducts(newNumProducts);
-          this.orderProductRenderer.updatePaginationControls();
+        this.orderProductRenderer.updateNumProducts(newNumProducts);
+        this.orderProductRenderer.updatePaginationControls();
 
-          let numPage = 1;
-          let message = '';
-          // Display alert
-          if (initialNumProducts > newNumProducts) { // product deleted
-            message = (initialNumProducts-newNumProducts === 1) ?
-                window.translate_javascripts['The product was successfully removed.'] :
-                window.translate_javascripts['[1] products were successfully removed.']
-                    .replace('[1]', (initialNumProducts-newNumProducts))
-            ;
+        let numPage = 1;
+        let message = '';
+        // Display alert
+        if (initialNumProducts > newNumProducts) { // product deleted
+          message = (initialNumProducts - newNumProducts === 1)
+            ? window.translate_javascripts['The product was successfully removed.']
+            : window.translate_javascripts['[1] products were successfully removed.']
+              .replace('[1]', (initialNumProducts - newNumProducts));
 
-            // Set target page to the page of the deleted item
-            numPage = (newPagesNum === 1) ? 1 : currentPage;
-          }
-          else if (initialNumProducts < newNumProducts) { // product added
-            message = (newNumProducts - initialNumProducts === 1) ?
-                window.translate_javascripts['The product was successfully added.'] :
-                window.translate_javascripts['[1] products were successfully added.']
-                    .replace('[1]', (newNumProducts-initialNumProducts))
-            ;
+          // Set target page to the page of the deleted item
+          numPage = (newPagesNum === 1) ? 1 : currentPage;
+        } else if (initialNumProducts < newNumProducts) { // product added
+          message = (newNumProducts - initialNumProducts === 1)
+            ? window.translate_javascripts['The product was successfully added.']
+            : window.translate_javascripts['[1] products were successfully added.']
+              .replace('[1]', (newNumProducts - initialNumProducts));
 
-            // Move to first page to see the added product
-            numPage = 1;
-          }
+          // Move to first page to see the added product
+          numPage = 1;
+        }
 
-          if ('' !== message) {
-            $.growl.notice({
-              title: '',
-              message: message,
-            });
-          }
-
-          // Move to page of the modified item
-          EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-            numPage: numPage
-          });
-
-          // Bind hover on product rows buttons
-          this.resetToolTips();
-        })
-        .fail(errors => {
-          $.growl.error({
+        if (message !== '') {
+          $.growl.notice({
             title: '',
-            message: 'Failed to reload the products list. Please reload the page',
+            message,
           });
-        })
-    ;
+        }
+
+        // Move to page of the modified item
+        EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+          numPage,
+        });
+
+        // Bind hover on product rows buttons
+        this.resetToolTips();
+      })
+      .fail(() => {
+        $.growl.error({
+          title: '',
+          message: 'Failed to reload the products list. Please reload the page',
+        });
+      });
   }
 }
