@@ -130,7 +130,7 @@ describe('Update sort carriers by and check it in FO', async () => {
     const pageTitle = await preferencesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
-  const sortCarriersBy = ['Price', 'Position'];
+  const sortCarriersBy = ['Position', 'Price'];
   const sortByPosition = [
     Carriers.default.name,
     Carriers.myCarrier.name,
@@ -139,72 +139,118 @@ describe('Update sort carriers by and check it in FO', async () => {
   ];
 
   sortCarriersBy.forEach((sortBy, index) => {
-    describe(`Set sort by '${sortBy}' and check result in FO`, async () => {
-      it(`should set sort by '${sortBy}' in BO`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
+    it(`should set sort by '${sortBy}' in BO`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
-        const textResult = await preferencesPage.setCarrierSortBy(page, sortBy);
-        await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
-      });
+      const textResult = await preferencesPage.setCarrierSortBy(page, sortBy);
+      await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
+    });
 
-      it('should view my shop', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-        // Click on view my shop
-        page = await preferencesPage.viewMyShop(page);
+      // Click on view my shop
+      page = await preferencesPage.viewMyShop(page);
 
-        // Change FO language
-        await foHomePage.changeLanguage(page, 'en');
+      // Change FO language
+      await foHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foHomePage.isHomePage(page);
-        await expect(isHomePage, 'Home page is not displayed').to.be.true;
-      });
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
 
-      it('should go to shipping step in checkout', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
+    it('should go to shipping step in checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
-        // Go to the first product page
-        await foHomePage.goToProductPage(page, 1);
+      // Go to the first product page
+      await foHomePage.goToProductPage(page, 1);
 
-        // Add the product to the cart
-        await foProductPage.addProductToTheCart(page);
+      // Add the product to the cart
+      await foProductPage.addProductToTheCart(page);
 
-        // Proceed to checkout the shopping cart
-        await foCartPage.clickOnProceedToCheckout(page);
+      // Proceed to checkout the shopping cart
+      await foCartPage.clickOnProceedToCheckout(page);
 
-        // Checkout the order
-        if (index === 0) {
-          // Personal information step - Login
-          await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, DefaultAccount);
-        }
+      // Checkout the order
+      if (index === 0) {
+        // Personal information step - Login
+        await foCheckoutPage.clickOnSignIn(page);
+        await foCheckoutPage.customerLogin(page, DefaultAccount);
+      }
 
-        // Address step - Go to delivery step
-        const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-      });
+      // Address step - Go to delivery step
+      const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
+      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
 
-      it(`should verify the sort of carriers by '${sortBy}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkDefaultCarrier${index}`, baseContext);
+    it(`should verify the sort of carriers by '${sortBy}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkDefaultCarrier${index}`, baseContext);
 
-        if (sortBy === 'Price') {
-          const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
-          const expectedResult = await foCheckoutPage.sortArray(sortedCarriers, true);
-          await expect(sortedCarriers).to.deep.equal(expectedResult);
-        } else {
-          const sortedCarriers = await foCheckoutPage.getAllCarriersNames(page);
-          await expect(sortedCarriers).to.deep.equal(sortByPosition);
-        }
-      });
+      if (sortBy === 'Price') {
+        const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
+        const expectedResult = await foCheckoutPage.sortArray(sortedCarriers, true);
+        await expect(sortedCarriers).to.deep.equal(expectedResult);
+      } else {
+        const sortedCarriers = await foCheckoutPage.getAllCarriersNames(page);
+        await expect(sortedCarriers).to.deep.equal(sortByPosition);
+      }
+    });
 
-      it('should go back to BO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-        page = await foCheckoutPage.closePage(browserContext, page, 0);
+      page = await foCheckoutPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await preferencesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(preferencesPage.pageTitle);
-      });
+      const pageTitle = await preferencesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(preferencesPage.pageTitle);
+    });
+  });
+
+  it('should go to \'Shipping > Carriers\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
+
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shippingLink,
+      dashboardPage.carriersLink,
+    );
+
+    const pageTitle = await carriersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(carriersPage.pageTitle);
+  });
+
+  carriersNames.forEach((carrierName, index) => {
+    it(`should filter list by name ${carrierName}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `filterByName${index}`, baseContext);
+
+      await carriersPage.filterTable(page, 'input', 'name', carrierName);
+
+      const textColumn = await carriersPage.getTextColumn(page, 1, 'name');
+      await expect(textColumn).to.contains(carrierName);
+    });
+
+    it('should disable the carrier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `enableCarrier${index}`, baseContext);
+
+      const isActionPerformed = await carriersPage.updateEnabledValue(page, 1, false);
+
+      if (isActionPerformed) {
+        const resultMessage = await carriersPage.getTextContent(
+          page,
+          carriersPage.alertSuccessBlock,
+        );
+        await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
+      }
+
+      const carrierStatus = await carriersPage.getToggleColumnValue(page, 1);
+      await expect(carrierStatus).to.be.false;
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
+
+      const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
     });
   });
 });
