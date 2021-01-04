@@ -131,6 +131,12 @@ describe('Update sort carriers by and check it in FO', async () => {
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
   const sortCarriersBy = ['Price', 'Position'];
+  const sortByPosition = [
+    Carriers.default.name,
+    Carriers.myCarrier.name,
+    Carriers.cheapCarrier.name,
+    Carriers.lightCarrier.name,
+  ];
 
   sortCarriersBy.forEach((sortBy, index) => {
     describe(`Set sort by '${sortBy}' and check result in FO`, async () => {
@@ -178,12 +184,18 @@ describe('Update sort carriers by and check it in FO', async () => {
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
-      /*it('should verify default carrier', async function () {
+      it(`should verify the sort of carriers by '${sortBy}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkDefaultCarrier${index}`, baseContext);
 
-        const selectedShippingMethod = await foCheckoutPage.getSelectedShippingMethod(page);
-        await expect(selectedShippingMethod, 'Wrong carrier was selected in FO').to.equal(carrierName);
-      });*/
+        if (sortBy === 'Price') {
+          const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
+          const expectedResult = await foCheckoutPage.sortArray(sortedCarriers, true);
+          await expect(sortedCarriers).to.deep.equal(expectedResult);
+        } else {
+          const sortedCarriers = await foCheckoutPage.getAllCarriersNames(page);
+          await expect(sortedCarriers).to.deep.equal(sortByPosition);
+        }
+      });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
