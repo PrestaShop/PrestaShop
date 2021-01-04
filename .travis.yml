@@ -31,6 +31,8 @@ stages:
     if: type = cron
 
 jobs:
+  exclude:
+    - if: type != cron
   include:
     - stage: deploy
       php: 7.3
