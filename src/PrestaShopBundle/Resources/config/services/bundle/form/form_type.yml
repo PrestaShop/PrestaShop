@@ -1255,7 +1255,7 @@ services:
         parent: 'form.type.translatable.aware'
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
-            - "@prestashop.adapter.data_provider.carrier"
+            - "@prestashop.core.form.choice_provider.carrier_by_reference_id"
         public: true
         tags:
             - { name: form.type }

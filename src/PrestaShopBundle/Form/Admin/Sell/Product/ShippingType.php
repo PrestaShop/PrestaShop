@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -51,19 +51,19 @@ class ShippingType extends TranslatorAwareType
     private $currencyIsoCode;
 
     /**
-     * @var CarrierDataProvider
+     * @var FormChoiceProviderInterface
      */
-    private $carrierDataProvider;
+    private $carrierChoiceProvider;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         string $currencyIsoCode,
-        CarrierDataProvider $carrierDataProvider
+        FormChoiceProviderInterface $carrierChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->currencyIsoCode = $currencyIsoCode;
-        $this->carrierDataProvider = $carrierDataProvider;
+        $this->carrierChoiceProvider = $carrierChoiceProvider;
     }
 
     /**
@@ -147,36 +147,12 @@ class ShippingType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
             ])->add('selectedCarriers', ChoiceType::class, [
-                'choices' => $this->getCarrierChoices(),
+                'choices' => $this->carrierChoiceProvider->getChoices(),
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
             ])
         ;
-    }
-
-    //@todo; move to separate choices provider. Its copied from ProductShipping.php can be optimized
-    private function getCarrierChoices(): array
-    {
-        $carriers = $this->carrierDataProvider->getCarriers(
-            $this->locales[0]['id_lang'],
-            false,
-            false,
-            false,
-            null,
-            $this->carrierDataProvider->getAllCarriersConstant()
-        );
-        $carrierChoices = [];
-        foreach ($carriers as $carrier) {
-            $choiceId = $carrier['id_carrier'] . ' - ' . $carrier['name'];
-            if ($carrier['name']) {
-                $choiceId .= ' (' . $carrier['delay'] . ')';
-            }
-
-            $carrierChoices[$choiceId] = $carrier['id_reference'];
-        }
-
-        return $carrierChoices;
     }
 }
