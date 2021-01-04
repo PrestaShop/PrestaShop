@@ -34,10 +34,10 @@ class ManufacturerCore extends ObjectModel
     /** @var string Name */
     public $name;
 
-    /** @var array<string> Description */
+    /** @var string|array<int, string> Description */
     public $description;
 
-    /** @var array<string> Short description */
+    /** @var string|array<int, string> Short description */
     public $short_description;
 
     /** @var int Address */
@@ -52,13 +52,13 @@ class ManufacturerCore extends ObjectModel
     /** @var string Friendly URL */
     public $link_rewrite;
 
-    /** @var array<string> Meta title */
+    /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var array<string> Meta keywords */
+    /** @var string|array<int, string> Meta keywords */
     public $meta_keywords;
 
-    /** @var array<string> Meta description */
+    /** @var string|array<int, string> Meta description */
     public $meta_description;
 
     /** @var bool active */
@@ -179,8 +179,8 @@ class ManufacturerCore extends ObjectModel
      * @param bool $getNbProducts [optional] return products numbers for each
      * @param int $idLang Language ID
      * @param bool $active
-     * @param int $p
-     * @param int $n
+     * @param int|bool $p
+     * @param int|bool $n
      * @param bool $allGroup
      *
      * @return array Manufacturers

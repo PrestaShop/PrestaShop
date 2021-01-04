@@ -49,7 +49,12 @@ class DatabaseTranslationLoader implements LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $resource
+     * @param string $locale
+     * @param string $domain
+     * @param string|null $theme
+     *
+     * @return MessageCatalogue
      *
      * @todo: this method doesn't match the interface
      */

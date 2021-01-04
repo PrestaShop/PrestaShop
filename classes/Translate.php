@@ -161,7 +161,7 @@ class TranslateCore
      * @param string|Module $module
      * @param string $originalString
      * @param string $source
-     * @param null $sprintf
+     * @param string|array|null $sprintf
      * @param bool $js
      * @param string|null $locale
      * @param bool $fallback [default=true] If true, this method falls back to the new translation system if no translation is found

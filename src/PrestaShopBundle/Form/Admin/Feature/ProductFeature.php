@@ -33,6 +33,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * This Class is responsible to generate the product Features form.
@@ -138,7 +139,11 @@ class ProductFeature extends CommonAbstractType
         });
     }
 
-    private function updateValueField(Form $form, $choices)
+    /**
+     * @param FormInterface $form
+     * @param array $choices
+     */
+    private function updateValueField(FormInterface $form, array $choices)
     {
         $form->add('value', FormType\ChoiceType::class, [
             'label' => $this->translator->trans('Pre-defined value', [], 'Admin.Catalog.Feature'),

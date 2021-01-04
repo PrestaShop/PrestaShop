@@ -114,7 +114,7 @@ class Repository implements CurrencyRepositoryInterface
             $currencyData->isActive(),
             $currencyData->getConversionRate(),
             $currencyData->getIsoCode(),
-            $currencyData->getNumericIsoCode(),
+            (int) $currencyData->getNumericIsoCode(),
             $currencyData->getSymbols(),
             $currencyData->getPrecision(),
             $currencyData->getNames(),

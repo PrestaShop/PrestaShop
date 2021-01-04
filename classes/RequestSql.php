@@ -113,7 +113,7 @@ class RequestSqlCore extends ObjectModel
      *
      * @param string $sql
      *
-     * @return bool
+     * @return array
      */
     public function parsingSql($sql)
     {
@@ -150,9 +150,9 @@ class RequestSqlCore extends ObjectModel
     /**
      * Cut the request for check each cutting.
      *
-     * @param $tab
-     * @param $in
-     * @param $sql
+     * @param array $tab
+     * @param bool $in
+     * @param string $sql
      *
      * @return bool
      */
@@ -353,7 +353,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check if all required sentence existing.
      *
-     * @param $tab
+     * @param array $tab
      *
      * @return bool
      */
@@ -373,7 +373,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check if an unauthorized existing in an array.
      *
-     * @param string $tab
+     * @param array $tab
      *
      * @return bool
      */

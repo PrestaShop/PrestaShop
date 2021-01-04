@@ -328,7 +328,7 @@ class TranslationController extends ApiController
     /**
      * @param string $lang
      * @param string|null $type
-     * @param string $theme Selected theme name
+     * @param string|null $theme Selected theme name
      * @param null $search
      *
      * @return array
