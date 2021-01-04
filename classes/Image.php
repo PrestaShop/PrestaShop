@@ -81,8 +81,8 @@ class ImageCore extends ObjectModel
     /**
      * ImageCore constructor.
      *
-     * @param null $id
-     * @param null $idLang
+     * @param int|null $id
+     * @param int|null $idLang
      */
     public function __construct($id = null, $idLang = null)
     {

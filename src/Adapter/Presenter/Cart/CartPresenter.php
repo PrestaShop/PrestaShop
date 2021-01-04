@@ -521,7 +521,7 @@ class CartPresenter implements PresenterInterface
             $defaultCountry = null;
 
             if (isset(Context::getContext()->cookie->id_country)) {
-                $defaultCountry = new Country(Context::getContext()->cookie->id_country);
+                $defaultCountry = new Country((int) Context::getContext()->cookie->id_country);
             }
 
             $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
