@@ -197,7 +197,7 @@ class WebService extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteWebService(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -215,7 +215,7 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   getValidationMessage(page) {
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -243,7 +243,7 @@ class WebService extends BOBasePage {
     ]);
     await this.confirmDeleteWebService(page, this.modalDeleteButton);
 
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

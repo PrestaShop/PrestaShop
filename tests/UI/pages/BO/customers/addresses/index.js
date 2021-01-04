@@ -167,7 +167,7 @@ class Addresses extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
     await page.click(this.deleteAddressModalDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -192,7 +192,7 @@ class Addresses extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
     await page.click(this.deleteAddressModalDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */

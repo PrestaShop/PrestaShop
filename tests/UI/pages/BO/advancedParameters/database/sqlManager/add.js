@@ -27,7 +27,7 @@ class AddSQLQuery extends BOBasePage {
     await this.setValue(page, this.sqlQueryNameInput, sqlQueryData.name);
     await this.setValue(page, this.sqlQueryTextArea, sqlQueryData.sqlQuery);
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

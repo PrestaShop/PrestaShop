@@ -406,3 +406,21 @@ input#partial_refund_shipping {
 .discountList .btn:hover {
   color: $primary;
 }
+.spinner-order-products-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  background: #FFFFFF;
+  display: none;
+
+  .spinner {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 50%;
+  }
+}

@@ -35,7 +35,7 @@ class AddShopGroup extends BOBasePage {
     await page.check(this.statusToggleLabel(shopGroupData.status ? 'on' : 'off'));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

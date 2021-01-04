@@ -191,7 +191,7 @@ class TaxRules extends BOBasePage {
     // Confirm delete action
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   // Sort methods
@@ -315,7 +315,7 @@ class TaxRules extends BOBasePage {
 
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
