@@ -239,7 +239,7 @@ class CommonController extends FrameworkBundleAdminController
 
         $modules = $recommendedModules->filterInstalledAndBadModules($modules);
         $collection = AddonsCollection::createFrom($modules);
-        $modules = $modulesProvider->generateAddonsUrls($collection);
+        $modules = $modulesProvider->generateAddonsUrls($collection)->toArray();
 
         return [
             'domain' => $domain,

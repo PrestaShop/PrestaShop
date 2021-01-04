@@ -70,10 +70,13 @@ final class ImportDataFormatter
      */
     public function getPrice($field)
     {
-        $field = (float) str_replace(',', '.', $field);
-        $field = (float) str_replace('%', '', $field);
+        $field = str_replace(
+            [',', '%'],
+            ['.', ''],
+            $field
+        );
 
-        return $field;
+        return (float) $field;
     }
 
     /**

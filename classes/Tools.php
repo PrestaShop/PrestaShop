@@ -814,7 +814,7 @@ class ToolsCore
      * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
      * @see Locale
      *
-     * @param float $number The number to format
+     * @param int|float|string $number The number to format
      * @param null $currency not used anymore
      *
      * @return string The formatted number
@@ -856,7 +856,7 @@ class ToolsCore
      * @deprecated since 1.7.4 use convertPriceToCurrency()
      *
      * @param float|null $price Product price
-     * @param object|array $currency Current currency object
+     * @param object|array|int|string|null $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
      * @param Context $context
      *
