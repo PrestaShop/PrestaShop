@@ -60,7 +60,7 @@ describe('Update sort carriers by and check it in FO', async () => {
   });
 
   it('should go to \'Shipping > Carriers\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPageToEnable', baseContext);
 
     await dashboardPage.goToSubMenu(
       page,
@@ -111,7 +111,7 @@ describe('Update sort carriers by and check it in FO', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterEnable${index}`, baseContext);
 
       const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
@@ -207,7 +207,7 @@ describe('Update sort carriers by and check it in FO', async () => {
   });
 
   it('should go to \'Shipping > Carriers\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPageToDisable', baseContext);
 
     await dashboardPage.goToSubMenu(
       page,
@@ -221,7 +221,7 @@ describe('Update sort carriers by and check it in FO', async () => {
 
   carriersNames.forEach((carrierName, index) => {
     it(`should filter list by name ${carrierName}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `filterByName${index}`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `filterByName${index}ToDisable`, baseContext);
 
       await carriersPage.filterTable(page, 'input', 'name', carrierName);
 
@@ -230,7 +230,7 @@ describe('Update sort carriers by and check it in FO', async () => {
     });
 
     it('should disable the carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `enableCarrier${index}`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `disableCarrier${index}`, baseContext);
 
       const isActionPerformed = await carriersPage.updateEnabledValue(page, 1, false);
 
@@ -247,7 +247,7 @@ describe('Update sort carriers by and check it in FO', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDisable${index}`, baseContext);
 
       const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
