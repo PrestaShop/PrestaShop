@@ -1253,6 +1253,9 @@ services:
     form.type.sell.catalog.product.shipping_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
         parent: 'form.type.translatable.aware'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+            - "@prestashop.adapter.data_provider.carrier"
         public: true
         tags:
             - { name: form.type }

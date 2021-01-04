@@ -28,20 +28,44 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
- * Form type containing shipping information
+ * Form type containing product shipping information
  */
 class ShippingType extends TranslatorAwareType
 {
+    /**
+     * @var string
+     */
+    private $currencyIsoCode;
+
+    /**
+     * @var CarrierDataProvider
+     */
+    private $carrierDataProvider;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        string $currencyIsoCode,
+        CarrierDataProvider $carrierDataProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->currencyIsoCode = $currencyIsoCode;
+        $this->carrierDataProvider = $carrierDataProvider;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -49,35 +73,110 @@ class ShippingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
-                    $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
-                    $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
-                ],
-                'choice_translation_domain' => 'Admin.Catalog.Feature',
-                'attr' => [
-                    'class' => 'custom-select',
-                ],
-                'label' => $this->trans('Type', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?', 'Admin.Catalog.Help'),
-                'required' => true,
-            ])
-            ->add('name', TranslatableType::class, [
-                'label' => $this->trans('Name', 'Admin.Global'),
-                'type' => TextType::class,
+            ->add('width', NumberType::class, [
+                'required' => false,
+                'label' => $this->trans('Width', 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new DefaultLanguage(),
+                    new NotBlank(),
+                    new Type(['type' => 'numeric']),
                 ],
-            ])
-            ->add('description_short', TranslatableType::class, [
-                'label' => $this->trans('Summary', 'Admin.Global'),
-                'type' => FormattedTextareaType::class,
-            ])
-            ->add('description', TranslatableType::class, [
-                'label' => $this->trans('Description', 'Admin.Global'),
-                'type' => FormattedTextareaType::class,
+            ])->add('height', NumberType::class, [
+                'required' => false,
+                'label' => $this->trans('Height', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'numeric']),
+                ],
+            ])->add('depth', NumberType::class, [
+                'required' => false,
+                'label' => $this->trans('Depth', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'numeric']),
+                ],
+            ])->add('weight', NumberType::class, [
+                'required' => false,
+                'label' => $this->trans('Weight', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'numeric']),
+                ],
+            ])->add('additional_delivery_times', ChoiceType::class, [
+                'choices' => [
+                    $this->trans('None', 'Admin.Catalog.Feature') => 0,
+                    $this->trans('Default delivery time', 'Admin.Catalog.Feature') => 1,
+                    $this->trans('Specific delivery time to this product', 'Admin.Catalog.Feature') => 2,
+                ],
+                'expanded' => true,
+                'multiple' => false,
+                'required' => false,
+                'placeholder' => null,
+                'preferred_choices' => ['default'],
+                'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
+            ])->add('delivery_in_stock', TranslateType::class, [
+                'type' => TextType::class,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Catalog.Feature'),
+                    ],
+                ],
+                'locales' => $this->locales,
+                'hideTabs' => true,
+                'required' => false,
+                'label' => $this->trans('Delivery time of in-stock products:', 'Admin.Catalog.Feature'),
+            ])->add('delivery_out_stock', TranslateType::class, [
+                'type' => TextType::class,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Catalog.Feature'),
+                    ],
+                ],
+                'locales' => $this->locales,
+                'hideTabs' => true,
+                'required' => false,
+                'label' => $this->trans(
+                    'Delivery time of out-of-stock products with allowed orders:',
+                    'Admin.Catalog.Feature'
+                ),
+            ])->add('additional_shipping_cost', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
+                'currency' => $this->currencyIsoCode,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                ],
+            ])->add('selectedCarriers', ChoiceType::class, [
+                'choices' => $this->getCarrierChoices(),
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false,
+                'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
             ])
         ;
+    }
+
+    //@todo; move to separate choices provider. Its copied from ProductShipping.php can be optimized
+    private function getCarrierChoices(): array
+    {
+        $carriers = $this->carrierDataProvider->getCarriers(
+            $this->locales[0]['id_lang'],
+            false,
+            false,
+            false,
+            null,
+            $this->carrierDataProvider->getAllCarriersConstant()
+        );
+        $carrierChoices = [];
+        foreach ($carriers as $carrier) {
+            $choiceId = $carrier['id_carrier'] . ' - ' . $carrier['name'];
+            if ($carrier['name']) {
+                $choiceId .= ' (' . $carrier['delay'] . ')';
+            }
+
+            $carrierChoices[$choiceId] = $carrier['id_reference'];
+        }
+
+        return $carrierChoices;
     }
 }
