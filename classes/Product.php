@@ -7355,7 +7355,7 @@ class ProductCore extends ObjectModel
             FROM
                 `' . _DB_PREFIX_ . 'product_attribute_combination` pac
                 INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-				INNER JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.id_attribute = pac.id_attribute
+                INNER JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.id_attribute = pac.id_attribute
             WHERE
                 pa.id_product = ' . $idProduct . '
                 AND pac.id_attribute IN (' . $idAttributesImploded . ')
@@ -7365,7 +7365,7 @@ class ProductCore extends ObjectModel
                     FROM  
                         `' . _DB_PREFIX_ . 'product_attribute_combination` pac 
                         INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-						INNER JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.id_attribute = pac.id_attribute
+                        INNER JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.id_attribute = pac.id_attribute
                     WHERE  
                         pa.id_product = ' . $idProduct . ' ' . $subQueryAdditionalWhere . '
                 )

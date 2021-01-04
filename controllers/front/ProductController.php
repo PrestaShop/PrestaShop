@@ -725,7 +725,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             );
                         }
                     }
-					
+
                     // Added empty attribute if current group attributes are irregular!
                     // Irregular means when we have Product Attributes with and without
                     // current group related attributes at the same time. for example:
@@ -782,7 +782,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
                     }
                 }
-				
+
                 //find selected attribute or first of group
                 $index = 0;
                 $current_selected_attribute = 0;
