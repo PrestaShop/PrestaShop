@@ -171,8 +171,6 @@ export default class OrderViewPage {
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
         numPage: newPagesNum,
       });
-=======
->>>>>>> 427b3d42077ae0f25c00f19ee111731352c48c3b
     });
   }
 
