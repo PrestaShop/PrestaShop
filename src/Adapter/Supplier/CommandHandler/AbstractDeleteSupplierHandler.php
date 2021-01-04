@@ -93,15 +93,31 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if ($this->hasPendingOrders($supplierId)) {
-                throw new CannotDeleteSupplierException($supplierId->getValue(), sprintf('Supplier with id %s cannot be deleted due to it has pending orders', $supplierId->getValue()), CannotDeleteSupplierException::HAS_PENDING_ORDERS);
+                throw new CannotDeleteSupplierException(
+                    sprintf(
+                        'Supplier with id %d cannot be deleted due to it has pending orders',
+                        $supplierId->getValue()
+                    ),
+                    CannotDeleteSupplierException::HAS_PENDING_ORDERS
+                );
             }
 
             if (false === $this->deleteProductSupplierRelation($supplierId)) {
-                throw new CannotDeleteSupplierProductRelationException(sprintf('Unable to delete suppliers with id "%s" product relation from product_supplier table', $supplierId->getValue()));
+                throw new CannotDeleteSupplierProductRelationException(
+                    sprintf(
+                        'Unable to delete suppliers with id "%d" product relation from product_supplier table',
+                        $supplierId->getValue()
+                    )
+                );
             }
 
             if (1 >= count($entity->getAssociatedShops()) && false === $this->deleteSupplierAddress($supplierId)) {
-                throw new CannotDeleteSupplierAddressException(sprintf('Unable to set deleted flag for supplier with id "%s" address', $supplierId->getValue()));
+                throw new CannotDeleteSupplierAddressException(
+                    sprintf(
+                        'Unable to set deleted flag for supplier with id "%d" address',
+                        $supplierId->getValue()
+                    )
+                );
             }
 
             if (false === $entity->delete()) {

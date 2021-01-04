@@ -32,11 +32,6 @@ use DbQuery;
 use ObjectModel;
 use Shop;
 
-/**
- * Not used in PrestaShop core, only in tests.
- *
- * @deprecated since 1.7.5, to be removed in 1.8
- */
 class EntityMapper
 {
     /**
@@ -55,7 +50,7 @@ class EntityMapper
     {
         // Load object from database if object id is present
         $cache_id = 'objectmodel_' . $entity_defs['classname'] . '_' . (int) $id . '_' . (int) $id_shop . '_' . (int) $id_lang;
-        if (!$should_cache_objects || !\Cache::isStored($cache_id)) {
+        if (!$should_cache_objects || !Cache::isStored($cache_id)) {
             $sql = new DbQuery();
             $sql->from($entity_defs['table'], 'a');
             $sql->where('a.`' . bqSQL($entity_defs['primary']) . '` = ' . (int) $id);

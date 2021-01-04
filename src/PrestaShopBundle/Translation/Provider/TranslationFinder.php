@@ -43,7 +43,7 @@ class TranslationFinder
     const ERR_DIRECTORY_NOT_FOUND = 2;
 
     /**
-     * @param string|array $paths a list of paths when we can look for translations
+     * @param string|array<string> $paths a list of paths when we can look for translations
      * @param string $locale the Symfony (not the PrestaShop one) locale
      * @param string|null $pattern a regular expression
      *
