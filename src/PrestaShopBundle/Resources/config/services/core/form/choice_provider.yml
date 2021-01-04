@@ -245,3 +245,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.order_message.order_message_provider").getMessages()'
+
+  prestashop.core.form.choice_provider.additional_delivery_time_note_types_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AdditionalDeliveryTimeNoteTypesProvider'
+      arguments:
+          - '@translator'
