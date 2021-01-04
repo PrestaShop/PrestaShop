@@ -28,14 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Provides choices of additional delivery time notes types
  */
-final class AdditionalDeliveryTimeNoteTypesProvider implements FormChoiceProviderInterface
+final class DeliveryTimeNoteTypesProvider implements FormChoiceProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -57,9 +57,9 @@ final class AdditionalDeliveryTimeNoteTypesProvider implements FormChoiceProvide
     public function getChoices()
     {
         return [
-            $this->translator->trans('None', [], 'Admin.Catalog.Feature') => DeliveryTimeNotesType::TYPE_NONE,
-            $this->translator->trans('Default delivery time', [], 'Admin.Catalog.Feature') => DeliveryTimeNotesType::TYPE_DEFAULT,
-            $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature') => DeliveryTimeNotesType::TYPE_SPECIFIC,
+            $this->translator->trans('None', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_NONE,
+            $this->translator->trans('Default delivery time', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_DEFAULT,
+            $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_SPECIFIC,
         ];
     }
 }

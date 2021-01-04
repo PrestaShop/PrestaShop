@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -73,9 +73,9 @@ class UpdateProductShippingCommand
     private $carrierReferences;
 
     /**
-     * @var DeliveryTimeNotesType
+     * @var DeliveryTimeNoteType
      */
-    private $deliveryTimeNotesType;
+    private $deliveryTimeNoteType;
 
     /**
      * @var string[]|null
@@ -224,11 +224,11 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return DeliveryTimeNotesType|null
+     * @return DeliveryTimeNoteType|null
      */
-    public function getDeliveryTimeNotesType(): ?DeliveryTimeNotesType
+    public function getDeliveryTimeNoteType(): ?DeliveryTimeNoteType
     {
-        return $this->deliveryTimeNotesType;
+        return $this->deliveryTimeNoteType;
     }
 
     /**
@@ -236,9 +236,9 @@ class UpdateProductShippingCommand
      *
      * @return UpdateProductShippingCommand
      */
-    public function setDeliveryTimeNotesType(int $type): UpdateProductShippingCommand
+    public function setDeliveryTimeNoteType(int $type): UpdateProductShippingCommand
     {
-        $this->deliveryTimeNotesType = new DeliveryTimeNotesType($type);
+        $this->deliveryTimeNoteType = new DeliveryTimeNoteType($type);
 
         return $this;
     }

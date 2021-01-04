@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * Holds value of additional delivery time notes type
  */
-class DeliveryTimeNotesType
+class DeliveryTimeNoteType
 {
     /**
      * Represents case when additional delivery time note is not used

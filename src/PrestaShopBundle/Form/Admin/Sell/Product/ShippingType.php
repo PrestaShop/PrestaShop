@@ -57,7 +57,7 @@ class ShippingType extends TranslatorAwareType
     /**
      * @var FormChoiceProviderInterface
      */
-    private $additionalDeliveryTimeNoteTypesProvider;
+    private $deliveryTimeNoteTypesProvider;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -69,7 +69,7 @@ class ShippingType extends TranslatorAwareType
         parent::__construct($translator, $locales);
         $this->currencyIsoCode = $currencyIsoCode;
         $this->carrierChoiceProvider = $carrierChoiceProvider;
-        $this->additionalDeliveryTimeNoteTypesProvider = $additionalDeliveryTimeNoteTypesProvider;
+        $this->deliveryTimeNoteTypesProvider = $additionalDeliveryTimeNoteTypesProvider;
     }
 
     /**
@@ -121,7 +121,7 @@ class ShippingType extends TranslatorAwareType
                     new Type('numeric'),
                 ],
             ])->add('additional_delivery_time_notes_type', ChoiceType::class, [
-                'choices' => $this->additionalDeliveryTimeNoteTypesProvider->getChoices(),
+                'choices' => $this->deliveryTimeNoteTypesProvider->getChoices(),
                 'placeholder' => false,
                 'expanded' => true,
                 'multiple' => false,
