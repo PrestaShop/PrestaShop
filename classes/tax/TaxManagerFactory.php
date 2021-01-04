@@ -35,7 +35,7 @@ class TaxManagerFactoryCore
      * Returns a tax manager able to handle this address.
      *
      * @param Address $address
-     * @param string $type
+     * @param int $type
      *
      * @return TaxManagerInterface
      */

@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -145,8 +145,8 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Form $handlingForm
-     * @param Form $carrierOptionsForm
+     * @param FormInterface $handlingForm
+     * @param FormInterface $carrierOptionsForm
      * @param Request $request
      *
      * @return Response|null

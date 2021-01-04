@@ -75,7 +75,7 @@ class SqlQueryValidator
     /**
      * Get request sql errors.
      *
-     * @param array $sqlErrors
+     * @param array<string, string|array<string>> $sqlErrors
      *
      * @return array
      */
@@ -84,8 +84,10 @@ class SqlQueryValidator
         $errors = [];
 
         foreach ($sqlErrors as $key => $sqlError) {
-            if (false === is_array($sqlError)) {
-                $sqlError = [];
+            if (!in_array($key, ['testedRequired', 'testedUnauthorized'])) {
+                if (false === is_array($sqlError)) {
+                    $sqlError = [];
+                }
             }
 
             if ('checkedFrom' === $key) {

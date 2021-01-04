@@ -37,13 +37,13 @@ class TreeBuilder
      */
     private $locale;
     /**
-     * @var string
+     * @var string|null
      */
     private $theme;
 
     /**
      * @param string $locale
-     * @param string $theme
+     * @param string|null $theme
      */
     public function __construct($locale, $theme)
     {
@@ -53,7 +53,7 @@ class TreeBuilder
 
     /**
      * @param AbstractProvider $provider
-     * @param null $search
+     * @param string|array|null $search
      *
      * @return array|mixed
      */
@@ -180,9 +180,9 @@ class TreeBuilder
      *
      * @param array $tree
      * @param Router $router
-     * @param null $theme
+     * @param string|null $theme
      * @param null $search
-     * @param null $module
+     * @param string|null $module
      *
      * @return array
      */
@@ -294,9 +294,9 @@ class TreeBuilder
      * @param int $index
      * @param string $name
      * @param string $fullName
-     * @param bool $theme
+     * @param string|bool $theme
      * @param null $search
-     * @param bool $module
+     * @param string|bool $module
      *
      * @return mixed
      */

@@ -1740,7 +1740,7 @@ class CartCore extends ObjectModel
      * @param int $quantity Quantity value
      * @param bool $returnId if true - returns the customization record id
      *
-     * @return bool Success
+     * @return bool|int
      */
     public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity, $returnId = false)
     {

@@ -221,7 +221,7 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
         ;
 
         /** @var array $row */
-        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+        $row = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getRow($query);
 
         if (!is_array($row) || empty($row['active'])) {
             $this->configuration->set('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0);
