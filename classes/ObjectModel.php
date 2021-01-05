@@ -1878,6 +1878,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public static function existsInDatabase($id_entity, $table = null)
     {
+        if ($table !== null) {
+            Tools::displayParameterAsDeprecated('table');
+        }
+
         if ($table !== null && static::class == 'ObjectModel') {
             $primary = 'id_' . bqSQL($table);
         } else {
