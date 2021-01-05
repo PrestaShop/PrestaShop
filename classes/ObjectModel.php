@@ -1872,19 +1872,32 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Checks if an object exists in database.
      *
      * @param int $id_entity
-     * @param string $table
+     * @param string $table Deprecated since 1.7.8.x
      *
      * @return bool
      */
-    public static function existsInDatabase($id_entity, $table)
+    public static function existsInDatabase($id_entity, $table = null)
     {
+        if ($table !== null && static::class == 'ObjectModel') {
+            $primary = 'id_' . bqSQL($table);
+        } else {
+            $object_def = static::$definition;
+
+            if (empty($object_def['table']) || empty($object_def['primary'])) {
+                return false;
+            }
+
+            $table = $object_def['table'];
+            $primary = $object_def['primary'];
+        }
+
         $row = Db::getInstance()->getRow(
-            '
-			SELECT `id_' . bqSQL($table) . '` as id
-			FROM `' . _DB_PREFIX_ . bqSQL($table) . '` e
-			WHERE e.`id_' . bqSQL($table) . '` = ' . (int) $id_entity,
-            false
-        );
+                (new DbQuery())
+                    ->select('e.`' . $primary . '` as id')
+                    ->from($table, 'e')
+                    ->where('e.`' . $primary . '` = ' . (int) $id_entity),
+                false
+            );
 
         return isset($row['id']);
     }
