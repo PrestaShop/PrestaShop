@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import FormSubmitButton from '@components/form-submit-button';
 import Grid from '@components/grid/grid';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
@@ -70,4 +71,6 @@ $(() => {
   });
 
   new window.prestashop.component.ChoiceTree('#manufacturer_shop_association').enableAutoCheckChildren();
+
+  new FormSubmitButton();
 });
