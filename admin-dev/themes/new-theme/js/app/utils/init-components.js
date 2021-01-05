@@ -32,6 +32,7 @@ import ChoiceTree from '@js/components/form/choice-tree.js';
 import MultipleChoiceTable from '@js/components/multiple-choice-table.js';
 import GeneratableInput from '@js/components/generatable-input.js';
 import {EventEmitter} from '@components/event-emitter';
+import FormSubmitButton from '@components/form-submit-button';
 
 const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
@@ -83,6 +84,7 @@ const initPrestashopComponents = () => {
     ChoiceTree,
     MultipleChoiceTable,
     GeneratableInput,
+    FormSubmitButton,
   };
 };
 export default initPrestashopComponents;
