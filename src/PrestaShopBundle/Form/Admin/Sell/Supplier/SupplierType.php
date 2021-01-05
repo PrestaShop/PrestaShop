@@ -105,12 +105,12 @@ class SupplierType extends TranslatorAwareType
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
 
         $invalidCharsText = sprintf(
-            '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,
+            '%s ' . TypedRegexValidator::CATALOG_CHARS,
             $this->trans('Invalid characters:', 'Admin.Global')
         );
 
         $invalidGenericNameHint = sprintf(
-            '%s <>={}',
+            '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,
             $this->trans('Invalid characters:', 'Admin.Global')
         );
 
