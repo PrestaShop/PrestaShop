@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -86,7 +87,7 @@ class ShippingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('width', TextType::class, [
+            ->add('width', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Width', 'Admin.Catalog.Feature'),
                 'constraints' => [
@@ -100,7 +101,7 @@ class ShippingType extends TranslatorAwareType
                     ]),
                     new PositiveOrZero(),
                 ],
-            ])->add('height', TextType::class, [
+            ])->add('height', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Height', 'Admin.Catalog.Feature'),
                 'constraints' => [
@@ -114,7 +115,7 @@ class ShippingType extends TranslatorAwareType
                     ]),
                     new PositiveOrZero(),
                 ],
-            ])->add('depth', TextType::class, [
+            ])->add('depth', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Depth', 'Admin.Catalog.Feature'),
                 'constraints' => [
@@ -128,7 +129,7 @@ class ShippingType extends TranslatorAwareType
                     ]),
                     new PositiveOrZero(),
                 ],
-            ])->add('weight', TextType::class, [
+            ])->add('weight', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Weight', 'Admin.Catalog.Feature'),
                 'constraints' => [
