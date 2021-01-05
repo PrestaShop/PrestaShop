@@ -56,7 +56,6 @@ $(() => {
 
   window.prestashop.component.initComponents(
     [
-      'TinyMCEEditor',
       'TranslatableInput',
       'TranslatableField',
       'TinyMCEEditor',
