@@ -165,8 +165,9 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private function getRowActions()
     {
-        return (new RowActionCollection())
-            ->add(
+         $rowActionCollection = new RowActionCollection();
+         $rowActionCollection
+           ->add(
                 (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
@@ -184,6 +185,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'id_zone'
                 )
             );
+          return $rowActionCollection;
     }
 
     /**
