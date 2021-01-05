@@ -185,6 +185,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'id_zone'
                 )
             );
+
         return $rowActionCollection;
     }
 
