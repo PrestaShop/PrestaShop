@@ -33,18 +33,21 @@ export default class NavBar {
     $(() => {
       const $navBar = $('.nav-bar');
       if ($navBar.length > 0) {
-        new PerfectScrollbar('.nav-bar-overflow');
+        const $navBarOverflow = $('.nav-bar-overflow');
+        if ($navBarOverflow.length > 0) {
+          new PerfectScrollbar('.nav-bar-overflow');
 
-        $('.nav-bar-overflow').on('scroll', () => {
-          const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
+          $navBarOverflow.on('scroll', () => {
+            const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
 
-          $($menuItems).each((i, e) => {
-            const itemOffsetTop = $(e).position().top;
-            $(e)
+            $($menuItems).each((i, e) => {
+              const itemOffsetTop = $(e).position().top;
+              $(e)
                 .find('ul.submenu')
                 .css('top', itemOffsetTop);
+            });
           });
-        });
+        }
 
         $navBar.find('.link-levelone').hover(
             function onMouseEnter() {
