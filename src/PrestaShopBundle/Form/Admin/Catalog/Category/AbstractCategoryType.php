@@ -111,7 +111,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $disableMenuThumbnailsUpload = false;
-        if (isset($options['id_category']) && null !== $options['id_category']) {
+        if (isset($options['id_category'])) {
             $disableMenuThumbnailsUpload = $options['disable_menu_thumbnails_upload'];
         }
         $genericCharactersHint = $this->trans('Invalid characters:', 'Admin.Global') . ' <>;=#{}';
