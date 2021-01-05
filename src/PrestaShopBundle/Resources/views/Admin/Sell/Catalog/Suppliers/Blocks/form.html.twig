@@ -34,14 +34,6 @@
   <div class="card-block row">
     <div class="card-text">
 
-      {% if logoImage is defined and logoImage is not null %}
-        <div class="form-group row">
-          <label class="form-control-label"></label>
-          <div class="col-sm">
-            {% include '@PrestaShop/Admin/Sell/Catalog/Suppliers/logo_image.html.twig' %}
-          </div>
-        </div>
-      {% endif %}
       {{ form_row(supplierForm.name) }}
       {{ form_row(supplierForm.description) }}
       {{ form_row(supplierForm.phone) }}
@@ -54,8 +46,18 @@
         <div class="js-supplier-state{% if supplierForm.id_state.vars.choices is empty %} d-none{% endif %}">
           {{ form_row(supplierForm.id_state) }}
         </div>
+      {{ form_row(supplierForm.dni) }}
+      {{ form_row(supplierForm.logo) }}
 
-        {{ form_widget(supplierForm) }}
+      {% if logoImage is defined and logoImage is not null %}
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            {% include '@PrestaShop/Admin/Sell/Catalog/Suppliers/logo_image.html.twig' %}
+          </div>
+        </div>
+      {% endif %}
+      {{ form_widget(supplierForm) }}
 
     </div>
   </div>
