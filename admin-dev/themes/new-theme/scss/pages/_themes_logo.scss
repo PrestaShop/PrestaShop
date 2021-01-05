@@ -13,7 +13,7 @@
     line-height: normal;
     color: #fff;
     text-align: center;
-    letter-spacing: -.2px;
+    letter-spacing: -0.2px;
     background-color: #6c868e;
     @include border-radius(2px);
   }
@@ -25,7 +25,7 @@
     line-height: normal;
     color: #363a41;
     text-align: center;
-    letter-spacing: -.2px;
+    letter-spacing: -0.2px;
     background-color: transparent;
     border: 1px solid #6c858c;
   }
@@ -36,9 +36,9 @@
 
   .layout-configuration {
     .inner-content {
-      padding: .9375rem;
+      padding: 0.9375rem;
       background-color: #f8f8f8;
-      @include border-radius(.25rem);
+      @include border-radius(0.25rem);
 
       .title {
         font-size: 14px;
@@ -67,7 +67,7 @@
     }
 
     .choose-layouts-button {
-      margin-right: .9375rem;
+      margin-right: 0.9375rem;
     }
   }
 }

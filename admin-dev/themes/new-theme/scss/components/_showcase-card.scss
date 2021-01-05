@@ -6,7 +6,7 @@
   max-width: 810px;
   margin: auto;
   margin-bottom: 17px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, .06);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.06);
 
   &__left,
   &__right {
@@ -72,7 +72,7 @@
 
     > a {
       &.btn-outline-secondary {
-        margin-right: .95rem;
+        margin-right: 0.95rem;
       }
     }
 
@@ -110,7 +110,7 @@
     font-size: 20px;
     font-weight: 600;
     color: #363a41;
-    opacity: .7;
+    opacity: 0.7;
   }
 
   &__message {
