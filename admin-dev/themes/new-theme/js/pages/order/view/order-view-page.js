@@ -65,31 +65,6 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
-      // Remove the row
-      const $row = $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId));
-      const $next = $row.next();
-      $row.remove();
-      if ($next.hasClass('order-product-customization')) {
-        $next.remove();
-      }
-
-      const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      const numPages = $tablePagination.data('numPages');
-      const numRowsPerPage = $tablePagination.data('numPerPage');
-      const numRows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length;
-      let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
-      const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-      if ((numProducts - 1) % numRowsPerPage === 0) {
-        this.orderProductRenderer.paginationRemovePage(numPages);
-      }
-      if (numRows === 1 && currentPage === numPages) {
-        currentPage -= 1;
-      }
-      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: currentPage,
-      });
-
-      this.orderProductRenderer.updateNumProducts(numProducts - 1);
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderPaymentsRefresher.refresh(event.orderId);
       this.refreshProductsList(event.orderId);
@@ -135,28 +110,6 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productAddedToOrder, (event) => {
-      const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      const numRowsPerPage = $tablePagination.data('numPerPage');
-      const initialNumProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-
-      this.orderProductRenderer.addOrUpdateProductToList(
-        $(`#${$(event.newRow).find('tr').attr('id')}`),
-        event.newRow,
-      );
-      this.listenForProductDelete();
-      this.listenForProductEdit();
-      this.resetToolTips();
-
-      const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
-      const initialPagesNum = Math.max(Math.ceil(initialNumProducts / numRowsPerPage), 1);
-      const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
-
-      // Update pagination
-      if (newPagesNum > initialPagesNum) {
-        this.orderProductRenderer.paginationAddPage(newPagesNum);
-      }
-
-      this.orderProductRenderer.updateNumProducts(newNumProducts);
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderPricesRefresher.refresh(event.orderId);
@@ -166,11 +119,6 @@ export default class OrderViewPage {
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
-
-      // Move to last page to see the added product
-      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: newPagesNum,
-      });
     });
   }
 
