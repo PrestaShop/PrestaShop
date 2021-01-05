@@ -147,11 +147,7 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
-                'help' => sprintf(
-                    '%s %s',
-                    $this->trans('Will appear in the list of suppliers.', 'Admin.Catalog.Help'),
-                    $invalidCharsText
-                ),
+                'help' => $this->trans('Will appear in the list of suppliers.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'type' => FormattedTextareaType::class,
                 'options' => [
