@@ -36,7 +36,9 @@
       {{ form_errors(categoryForm) }}
       {{ form_row(categoryForm.name) }}
       {{ form_row(categoryForm.active) }}
-      {{ form_row(categoryForm.id_parent) }}
+      {% if categoryForm.id_parent is defined %}
+        {{ form_row(categoryForm.id_parent) }}
+      {% endif %}
       {{ form_row(categoryForm.description) }}
       {{ form_row(categoryForm.cover_image) }}
       {{ form_row(categoryForm.thumbnail_image) }}
