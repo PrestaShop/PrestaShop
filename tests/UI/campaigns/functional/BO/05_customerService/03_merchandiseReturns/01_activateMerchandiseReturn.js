@@ -35,6 +35,7 @@ let browserContext;
 let page;
 
 /*
+Create order in FO
 Activate/Deactivate merchandise return
 Change the first order status in the list to shipped
 Check the existence of the button return products
