@@ -97,7 +97,6 @@ class ManufacturerType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            /* @todo change to TranslatableType */
             ->add('short_description', TranslatableType::class, [
                 'label' => $this->trans('Short description', 'Admin.Catalog.Feature'),
                 'type' => FormattedTextareaType::class,
