@@ -106,22 +106,22 @@
         </div>
       </div>
     </div>
-{% else %}
-  <!-- Modal -->
-  <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">{{ 'Loading currency data'|trans({}, 'Admin.International.Feature') }}</h5>
-        </div>
-        <div class="modal-body">
-          {{ 'Please wait while currency data is being loaded'|trans({}, 'Admin.International.Feature') }}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary spinner">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
+  {% else %}
+    <!-- Modal -->
+    <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">{{ 'Loading currency data'|trans({}, 'Admin.International.Feature') }}</h5>
+          </div>
+          <div class="modal-body">
+            {{ 'Please wait while currency data is being loaded'|trans({}, 'Admin.International.Feature') }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary spinner">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   {% endif %}
 {% endblock %}
