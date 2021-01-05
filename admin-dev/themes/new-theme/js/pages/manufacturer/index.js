@@ -59,7 +59,6 @@ $(() => {
       'TranslatableInput',
       'TranslatableField',
       'TinyMCEEditor',
-      'FormSubmitButton',
     ],
   );
 
