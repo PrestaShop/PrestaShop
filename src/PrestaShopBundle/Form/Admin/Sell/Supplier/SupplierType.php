@@ -39,7 +39,6 @@ use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -57,16 +56,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class SupplierType extends TranslatorAwareType
 {
     /**
-     * @var array
-     */
-    private $countryChoices;
-
-    /**
-     * @var array
-     */
-    private $countryChoicesAttributes;
-
-    /**
      * @var ConfigurableFormChoiceProviderInterface
      */
     private $statesChoiceProvider;
@@ -75,11 +64,6 @@ class SupplierType extends TranslatorAwareType
      * @var int
      */
     private $contextCountryId;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
 
     /**
      * @var bool
@@ -92,8 +76,6 @@ class SupplierType extends TranslatorAwareType
     private $router;
 
     /**
-     * @param array $countryChoices
-     * @param array $countryChoicesAttributes
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $contextCountryId
      * @param TranslatorInterface $translator
@@ -102,8 +84,6 @@ class SupplierType extends TranslatorAwareType
      * @param array $locales
      */
     public function __construct(
-        array $countryChoices,
-        array $countryChoicesAttributes,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
         TranslatorInterface $translator,
@@ -113,8 +93,6 @@ class SupplierType extends TranslatorAwareType
     ) {
         parent::__construct($translator, $locales);
 
-        $this->countryChoices = $countryChoices;
-        $this->countryChoicesAttributes = $countryChoicesAttributes;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->isMultistoreEnabled = $isMultistoreEnabled;
@@ -167,7 +145,7 @@ class SupplierType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('description', TranslateType::class, [
+            ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'help' => sprintf(
                     '%s %s',
@@ -176,8 +154,6 @@ class SupplierType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
-                'hideTabs' => false,
                 'options' => [
                     'constraints' => [
                         new CleanHtml([

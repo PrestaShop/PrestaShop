@@ -42,10 +42,20 @@
           </div>
         </div>
       {% endif %}
+      {{ form_row(supplierForm.name) }}
+      {{ form_row(supplierForm.description) }}
+      {{ form_row(supplierForm.phone) }}
+      {{ form_row(supplierForm.mobile_phone) }}
+      {{ form_row(supplierForm.address) }}
+      {{ form_row(supplierForm.address2) }}
+      {{ form_row(supplierForm.post_code) }}
+      {{ form_row(supplierForm.city) }}
+      {{ form_row(supplierForm.id_country) }}
+        <div class="js-supplier-state{% if supplierForm.id_state.vars.choices is empty %} d-none{% endif %}">
+          {{ form_row(supplierForm.id_state) }}
+        </div>
 
-      {% block supplier_form_widget %}
         {{ form_widget(supplierForm) }}
-      {% endblock %}
 
     </div>
   </div>
