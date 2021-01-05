@@ -72,7 +72,9 @@ export default class ProductPartialUpdater {
    * This methods handles the form submit
    *
    * @param event
+   *
    * @returns {boolean}
+   *
    * @private
    */
   updatePartialForm(event) {
@@ -97,19 +99,32 @@ export default class ProductPartialUpdater {
    */
   postUpdatedData(updatedData) {
     this.$productFormSubmitButton.prop('disabled', true);
+    const $updatedForm = this.createShadowForm(updatedData);
+
+    $updatedForm.appendTo('body');
+    $updatedForm.submit();
+  }
+
+  /**
+   * @param updatedData
+   *
+   * @returns {Object} Form clone (Jquery object)
+   */
+  createShadowForm(updatedData) {
     const $updatedForm = this.$productForm.clone();
     $updatedForm.empty();
     $updatedForm.prop('class', '');
     Object.keys(updatedData).forEach((fieldName) => {
-      $('<input>').attr({
-        name: fieldName,
-        type: 'hidden',
-        value: updatedData[fieldName],
-      }).appendTo($updatedForm);
+      if (Array.isArray(updatedData[fieldName])) {
+        updatedData[fieldName].forEach((value) => {
+          this.appendInputToForm($updatedForm, fieldName, value);
+        });
+      } else {
+        this.appendInputToForm($updatedForm, fieldName, updatedData[fieldName]);
+      }
     });
 
-    $updatedForm.appendTo('body');
-    $updatedForm.submit();
+    return $updatedForm;
   }
 
   /**
@@ -134,7 +149,11 @@ export default class ProductPartialUpdater {
     // This way only updated AND new values remain
     Object.keys(this.initialData).forEach((fieldName) => {
       const fieldValue = this.initialData[fieldName];
-      if (currentData[fieldName] === fieldValue) {
+      if (Array.isArray(fieldValue)) {
+        if (this.arrayEquals(fieldValue, currentData[fieldName])) {
+          delete currentData[fieldName];
+        }
+      } else if (currentData[fieldName] === fieldValue) {
         delete currentData[fieldName];
       }
     });
@@ -167,10 +186,57 @@ export default class ProductPartialUpdater {
   getFormDataAsObject() {
     const formArray = this.$productForm.serializeArray();
     const serializedForm = {};
+
     formArray.forEach((formField) => {
-      serializedForm[formField.name] = formField.value;
+      let {value} = formField;
+      if (formField.name.endsWith('[]')) {
+        let multiField = [];
+
+        if (Object.prototype.hasOwnProperty.call(serializedForm, formField.name)) {
+          multiField = serializedForm[formField.name];
+        }
+
+        multiField.push(formField.value);
+        value = multiField;
+      }
+
+      serializedForm[formField.name] = value;
     });
 
     return serializedForm;
+  }
+
+  /**
+   * @param $form
+   * @param name
+   * @param value
+   *
+   * @private
+   */
+  appendInputToForm($form, name, value) {
+    $('<input>').attr({
+      name,
+      type: 'hidden',
+      value,
+    }).appendTo($form);
+  }
+
+  // @todo: move out or use some lib for this?
+  arrayEquals(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    for (let i = 0; i < arr2.length; i += 1) {
+      if (arr1[i] instanceof Array && arr2[i] instanceof Array) {
+        if (!arr1[i].equals(arr2[i])) {
+          return false;
+        }
+      } else if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
