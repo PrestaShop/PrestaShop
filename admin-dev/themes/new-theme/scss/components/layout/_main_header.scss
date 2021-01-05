@@ -373,9 +373,6 @@ $header-text-color: #4e6167 !default;
     color: $header-text-color;
     text-decoration: none;
 
-    &:hover {
-      color: $primary;
-    }
 
     .selected-item {
       font-size: 0.8125rem;
@@ -383,15 +380,34 @@ $header-text-color: #4e6167 !default;
       .material-icons {
         top: -1px;
         font-size: 1.25rem;
+
         &.visibility {
-          color: $primary;
+          color: $medium-gray;
+          @include transition(.25s ease-out);
+        }
+      }
+    }
+
+    &:hover {
+      color: $primary;
+
+      .selected-item {
+        .material-icons {
+          &.visibility {
+            color: $primary;
+          }
         }
       }
     }
   }
+
   &.show {
     .selected-item {
       color: $primary;
+
+      .material-icons.visibility {
+        color: $primary;
+      }
     }
   }
   .dropdown-menu {
