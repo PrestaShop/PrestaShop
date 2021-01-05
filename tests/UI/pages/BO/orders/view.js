@@ -271,7 +271,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isReturnProductsButtonVisible(page) {
-    return this.elementVisible(page, this.returnProductsButton);
+    return this.elementVisible(page, this.returnProductsButton, 2000);
   }
 }
 
