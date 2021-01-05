@@ -52,7 +52,7 @@ class TranslationApiTreeBuilderTest extends TestCase
 
     public function provideTestCases(): array
     {
-        return  [
+        return [
             [
                 'translationsArray' => [
                     'AdminFooBar' => [

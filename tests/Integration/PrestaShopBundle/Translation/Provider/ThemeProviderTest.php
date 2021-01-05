@@ -217,7 +217,7 @@ class ThemeProviderTest extends KernelTestCase
             ],
         ];
 
-        return  [
+        return [
             'not empty catalogue' => [
                 false,
                 $extractedMessages,
