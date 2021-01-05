@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '@components/translatable-input';
 import StockManagementOptionHandler from '@pages/product-preferences/stock-management-option-handler';
 import CatalogModeOptionHandler from '@pages/product-preferences/catalog-mode-option-handler';
 import * as pageMap from '@pages/product-preferences/product-preferences-page-map';
@@ -31,7 +30,12 @@ import * as pageMap from '@pages/product-preferences/product-preferences-page-ma
 const {$} = window;
 
 $(() => {
-  new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
+
   new StockManagementOptionHandler();
   new CatalogModeOptionHandler(pageMap);
 });
