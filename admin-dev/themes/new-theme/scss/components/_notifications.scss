@@ -39,7 +39,7 @@
     margin: 0;
     font-size: $font-size-base;
     @include border-radius(0);
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .1);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
     &::before,
     &::after {
       position: absolute;
@@ -72,7 +72,7 @@
       }
 
       .nav-link {
-        padding: .9375rem .9375rem .625rem;
+        padding: 0.9375rem 0.9375rem 0.625rem;
         font-weight: $font-weight-normal;
         color: $gray-medium;
 
@@ -90,8 +90,8 @@
 
     .tab-content {
       padding: 0;
-      margin-top: -.0625rem;
-      border-top: .125rem solid $gray-light;
+      margin-top: -0.0625rem;
+      border-top: 0.125rem solid $gray-light;
 
       > .tab-pane {
         height: 11.88rem;
@@ -110,7 +110,14 @@
             font-size: 5.625rem;
             color: $gray-light;
             content: "\E7F5";
-            opacity: .7;
+            opacity: 0.7;
+
+            @include media-breakpoint-down("sm") {
+              display: block;
+              margin-top: 1rem;
+              font-size: 1.625rem;
+              color: $gray-medium;
+            }
           }
 
           > .no-notification {
@@ -127,7 +134,7 @@
 
       .notif {
         display: block;
-        padding: .625rem .9375rem;
+        padding: 0.625rem 0.9375rem;
         color: $gray-medium;
 
         .material-icons {
@@ -167,7 +174,7 @@
   }
   .mobile & {
     .nav-link::before {
-      display: block;
+      display: none;
       font-family: "Material Icons", Arial, Helvetica, sans-serif;
       font-size: 30px;
       color: $gray-dark;
@@ -182,7 +189,13 @@
       content: "\E0BE";
     }
     .no-notification {
-      top: 13.75rem;
+      top: 7.75rem;
+    }
+
+    &.show {
+      .dropdown-toggle {
+        color: $primary;
+      }
     }
   }
 }
