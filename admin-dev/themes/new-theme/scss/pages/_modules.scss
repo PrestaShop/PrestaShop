@@ -99,6 +99,10 @@
 .module-short-list {
   margin: 2em 0;
 
+  @include media-breakpoint-down(md) {
+  margin: 1rem 0;
+  }
+
   .module-list-empty {
     padding: 20px;
     background: rgba(255, 255, 255, 0.4);
@@ -132,8 +136,16 @@
   }
 
   .module-item-wrapper-list {
-    @media (max-width: 33.9em) {
-      text-align: center;
+    > div {
+      @media (max-width: 33.9em) {
+        &:first-of-type {
+          width: 25%;
+        }
+
+        &:last-of-type {
+          width: 75%;
+        }
+      }
     }
 
     .module-logo-thumb-list {
@@ -387,7 +399,18 @@
     h3 {
       margin-top: 30px;
       font-size: 14px;
+
+      @include media-breakpoint-down(md) {
+        margin-top: 1rem;
+      }
     }
+  }
+}
+
+.top-menu-separator {
+  @include media-breakpoint-down(md) {
+    margin-top: 1rem;
+    margin-bottom: 0;
   }
 }
 
