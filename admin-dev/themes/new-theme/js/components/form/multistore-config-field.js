@@ -31,7 +31,7 @@ export default class MultistoreConfigField {
   }
 
   updateMultistoreFieldOnChange() {
-    $('.multistore-checkbox').on('change', function () {
+    $(document).on('change', '.multistore-checkbox', function () {
       const input = $(this).closest('.form-group').find(':input:not(.multistore-checkbox)');
       const inputContainer = $(this).closest('.form-group').find('.col-sm');
       const labelContainer = $(this).closest('.form-group').find('.form-control-label');
