@@ -60,6 +60,7 @@ describe('Create official currency and check it in FO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
     await localizationPage.goToSubTabCurrencies(page);
+
     const pageTitle = await currenciesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
@@ -86,7 +87,7 @@ describe('Create official currency and check it in FO', async () => {
         await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
       });
 
-      it('should create official currency', async function () {
+      it('should create currency', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOfficialCurrency${index}`, baseContext);
 
         // Create and check successful message
@@ -96,6 +97,81 @@ describe('Create official currency and check it in FO', async () => {
         // Check number of currencies after creation
         const numberOfCurrenciesAfterCreation = await currenciesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCurrenciesAfterCreation).to.be.equal(numberOfCurrencies + 1 + index);
+      });
+    });
+  });
+
+  // Filter currencies with all inputs and selects in grid table
+  describe('Filter currencies', async () => {
+    [
+      {
+        args:
+          {
+            testIdentifier: 'filterById',
+            filterType: 'input',
+            filterBy: 'id_currency',
+            filterValue: 1,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByName',
+            filterType: 'input',
+            filterBy: 'name',
+            filterValue: Currencies.all.name,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterBySymbol',
+            filterType: 'input',
+            filterBy: 'symbol',
+            filterValue: Currencies.all.symbol,
+          },
+
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByIsoCode',
+            filterType: 'input',
+            filterBy: 'iso_code',
+            filterValue: Currencies.all.isoCode,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByEnabled',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: Currencies.all.enabled,
+          },
+      },
+    ].forEach((test, index) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        // Filter
+        await currenciesPage.filterTable(
+          page,
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
+        );
+
+        // Check number of currencies
+        const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
+        await expect(numberOfCurrenciesAfterFilter).to.be.at.most(numberOfCurrencies + 11);
+      });
+
+      it('should reset filter', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilter${index}`, baseContext);
+
+        const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 10);
       });
     });
   });
