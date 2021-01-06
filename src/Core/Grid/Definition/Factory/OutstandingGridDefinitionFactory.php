@@ -134,6 +134,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'field' => 'risk',
                         'color_field' => 'color',
                         'badge_type' => '',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -148,6 +149,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ->setName($this->trans('Current outstanding', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'outstanding',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -223,13 +225,6 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
             ->add(
                 (new Filter('outstanding_allow_amount', TextType::class))
                     ->setAssociatedColumn('outstanding_allow_amount')
-                    ->setTypeOptions([
-                        'required' => false,
-                    ])
-            )
-            ->add(
-                (new Filter('outstanding', TextType::class))
-                    ->setAssociatedColumn('outstanding')
                     ->setTypeOptions([
                         'required' => false,
                     ])
