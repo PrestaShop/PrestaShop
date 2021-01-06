@@ -24,7 +24,7 @@
  *-->
 
 <template>
-  <div class="container-fluid">
+  <div class="content-topbar container-fluid">
     <div class="row py-2">
       <div class="col row ml-1">
         <PSCheckbox
@@ -39,7 +39,7 @@
           >{{ trans('filter_low_stock') }}</span>
         </PSCheckbox>
       </div>
-      <div class="col mr-3 d-flex align-items-center justify-content-end">
+      <div class="content-topbar-right col mr-3 d-flex align-items-center justify-content-end">
         <a :href="stockExportUrl">
           <span
             data-toggle="pstooltip"
