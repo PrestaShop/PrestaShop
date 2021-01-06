@@ -901,6 +901,12 @@
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
 
+{%- block number_widget -%}
+  {%- set type = type|default('text') -%}
+  {{ block('form_widget_simple') }}
+  {{- block('form_help') -}}
+{%- endblock number_widget -%}
+
 {% block form_help %}
   {% if help %}
     <small class="form-text">{{ help|raw }}</small>

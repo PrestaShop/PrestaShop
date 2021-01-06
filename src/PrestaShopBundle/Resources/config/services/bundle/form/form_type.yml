@@ -830,8 +830,11 @@ services:
 
     form.type.currency_exchange_rate:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.adapter.data_provider.module").isInstalled("cronjobs")'
+            - '@prestashop.router'
         tags:
             - { name: form.type }
 
