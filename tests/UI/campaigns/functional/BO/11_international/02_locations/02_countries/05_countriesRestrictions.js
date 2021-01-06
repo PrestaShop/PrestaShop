@@ -102,12 +102,10 @@ describe('Filter and quick edit countries', async () => {
     await expect(currentStatus).to.be.true;
   });
 
-  const statuses = [
+  [
     {args: {status: 'enable', enable: true, isCountryVisible: false}},
     {args: {status: 'disable', enable: false, isCountryVisible: true}},
-  ];
-
-  statuses.forEach((status, index) => {
+  ].forEach((status, index) => {
     it(`should ${status.args.status} restrict country selections`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}RestrictCountry`, baseContext);
 
@@ -163,6 +161,7 @@ describe('Filter and quick edit countries', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
 
       await addressesPage.logout(page);
+
       const isCustomerConnected = await addressesPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
