@@ -98,17 +98,18 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
       it('should enable the carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `enableCarrier${index}`, baseContext);
 
-        const isActionPerformed = await carriersPage.updateEnabledValue(page, 1, true);
+        const isActionPerformed = await carriersPage.setStatus(page, 1, true);
 
         if (isActionPerformed) {
           const resultMessage = await carriersPage.getTextContent(
             page,
             carriersPage.alertSuccessBlock,
           );
+
           await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 
-        const carrierStatus = await carriersPage.getToggleColumnValue(page, 1);
+        const carrierStatus = await carriersPage.getStatus(page, 1);
         await expect(carrierStatus).to.be.true;
       });
 
@@ -130,6 +131,8 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
         dashboardPage.shippingLink,
         dashboardPage.shippingPreferencesLink,
       );
+
+      await preferencesPage.closeSfToolBar(page);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(preferencesPage.pageTitle);
@@ -238,7 +241,7 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
       it('should disable the carrier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `disableCarrier${index}`, baseContext);
 
-        const isActionPerformed = await carriersPage.updateEnabledValue(page, 1, false);
+        const isActionPerformed = await carriersPage.setStatus(page, 1, false);
 
         if (isActionPerformed) {
           const resultMessage = await carriersPage.getTextContent(
@@ -249,7 +252,7 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
           await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 
-        const carrierStatus = await carriersPage.getToggleColumnValue(page, 1);
+        const carrierStatus = await carriersPage.getStatus(page, 1);
         await expect(carrierStatus).to.be.false;
       });
 
