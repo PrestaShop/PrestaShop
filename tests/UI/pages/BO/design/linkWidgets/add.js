@@ -180,7 +180,7 @@ class AddLinkWidget extends BOBasePage {
     await this.addCustomPages(page, linkWidgetData.customPages);
     // Save
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

@@ -201,7 +201,7 @@ class Currencies extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteCurrency(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -230,7 +230,7 @@ class Currencies extends LocalizationBasePage {
    */
   async updateExchangeRate(page) {
     await this.clickAndWaitForNavigation(page, this.updateExchangeRatesButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

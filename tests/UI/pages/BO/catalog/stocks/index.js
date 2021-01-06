@@ -9,6 +9,12 @@ class Stocks extends BOBasePage {
     this.successfulUpdateMessage = 'Stock successfully updated';
 
     // Selectors
+    // Alert Box
+    this.alertBoxBlock = 'div.alert-box';
+    this.alertBoxTextSpan = `${this.alertBoxBlock} p.alert-text span`;
+    this.alertBoxButtonClose = `${this.alertBoxBlock} button.close`;
+
+    // Search
     this.movementsNavItemLink = '#head_tabs li:nth-child(2) > a';
     this.searchForm = 'form.search-form';
     this.searchInput = `${this.searchForm} input.input`;

@@ -42,7 +42,7 @@ class AddEmployee extends BOBasePage {
     // replace toggle by 1 in the selector if active = YES / 0 if active = NO
     await page.check(this.statusToggleInput(employeeData.active ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

@@ -136,7 +136,7 @@ class OrderMessages extends BOBasePage {
 
     // Confirm delete in modal
     await this.confirmDeleteOrderMessages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -174,7 +174,7 @@ class OrderMessages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.confirmDeleteOrderMessages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

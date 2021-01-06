@@ -271,7 +271,7 @@ class AddProduct extends BOBasePage {
       page.click(this.productDeleteLink),
     ]);
     await this.clickAndWaitForNavigation(page, this.modalDialogYesButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

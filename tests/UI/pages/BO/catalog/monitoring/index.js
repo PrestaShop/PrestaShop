@@ -153,7 +153,7 @@ class Monitoring extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(table));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Categories methods */
@@ -199,7 +199,7 @@ class Monitoring extends BOBasePage {
     // choose deletion mode
     await page.click(this.deleteModeInput(deletionModePosition));
     await this.clickAndWaitForNavigation(page, this.submitDeleteCategoryButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

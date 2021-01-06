@@ -87,7 +87,7 @@ describe('Quick edit status', async () => {
       const isActionPerformed = await searchPage.setStatus(page, 1, aliasStatus.args.enable);
 
       if (isActionPerformed) {
-        const resultMessage = await searchPage.getTextContent(page, searchPage.alertSuccessBlock);
+        const resultMessage = await searchPage.getAlertSuccessBlockContent(page);
         await expect(resultMessage).to.contains(searchPage.successfulUpdateStatusMessage);
       }
 

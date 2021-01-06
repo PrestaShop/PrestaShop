@@ -202,4 +202,5 @@ export default {
   orderNoteBlock: '.js-order-notes-block',
   orderNoteInput: '#internal_note_note',
   orderNoteSubmitBtn: '.js-order-notes-btn',
+  refreshProductsListLoadingSpinner: '#orderProductsPanel .spinner-order-products-container#orderProductsLoading',
 };
