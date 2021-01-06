@@ -56,29 +56,14 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        /** @var ProductForEditing $product */
-        $product = $this->queryBus->handle(new GetProductForEditing((int) $id));
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing((int) $id));
 
         return [
             'id' => $id,
-            'basic' => [
-                'name' => $product->getBasicInformation()->getLocalizedNames(),
-                'type' => $product->getBasicInformation()->getType()->getValue(),
-                'description' => $product->getBasicInformation()->getLocalizedDescriptions(),
-                'description_short' => $product->getBasicInformation()->getLocalizedShortDescriptions(),
-            ],
-            'price' => [
-                'price_tax_excluded' => (float) (string) $product->getPricesInformation()->getPrice(),
-                // @todo: we don't have the price tax included for now This should be computed by GetProductForEditing
-                'price_tax_included' => (float) (string) $product->getPricesInformation()->getPrice(),
-                'ecotax' => (float) (string) $product->getPricesInformation()->getEcotax(),
-                'tax_rules_group_id' => $product->getPricesInformation()->getTaxRulesGroupId(),
-                'on_sale' => $product->getPricesInformation()->isOnSale(),
-                'wholesale_price' => (float) (string) $product->getPricesInformation()->getWholesalePrice(),
-                'unit_price' => (float) (string) $product->getPricesInformation()->getUnitPrice(),
-                'unity' => $product->getPricesInformation()->getUnity(),
-            ],
-            'shipping' => $this->extractShippingData($product),
+            'basic' => $this->extractBasicData($productForEditing),
+            'price' => $this->extractPriceData($productForEditing),
+            'shipping' => $this->extractShippingData($productForEditing),
         ];
     }
 
@@ -103,6 +88,41 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'depth' => 0,
                 'weight' => 0,
             ],
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractBasicData(ProductForEditing $productForEditing): array
+    {
+        return [
+            'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
+            'type' => $productForEditing->getBasicInformation()->getType()->getValue(),
+            'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
+            'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractPriceData(ProductForEditing $productForEditing): array
+    {
+        return [
+            'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
+            // @todo: we don't have the price tax included for now This should be computed by GetProductForEditing
+            'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
+            'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+            'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
+            'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
+            'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),
+            'unit_price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
+            'unity' => $productForEditing->getPricesInformation()->getUnity(),
         ];
     }
 

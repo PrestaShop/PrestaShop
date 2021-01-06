@@ -189,6 +189,8 @@ export default class ProductPartialUpdater {
 
     formArray.forEach((formField) => {
       let {value} = formField;
+      // Input names can be identical when expressing array of values for same field (like multiselect checkboxes)
+      // so we need to put these input values into single array indexed by that field name
       if (formField.name.endsWith('[]')) {
         let multiField = [];
 
