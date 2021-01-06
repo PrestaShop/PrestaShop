@@ -144,6 +144,10 @@
 
         &:last-of-type {
           width: 75%;
+
+          > div {
+            position: initial;
+          }
         }
       }
     }
@@ -281,6 +285,12 @@
   position: absolute;
   top: 7px;
   right: 7px;
+
+  @media (max-width: 33.9em) {
+    top: 0;
+    right: 1rem;
+  }
+
   &.md-checkbox label {
     padding: 0;
   }
@@ -658,6 +668,22 @@ form#importDropzone {
   }
 }
 
+.modules-list {
+  .module-item {
+    &:first-of-type {
+      .container-fluid {
+        @include border-top-radius(5px);
+      }
+    }
+
+    &:last-of-type {
+      .container-fluid {
+        @include border-bottom-radius(5px);
+      }
+    }
+  }
+}
+
 .module-list {
   &-disabled {
     @extend .module-list;
@@ -811,6 +837,10 @@ form#importDropzone {
 }
 
 .module-actions {
+  @media (max-width: 33.9em) {
+    margin-top: 1rem;
+  }
+
   // @toDo: move to ui kit
   .dropdown-toggle-split-text {
     margin-left: 10px !important;
