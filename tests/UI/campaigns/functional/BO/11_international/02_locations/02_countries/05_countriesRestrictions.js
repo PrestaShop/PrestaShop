@@ -35,6 +35,9 @@ let numberOfCountries = 0;
 // Import data
 const {DefaultAccount} = require('@data/demo/customer');
 
+/*
+Enable the country ''
+ */
 describe('Filter and quick edit countries', async () => {
   // before and after functions
   before(async function () {

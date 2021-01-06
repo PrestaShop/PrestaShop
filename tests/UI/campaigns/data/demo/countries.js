@@ -34,7 +34,7 @@ module.exports = {
         status: false,
       },
       afghanistan: {
-        id: 1,
+        id: 231,
         name: 'Afghanistan',
         isoCode: 'AF',
         callPrefix: 93,
