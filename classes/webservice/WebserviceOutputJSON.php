@@ -44,7 +44,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
      * Json content.
      */
     protected $content = [];
-    
+
     private $parentNode = null;
 
     public function __construct($languages = [])
@@ -120,7 +120,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         if (in_array($node_name, ['description', 'schema', 'api'])) {
             return;
         }
-        
+
         if (isset($this->parentNode)) {
             $this->content[$this->parentNode][$node_name] = [];
         } else {

@@ -181,7 +181,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         /* @var $outputService WebserviceOutputJSONCore */
         $outputService = $this->objOutput->getObjectRender();
-        
+
         $this->output = $outputService->getContent();
     }
 
