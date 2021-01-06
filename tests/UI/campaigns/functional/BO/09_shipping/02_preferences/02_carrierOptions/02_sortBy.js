@@ -22,7 +22,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shipping_preferences_carriersOptions_sortBy';
+const baseContext = 'functional_BO_shipping_preferences_carrierOptions_sortBy';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -130,7 +130,7 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
     const pageTitle = await preferencesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
-  const sortCarriersBy = ['Position', 'Price'];
+
   const sortByPosition = [
     Carriers.default.name,
     Carriers.myCarrier.name,
@@ -138,7 +138,7 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
     Carriers.lightCarrier.name,
   ];
 
-  sortCarriersBy.forEach((sortBy, index) => {
+  ['Position', 'Price'].forEach((sortBy, index) => {
     it(`should set sort by '${sortBy}' in BO`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
@@ -206,6 +206,7 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
     });
   });
 
+
   it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPageToDisable', baseContext);
 
@@ -239,6 +240,7 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
           page,
           carriersPage.alertSuccessBlock,
         );
+
         await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
       }
 
