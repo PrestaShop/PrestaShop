@@ -1,5 +1,6 @@
 #!/bin/sh
 
+set -e
 # Get vars
 WORKSPACE=$1
 PHP_VERSION=$2
