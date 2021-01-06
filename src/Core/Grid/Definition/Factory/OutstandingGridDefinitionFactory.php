@@ -135,6 +135,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'color_field' => 'color',
                         'badge_type' => '',
                         'sortable' => false,
+                        'empty_value' => '--',
                     ])
             )
             ->add(
