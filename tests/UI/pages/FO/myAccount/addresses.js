@@ -23,6 +23,8 @@ class Addresses extends FOBasePage {
    */
   async openNewAddressForm(page) {
     await this.waitForSelectorAndClick(page, this.createNewAddressLink);
+
+    await page.waitForTimeout(5000);
   }
 
   /**

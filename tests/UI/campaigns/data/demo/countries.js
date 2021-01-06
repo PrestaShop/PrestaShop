@@ -33,5 +33,13 @@ module.exports = {
         zone: 'Europe',
         status: false,
       },
+      afghanistan: {
+        id: 1,
+        name: 'Afghanistan',
+        isoCode: 'AF',
+        callPrefix: 93,
+        zone: 'Asia',
+        status: false,
+      },
     },
 };
