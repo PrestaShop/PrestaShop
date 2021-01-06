@@ -171,12 +171,13 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function match($pattern, $type, $value)
     {
-        $typesToInverseMatching = [TypedRegex::TYPE_MESSAGE];
+        $match = preg_match($pattern, $value);
 
+        $typesToInverseMatching = [TypedRegex::TYPE_MESSAGE];
         if (in_array($type, $typesToInverseMatching, true)) {
-            return !preg_match($pattern, $value);
+            return !$match;
         }
 
-        return preg_match($pattern, $value);
+        return $match;
     }
 }
