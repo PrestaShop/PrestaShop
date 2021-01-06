@@ -76,6 +76,7 @@ describe('Create official currency and check it in FO', async () => {
     Currencies.try, Currencies.usd, Currencies.aed, Currencies.lyd, Currencies.lsl,
   ];
 
+  // 1 - Create 10 currencies
   currencies.forEach((currency, index) => {
     describe(`Create official currency '${currency.name}'`, async () => {
       it('should go to create new currency page', async function () {
@@ -101,7 +102,7 @@ describe('Create official currency and check it in FO', async () => {
     });
   });
 
-  // Filter currencies with all inputs and selects in grid table
+  // 2 - Filter currencies table
   describe('Filter currencies', async () => {
     [
       {
@@ -173,6 +174,37 @@ describe('Create official currency and check it in FO', async () => {
         const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 10);
       });
+    });
+  });
+
+  // 3 : Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await currenciesPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await currenciesPage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await currenciesPage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await currenciesPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 });
