@@ -251,7 +251,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ->setName($this->trans('View invoice', [], 'Admin.Orderscustomers.Feature'))
                     ->setIcon('receipt')
                     ->setOptions([
-                        'route' => 'admin_orders_generate_delivery_slip_pdf',
+                        'route' => 'admin_orders_generate_invoice_pdf',
                         'route_param_name' => 'orderId',
                         'route_param_field' => 'id_order',
                         'use_inline_display' => true,
