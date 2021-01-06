@@ -150,7 +150,7 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function sanitize($value, $type)
     {
-        if ($type === 'name') {
+        if ($type === TypedRegex::TYPE_NAME) {
             $value = stripslashes($value);
         }
 
@@ -171,7 +171,7 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function match($pattern, $type, $value)
     {
-        $typesToInverseMatching = ['message'];
+        $typesToInverseMatching = [TypedRegex::TYPE_MESSAGE];
 
         if (in_array($type, $typesToInverseMatching, true)) {
             return !preg_match($pattern, $value);
