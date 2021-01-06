@@ -36,7 +36,12 @@ let numberOfCountries = 0;
 const {DefaultAccount} = require('@data/demo/customer');
 
 /*
-Enable the country ''
+Enable the country 'Afghanistan'
+Enable 'Restrict country selections in front office to those covered by active carriers'
+Go to FO > Address page and check that the country doesn't exist
+Disable 'Restrict country selections in front office to those covered by active carriers'
+Go to FO > Address page and check that the country exist
+Disable the country 'Afghanistan'
  */
 describe('Filter and quick edit countries', async () => {
   // before and after functions
