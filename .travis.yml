@@ -21,14 +21,22 @@ cache:
 os: linux
 dist: xenial
 
+php:
+  - 7.1
+  - 7.3
+
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
     - DISABLE_DEBUG_TOOLBAR=1
+  jobs:
+    - PRESTASHOP_TEST_TYPE=sanity
 
 stages:
   - name: deploy
     if: type = cron
+  - name: test
+    if: type IN (push, pull_request)
 
 jobs:
   include:
@@ -53,6 +61,17 @@ jobs:
         local_dir: "/tmp/ps-release"
         on:
           all_branches: true
+
+before_install: skip
+
+install: skip
+
+script:
+  - php -v
+
+after_script: skip
+
+after_failure: skip
 
 before_deploy:
   - |
