@@ -56,21 +56,29 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
     private $criteriaApplicator;
 
     /**
+     * @var array
+     */
+    private $contextShopIds;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
      * @param int $contextLangId
+     * @param array $contextShopIds
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
-        int $contextLangId
+        int $contextLangId,
+        array $contextShopIds
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->contextLangId = $contextLangId;
         $this->criteriaApplicator = $criteriaApplicator;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -115,7 +123,9 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
             ->leftJoin('r', $this->dbPrefix . 'risk_lang', 'rl', 'r.id_risk = rl.id_risk AND rl.id_lang = :context_lang_id')
             ->leftJoin('o', $this->dbPrefix . 'currency', 'cur', 'o.id_currency = cur.id_currency')
             ->andWhere('number > 0')
-            ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT);
+            ->andWhere('o.id_shop IN (:context_shop_ids)')
+            ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT)
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         $this->applyFilters($qb, $criteria->getFilters());
 
