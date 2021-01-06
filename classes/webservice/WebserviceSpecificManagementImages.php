@@ -530,7 +530,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
         if ($this->imageType == 'products') {
             foreach (Image::getAllImages() as $image) {
-                $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $image['id_image'], 'id_product' => $image['id_product'], 'xlink_resource' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $image['id_product']), false);
+                $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', [], ['id' => $image['id_image'], 'id_product' => $image['id_product'], 'xlink_resource' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $image['id_product']], false);
             }
         } else {
             $nodes = scandir($directory, SCANDIR_SORT_NONE);
