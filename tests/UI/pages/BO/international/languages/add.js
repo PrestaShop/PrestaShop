@@ -47,7 +47,7 @@ class AddLanguage extends BOBasePage {
 
     // Save and return result
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 

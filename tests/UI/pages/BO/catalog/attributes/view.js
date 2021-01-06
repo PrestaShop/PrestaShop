@@ -167,7 +167,7 @@ class ViewAttribute extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -194,7 +194,7 @@ class ViewAttribute extends BOBasePage {
       this.tableColumnPosition(newPosition),
     );
 
-    return this.getGrowlMessageContent(page);
+    return this.getTextContent(page, this.growlMessageBlock);
   }
 }
 

@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizatio
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -171,13 +170,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         unset($product);
 
-        if (QuerySorting::DESC === $query->getProductsSorting()->getValue()) {
-            // reorder products by order_detail_id DESC
-            krsort($products);
-        } else {
-            // reorder products by order_detail_id ASC
-            ksort($products);
-        }
+        ksort($products);
 
         $productsForViewing = [];
 

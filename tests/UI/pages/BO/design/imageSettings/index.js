@@ -265,7 +265,7 @@ class ImageSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Bulk actions methods */
@@ -298,7 +298,7 @@ class ImageSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Sort functions */

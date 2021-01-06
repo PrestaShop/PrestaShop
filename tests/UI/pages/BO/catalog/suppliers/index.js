@@ -108,7 +108,7 @@ class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSuppliers(page);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -241,7 +241,7 @@ class Suppliers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -266,7 +266,7 @@ class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSuppliers(page);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -278,6 +278,13 @@ class Suppliers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
+  /**
+   * Get alert text message
+   * @returns {Promise<string>}
+   */
+  getAlertTextMessage(page) {
+    return this.getTextContent(page, this.alertTextBlock);
+  }
 
   // Sort methods
   /**

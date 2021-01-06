@@ -263,7 +263,7 @@ class Countries extends BOBasePage {
 
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**

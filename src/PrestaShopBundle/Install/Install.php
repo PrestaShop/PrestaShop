@@ -440,10 +440,11 @@ class Install extends AbstractInstall
                         }
                     }
                 }
-                $languages = $this->installLanguages(array_unique($iso_codes_to_install));
+                $iso_codes_to_install = array_unique($iso_codes_to_install);
             } else {
-                $languages = $this->installLanguages();
+                $iso_codes_to_install = null;
             }
+            $languages = $this->installLanguages($iso_codes_to_install);
         } catch (PrestashopInstallerException $e) {
             $this->setError($e->getMessage());
 
@@ -574,13 +575,11 @@ class Install extends AbstractInstall
     /**
      * Install languages.
      *
-     * @param array|null $languages_list
-     *
      * @return array Association between ID and iso array(id_lang => iso, ...)
      */
     public function installLanguages($languages_list = null)
     {
-        if ($languages_list === null || (is_array($languages_list) && !count($languages_list))) {
+        if ($languages_list == null || !is_array($languages_list) || !count($languages_list)) {
             $languages_list = $this->language->getIsoList();
         }
 

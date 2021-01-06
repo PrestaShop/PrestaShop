@@ -71,7 +71,7 @@ class AddTitle extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 

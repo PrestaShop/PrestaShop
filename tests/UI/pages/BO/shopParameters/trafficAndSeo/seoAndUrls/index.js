@@ -109,7 +109,7 @@ class SeoAndUrls extends BOBasePage {
     ]);
 
     await this.confirmDeleteSeoUrlPage(page);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Column methods */
@@ -170,7 +170,7 @@ class SeoAndUrls extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSeoUrlPage(page);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -299,7 +299,7 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableFriendlyURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
@@ -311,7 +311,7 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableAccentedURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
@@ -323,7 +323,7 @@ class SeoAndUrls extends BOBasePage {
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
     await page.check(this.switchDisplayAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

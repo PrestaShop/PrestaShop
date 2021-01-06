@@ -35,7 +35,7 @@ class AddPageCategory extends BOBasePage {
     await this.setValue(page, this.metaDescriptionInput, pageCategoryData.metaDescription);
     await this.setValue(page, this.metaKeywordsInput, pageCategoryData.metaKeywords);
     await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 module.exports = new AddPageCategory();

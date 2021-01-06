@@ -95,7 +95,7 @@ class AddSeoUrl extends BOBasePage {
 
     // Save seo page
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 

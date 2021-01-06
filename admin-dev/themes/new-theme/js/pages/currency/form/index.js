@@ -23,18 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ChoiceTree from '@components/form/choice-tree';
+import TranslatableInput from '@components/translatable-input';
 import currencyFormMap from './currency-form-map';
 import CurrencyForm from './currency-form';
 
 const {$} = window;
 
 $(() => {
-  window.prestashop.component.initComponents(
-    [
-      'TranslatableInput',
-    ],
-  );
-  const choiceTree = new window.prestashop.component.ChoiceTree(currencyFormMap.shopAssociationTree);
+  new TranslatableInput();
+  const choiceTree = new ChoiceTree(currencyFormMap.shopAssociationTree);
   choiceTree.enableAutoCheckChildren();
   const currencyForm = new CurrencyForm(currencyFormMap);
   currencyForm.init();

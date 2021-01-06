@@ -149,7 +149,11 @@ describe('Filter And Quick Edit taxes', async () => {
         );
 
         if (isActionPerformed) {
-          const resultMessage = await taxesPage.getAlertSuccessBlockParagraphContent(page);
+          const resultMessage = await taxesPage.getTextContent(
+            page,
+            taxesPage.alertSuccessBlockParagraph,
+          );
+
           await expect(resultMessage).to.contains(taxesPage.successfulUpdateStatusMessage);
         }
 

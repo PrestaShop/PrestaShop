@@ -145,7 +145,7 @@ class CreditSlips extends BOBasePage {
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
     await page.click(this.generatePdfByDateButton);
-    return this.getAlertDangerBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertTextBlock);
   }
 
   /**
@@ -180,7 +180,7 @@ class CreditSlips extends BOBasePage {
    */
   async saveCreditSlipOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveCreditSlipOptionsButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 module.exports = new CreditSlips();

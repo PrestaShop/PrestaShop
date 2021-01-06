@@ -200,9 +200,8 @@ class SqlManager extends BOBasePage {
       page.click(this.sqlQueryListTableDeleteLink(row)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-
     await this.confirmDeleteSQLQuery(page);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -321,7 +320,7 @@ class SqlManager extends BOBasePage {
     ]);
     await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 

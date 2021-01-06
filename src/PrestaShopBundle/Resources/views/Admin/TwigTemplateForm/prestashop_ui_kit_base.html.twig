@@ -654,7 +654,7 @@
 
 {% block material_multiple_choice_table_widget %}
   {% spaceless %}
-    <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
+    <div class="choice-table table-responsive">
       <table class="table">
         <thead>
         <tr>
@@ -900,12 +900,6 @@
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
-
-{%- block number_widget -%}
-  {%- set type = type|default('text') -%}
-  {{ block('form_widget_simple') }}
-  {{- block('form_help') -}}
-{%- endblock number_widget -%}
 
 {% block form_help %}
   {% if help %}

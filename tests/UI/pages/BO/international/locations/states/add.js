@@ -38,7 +38,7 @@ class AddState extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveStateButton);
 
     // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

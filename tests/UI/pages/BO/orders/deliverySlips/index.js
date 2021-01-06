@@ -55,7 +55,7 @@ class DeliverySlips extends BOBasePage {
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
     await page.click(this.generatePdfByDateButton);
-    return this.getAlertDangerBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertTextBlock);
   }
 
   /**
@@ -109,7 +109,7 @@ class DeliverySlips extends BOBasePage {
    */
   async saveDeliverySlipOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveDeliverySlipOptionsButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 module.exports = new DeliverySlips();

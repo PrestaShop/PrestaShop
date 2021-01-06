@@ -208,7 +208,7 @@ class Search extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /* Bulk actions methods */
@@ -242,7 +242,7 @@ class Search extends BOBasePage {
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**

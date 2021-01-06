@@ -189,7 +189,11 @@ describe('Filter And Quick Edit Pages', async () => {
         );
 
         if (isActionPerformed) {
-          const resultMessage = await pagesPage.getAlertSuccessBlockParagraphContent(page);
+          const resultMessage = await pagesPage.getTextContent(
+            page,
+            pagesPage.alertSuccessBlockParagraph,
+          );
+
           await expect(resultMessage).to.contains(pagesPage.successfulUpdateStatusMessage);
         }
 

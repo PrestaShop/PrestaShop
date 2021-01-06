@@ -262,7 +262,10 @@ describe('Filter And Quick Edit Customers', async () => {
         );
 
         if (isActionPerformed) {
-          const resultMessage = await customersPage.getAlertSuccessBlockParagraphContent(page);
+          const resultMessage = await customersPage.getTextContent(
+            page,
+            customersPage.alertSuccessBlockParagraph,
+          );
           await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
         }
 

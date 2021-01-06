@@ -223,7 +223,7 @@ class Carriers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   // Sort methods
@@ -345,7 +345,7 @@ class Carriers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
@@ -425,7 +425,7 @@ class Carriers extends BOBasePage {
       this.tableColumnPosition(newPosition),
     );
 
-    return this.getGrowlMessageContent(page);
+    return this.getTextContent(page, this.growlMessageBlock);
   }
 }
 

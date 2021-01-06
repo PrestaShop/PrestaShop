@@ -31,7 +31,7 @@ class AddZone extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveZoneButton);
 
     // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

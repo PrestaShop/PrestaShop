@@ -236,7 +236,7 @@ class SearchEngines extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Pagination methods */
@@ -315,7 +315,7 @@ class SearchEngines extends BOBasePage {
 
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

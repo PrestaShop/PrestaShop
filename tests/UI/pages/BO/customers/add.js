@@ -71,7 +71,7 @@ class AddCustomer extends BOBasePage {
 
     // Save Customer
     await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**

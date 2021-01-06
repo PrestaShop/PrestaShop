@@ -33,11 +33,7 @@ class SimplexmlElement extends \SimpleXMLElement
     /**
      * Can add SimpleXMLElement values in XML tree.
      *
-     * @param string $name
-     * @param string|SimplexmlElement|null $value
-     * @param string|null $namespace
-     *
-     * @return \SimpleXMLElement|void
+     * @see SimpleXMLElement::addChild()
      */
     public function addChild($name, $value = null, $namespace = null)
     {

@@ -46,7 +46,7 @@ class AddCountry extends BOBasePage {
     await page.click(this.displayTaxLabel(countryData.displayTaxNumber ? 'on' : 'off'));
     // Save country
     await this.clickAndWaitForNavigation(page, this.saveCountryButton);
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

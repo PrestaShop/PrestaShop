@@ -263,7 +263,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -297,7 +297,7 @@ class Categories extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -323,7 +323,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -339,7 +339,7 @@ class Categories extends BOBasePage {
       this.categoriesListTableDraggableColumn(categoryRow),
       this.categoriesListTableDraggableColumn(position),
     );
-    return this.getGrowlMessageContent(page);
+    return this.getTextContent(page, this.growlMessageBlock);
   }
 
   /* Sort methods */

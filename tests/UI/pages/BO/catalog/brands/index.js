@@ -275,7 +275,7 @@ class Brands extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDelete(page, table);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -327,7 +327,7 @@ class Brands extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -356,7 +356,7 @@ class Brands extends BOBasePage {
       await this.waitForVisibleSelector(page, `${this.confirmDeleteModal('manufacturer_address')}.show`);
     }
     await this.confirmDelete(page, table);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -509,6 +509,15 @@ class Brands extends BOBasePage {
    */
   async sortTableAddresses(page, sortBy, sortDirection = 'asc') {
     return this.sortTable(page, 'manufacturer_address', sortBy, sortDirection);
+  }
+
+  /**
+   * Get alert text message
+   * @param page
+   * @return {Promise<string>}
+   */
+  getAlertTextMessage(page) {
+    return this.getTextContent(page, this.alertTextBlock);
   }
 
   // Export methods

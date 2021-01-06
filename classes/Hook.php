@@ -152,7 +152,7 @@ class HookCore extends ObjectModel
 
     public static function isDisplayHookName($hook_name)
     {
-        $hook_name = strtolower(static::normalizeHookName($hook_name));
+        $hook_name = strtolower(self::normalizeHookName($hook_name));
 
         if ($hook_name === 'header' || $hook_name === 'displayheader') {
             // this hook is to add resources to the <head> section of the page
@@ -181,7 +181,7 @@ class HookCore extends ObjectModel
 
         if ($only_display_hooks) {
             return array_filter($hooks, function ($hook) {
-                return static::isDisplayHookName($hook['name']);
+                return self::isDisplayHookName($hook['name']);
             });
         } else {
             return $hooks;
@@ -209,9 +209,9 @@ class HookCore extends ObjectModel
             return false;
         }
 
-        $hook_ids = static::getAllHookIds($withAliases, $refreshCache);
+        $hook_ids = self::getAllHookIds($withAliases, $refreshCache);
 
-        return $hook_ids[$hookName] ?? false;
+        return isset($hook_ids[$hookName]) ? $hook_ids[$hookName] : false;
     }
 
     /**
@@ -229,9 +229,7 @@ class HookCore extends ObjectModel
 							WHERE `id_hook` = ' . (int) $hook_id);
 
             if (false === $result) {
-                throw new PrestaShopObjectNotFoundException(
-                    sprintf('The hook id #%d does not exist in database', $hook_id)
-                );
+                throw new PrestaShopObjectNotFoundException('The hook id #%s does not exist in database', $hook_id);
             }
 
             Cache::store($cache_id, $result);
@@ -258,7 +256,7 @@ class HookCore extends ObjectModel
             E_USER_DEPRECATED
         );
 
-        return static::getCanonicalHookNames();
+        return self::getCanonicalHookNames();
     }
 
     /**
@@ -272,7 +270,7 @@ class HookCore extends ObjectModel
      */
     public static function isAlias(string $hookName): bool
     {
-        $aliases = static::getCanonicalHookNames();
+        $aliases = self::getCanonicalHookNames();
 
         return isset($aliases[strtolower($hookName)]);
     }
@@ -292,7 +290,7 @@ class HookCore extends ObjectModel
             $hookAliases = [];
             if ($hookAliasList) {
                 foreach ($hookAliasList as $ha) {
-                    $hookAliases[strtolower($ha['name'])][] = $ha['alias'];
+                    $hookAliases[$ha['name']][] = $ha['alias'];
                 }
             }
             Cache::store($cacheId, $hookAliases);
@@ -321,7 +319,7 @@ class HookCore extends ObjectModel
 
         $allAliases = Hook::getAllHookAliases();
 
-        $aliases = $allAliases[strtolower($canonicalHookName)] ?? [];
+        $aliases = $allAliases[$canonicalHookName] ?? [];
 
         Cache::store($cacheId, $aliases);
 
@@ -390,7 +388,7 @@ class HookCore extends ObjectModel
         $hooksToCheck = (!$strict) ? static::getAllKnownNames($hookName) : [$hookName];
 
         foreach ($hooksToCheck as $currentHookName) {
-            if (is_callable([$module, static::getMethodName($currentHookName)])) {
+            if (is_callable([$module, self::getMethodName($currentHookName)])) {
                 return true;
             }
         }
@@ -416,14 +414,14 @@ class HookCore extends ObjectModel
         // Since is_callable() will always return true when __call() is available,
         // if the module was expecting an aliased hook name to be invoked, but we send
         // the canonical hook name instead, the hook will never be acknowledged by the module.
-        $methodName = static::getMethodName($hookName);
+        $methodName = self::getMethodName($hookName);
         if (is_callable([$module, $methodName])) {
             return static::coreCallHook($module, $methodName, $hookArgs);
         }
 
         // fall back to all other names
         foreach (static::getAllKnownNames($hookName) as $hook) {
-            $methodName = static::getMethodName($hook);
+            $methodName = self::getMethodName($hook);
             if (is_callable([$module, $methodName])) {
                 return static::coreCallHook($module, $methodName, $hookArgs);
             }
@@ -718,7 +716,7 @@ class HookCore extends ObjectModel
      */
     public static function getHookModuleExecList($hookName = null)
     {
-        $allHookRegistrations = static::getAllHookRegistrations(Context::getContext(), $hookName);
+        $allHookRegistrations = self::getAllHookRegistrations(Context::getContext(), $hookName);
 
         // If no hook_name is given, return all registered hooks
         if (null === $hookName) {
@@ -777,7 +775,7 @@ class HookCore extends ObjectModel
             return null;
         }
 
-        $hookRegistry = static::getHookRegistry();
+        $hookRegistry = self::getHookRegistry();
         $isRegistryEnabled = null !== $hookRegistry;
 
         if ($isRegistryEnabled) {
@@ -819,8 +817,8 @@ class HookCore extends ObjectModel
             return ($array_return) ? [] : false;
         }
 
-        if (array_key_exists($hook_name, static::$deprecated_hooks)) {
-            $deprecVersion = static::$deprecated_hooks[$hook_name]['from'] ?? _PS_VERSION_;
+        if (array_key_exists($hook_name, self::$deprecated_hooks)) {
+            $deprecVersion = self::$deprecated_hooks[$hook_name]['from'] ?? _PS_VERSION_;
             Tools::displayAsDeprecated('The hook ' . $hook_name . ' is deprecated in PrestaShop v.' . $deprecVersion);
         }
 
@@ -1046,8 +1044,8 @@ class HookCore extends ObjectModel
         $customer = $context->customer;
 
         $cache_id = self::MODULE_LIST_BY_HOOK_KEY
-            . (isset($shop->id) ? '_' . $shop->id : '')
-            . (isset($customer->id) ? '_' . $customer->id : '');
+            . ($shop instanceof Shop && isset($shop->id) ? '_' . $shop->id : '')
+            . ($customer instanceof Customer ? '_' . $customer->id : '');
 
         $useCache = (
             !in_array(
@@ -1188,7 +1186,7 @@ class HookCore extends ObjectModel
         if ($useCache) {
             Cache::store($cache_id, $allHookRegistrations);
             // @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
-            static::$_hook_modules_cache_exec = $allHookRegistrations;
+            self::$_hook_modules_cache_exec = $allHookRegistrations;
         }
 
         return $allHookRegistrations;

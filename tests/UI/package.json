@@ -11,7 +11,7 @@
     "lint": "eslint --ignore-path .gitignore .",
     "specific-test": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
     "sanity-tests": "./node_modules/mocha/bin/mocha --file campaigns/utils/setup.js campaigns/sanity/*",
-    "sanity-travis": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
+    "sanity-tests-fast-fail": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
     "functional-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/*",
     "regression-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/regression/*",
     "all-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*",

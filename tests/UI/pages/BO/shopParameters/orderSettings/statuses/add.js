@@ -55,7 +55,7 @@ class AddOrderStatus extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

@@ -156,7 +156,11 @@ describe('Filter And Quick Edit brands', async () => {
         const isActionPerformed = await brandsPage.setBrandStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await brandsPage.getAlertSuccessBlockParagraphContent(page);
+          const resultMessage = await brandsPage.getTextContent(
+            page,
+            brandsPage.alertSuccessBlockParagraph,
+          );
+
           await expect(resultMessage).to.contains(brandsPage.successfulUpdateStatusMessage);
         }
 

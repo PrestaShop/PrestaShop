@@ -202,7 +202,10 @@ class ToolsCore
             }
 
             $explode = explode('?', $url);
-            $url = $link->getPageLink($explode[0]);
+            // don't use ssl if url is home page
+            // used when logout for example
+            $use_ssl = !empty($url);
+            $url = $link->getPageLink($explode[0], $use_ssl);
             if (isset($explode[1])) {
                 $url .= '?' . $explode[1];
             }

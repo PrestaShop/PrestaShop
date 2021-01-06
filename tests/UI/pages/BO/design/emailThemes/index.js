@@ -32,7 +32,7 @@ class EmailThemes extends BOBasePage {
     await this.selectByVisibleText(page, this.defaultEmailThemeSelect, emailTheme);
     await this.clickAndWaitForNavigation(page, this.configurationFormSaveButton);
 
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /* Email themes grid methods */

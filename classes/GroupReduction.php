@@ -285,12 +285,4 @@ class GroupReductionCore extends ObjectModel
 
         return true;
     }
-
-    /**
-     * Reset static cache (mainly for test environment)
-     */
-    public static function resetStaticCache()
-    {
-        static::$reduction_cache = [];
-    }
 }

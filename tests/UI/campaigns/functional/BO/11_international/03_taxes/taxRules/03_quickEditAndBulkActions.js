@@ -135,7 +135,7 @@ describe('Enable/Disable/delete tax rules by quick edit and bulk actions', async
         const isActionPerformed = await taxRulesPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await taxRulesPage.getAlertSuccessBlockContent(page);
+          const resultMessage = await taxRulesPage.getTextContent(page, taxRulesPage.alertSuccessBlock);
           await expect(resultMessage).to.contains(taxRulesPage.successfulUpdateStatusMessage);
         }
 

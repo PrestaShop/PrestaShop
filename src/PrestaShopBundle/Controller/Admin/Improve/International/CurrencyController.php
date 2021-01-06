@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -192,19 +193,11 @@ class CurrencyController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        $templateVars = [
+        return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', [
             'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
             'currencyForm' => $currencyForm->createView(),
-        ];
-        try {
-            $languageData = $this->getLanguagesData($currencyForm->getData()['iso_code']);
-            $templateVars['languages'] = $languageData;
-        } catch (Exception $e) {
-            $templateVars['languageDataError'] = $e->getMessage();
-            $templateVars['languages'] = [];
-        }
-
-        return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', $templateVars);
+            'languages' => $this->getLanguagesData($currencyForm->getData()['iso_code']),
+        ]);
     }
 
     /**

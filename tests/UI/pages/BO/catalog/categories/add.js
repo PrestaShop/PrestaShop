@@ -46,7 +46,7 @@ class AddCategory extends BOBasePage {
     await page.click(this.selectAllGroupAccessCheckbox);
     // Save Category
     await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -65,7 +65,7 @@ class AddCategory extends BOBasePage {
     await page.click(this.selectAllGroupAccessCheckbox);
     // Save Category
     await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 

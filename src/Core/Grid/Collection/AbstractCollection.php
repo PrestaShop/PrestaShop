@@ -48,7 +48,7 @@ abstract class AbstractCollection implements Iterator, Countable
     }
 
     /**
-     * @return mixed|false
+     * {@inheritdoc}
      */
     public function next()
     {
