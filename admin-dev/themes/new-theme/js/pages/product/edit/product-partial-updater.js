@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import _ from 'lodash';
+
 const {$} = window;
 
 /**
@@ -71,18 +73,25 @@ export default class ProductPartialUpdater {
   /**
    * This methods handles the form submit
    *
-   * @param event
-   *
    * @returns {boolean}
    *
    * @private
    */
-  updatePartialForm(event) {
-    event.stopImmediatePropagation();
-
+  updatePartialForm() {
     const updatedData = this.getUpdatedFormData();
     if (updatedData !== null) {
-      this.postUpdatedData(updatedData);
+      let formMethod = this.$productForm.prop('method');
+      if (Object.prototype.hasOwnProperty.call(updatedData, '_method')) {
+        // eslint-disable-next-line dot-notation
+        formMethod = updatedData['_method'];
+      }
+
+      if (formMethod === 'PATCH') {
+        this.postUpdatedData(updatedData);
+      } else {
+        // Return true only for POST request to keep submitting form normally
+        return true;
+      }
     } else {
       // @todo: This is temporary we should probably use a nice modal instead, that said since the submit button is
       //        disabled when no data has been modified it should never happen
@@ -149,14 +158,16 @@ export default class ProductPartialUpdater {
     // This way only updated AND new values remain
     Object.keys(this.initialData).forEach((fieldName) => {
       const fieldValue = this.initialData[fieldName];
-      if (Array.isArray(fieldValue)) {
-        if (this.arrayEquals(fieldValue, currentData[fieldName])) {
-          delete currentData[fieldName];
-        }
-      } else if (currentData[fieldName] === fieldValue) {
+      // Field is absent in the new data (it was not in the initial) we force it to empty string (not null
+      // or it will be ignored)
+      if (!Object.prototype.hasOwnProperty.call(currentData, fieldName)) {
+        currentData[fieldName] = '';
+      } else if (_.isEqual(currentData[fieldName], fieldValue)) {
         delete currentData[fieldName];
       }
     });
+    // No need to loop through the field contained in currentData and not in the initial
+    // they are new values so are, by fact, updated values
 
     if (Object.keys(currentData).length === 0) {
       return null;
@@ -221,24 +232,5 @@ export default class ProductPartialUpdater {
       type: 'hidden',
       value,
     }).appendTo($form);
-  }
-
-  // @todo: move out or use some lib for this?
-  arrayEquals(arr1, arr2) {
-    if (arr1.length !== arr2.length) {
-      return false;
-    }
-
-    for (let i = 0; i < arr2.length; i += 1) {
-      if (arr1[i] instanceof Array && arr2[i] instanceof Array) {
-        if (!arr1[i].equals(arr2[i])) {
-          return false;
-        }
-      } else if (arr1[i] !== arr2[i]) {
-        return false;
-      }
-    }
-
-    return true;
   }
 }
