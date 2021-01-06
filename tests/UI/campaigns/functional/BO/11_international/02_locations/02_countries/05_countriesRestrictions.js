@@ -82,7 +82,7 @@ describe('Filter and quick edit countries', async () => {
   });
 
   it(`should search for the country '${countries.afghanistan.name}'`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterByName', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
     await countriesPage.filterTable(page, 'input', 'b!name', countries.afghanistan.name);
 
@@ -93,7 +93,7 @@ describe('Filter and quick edit countries', async () => {
     await expect(textColumn).to.equal(countries.afghanistan.name);
   });
 
-  it('should enable the country', async function () {
+  it(`should enable the country '${countries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableCountry', baseContext);
 
     await countriesPage.setCountryStatus(page, 1, true);
@@ -150,7 +150,7 @@ describe('Filter and quick edit countries', async () => {
       await expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
     });
 
-    it(`should check if the new country '${countries.afghanistan.name}' exist`, async function () {
+    it(`should check if the country '${countries.afghanistan.name}' exist`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkIsNewCountryExist${index}`, baseContext);
 
       await addressesPage.openNewAddressForm(page);
@@ -177,8 +177,29 @@ describe('Filter and quick edit countries', async () => {
     });
   });
 
-  it('should reset all countries filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
+  it(`should search for the country '${countries.afghanistan.name}'`, async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToDisable', baseContext);
+
+    await countriesPage.filterTable(page, 'input', 'b!name', countries.afghanistan.name);
+
+    const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+    await expect(numberOfCountriesAfterFilter).to.be.equal(1);
+
+    const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name', countries.afghanistan.name);
+    await expect(textColumn).to.equal(countries.afghanistan.name);
+  });
+
+  it('should disable the country', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'disableCountry', baseContext);
+
+    await countriesPage.setCountryStatus(page, 1, false);
+
+    const currentStatus = await countriesPage.getCountryStatus(page, 1);
+    await expect(currentStatus).to.be.false;
+  });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDisable', baseContext);
 
     const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
