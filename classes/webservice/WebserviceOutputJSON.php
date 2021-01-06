@@ -44,6 +44,8 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
      * Json content.
      */
     protected $content = [];
+    
+    private $parentNode = null;
 
     public function __construct($languages = [])
     {
@@ -113,21 +115,30 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         return '';
     }
 
-    public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
-    {
-        // api ?
-        static $isAPICall = false;
-        if ($node_name == 'api' && ($isAPICall == false)) {
-            $isAPICall = true;
+    public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true) {
+        if (in_array($node_name, ['description', 'schema', 'api'])) {
+            return;
         }
-        if ($isAPICall && !in_array($node_name, ['description', 'schema', 'api'])) {
-            $this->content[] = $node_name;
-        }
-        if (isset($more_attr, $more_attr['id'])) {
-            $this->content[$params['objectsNodeName']][] = ['id' => $more_attr['id']];
+        
+        if (isset($this->parentNode)) {
+            $this->content[$this->parentNode][$node_name] = [];
+        } else {
+            $this->content[$node_name] = [];
         }
 
-        return '';
+        if ($has_child) {
+            $this->parentNode = $node_name;
+        }
+
+        if (is_array($more_attr)) {
+            foreach ($more_attr as $key => $attr) {
+                if (isset($this->parentNode)) {
+                    $this->content[$this->parentNode][$node_name][$key] = $attr;
+                } else {
+                    $this->content[$node_name][$key] = $attr;
+                }
+            }
+        }
     }
 
     public function getNodeName($params)

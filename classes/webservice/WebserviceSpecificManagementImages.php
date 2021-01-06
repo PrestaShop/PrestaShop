@@ -170,7 +170,18 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         $this->manageImages();
 
+        if(is_a($this->objOutput->getObjectRender(), WebserviceOutputJSONCore::class)){
+            $this->injectJsonContent();
+        }
+
         return $this->wsObject->getOutputEnabled();
+    }
+
+    private function injectJsonContent() {
+        /* @var $outputService WebserviceOutputJSONCore */
+        $outputService = $this->objOutput->getObjectRender();
+        
+        $this->output = $outputService->getContent();
     }
 
     /**
@@ -517,15 +528,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('images', []);
 
         if ($this->imageType == 'products') {
-            $ids = [];
-            $images = Image::getAllImages();
-            foreach ($images as $image) {
-                $ids[] = $image['id_product'];
-            }
-            $ids = array_unique($ids, SORT_NUMERIC);
-            asort($ids);
-            foreach ($ids as $id) {
-                $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', [], ['id' => $id, 'xlink_resource' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id], false);
+            foreach (Image::getAllImages() as $image) {
+                $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $image['id_image'], 'id_product' => $image['id_product'], 'xlink_resource' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $image['id_product']), false);
             }
         } else {
             $nodes = scandir($directory, SCANDIR_SORT_NONE);
