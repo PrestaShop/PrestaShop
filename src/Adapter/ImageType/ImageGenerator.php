@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\ImageType;
 
-use Configuration;
 use Db;
 use Image;
 use ImageManager;
 use ImageType;
 use Language;
 use Module;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\ImageType\ImageGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -64,11 +64,17 @@ class ImageGenerator implements ImageGeneratorInterface
     private $maxExecutionTime = 7200;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, Configuration $configuration)
     {
         $this->translator = $translator;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -127,7 +133,7 @@ class ImageGenerator implements ImageGeneratorInterface
             return false;
         }
 
-        $generateHightDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
+        $generateHightDpiImages = $this->configuration->getBoolean('PS_HIGHT_DPI');
         $errors = [];
 
         if (!$productsImages) {
@@ -227,13 +233,13 @@ class ImageGenerator implements ImageGeneratorInterface
     public function regenerateNoPictureImages(string $dir, array $type, array $languages)
     {
         $errors = false;
-        $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+        $generate_hight_dpi_images = $this->configuration->getBoolean('PS_HIGHT_DPI');
 
         foreach ($type as $image_type) {
             foreach ($languages as $language) {
                 $file = $dir . $language['iso_code'] . '.jpg';
                 if (!file_exists($file)) {
-                    $file = _PS_PROD_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
+                    $file = _PS_PROD_IMG_DIR_ . Language::getIsoById($this->configuration->getInt('PS_LANG_DEFAULT')) . '.jpg';
                 }
                 if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg')) {
                     if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
