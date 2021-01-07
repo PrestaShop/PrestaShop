@@ -32,7 +32,7 @@ use Customization;
 use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;

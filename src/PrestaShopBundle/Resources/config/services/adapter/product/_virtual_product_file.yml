@@ -15,7 +15,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.virtual_product_file.uploader.virtual_product_file_uploader'
-            - '@prestashop.adapter.product.repository.product_download_repository'
+            - '@prestashop.adapter.product.virtual_product_file.repository.product_download_repository'
 
     prestashop.adapter.product.virtual_product_file.validator.virtual_product_file_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validator\VirtualProductFileValidator
@@ -27,3 +27,11 @@ services:
         arguments:
             - '@prestashop.adapter.product.virtual_product_file.validator.virtual_product_file_validator'
             - !php/const _PS_DOWNLOAD_DIR_
+
+    prestashop.adapter.product.virtual_product_file.validate.product_download_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validate\ProductDownloadValidator
+
+    prestashop.adapter.product.virtual_product_file.repository.product_download_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\ProductDownloadRepository
+        arguments:
+            - '@prestashop.adapter.product.virtual_product_file.validate.product_download_validator'

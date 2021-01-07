@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductDownloadValidator;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validate\ProductDownloadValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotAddVirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;

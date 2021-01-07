@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Update;
 
 use PrestaShop\Decimal\Exception\DivisionByZeroException;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Uploader\VirtualProductFileUploader;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
