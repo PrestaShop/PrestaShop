@@ -26,9 +26,5 @@
 {% set value = record[column.options.field] %}
 
 <i class="material-icons grid-toggler-icon-{% if value == true %}valid{% else %}not-valid{% endif %}">
-  {% if value %}
-    check
-  {% else %}
-    clear
-  {% endif %}
+  {% if value %}check{% else %}clear{% endif %}
 </i>
