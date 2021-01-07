@@ -57,24 +57,24 @@ class EditImageTypeHandler extends AbstractImageTypeHandler implements EditImage
             $imageType->height = $command->getHeight();
         }
 
-        if (null !== $command->getProductsEnabled()) {
-            $imageType->products = $command->getProductsEnabled();
+        if (null !== $command->isAppliedOnProducts()) {
+            $imageType->products = $command->isAppliedOnProducts();
         }
 
-        if (null !== $command->getCategoriesEnabled()) {
-            $imageType->categories = $command->getCategoriesEnabled();
+        if (null !== $command->isAppliedOnCategories()) {
+            $imageType->categories = $command->isAppliedOnCategories();
         }
 
-        if (null !== $command->getManufacturersEnabled()) {
-            $imageType->manufacturers = $command->getManufacturersEnabled();
+        if (null !== $command->isAppliedOnManufacturers()) {
+            $imageType->manufacturers = $command->isAppliedOnManufacturers();
         }
 
-        if (null !== $command->getSuppliersEnabled()) {
-            $imageType->suppliers = $command->getSuppliersEnabled();
+        if (null !== $command->isAppliedOnSuppliers()) {
+            $imageType->suppliers = $command->isAppliedOnSuppliers();
         }
 
-        if (null !== $command->getStoresEnabled()) {
-            $imageType->stores = $command->getStoresEnabled();
+        if (null !== $command->isAppliedOnStores()) {
+            $imageType->stores = $command->isAppliedOnStores();
         }
 
         if (false === $imageType->validateFields(false)) {
