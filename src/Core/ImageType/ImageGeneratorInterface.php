@@ -38,7 +38,7 @@ interface ImageGeneratorInterface
      * @param array $type
      * @param bool $product
      */
-    public function deleteOldImages(string $dir, array $type, bool $product = false);
+    public function deleteOldImages(string $dir, array $type, bool $product = false): void;
 
     /**
      * @param string $dir
