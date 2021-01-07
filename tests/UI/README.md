@@ -68,7 +68,7 @@ HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanit
 If you want to run all sanity tests "safely", you can use the Travis-specific command : this will add the Mocha `--bail` parameter which stops the campaign when the first test fails.
 
 ```bash
-npm run sanity-travis
+npm run sanity-tests-fast-fail
 ```
 
 ## Functional tests 
