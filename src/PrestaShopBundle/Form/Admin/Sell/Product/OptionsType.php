@@ -73,9 +73,6 @@ class OptionsType extends TranslatorAwareType
             ])
             ->add('visibility', ChoiceType::class, [
                 'choices' => $this->productVisibilityChoiceProvider->getChoices(),
-                'attr' => [
-                    'class' => 'custom-select',
-                ],
                 'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
             ])
             ->add('available_for_order', SwitchType::class, [
@@ -147,6 +144,7 @@ class OptionsType extends TranslatorAwareType
             ])
             ->add('condition', ChoiceType::class, [
                 'choices' => [
+                    //@todo: move to choice provider
                     $this->trans('New', 'Shop.Theme.Catalog') => 'new',
                     $this->trans('Used', 'Shop.Theme.Catalog') => 'used',
                     $this->trans('Refurbished', 'Shop.Theme.Catalog') => 'refurbished',
@@ -157,26 +155,9 @@ class OptionsType extends TranslatorAwareType
                 'required' => true,
                 'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
             ])
-//            ->add('suppliers', ChoiceType::class, [
-//                'choices' => $this->suppliers,
-//                'expanded' => true,
-//                'multiple' => true,
-//                'required' => false,
-//                'attr' => [
-//                    'class' => 'custom-select',
-//                ],
-//                'label' => $this->trans('Suppliers', 'Admin.Global'),
-//            ])
-//            ->add('default_supplier', ChoiceType::class, [
-//                'choices' => $this->suppliers,
-//                'expanded' => true,
-//                'multiple' => false,
-//                'required' => true,
-//                'attr' => [
-//                    'class' => 'custom-select',
-//                ],
-//                'label' => $this->trans('Default suppliers', 'Admin.Catalog.Feature'),
-//            ])
+            ->add('suppliers', SuppliersType::class, [
+                'label' => $this->trans('Suppliers', 'Admin.Global'),
+            ])
         ;
     }
 }

@@ -1272,6 +1272,22 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.suppliers_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SuppliersType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.product.product_supplier_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductSupplierType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
       parent: 'form.type.translatable.aware'

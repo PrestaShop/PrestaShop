@@ -31,7 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -57,13 +59,14 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing((int) $id));
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing($id));
 
         return [
             'id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
+            'options' => $this->extractOptionsData($productForEditing),
         ];
     }
 
@@ -146,5 +149,47 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'delivery_time_out_stock_note' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
             'carriers' => $shipping->getCarrierReferences(),
         ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function extractOptionsData(ProductForEditing $productForEditing): array
+    {
+        return [
+            'suppliers' => $this->extractSuppliersData($productForEditing),
+            //@todo: finish up with rest
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractSuppliersData(ProductForEditing $productForEditing): array
+    {
+        /** @var ProductSupplierOptions $productSupplierOptions */
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
+
+        $suppliersData = [
+            'default_supplier_id' => $productSupplierOptions->getDefaultSupplierId(),
+        ];
+
+        foreach ($productSupplierOptions->getOptionsBySupplier() as $supplierOption) {
+            $suppliersData['supplier_ids'][] = $supplierOption->getSupplierId();
+            $fieldName = 'product_suppliers_for_supplier_' . $supplierOption->getSupplierId();
+            foreach ($supplierOption->getProductSuppliersForEditing() as $key => $supplierForEditing) {
+                $suppliersData[$fieldName][$key]['product_supplier_id'] = $supplierForEditing->getProductSupplierId();
+                $suppliersData[$fieldName][$key]['supplier_price_tax_excluded'] = $supplierForEditing->getPriceTaxExcluded();
+                $suppliersData[$fieldName][$key]['supplier_reference'] = $supplierForEditing->getReference();
+                $suppliersData[$fieldName][$key]['currency_id'] = $supplierForEditing->getCurrencyId();
+                $suppliersData[$fieldName][$key]['combination_id'] = $supplierForEditing->getCombinationId();
+            }
+        }
+
+        return $suppliersData;
     }
 }
