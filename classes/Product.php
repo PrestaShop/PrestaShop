@@ -34,7 +34,11 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
@@ -421,7 +425,7 @@ class ProductCore extends ObjectModel
             'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_manufacturer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => Reference::MAX_LENGTH],
             'supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
             'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'width' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
@@ -429,10 +433,10 @@ class ProductCore extends ObjectModel
             'depth' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'quantity_discount' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13],
-            'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32],
-            'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12],
-            'mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 40],
+            'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => Ean13::MAX_LENGTH],
+            'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => Isbn::MAX_LENGTH],
+            'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => Upc::MAX_LENGTH],
+            'mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => ProductSettings::MAX_MPN_LENGTH],
             'cache_is_pack' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'cache_has_attachments' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'is_virtual' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -6272,7 +6276,7 @@ class ProductCore extends ObjectModel
      *
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     public function hasActivatedRequiredCustomizableFields()
     {
@@ -6429,7 +6433,7 @@ class ProductCore extends ObjectModel
      */
     public static function getOldTempProducts()
     {
-        $sql = 'SELECT id_product FROM `' . _DB_PREFIX_ . 'product` WHERE state=' . \Product::STATE_TEMP . ' AND date_upd < NOW() - INTERVAL 1 DAY';
+        $sql = 'SELECT id_product FROM `' . _DB_PREFIX_ . 'product` WHERE state=' . Product::STATE_TEMP . ' AND date_upd < NOW() - INTERVAL 1 DAY';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
     }

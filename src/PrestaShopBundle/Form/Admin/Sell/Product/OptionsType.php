@@ -27,9 +27,9 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -77,38 +77,27 @@ class OptionsType extends TranslatorAwareType
                 'required' => true,
                 'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
             ])
-            ->add('meta_keyword', TranslatableType::class, [
+            ->add('tags', TranslatableType::class, [
                 'required' => false,
+                'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
                             'type' => TypedRegex::TYPE_GENERIC_NAME,
-                            //                        'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                     ],
                     'attr' => [
                         'class' => 'js-taggable-field',
-                        //                    'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
+                        'placeholder' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
                     ],
                     'required' => false,
                 ],
-            ])
-            ->add('tags', TranslateType::class, [
-                'type' => TextType::class,
-                'options' => [
-                    'attr' => [
-                        'class' => 'tokenfield',
-                        'placeholder' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
-                    ],
-                ],
-                'locales' => $this->locales,
-                'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
             ])
             ->add('mpn', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('MPN', 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Length(['max' => 40]),
+                    new Length(['max' => ProductSettings::MAX_MPN_LENGTH]),
                 ],
                 'empty_data' => '',
             ])

@@ -29,12 +29,22 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
- * Defines settings for product
+ * Defines settings for product.
+ * If related Value Object does not exist, then various settings (e.g. regex, length constraints) are saved here
  */
 class ProductSettings
 {
     /**
-     * Maximum length of product name
+     * Class not supposed to be initialized, it only serves as static storage
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * Bellow constants define maximum allowed length of product properties
      */
     const MAX_NAME_LENGTH = 128;
+    const MAX_MPN_LENGTH = 40;
+    //@todo: finish up with properties that doesn't have related ValueObjects like description, meta_description etc. (see Product.php)
 }
