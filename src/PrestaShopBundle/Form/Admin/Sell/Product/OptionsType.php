@@ -29,9 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -68,13 +68,26 @@ class OptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('active', SwitchType::class, [
+                'label' => $this->trans('Online', 'Admin.Catalog.Feature'),
+            ])
             ->add('visibility', ChoiceType::class, [
                 'choices' => $this->productVisibilityChoiceProvider->getChoices(),
                 'attr' => [
                     'class' => 'custom-select',
                 ],
-                'required' => true,
                 'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
+            ])
+            ->add('available_for_order', SwitchType::class, [
+                'label' => $this->trans('Available for order', 'Admin.Catalog.Feature'),
+            ])
+            ->add('show_price', SwitchType::class, [
+                'label' => $this->trans('Show price', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
+            ->add('online_only', SwitchType::class, [
+                'label' => $this->trans('Web only (not sold in your retail store)', 'Admin.Catalog.Feature'),
+                'required' => false,
             ])
             ->add('tags', TranslatableType::class, [
                 'required' => false,
@@ -128,7 +141,7 @@ class OptionsType extends TranslatorAwareType
                 'label' => $this->trans('Reference', 'Admin.Global'),
                 'empty_data' => '',
             ])
-            ->add('show_condition', CheckboxType::class, [
+            ->add('show_condition', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
             ])
@@ -165,15 +178,5 @@ class OptionsType extends TranslatorAwareType
 //                'label' => $this->trans('Default suppliers', 'Admin.Catalog.Feature'),
 //            ])
         ;
-    }
-
-    /**
-     * Returns the block prefix of this type.
-     *
-     * @return string The prefix name
-     */
-    public function getBlockPrefix()
-    {
-        return 'product_options';
     }
 }
