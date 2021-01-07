@@ -1,5 +1,4 @@
 module.exports = {
-  // TODO replace customers by combinations
   SampleFiles: {
     combinations: {
       value: 'Combinations',
