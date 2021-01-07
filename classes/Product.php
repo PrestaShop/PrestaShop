@@ -1557,15 +1557,15 @@ class ProductCore extends ObjectModel
             $nbDaysNewProduct = 20;
         }
 
-        $query = 'SELECT p.id_product
+        $query = 'SELECT COUNT(p.id_product)
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
             WHERE p.id_product = ' . (int) $this->id . '
             AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
 
-        $result = Db::getInstance()->executeS($query, true, false);
+        $result = Db::getInstance()->getValue($query, true, false);
 
-        return count($result) > 0;
+        return (bool) $result;
     }
 
     /**
