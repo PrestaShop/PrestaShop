@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
 use RuntimeException;
