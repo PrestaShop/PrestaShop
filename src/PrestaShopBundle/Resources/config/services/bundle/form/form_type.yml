@@ -1267,6 +1267,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\OptionsType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
         tags:
             - { name: form.type }
 

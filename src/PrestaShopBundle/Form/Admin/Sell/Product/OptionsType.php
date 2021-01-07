@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -34,6 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -43,40 +45,54 @@ use Symfony\Component\Validator\Constraints\Regex;
 class OptionsType extends TranslatorAwareType
 {
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $productVisibilityChoiceProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $productVisibilityChoiceProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $productVisibilityChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->productVisibilityChoiceProvider = $productVisibilityChoiceProvider;
+    }
+
+    /**
      * {@inheritdoc}
-     *
-     * Builds form
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('visibility', ChoiceType::class, [
-            'choices' => [
-                $this->trans('Everywhere', 'Admin.Catalog.Feature') => 'both',
-                $this->trans('Catalog only', 'Admin.Catalog.Feature') => 'catalog',
-                $this->trans('Search only', 'Admin.Catalog.Feature') => 'search',
-                $this->trans('Nowhere', 'Admin.Catalog.Feature') => 'none',
-            ],
-            'attr' => [
-                'class' => 'custom-select',
-            ],
-            'required' => true,
-            'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
-        ])->add('meta_keyword', TranslatableType::class, [
-            'required' => false,
-            'options' => [
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => TypedRegex::TYPE_GENERIC_NAME,
-                        //                        'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
-                    ]),
-                ],
+        $builder
+            ->add('visibility', ChoiceType::class, [
+                'choices' => $this->productVisibilityChoiceProvider->getChoices(),
                 'attr' => [
-                    'class' => 'js-taggable-field',
-                    //                    'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
+                    'class' => 'custom-select',
                 ],
+                'required' => true,
+                'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
+            ])
+            ->add('meta_keyword', TranslatableType::class, [
                 'required' => false,
-            ],
-        ])
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
+                            //                        'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                    'attr' => [
+                        'class' => 'js-taggable-field',
+                        //                    'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ],
+            ])
             ->add('tags', TranslateType::class, [
                 'type' => TextType::class,
                 'options' => [
