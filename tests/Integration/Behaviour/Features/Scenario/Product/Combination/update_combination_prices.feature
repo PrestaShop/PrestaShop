@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-prices
 @reset-database-before-feature
 @clear-cache-before-feature
-@update-combination
+@product-combination
 @update-combination-prices
 Feature: Update product combination prices in Back Office (BO)
   As an employee
