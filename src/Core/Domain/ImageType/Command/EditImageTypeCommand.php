@@ -174,7 +174,7 @@ class EditImageTypeCommand
     /**
      * @return bool|null
      */
-    public function getProductsEnabled(): ?bool
+    public function isAppliedOnProducts(): ?bool
     {
         return $this->productsEnabled;
     }
@@ -194,7 +194,7 @@ class EditImageTypeCommand
     /**
      * @return bool|null
      */
-    public function getCategoriesEnabled(): ?bool
+    public function isAppliedOnCategories(): ?bool
     {
         return $this->categoriesEnabled;
     }
@@ -214,7 +214,7 @@ class EditImageTypeCommand
     /**
      * @return bool|null
      */
-    public function getManufacturersEnabled(): ?bool
+    public function isAppliedOnManufacturers(): ?bool
     {
         return $this->manufacturersEnabled;
     }
@@ -234,7 +234,7 @@ class EditImageTypeCommand
     /**
      * @return bool|null
      */
-    public function getSuppliersEnabled(): ?bool
+    public function isAppliedOnSuppliers(): ?bool
     {
         return $this->suppliersEnabled;
     }
@@ -254,7 +254,7 @@ class EditImageTypeCommand
     /**
      * @return bool|null
      */
-    public function getStoresEnabled(): ?bool
+    public function isAppliedOnStores(): ?bool
     {
         return $this->storesEnabled;
     }
