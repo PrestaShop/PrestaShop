@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\VirtualProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;

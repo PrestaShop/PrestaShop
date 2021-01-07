@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Update;
 
 use PrestaShop\Decimal\Exception\DivisionByZeroException;
-use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Uploader\VirtualProductFileUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
