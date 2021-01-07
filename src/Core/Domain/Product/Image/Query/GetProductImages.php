@@ -26,10 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Get list of Images associated to a Product
+ * @package PrestaShop\PrestaShop\Core\Domain\Product\Image\Query
+ */
 class GetProductImages
 {
     /**
