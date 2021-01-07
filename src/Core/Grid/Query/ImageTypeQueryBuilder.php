@@ -82,7 +82,7 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('COUNT(*)');
     }
 
-    private function getImageTypeQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    private function getImageTypeQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'image_type', 'it');
