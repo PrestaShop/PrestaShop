@@ -200,7 +200,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
      * @param QueryBuilder $qb
      * @param SearchCriteriaInterface $criteria
      */
-    private function applySorting(QueryBuilder $qb, SearchCriteriaInterface $criteria)
+    private function applySorting(QueryBuilder $qb, SearchCriteriaInterface $criteria): void
     {
         $sortableFields = [
             'id_invoice' => 'oi.id_order_invoice',
