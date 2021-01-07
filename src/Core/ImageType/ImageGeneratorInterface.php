@@ -62,7 +62,7 @@ interface ImageGeneratorInterface
      *
      * @return string|null
      */
-    public function regenerateWatermark(string $dir, ?array $type = null);
+    public function regenerateWatermark(string $dir, ?array $type = null): ?string;
 
     /**
      * @param array $data
