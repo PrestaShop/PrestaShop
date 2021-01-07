@@ -511,14 +511,6 @@ services:
             - '@prestashop.adapter.product.repository.combination_repository'
             - '@prestashop.adapter.product.repository.product_repository'
 
-    prestashop.adapter.product.command_handler.generate_product_combinations_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\GenerateProductCombinationsHandler
-        arguments:
-            - '@prestashop.adapter.product.create.combination_creator'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
-
     prestashop.adapter.product.query_handler.get_editable_combinations_list_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetEditableCombinationsListHandler
         arguments:
@@ -539,24 +531,8 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
 
-    prestashop.adapter.product.command.update_combination_details_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCombinationDetailsHandler
-        arguments:
-            - '@prestashop.adapter.product.repository.combination_repository'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand
-
     prestashop.adapter.product.validate.combination_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\CombinationValidator
-
-    prestashop.adapter.product.command_handler.update_combination_prices_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCombinationPricesHandler
-        arguments:
-            - '@prestashop.adapter.product.repository.combination_repository'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationPricesCommand
 
     prestashop.adapter.product.update.combination_stock_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\CombinationStockUpdater
@@ -564,15 +540,6 @@ services:
             - '@prestashop.adapter.product.repository.stock_available_repository'
             - '@prestashop.adapter.product.repository.combination_repository'
             - '@prestashop.core.stock.stock_manager'
-
-    prestashop.adapter.product.command.update_combination_stock_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCombinationStockHandler
-        arguments:
-            - '@prestashop.adapter.product.repository.combination_repository'
-            - '@prestashop.adapter.product.update.combination_stock_updater'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand
 
     prestashop.adapter.product.validate.stock_available_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\StockAvailableValidator

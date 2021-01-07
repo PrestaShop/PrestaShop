@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-details
 @reset-database-before-feature
 @clear-cache-before-feature
-@update-combination
+@product-combination
 @update-combination-details
 Feature: Update product combination details in Back Office (BO)
   As an employee
