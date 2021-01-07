@@ -327,6 +327,7 @@ class Currencies extends LocalizationBasePage {
       const rowContent = await this.getTextColumnFromTableCurrency(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 }
