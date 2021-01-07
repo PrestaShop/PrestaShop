@@ -57,7 +57,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
     private $configuration;
 
     /**
-     * @var array
+     * @var array<string, id>
      */
     private $risks;
 
