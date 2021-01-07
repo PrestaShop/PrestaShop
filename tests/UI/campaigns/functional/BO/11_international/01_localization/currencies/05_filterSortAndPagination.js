@@ -10,7 +10,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
 const addCurrencyPage = require('@pages/BO/international/currencies/add');
-const foHomePage = require('@pages/FO/home');
 
 // Import Data
 const {Currencies} = require('@data/demo/currencies');
@@ -205,6 +204,61 @@ describe('Create official currency and check it in FO', async () => {
 
       const paginationNumber = await currenciesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 4 : Sort table
+  describe('Sort currencies table', async () => {
+    const tests = [
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_currency', sortDirection: 'desc', isFloat: true,
+        },
+      },
+      {args: {testIdentifier: 'sortByIsoCodeAsc', sortBy: 'iso_code', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByIsoCodeDesc', sortBy: 'iso_code', sortDirection: 'desc'}},
+      {
+        args: {
+          testIdentifier: 'sortByExchangeRateAsc', sortBy: 'conversion_rate', sortDirection: 'asc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByExchangeRateDesc', sortBy: 'conversion_rate', sortDirection: 'desc', isFloat: true,
+        },
+      },
+      {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_currency', sortDirection: 'asc', isFloat: true,
+        },
+      },
+    ];
+
+    tests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await currenciesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await currenciesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await currenciesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await currenciesPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
     });
   });
 });
