@@ -49,6 +49,11 @@ class Currencies extends LocalizationBasePage {
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
     this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header Methods */
@@ -285,6 +290,44 @@ class Currencies extends LocalizationBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await page.hover(this.sortColumnDiv(sortBy));
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableCurrency(page, i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 }
 
