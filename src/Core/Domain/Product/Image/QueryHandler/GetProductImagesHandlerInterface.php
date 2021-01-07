@@ -24,10 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 
 /**
  * Handles @see GetProductImages query

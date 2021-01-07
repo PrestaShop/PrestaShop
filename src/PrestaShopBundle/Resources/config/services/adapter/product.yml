@@ -450,14 +450,6 @@ services:
             - '@translator'
             - '@prestashop.core.util.string.string_modifier'
 
-    prestashop.adapter.product.query_handler.get_product_images_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductImagesHandler
-        arguments:
-            - '@prestashop.adapter.product.image.repository.product_image_repository'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages
-
     prestashop.adapter.product.repository.stock_available_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository
         arguments:
