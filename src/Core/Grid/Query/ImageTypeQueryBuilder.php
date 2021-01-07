@@ -98,7 +98,7 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param array $filters
      * @param QueryBuilder $qb
      */
-    private function applyFilters(array $filters, QueryBuilder $qb)
+    private function applyFilters(array $filters, QueryBuilder $qb): void
     {
         $allowedFilters = [
             'id_image_type',
