@@ -46,6 +46,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageGenerator'
         arguments:
             - '@translator'
+            - '@prestashop.adapter.legacy.configuration'
 
     prestashop.adapter.image_settings.helper:
         class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageSettingsHelper'
