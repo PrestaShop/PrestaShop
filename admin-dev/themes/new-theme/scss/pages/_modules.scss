@@ -86,6 +86,45 @@
 .module-modal-dialog {
   width: 50%;
   height: 85%;
+
+  @include media-breakpoint-down(sm) {
+    width: calc(100% - 2rem);
+    margin: auto;
+
+    .modal-header {
+      > div {
+        display: flex;
+
+        h1 {
+          font-size: 1rem;
+        }
+
+        img {
+          width: 40px;
+          margin-right: 1rem;
+        }
+      }
+    }
+
+    .tab-content {
+      padding: 0;
+    }
+
+    .navbar {
+      padding: 0;
+    }
+
+    .nav {
+      flex-wrap: nowrap;
+      overflow: scroll;
+
+      li {
+        &:nth-child(2) {
+          min-width: 12rem;
+        }
+      }
+    }
+  }
 }
 .module-modal-content {
   border: none;
@@ -100,7 +139,7 @@
   margin: 2em 0;
 
   @include media-breakpoint-down(md) {
-  margin: 1rem 0;
+    margin: 1rem 0;
   }
 
   .module-list-empty {
@@ -145,7 +184,7 @@
         &:last-of-type {
           width: 75%;
 
-          > div {
+          > div:not(.modal) {
             position: initial;
           }
         }
