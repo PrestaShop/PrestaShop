@@ -37,7 +37,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * This form class is responsible to generate the product options form.
@@ -82,9 +81,7 @@ class OptionsType extends TranslatorAwareType
                 'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
                 'options' => [
                     'constraints' => [
-                        new TypedRegex([
-                            'type' => TypedRegex::TYPE_GENERIC_NAME,
-                        ]),
+                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
                     ],
                     'attr' => [
                         'class' => 'js-taggable-field',
@@ -105,8 +102,7 @@ class OptionsType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('UPC barcode', 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    //@todo: adjust TypedRegex use UPC VO
-                    new Regex('/^[0-9]{0,12}$/'),
+                    new TypedRegex(TypedRegex::TYPE_UPC),
                 ],
                 'empty_data' => '',
             ])
@@ -115,8 +111,7 @@ class OptionsType extends TranslatorAwareType
                 'error_bubbling' => true,
                 'label' => $this->trans('EAN-13 or JAN barcode', 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    //@todo: adjust TypedRegex
-                    new Regex('/^[0-9]{0,13}$/'),
+                    new TypedRegex(TypedRegex::TYPE_EAN_13),
                 ],
                 'empty_data' => '',
             ])
@@ -124,8 +119,7 @@ class OptionsType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('ISBN', 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    //@todo: adjust TypedRegex
-                    new Regex('/^[0-9-]{0,32}$/'),
+                    new TypedRegex(TypedRegex::TYPE_ISBN),
                 ],
                 'empty_data' => '',
             ])
