@@ -1,8 +1,9 @@
 module.exports = {
+  // TODO replace customers by combinations
   SampleFiles: {
-    customers: {
-      value: 'Customers',
-      name: 'customers_import',
+    combinations: {
+      value: 'Combinations',
+      name: 'combinations_import',
     },
   },
 };
