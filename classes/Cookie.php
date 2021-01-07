@@ -597,13 +597,19 @@ class CookieCore
         return null;
     }
 
+    /**
+     * Set session cookie parameters to behave similarly to cookies
+     */
     public function sessionSetCookieParams()
     {
-        if (static::$isSetSessionCookieParams === true) {
+        if (
+            session_status() === PHP_SESSION_DISABLED ||
+            static::$isSetSessionCookieParams === true
+        ) {
             return null;
         }
 
-        if (session_id() == PHP_SESSION_NONE) {
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
