@@ -418,7 +418,7 @@ $header-text-color: #4e6167 !default;
 
         &.visibility {
           color: $medium-gray;
-          @include transition(.25s ease-out);
+          @include transition(0.25s ease-out);
         }
       }
     }
