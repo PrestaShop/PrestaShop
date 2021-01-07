@@ -1,6 +1,5 @@
 imports:
-    - { resource: product/_specific_prices.yml }
-    - { resource: product/_combination.yml }
+    - { resource: product/*.yml }
 
 services:
     _defaults:
