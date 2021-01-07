@@ -26,15 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Create;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Create;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface;
 use PrestaShopException;
 use Product;
 use SpecificPriceRule;
