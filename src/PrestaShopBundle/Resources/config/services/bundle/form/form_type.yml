@@ -1263,6 +1263,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.options_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\OptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
       parent: 'form.type.translatable.aware'

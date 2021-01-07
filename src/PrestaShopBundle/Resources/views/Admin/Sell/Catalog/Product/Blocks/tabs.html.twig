@@ -25,6 +25,7 @@
 {% set isBasicTabValid = productForm.basic.description.vars.valid and productForm.basic.description_short.vars.valid %}
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
+{% set isOptionsTabValid = productForm.options.vars.valid %}
 
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">
@@ -42,9 +43,16 @@
         {{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
+
     <li id="shipping-tab-nav" class="nav-item{% if not isShippingTabValid %} has-error{% endif %}">
       <a href="#shipping-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+
+    <li id="options-tab-nav" class="nav-item{% if not isOptionsTabValid %} has-error{% endif %}">
+      <a href="#options-tab" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Options'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
   </ul>
