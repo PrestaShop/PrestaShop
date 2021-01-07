@@ -30,8 +30,8 @@ use Context;
 use Hook;
 use Order;
 use OrderCarrier;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
-use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
@@ -73,24 +73,32 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $refundUpdater;
 
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
      * @param ConfigurationInterface $configuration
      * @param OrderRefundCalculator $orderRefundCalculator
      * @param OrderSlipCreator $orderSlipCreator
      * @param VoucherGenerator $voucherGenerator
      * @param OrderRefundUpdater $refundUpdater
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
         ConfigurationInterface $configuration,
         OrderRefundCalculator $orderRefundCalculator,
         OrderSlipCreator $orderSlipCreator,
         VoucherGenerator $voucherGenerator,
-        OrderRefundUpdater $refundUpdater
+        OrderRefundUpdater $refundUpdater,
+        ContextStateManager $contextStateManager
     ) {
         $this->configuration = $configuration;
         $this->orderRefundCalculator = $orderRefundCalculator;
         $this->orderSlipCreator = $orderSlipCreator;
         $this->voucherGenerator = $voucherGenerator;
         $this->refundUpdater = $refundUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -107,7 +115,21 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             );
         }
 
-        /** @var OrderRefundSummary $orderRefundSummary */
+        $this->setOrderContext($this->contextStateManager, $order);
+
+        try {
+            $this->issuePartialRefund($command, $order);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+    }
+
+    /**
+     * @param IssuePartialRefundCommand $command
+     * @param Order $order
+     */
+    private function issuePartialRefund(IssuePartialRefundCommand $command, Order $order): void
+    {
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
             $command->getOrderDetailRefunds(),

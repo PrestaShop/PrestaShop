@@ -87,7 +87,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.42   |
     # Edit with values that are not strictly equals, but price tax excluded is not different from the catalog price
-    # so no specific price is computed
+    # so it is not recomputed
     When I edit product "Test Product With Odd Tax" to order "bo_order1" with following products details:
       | amount         | 80   |
       | price          | 7.80 |
@@ -142,7 +142,6 @@ Feature: Order from Back Office (BO)
       | amount         | 80    |
       | price          | 78.00 |
       | price_tax_incl | 94.38 |
-    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 78.00
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80      |
       | product_price               | 78.00   |
@@ -168,13 +167,12 @@ Feature: Order from Back Office (BO)
       | amount         | 80    |
       | price          | 78.02 |
       | price_tax_incl | 94.40 |
-    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 78.016528
     # product_price is computed for backward compatibility which is why it is rounded
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80        |
       | product_price               | 78.02     |
       | original_product_price      | 7.80      |
-      | unit_price_tax_incl         | 94.399999 |
+      | unit_price_tax_incl         | 94.40     |
       | unit_price_tax_excl         | 78.016528 |
       | total_price_tax_excl        | 6241.32   |
       | total_price_tax_incl        | 7552.00   |
@@ -218,7 +216,6 @@ Feature: Order from Back Office (BO)
       | amount         | 80     |
       | price          | 7.85   |
       | price_tax_incl | 9.4985 |
-    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 7.85
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80     |
       | product_price               | 7.85   |
@@ -239,19 +236,18 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.42   |
-    # Edit with values that are not strictly equals, but price tax excluded is not different from the catalog price
-    # so no specific price is computed
+    # Edit with values that are not strictly equals, and price tax excluded is different from the catalog price
+    # so price tax excluded is recomputed
     When I edit product "Test Product With Odd Tax" to order "bo_order1" with following products details:
       | amount         | 80   |
       | price          | 7.85 |
       | price_tax_incl | 9.50 |
-    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 7.851239
     # product_price is computed for backward compatibility which is why it is rounded
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80       |
       | product_price               | 7.85     |
       | original_product_price      | 7.80     |
-      | unit_price_tax_incl         | 9.499999 |
+      | unit_price_tax_incl         | 9.50     |
       | unit_price_tax_excl         | 7.851239 |
       | total_price_tax_excl        | 628.10   |
       | total_price_tax_incl        | 760.00   |
@@ -273,13 +269,12 @@ Feature: Order from Back Office (BO)
       | amount         | 80   |
       | price          | 7.44 |
       | price_tax_incl | 9.00 |
-    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 7.438016
     # product_price is computed for backward compatibility which is why it is rounded
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80       |
       | product_price               | 7.44     |
       | original_product_price      | 7.80     |
-      | unit_price_tax_incl         | 8.999999 |
+      | unit_price_tax_incl         | 9.00     |
       | unit_price_tax_excl         | 7.438016 |
       | total_price_tax_excl        | 595.04   |
       | total_price_tax_incl        | 720.00   |

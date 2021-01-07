@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a73079487d679518abd2315f102b619",
+    "content-hash": "2a30571d9a8b17340cf72e71cb77f2cd",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -1114,6 +1114,7 @@
                 "cache",
                 "caching"
             ],
+            "abandoned": true,
             "time": "2019-11-29T11:22:01+00:00"
         },
         {
@@ -4196,25 +4197,28 @@
         },
         {
             "name": "prestashop/gridhtml",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gridhtml.git",
-                "reference": "b952ef9473a35acf6dce219ee595486853762084"
+                "reference": "bbd3985d5919a0c4dec622eb716cf157769eaab9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gridhtml/zipball/b952ef9473a35acf6dce219ee595486853762084",
-                "reference": "b952ef9473a35acf6dce219ee595486853762084",
+                "url": "https://api.github.com/repos/PrestaShop/gridhtml/zipball/bbd3985d5919a0c4dec622eb716cf157769eaab9",
+                "reference": "bbd3985d5919a0c4dec622eb716cf157769eaab9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4227,7 +4231,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/gridhtml/tree/dev"
             },
-            "time": "2017-02-22T11:03:13+00:00"
+            "time": "2020-12-09T14:23:53+00:00"
         },
         {
             "name": "prestashop/gsitemap",
@@ -4301,16 +4305,16 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v4.2.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "c56e3e9495c4a0a9c1e7dc43e1bb0fcad2796dbf"
+                "reference": "bf361efa8b291c5134a2cceeeb1ab84db31b05b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/c56e3e9495c4a0a9c1e7dc43e1bb0fcad2796dbf",
-                "reference": "c56e3e9495c4a0a9c1e7dc43e1bb0fcad2796dbf",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/bf361efa8b291c5134a2cceeeb1ab84db31b05b7",
+                "reference": "bf361efa8b291c5134a2cceeeb1ab84db31b05b7",
                 "shasum": ""
             },
             "require": {
@@ -4319,6 +4323,9 @@
                 "php": ">=5.6.0",
                 "prestashop/circuit-breaker": "^3.0.0",
                 "symfony/css-selector": "^3.4 || ^4.4 || ^5.0"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -4342,10 +4349,7 @@
             ],
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
-            "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v4.2.0"
-            },
-            "time": "2020-11-16T13:13:36+00:00"
+            "time": "2020-12-03T15:07:10+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -4767,16 +4771,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.6.0",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "0f75dba2ee29de86cc75674b78e716ceadfaeaad"
+                "reference": "a889cce83d7df567e1f6d1b1ebf16915a102a5ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/0f75dba2ee29de86cc75674b78e716ceadfaeaad",
-                "reference": "0f75dba2ee29de86cc75674b78e716ceadfaeaad",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/a889cce83d7df567e1f6d1b1ebf16915a102a5ba",
+                "reference": "a889cce83d7df567e1f6d1b1ebf16915a102a5ba",
                 "shasum": ""
             },
             "require": {
@@ -4784,10 +4788,9 @@
                 "php": ">=5.6"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.14",
                 "mockery/mockery": "^1.2",
                 "phpunit/phpunit": "~5.7",
-                "prestashop/php-coding-standards": "dev-master"
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -4815,7 +4818,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.6.0"
             },
-            "time": "2020-09-08T07:05:01+00:00"
+            "time": "2020-12-14T13:11:58+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -6145,16 +6148,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v6.0.3",
+            "version": "v6.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "af55f914a8ecf1ba55ae40ad84ebd9c01944c66e"
+                "reference": "2634da35dec6c52a8c3a18dfcf051dbbb6b48edc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/af55f914a8ecf1ba55ae40ad84ebd9c01944c66e",
-                "reference": "af55f914a8ecf1ba55ae40ad84ebd9c01944c66e",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/2634da35dec6c52a8c3a18dfcf051dbbb6b48edc",
+                "reference": "2634da35dec6c52a8c3a18dfcf051dbbb6b48edc",
                 "shasum": ""
             },
             "require": {
@@ -8645,27 +8648,27 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.16.4",
+            "version": "v2.17.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "1023c3458137ab052f6ff1e09621a721bfdeca13"
+                "reference": "aaee4f3d16a996fc0b570be0c69d3b80c909c507"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/1023c3458137ab052f6ff1e09621a721bfdeca13",
-                "reference": "1023c3458137ab052f6ff1e09621a721bfdeca13",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/aaee4f3d16a996fc0b570be0c69d3b80c909c507",
+                "reference": "aaee4f3d16a996fc0b570be0c69d3b80c909c507",
                 "shasum": ""
             },
             "require": {
-                "composer/semver": "^1.4",
+                "composer/semver": "^1.4 || ^2.0 || ^3.0",
                 "composer/xdebug-handler": "^1.2",
                 "doctrine/annotations": "^1.2",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": "^5.6 || ^7.0",
+                "php": "^5.6 || ^7.0 || ^8.0",
                 "php-cs-fixer/diff": "^1.3",
-                "symfony/console": "^3.4.17 || ^4.1.6 || ^5.0",
+                "symfony/console": "^3.4.43 || ^4.1.6 || ^5.0",
                 "symfony/event-dispatcher": "^3.0 || ^4.0 || ^5.0",
                 "symfony/filesystem": "^3.0 || ^4.0 || ^5.0",
                 "symfony/finder": "^3.0 || ^4.0 || ^5.0",
@@ -8678,14 +8681,17 @@
             "require-dev": {
                 "johnkary/phpunit-speedtrap": "^1.1 || ^2.0 || ^3.0",
                 "justinrainbow/json-schema": "^5.0",
-                "keradus/cli-executor": "^1.2",
+                "keradus/cli-executor": "^1.4",
                 "mikey179/vfsstream": "^1.6",
-                "php-coveralls/php-coveralls": "^2.1",
+                "php-coveralls/php-coveralls": "^2.4.1",
                 "php-cs-fixer/accessible-object": "^1.0",
-                "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.1",
-                "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.1",
-                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.1",
-                "phpunitgoodpractices/traits": "^1.8",
+                "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.2",
+                "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.2.1",
+                "phpspec/prophecy-phpunit": "^1.1 || ^2.0",
+                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5.13 || ^9.4.4 <9.5",
+                "phpunitgoodpractices/polyfill": "^1.5",
+                "phpunitgoodpractices/traits": "^1.9.1",
+                "sanmai/phpunit-legacy-adapter": "^6.4 || ^8.2.1",
                 "symfony/phpunit-bridge": "^5.1",
                 "symfony/yaml": "^3.0 || ^4.0 || ^5.0"
             },
@@ -8734,7 +8740,7 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues",
-                "source": "https://github.com/FriendsOfPHP/PHP-CS-Fixer/tree/v2.16.4"
+                "source": "https://github.com/FriendsOfPHP/PHP-CS-Fixer/tree/v2.17.2"
             },
             "funding": [
                 {
@@ -8742,7 +8748,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-06-27T23:57:46+00:00"
+            "time": "2020-12-17T16:41:55+00:00"
         },
         {
             "name": "johnkary/phpunit-speedtrap",
@@ -9310,16 +9316,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.48",
+            "version": "0.12.64",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "d364cfbac9ffd869570cdfea7eaa6541c3dac666"
+                "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d364cfbac9ffd869570cdfea7eaa6541c3dac666",
-                "reference": "d364cfbac9ffd869570cdfea7eaa6541c3dac666",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
+                "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
                 "shasum": ""
             },
             "require": {
@@ -9348,7 +9354,25 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-09-19T21:19:38+00:00"
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.64"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpstan",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-12-21T11:59:02+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -10427,6 +10451,7 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "ext-simplexml": "*",
         "ext-zip": "*"
     },
     "platform-dev": [],

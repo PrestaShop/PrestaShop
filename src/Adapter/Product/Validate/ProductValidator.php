@@ -210,14 +210,19 @@ class ProductValidator extends AbstractObjectModelValidator
         } else {
             $this->validateClassicStock($product);
         }
-
+        //@todo: quantity validation missing. product->quantity is not defined in Product.php $definition so its always 0 & cannot be validated by legacy
         $this->validateProductProperty($product, 'low_stock_threshold', ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD);
         $this->validateProductProperty($product, 'low_stock_alert', ProductConstraintException::INVALID_LOW_STOCK_ALERT);
         $this->validateProductProperty($product, 'available_date', ProductConstraintException::INVALID_AVAILABLE_DATE);
         $this->validateProductProperty($product, 'minimal_quantity', ProductConstraintException::INVALID_MINIMAL_QUANTITY);
-        $this->validateProductProperty($product, 'location', ProductConstraintException::INVALID_LOCATION);
         $this->validateProductLocalizedProperty($product, 'available_later', ProductConstraintException::INVALID_AVAILABLE_LATER);
         $this->validateProductLocalizedProperty($product, 'available_now', ProductConstraintException::INVALID_AVAILABLE_NOW);
+        $this->validateObjectModelProperty(
+            $product,
+            'location',
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INVALID_LOCATION
+        );
     }
 
     /**

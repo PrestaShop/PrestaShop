@@ -351,6 +351,13 @@
   #order-view-page {
     padding: 0 10px;
 
+    .right-column .tab-content,
+    #orderProductsPanel {
+      table {
+        overflow: scroll;
+      }
+    }
+
     .card-details {
       &-form {
         width: 100%;

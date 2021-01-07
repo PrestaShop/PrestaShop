@@ -17,14 +17,14 @@ class Customers extends BOBasePage {
     this.customersListForm = '#customer_grid';
     this.customersListTableRow = row => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row, column) => `${this.customersListTableRow(row)} td.column-${column}`;
+    this.customersListToggleColumn = (row, column) => `${this.customersListTableColumn(row, column)} .ps-switch`;
+    this.customersListToggleColumnInput = (row, column) => `${this.customersListToggleColumn(row, column)} input`;
     this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
     this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)} a.grid-edit-row-link`;
     this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)}`
       + ' a[data-toggle=\'dropdown\']';
     this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a.grid-view-row-link`;
     this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a.grid-delete-row-link`;
-    this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
-      + ' i.grid-toggler-icon-valid';
     // Filters
     this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
     this.filterSearchButton = `${this.customersListForm} .grid-search-button`;
@@ -143,9 +143,47 @@ class Customers extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getToggleColumnValue(page, row, column) {
-    await this.waitForVisibleSelector(page, this.customersListTableColumn(row, column), 2000);
-    return this.elementVisible(page, this.customersListColumnValidIcon(row, column), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.customersListToggleColumnInput(row, column)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
+
+  /**
+   * Get customer status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getCustomerStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'active');
+  }
+
+  /**
+   * Get newsletter status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getNewsletterStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'newsletter');
+  }
+
+  /**
+   * Get partner offers status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getPartnerOffersStatus(page, row) {
+    return this.getToggleColumnValue(page, row, 'optin');
+  }
+
 
   /**
    * Quick edit toggle column value
@@ -157,13 +195,44 @@ class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(page, row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
-      await Promise.all([
-        page.$eval(`${this.customersListTableColumn(row, column)} i`, el => el.click()),
-        page.waitForNavigation({waitUntil: 'networkidle'}),
-      ]);
+      await this.clickAndWaitForNavigation(page, this.customersListToggleColumn(row, column));
       return true;
     }
+
     return false;
+  }
+
+  /**
+   * Set customer status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setCustomerStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'active', valueWanted);
+  }
+
+  /**
+   * Set newsletter status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setNewsletterStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'newsletter', valueWanted);
+  }
+
+  /**
+   * Set partner offers status in a row
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}
+   */
+  setPartnerOffersStatus(page, row, valueWanted = true) {
+    return this.updateToggleColumnValue(page, row, 'optin', valueWanted);
   }
 
   /**
@@ -193,9 +262,9 @@ class Customers extends BOBasePage {
       lastName: await this.getTextColumnFromTableCustomers(page, row, 'lastname'),
       email: await this.getTextColumnFromTableCustomers(page, row, 'email'),
       sales: await this.getTextColumnFromTableCustomers(page, row, 'total_spent'),
-      status: await this.getToggleColumnValue(page, row, 'active'),
-      newsletter: await this.getToggleColumnValue(page, row, 'newsletter'),
-      partnerOffers: await this.getToggleColumnValue(page, row, 'optin'),
+      status: await this.getCustomerStatus(page, row),
+      newsletter: await this.getNewsletterStatus(page, row),
+      partnerOffers: await this.getPartnerOffersStatus(page, row),
     };
   }
 
@@ -267,7 +336,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -293,7 +362,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -330,7 +399,7 @@ class Customers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */
@@ -378,7 +447,7 @@ class Customers extends BOBasePage {
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Export methods

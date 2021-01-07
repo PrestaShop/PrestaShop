@@ -136,7 +136,7 @@ class OrderMessages extends BOBasePage {
 
     // Confirm delete in modal
     await this.confirmDeleteOrderMessages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -174,7 +174,7 @@ class OrderMessages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.confirmDeleteOrderMessages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -238,10 +238,7 @@ class OrderMessages extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
-      if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
-      }
+      const rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class ProductCore extends ObjectModel
 {
@@ -135,7 +136,7 @@ class ProductCore extends ObjectModel
     public $supplier_reference;
 
     /** @var string Location */
-    public $location;
+    public $location = '';
 
     /** @var string|float Width in default width unit */
     public $width = 0;
@@ -213,7 +214,7 @@ class ProductCore extends ObjectModel
     public $available_for_order = true;
 
     /** @var string Available for order date in mysql format Y-m-d */
-    public $available_date = '0000-00-00';
+    public $available_date = DateTimeUtil::NULL_DATE;
 
     /** @var bool Will the condition select should be visible for this product ? */
     public $show_condition = false;
@@ -422,7 +423,7 @@ class ProductCore extends ObjectModel
             'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
             'supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'width' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'height' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'depth' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
@@ -3700,7 +3701,9 @@ class ProductCore extends ObjectModel
 
         // fetch price & attribute price
         $cache_id_2 = $id_product . '-' . $id_shop;
-        if (!isset(self::$_pricesLevel2[$cache_id_2])) {
+        // We need to check the cache for this price AND attribute, if absent the whole product cache needs update
+        // This can happen if the cache was filled before the combination was created for example
+        if (!isset(self::$_pricesLevel2[$cache_id_2][(int) $id_product_attribute])) {
             $sql = new DbQuery();
             $sql->select('product_shop.`price`, product_shop.`ecotax`');
             $sql->from('product', 'p');
@@ -3866,6 +3869,59 @@ class ProductCore extends ObjectModel
         self::$_prices[$cache_id] = $price;
 
         return self::$_prices[$cache_id];
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $productId
+     * @param int $combinationId
+     * @param bool $withTaxes
+     * @param bool $useReduction
+     * @param bool $withEcoTax
+     *
+     * @return float|null
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getPriceFromOrder(
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax
+    ): ?float {
+        $sql = new DbQuery();
+        $sql->select('od.*, t.rate AS tax_rate');
+        $sql->from('order_detail', 'od');
+        $sql->where('od.`id_order` = ' . $orderId);
+        $sql->where('od.`product_id` = ' . $productId);
+        if (Combination::isFeatureActive()) {
+            $sql->where('od.`product_attribute_id` = ' . $combinationId);
+        }
+        $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
+        $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
+        $res = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
+        if (!is_array($res) || empty($res)) {
+            return null;
+        }
+
+        $orderDetail = $res[0];
+        if ($useReduction) {
+            // If we want price with reduction it is already the one stored in OrderDetail
+            $price = $withTaxes ? $orderDetail['unit_price_tax_incl'] : $orderDetail['unit_price_tax_excl'];
+        } else {
+            // Without reduction we use the original product price to compute the original price
+            $tax_rate = $withTaxes ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
+            $price = $orderDetail['original_product_price'] * $tax_rate;
+        }
+        $ecoTaxValue = 0;
+        if ($withEcoTax) {
+            $ecoTaxValue = $withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
+        }
+        $price += $ecoTaxValue;
+
+        return $price;
     }
 
     /**
@@ -4114,7 +4170,9 @@ class ProductCore extends ObjectModel
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($idProduct, $idProductAttribute);
         $nbProductInCart = 0;
 
-        if (!empty($cart)) {
+        // we don't substract products in cart if the cart is already attached to an order, since stock quantity
+        // has already been updated, this is only useful when the order has not yet been created
+        if (!empty($cart) && empty(Order::getByCartId($cart->id))) {
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {

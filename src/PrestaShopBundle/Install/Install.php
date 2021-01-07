@@ -87,6 +87,11 @@ class Install extends AbstractInstall
      */
     protected $settingsFile = null;
 
+    /**
+     * @var bool
+     */
+    protected $isDebug = null;
+
     public function __construct($settingsFile = null, $bootstrapFile = null)
     {
         if ($bootstrapFile === null) {
@@ -99,6 +104,7 @@ class Install extends AbstractInstall
 
         $this->settingsFile = $settingsFile;
         $this->bootstrapFile = $bootstrapFile;
+        $this->isDebug = _PS_MODE_DEV_;
         parent::__construct();
     }
 
@@ -346,8 +352,8 @@ class Install extends AbstractInstall
         $instance->execute('SET FOREIGN_KEY_CHECKS=0');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
-            if (!_DB_PREFIX_ || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
-                $instance->execute((($truncate) ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . '`' . $table . '`');
+            if (empty(_DB_PREFIX_) || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
+                $instance->execute(($truncate ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . '`' . $table . '`');
             }
         }
 
@@ -434,11 +440,10 @@ class Install extends AbstractInstall
                         }
                     }
                 }
-                $iso_codes_to_install = array_unique($iso_codes_to_install);
+                $languages = $this->installLanguages(array_unique($iso_codes_to_install));
             } else {
-                $iso_codes_to_install = null;
+                $languages = $this->installLanguages();
             }
-            $languages = $this->installLanguages($iso_codes_to_install);
         } catch (PrestashopInstallerException $e) {
             $this->setError($e->getMessage());
 
@@ -569,11 +574,13 @@ class Install extends AbstractInstall
     /**
      * Install languages.
      *
+     * @param array|null $languages_list
+     *
      * @return array Association between ID and iso array(id_lang => iso, ...)
      */
     public function installLanguages($languages_list = null)
     {
-        if ($languages_list == null || !is_array($languages_list) || !count($languages_list)) {
+        if ($languages_list === null || (is_array($languages_list) && !count($languages_list))) {
             $languages_list = $this->language->getIsoList();
         }
 
@@ -631,7 +638,11 @@ class Install extends AbstractInstall
             Tools::clearCache();
 
             if (!$id_lang = EntityLanguage::getIdByIso($iso, true)) {
-                throw new PrestashopInstallerException($this->translator->trans('Cannot install language "%iso%"', ['%iso%' => ($xml->name ? $xml->name : $iso)], 'Install'));
+                throw new PrestashopInstallerException($this->translator->trans(
+                    'Cannot install language "%iso%"',
+                    ['%iso%' => (string) $xml->name],
+                    'Install'
+                ));
             }
 
             $languages[$id_lang] = $iso;
@@ -810,7 +821,7 @@ class Install extends AbstractInstall
         }
 
         // Disable cache for debug mode
-        if (_PS_MODE_DEV_) {
+        if ($this->isDebug) {
             Configuration::updateGlobalValue('PS_SMARTY_CACHE', 1);
         }
 
@@ -879,76 +890,65 @@ class Install extends AbstractInstall
 
     public function getModulesList()
     {
-        $modules = [];
-        if (false) {
-            foreach (scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE) as $module) {
-                if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_ . $module) && file_exists(_PS_MODULE_DIR_ . $module . '/' . $module . '.php')) {
-                    $modules[] = $module;
-                }
-            }
-        } else {
-            $modules = [
-                'contactform',
-                'dashactivity',
-                'dashgoals',
-                'dashproducts',
-                'dashtrends',
-                'graphnvd3',
-                'gridhtml',
-                'gsitemap',
-                'pagesnotfound',
-                'productcomments',
-                'ps_banner',
-                'ps_categorytree',
-                'ps_checkpayment',
-                'ps_contactinfo',
-                'ps_crossselling',
-                'ps_currencyselector',
-                'ps_customeraccountlinks',
-                'ps_customersignin',
-                'ps_customtext',
-                'ps_dataprivacy',
-                'ps_emailsubscription',
-                'ps_facetedsearch',
-                'ps_faviconnotificationbo',
-                'ps_featuredproducts',
-                'ps_imageslider',
-                'ps_languageselector',
-                'ps_linklist',
-                'ps_mainmenu',
-                'ps_searchbar',
-                'ps_sharebuttons',
-                'ps_shoppingcart',
-                'ps_socialfollow',
-                'ps_themecusto',
-                'ps_wirepayment',
-                'sekeywords',
-                'statsbestcategories',
-                'statsbestcustomers',
-                'statsbestproducts',
-                'statsbestsuppliers',
-                'statsbestvouchers',
-                'statscarrier',
-                'statscatalog',
-                'statscheckup',
-                'statsdata',
-                'statsequipment',
-                'statsforecast',
-                'statslive',
-                'statsnewsletter',
-                'statsorigin',
-                'statspersonalinfos',
-                'statsproduct',
-                'statsregistrations',
-                'statssales',
-                'statssearch',
-                'statsstock',
-                'statsvisits',
-                'welcome',
-            ];
-        }
-
-        return $modules;
+        return [
+            'contactform',
+            'dashactivity',
+            'dashgoals',
+            'dashproducts',
+            'dashtrends',
+            'graphnvd3',
+            'gridhtml',
+            'gsitemap',
+            'pagesnotfound',
+            'productcomments',
+            'ps_banner',
+            'ps_categorytree',
+            'ps_checkpayment',
+            'ps_contactinfo',
+            'ps_crossselling',
+            'ps_currencyselector',
+            'ps_customeraccountlinks',
+            'ps_customersignin',
+            'ps_customtext',
+            'ps_dataprivacy',
+            'ps_emailsubscription',
+            'ps_facetedsearch',
+            'ps_faviconnotificationbo',
+            'ps_featuredproducts',
+            'ps_imageslider',
+            'ps_languageselector',
+            'ps_linklist',
+            'ps_mainmenu',
+            'ps_searchbar',
+            'ps_sharebuttons',
+            'ps_shoppingcart',
+            'ps_socialfollow',
+            'ps_themecusto',
+            'ps_wirepayment',
+            'sekeywords',
+            'statsbestcategories',
+            'statsbestcustomers',
+            'statsbestproducts',
+            'statsbestsuppliers',
+            'statsbestvouchers',
+            'statscarrier',
+            'statscatalog',
+            'statscheckup',
+            'statsdata',
+            'statsequipment',
+            'statsforecast',
+            'statslive',
+            'statsnewsletter',
+            'statsorigin',
+            'statspersonalinfos',
+            'statsproduct',
+            'statsregistrations',
+            'statssales',
+            'statssearch',
+            'statsstock',
+            'statsvisits',
+            'welcome',
+        ];
     }
 
     public function getAddonsModulesList($params = [])
@@ -1044,7 +1044,7 @@ class Install extends AbstractInstall
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
      *
-     * @param string|null $module Module to install. If not provided, installs all modules.
+     * @param array|string|null $module Module to install. If not provided, installs all modules.
      *
      * @return bool
      */

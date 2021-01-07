@@ -152,6 +152,7 @@ export default {
   orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
+  orderShippingTotalContainer: '#order-shipping-total-container',
   orderShippingTotal: '#orderShippingTotal',
   orderTaxesTotal: '#orderTaxesTotal',
   orderTotal: '#orderTotal',
@@ -201,4 +202,5 @@ export default {
   orderNoteBlock: '.js-order-notes-block',
   orderNoteInput: '#internal_note_note',
   orderNoteSubmitBtn: '.js-order-notes-btn',
+  refreshProductsListLoadingSpinner: '#orderProductsPanel .spinner-order-products-container#orderProductsLoading',
 };

@@ -159,17 +159,35 @@ describe('Filter And Quick Edit Customers', async () => {
         await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
 
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-          if (typeof test.args.filterValue === 'boolean') {
-            const toggleValue = await customersPage.getToggleColumnValue(page, i, test.args.filterBy);
-            await expect(toggleValue).to.equal(test.args.filterValue);
-          } else {
-            const textColumn = await customersPage.getTextColumnFromTableCustomers(
-              page,
-              i,
-              test.args.filterBy,
-            );
+          switch (test.args.filterBy) {
+            case 'active': {
+              const customerStatus = await customersPage.getCustomerStatus(page, i);
+              await expect(customerStatus).to.equal(test.args.filterValue);
+              break;
+            }
 
-            await expect(textColumn).to.contains(test.args.filterValue);
+            case 'newsletter': {
+              const newsletterStatus = await customersPage.getNewsletterStatus(page, i);
+              await expect(newsletterStatus).to.equal(test.args.filterValue);
+              break;
+            }
+
+            case 'optin': {
+              const partnerOffersStatus = await customersPage.getPartnerOffersStatus(page, i);
+              await expect(partnerOffersStatus).to.equal(test.args.filterValue);
+              break;
+            }
+
+            default: {
+              const textColumn = await customersPage.getTextColumnFromTableCustomers(
+                page,
+                i,
+                test.args.filterBy,
+              );
+
+              await expect(textColumn).to.contains(test.args.filterValue);
+              break;
+            }
           }
         }
       });
@@ -244,10 +262,7 @@ describe('Filter And Quick Edit Customers', async () => {
         );
 
         if (isActionPerformed) {
-          const resultMessage = await customersPage.getTextContent(
-            page,
-            customersPage.alertSuccessBlockParagraph,
-          );
+          const resultMessage = await customersPage.getAlertSuccessBlockParagraphContent(page);
           await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
         }
 

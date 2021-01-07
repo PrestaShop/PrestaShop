@@ -2655,6 +2655,11 @@
       <title>Category footer</title>
       <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
+    <hook id="displayHeaderCategory">
+      <name>displayHeaderCategory</name>
+      <title>Category header</title>
+      <description>This hook adds new blocks above the products listing in a category/search</description>
+    </hook>
     <hook id="actionAdminAdministrationControllerPostProcessBefore">
       <name>actionAdminAdministrationControllerPostProcessBefore</name>
       <title>On post-process in Admin Configure Advanced Parameters Administration Controller</title>

@@ -11,6 +11,7 @@ class MultiStoreSettings extends BOBasePage {
 
     // Header selectors
     this.newShopGroupLink = '#page-header-desc-shop_group-new';
+    this.newShopLink = '#page-header-desc-shop_group-new_2';
 
     // Form selectors
     this.gridForm = '#form-shop_group';
@@ -41,6 +42,10 @@ class MultiStoreSettings extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
+
+    // Multistore tree selectors
+    this.multistoreTree = '#shops-tree';
+    this.shopLink = id => `${this.multistoreTree} a[href*='shop_id=${id}']`;
   }
 
   /* Header methods */
@@ -51,6 +56,15 @@ class MultiStoreSettings extends BOBasePage {
    */
   async goToNewShopGroupPage(page) {
     await this.clickAndWaitForNavigation(page, this.newShopGroupLink);
+  }
+
+  /**
+   * Go to new shop page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToNewShopPage(page) {
+    await this.clickAndWaitForNavigation(page, this.newShopLink);
   }
 
   /* Filter methods */
@@ -125,7 +139,27 @@ class MultiStoreSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Is action toggle button visible
+   * @param page
+   * @param row
+   * @returns {Promise<boolean>}
+   */
+  async isActionToggleButtonVisible(page, row) {
+    return this.elementVisible(page, this.tableColumnActionsToggleButton(row));
+  }
+
+  /**
+   * Go to shop link
+   * @param page
+   * @param id
+   * @returns {Promise<void>}
+   */
+  async goToShopPage(page, id) {
+    await this.clickAndWaitForNavigation(page, this.shopLink(id));
   }
 }
 

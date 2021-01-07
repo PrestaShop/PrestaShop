@@ -30,20 +30,20 @@
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">cloud_upload</i> {{ 'Export a language'|trans }}
+
+    <span
+      class="help-box"
+      data-container="body"
+      data-toggle="popover"
+      data-trigger="hover"
+      data-placement="right"
+      data-content="{{ 'Export data from one language to a file (language pack).'|trans({}, 'Admin.International.Help') }}{{ 'Select which theme you would like to export your translations to.'|trans({}, 'Admin.International.Help') }}"
+      title=""
+    >
+    </span>
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      <div class="row">
-        <div class="col-sm">
-          <div class="alert alert-info" role="alert">
-            <div class="alert-text">
-              {{ 'Export data from one language to a file (language pack).'|trans({}, 'Admin.International.Help') }} <br>
-              {{ 'Select which theme you would like to export your translations to.'|trans({}, 'Admin.International.Help') }}
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="form-group row">
         <label class="form-control-label">
           {{ 'Language'|trans({}, 'Admin.Global') }}

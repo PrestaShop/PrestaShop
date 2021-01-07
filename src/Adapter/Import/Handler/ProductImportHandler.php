@@ -758,7 +758,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 'Rewrite link for %1$s (ID %2$s): re-written as %3$s.',
                 [
                     '%1$s' => $product->name[$this->languageId],
-                    '%2$s' => !empty($info['id']) ? $info['id'] : 'null',
+                    '%2$s' => 'null',
                     '%3$s' => $linkRewrite,
                 ],
                 'Admin.Advparameters.Notification'
@@ -1323,7 +1323,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 if ($product->depends_on_stock == 1) {
                     $stockManager = StockManagerFactory::getManager();
                     $price = str_replace(',', '.', $product->wholesale_price);
-                    if (!is_array($price) && $price == 0) {
+                    if ($price == 0) {
                         $price = 0.000001;
                     }
                     $price = round(floatval($price), 6);

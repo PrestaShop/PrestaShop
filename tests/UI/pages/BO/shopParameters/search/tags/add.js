@@ -33,7 +33,7 @@ class AddTag extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.moveToRightButton);
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

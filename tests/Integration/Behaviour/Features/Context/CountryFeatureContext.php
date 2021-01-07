@@ -72,4 +72,20 @@ class CountryFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf('No country with ISO Code "%s"', $countryIsoCode));
         }
     }
+
+    /**
+     * @param string $countryIsoCode
+     *
+     * @return int
+     */
+    public function getCountryWithIsoCode(string $countryIsoCode): int
+    {
+        $country = Country::getByIso($countryIsoCode);
+
+        if (false === $country) {
+            throw new RuntimeException(sprintf('No country with ISO Code "%s"', $countryIsoCode));
+        }
+
+        return $country;
+    }
 }

@@ -23,17 +23,13 @@ dist: xenial
 
 php:
   - 7.1
-  - 7.2
   - 7.3
-  - 7.4
 
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
     - DISABLE_DEBUG_TOOLBAR=1
   jobs:
-    - PRESTASHOP_TEST_TYPE=unit
-    - PRESTASHOP_TEST_TYPE=integration
     - PRESTASHOP_TEST_TYPE=sanity
 
 stages:
@@ -66,63 +62,16 @@ jobs:
         on:
           all_branches: true
 
-before_install:
-  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
-  # Avoid Composer authentication issues
-  - if [[ "$TRAVIS_REPO_SLUG" = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
-  # Apache & php-fpm configuration
-  - bash travis-scripts/setup-php-fpm.sh
-  - bash travis-scripts/setup-apache.sh
-  - bash travis-scripts/setup-node-js.sh
+before_install: skip
 
-  # PrestaShop configuration
-  - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
-
-  # Always test with non-unity MySQL autoincrement
-  - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
-
-install:
-  - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
-  - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ] || [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
-        make assets;
-    fi
-
-  - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
-      bash travis-scripts/install-prestashop;
-    fi
+install: skip
 
 script:
-  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests/check_file_syntax.sh;
-    fi
+  - php -v
 
-  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests-legacy/check_phpunit.sh;
-    fi
+after_script: skip
 
-  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests/check_unit.sh;
-    fi
-
-  - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
-        bash tests/check_integration.sh;
-    fi
-
-  - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
-        bash tests/check_sanity.sh;
-    fi
-
-after_script:
-  - sudo cat /var/log/apache2/error.log
-
-after_failure:
-  - curl -L http://localhost/
-  - cat /etc/apache2/envvars
-  - cat /etc/apache2/sites-available/000-default.conf
-  - sudo cat /var/log/php-fpm.log
-  - sudo ls -l /var/log/apache2
-  - sudo cat /var/log/apache2/other_vhosts_access.log
-  - cat $TRAVIS_BUILD_DIR/var/log/dev.log
+after_failure: skip
 
 before_deploy:
   - |

@@ -32,6 +32,7 @@ use Customization;
 use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -50,6 +51,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
@@ -71,15 +75,23 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $stockAvailableRepository;
 
     /**
+     * @var ProductDownloadRepository
+     */
+    private $productDownloadRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param ProductDownloadRepository $productDownloadRepository
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        ProductDownloadRepository $productDownloadRepository
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->productDownloadRepository = $productDownloadRepository;
     }
 
     /**
@@ -100,7 +112,8 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
-            $this->getProductStockInformation($product)
+            $this->getProductStockInformation($product),
+            $this->getVirtualProductFile($product)
         );
     }
 
@@ -273,14 +286,16 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
         switch ((int) $product->customizable) {
             case ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION:
-                return ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             case ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION:
-                return ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             default:
-                return ProductCustomizationOptions::createNotCustomizable();
+                $options = ProductCustomizationOptions::createNotCustomizable();
         }
+
+        return $options;
     }
 
     /**
@@ -320,12 +335,40 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (int) $stockAvailable->out_of_stock,
             (int) $stockAvailable->quantity,
             (int) $product->minimal_quantity,
-            $stockAvailable->location,
             (int) $product->low_stock_threshold,
             (bool) $product->low_stock_alert,
             $product->available_now,
             $product->available_later,
-            new DateTime($product->available_date)
+            $stockAvailable->location,
+            DateTimeUtil::NULL_DATE === $product->available_date ? null : new DateTime($product->available_date)
+        );
+    }
+
+    /**
+     * Get virtual product file
+     * legacy ProductDownload is referred as VirtualProductFile in Core
+     *
+     * @param Product $product
+     *
+     * @return VirtualProductFileForEditing|null
+     *
+     * @throws VirtualProductFileNotFoundException
+     */
+    private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
+    {
+        $productDownload = $this->productDownloadRepository->findByProductId(new ProductId($product->id));
+
+        if (!$productDownload) {
+            return null;
+        }
+
+        return new VirtualProductFileForEditing(
+            (int) $productDownload->id,
+            $productDownload->filename,
+            $productDownload->display_filename,
+            (int) $productDownload->nb_days_accessible,
+            (int) $productDownload->nb_downloadable,
+            $productDownload->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($productDownload->date_expiration)
         );
     }
 }

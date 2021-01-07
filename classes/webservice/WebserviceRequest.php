@@ -1328,6 +1328,10 @@ class WebserviceRequestCore
 
     public function getFilteredObjectDetails()
     {
+        if (!$this->setFieldsToDisplay()) {
+            return false;
+        }
+
         $objects = [];
         if (!isset($this->urlFragments['display'])) {
             $this->fieldsToDisplay = 'full';

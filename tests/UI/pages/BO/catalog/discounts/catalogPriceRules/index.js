@@ -176,7 +176,7 @@ class CatalogPriceRules extends BOBasePage {
       this.waitForVisibleSelector(page, this.confirmDeleteButton),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
@@ -272,7 +272,7 @@ class CatalogPriceRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   // Sort methods

@@ -28,10 +28,10 @@ class Categories extends BOBasePage {
     } a.grid-view-row-link`;
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a.grid-edit-row-link`;
-    this.categoriesListStatusColumn = row => this.categoriesListTableColumn(row, 'active');
-    this.categoriesListColumnValidIcon = row => `${this.categoriesListStatusColumn(row)} i.grid-toggler-icon-valid`;
-    this.categoriesListColumnNotValidIcon = row => `${this.categoriesListStatusColumn(row)
-    } i.grid-toggler-icon-not-valid`;
+
+    this.categoriesListColumnStatus = row => `${this.categoriesListTableColumn(row, 'active')} .ps-switch`;
+    this.categoriesListColumnStatusToggleInput = row => `${this.categoriesListColumnStatus(row)} input`;
+
     // Filters
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
     this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
@@ -133,7 +133,15 @@ class Categories extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getStatus(page, row) {
-    return this.elementVisible(page, this.categoriesListColumnValidIcon(row), 500);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.categoriesListColumnStatusToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -144,17 +152,12 @@ class Categories extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.categoriesListStatusColumn(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(`${this.categoriesListStatusColumn(row)} i`);
+      await page.click(this.categoriesListColumnStatus(row));
+
       await this.waitForVisibleSelector(
         page,
-        (
-          valueWanted
-            ? this.categoriesListColumnValidIcon(row)
-            : this.categoriesListColumnNotValidIcon(row)
-        ),
-        15000,
+        `${this.categoriesListColumnStatusToggleInput(row)}[value='${valueWanted ? 1 : 0}']:checked`,
       );
 
       return true;
@@ -260,7 +263,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -294,7 +297,7 @@ class Categories extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -320,7 +323,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -336,7 +339,7 @@ class Categories extends BOBasePage {
       this.categoriesListTableDraggableColumn(categoryRow),
       this.categoriesListTableDraggableColumn(position),
     );
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 
   /* Sort methods */

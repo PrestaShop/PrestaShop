@@ -326,22 +326,18 @@ namespace PrestaShopBundle\Install {
 
         private function getConfValue($name)
         {
-            $full = version_compare('1.5.0.10', AppKernel::VERSION) < 0;
-
             $sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
 			FROM `' . _DB_PREFIX_ . 'configuration` c
 			LEFT JOIN `' . _DB_PREFIX_ . 'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
 			WHERE c.`name`=\'' . pSQL($name) . '\'';
 
-            if ($full) {
-                $id_shop = Shop::getContextShopID(true);
-                $id_shop_group = Shop::getContextShopGroupID(true);
-                if ($id_shop) {
-                    $sql .= ' AND c.`id_shop` = ' . (int) $id_shop;
-                }
-                if ($id_shop_group) {
-                    $sql .= ' AND c.`id_shop_group` = ' . (int) $id_shop_group;
-                }
+            $id_shop = Shop::getContextShopID(true);
+            $id_shop_group = Shop::getContextShopGroupID(true);
+            if ($id_shop) {
+                $sql .= ' AND c.`id_shop` = ' . (int) $id_shop;
+            }
+            if ($id_shop_group) {
+                $sql .= ' AND c.`id_shop_group` = ' . (int) $id_shop_group;
             }
 
             return $this->db->getValue($sql);
@@ -362,8 +358,6 @@ namespace PrestaShopBundle\Install {
                 $this->logError('Current version: %current%. Version to install: %future%.', 27, ['%current%' => $this->oldVersion, '%future%' => _PS_INSTALL_VERSION_]);
             } elseif ($versionCompare == 0) {
                 $this->logError('You already have the %future% version.', 28, ['%future%' => _PS_INSTALL_VERSION_]);
-            } elseif ($versionCompare === false) {
-                $this->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?', 29);
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
@@ -771,8 +765,8 @@ namespace PrestaShopBundle\Install {
                 $mailTheme,
                 $locale,
                 false,
-                !empty($coreOutputFolder) ? $coreOutputFolder : '',
-                !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
+                '',
+                ''
             );
             /** @var CommandBusInterface $commandBus */
             $commandBus = $sfContainer->get('prestashop.core.command_bus');
@@ -793,6 +787,7 @@ namespace PrestaShopBundle\Install {
                 eval('class Tools2 extends \ToolsCore{}');
             }
 
+            /* @phpstan-ignore-next-line */
             if (class_exists('\Tools2') && method_exists('\Tools2', 'generateHtaccess')) {
                 $url_rewrite = (bool) $this->db->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
 

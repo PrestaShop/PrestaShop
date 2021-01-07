@@ -153,7 +153,7 @@ class Monitoring extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(table));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Categories methods */
@@ -199,17 +199,17 @@ class Monitoring extends BOBasePage {
     // choose deletion mode
     await page.click(this.deleteModeInput(deletionModePosition));
     await this.clickAndWaitForNavigation(page, this.submitDeleteCategoryButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
-   * Get toggle column value for a row
+   * Get status
    * @param page
    * @param table
    * @param row
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, table, row = 1) {
+  async getStatus(page, table, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(table, row), 100);
   }
 
@@ -227,7 +227,7 @@ class Monitoring extends BOBasePage {
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(table, i, column));
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, table, i).toString();
+        rowContent = await this.getStatus(page, table, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }

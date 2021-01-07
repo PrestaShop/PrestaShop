@@ -585,15 +585,21 @@ services:
 
     form.type.shop.traffic_seo.meta.set_up_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.canonical_redirect_type").getChoices()'
             - '@=service("prestashop.core.util.url.url_file_checker").isHtaccessFileWritable()'
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
+            - '@=service("prestashop.adapter.tools").isModRewriteActive()'
+            - '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
         tags:
             - { name: form.type }
 
     form.type.shop.traffic_seo.meta.shop_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
@@ -603,8 +609,17 @@ services:
 
     form.type.shop.traffic_seo.meta.url_schema:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
-            - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
+            - '@prestashop.adapter.data_provider.default_route'
+        tags:
+            - { name: form.type }
+
+    form.type.shop.traffic_seo.meta.seo_options:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SEOOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
@@ -815,8 +830,11 @@ services:
 
     form.type.currency_exchange_rate:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.adapter.data_provider.module").isInstalled("cronjobs")'
+            - '@prestashop.router'
         tags:
             - { name: form.type }
 
@@ -830,6 +848,13 @@ services:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
       tags:
         - { name: form.type }
+
+    form.type.webservice_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
 
     form.type.contact:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact\ContactType'
@@ -1173,8 +1198,8 @@ services:
 
     prestashop.bundle.form.admin.sell.attachment.attachment:
         class: 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
@@ -1202,14 +1227,41 @@ services:
       tags:
         - { name: form.type }
 
-    form.type.sell.catalog.product.product_price_type:
-      class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType'
+    form.type.sell.product.product_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.price_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\PriceType'
+      parent: 'form.type.translatable.aware'
       public: true
       arguments:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+        - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       tags:
         - { name: form.type }
+
+    form.type.sell.product.basic_information_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\BasicInformationType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+          - { name: form.type }
+
+    form.type.sell.product.shipping_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+            - '@prestashop.core.form.choice_provider.carrier_by_reference_id'
+            - '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
+        public: true
+        tags:
+            - { name: form.type }
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
@@ -1235,7 +1287,7 @@ services:
         public: true
         tags:
             - { name: form.type }
-            
+
     form.type.logs_by_email:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
         parent: 'form.type.translatable.aware'

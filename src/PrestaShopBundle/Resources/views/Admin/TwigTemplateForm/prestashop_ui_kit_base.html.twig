@@ -654,11 +654,11 @@
 
 {% block material_multiple_choice_table_widget %}
   {% spaceless %}
-    <div class="choice-table table-responsive">
+    <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
       <table class="table">
         <thead>
         <tr>
-          <th>{{ label }}</th>
+          <th>{{ table_label }}</th>
           {% for child_choice in form %}
             <th class="text-center">
               {% if child_choice.vars.multiple and child_choice.vars.name not in headers_to_disable %}
@@ -705,40 +705,73 @@
   {% endspaceless %}
 {% endblock material_multiple_choice_table_widget %}
 
-{% block translatable_widget -%}
-  <div class="input-group locale-input-group js-locale-input-group d-flex">
-    {% for translateField in form %}
-      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
-      {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
-      {% if default_locale.id_lang != translateField.vars.name %}
-        {% set classes = classes ~ ' d-none' %}
-      {% endif %}
-      <div class="{{ classes }}" style="flex-grow: 1;">
-        {{ form_widget(translateField) }}
-      </div>
-    {% endfor %}
-    {% if not hide_locales %}
-      <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
-                type="button"
-                data-toggle="dropdown"
-          {% if change_form_language_url is defined %}
-            data-change-language-url="{{ form.vars.change_form_language_url }}"
-          {% endif %}
-                aria-haspopup="true"
-                aria-expanded="false"
-                id="{{ form.vars.id }}"
-        >
-          {{ form.vars.default_locale.iso_code }}
-        </button>
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
-          {% for locale in locales %}
-            <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
-          {% endfor %}
-        </div>
-      </div>
+{# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
+{% block translatable_formatted_fields %}
+  <div class="translations tabbable" id="{{ form.vars.id }}">
+    {% if hide_locales == false and form|length > 1 %}
+      <ul class="translationsLocales nav nav-pills">
+        {% for translationsFields in form %}
+          <li class="nav-item">
+            <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if default_locale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
+              {{ translationsFields.vars.label|capitalize }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
     {% endif %}
+
+    <div class="translationsFields tab-content">
+      {% for translationsFields in form %}
+        <div data-locale="{{ translationsFields.vars.label }}" class="translationsFields-{{ translationsFields.vars.id }} tab-pane translation-field {% if hide_locales == false and form|length > 1 %}panel panel-default{% endif %} {% if default_locale.id_lang == translationsFields.vars.name %}show active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
+          {{ form_widget(translationsFields) }}
+        </div>
+      {% endfor %}
+    </div>
   </div>
+{% endblock %}
+
+{% block translatable_default -%}
+    <div class="input-group locale-input-group js-locale-input-group d-flex">
+      {% for translateField in form %}
+        {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+        {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+        {% if default_locale.id_lang != translateField.vars.name %}
+          {% set classes = classes ~ ' d-none' %}
+        {% endif %}
+        <div class="{{ classes }}" style="flex-grow: 1;">
+          {{ form_widget(translateField) }}
+        </div>
+      {% endfor %}
+      {% if not hide_locales %}
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
+                  type="button"
+                  data-toggle="dropdown"
+            {% if change_form_language_url is defined %}
+              data-change-language-url="{{ form.vars.change_form_language_url }}"
+            {% endif %}
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  id="{{ form.vars.id }}"
+          >
+            {{ form.vars.default_locale.iso_code }}
+          </button>
+          <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+            {% for locale in locales %}
+              <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+{%- endblock translatable_default %}
+
+{% block translatable_widget -%}
+  {% if formatted_text_area %}
+    {{ block('translatable_formatted_fields') }}
+  {% else %}
+    {{ block('translatable_default') }}
+  {% endif %}
   {{ block('form_help') }}
 {%- endblock translatable_widget %}
 
@@ -814,7 +847,11 @@
 
 {% block generatable_text_widget %}
   <div class="input-group">
-    {{- block('form_widget') -}}
+    {% if compound %}
+      {{- block('form_widget_compound') -}}
+    {% else %}
+      {{- block('form_widget_simple') -}}
+    {% endif %}
     <span class="input-group-btn ml-1">
       <button class="btn btn-outline-secondary js-generator-btn"
               type="button"
@@ -825,6 +862,7 @@
       </button>
    </span>
   </div>
+  {{ block('form_help') }}
 {% endblock generatable_text_widget %}
 
 {% block text_with_recommended_length_widget %}
@@ -862,6 +900,12 @@
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
+
+{%- block number_widget -%}
+  {%- set type = type|default('text') -%}
+  {{ block('form_widget_simple') }}
+  {{- block('form_help') -}}
+{%- endblock number_widget -%}
 
 {% block form_help %}
   {% if help %}

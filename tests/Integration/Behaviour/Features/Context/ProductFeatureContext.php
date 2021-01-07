@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
+use Cart;
 use Combination;
 use Configuration;
 use Customization;
@@ -271,6 +272,23 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkProductWithNameExists($productName);
         $this->products[$productName]->weight = $weight;
         $this->products[$productName]->save();
+    }
+
+    /**
+     * @Given /^product "(.+)" price is (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param float $price
+     */
+    public function setProductPrice(string $productName, float $price)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->price = $price;
+        $this->products[$productName]->save();
+
+        Product::flushPriceCache();
+        Product::resetStaticCache();
+        Cart::resetStaticCache();
     }
 
     /**
