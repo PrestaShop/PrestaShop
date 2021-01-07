@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image;
 
 use Image;
 
