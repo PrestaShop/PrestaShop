@@ -31,12 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\ProductImageUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 /**
- * Handles @see AddProductImageCommand
+ * Handles @see \PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
  */
 final class AddProductImageHandler implements AddProductImageHandlerInterface
 {

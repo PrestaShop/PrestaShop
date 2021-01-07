@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 /**
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 interface AddProductImageHandlerInterface
 {
     /**
-     * @param AddProductImageCommand $command
+     * @param \PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand $command
      *
      * @return ImageId
      */
