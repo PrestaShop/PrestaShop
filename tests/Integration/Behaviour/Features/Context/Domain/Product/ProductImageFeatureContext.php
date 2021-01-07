@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
@@ -47,7 +47,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
     public function __construct()
     {
-        $this->productImageRepository = $this->getContainer()->get('prestashop.adapter.product.repository.product_image_repository');
+        $this->productImageRepository = $this->getContainer()->get('prestashop.adapter.product.image.repository.product_image_repository');
     }
 
     /**

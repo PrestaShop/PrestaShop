@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 interface AddProductImageHandlerInterface
 {
     /**
-     * @param \PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand $command
+     * @param AddProductImageCommand $command
      *
      * @return ImageId
      */
