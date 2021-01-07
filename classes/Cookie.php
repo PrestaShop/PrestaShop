@@ -71,6 +71,9 @@ class CookieCore
     /** @var bool */
     protected $_secure = false;
 
+    /** @var bool */
+    protected static $isSetSessionCookieParams = false;
+
     /**
      * Get data if the cookie exists and else initialize an new one.
      *
@@ -103,6 +106,7 @@ class CookieCore
         $this->_secure = (bool) $secure;
 
         $this->update();
+        $this->sessionSetCookieParams();
     }
 
     public function disallowWriting()
@@ -591,5 +595,41 @@ class CookieCore
         }
 
         return null;
+    }
+
+    public function sessionSetCookieParams()
+    {
+        if (static::$isSetSessionCookieParams === true) {
+            return null;
+        }
+
+        if (session_id() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $sameSite = Configuration::get('PS_COOKIE_SAMESITE');
+
+        /*
+         * The alternative signature supporting an options array is only available since
+         * PHP 7.3.0, before there is no support for SameSite attribute.
+         */
+        if (PHP_VERSION_ID < 70300) {
+            header(
+                'Set-Cookie: ' . session_name() . '=' . session_id()
+                . '; path=' . $this->_path
+                . '; httpOnly'
+                . '; SameSite=' . $sameSite
+                . ($this->_secure ? '; Secure': '')
+            );
+        } else {
+            session_set_cookie_params([
+                'path' => $this->_path,
+                'httponly' => true,
+                'samesite' => $sameSite,
+                'secure' => $this->_secure,
+            ]);
+        }
+
+        static::$isSetSessionCookieParams = true;
     }
 }
