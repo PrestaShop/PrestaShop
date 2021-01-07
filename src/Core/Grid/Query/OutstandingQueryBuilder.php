@@ -112,7 +112,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
      *
      * @return QueryBuilder
      */
-    private function getBaseQueryBuilder(SearchCriteriaInterface $criteria)
+    private function getBaseQueryBuilder(SearchCriteriaInterface $criteria): QueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
