@@ -32,10 +32,11 @@ use ErrorException;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validator\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
-use ProductDownload;
+use ProductDownload as VirtualProductFile;
 
 /**
  * Uploads file for virtual product
+ * Legacy object ProductDownload is referred as VirtualProductFile in Core
  */
 class VirtualProductFileUploader
 {
@@ -69,7 +70,7 @@ class VirtualProductFileUploader
     public function upload(string $filePath): string
     {
         $this->virtualProductFileValidator->validate($filePath);
-        $destination = $this->downloadDir . ProductDownload::getNewFilename();
+        $destination = $this->downloadDir . VirtualProductFile::getNewFilename();
 
         $this->copyFile($filePath, $destination);
         $this->removeFile($filePath);

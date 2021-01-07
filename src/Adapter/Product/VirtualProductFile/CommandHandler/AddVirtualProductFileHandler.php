@@ -33,12 +33,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirt
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use ProductDownload;
+use ProductDownload as VirtualProductFile;
 
 /**
  * Handles @see AddVirtualProductFileCommand using legacy object model
  *
- * VirtualProductFile is an alias to ProductDownload
+ * Legacy object ProductDownload is referred as VirtualProductFile in Core
  */
 final class AddVirtualProductFileHandler implements AddVirtualProductFileHandlerInterface
 {
@@ -71,19 +71,19 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
     /**
      * @param AddVirtualProductFileCommand $command
      *
-     * @return ProductDownload
+     * @return VirtualProductFile
      */
-    private function buildObjectModel(AddVirtualProductFileCommand $command): ProductDownload
+    private function buildObjectModel(AddVirtualProductFileCommand $command): VirtualProductFile
     {
-        $productDownload = new ProductDownload();
-        $productDownload->display_filename = $command->getDisplayName();
-        $productDownload->nb_days_accessible = $command->getAccessDays() ?: 0;
-        $productDownload->nb_downloadable = $command->getDownloadTimesLimit() ?: 0;
-        $productDownload->date_expiration = $command->getExpirationDate() ?
+        $virtualProductFile = new VirtualProductFile();
+        $virtualProductFile->display_filename = $command->getDisplayName();
+        $virtualProductFile->nb_days_accessible = $command->getAccessDays() ?: 0;
+        $virtualProductFile->nb_downloadable = $command->getDownloadTimesLimit() ?: 0;
+        $virtualProductFile->date_expiration = $command->getExpirationDate() ?
             $command->getExpirationDate()->format(DateTime::DEFAULT_DATETIME_FORMAT) :
             null
         ;
 
-        return $productDownload;
+        return $virtualProductFile;
     }
 }

@@ -29,68 +29,68 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validate\ProductDownloadValidator;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validate\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotAddVirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
-use ProductDownload;
+use ProductDownload as VirtualProductFile;
 
 /**
- * Provides access to ProductDownload data source
- * ProductDownload is referred as VirtualProductFile in Core
+ * Provides access to VirtualProductFile data source
+ * Legacy object ProductDownload is referred as VirtualProductFile in Core
  */
-class ProductDownloadRepository extends AbstractObjectModelRepository
+class VirtualProductFileRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var ProductDownloadValidator
+     * @var VirtualProductFileValidator
      */
-    private $productDownloadValidator;
+    private $virtualProductFileValidator;
 
     /**
-     * @param ProductDownloadValidator $productDownloadValidator
+     * @param VirtualProductFileValidator $virtualProductFileValidator
      */
     public function __construct(
-        ProductDownloadValidator $productDownloadValidator
+        VirtualProductFileValidator $virtualProductFileValidator
     ) {
-        $this->productDownloadValidator = $productDownloadValidator;
+        $this->virtualProductFileValidator = $virtualProductFileValidator;
     }
 
     /**
      * @param VirtualProductFileId $virtualProductFileId
      *
-     * @return ProductDownload
+     * @return VirtualProductFile
      *
      * @throws VirtualProductFileNotFoundException
      */
-    public function get(VirtualProductFileId $virtualProductFileId): ProductDownload
+    public function get(VirtualProductFileId $virtualProductFileId): VirtualProductFile
     {
-        /** @var ProductDownload $productDownload */
-        $productDownload = $this->getObjectModel(
+        /** @var VirtualProductFile $virtualProductFile */
+        $virtualProductFile = $this->getObjectModel(
             $virtualProductFileId->getValue(),
-            ProductDownload::class,
+            VirtualProductFile::class,
             VirtualProductFileNotFoundException::class
         );
 
-        return $productDownload;
+        return $virtualProductFile;
     }
 
     /**
      * @param ProductId $productId
      *
-     * @return ProductDownload|null
+     * @return VirtualProductFile|null
      *
      * @throws VirtualProductFileNotFoundException
      */
-    public function findByProductId(ProductId $productId): ?ProductDownload
+    public function findByProductId(ProductId $productId): ?VirtualProductFile
     {
         try {
-            $id = (int) ProductDownload::getIdFromIdProduct($productId->getValue());
+            $id = (int) VirtualProductFile::getIdFromIdProduct($productId->getValue());
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to find ProductDownload by product id #%d', $productId->getValue()),
+                sprintf('Error occurred when trying to find VirtualProductFile by product id #%d', $productId->getValue()),
                 0,
                 $e
             );
@@ -104,16 +104,16 @@ class ProductDownloadRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductDownload $productDownload
+     * @param VirtualProductFile $virtualProductFile
      *
      * @return VirtualProductFileId
      *
      * @throws CannotAddVirtualProductFileException
      */
-    public function add(ProductDownload $productDownload): VirtualProductFileId
+    public function add(VirtualProductFile $virtualProductFile): VirtualProductFileId
     {
-        $this->productDownloadValidator->validate($productDownload);
-        $id = $this->addObjectModel($productDownload, CannotAddVirtualProductFileException::class);
+        $this->virtualProductFileValidator->validate($virtualProductFile);
+        $id = $this->addObjectModel($virtualProductFile, CannotAddVirtualProductFileException::class);
 
         return new VirtualProductFileId($id);
     }

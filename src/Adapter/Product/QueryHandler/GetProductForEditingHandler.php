@@ -32,7 +32,7 @@ use Customization;
 use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\ProductDownloadRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -75,23 +75,23 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $stockAvailableRepository;
 
     /**
-     * @var ProductDownloadRepository
+     * @var VirtualProductFileRepository
      */
-    private $productDownloadRepository;
+    private $virtualProductFileRepository;
 
     /**
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
-     * @param ProductDownloadRepository $productDownloadRepository
+     * @param VirtualProductFileRepository $virtualProductFileRepository
      */
     public function __construct(
         NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
-        ProductDownloadRepository $productDownloadRepository
+        VirtualProductFileRepository $virtualProductFileRepository
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
-        $this->productDownloadRepository = $productDownloadRepository;
+        $this->virtualProductFileRepository = $virtualProductFileRepository;
     }
 
     /**
@@ -346,7 +346,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
     /**
      * Get virtual product file
-     * legacy ProductDownload is referred as VirtualProductFile in Core
+     * Legacy object ProductDownload is referred as VirtualProductFile in Core
      *
      * @param Product $product
      *
@@ -356,19 +356,19 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
     {
-        $productDownload = $this->productDownloadRepository->findByProductId(new ProductId($product->id));
+        $virtualProductFile = $this->virtualProductFileRepository->findByProductId(new ProductId($product->id));
 
-        if (!$productDownload) {
+        if (!$virtualProductFile) {
             return null;
         }
 
         return new VirtualProductFileForEditing(
-            (int) $productDownload->id,
-            $productDownload->filename,
-            $productDownload->display_filename,
-            (int) $productDownload->nb_days_accessible,
-            (int) $productDownload->nb_downloadable,
-            $productDownload->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($productDownload->date_expiration)
+            (int) $virtualProductFile->id,
+            $virtualProductFile->filename,
+            $virtualProductFile->display_filename,
+            (int) $virtualProductFile->nb_days_accessible,
+            (int) $virtualProductFile->nb_downloadable,
+            $virtualProductFile->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($virtualProductFile->date_expiration)
         );
     }
 }
