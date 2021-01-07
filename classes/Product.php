@@ -1561,9 +1561,9 @@ class ProductCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
             WHERE p.id_product = ' . (int) $this->id . '
-            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
+            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . (int) $nbDaysNewProduct;
 
-        $result = Db::getInstance()->getValue($query, true, false);
+        return (bool) Db::getInstance()->getValue($query, true, false);
 
         return (bool) $result;
     }
