@@ -7,6 +7,6 @@
     <delay>بیشتر بخرید تا هزینه کمتری بپردازید!</delay>
   </carrier>
   <carrier id="My_light_carrier" id_shop="1">
-    <delay>سبک تر ارزان تر!</delay>
+    <delay>هرچه سبک تر ارزان تر!</delay>
   </carrier>
 </entity_carrier>
