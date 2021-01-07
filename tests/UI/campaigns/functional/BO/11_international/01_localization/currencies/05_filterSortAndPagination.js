@@ -17,13 +17,18 @@ const {Currencies} = require('@data/demo/currencies');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_currencies_CreateOfficialCurrency';
+const baseContext = 'functional_BO_international_localization_currencies_filterSortAndPagination';
 
 let browserContext;
 let page;
 let numberOfCurrencies = 0;
 
 /*
+Create 10 official currencies
+Filter currencies by: ID, currency, symbol, iso code, enabled
+Pagination next and previous
+Sort currencies by : ID, iso code, exchange rate, enabled
+Delete the created currencies
  */
 describe('Create official currency and check it in FO', async () => {
   // before and after functions
