@@ -64,7 +64,7 @@ module.exports = {
       enabled: true,
     },
     usd: {
-      name: 'Turkish Lira',
+      name: 'US Dollar',
       frName: 'dollar des États-Unis',
       symbol: '$',
       isoCode: 'USD',

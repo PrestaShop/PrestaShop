@@ -161,10 +161,17 @@ describe('Create official currency and check it in FO', async () => {
           test.args.filterBy,
           test.args.filterValue,
         );
+        if (test.args.filterBy === 'active') {
+          const currencyStatus = await currenciesPage.getStatus(page, 1);
+          await expect(currencyStatus).to.be.equal(test.args.filterValue);
+        } else {
+          const currency = await currenciesPage.getTextColumnFromTableCurrency(page, 1, test.args.filterBy);
+          await expect(currency).to.contains(test.args.filterValue);
+        }
 
         // Check number of currencies
         const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCurrenciesAfterFilter).to.be.at.most(numberOfCurrencies + 11);
+        await expect(numberOfCurrenciesAfterFilter).to.be.most(numberOfCurrencies + 10);
       });
 
       it('should reset filter', async function () {
@@ -258,6 +265,34 @@ describe('Create official currency and check it in FO', async () => {
         } else {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
+      });
+    });
+  });
+
+  // 4 : Delete currencies created
+  describe('Delete currencies', async () => {
+    currencies.forEach((currency, index) => {
+      it(`should filter list by currency name '${currency.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
+
+        await currenciesPage.filterTable(page, 'input', 'name', currency.name);
+
+        const currencyName = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'name');
+        await expect(currencyName).to.contains(currency.name);
+      });
+
+      it('should delete currency', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `deleteCurrency${index}`, baseContext);
+
+        const result = await currenciesPage.deleteCurrency(page, 1);
+        await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+      });
+
+      it('should reset filter', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete${index}`, baseContext);
+
+        const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 10 - index - 1);
       });
     });
   });
