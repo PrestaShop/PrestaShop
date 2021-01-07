@@ -56,7 +56,7 @@ export default class ProductPartialUpdater {
   watch() {
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
-    this.$productForm.submit((e) => this.updatePartialForm(e));
+    this.$productForm.submit(() => this.updatePartialForm());
     this.$productForm.on('change', ':input', () => this.updateSubmitButtonState());
     this.initFormattedTextarea();
   }
@@ -86,12 +86,12 @@ export default class ProductPartialUpdater {
         formMethod = updatedData['_method'];
       }
 
-      if (formMethod === 'PATCH') {
-        this.postUpdatedData(updatedData);
-      } else {
-        // Return true only for POST request to keep submitting form normally
+      if (formMethod !== 'PATCH') {
+        // Returning true will continue submitting form as usual
         return true;
       }
+      // On patch method we extract changed values and submit only them
+      this.submitUpdatedData(updatedData);
     } else {
       // @todo: This is temporary we should probably use a nice modal instead, that said since the submit button is
       //        disabled when no data has been modified it should never happen
@@ -106,7 +106,7 @@ export default class ProductPartialUpdater {
    *
    * @param updatedData {Object} Contains an object with all form fields to update indexed by query parameters name
    */
-  postUpdatedData(updatedData) {
+  submitUpdatedData(updatedData) {
     this.$productFormSubmitButton.prop('disabled', true);
     const $updatedForm = this.createShadowForm(updatedData);
 
