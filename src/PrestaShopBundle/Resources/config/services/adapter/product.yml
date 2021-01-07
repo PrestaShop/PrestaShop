@@ -496,30 +496,5 @@ services:
             - '@prestashop.adapter.product.repository.stock_available_repository'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"
 
-    prestashop.adapter.product.repository.combination_repository:
-        class: PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '%database_prefix%'
-            - '@prestashop.adapter.attribute.repository.attribute_repository'
-            - '@prestashop.adapter.product.validate.combination_validator'
-
-    prestashop.adapter.product.create.combination_creator:
-        class: PrestaShop\PrestaShop\Adapter\Product\Create\CombinationCreator
-        arguments:
-            - '@prestashop.core.product.combination_generator'
-            - '@prestashop.adapter.product.repository.combination_repository'
-            - '@prestashop.adapter.product.repository.product_repository'
-
-    prestashop.adapter.product.validate.combination_validator:
-        class: PrestaShop\PrestaShop\Adapter\Product\Validate\CombinationValidator
-
-    prestashop.adapter.product.update.combination_stock_updater:
-        class: PrestaShop\PrestaShop\Adapter\Product\Update\CombinationStockUpdater
-        arguments:
-            - '@prestashop.adapter.product.repository.stock_available_repository'
-            - '@prestashop.adapter.product.repository.combination_repository'
-            - '@prestashop.core.stock.stock_manager'
-
     prestashop.adapter.product.validate.stock_available_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\StockAvailableValidator
