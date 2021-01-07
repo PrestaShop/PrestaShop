@@ -138,7 +138,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
      * @param QueryBuilder $qb
      * @param array $filters
      */
-    private function applyFilters(QueryBuilder $qb, array $filters)
+    private function applyFilters(QueryBuilder $qb, array $filters): void
     {
         $strictComparisonFilters = [
             'id_invoice' => 'oi.id_order_invoice',
