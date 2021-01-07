@@ -29,7 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -73,9 +74,9 @@ class UpdateProductShippingCommand
     private $carrierReferences;
 
     /**
-     * @var DeliveryTimeNotesType
+     * @var DeliveryTimeNoteType
      */
-    private $deliveryTimeNotesType;
+    private $deliveryTimeNoteType;
 
     /**
      * @var string[]|null
@@ -118,7 +119,9 @@ class UpdateProductShippingCommand
      */
     public function setWidth(string $width): UpdateProductShippingCommand
     {
-        $this->width = new DecimalNumber($width);
+        $width = new DecimalNumber($width);
+        $this->assertPackageDimensionIsPositiveOrZero($width, 'width');
+        $this->width = $width;
 
         return $this;
     }
@@ -138,7 +141,9 @@ class UpdateProductShippingCommand
      */
     public function setHeight(string $height): UpdateProductShippingCommand
     {
-        $this->height = new DecimalNumber($height);
+        $height = new DecimalNumber($height);
+        $this->assertPackageDimensionIsPositiveOrZero($height, 'height');
+        $this->height = $height;
 
         return $this;
     }
@@ -158,7 +163,9 @@ class UpdateProductShippingCommand
      */
     public function setDepth(string $depth): UpdateProductShippingCommand
     {
-        $this->depth = new DecimalNumber($depth);
+        $depth = new DecimalNumber($depth);
+        $this->assertPackageDimensionIsPositiveOrZero($depth, 'depth');
+        $this->depth = $depth;
 
         return $this;
     }
@@ -178,7 +185,9 @@ class UpdateProductShippingCommand
      */
     public function setWeight(string $weight): UpdateProductShippingCommand
     {
-        $this->weight = new DecimalNumber($weight);
+        $weight = new DecimalNumber($weight);
+        $this->assertPackageDimensionIsPositiveOrZero($weight, 'weight');
+        $this->weight = $weight;
 
         return $this;
     }
@@ -224,11 +233,11 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return DeliveryTimeNotesType|null
+     * @return DeliveryTimeNoteType|null
      */
-    public function getDeliveryTimeNotesType(): ?DeliveryTimeNotesType
+    public function getDeliveryTimeNoteType(): ?DeliveryTimeNoteType
     {
-        return $this->deliveryTimeNotesType;
+        return $this->deliveryTimeNoteType;
     }
 
     /**
@@ -236,9 +245,9 @@ class UpdateProductShippingCommand
      *
      * @return UpdateProductShippingCommand
      */
-    public function setDeliveryTimeNotesType(int $type): UpdateProductShippingCommand
+    public function setDeliveryTimeNoteType(int $type): UpdateProductShippingCommand
     {
-        $this->deliveryTimeNotesType = new DeliveryTimeNotesType($type);
+        $this->deliveryTimeNoteType = new DeliveryTimeNoteType($type);
 
         return $this;
     }
@@ -281,5 +290,30 @@ class UpdateProductShippingCommand
         $this->localizedDeliveryTimeOutOfStockNotes = $localizedDeliveryTimeOutOfStockNotes;
 
         return $this;
+    }
+
+    /**
+     * @param DecimalNumber $value
+     * @param string $dimensionName
+     *
+     * @throws ProductConstraintException
+     */
+    private function assertPackageDimensionIsPositiveOrZero(DecimalNumber $value, string $dimensionName): void
+    {
+        if ($value->isGreaterOrEqualThanZero()) {
+            return;
+        }
+
+        $codeByDimension = [
+            'width' => ProductConstraintException::INVALID_WIDTH,
+            'height' => ProductConstraintException::INVALID_HEIGHT,
+            'depth' => ProductConstraintException::INVALID_DEPTH,
+            'weight' => ProductConstraintException::INVALID_WEIGHT,
+        ];
+
+        throw new ProductConstraintException(
+            sprintf('Invalid product %s, it must be positive number or zero', $dimensionName),
+            $codeByDimension[$dimensionName]
+        );
     }
 }

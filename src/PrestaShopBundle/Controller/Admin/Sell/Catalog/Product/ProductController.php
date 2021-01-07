@@ -101,7 +101,9 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
-            'method' => Request::METHOD_PATCH,
+            // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
+            // 'method' => Request::METHOD_PATCH,
+            'method' => Request::METHOD_POST,
         ]);
 
         try {

@@ -50,6 +50,7 @@ class ProductType extends TranslatorAwareType
         $builder
             ->add('basic', BasicInformationType::class)
             ->add('price', PriceType::class)
+            ->add('shipping', ShippingType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [

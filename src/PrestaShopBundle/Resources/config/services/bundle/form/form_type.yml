@@ -1227,14 +1227,14 @@ services:
       tags:
         - { name: form.type }
 
-    form.type.sell.catalog.product.product_type:
+    form.type.sell.product.product_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
-    form.type.sell.catalog.product.product_price_type:
+    form.type.sell.product.price_type:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\PriceType'
       parent: 'form.type.translatable.aware'
       public: true
@@ -1245,12 +1245,23 @@ services:
       tags:
         - { name: form.type }
 
-    form.type.sell.catalog.product.product_basic_information_type:
+    form.type.sell.product.basic_information_type:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\BasicInformationType'
       parent: 'form.type.translatable.aware'
       public: true
       tags:
           - { name: form.type }
+
+    form.type.sell.product.shipping_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+            - '@prestashop.core.form.choice_provider.carrier_by_reference_id'
+            - '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
+        public: true
+        tags:
+            - { name: form.type }
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
