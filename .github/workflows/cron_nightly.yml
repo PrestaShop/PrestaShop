@@ -1,0 +1,63 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron:  '30 2 * * *'
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    name: Nightly
+    strategy:
+      matrix:
+        php: [ '7.3' ]
+    env:
+      GC_INSTANCE_KEY: ${{ secrets.GC_INSTANCE_KEY }}
+      GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
+      #GC_INSTANCE_PUB: ${{ secrets.GC_INSTANCE_PUB }}
+      GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
+      GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
+      GC_ZONE: ${{ secrets.GC_ZONE }}
+      GH_BRANCH: 'develop'
+
+    steps:
+      -   uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+
+      -   name: Initialize GCloud Service Key
+          run: echo ${{ secrets.GC_SERVICE_KEY }} | base64 --decode -i > $HOME/gcloud-service-key.json
+
+      -   uses: google-github-actions/setup-gcloud@master
+          with:
+            service_account_key: ${{ secrets.GC_SERVICE_KEY }}
+            project_id: ${{ secrets.GC_PROJECT_ID }}
+
+      -   name: Create directory
+          run: mkdir -p /tmp/ps-release
+
+      -   name: Create build
+          run: php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
+
+      -   name: Rename file
+          run: cd /tmp/ps-release
+              && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$GH_BRANCH-$i; done
+              && cd -
+
+      -   name: Upload to Google Cloud Storage (GCS)
+          run: gsutil cp -r "/tmp/ps-release" gs://prestashop-core-nightly
+
+      -   name: Set environment variable INSTANCE_TYPE
+          run: |
+            echo "::set-env name=INSTANCE_TYPE::$([[ $GH_BRANCH = "develop" ]] && echo 'develop' || echo 'release';)"
+
+      -   name: Stop the instance if started
+          run: gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
+
+      -   name: Add metadata & Start instance
+          run: |
+            gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=NIGHTLY_TOKEN=$NIGHTLY_TOKEN && \
+            gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$GH_BRANCH && \
+            gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/UI/scripts/run-nightly-tests.sh && \
+            gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/UI/scripts/run-nightly-reports.sh && \
+            gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
