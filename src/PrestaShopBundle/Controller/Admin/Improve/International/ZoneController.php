@@ -68,7 +68,7 @@ class ZoneController extends FrameworkBundleAdminController
         $zoneGridFactory = $this->get('prestashop.core.grid.factory.zone');
         $zoneGrid = $zoneGridFactory->getGrid($zoneFilters);
 
-        return $this->render('@Prestashop/Admin/Improve/International/Zone:index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/International/Zone/index.html.twig', [
             'zoneGrid' => $this->presentGrid($zoneGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
