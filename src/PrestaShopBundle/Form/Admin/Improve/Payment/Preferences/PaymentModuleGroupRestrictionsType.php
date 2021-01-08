@@ -78,7 +78,7 @@ class PaymentModuleGroupRestrictionsType extends PaymentModuleRestrictionsParent
     /**
      * Get multiple group choices for payment modules.
      *
-     * @return array
+     * @return array<int, array<string, string|bool|array>>
      */
     private function getGroupChoicesForPaymentModules(): array
     {
