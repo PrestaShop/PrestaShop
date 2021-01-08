@@ -54,8 +54,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 final class EmployeeType extends TranslatorAwareType
 {
-    private const PASSWORD_MIN_CHARACTER_AMOUNT = 8;
-
     /**
      * @var array
      */
@@ -211,7 +209,7 @@ final class EmployeeType extends TranslatorAwareType
                 'help' => $this->trans(
                     'Password should be at least %num% characters long.',
                     'Admin.Advparameters.Help',
-                    ['%num%' => self::PASSWORD_MIN_CHARACTER_AMOUNT]
+                    ['%num%' => Password::MIN_LENGTH]
                 ),
                 'constraints' => [
                     $this->getLengthConstraint(Password::MAX_LENGTH, Password::MIN_LENGTH),
