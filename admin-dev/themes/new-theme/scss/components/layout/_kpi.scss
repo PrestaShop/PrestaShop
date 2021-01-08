@@ -16,6 +16,7 @@
     }
 
     &.box-stats {
+      width: max-content;
       min-width: 13rem;
       padding: 1rem;
       background-color: #fff;
@@ -43,14 +44,20 @@
       align-items: center;
       // stylelint-disable
       justify-content: flex-start !important;
-      padding: 1.1rem 0;
+      padding: 1.1rem 0.6rem;
       padding-top: 0.5rem;
-      margin: 0 -0.5rem !important;
+      margin: 0 -1rem !important;
       overflow: scroll;
       // stylelint-enable
 
       > div {
         margin: 0 0.5rem;
+
+        &:last-child {
+          .box-stats {
+            margin-right: 1rem;
+          }
+        }
 
         i {
           font-size: 1.5rem;
