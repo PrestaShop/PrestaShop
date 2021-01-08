@@ -236,7 +236,7 @@ describe('CRUD address in FO', async () => {
       try {
         await expect(numberOfAddresses).to.equal(0);
       } catch (e) {
-        for(let row = 1; row <= numberOfAddresses; row++) {
+        for (let row = 1; row <= numberOfAddresses; row++) {
           const textColumn = await boAddressesPage.getTextColumnFromTableAddresses(page, row, 'address1');
           await expect(textColumn).to.not.equal(editAddressData.address);
         }
