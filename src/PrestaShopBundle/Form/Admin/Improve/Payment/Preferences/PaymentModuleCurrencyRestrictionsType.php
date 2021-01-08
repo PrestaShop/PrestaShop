@@ -121,7 +121,7 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
     /**
      * Get payment preferences specific currency choices.
      *
-     * @return array
+     * @return array<string, int>
      */
     private function getAdditionalCurrencyChoices(): array
     {
