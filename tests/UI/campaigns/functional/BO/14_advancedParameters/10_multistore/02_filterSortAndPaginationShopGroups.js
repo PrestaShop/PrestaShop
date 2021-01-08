@@ -18,7 +18,7 @@ const ShopGroupFaker = require('@data/faker/shopGroup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_advancedParameters_multistore_filterSortAndPaginationShopGroup';
+const baseContext = 'functional_BO_modules_advancedParameters_multistore_filterSortAndPaginationShopGroups';
 
 let browserContext;
 let page;
@@ -26,7 +26,11 @@ let page;
 let numberOfShopGroups = 0;
 
 /*
-
+Enable multistore
+Create 20 shop groups
+Filter by : Id and shop group
+Delete the created shop groups
+Disable multistore
  */
 describe('Filter, sort and pagination shop group', async () => {
   // before and after functions
@@ -68,6 +72,7 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
+  // 2 : Go to multistore page
   describe('Go to multistore page and get number of store groups', async () => {
     it('should go to \'Advanced parameters > Multi store\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
@@ -92,8 +97,8 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
-  // 2 : Create shop group
-  new Array(11).fill(0, 0, 11).forEach((test, index) => {
+  // 3 : Create shop groups
+  new Array(20).fill(0, 0, 20).forEach((test, index) => {
     describe(`Create shop group n°${index + 1}`, async () => {
       const shopGroupData = new ShopGroupFaker({name: `todelete${index}`});
       it('should go to add new shop group page', async function () {
@@ -117,11 +122,39 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
+  // 4 : filter shop groups
+  describe('Filter shop group table', async () => {
+    [
+      {args: {filterBy: 'id_shop_group', filterValue: 10}},
+      {args: {filterBy: 'a!name', filterValue: 'todelete10'}},
+    ].forEach((test, index) => {
+      it(`should filter list by ${test.args.filterBy}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.filterBy}`, baseContext);
+
+        await multiStorePage.filterTable(page, test.args.filterBy, test.args.filterValue);
+
+        const numberOfElementAfterFilter = await multiStorePage.getNumberOfElementInGrid(page);
+
+        for (let i = 1; i <= numberOfElementAfterFilter; i++) {
+          const textColumn = await multiStorePage.getTextColumn(page, i, test.args.filterBy);
+          await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
+
+      it('should reset filter and check the number of shop groups', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
+
+        const numberOfElement = await multiStorePage.resetAndGetNumberOfLines(page);
+        await expect(numberOfElement).to.be.equal(numberOfShopGroups + 20);
+      });
+    });
+  });
+
   // 6 : Delete shop groups created
-  new Array(11).fill(0, 0, 11).forEach((test, index) => {
-    describe('delete shop group', async () => {
+  describe('delete all shop groups created', async () => {
+    new Array(20).fill(0, 0, 20).forEach((test, index) => {
       it(`should delete the shop group 'todelete${index}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'deleteEditedSHopGroup', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `deleteShopGroup${index}`, baseContext);
 
         await multiStorePage.filterTable(page, 'a!name', `todelete${index}`);
 
@@ -129,7 +162,7 @@ describe('Filter, sort and pagination shop group', async () => {
         await expect(textResult).to.contains(multiStorePage.successfulDeleteMessage);
 
         const numberOfShopGroupsAfterDelete = await multiStorePage.resetAndGetNumberOfLines(page);
-        await expect(numberOfShopGroupsAfterDelete).to.be.equal(numberOfShopGroups + 11 - index - 1);
+        await expect(numberOfShopGroupsAfterDelete).to.be.equal(numberOfShopGroups + 20 - index - 1);
       });
     });
   });

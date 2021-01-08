@@ -32,6 +32,7 @@ class MultiStoreSettings extends BOBasePage {
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.listTableColumn = (row, column) => `${this.tableBodyColumn(row)}:nth-child(${column})`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -160,6 +161,32 @@ class MultiStoreSettings extends BOBasePage {
    */
   async goToShopPage(page, id) {
     await this.clickAndWaitForNavigation(page, this.shopLink(id));
+  }
+
+  /**
+   * get text from a column from table
+   * @param page
+   * @param row
+   * @param column
+   * @returns {Promise<string>}
+   */
+  async getTextColumn(page, row, column) {
+    let columnSelector;
+
+    switch (column) {
+      case 'id_shop_group':
+        columnSelector = this.listTableColumn(row, 1);
+        break;
+
+      case 'a!name':
+        columnSelector = this.listTableColumn(row, 2);
+        break;
+
+      default:
+        throw new Error(`Column ${column} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
   }
 }
 
