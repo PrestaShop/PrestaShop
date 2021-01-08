@@ -1269,6 +1269,7 @@ services:
         public: true
         arguments:
             - '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
+            - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
         tags:
             - { name: form.type }
 

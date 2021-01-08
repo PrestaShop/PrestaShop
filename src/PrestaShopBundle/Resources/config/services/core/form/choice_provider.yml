@@ -255,3 +255,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductVisibilityChoiceProvider'
       arguments:
           - '@translator'
+
+  prestashop.core.form.choice_provider.product_condition_choice_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductConditionChoiceProvider'
+      arguments:
+          - '@translator'

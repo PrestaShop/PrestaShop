@@ -49,17 +49,25 @@ class OptionsType extends TranslatorAwareType
     private $productVisibilityChoiceProvider;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $productConditionChoiceProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $productVisibilityChoiceProvider
+     * @param FormChoiceProviderInterface $productConditionChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $productVisibilityChoiceProvider
+        FormChoiceProviderInterface $productVisibilityChoiceProvider,
+        FormChoiceProviderInterface $productConditionChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productVisibilityChoiceProvider = $productVisibilityChoiceProvider;
+        $this->productConditionChoiceProvider = $productConditionChoiceProvider;
     }
 
     /**
@@ -119,7 +127,7 @@ class OptionsType extends TranslatorAwareType
                 ],
                 'empty_data' => '',
             ])
-            ->add('ean13', TextType::class, [
+            ->add('ean_13', TextType::class, [
                 'required' => false,
                 'error_bubbling' => true,
                 'label' => $this->trans('EAN-13 or JAN barcode', 'Admin.Catalog.Feature'),
@@ -146,37 +154,13 @@ class OptionsType extends TranslatorAwareType
                 'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
             ])
             ->add('condition', ChoiceType::class, [
-                'choices' => [
-                    $this->trans('New', 'Shop.Theme.Catalog') => 'new',
-                    $this->trans('Used', 'Shop.Theme.Catalog') => 'used',
-                    $this->trans('Refurbished', 'Shop.Theme.Catalog') => 'refurbished',
-                ],
+                'choices' => $this->productConditionChoiceProvider->getChoices(),
                 'attr' => [
                     'class' => 'custom-select',
                 ],
                 'required' => true,
                 'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
             ])
-//            ->add('suppliers', ChoiceType::class, [
-//                'choices' => $this->suppliers,
-//                'expanded' => true,
-//                'multiple' => true,
-//                'required' => false,
-//                'attr' => [
-//                    'class' => 'custom-select',
-//                ],
-//                'label' => $this->trans('Suppliers', 'Admin.Global'),
-//            ])
-//            ->add('default_supplier', ChoiceType::class, [
-//                'choices' => $this->suppliers,
-//                'expanded' => true,
-//                'multiple' => false,
-//                'required' => true,
-//                'attr' => [
-//                    'class' => 'custom-select',
-//                ],
-//                'label' => $this->trans('Default suppliers', 'Admin.Catalog.Feature'),
-//            ])
         ;
     }
 }
