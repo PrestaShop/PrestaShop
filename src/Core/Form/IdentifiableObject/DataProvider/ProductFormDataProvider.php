@@ -66,7 +66,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'basic' => $this->extractBasicData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
-            'options' => $this->extractOptionsData($productForEditing),
+            //            'options' => $this->extractOptionsData($productForEditing),
+            'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }
 
@@ -154,19 +155,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, array<string, mixed>>
-     */
-    private function extractOptionsData(ProductForEditing $productForEditing): array
-    {
-        return [
-            'suppliers' => $this->extractSuppliersData($productForEditing),
-            //@todo: finish up with rest
-        ];
-    }
-
-    /**
-     * @param ProductForEditing $productForEditing
-     *
      * @return array
      */
     private function extractSuppliersData(ProductForEditing $productForEditing): array
@@ -179,14 +167,15 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         foreach ($productSupplierOptions->getOptionsBySupplier() as $supplierOption) {
-            $suppliersData['supplier_ids'][] = $supplierOption->getSupplierId();
-            $fieldName = 'product_suppliers_for_supplier_' . $supplierOption->getSupplierId();
-            foreach ($supplierOption->getProductSuppliersForEditing() as $key => $supplierForEditing) {
-                $suppliersData[$fieldName][$key]['product_supplier_id'] = $supplierForEditing->getProductSupplierId();
-                $suppliersData[$fieldName][$key]['supplier_price_tax_excluded'] = $supplierForEditing->getPriceTaxExcluded();
-                $suppliersData[$fieldName][$key]['supplier_reference'] = $supplierForEditing->getReference();
-                $suppliersData[$fieldName][$key]['currency_id'] = $supplierForEditing->getCurrencyId();
-                $suppliersData[$fieldName][$key]['combination_id'] = $supplierForEditing->getCombinationId();
+            $supplierId = $supplierOption->getSupplierId();
+            $suppliersData['supplier_ids'][] = $supplierId;
+            $fieldName = 'product_suppliers_by_supplier_' . $supplierId;
+            foreach ($supplierOption->getProductSuppliersForEditing() as $index => $supplierForEditing) {
+                $suppliersData[$fieldName][$index]['product_supplier_id'] = $supplierForEditing->getProductSupplierId();
+                $suppliersData[$fieldName][$index]['supplier_price_tax_excluded'] = $supplierForEditing->getPriceTaxExcluded();
+                $suppliersData[$fieldName][$index]['supplier_reference'] = $supplierForEditing->getReference();
+                $suppliersData[$fieldName][$index]['currency_id'] = $supplierForEditing->getCurrencyId();
+                $suppliersData[$fieldName][$index]['combination_id'] = $supplierForEditing->getCombinationId();
             }
         }
 

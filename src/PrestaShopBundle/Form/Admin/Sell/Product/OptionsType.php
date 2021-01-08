@@ -155,9 +155,6 @@ class OptionsType extends TranslatorAwareType
                 'required' => true,
                 'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
             ])
-            ->add('suppliers', SuppliersType::class, [
-                'label' => $this->trans('Suppliers', 'Admin.Global'),
-            ])
         ;
     }
 }

@@ -69,17 +69,17 @@ class SuppliersType extends TranslatorAwareType
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,
-                'label' => false,
+                'label' => $this->trans('Choose the suppliers associated with this product', 'Admin.Catalog.Feature'),
             ])
             ->add('default_supplier_id', ChoiceType::class, [
                 'choices' => $suppliers,
                 'expanded' => true,
-                'label' => $this->trans('Default supplier', 'Admin.Global'),
+                'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
             ])
         ;
 
-        foreach ($suppliers as $name => $supplierId) {
-            $builder->add(sprintf('product_suppliers_for_supplier_%s', $supplierId), CollectionType::class, [
+        foreach ($suppliers as $supplierId) {
+            $builder->add('product_suppliers_by_supplier_' . $supplierId, CollectionType::class, [
                 'entry_type' => ProductSupplierType::class,
                 'label' => false,
                 'entry_options' => [

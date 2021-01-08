@@ -28,15 +28,49 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class ProductSupplierType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $currencyByIdChoiceProvider;
+
+    /**
+     * @var string
+     */
+    private $currencyIsoCode;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $currencyByIdChoiceProvider
+     * @param string $currencyIsoCode
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $currencyByIdChoiceProvider,
+        string $currencyIsoCode
+    ) {
+        parent::__construct($translator, $locales);
+        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
+        $this->currencyIsoCode = $currencyIsoCode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -47,15 +81,20 @@ class ProductSupplierType extends TranslatorAwareType
                 'label' => false,
                 'required' => false,
             ])
-            //@todo: constraints
             ->add('supplier_reference', TextType::class, [
                 'empty_data' => '',
             ])
-            ->add('supplier_price_tax_excluded', MoneyType::class)
-            ->add('currency_id', ChoiceType::class, [
-                'choices' => [
-                    'US Dollar' => 1,
+            ->add('supplier_price_tax_excluded', MoneyType::class, [
+                //@todo: should currency change depending on currency_id selection or always context value?
+                'currency' => $this->currencyIsoCode,
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
                 ],
+            ])
+            ->add('currency_id', ChoiceType::class, [
+                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
             ])
         ;
     }

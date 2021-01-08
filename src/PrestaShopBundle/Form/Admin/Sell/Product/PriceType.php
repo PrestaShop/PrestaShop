@@ -71,6 +71,7 @@ class PriceType extends TranslatorAwareType
         array $locales,
         array $taxRuleGroupChoices,
         array $taxRuleGroupChoicesAttributes,
+        //@todo: I don't think we can use legacy obj models here. could maybe inject iso_code instead?
         Currency $defaultCurrency
     ) {
         parent::__construct($translator, $locales);
