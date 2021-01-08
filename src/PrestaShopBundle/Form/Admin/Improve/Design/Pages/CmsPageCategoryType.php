@@ -47,7 +47,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class CmsPageCategoryType extends TranslatorAwareType
 {
     private const NAME_MAX_LENGTH = 64;
-    private const FRIENDLY_URL_MAX_LENGTH = 64;
     private const META_TITLE_MAX_LENGTH = 255;
     private const META_KEYWORDS_MAX_LENGTH = 255;
     private const META_DESCRIPTION_MAX_LENGTH = 512;
@@ -198,11 +197,11 @@ class CmsPageCategoryType extends TranslatorAwareType
                     'constraints' => [
                         new IsUrlRewrite(),
                         new Length([
-                            'max' => self::FRIENDLY_URL_MAX_LENGTH,
+                            'max' => self::NAME_MAX_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
                                 'Admin.Notifications.Error',
-                                ['%limit%' => self::FRIENDLY_URL_MAX_LENGTH]
+                                ['%limit%' => self::NAME_MAX_LENGTH]
                             ),
                         ]),
                     ],
