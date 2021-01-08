@@ -43,7 +43,7 @@ Disable 'Restrict country selections in front office to those covered by active 
 Go to FO > Address page and check that the country exist
 Disable the country 'Afghanistan'
  */
-describe('Filter and quick edit countries', async () => {
+describe('Enable/Disable Restrict country selections in front office', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -118,7 +118,7 @@ describe('Filter and quick edit countries', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}RestrictCountry`, baseContext);
 
       const currentStatus = await countriesPage.setCountriesRestrictions(page, status.args.enable);
-      await expect(currentStatus).to.contains(countriesPage.successfulUpdateMessage);
+      await expect(currentStatus).to.contains(countriesPage.successfulMessage);
     });
 
     it('should go to FO', async function () {
