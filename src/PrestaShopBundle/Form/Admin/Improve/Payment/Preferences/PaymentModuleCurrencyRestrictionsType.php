@@ -89,15 +89,11 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
         foreach ($this->paymentModules as $paymentModule) {
             $moduleInstance = $paymentModule->getInstance();
 
+            $allowMultipleCurrencies = true;
+            $currencyChoices = $this->currencyChoices;
             if ('radio' === $moduleInstance->currencies_mode) {
                 $allowMultipleCurrencies = false;
-                $currencyChoices = array_merge(
-                    $this->currencyChoices,
-                    $this->getAdditionalCurrencyChoices()
-                );
-            } else {
-                $allowMultipleCurrencies = true;
-                $currencyChoices = $this->currencyChoices;
+                $currencyChoices = $this->getCurrencyChoices();
             }
             $choices[] = [
                 'name' => $paymentModule->get('name'),
