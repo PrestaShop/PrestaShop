@@ -71,6 +71,7 @@ jobs:
     strategy:
         matrix:
             php: ['7.1', '7.2', '7.3', '7.4']
+        fail-fast: false
     steps:
         -   name: Setup PHP
             uses: shivammathur/setup-php@v2
@@ -111,6 +112,7 @@ jobs:
       strategy:
           matrix:
               php: ['7.1', '7.2', '7.3', '7.4']
+          fail-fast: false
       steps:
         -   name: Setup PHP
             uses: shivammathur/setup-php@v2

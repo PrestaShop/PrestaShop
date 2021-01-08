@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         php: [ '7.1', '7.2', '7.3', '7.4' ]
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v2
