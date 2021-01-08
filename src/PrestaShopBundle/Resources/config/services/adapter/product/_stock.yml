@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.product.stock.validate.stock_available_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator
+
+    prestashop.adapter.product.stock.repository.stock_available_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.adapter.product.stock.validate.stock_available_validator'

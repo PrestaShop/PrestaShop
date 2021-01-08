@@ -73,7 +73,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
         arguments:
             - '@prestashop.core.util.number.number_extractor'
-            - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.adapter.product.virtual_product_file.repository.product_download_repository'
         tags:
             - name: tactician.handler
@@ -450,20 +450,10 @@ services:
             - '@translator'
             - '@prestashop.core.util.string.string_modifier'
 
-    prestashop.adapter.product.repository.stock_available_repository:
-        class: PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '%database_prefix%'
-            - '@prestashop.adapter.product.validate.stock_available_validator'
-
     prestashop.adapter.product.update.product_stock_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater
         arguments:
             - '@prestashop.core.stock.stock_manager'
             - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"
-
-    prestashop.adapter.product.validate.stock_available_validator:
-        class: PrestaShop\PrestaShop\Adapter\Product\Validate\StockAvailableValidator
