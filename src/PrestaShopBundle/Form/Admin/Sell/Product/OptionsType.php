@@ -85,7 +85,7 @@ class OptionsType extends TranslatorAwareType
     {
         $builder
             ->add('active', SwitchType::class, [
-                'label' => $this->trans('Online', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Online', 'Admin.Global'),
             ])
             ->add('visibility', ChoiceType::class, [
                 'choices' => $this->productVisibilityChoiceProvider->getChoices(),
@@ -171,7 +171,7 @@ class OptionsType extends TranslatorAwareType
             ])
             ->add('manufacturer_id', ChoiceType::class, [
                 'choices' => $this->manufacturerNameByIdChoiceProvider->getChoices(),
-                'label' => $this->trans('Manufacturer', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Brand', 'Admin.Catalog.Feature'),
             ]);
     }
 }
