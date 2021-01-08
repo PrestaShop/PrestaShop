@@ -50,6 +50,9 @@ class TypedRegex extends Constraint
     const TYPE_CURRENCY_ISO_CODE = 'currency_iso_code';
     const TYPE_FILE_NAME = 'file_name';
     const TYPE_DNI_LITE = 'dni_lite';
+    const TYPE_UPC = 'upc';
+    const TYPE_EAN_13 = 'ean_13';
+    const TYPE_ISBN = 'isbn';
 
     /**
      * @var string
@@ -75,5 +78,13 @@ class TypedRegex extends Constraint
     public function validatedBy()
     {
         return TypedRegexValidator::class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultOption()
+    {
+        return 'type';
     }
 }

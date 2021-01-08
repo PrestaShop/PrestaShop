@@ -26,25 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-/**
- * Defines settings for product.
- * If related Value Object does not exist, then various settings (e.g. regex, length constraints) are saved here
- */
-class ProductSettings
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+
+final class ProductConditionChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * Class not supposed to be initialized, it only serves as static storage
+     * @var TranslatorInterface
      */
-    private function __construct()
-    {
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        TranslatorInterface $translator
+    ) {
+        $this->translator = $translator;
     }
 
     /**
-     * Bellow constants define maximum allowed length of product properties
+     * {@inheritDoc}
      */
-    const MAX_NAME_LENGTH = 128;
-    const MAX_MPN_LENGTH = 40;
-    //@todo: finish up with properties that doesn't have related ValueObjects like description, meta_description etc. (see Product.php)
+    public function getChoices()
+    {
+        return [
+            $this->translator->trans('New', [], 'Shop.Theme.Catalog') => ProductCondition::NEW,
+            $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => ProductCondition::USED,
+            $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => ProductCondition::REFURBISHED,
+        ];
+    }
 }

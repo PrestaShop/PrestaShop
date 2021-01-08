@@ -70,6 +70,12 @@
         </div>
       {% endblock %}
 
+      {% block product_tab_options %}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="options-tab">
+          {{ form_widget(productForm.options) }}
+        </div>
+      {% endblock %}
+
       {% block product_extra_tabs %}
       {% endblock %}
     </div>
