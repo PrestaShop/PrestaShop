@@ -171,6 +171,7 @@ class OptionsType extends TranslatorAwareType
             ])
             ->add('manufacturer_id', ChoiceType::class, [
                 'choices' => $this->manufacturerNameByIdChoiceProvider->getChoices(),
+                'label' => $this->trans('Manufacturer', 'Admin.Catalog.Feature'),
             ]);
     }
 }
