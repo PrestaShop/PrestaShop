@@ -39,7 +39,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler
         arguments:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
-            - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
@@ -50,7 +50,7 @@ services:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.core.util.number.number_extractor'
-            - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
@@ -69,7 +69,7 @@ services:
     prestashop.adapter.product.combination.update.combination_stock_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
         arguments:
-            - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.adapter.product.combination.repository.combination_repository'
             - '@prestashop.core.stock.stock_manager'
 
