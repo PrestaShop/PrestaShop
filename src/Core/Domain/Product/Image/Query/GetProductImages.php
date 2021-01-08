@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Adds new product image
+ * Get list of Images associated to a Product
  */
-class AddProductImageCommand
+class GetProductImages
 {
     /**
      * @var ProductId
@@ -41,20 +41,12 @@ class AddProductImageCommand
     private $productId;
 
     /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
      * @param int $productId
-     * @param string $pathName
      */
     public function __construct(
-        int $productId,
-        string $pathName
+        int $productId
     ) {
         $this->productId = new ProductId($productId);
-        $this->filePath = $pathName;
     }
 
     /**
@@ -63,13 +55,5 @@ class AddProductImageCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFilePath(): string
-    {
-        return $this->filePath;
     }
 }

@@ -26,13 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image\Uploader;
 
 use ErrorException;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
-use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;

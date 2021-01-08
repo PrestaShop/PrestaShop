@@ -24,20 +24,52 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles @see GetProductImages query
+ * Adds new product image
  */
-interface GetProductImagesHandlerInterface
+class AddProductImageCommand
 {
     /**
-     * @param GetProductImages $query
-     *
-     * @return ProductImage[]
+     * @var ProductId
      */
-    public function handle(GetProductImages $query): array;
+    private $productId;
+
+    /**
+     * @var string
+     */
+    private $filePath;
+
+    /**
+     * @param int $productId
+     * @param string $pathName
+     */
+    public function __construct(
+        int $productId,
+        string $pathName
+    ) {
+        $this->productId = new ProductId($productId);
+        $this->filePath = $pathName;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilePath(): string
+    {
+        return $this->filePath;
+    }
 }

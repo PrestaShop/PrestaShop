@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\ProductImageUploader;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductImageHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\AddProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 /**

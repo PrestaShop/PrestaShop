@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
 use Image;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductImagesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 
 /**
  * Handles @see GetProductImages query

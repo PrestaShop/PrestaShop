@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 
 use Doctrine\DBAL\Connection;
 use Image;
