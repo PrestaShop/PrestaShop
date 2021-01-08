@@ -48,12 +48,6 @@ class CmsPageCategoryType extends AbstractType
 {
     use TranslatorAwareTrait;
 
-    private const NAME_MAX_LENGTH = 64;
-    private const FRIENDLY_URL_MAX_LENGTH = 64;
-    private const META_TITLE_MAX_LENGTH = 255;
-    private const META_KEYWORDS_MAX_LENGTH = 255;
-    private const META_DESCRIPTION_MAX_LENGTH = 512;
-
     /**
      * @var array
      */
@@ -90,10 +84,10 @@ class CmsPageCategoryType extends AbstractType
                             'type' => 'catalog_name',
                         ]),
                         new Length([
-                            'max' => self::NAME_MAX_LENGTH,
+                            'max' => 64,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => self::NAME_MAX_LENGTH],
+                                ['%limit%' => 64],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -125,10 +119,10 @@ class CmsPageCategoryType extends AbstractType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => self::META_TITLE_MAX_LENGTH,
+                            'max' => 255,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => self::META_TITLE_MAX_LENGTH],
+                                ['%limit%' => 255],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -143,10 +137,10 @@ class CmsPageCategoryType extends AbstractType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => self::META_DESCRIPTION_MAX_LENGTH,
+                            'max' => 512,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => self::META_DESCRIPTION_MAX_LENGTH],
+                                ['%limit%' => 512],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -161,10 +155,10 @@ class CmsPageCategoryType extends AbstractType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => self::META_KEYWORDS_MAX_LENGTH,
+                            'max' => 255,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => self::META_KEYWORDS_MAX_LENGTH],
+                                ['%limit%' => 255],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -182,10 +176,10 @@ class CmsPageCategoryType extends AbstractType
                     'constraints' => [
                         new IsUrlRewrite(),
                         new Length([
-                            'max' => self::FRIENDLY_URL_MAX_LENGTH,
+                            'max' => 64,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => self::FRIENDLY_URL_MAX_LENGTH],
+                                ['%limit%' => 64],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
