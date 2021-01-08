@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
  * On PrestaShop 1.7.6.0, two new columns have been introduced in the PREFIX_currency table: precision & numeric_iso_code
  * A fresh install would add the proper data in these columns, however an upgraded shop to 1.7.6.0 would not get the
  * corresponding values of each currency.
- * 
+ *
  * This upgrade script will cover this need by loading the CLDR data and update the currency if it still has the default table values.
  */
 function ps_1761_update_currencies()
@@ -62,10 +62,12 @@ function ps_1761_update_currencies()
             $currency->precision = (int) $cldrCurrency->getDecimalDigits();
             $currency->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
         }
-        $currency->save();
+        Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . 'currency`
+            SET `precision` = ' . $currency->precision . ', `numeric_iso_code` = ' . $currency->numeric_iso_code . '
+            WHERE `id_currency` = ' . $currency->id
+        );
     }
 
     ObjectModel::enableCache();
-    
-    
 }
