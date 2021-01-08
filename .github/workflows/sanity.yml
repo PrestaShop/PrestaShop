@@ -69,6 +69,8 @@ jobs:
 
       - run: |
           sudo chown www-data:www-data -R ${{ github.workspace }} && \
+          sudo mkdir -p /var/lib/php/sessions && \
+          sudo chown www-data:www-data -R /var/lib/php/sessions && \
           sudo service apache2 restart
 
       - name: Run tests
