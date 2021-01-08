@@ -52,6 +52,9 @@ class ProductType extends TranslatorAwareType
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)
+            ->add('suppliers', SuppliersType::class, [
+                'label' => false,
+            ])
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
