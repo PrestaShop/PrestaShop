@@ -78,12 +78,9 @@ describe('CRUD address in FO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
 
     await foMyAccountPage.goToAddressesPage(page);
-
-
     const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
     await expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);
   });
-
 
   describe('Create new address in FO', async () => {
     it('should go to create address page', async function () {
@@ -141,7 +138,6 @@ describe('CRUD address in FO', async () => {
       page = await boAddressesPage.closePage(browserContext, page, 0);
     });
   });
-
 
   describe('Update the created address on FO', async () => {
     it('should go to edit address page', async function () {
