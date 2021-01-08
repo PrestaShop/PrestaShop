@@ -2120,6 +2120,14 @@ class CartCore extends ObjectModel
             $type = Cart::ONLY_PRODUCTS;
         }
 
+        if ($type == Cart::ONLY_PRODUCTS) {
+            foreach ($products as $key => $product) {
+                if ($product['is_gift']) {
+                    unset($products[$key]);
+                }
+            }
+        }
+
         if (Tax::excludeTaxeOption()) {
             $withTaxes = false;
         }
