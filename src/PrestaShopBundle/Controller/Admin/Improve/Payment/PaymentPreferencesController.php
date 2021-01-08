@@ -85,10 +85,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
 
         $paymentModulesCount = 0;
         if (!$isSingleShopContext) {
-            $paymentCarrierRestrictionsForm = null;
-            $paymentCountryRestrictionsForm = null;
-            $paymentCurrencyRestrictionsForm = null;
-            $paymentGroupRestrictionsForm = null;
+            $paymentCarrierRestrictionsForm = $paymentCountryRestrictionsForm = $paymentCurrencyRestrictionsForm = $paymentGroupRestrictionsForm = null;
         }
 
         if ($isSingleShopContext) {
