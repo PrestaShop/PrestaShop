@@ -23,10 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import MultipleChoiceTable from '@components/multiple-choice-table';
-
 const {$} = window;
 
 $(() => {
-  new MultipleChoiceTable();
+  window.prestashop.component.initComponents(
+    [
+      'MultipleChoiceTable',
+    ],
+  );
 });
