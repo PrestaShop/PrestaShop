@@ -71,6 +71,7 @@ class PaymentModuleCarrierRestrictionsType extends PaymentModuleRestrictionsPare
                 'required' => false,
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ]);
     }
 

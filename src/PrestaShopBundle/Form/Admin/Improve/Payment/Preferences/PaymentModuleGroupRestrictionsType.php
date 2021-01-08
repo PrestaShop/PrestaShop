@@ -71,6 +71,7 @@ class PaymentModuleGroupRestrictionsType extends PaymentModuleRestrictionsParent
                 'required' => false,
                 'choices' => $this->groupChoices,
                 'multiple_choices' => $this->getGroupChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ]);
     }
 

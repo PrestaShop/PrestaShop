@@ -82,6 +82,7 @@ class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsPare
                 'required' => false,
                 'choices' => $this->countryChoices,
                 'multiple_choices' => $this->getCountryChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ]);
     }
 

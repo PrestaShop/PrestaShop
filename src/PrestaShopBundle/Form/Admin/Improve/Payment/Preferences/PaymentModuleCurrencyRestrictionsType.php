@@ -71,6 +71,7 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
                 'required' => false,
                 'choices' => $this->getCurrencyChoices(),
                 'multiple_choices' => $this->getCurrencyChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ]);
     }
 
