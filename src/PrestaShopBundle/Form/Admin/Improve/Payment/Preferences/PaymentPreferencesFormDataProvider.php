@@ -37,15 +37,15 @@ final class PaymentPreferencesFormDataProvider implements FormDataProviderInterf
     /**
      * @var DataConfigurationInterface
      */
-    private $PaymentModuleConfiguration;
+    private $paymentModuleConfiguration;
 
     /**
-     * @param DataConfigurationInterface $PaymentModuleConfiguration
+     * @param DataConfigurationInterface $paymentModuleConfiguration
      */
     public function __construct(
-        DataConfigurationInterface $PaymentModuleConfiguration
+        DataConfigurationInterface $paymentModuleConfiguration
     ) {
-        $this->PaymentModuleConfiguration = $PaymentModuleConfiguration;
+        $this->paymentModuleConfiguration = $paymentModuleConfiguration;
     }
 
     /**
@@ -53,7 +53,7 @@ final class PaymentPreferencesFormDataProvider implements FormDataProviderInterf
      */
     public function getData()
     {
-        return $this->PaymentModuleConfiguration->getConfiguration();
+        return $this->paymentModuleConfiguration->getConfiguration();
     }
 
     /**
@@ -61,6 +61,6 @@ final class PaymentPreferencesFormDataProvider implements FormDataProviderInterf
      */
     public function setData(array $data)
     {
-        return $this->PaymentModuleConfiguration->updateConfiguration($data);
+        return $this->paymentModuleConfiguration->updateConfiguration($data);
     }
 }
