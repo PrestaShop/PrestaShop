@@ -255,10 +255,24 @@
         justify-content: space-between;
 
         > div {
-          width: 60%;
+          width: 55%;
+
+          .update-qty {
+            display: flex;
+            align-items: center;
+            max-width: 90%;
+            // stylelint-disable-next-line
+            margin-right: 0 !important;
+            white-space: inherit;
+          }
 
           &:first-of-type {
-            width: 40%;
+            width: 45%;
+          }
+
+          &:last-of-type {
+            display: flex;
+            justify-content: center;
           }
         }
       }
