@@ -172,54 +172,54 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_product_form',
-                                'route_param_name' => 'id',
-                                'route_param_field' => 'id_product',
-                            ])
-                        )
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add((new LinkRowAction('edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'route' => 'admin_product_form',
+                        'route_param_name' => 'id',
+                        'route_param_field' => 'id_product',
+                    ])
+                    ),
 
-                    //    @todo Implement remaining actions actions
-                    //    ->add((new PreviewProductRowAction('preview_product'))
-                    //        ->setName($this->trans('Preview', [], 'Admin.Actions'))
-                    //        ->setIcon('remove_red_eye')
-                    //        ->setOptions([
-                    //            'route' => 'admin_products_preview',
-                    //            'route_param_name' => 'productId',
-                    //            'route_param_field' => 'id_product',
-                    //        ])
-                    //    )
-                    //    ->add((new SubmitRowAction('duplicate'))
-                    //        ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
-                    //        ->setIcon('content_copy')
-                    //        ->setOptions([
-                    //            'route' => 'admin_products_duplicate',
-                    //            'route_param_name' => 'productId',
-                    //            'route_param_field' => 'id_product',
-                    //        ])
-                    //    )
-                    //    ->add((new SubmitRowAction('delete'))
-                    //        ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    //        ->setIcon('delete')
-                    //        ->setOptions([
-                    //            'method' => 'DELETE',
-                    //            'route' => 'admin_products_delete',
-                    //            'route_param_name' => 'productId',
-                    //            'route_param_field' => 'id_product',
-                    //            'confirm_message' => $this->trans(
-                    //                'Delete selected item?',
-                    //                [],
-                    //                'Admin.Notifications.Warning'
-                    //            ),
-                    //        ])
-                    //    ),
-                ])
+                //    @todo Implement remaining actions actions
+                //    ->add((new PreviewProductRowAction('preview_product'))
+                //        ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                //        ->setIcon('remove_red_eye')
+                //        ->setOptions([
+                //            'route' => 'admin_products_preview',
+                //            'route_param_name' => 'productId',
+                //            'route_param_field' => 'id_product',
+                //        ])
+                //    )
+                //    ->add((new SubmitRowAction('duplicate'))
+                //        ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
+                //        ->setIcon('content_copy')
+                //        ->setOptions([
+                //            'route' => 'admin_products_duplicate',
+                //            'route_param_name' => 'productId',
+                //            'route_param_field' => 'id_product',
+                //        ])
+                //    )
+                //    ->add((new SubmitRowAction('delete'))
+                //        ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                //        ->setIcon('delete')
+                //        ->setOptions([
+                //            'method' => 'DELETE',
+                //            'route' => 'admin_products_delete',
+                //            'route_param_name' => 'productId',
+                //            'route_param_field' => 'id_product',
+                //            'confirm_message' => $this->trans(
+                //                'Delete selected item?',
+                //                [],
+                //                'Admin.Notifications.Warning'
+                //            ),
+                //        ])
+                //    ),
+            ])
             );
         if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
             $columns->addAfter(
@@ -228,7 +228,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
-                        /** @todo change route to link with quantity edit */
+                        /* @todo change route to link with quantity edit */
                         'route' => 'admin_products_v2_index',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
@@ -290,7 +290,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('price_tax_excluded')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-                ->setAssociatedColumn('active')
+            ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
