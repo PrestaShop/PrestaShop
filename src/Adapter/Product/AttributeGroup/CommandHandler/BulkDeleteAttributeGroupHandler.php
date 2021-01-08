@@ -24,31 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\AttributeGroup\AbstractAttributeGroupHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\CommandHandler\DeleteAttributeGroupHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
+use PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AbstractAttributeGroupHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\BulkDeleteAttributeGroupCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\DeleteAttributeGroupException;
 
 /**
- * Handles command which deletes attribute group using legacy object model
+ * Handles command which deletes multiple attribute groups using legacy object model
  */
-final class DeleteAttributeGroupHandler extends AbstractAttributeGroupHandler implements DeleteAttributeGroupHandlerInterface
+final class BulkDeleteAttributeGroupHandler extends AbstractAttributeGroupHandler implements BulkDeleteAttributeGroupHandlerInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws AttributeGroupException
      */
-    public function handle(DeleteAttributeGroupCommand $command)
+    public function handle(BulkDeleteAttributeGroupCommand $command)
     {
-        $attributeGroupId = $command->getAttributeGroupId();
-        $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
+        foreach ($command->getAttributeGroupIds() as $attributeGroupId) {
+            $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
 
-        if (false === $this->deleteAttributeGroup($attributeGroup)) {
-            throw new DeleteAttributeGroupException(sprintf('Failed deleting attribute group with id "%s"', $attributeGroupId->getValue()), DeleteAttributeGroupException::FAILED_DELETE);
+            if (false === $this->deleteAttributeGroup($attributeGroup)) {
+                throw new DeleteAttributeGroupException(sprintf('Failed to delete attribute group with id "%s"', $attributeGroupId->getValue()), DeleteAttributeGroupException::FAILED_BULK_DELETE);
+            }
         }
     }
 }

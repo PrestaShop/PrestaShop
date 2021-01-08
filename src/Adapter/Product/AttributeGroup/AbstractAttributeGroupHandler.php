@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\AttributeGroup;
+namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup;
 
 use AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
