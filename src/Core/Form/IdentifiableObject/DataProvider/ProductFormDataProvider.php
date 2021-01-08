@@ -32,8 +32,10 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -70,6 +72,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
+            'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }
 
@@ -244,5 +247,35 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $tags;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractSuppliersData(ProductForEditing $productForEditing): array
+    {
+        /** @var ProductSupplierOptions $productSupplierOptions */
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
+
+        $suppliersData = [
+            'default_supplier_id' => $productSupplierOptions->getDefaultSupplierId(),
+        ];
+
+        foreach ($productSupplierOptions->getOptionsBySupplier() as $supplierOption) {
+            $supplierId = $supplierOption->getSupplierId();
+            $suppliersData['supplier_ids'][] = $supplierId;
+            $fieldName = 'product_suppliers_by_supplier_' . $supplierId;
+            foreach ($supplierOption->getProductSuppliersForEditing() as $index => $supplierForEditing) {
+                $suppliersData[$fieldName][$index]['product_supplier_id'] = $supplierForEditing->getProductSupplierId();
+                $suppliersData[$fieldName][$index]['supplier_price_tax_excluded'] = $supplierForEditing->getPriceTaxExcluded();
+                $suppliersData[$fieldName][$index]['supplier_reference'] = $supplierForEditing->getReference();
+                $suppliersData[$fieldName][$index]['currency_id'] = $supplierForEditing->getCurrencyId();
+                $suppliersData[$fieldName][$index]['combination_id'] = $supplierForEditing->getCombinationId();
+            }
+        }
+
+        return $suppliersData;
     }
 }
