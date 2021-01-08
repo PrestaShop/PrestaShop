@@ -134,7 +134,9 @@ class ModuleProviderTest extends TestCase
     public function testGetDefaultCatalogue()
     {
         $catalogue = $this->modulesProvider->getDefaultCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
-        $this->assertSame(self::$wordings, $catalogue->all());
+        $catalogueAsArray = $catalogue->all();
+        ksort($catalogueAsArray);
+        $this->assertSame(self::$wordings, $catalogueAsArray);
 
         $catalogue = $this->modulesProvider->getDefaultCatalogue(
             DefaultCatalogueProvider::DEFAULT_LOCALE,

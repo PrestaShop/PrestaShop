@@ -67,22 +67,27 @@ class TranslationsCatalogueProvider
         array $search = []
     ): array {
         $provider = $this->providerFactory->build($providerType);
-
-        $defaultCatalogue = $provider->getDefaultCatalogue($locale);
-        if (null === $defaultCatalogue) {
-            return [];
-        }
-        $defaultCatalogue = $this->filterCatalogue($defaultCatalogue, $locale, $domain)->all($domain);
+        $defaultCatalogue = $this->filterCatalogue(
+            $provider->getDefaultCatalogue($locale),
+            $locale,
+            $domain
+        )->all($domain);
 
         try {
-            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
-            $fileTranslatedCatalogue = (null !== $fileTranslatedCatalogue) ? $this->filterCatalogue($fileTranslatedCatalogue, $locale, $domain)->all($domain) : [];
+            $fileTranslatedCatalogue = $this->filterCatalogue(
+                $provider->getFileTranslatedCatalogue($locale),
+                $locale,
+                $domain
+            )->all($domain);
         } catch (FileNotFoundException $exception) {
             $fileTranslatedCatalogue = [];
         }
 
-        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
-        $userTranslatedCatalogue = (null !== $userTranslatedCatalogue) ? $this->filterCatalogue($userTranslatedCatalogue, $locale, $domain)->all($domain) : [];
+        $userTranslatedCatalogue = $this->filterCatalogue(
+            $provider->getUserTranslatedCatalogue($locale),
+            $locale,
+            $domain
+        )->all($domain);
 
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 

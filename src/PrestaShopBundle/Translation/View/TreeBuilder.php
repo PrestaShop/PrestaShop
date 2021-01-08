@@ -110,10 +110,6 @@ class TreeBuilder
             $subtree = &$tree;
             $currentSubdomainName = '';
 
-            if (false === $parts) {
-                continue;
-            }
-
             foreach ($parts as $partNumber => $part) {
                 $subdomainPartName = ucfirst($part);
                 $currentSubdomainName .= $subdomainPartName;
@@ -171,9 +167,9 @@ class TreeBuilder
     /**
      * @param string $domain
      *
-     * @return false|string[]
+     * @return string[]
      */
-    private function splitDomain(string $domain)
+    private function splitDomain(string $domain): array
     {
         // the third component of the domain may have underscores, so we need to limit pieces to 3
         return explode('_', Inflector::tableize($domain), 3);
