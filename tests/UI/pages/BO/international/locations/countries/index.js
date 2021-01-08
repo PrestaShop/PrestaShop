@@ -6,7 +6,7 @@ class Countries extends BOBasePage {
     super();
 
     this.pageTitle = 'Countries •';
-    this.successfulMessage = 'The settings have been successfully updated.';
+    this.settingsUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // Header selectors

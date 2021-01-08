@@ -118,7 +118,7 @@ describe('Enable/Disable Restrict country selections in front office', async () 
       await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}RestrictCountry`, baseContext);
 
       const currentStatus = await countriesPage.setCountriesRestrictions(page, status.args.enable);
-      await expect(currentStatus).to.contains(countriesPage.successfulMessage);
+      await expect(currentStatus).to.contains(countriesPage.settingsUpdateMessage);
     });
 
     it('should go to FO', async function () {
