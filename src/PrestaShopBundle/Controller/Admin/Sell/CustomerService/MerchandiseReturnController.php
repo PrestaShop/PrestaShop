@@ -294,7 +294,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             ),
             DeleteOrderReturnProductException::class => [
                 DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND => $this->trans(
-                    'An error occurred while deleting this product, order product not found.',
+                    'An error occurred while deleting this product (order product not found).',
                     'Admin.Notifications.Error'
                 ),
                 DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT => $this->trans(
