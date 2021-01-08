@@ -119,8 +119,13 @@
       overflow: scroll;
 
       li {
-        &:nth-child(2) {
-          min-width: 12rem;
+        display: flex;
+
+        .nav-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: max-content;
         }
       }
     }
@@ -209,6 +214,10 @@
       margin: 0;
       font-weight: bolder;
       color: $gray-dark;
+
+      @media (max-width: 33.9em) {
+        padding-right: 1.5rem;
+      }
     }
     .module-version-author-list {
       overflow: hidden;
