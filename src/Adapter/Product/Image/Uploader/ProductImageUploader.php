@@ -77,13 +77,13 @@ class ProductImageUploader extends AbstractImageUploader
     private $isLegacyImageMode;
 
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository
+     * @var ProductImageRepository
      */
     private $productImageRepository;
 
     /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
-     * @param \PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory $productImagePathFactory
+     * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
      * @param ImageGenerator $imageGenerator
      * @param HookDispatcherInterface $hookDispatcher
