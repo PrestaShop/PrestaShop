@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Product\Generator;
+namespace Tests\Unit\Core\Product\Combination\Generator;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGenerator;
+use PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator;
 
 class CombinationGeneratorTest extends TestCase
 {

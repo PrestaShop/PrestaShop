@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Create\CombinationCreator;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateProductCombinationsHandlerInterface;
 

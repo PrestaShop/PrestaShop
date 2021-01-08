@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-stock
 @reset-database-before-feature
 @clear-cache-before-feature
-@update-combination
+@product-combination
 @update-combination-stock
 Feature: Update product combination stock information in Back Office (BO)
   As an employee

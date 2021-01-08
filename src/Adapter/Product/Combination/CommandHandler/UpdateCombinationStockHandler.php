@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use Combination;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\CombinationStockUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
