@@ -1287,10 +1287,29 @@ services:
     form.type.sell.product.stock_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
         parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
             - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.suppliers_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SuppliersType'
+        parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.product.product_supplier_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductSupplierType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.currency_by_id'
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
         tags:
             - { name: form.type }
 
