@@ -26,12 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Update;
 
 use PrestaShop\Decimal\Exception\DivisionByZeroException;
-use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\VirtualProductFileRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Uploader\VirtualProductFileUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
@@ -39,10 +39,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\Vir
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
-use ProductDownload;
+use ProductDownload as VirtualProductFile;
 
 /**
  * Provides update methods specific to virtual product
+ * Legacy object ProductDownload is referred as VirtualProductFile in Core
  */
 class VirtualProductUpdater
 {
@@ -57,32 +58,32 @@ class VirtualProductUpdater
     private $virtualProductFileUploader;
 
     /**
-     * @var ProductDownloadRepository
+     * @var VirtualProductFileRepository
      */
-    private $productDownloadRepository;
+    private $virtualProductFileRepository;
 
     /**
      * @param ProductRepository $productRepository
      * @param VirtualProductFileUploader $virtualProductFileUploader
-     * @param ProductDownloadRepository $productDownloadRepository
+     * @param VirtualProductFileRepository $virtualProductFileRepository
      */
     public function __construct(
         ProductRepository $productRepository,
         VirtualProductFileUploader $virtualProductFileUploader,
-        ProductDownloadRepository $productDownloadRepository
+        VirtualProductFileRepository $virtualProductFileRepository
     ) {
         $this->productRepository = $productRepository;
         $this->virtualProductFileUploader = $virtualProductFileUploader;
-        $this->productDownloadRepository = $productDownloadRepository;
+        $this->virtualProductFileRepository = $virtualProductFileRepository;
     }
 
     /**
      * Add virtual product file to a product
-     * Legacy ProductDownload is referred as VirtualProductFile in Core
+     * Legacy object ProductDownload is referred as VirtualProductFile in Core
      *
      * @param ProductId $productId
      * @param string $filePath
-     * @param ProductDownload $productDownload
+     * @param VirtualProductFile $virtualProductFile
      *
      * @return VirtualProductFileId
      *
@@ -93,7 +94,7 @@ class VirtualProductUpdater
      * @throws CannotUnlinkFileException
      * @throws FileUploadException
      */
-    public function addFile(ProductId $productId, string $filePath, ProductDownload $productDownload): VirtualProductFileId
+    public function addFile(ProductId $productId, string $filePath, VirtualProductFile $virtualProductFile): VirtualProductFileId
     {
         $product = $this->productRepository->get($productId);
 
@@ -104,7 +105,7 @@ class VirtualProductUpdater
             );
         }
 
-        if ($this->productDownloadRepository->findByProductId($productId)) {
+        if ($this->virtualProductFileRepository->findByProductId($productId)) {
             throw new VirtualProductFileConstraintException(
                 sprintf('File already exists for product #%d', $product->id),
                 VirtualProductFileConstraintException::ALREADY_HAS_A_FILE
@@ -112,9 +113,9 @@ class VirtualProductUpdater
         }
 
         $uploadedFilePath = $this->virtualProductFileUploader->upload($filePath);
-        $productDownload->filename = pathinfo($uploadedFilePath, PATHINFO_FILENAME);
-        $productDownload->id_product = $productId->getValue();
+        $virtualProductFile->filename = pathinfo($uploadedFilePath, PATHINFO_FILENAME);
+        $virtualProductFile->id_product = $productId->getValue();
 
-        return $this->productDownloadRepository->add($productDownload);
+        return $this->virtualProductFileRepository->add($virtualProductFile);
     }
 }

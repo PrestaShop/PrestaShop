@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\File\Validator;
+namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validator;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
