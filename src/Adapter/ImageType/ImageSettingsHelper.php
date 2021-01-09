@@ -48,11 +48,23 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
     private $translator;
 
     /**
+     * @var string
+     */
+    public $productImagesDir;
+
+    /**
+     * @var bool
+     */
+    public $showDuplicatesAlert;
+
+    /**
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
+        $this->productImagesDir = _PS_PROD_IMG_DIR_;
+        $this->showDuplicatesAlert = file_exists(_PS_PROD_IMG_DIR_ . 'duplicates/');
     }
 
     /**
@@ -90,14 +102,6 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
     /**
      * {@inheritdoc}
      */
-    public function showDuplicatesAlert(): bool
-    {
-        return file_exists(_PS_PROD_IMG_DIR_ . 'duplicates/');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function showMovingForm(): bool
     {
         $dir = _PS_PROD_IMG_DIR_;
@@ -115,13 +119,5 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
         }
 
         return $displayMove;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getProductImagesDir(): string
-    {
-        return _PS_PROD_IMG_DIR_;
     }
 }
