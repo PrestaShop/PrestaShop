@@ -39,23 +39,9 @@ interface ImageSettingsHelperInterface
     public function moveImagesToNewFileSystem(): array;
 
     /**
-     * Checks should duplicates alert be shown.
-     *
-     * @return bool
-     */
-    public function showDuplicatesAlert(): bool;
-
-    /**
      * Checks is images in old file system.
      *
      * @return bool
      */
     public function showMovingForm(): bool;
-
-    /**
-     * Returns product images directory.
-     *
-     * @return string
-     */
-    public function getProductImagesDir(): string;
 }
