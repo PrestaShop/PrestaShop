@@ -40,14 +40,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ImageGenerator implements ImageGeneratorInterface
 {
-    public const PROCESS_DIRS = [
-        ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
-        ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
-        ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
-        ['type' => 'products', 'dir' => _PS_PROD_IMG_DIR_],
-        ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
-    ];
-
     /**
      * @var TranslatorInterface
      */
@@ -75,6 +67,13 @@ class ImageGenerator implements ImageGeneratorInterface
     {
         $this->translator = $translator;
         $this->configuration = $configuration;
+        $this->process_dirs = [
+            ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
+            ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
+            ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
+            ['type' => 'products', 'dir' => _PS_PROD_IMG_DIR_],
+            ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
+        ];
     }
 
     /**
@@ -304,7 +303,7 @@ class ImageGenerator implements ImageGeneratorInterface
         $type = $data['image_category'];
         $deleteOldImages = $data['erase_previous_images'];
 
-        foreach (self::PROCESS_DIRS as $proc) {
+        foreach ($this->process_dirs as $proc) {
             if ($type != 'all' && $type != $proc['type']) {
                 continue;
             }
@@ -325,7 +324,7 @@ class ImageGenerator implements ImageGeneratorInterface
             if ($deleteOldImages) {
                 $this->deleteOldImages($proc['dir'], $formats, $proc['type'] == 'products');
             }
-            if (($return = $this->regenerateNewImages($proc['dir'], $formats, $proc['type'] == 'products')) === true) {
+            if (count(($return = $this->regenerateNewImages($proc['dir'], $formats, $proc['type'] == 'products')))) {
                 if (!count($errors)) {
                     $errors[] = $this->translator->trans('Cannot write images for this type: %1$s. Please check the %2$s folder\'s writing permissions.', [$proc['type'], $proc['dir']], 'Admin.Design.Notification');
                 }
