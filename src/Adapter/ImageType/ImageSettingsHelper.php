@@ -60,33 +60,31 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
      */
     public function moveImagesToNewFileSystem(): array
     {
-        $errors = [];
-
         if (!Image::testFileSystem()) {
-            $errors[] = $this->translator->trans(
+            return [$this->translator->trans(
                 'Error: Your server configuration is not compatible with the new image system. No images were moved.',
                 [],
                 'Admin.Design.Notification'
-            );
+            )];
         } else {
             ini_set('max_execution_time', (string) $this->max_execution_time);
             $this->max_execution_time = (int) ini_get('max_execution_time');
             $result = Image::moveToNewFileSystem($this->max_execution_time);
 
             if ($result === 'timeout') {
-                $errors[] = $this->translator->trans(
+                return [$this->translator->trans(
                     'Not all images have been moved. The server timed out before finishing. Click on "%move_images_label%" again to resume the moving process.',
                     [
                         '%move_images_label%' => $this->translator->trans('Move images', [], 'Admin.Design.Feature'),
                     ],
                     'Admin.Design.Notification'
-                );
+                )];
             } elseif ($result === false) {
-                $errors[] = $this->translator->trans('Error: Some -- or all -- images cannot be moved.', [], 'Admin.Design.Notification');
+                return [$this->translator->trans('Error: Some -- or all -- images cannot be moved.', [], 'Admin.Design.Notification')];
             }
         }
 
-        return $errors;
+        return [];
     }
 
     /**
