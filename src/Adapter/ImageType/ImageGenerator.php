@@ -79,7 +79,7 @@ class ImageGenerator implements ImageGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteOldImages(string $dir, array $type, bool $product = false)
+    public function deleteOldImages(string $dir, array $type, bool $product = false): void
     {
         if (!is_dir($dir)) {
             return;
@@ -229,7 +229,7 @@ class ImageGenerator implements ImageGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerateNoPictureImages(string $dir, array $type, array $languages)
+    public function regenerateNoPictureImages(string $dir, array $type, array $languages): void
     {
         $errors = false;
         $generate_hight_dpi_images = $this->configuration->getBoolean('PS_HIGHT_DPI');
@@ -260,7 +260,7 @@ class ImageGenerator implements ImageGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerateWatermark(string $dir, ?array $type = null)
+    public function regenerateWatermark(string $dir, ?array $type = null): ?string
     {
         $result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `' . _DB_PREFIX_ . 'module` m
