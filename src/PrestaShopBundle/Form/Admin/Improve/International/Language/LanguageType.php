@@ -44,6 +44,8 @@ use Symfony\Component\Validator\Constraints\Regex;
  */
 class LanguageType extends TranslatorAwareType
 {
+    private const MAX_NAME_LENGTH = 32;
+
     /**
      * @var bool
      */
@@ -70,6 +72,9 @@ class LanguageType extends TranslatorAwareType
         $builder
             ->add('name', TextType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
+                'attr' => [
+                    'maxLength' => self::MAX_NAME_LENGTH,
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
