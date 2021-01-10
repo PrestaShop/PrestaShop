@@ -240,10 +240,12 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollection
     {
-        return (new BulkActionCollection())
+        $bulkActions = new BulkActionCollection();
+        $bulkActions
             ->add(
                 $this->buildBulkDeleteAction('admin_image_settings_bulk_delete')
             );
+        return $bulkActions;
     }
 
     /**
@@ -274,7 +276,8 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private function getRowActions(): RowActionCollection
     {
-        return (new RowActionCollection())
+        $rowActions = new RowActionCollection()
+        $rowActions
             ->add(
                 (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
@@ -293,5 +296,6 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'id_image_type'
                 )
             );
+        return $rowActions;
     }
 }
