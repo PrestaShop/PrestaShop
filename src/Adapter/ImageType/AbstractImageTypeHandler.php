@@ -51,7 +51,7 @@ abstract class AbstractImageTypeHandler
         try {
             $imageType = new ImageType($imageTypeId->getValue());
         } catch (PrestaShopException $e) {
-            throw new ImageTypeException(sprintf('Failed to create new image type.', 0, $e));
+            throw new ImageTypeException('Failed to create new image type.', 0, $e);
         }
 
         if ($imageType->id !== $imageTypeId->getValue()) {
