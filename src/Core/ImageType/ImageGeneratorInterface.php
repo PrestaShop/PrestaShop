@@ -53,8 +53,10 @@ interface ImageGeneratorInterface
      * @param string $dir
      * @param array $type
      * @param array $languages
+     *
+     * @return bool
      */
-    public function regenerateNoPictureImages(string $dir, array $type, array $languages): void;
+    public function regenerateNoPictureImages(string $dir, array $type, array $languages): bool;
 
     /**
      * @param string $dir
