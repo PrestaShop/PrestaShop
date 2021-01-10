@@ -276,7 +276,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private function getRowActions(): RowActionCollection
     {
-        $rowActions = new RowActionCollection()
+        $rowActions = new RowActionCollection();
         $rowActions
             ->add(
                 (new LinkRowAction('edit'))
