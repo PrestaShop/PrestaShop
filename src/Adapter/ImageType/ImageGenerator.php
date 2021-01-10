@@ -229,7 +229,7 @@ class ImageGenerator implements ImageGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerateNoPictureImages(string $dir, array $type, array $languages): void
+    public function regenerateNoPictureImages(string $dir, array $type, array $languages): bool
     {
         $errors = false;
         $generate_hight_dpi_images = $this->configuration->getBoolean('PS_HIGHT_DPI');
