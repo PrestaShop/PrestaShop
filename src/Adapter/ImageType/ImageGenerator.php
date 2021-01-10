@@ -61,6 +61,11 @@ class ImageGenerator implements ImageGeneratorInterface
     private $configuration;
 
     /**
+     * @var array
+     */
+    private $process_dirs;
+
+    /**
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator, Configuration $configuration)
