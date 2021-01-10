@@ -33,12 +33,15 @@ import ReloadListActionExtension from '@components/grid/extension/reload-list-ex
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import ImageSettingsIndexMap from '@pages/image-settings/index-map';
 
 const {$} = window;
 
 $(() => {
-  $('.second-select').addClass('d-none');
-  $(`.format_${$('#thumbnail_regeneration_image_category').val()}`).removeClass('d-none');
+  $(ImageSettingsIndexMap.secondSelect).addClass('d-none');
+  $(ImageSettingsIndexMap.format(
+    $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val()),
+  ).removeClass('d-none');
 
   const grid = new Grid('image_type');
 
@@ -52,8 +55,10 @@ $(() => {
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new LinkRowActionExtension());
 
-  $('#thumbnail_regeneration_image_category').change(() => {
-    $('.second-select').addClass('d-none');
-    $(`.format_${$('#thumbnail_regeneration_image_category').val()}`).removeClass('d-none');
+  $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).change(() => {
+    $(ImageSettingsIndexMap.secondSelect).addClass('d-none');
+    $(ImageSettingsIndexMap.format(
+      $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val()),
+    ).removeClass('d-none');
   });
 });
