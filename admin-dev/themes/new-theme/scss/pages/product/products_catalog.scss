@@ -16,6 +16,11 @@
 
     .row {
       align-items: center;
+
+      @include media-breakpoint-down(sm) {
+        margin-right: 0;
+        margin-left: 0;
+      }
     }
   }
 
