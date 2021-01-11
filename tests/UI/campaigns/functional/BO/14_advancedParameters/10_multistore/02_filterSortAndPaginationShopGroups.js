@@ -29,6 +29,7 @@ let numberOfShopGroups = 0;
 Enable multistore
 Create 20 shop groups
 Filter by : Id and shop group
+Pagination between pages
 Delete the created shop groups
 Disable multistore
  */
