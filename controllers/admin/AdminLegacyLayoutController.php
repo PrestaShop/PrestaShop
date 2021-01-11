@@ -151,7 +151,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $isProductPage = ('AdminProducts' === $this->controller_name);
 
         $vars = [
-            'viewport_scale' => '1',
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
