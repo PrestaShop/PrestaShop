@@ -97,7 +97,7 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
-  // 3 : Create shop groups
+  // 3 : Create 20 shop groups
   new Array(20).fill(0, 0, 20).forEach((test, index) => {
     describe(`Create shop group n°${index + 1}`, async () => {
       const shopGroupData = new ShopGroupFaker({name: `todelete${index}`});
@@ -147,6 +147,37 @@ describe('Filter, sort and pagination shop group', async () => {
         const numberOfElement = await multiStorePage.resetAndGetNumberOfLines(page);
         await expect(numberOfElement).to.be.equal(numberOfShopGroups + 20);
       });
+    });
+  });
+
+  // 5 : pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await multiStorePage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await multiStorePage.paginationNext(page);
+      expect(paginationNumber).to.equal('2');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await multiStorePage.paginationPrevious(page);
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await multiStorePage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.equal('1');
     });
   });
 
