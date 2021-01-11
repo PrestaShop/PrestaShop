@@ -93,7 +93,7 @@ class SessionHandler implements SessionHandlerInterface
      */
     public function initialize(): void
     {
-        if ($this->isSessionDisabled()) {
+        if ($this->isSessionDisabled() || $this->isSessionStarted()) {
             return;
         }
 
@@ -120,10 +120,6 @@ class SessionHandler implements SessionHandlerInterface
         }
 
         $this->session = new Session(new PhpBridgeSessionStorage());
-        if ($this->isSessionStarted()) {
-            return;
-        }
-
         $this->session->start();
     }
 

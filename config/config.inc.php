@@ -190,12 +190,15 @@ if (defined('_PS_ADMIN_DIR_')) {
     }
 }
 
-$session = new SessionHandler(
-    $cookie_lifetime,
-    $force_ssl,
-    Configuration::get('PS_COOKIE_SAMESITE'),
-    Context::getContext()->shop->physical_uri
-);
+
+if (PHP_SAPI !== 'cli') {
+    $session = new SessionHandler(
+        $cookie_lifetime,
+        $force_ssl,
+        Configuration::get('PS_COOKIE_SAMESITE'),
+        Context::getContext()->shop->physical_uri
+    );
+}
 
 $context->cookie = $cookie;
 
