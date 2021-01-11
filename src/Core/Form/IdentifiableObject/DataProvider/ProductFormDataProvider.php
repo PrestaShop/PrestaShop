@@ -89,6 +89,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'height' => 0,
                 'depth' => 0,
                 'weight' => 0,
+                'additional_shipping_cost' => 0,
             ],
         ];
     }
