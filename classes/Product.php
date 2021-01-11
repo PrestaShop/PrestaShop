@@ -1563,7 +1563,7 @@ class ProductCore extends ObjectModel
             WHERE p.id_product = ' . (int) $this->id . '
             AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
 
-        return (bool) Db::getInstance()->getValue($query, true, false);
+        return (bool) Db::getInstance()->getValue($query, false);
     }
 
     /**
