@@ -34,15 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 final class ShippingCommandBuilder implements ProductCommandBuilderInterface
 {
     /**
-     * @param ProductId $productId
-     * @param array $formData
-     *
-     * @return UpdateProductShippingCommand|null
+     * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData)
+    public function buildCommand(ProductId $productId, array $formData): array
     {
         if (!isset($formData['shipping'])) {
-            return null;
+            return [];
         }
 
         $shippingData = $formData['shipping'];
@@ -84,6 +81,6 @@ final class ShippingCommandBuilder implements ProductCommandBuilderInterface
             $command->setCarrierReferences($shippingData['carriers']);
         }
 
-        return $command;
+        return [$command];
     }
 }

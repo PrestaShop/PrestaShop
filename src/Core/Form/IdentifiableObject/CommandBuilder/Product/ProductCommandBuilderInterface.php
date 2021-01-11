@@ -38,7 +38,7 @@ interface ProductCommandBuilderInterface
      * @param ProductId $productId
      * @param array $formData
      *
-     * @return mixed|null Returns null if the required data for the command is absent
+     * @return array Returns empty array if the required data for the command is absent
      */
-    public function buildCommand(ProductId $productId, array $formData);
+    public function buildCommand(ProductId $productId, array $formData): array;
 }

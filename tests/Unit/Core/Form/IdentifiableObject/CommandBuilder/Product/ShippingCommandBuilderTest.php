@@ -39,13 +39,13 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
      * @dataProvider getExpectedCommands
      *
      * @param array $formData
-     * @param UpdateProductShippingCommand|null $expectedCommand
+     * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, ?UpdateProductShippingCommand $expectedCommand): void
+    public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new ShippingCommandBuilder();
-        $builtCommand = $builder->buildCommand($this->getProductId(), $formData);
-        $this->assertEquals($expectedCommand, $builtCommand);
+        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     /**
@@ -57,16 +57,17 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'no data' => ['useless value'],
             ],
-            null,
+            [],
         ];
 
+        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
         yield [
             [
                 'shipping' => [
                     'not_handled' => 0,
                 ],
             ],
-            new UpdateProductShippingCommand($this->getProductId()->getValue()),
+            [$command],
         ];
 
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
@@ -83,7 +84,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'depth' => 0,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
@@ -94,7 +95,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'additional_shipping_cost' => '-0.55',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
@@ -105,7 +106,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'carriers' => ['1', '2', '3'],
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
@@ -116,7 +117,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'delivery_time_note_type' => 1,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
@@ -131,7 +132,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'delivery_time_in_stock_note' => $localizedNotes,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
@@ -146,7 +147,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'delivery_time_out_stock_note' => $localizedNotes,
                 ],
             ],
-            $command,
+            [$command],
         ];
     }
 }

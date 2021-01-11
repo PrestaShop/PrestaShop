@@ -39,13 +39,13 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
      * @dataProvider getExpectedCommands
      *
      * @param array $formData
-     * @param UpdateProductOptionsCommand|null $expectedCommand
+     * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, ?UpdateProductOptionsCommand $expectedCommand)
+    public function testBuildCommand(array $formData, array $expectedCommands)
     {
         $builder = new OptionsCommandBuilder();
-        $builtCommand = $builder->buildCommand($this->getProductId(), $formData);
-        $this->assertEquals($expectedCommand, $builtCommand);
+        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     public function getExpectedCommands()
@@ -54,16 +54,17 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'no data' => ['useless value'],
             ],
-            null,
+            [],
         ];
 
+        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
         yield [
             [
                 'options' => [
                     'not_handled' => 0,
                 ],
             ],
-            $command = new UpdateProductOptionsCommand($this->getProductId()->getValue()),
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -75,7 +76,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'active' => 1,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -86,7 +87,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'manufacturer_id' => '1',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -97,7 +98,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'condition' => 'new',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -109,7 +110,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'show_condition' => 0,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -121,7 +122,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'online_only' => true,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -133,7 +134,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'show_price' => false,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -145,7 +146,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'available_for_order' => '1',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
@@ -157,7 +158,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'visibility' => 'none',
                 ],
             ],
-            $command,
+            [$command],
         ];
     }
 }
