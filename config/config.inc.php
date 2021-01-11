@@ -197,6 +197,7 @@ if (PHP_SAPI !== 'cli') {
         Configuration::get('PS_COOKIE_SAMESITE'),
         Context::getContext()->shop->physical_uri
     );
+    $sessionHandler->init();
 
     $context->session = $sessionHandler->getSession();
 }

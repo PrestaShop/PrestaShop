@@ -76,14 +76,12 @@ class SessionHandler implements SessionHandlerInterface
 
         $this->path = rawurlencode($this->path);
         $this->path = str_replace(['%2F', '%7E', '%2B', '%26'], ['/', '~', '+', '&'], $this->path);
-
-        $this->initialize();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSession(): SessionInterface
+    public function getSession(): ?SessionInterface
     {
         return $this->session;
     }
@@ -91,7 +89,7 @@ class SessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function initialize(): void
+    public function init(): void
     {
         if ($this->isSessionDisabled() || $this->isSessionStarted()) {
             return;

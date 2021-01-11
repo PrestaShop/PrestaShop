@@ -33,7 +33,17 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 interface SessionHandlerInterface
 {
-    public function initialize(): void;
+    /**
+     * Initialize session
+     *
+     * @return void
+     */
+    public function init(): void;
 
-    public function getSession(): SessionInterface;
+    /**
+     * Return the current session
+     *
+     * @return ?SessionInterface
+     */
+    public function getSession(): ?SessionInterface;
 }
