@@ -21,7 +21,7 @@ parameters:
 		- Product
 
 includes:
-    - vendor/matks/phpstan-prestashop/extension.neon
+    - vendor/prestashop/phpstan-prestashop/extension.neon
 
 services:
 	strictTypesForNewClassesRuleConfigurationFileLoader:
