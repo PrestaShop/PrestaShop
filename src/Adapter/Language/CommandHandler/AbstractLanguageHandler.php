@@ -54,7 +54,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
     protected function copyNoPictureImage(IsoCode $isoCode, $noPictureImagePath)
     {
         if (!($temporaryImage = tempnam(_PS_TMP_IMG_DIR_, 'PS'))
-            || !move_uploaded_file($noPictureImagePath, $temporaryImage)
+            || !copy($noPictureImagePath, $temporaryImage)
         ) {
             return;
         }
@@ -91,6 +91,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             }
         }
 
+        unlink($noPictureImagePath);
         unlink($temporaryImage);
     }
 
@@ -106,7 +107,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             return;
         }
 
-        if (!move_uploaded_file($newImagePath, $temporaryImage)) {
+        if (!copy($newImagePath, $temporaryImage)) {
             return;
         }
 
@@ -129,6 +130,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             }
         }
 
+        unlink($newImagePath);
         unlink($temporaryImage);
     }
 
