@@ -29,6 +29,15 @@ admin_product_edit_price:
     requirements:
         productId: \d+
 
+admin_product_edit_quantity:
+    path: /{productId}/edit-quantity
+    methods: GET
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:editQuantity
+        _legacy_controller: AdminProducts
+    requirements:
+        productId: \d+
+
 admin_products_v2_create:
   path: /create
   methods: [GET, POST]
