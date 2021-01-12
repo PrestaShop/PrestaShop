@@ -23,6 +23,71 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+####################################
+#   v1.7.7.1 - (2021-01-11)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #22020: Take shop id into account when getting a language list for an order (by @matthieu-rolland)
+    - #22028: Update out of stock mail wording (by @jolelievre)
+  - Bug fix:
+    - #21692: Refresh order products when a product is added or deleted (by @sowbiba)
+    - #22535: Method assertCmsCategoryExists doesn't return anything, it throws an exception (by @PierreRambaud)
+    - #22082: Hide product quantity in Order view page when stock management is disabled (by @jolelievre)
+    - #22299: Use OrderDetail prices when modifying an Order (by @jolelievre)
+    - #21795: Fix wrong product quantity after adding a product triggering a free gift  (by @matthieu-rolland)
+    - #22175: Added error when a customization is not found (by @Progi1984)
+    - #21912: Use language_code when locale is empty to get CLDR data (by @atomiix)
+    - #22171: When refreshing an order, display shipping price if needed (by @Progi1984)
+    - #22406: Fixed pagination in Product Quick Navigation Popup (by @Progi1984)
+    - #21977: Add debounce to quantity change of order create product (by @NeOMakinG)
+    - #22291: Fixed Pagination of Sell > Orders > Credits Slips page (by @Progi1984)
+    - #22214: Fix numeric_iso_code in the upgrade to 1.7.7.1 (by @atomiix)
+    - #22126: Fix bug on displayed price's calculation in BO order page under specific conditions (by @matthieu-rolland)
+    - #22246: Integrate ContextStateManager into refund handlers (by @jolelievre)
+    - #21568: Fixed in Create Order the update of cart rules when changing adress  (by @Progi1984)
+    - #22189: Trigger input when a predefined message is applied (by @Progi1984)
+    - #22077: Create Order - Fix remove cart rule when amount is not reached (by @sowbiba)
+    - #22101: Fix product selections when creating/updating tags (by @atomiix)
+    - #22099: Fix employee filter for the Logs page (by @atomiix)
+    - #22059: Add Payments block refresher - Refresh when product is added or removed from Order (by @sowbiba)
+    - #21992: Make customer note TYPE_STRING instead of TYPE_HTML (by @atomiix)
+    - #21980: Fixed the error message for a combination with a min quantity for sale (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #22296: Center products on category list on mobile (by @NeOMakinG)
+    - #22241: Fix duplicated hook data after product page refresh (by @Hlavtox)
+    - #22103: Display combination image in product pack list (by @jolelievre)
+- Core:
+  - Bug fix:
+    - #22532: Hook keys must be in lowercase (by @PierreRambaud)
+    - #22432: Don't redirect to http from https if it is homepage (by @ludoc)
+    - #22293: Use PS cache config as driver.cache (by @atomiix)
+    - #22274: Fix upgrade from ps < 1.7.0.0 (by @atomiix)
+    - #22289: Removed module Linklist update from upgrade script (by @Progi1984)
+    - #21988: Fix order detail total amount update when rounding is per item (by @matthieu-rolland)
+- Tests:
+  - Improvement:
+    - #22198: Add static cache resets (by @matthieu-rolland)
+  - Refactoring:
+    - #22543: Add test 'Page for terms and conditions' (by @nesrineabdmouleh)
+    - #22523: Add test 'Activate merchandise returns' (by @nesrineabdmouleh)
+    - #22521: Refactoring alert blocks in UI tests (by @boubkerbribri)
+    - #22491: Add test 'View customer service message page' (by @nesrineabdmouleh)
+    - #22490: Add new FO tests 'Edit account information' (by @boubkerbribri)
+    - #22433: Add test 'Check to delete shop groups' (by @nesrineabdmouleh)
+    - #22446: Add test 'Quick edit order status' (by @nesrineabdmouleh)
+    - #22454: Add test 'Quick edit alias status' (by @nesrineabdmouleh)
+    - #22455: Add requirement block to README in UI tests (by @boubkerbribri)
+    - #22434: Refactoring FO login page in UI tests and add new page for create account page (by @boubkerbribri)
+    - #22428: Add new command to run all UI tests and check step identifiers in all campaigns (by @boubkerbribri)
+    - #22423: Add new test 'Change carrier position' (by @boubkerbribri)
+    - #22408: Rename functions in UI tests (by @boubkerbribri)
+    - #22345: Add tests on products page (by @boubkerbribri)
+    - #22012: Fix random fails in travis CI (by @boubkerbribri)
+    - #22209: Backport fix on UI sort tests (by @boubkerbribri)
+    - #22172: Backport UI tests (by @boubkerbribri)
 
 ####################################
 #   v1.7.7.0 - (2020-12-02)

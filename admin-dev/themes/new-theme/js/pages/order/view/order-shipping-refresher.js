@@ -25,22 +25,19 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-import InvoiceNoteManager from '../invoice-note-manager';
 
-const {$} = window;
+const $ = window.$;
 
-export default class OrderDocumentsRefresher {
-  constructor() {
-    this.router = new Router();
-    this.invoiceNoteManager = new InvoiceNoteManager();
-  }
+export default class OrderShippingRefresher {
+    constructor() {
+        this.router = new Router();
+    }
 
-  refresh(orderId) {
-    $.getJSON(this.router.generate('admin_orders_get_documents', {orderId}))
-      .then((response) => {
-        $(OrderViewPageMap.orderDocumentsTabCount).text(response.total);
-        $(OrderViewPageMap.orderDocumentsTabBody).html(response.html);
-        this.invoiceNoteManager.setupListeners();
-      });
-  }
+    refresh(orderId) {
+        $.getJSON(this.router.generate('admin_orders_get_shipping', {orderId}))
+            .then((response) => {
+                $(OrderViewPageMap.orderShippingTabCount).text(response.total);
+                $(OrderViewPageMap.orderShippingTabBody).html(response.html);
+            });
+    }
 }
