@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ConfirmModal from '@components/modal';
+
 const {$} = window;
 
 /**
@@ -90,7 +92,7 @@ class AdminModuleController {
     // Upgrade All selectors
     this.upgradeAllSource = '.module_action_menu_upgrade_all';
     this.upgradeContainer = '#modules-list-container-update';
-    this.upgradeAllTargets = `${this.upgradeContainer}' .module_action_menu_upgrade:visible`;
+    this.upgradeAllTargets = `${this.upgradeContainer} .module_action_menu_upgrade:visible`;
 
     // Notification selectors
     this.notificationContainer = '#modules-list-container-notification';
@@ -1086,24 +1088,51 @@ class AdminModuleController {
     // "Upgrade All" button handler
     $('body').on('click', self.upgradeAllSource, (event) => {
       event.preventDefault();
+      const isMaintenanceMode = window.isShopMaintenance;
 
-      if ($(self.upgradeAllTargets).length <= 0) {
-        console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
-        return false;
-      }
+      // Modal body element
+      const maintenanceLink = document.createElement('a');
+      maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
+      maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
+      maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
 
-      const modulesActions = [];
-      let moduleTechName;
-      $(self.upgradeAllTargets).each(function bulkActionSelector() {
-        const moduleItemList = $(this).closest('.module-item-list');
-        moduleTechName = moduleItemList.data('tech-name');
-        modulesActions.push({
-          techName: moduleTechName,
-          actionMenuObj: $('.module-actions', moduleItemList),
-        });
-      });
+      const updateAllConfirmModal = new ConfirmModal(
+        {
+          id: 'confirm-module-update-modal',
+          confirmTitle: window.moduleTranslations.singleModuleModalUpdateTitle,
+          closeButtonLabel: window.moduleTranslations.moduleModalUpdateCancel,
+          confirmButtonLabel: isMaintenanceMode
+            ? window.moduleTranslations.moduleModalUpdateUpgrade
+            : window.moduleTranslations.upgradeAnywayButtonText,
+          confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
+          confirmMessage: isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+          closable: true,
+          customButtons: isMaintenanceMode ? [] : [maintenanceLink],
+        },
+        () => {
+          if ($(self.upgradeAllTargets).length <= 0) {
+            console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
+            return false;
+          }
 
-      this.performModulesAction(modulesActions, 'upgrade');
+          const modulesActions = [];
+          let moduleTechName;
+          $(self.upgradeAllTargets).each(function bulkActionSelector() {
+            const moduleItemList = $(this).closest('.module-item-list');
+            moduleTechName = moduleItemList.data('tech-name');
+            modulesActions.push({
+              techName: moduleTechName,
+              actionMenuObj: $('.module-actions', moduleItemList),
+            });
+          });
+
+          this.performModulesAction(modulesActions, 'upgrade');
+
+          return true;
+        },
+      );
+
+      updateAllConfirmModal.show();
 
       return true;
     });
@@ -1192,14 +1221,20 @@ class AdminModuleController {
     $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = true;
       $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeLessSelector).removeClass('d-none');
+      $(this)
+        .closest(self.moduleShortList)
+        .find(self.seeLessSelector)
+        .removeClass('d-none');
       self.updateModuleVisibility();
     });
 
     $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = false;
       $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeMoreSelector).removeClass('d-none');
+      $(this)
+        .closest(self.moduleShortList)
+        .find(self.seeMoreSelector)
+        .removeClass('d-none');
       self.updateModuleVisibility();
     });
   }
@@ -1228,10 +1263,10 @@ class AdminModuleController {
       const modulesCount = $('.modules-list').find('.module-item').length;
       replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
-      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST)
-        ? this.addonItemListSelector
-        : this.addonItemGridSelector;
-      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
+      // eslint-disable-next-line
+      const selectorToToggle =
+        self.currentDisplay === self.DISPLAY_LIST ? this.addonItemListSelector : this.addonItemGridSelector;
+      $(selectorToToggle).toggle(modulesCount !== this.modulesList.length / 2);
 
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
@@ -1243,8 +1278,7 @@ class AdminModuleController {
   }
 
   isModulesPage() {
-    return $(this.upgradeContainer).length === 0
-      && $(this.notificationContainer).length === 0;
+    return $(this.upgradeContainer).length === 0 && $(this.notificationContainer).length === 0;
   }
 }
 
