@@ -346,6 +346,17 @@ admin_orders_get_documents:
   options:
     expose: true
 
+admin_orders_get_shipping:
+  path: /{orderId}/shipping
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getShipping
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_cancellation:
   path: /{orderId}/cancellation
   methods: [POST]
