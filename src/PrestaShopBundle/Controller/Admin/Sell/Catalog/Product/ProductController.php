@@ -123,6 +123,30 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * Redirects to step where product price can be edited.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
+    public function editQuantityAction(int $productId): RedirectResponse
+    {
+        $response = $this->redirectToRoute('admin_product_form', [
+            'id' => $productId,
+        ]);
+
+        return $response->setTargetUrl(
+            $response->getTargetUrl() . '#tab-step3'
+        );
+    }
+
+    /**
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
