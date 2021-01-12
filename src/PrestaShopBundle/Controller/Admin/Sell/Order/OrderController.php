@@ -1926,6 +1926,19 @@ class OrderController extends FrameworkBundleAdminController
                 'Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
+            OrderConstraintException::class => [
+                OrderConstraintException::INVALID_PAYMENT_METHOD => sprintf(
+                    '%s %s ^<>={}',
+                    $this->trans(
+                        'The selected payment method is invalid.',
+                        'Admin.Orderscustomers.Notification'
+                    ),
+                    $this->trans(
+                        'Invalid characters:',
+                        'Admin.Notifications.Info'
+                    )
+                ),
+            ],
         ]);
     }
 

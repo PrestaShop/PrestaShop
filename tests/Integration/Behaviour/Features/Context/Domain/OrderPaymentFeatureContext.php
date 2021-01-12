@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -156,15 +157,28 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             );
         } catch (NegativePaymentAmountException $exception) {
             $this->lastException = $exception;
+        } catch (OrderConstraintException $exception) {
+            $this->lastException = $exception;
         }
     }
 
     /**
      * @Then I should get error that payment amount is negative
      */
-    public function assertLastErrorIsNegativePaymentAmount()
+    public function assertLastErrorIsNegativePaymentAmount(): void
     {
         $this->assertLastErrorIs(NegativePaymentAmountException::class);
+    }
+
+    /**
+     * @Then I should get error that payment method is invalid
+     */
+    public function assertLastErrorIsInvalidPaymentMethod(): void
+    {
+        $this->assertLastErrorIs(
+            OrderConstraintException::class,
+            OrderConstraintException::INVALID_PAYMENT_METHOD
+        );
     }
 
     private function mapToOrderPaymentForViewing(int $paymentId, array $data)
