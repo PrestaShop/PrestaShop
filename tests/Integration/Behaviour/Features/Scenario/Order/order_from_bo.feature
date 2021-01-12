@@ -79,6 +79,17 @@ Feature: Order from Back Office (BO)
     Then I should get error that payment amount is negative
     And order "bo_order1" has 0 payments
 
+  Scenario: pay order with invalid payment method and see it is not valid
+    When order "bo_order1" has 0 payments
+    And I pay order "bo_order1" with the invalid following details:
+      | date           | 2019-11-26 13:56:22 |
+      | payment_method | Paym>>ents by check |
+      | transaction_id | test!@#$%%^^&* OR 1 |
+      | currency       | USD                 |
+      | amount         | 1.548               |
+    Then I should get error that payment method is invalid
+    And order "bo_order1" has 0 payments
+
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
       | date           | 2019-11-26 13:56:23 |
