@@ -26,18 +26,18 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderShippingRefresher {
-    constructor() {
-        this.router = new Router();
-    }
+  constructor() {
+    this.router = new Router();
+  }
 
-    refresh(orderId) {
-        $.getJSON(this.router.generate('admin_orders_get_shipping', {orderId}))
-            .then((response) => {
-                $(OrderViewPageMap.orderShippingTabCount).text(response.total);
-                $(OrderViewPageMap.orderShippingTabBody).html(response.html);
-            });
-    }
+  refresh(orderId) {
+    $.getJSON(this.router.generate('admin_orders_get_shipping', {orderId}))
+      .then((response) => {
+        $(OrderViewPageMap.orderShippingTabCount).text(response.total);
+        $(OrderViewPageMap.orderShippingTabBody).html(response.html);
+      });
+  }
 }
