@@ -5312,4 +5312,27 @@ class CartCore extends ObjectModel
 
         return $summary;
     }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return float
+     */
+    public function getCartTotalPrice()
+    {
+        $summary = $this->getSummaryDetails();
+
+        $id_order = (int) Order::getIdByCartId($this->id);
+        $order = new Order($id_order);
+
+        if (Validate::isLoadedObject($order)) {
+            $taxCalculationMethod = $order->getTaxCalculationMethod();
+        } else {
+            $taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+        }
+
+        return $taxCalculationMethod == PS_TAX_EXC ?
+            $summary['total_price_without_tax'] :
+            $summary['total_price'];
+    }
 }
