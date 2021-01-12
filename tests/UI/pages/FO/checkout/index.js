@@ -49,6 +49,8 @@ class Checkout extends FOBasePage {
     this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = id => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
     this.deliveryOptionNameSpan = id => `${this.deliveryOptionLabel(id)} span.carrier-name`;
+    this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
+    this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
@@ -138,6 +140,24 @@ class Checkout extends FOBasePage {
       return this.getTextContent(page, this.deliveryOptionNameSpan(selectedOptionId));
     }
     throw new Error('No selected option was found');
+  }
+
+  /**
+   * Get all carriers prices
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersPrices(page) {
+    return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
+  }
+
+  /**
+   * Get all carriers names
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersNames(page) {
+    return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
   }
 
   /**
