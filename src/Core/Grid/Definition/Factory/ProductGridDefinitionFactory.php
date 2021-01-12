@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -228,8 +229,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
-                        /* @todo change route to link with quantity edit */
-                        'route' => 'admin_products_v2_index',
+                        'route' => 'admin_product_edit_quantity',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                     ])
