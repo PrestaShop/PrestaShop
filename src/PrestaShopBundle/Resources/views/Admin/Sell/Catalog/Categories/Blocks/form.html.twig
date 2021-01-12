@@ -40,8 +40,28 @@
         {{ form_row(categoryForm.id_parent) }}
       {% endif %}
       {{ form_row(categoryForm.description) }}
-      {{ form_row(categoryForm.cover_image) }}
-      {{ form_row(categoryForm.thumbnail_image) }}
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ form_label(categoryForm.cover_image) }}
+        </label>
+        <div class="col-sm">
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig' %}
+
+          {{ form_widget(categoryForm.cover_image) }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ form_label(categoryForm.thumbnail_image) }}
+        </label>
+        <div class="col-sm">
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
+
+          {{ form_widget(categoryForm.thumbnail_image) }}
+        </div>
+      </div>
+
 
       <div class="form-group row">
         <label class="form-control-label">
