@@ -2113,7 +2113,7 @@ class CartCore extends ObjectModel
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
             foreach ($products as $key => $product) {
-                if ($product['is_virtual']) {
+                if (!empty($product['is_virtual'])) {
                     unset($products[$key]);
                 }
             }
@@ -2122,7 +2122,7 @@ class CartCore extends ObjectModel
 
         if ($type == Cart::ONLY_PRODUCTS) {
             foreach ($products as $key => $product) {
-                if ($product['is_gift']) {
+                if (!empty($product['is_gift'])) {
                     unset($products[$key]);
                 }
             }
