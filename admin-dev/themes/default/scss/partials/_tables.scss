@@ -90,8 +90,8 @@
         background-color: $brand-primary !important;
       }
       &:before {
-        @extend .icon
-				@extend .icon-arrows
+        @extend .icon;
+				@extend .icon-arrows;
 				display: block;
         height: 16px;
         width: 16px;
