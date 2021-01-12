@@ -70,7 +70,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $productForm = $this->getProductFormBuilder()->getForm();
+        $productForm = $this->getFullProductFormBuilder()->getForm();
 
         try {
             $productForm->handleRequest($request);
@@ -92,24 +92,43 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function editAction(int $productId): Response
+    {
+        // This method is associated to GET request therefore the full form is filled
+        $fullProductForm = $this->getFullProductFormBuilder()->getFormFor($productId, [], [
+            'product_id' => $productId,
+            'method' => Request::METHOD_PATCH,
+            'action' => $this->generateUrl('admin_products_v2_update', ['productId' => $productId]),
+        ]);
+
+        return $this->renderProductForm($fullProductForm, $productId);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
      * @param Request $request
      * @param int $productId
      *
      * @return Response
      */
-    public function editAction(Request $request, int $productId): Response
+    public function updateAction(Request $request, int $productId): Response
     {
-        $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
-            'product_id' => $productId,
-            // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
-            // 'method' => Request::METHOD_PATCH,
-            'method' => Request::METHOD_POST,
-        ]);
-
         try {
-            $productForm->handleRequest($request);
+            // This method is associated to POST/PATCH request therefore the form is not fully
+            // filled so that only posted data is used
+            $partialProductForm = $this->getPartialProductFormBuilder()->getFormFor($productId, [], [
+                'product_id' => $productId,
+                'method' => Request::METHOD_PATCH,
+                'action' => $this->generateUrl('admin_products_v2_update', ['productId' => $productId]),
+            ]);
+            $partialProductForm->handleRequest($request);
 
-            $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
+            $result = $this->getProductFormHandler()->handleFor($productId, $partialProductForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -120,7 +139,15 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderProductForm($productForm, $productId);
+        // Some errors happen so we rebuild a full form to display it with inline errors
+        $fullProductForm = $this->getFullProductFormBuilder()->getFormFor($productId, [], [
+            'product_id' => $productId,
+            'method' => Request::METHOD_PATCH,
+            'action' => $this->generateUrl('admin_products_v2_update', ['productId' => $productId]),
+        ]);
+        $fullProductForm->handleRequest($request);
+
+        return $this->renderProductForm($fullProductForm, $productId);
     }
 
     /**
@@ -152,9 +179,19 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return FormBuilderInterface
      */
-    private function getProductFormBuilder(): FormBuilderInterface
+    private function getPartialProductFormBuilder(): FormBuilderInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.product_form_builder');
+        return $this->get('prestashop.core.form.identifiable_object.builder.partial_product_form_builder');
+    }
+
+    /**
+     * Gets form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getFullProductFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.full_product_form_builder');
     }
 
     /**

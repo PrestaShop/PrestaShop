@@ -10,7 +10,7 @@ admin_products_v2_create:
 
 admin_products_v2_edit:
   path: /{productId}/edit
-  methods: [GET, POST, PATCH]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:edit
     _legacy_controller: AdminProducts
@@ -21,3 +21,17 @@ admin_products_v2_edit:
       id_product: productId
   requirements:
     productId: \d+
+
+admin_products_v2_update:
+    path: /{productId}/update
+    methods: [POST, PATCH]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:update
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:updateproduct
+            - AdminProducts:update
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+

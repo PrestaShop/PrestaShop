@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 
 /**
- * Provides the data that is used to prefill the Product form
+ * Provides the data that is used to fully prefill the Product form
  */
-final class ProductFormDataProvider implements FormDataProviderInterface
+final class FullProductFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface
@@ -62,6 +62,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'id' => $id,
+            'product_id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),

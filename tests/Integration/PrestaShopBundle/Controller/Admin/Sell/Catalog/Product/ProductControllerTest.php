@@ -10,6 +10,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * This integration test is mostly used to ensure the partial update mechanism is correctly handled, the purpose is to check
@@ -42,7 +43,7 @@ class ProductControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->handlePartialUpdate = true;
-        $this->handleStrictPartialUpdate = false;
+        $this->handleStrictPartialUpdate = true;
     }
 
     public function testCreateProduct(): int
@@ -62,7 +63,9 @@ class ProductControllerTest extends WebTestCase
         // Now we check that the correct data were use by the form handler
         $dataChecker = $client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.product_form_data_handler_checker');
         $createData = $dataChecker->getLastCreateData();
-        $this->assertHandlerData(['basic' => ['name' => [1 => 'Test Product']]], $createData);
+
+        // We only check a little part of the data even though it should be full
+        $this->assertArraySubset(['basic' => ['name' => [1 => 'Test Product']]], $createData);
 
         return $createdProductId;
     }
@@ -82,7 +85,7 @@ class ProductControllerTest extends WebTestCase
         $createUrl = $router->generate('admin_products_v2_edit', ['productId' => $productId]);
         $crawler = $client->request('GET', $createUrl);
 
-        $productForm = $this->fillProductForm($crawler, $formModifications);
+        $productForm = $this->fillPartialProductForm($crawler, $formModifications);
         $client->submit($productForm);
 
         // If update happens correctly then we are redirect to the same edition page
@@ -92,7 +95,7 @@ class ProductControllerTest extends WebTestCase
         // Now we check that the correct data were use by the form handler
         $dataChecker = $client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.product_form_data_handler_checker');
         $updateData = $dataChecker->getLastUpdateData();
-        $this->assertHandlerData($expectedUpdateData, $updateData);
+        $this->assertHandlerData($expectedUpdateData, $updateData, $productId);
     }
 
     public function getProductEditionModifications()
@@ -139,8 +142,9 @@ class ProductControllerTest extends WebTestCase
      * @param array $expectedData
      * @param array $handlerData
      */
-    private function assertHandlerData(array $expectedData, array $handlerData): void
+    private function assertHandlerData(array $expectedData, array $handlerData, int $productId): void
     {
+        $expectedData['id'] = $expectedData['product_id'] = $productId;
         if ($this->handlePartialUpdate && !$this->handleStrictPartialUpdate) {
             // This method is deprecated in PHPUnit for PHP 8.0 but we can't use more recent libraries that replace this
             // because they require more recent version of PHP than ours, so for now we keep using this one
@@ -165,6 +169,9 @@ class ProductControllerTest extends WebTestCase
         $parsedUrl = parse_url($redirectUrl);
 
         $router = $client->getContainer()->get('router');
+        // We must override the router context because it will have method POST (from posted form)
+        // so it can't match admin_products_v2_edit which is a GET only route
+        $router->setContext(new RequestContext('', 'GET'));
         $routerMatching = $router->match($parsedUrl['path']);
         $this->assertArrayHasKey('_route', $routerMatching);
         $this->assertEquals('admin_products_v2_edit', $routerMatching['_route']);
@@ -211,6 +218,31 @@ class ProductControllerTest extends WebTestCase
                 /** @var FormField $formField */
                 $formField = $productForm->get($fieldName);
                 $formField->setValue($formValue);
+            }
+        }
+
+        return $productForm;
+    }
+
+    /**
+     * @param Crawler $crawler
+     * @param array $formModifications
+     *
+     * @return Form
+     */
+    private function fillPartialProductForm(Crawler $crawler, array $formModifications): Form
+    {
+        $productForm = $this->fillProductForm($crawler, $formModifications);
+
+        // Remove unnecessary form fields
+        $formFields = $productForm->all();
+        foreach ($formFields as $formField) {
+            if (in_array($formField->getName(), ['_method', 'product[_token]'])) {
+                continue;
+            }
+
+            if (!array_key_exists($formField->getName(), $formModifications)) {
+                $productForm->remove($formField->getName());
             }
         }
 
