@@ -34,6 +34,9 @@ module.exports = class FOBasePage extends CommonPage {
     this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
     this.wrapperContactBlockDiv = '#footer div.block-contact';
+
+    // Alert block selectors
+    this.alertSuccessBlock = '.alert-success ul li';
   }
 
   /**
