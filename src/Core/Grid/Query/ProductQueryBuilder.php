@@ -109,7 +109,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('img_shop.`id_image`')
         ;
 
-        if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
+        if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
             $qb->addSelect('sa.`quantity`');
         }
 
