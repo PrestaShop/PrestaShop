@@ -34,15 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 final class OptionsCommandBuilder implements ProductCommandBuilderInterface
 {
     /**
-     * @param ProductId $productId
-     * @param array $formData
-     *
-     * @return UpdateProductOptionsCommand|null
+     * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData)
+    public function buildCommand(ProductId $productId, array $formData): array
     {
         if (!isset($formData['options'])) {
-            return null;
+            return [];
         }
 
         $options = $formData['options'];
@@ -73,6 +70,6 @@ final class OptionsCommandBuilder implements ProductCommandBuilderInterface
             $command->setManufacturerId((int) $options['manufacturer_id']);
         }
 
-        return $command;
+        return [$command];
     }
 }

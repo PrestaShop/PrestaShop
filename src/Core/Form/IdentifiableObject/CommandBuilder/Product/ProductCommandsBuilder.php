@@ -56,14 +56,14 @@ class ProductCommandsBuilder
      */
     public function buildCommands(ProductId $productId, array $formData): ProductCommandCollection
     {
-        $commands = new ProductCommandCollection();
+        $commandCollection = new ProductCommandCollection();
         foreach ($this->commandBuilders as $commandBuilder) {
-            $command = $commandBuilder->buildCommand($productId, $formData);
-            if (null !== $command) {
-                $commands->add($command);
+            $commands = $commandBuilder->buildCommand($productId, $formData);
+            if (!empty($commands)) {
+                $commandCollection->merge($commands);
             }
         }
 
-        return $commands;
+        return $commandCollection;
     }
 }
