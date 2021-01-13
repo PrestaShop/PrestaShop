@@ -13,6 +13,8 @@ const foProductPage = require('@pages/FO/product');
 const foCartPage = require('@pages/FO/cart');
 const foCheckoutPage = require('@pages/FO/checkout');
 const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+const ordersPage = require('@pages/BO/orders');
+const viewOrderPage = require('@pages/BO/orders/view');
 const customersPage = require('@pages/BO/customers');
 
 // Import data
@@ -118,12 +120,53 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 4 - Delete customers with bulk actions
-  describe('Go to customers page', async()=>{
+  // 2 - View order page
+  describe('View order page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
+    it('should go to Orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
+
+    it('should filter the Orders table by \'Customer\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+
+      await ordersPage.filterOrders(page, 'input', 'customer', firstCustomerData.lastName);
+
+      const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, 1);
+      await expect(textColumn).to.contains(firstCustomerData.lastName);
+    });
+
+    it('should open the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+
+      await ordersPage.goToOrder(page, 1);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+  });
+
+  // 4 - Delete customers with bulk actions
+  describe('Go to customers page', async () => {
     it('should go to customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
@@ -143,7 +186,7 @@ describe('Check customer block in view order page', async () => {
     {args: {customer: firstCustomerData}},
     {args: {customer: secondCustomerData}},
   ].forEach((test, index) => {
-    describe('Delete the created customer', async () => {
+    describe(`Delete the customer ${test.args.customer.lastName}`, async () => {
       it('should filter list by lastName', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByLastname${index}`, baseContext);
 
