@@ -710,7 +710,8 @@ class ProductController extends FrameworkBundleAdminController
             foreach ($combinations as $combination) {
                 $formBuilder->add(
                     'combination_' . $combination['id_product_attribute'],
-                    ProductCombination::class
+                    ProductCombination::class,
+                    ['allow_extra_fields' => true]
                 );
             }
         }
