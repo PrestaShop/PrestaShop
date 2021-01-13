@@ -61,7 +61,7 @@ final class ImageThumbnailProvider implements ImageProviderInterface
 
         $image = new Image($imageId);
 
-        $pathToImage = $parentDirectory . '/' . $image->getExistingImgPath() . '.' . $imageType;
+        $pathToImage = $parentDirectory . DIRECTORY_SEPARATOR . $image->getExistingImgPath() . '.' . $imageType;
 
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
