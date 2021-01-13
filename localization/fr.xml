@@ -58,6 +58,7 @@
       <taxRule iso_code_country="hr" id_tax="1"/>
       <taxRule iso_code_country="es" id_tax="1"/>
       <taxRule iso_code_country="fr" id_tax="1"/>
+      <taxRule iso_code_country="mc" id_tax="1"/>
       <taxRule iso_code_country="ie" id_tax="1"/>
       <taxRule iso_code_country="it" id_tax="1"/>
       <taxRule iso_code_country="cy" id_tax="1"/>
@@ -88,6 +89,7 @@
       <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
+      <taxRule iso_code_country="mc" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
       <taxRule iso_code_country="it" id_tax="2"/>
       <taxRule iso_code_country="cy" id_tax="2"/>
@@ -118,6 +120,7 @@
       <taxRule iso_code_country="hr" id_tax="3"/>
       <taxRule iso_code_country="es" id_tax="3"/>
       <taxRule iso_code_country="fr" id_tax="3"/>
+      <taxRule iso_code_country="mc" id_tax="3"/>
       <taxRule iso_code_country="ie" id_tax="3"/>
       <taxRule iso_code_country="it" id_tax="3"/>
       <taxRule iso_code_country="cy" id_tax="3"/>
@@ -148,6 +151,7 @@
       <taxRule iso_code_country="hr" id_tax="4"/>
       <taxRule iso_code_country="es" id_tax="4"/>
       <taxRule iso_code_country="fr" id_tax="4"/>
+      <taxRule iso_code_country="mc" id_tax="4"/>
       <taxRule iso_code_country="ie" id_tax="4"/>
       <taxRule iso_code_country="it" id_tax="4"/>
       <taxRule iso_code_country="cy" id_tax="4"/>
@@ -169,6 +173,7 @@
     </taxRulesGroup>
     <taxRulesGroup name="EU VAT For Virtual Products" auto-generated="1" eu-tax-group="virtual">
       <taxRule iso_code_country="fr" id_tax="1"/>
+      <taxRule iso_code_country="mc" id_tax="1"/>
       <taxRule iso_code_country="at" id_tax="5"/>
       <taxRule iso_code_country="be" id_tax="6"/>
       <taxRule iso_code_country="bg" id_tax="7"/>

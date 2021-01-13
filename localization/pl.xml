@@ -49,6 +49,7 @@
       <taxRule iso_code_country="hr" id_tax="1"/>
       <taxRule iso_code_country="es" id_tax="1"/>
       <taxRule iso_code_country="fr" id_tax="1"/>
+      <taxRule iso_code_country="mc" id_tax="1"/>
       <taxRule iso_code_country="ie" id_tax="1"/>
       <taxRule iso_code_country="it" id_tax="1"/>
       <taxRule iso_code_country="cy" id_tax="1"/>
@@ -79,6 +80,7 @@
       <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
+      <taxRule iso_code_country="mc" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
       <taxRule iso_code_country="it" id_tax="2"/>
       <taxRule iso_code_country="cy" id_tax="2"/>
@@ -109,6 +111,7 @@
       <taxRule iso_code_country="hr" id_tax="4"/>
       <taxRule iso_code_country="es" id_tax="4"/>
       <taxRule iso_code_country="fr" id_tax="4"/>
+      <taxRule iso_code_country="mc" id_tax="4"/>
       <taxRule iso_code_country="it" id_tax="4"/>
       <taxRule iso_code_country="cy" id_tax="4"/>
       <taxRule iso_code_country="lv" id_tax="4"/>
@@ -138,6 +141,7 @@
       <taxRule iso_code_country="hr" id_tax="6"/>
       <taxRule iso_code_country="es" id_tax="6"/>
       <taxRule iso_code_country="fr" id_tax="6"/>
+      <taxRule iso_code_country="mc" id_tax="6"/>
       <taxRule iso_code_country="it" id_tax="6"/>
       <taxRule iso_code_country="cy" id_tax="6"/>
       <taxRule iso_code_country="lv" id_tax="6"/>
@@ -169,6 +173,7 @@
       <taxRule iso_code_country="es" id_tax="15"/>
       <taxRule iso_code_country="fi" id_tax="16"/>
       <taxRule iso_code_country="fr" id_tax="17"/>
+      <taxRule iso_code_country="mc" id_tax="17"/>
       <taxRule iso_code_country="gb" id_tax="18"/>
       <taxRule iso_code_country="gr" id_tax="19"/>
       <taxRule iso_code_country="hr" id_tax="20"/>
