@@ -170,7 +170,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         $this->manageImages();
 
-        if (is_a($this->objOutput->getObjectRender(), WebserviceOutputJSONCore::class)) {
+        if ($this->objOutput->getObjectRender() instanceof WebserviceOutputJSONCore) {
             $this->injectJsonContent();
         }
 
