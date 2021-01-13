@@ -29,7 +29,6 @@ $product-description-height: 70px;
     height: auto;
     margin-bottom: 1.563rem;
     background: #fff;
-    @include box-shadow();
 
     &:hover,
     &:focus {
@@ -117,7 +116,6 @@ $product-description-height: 70px;
     padding-top: 0.625rem;
     text-align: center;
     background: #fff;
-    box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
     transition: top 0.3s, bottom 0.3s;
 
     .quick-view {
@@ -182,20 +180,6 @@ $product-description-height: 70px;
     clear: both;
     font-weight: 500;
     color: $gray;
-  }
-}
-
-@include media-breakpoint-down(sm) {
-  #products,
-  .featured-products,
-  .product-accessories {
-    .thumbnail-container {
-      @include box-shadow();
-
-      .product-description {
-        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
-      }
-    }
   }
 }
 

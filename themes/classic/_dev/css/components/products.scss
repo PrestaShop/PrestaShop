@@ -69,7 +69,6 @@
 }
 
 .radio-label {
-  @include box-shadow();
   display: inline-block;
   padding: 0.125rem $small-space;
   font-weight: 600;
@@ -227,7 +226,6 @@
 }
 
 .tabs {
-  @include box-shadow();
   padding: $medium-space $large-space;
   margin-top: 2rem;
   background: #fff;
@@ -268,7 +266,6 @@
   margin-bottom: $medium-space;
 
   img {
-    @include box-shadow();
     background: #fff;
   }
 
@@ -511,7 +508,6 @@
     display: inline;
 
     > .thumb {
-      @include box-shadow();
       margin-bottom: $small-space;
       cursor: pointer;
 
@@ -631,7 +627,6 @@
       width: auto;
       padding-right: 1.875rem;
       background-color: #fff;
-      @include box-shadow-light();
     }
 
     ul li {
@@ -666,7 +661,6 @@
     text-transform: uppercase;
     pointer-events: auto;
     background: $brand-primary;
-    @include box-shadow-light();
 
     &.online-only {
       position: absolute;
@@ -803,7 +797,6 @@
   }
 
   li {
-    @include box-shadow-light();
     display: inline-block;
     width: 2.5rem;
     height: 2.5rem;

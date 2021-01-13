@@ -44,7 +44,6 @@ p {
   cursor: pointer;
   background-size: contain;
   border: 1px solid $radio-border-color;
-  @include box-shadow-light();
 
   &.active,
   &:hover {
@@ -75,7 +74,6 @@ p {
 
 .btn-primary,
 .btn-secondary {
-  @include box-shadow-light();
   padding: 0.5rem 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -94,7 +92,6 @@ p {
   color: $gray;
   text-transform: lowercase;
   background-color: #f7f7f7;
-  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
 
   .material-icons {
     font-size: $base-font-size;
@@ -102,7 +99,6 @@ p {
 
   &:hover {
     border: $input-btn-border-width solid rgba(35, 35, 35, 0.2);
-    box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -122,7 +118,7 @@ p {
 }
 
 .card {
-  @include box-shadow();
+  border: none;
 }
 
 label,
@@ -284,7 +280,6 @@ textarea {
   display: inline-block;
   float: left;
   width: auto;
-  @include box-shadow-light();
 
   input {
     &:focus {

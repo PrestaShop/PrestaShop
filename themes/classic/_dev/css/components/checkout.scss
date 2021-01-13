@@ -8,7 +8,6 @@ body#checkout {
     padding: 0.9375rem 0;
     margin-bottom: 0;
     border: none;
-    @include box-shadow();
 
     .logo {
       width: auto;
@@ -574,7 +573,6 @@ body#checkout {
   }
 
   #footer {
-    @include box-shadow();
     padding: 0.9375rem;
     color: $gray;
     background: #fff;

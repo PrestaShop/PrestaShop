@@ -1,6 +1,5 @@
 /*** SOME GENERIC STYLES ***/
 @mixin customer-area-base-box {
-  @include box-shadow();
   padding: 1rem;
   background: #fff;
 }
@@ -120,7 +119,6 @@
 /*** Addresses page ***/
 .page-addresses {
   .address {
-    @include box-shadow();
     margin-bottom: 1.875rem;
     font-size: $font-size-sm;
     color: $gray-darker;

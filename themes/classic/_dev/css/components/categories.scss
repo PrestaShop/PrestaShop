@@ -117,7 +117,6 @@
     cursor: pointer;
     background: #fff;
     border: $input-btn-border-width solid $input-border-color;
-    @include box-shadow-light();
   }
 
   .select-list {
@@ -203,7 +202,6 @@
 #search_filters,
 #search_filters_brands,
 #search_filters_suppliers {
-  @include box-shadow();
   padding: 1.563rem 1.25rem;
   margin-bottom: 1.563rem;
   background: #fff;
@@ -262,7 +260,6 @@
     padding: 0.375rem;
     margin-bottom: 0;
     background: #fff;
-    @include box-shadow-light();
 
     li {
       display: inline;
@@ -313,7 +310,6 @@
   }
 
   .filter-block {
-    @include box-shadow();
     display: inline-block;
     padding: 0.625rem;
     margin-right: $small-space;
@@ -333,7 +329,6 @@
 }
 
 .block-categories {
-  @include box-shadow();
   padding: 1.563rem 1.25rem;
   margin-bottom: 1.563rem;
   background: #fff;
