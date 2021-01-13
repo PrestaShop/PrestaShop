@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\EventListener\PartialFormListener;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -61,6 +62,11 @@ class ProductType extends TranslatorAwareType
                 ],
             ])
         ;
+
+        // This subscriber handles modification that allows partial update
+        if (!empty($options['use_partial_update'])) {
+            $builder->addEventSubscriber(new PartialFormListener($builder));
+        }
     }
 
     /**
@@ -86,7 +92,9 @@ class ProductType extends TranslatorAwareType
 
         $resolver->setDefaults([
             'product_id' => null,
+            'use_partial_update' => false,
         ]);
         $resolver->setAllowedTypes('product_id', ['null', 'int']);
+        $resolver->setAllowedTypes('use_partial_update', ['bool']);
     }
 }
