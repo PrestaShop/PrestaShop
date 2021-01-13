@@ -61,7 +61,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $productForEditing = $this->queryBus->handle(new GetProductForEditing((int) $id));
 
         return [
-            'id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
