@@ -62,6 +62,11 @@ class ProductController extends FrameworkBundleAdminController
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
 
     /**
+     * @var bool Indicates if the edit form is handled with partial update or full update
+     */
+    private $usePartialUpdate = true;
+
+    /**
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
@@ -101,9 +106,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
-            // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
-            // 'method' => Request::METHOD_PATCH,
-            'method' => Request::METHOD_POST,
+            'use_partial_update' => $this->usePartialUpdate,
         ]);
 
         try {
