@@ -1458,15 +1458,15 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         // Fetch all countries from Intl in specified locale
-        $countries_lang = (new self())->getCountries($lang->locale);
+        $langCountries = (new self())->getCountries($lang->locale);
         foreach ($translatableCountries as $country) {
             $isoCode = strtolower($country['iso_code']);
-            if (empty($countries_lang[$isoCode])) {
+            if (empty($langCountries[$isoCode])) {
                 continue;
             }
             // Translate the country name
             $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
-                    SET `name` = "' . pSQL($countries_lang[$isoCode]) . '"
+                    SET `name` = "' . pSQL($langCountries[$isoCode]) . '"
                     WHERE `id_country` = "' . (int) $country['id_country'] . '"
                     AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
             Db::getInstance()->execute($sql);

@@ -165,13 +165,13 @@ class LanguageList
     public function getCountriesByLanguage(?string $iso = null): array
     {
         $countryList = [];
-        $countries_lang = $this->getLanguage($iso)->getCountries();
-        $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
+        $langCountries = $this->getLanguage($iso)->getCountries();
+        $defaultCountries = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
         $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/country.xml');
         if ($xml) {
             foreach ($xml->entities->country as $country) {
                 $iso = strtolower((string) $country['iso_code']);
-                $countryList[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
+                $countryList[$iso] = isset($langCountries[$iso]) ? $langCountries[$iso] : $defaultCountries[$iso];
             }
         }
         asort($countryList);

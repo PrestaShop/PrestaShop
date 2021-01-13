@@ -1389,7 +1389,7 @@ class XmlLoader
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
      */
-    public function createXmlEntityNodes($entity, array $nodes, \SimpleXMLElement $entities)
+    public function createXmlEntityNodes($entity, array $nodes, SimpleXMLElement $entities)
     {
         $types = array_merge($this->getColumns($entity), $this->getColumns($entity, true));
         foreach ($nodes as $id => $node) {
