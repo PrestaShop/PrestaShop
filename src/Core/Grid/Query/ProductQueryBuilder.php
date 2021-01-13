@@ -178,7 +178,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('p.`state`=1')
         ;
 
-        $isStockManagementEnabled = $this->configuration->get('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
 
         if ($isStockManagementEnabled) {
             $stockOnCondition =
