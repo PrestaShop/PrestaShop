@@ -2907,7 +2907,7 @@ FileETag none
         }
 
         // Sitemap
-        if (file_exists($sitemap_file) && filesize($sitemap_file)) {
+        if (file_exists($sitemap_file) && filesize($sitemap_file) && isset($_SERVER['SERVER_NAME'])) {
             fwrite($write_fd, "# Sitemap\n");
             $sitemap_filename = basename($sitemap_file);
             fwrite($write_fd, 'Sitemap: ' . (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $_SERVER['SERVER_NAME']
