@@ -40,4 +40,9 @@ interface PartialFormInterface extends FormInterface
      * @return array|string|null
      */
     public function getSubmittedData();
+
+    /**
+     * @return bool
+     */
+    public function usePartialUpdate(): bool;
 }

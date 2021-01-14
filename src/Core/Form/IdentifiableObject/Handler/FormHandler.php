@@ -32,7 +32,6 @@ use PrestaShopBundle\Form\Partial\PartialFormInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -137,12 +136,10 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        // When for is using PATCH method it only updates its data partially so we don't use the whole data from
-        // the form (which may contain initial and default data) but the extraData which only contains the submitted
-        // data from the request
-        $partialUpdate = false;
-        if ($form instanceof PartialFormInterface && Request::METHOD_PATCH === $form->getConfig()->getMethod()) {
-            $partialUpdate = true;
+        // When we do a partial update we don't use the whole data in the form but only the submitted ones which
+        // represents what was actually changed
+        $partialUpdate = $form instanceof PartialFormInterface && $form->usePartialUpdate();
+        if ($partialUpdate) {
             $data = $form->getSubmittedData();
         }
 

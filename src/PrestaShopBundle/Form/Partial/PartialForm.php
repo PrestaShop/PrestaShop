@@ -93,6 +93,18 @@ class PartialForm implements \IteratorAggregate, PartialFormInterface
         return $this->submittedData;
     }
 
+    /**
+     * @return bool
+     */
+    public function usePartialUpdate(): bool
+    {
+        if (!$this->getConfig()->hasOption('use_partial_update')) {
+            return false;
+        }
+
+        return $this->getConfig()->getOption('use_partial_update');
+    }
+
     public function submit($submittedData, $clearMissing = true)
     {
         if ($this->innerForm->isSubmitted()) {

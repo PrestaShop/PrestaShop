@@ -33,6 +33,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormType;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * ResolvedPartialFormType is the class responsible for building a FormBuilder we need it
@@ -57,6 +58,7 @@ class ResolvedPartialFormType extends ResolvedFormType
     {
         parent::__construct($innerType, $typeExtensions, $parent);
 
+        // Since innerType is private we check its interface in the constructor
         $this->isPartialFormType = $innerType instanceof PartialFormTypeInterface;
     }
 
@@ -65,10 +67,33 @@ class ResolvedPartialFormType extends ResolvedFormType
      */
     protected function newBuilder($name, $dataClass, FormFactoryInterface $factory, array $options)
     {
+        // Only use partial builder form Form types which implement PartialFormTypeInterface
         if ($this->isPartialFormType) {
+            if (!empty($options['use_partial_update'])) {
+                $options['method'] = Request::METHOD_PATCH;
+            }
+
             return new PartialFormBuilder($name, $dataClass, new EventDispatcher(), $factory, $options);
         }
 
         return parent::newBuilder($name, $dataClass, $factory, $options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOptionsResolver()
+    {
+        $resolver = parent::getOptionsResolver();
+        if (!$resolver->hasDefault('use_partial_update')) {
+            $resolver
+                ->setDefaults([
+                    'use_partial_update' => false,
+                ])
+                ->setAllowedTypes('use_partial_update', ['bool'])
+            ;
+        }
+
+        return $resolver;
     }
 }
