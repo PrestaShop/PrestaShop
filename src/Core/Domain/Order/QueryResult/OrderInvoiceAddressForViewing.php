@@ -106,6 +106,7 @@ class OrderInvoiceAddressForViewing
      * @param string $postCode
      * @param string $phone
      * @param string $phoneMobile
+     * @param string|null $vatNumber
      */
     public function __construct(
         int $addressId,

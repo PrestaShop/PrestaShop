@@ -93,6 +93,21 @@ class OrderShippingAddressForViewing
      */
     private $mobilePhoneNumber;
 
+    /**
+     * @param int $addressId
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $companyName
+     * @param string $address1
+     * @param string $address2
+     * @param string $stateName
+     * @param string $cityName
+     * @param string $countryName
+     * @param string $postCode
+     * @param string $phone
+     * @param string $phoneMobile
+     * @param string|null $vatNumber
+     */
     public function __construct(
         int $addressId,
         string $firstName,
