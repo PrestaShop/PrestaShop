@@ -78,6 +78,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
@@ -232,7 +233,11 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         $summaryForm = $this->createForm(CartSummaryType::class);
-        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
+        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices(
+            [
+                'shop_id' => $shopContextChecker->getContextShopID(),
+            ]
+        );
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
@@ -398,7 +403,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -528,6 +533,7 @@ class OrderController extends FrameworkBundleAdminController
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
             'paginationNum' => $paginationNum,
             'paginationNumOptions' => $paginationNumOptions,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
         ]);
     }
 
@@ -640,7 +646,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
     {
-        $isStockManagementEnabled = $this->configuration->get('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
         if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
             return;
         }
@@ -666,9 +672,12 @@ class OrderController extends FrameworkBundleAdminController
     public function addProductAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
-        $previousProducts = $orderForViewing->getProducts()->getProducts();
+        $previousProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $previousProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
+        }
 
         $invoiceId = (int) $request->get('invoice_id');
         try {
@@ -705,14 +714,19 @@ class OrderController extends FrameworkBundleAdminController
             );
         }
 
+        /**
+         * Returning the products list view is not required since we reload the whole list
+         * We keep it for now to avoid Breaking Change
+         */
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
-        $updatedProducts = $orderForViewing->getProducts()->getProducts();
-        $newProducts = [];
-        for ($i = count($previousProducts); $i < count($updatedProducts); ++$i) {
-            $newProducts[] = $updatedProducts[$i];
+        $updatedProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $updatedProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
         }
+
+        $newProducts = array_diff_key($updatedProducts, $previousProducts);
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
@@ -727,6 +741,7 @@ class OrderController extends FrameworkBundleAdminController
                 'product' => $newProduct,
                 'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
                 'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
+                'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
                 'cancelProductForm' => $cancelProductForm->createView(),
                 'orderCurrency' => $orderCurrency,
             ]);
@@ -945,7 +960,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $products = $orderForViewing->getProducts()->getProducts();
         $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
@@ -967,6 +982,7 @@ class OrderController extends FrameworkBundleAdminController
             'cancelProductForm' => $cancelProductForm->createView(),
             'isColumnLocationDisplayed' => $product->getLocation() !== '',
             'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
@@ -1417,7 +1433,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @param int $orderId
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function getDiscountsAction(int $orderId): Response
     {
@@ -1449,7 +1465,81 @@ class OrderController extends FrameworkBundleAdminController
             'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThanZero(),
             'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
+            'shippingTotalDisplayed' => $orderForViewingPrices->getShippingPriceRaw()->isGreaterThanZero(),
             'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function getPaymentsAction(int $orderId): Response
+    {
+        try {
+            /** @var OrderForViewing $orderForViewing */
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+            return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig', [
+                'payments' => $orderForViewing->getPayments(),
+                'linkedOrders' => $orderForViewing->getLinkedOrders(),
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function getProductsListAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $paginationNum = $this->configuration->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
+        if (!in_array($paginationNum, $paginationNumOptions)) {
+            $paginationNumOptions[] = $paginationNum;
+        }
+        sort($paginationNumOptions);
+
+        $isColumnLocationDisplayed = false;
+        $isColumnRefundedDisplayed = false;
+
+        foreach (array_slice($orderForViewing->getProducts()->getProducts(), $paginationNum) as $product) {
+            if (!empty($product->getLocation())) {
+                $isColumnLocationDisplayed = true;
+            }
+            if ($product->getQuantityRefunded() > 0) {
+                $isColumnRefundedDisplayed = true;
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig', [
+            'orderForViewing' => $orderForViewing,
+            'cancelProductForm' => $cancelProductForm->createView(),
+            'orderCurrency' => $orderCurrency,
+            'paginationNum' => $paginationNum,
+            'isColumnLocationDisplayed' => $isColumnLocationDisplayed,
+            'isColumnRefundedDisplayed' => $isColumnRefundedDisplayed,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
         ]);
     }
 

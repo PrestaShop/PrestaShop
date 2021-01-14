@@ -7,6 +7,7 @@ class Localization extends LocalizationBasePage {
 
     this.pageTitle = 'Localization • ';
     this.importLocalizationPackSuccessfulMessage = 'Localization pack imported successfully.';
+    this.successfulSettingsUpdateMessage = 'Update successful';
 
     // Import localization pack selectors
     this.importLocalizationPackForm = 'form[name=\'import_localization_pack\']';
@@ -23,6 +24,7 @@ class Localization extends LocalizationBasePage {
     this.defaultLanguageSelector = '#form_configuration_default_language';
     this.languageFromBrowserLabel = toggle => `label[for='form_configuration_detect_language_from_browser_${toggle}']`;
     this.defaultCurrencySelect = '#form_configuration_default_currency';
+    this.defaultCountrySelect = '#form_configuration_default_country';
     this.saveConfigurationFormButton = '#main-div form[name=\'form\'] .card-footer button';
   }
 
@@ -53,7 +55,7 @@ class Localization extends LocalizationBasePage {
     await page.click(this.downloadPackDataSwitch(downloadPackData ? 1 : 0));
     // Import the pack
     await this.clickAndWaitForNavigation(page, this.importButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 
@@ -68,7 +70,7 @@ class Localization extends LocalizationBasePage {
     await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
     await this.waitForSelectorAndClick(page, this.languageFromBrowserLabel(languageFromBrowser ? 1 : 0));
     await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -81,7 +83,19 @@ class Localization extends LocalizationBasePage {
     this.dialogListener(page);
     await this.selectByVisibleText(page, this.defaultCurrencySelect, currency);
     await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Set default country
+   * @param page
+   * @param country
+   * @return {Promise<string>}
+   */
+  async setDefaultCountry(page, country) {
+    await this.selectByVisibleText(page, this.defaultCountrySelect, country);
+    await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 module.exports = new Localization();

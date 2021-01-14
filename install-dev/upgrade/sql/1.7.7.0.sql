@@ -30,8 +30,7 @@ UPDATE `PREFIX_hook_alias` SET `name` = SUBSTRING(`name`, 1, 191), `alias` = SUB
 ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;
 
-UPDATE `PREFIX_admin_filter` SET `filter_id` = SUBSTRING(`filter_id`, 1, 191);
-ALTER TABLE `PREFIX_admin_filter` CHANGE `filter_id` `filter_id` VARCHAR(191) NOT NULL;
+/* php:ps_1770_update_charset */
 
 UPDATE `PREFIX_alias` SET `alias` = SUBSTRING(`alias`, 1, 191);
 ALTER TABLE `PREFIX_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;
@@ -63,7 +62,6 @@ ALTER TABLE `PREFIX_access` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_gen
 ALTER TABLE `PREFIX_accessory` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_address` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_address_format` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_admin_filter` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_alias` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_attachment` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_attachment_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -162,9 +160,6 @@ ALTER TABLE `PREFIX_image_type` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4
 ALTER TABLE `PREFIX_import_match` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_lang_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_link_block` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_link_block_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_link_block_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_log` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_mail` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_manufacturer` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -181,7 +176,6 @@ ALTER TABLE `PREFIX_module_carrier` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf
 ALTER TABLE `PREFIX_module_country` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_module_currency` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_module_group` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_module_history` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_module_preference` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_module_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_operating_system` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -283,7 +277,6 @@ ALTER TABLE `PREFIX_tax_rule` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_tax_rules_group` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_tax_rules_group_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_timezone` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_translation` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_warehouse` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_warehouse_carrier` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_warehouse_product_location` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;

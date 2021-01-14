@@ -156,7 +156,7 @@ class Contacts extends BOBasePage {
     ]);
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -179,7 +179,7 @@ class Contacts extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort methods */

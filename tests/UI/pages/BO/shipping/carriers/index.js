@@ -9,6 +9,8 @@ class Carriers extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
+    this.growlMessageBlock = '#growls .growl-message:last-of-type';
+
     // Header links
     this.addNewCarrierLink = '#page-header-desc-carrier-new_carrier';
 
@@ -37,6 +39,7 @@ class Carriers extends BOBasePage {
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnDelay = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
     this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(6) a`;
+    this.enableColumnValidIcon = row => `${this.tableColumnActive(row)} i.icon-check`;
     this.tableColumnIsFree = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
     this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
 
@@ -68,6 +71,8 @@ class Carriers extends BOBasePage {
     this.bulkActionMenuButton = '#bulk_action_menu_carrier';
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
@@ -218,7 +223,7 @@ class Carriers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   // Sort methods
@@ -340,7 +345,88 @@ class Carriers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+
+  /**
+   * Bulk set carriers status
+   * @param page
+   * @param action
+   * @returns {Promise<void>}
+   */
+  async bulkSetStatus(page, action) {
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    if (action === 'Enable') {
+      await this.clickAndWaitForNavigation(page, this.bulkEnableLink);
+    } else {
+      await this.clickAndWaitForNavigation(page, this.bulkDisableLink);
+    }
+
+    // not working, skipping it
+    // Return successful message
+    // return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Get carrier status
+   * @param page
+   * @param row
+   * @returns {Promise<boolean>}
+   */
+  async getStatus(page, row = 1) {
+    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+  }
+
+  /**
+   * Set carriers status
+   * @param page
+   * @param row
+   * @param valueWanted
+   * @return {Promise<boolean>}, true if click has been performed
+   */
+  async setStatus(page, row = 1, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
+
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.tableColumnActive(row));
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Change carrier position
+   * @param page
+   * @param actualPosition
+   * @param newPosition
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return this.getGrowlMessageContent(page);
   }
 }
 

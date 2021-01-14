@@ -10,4 +10,9 @@ module.exports = {
     newsletter: true,
     partnerOffers: true,
   },
+  ImportedCustomer: {
+    email: 'Tiger.Lily@prestashop.com',
+    firstName: 'Lily',
+    lastName: 'Tiger',
+  },
 };

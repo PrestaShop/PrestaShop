@@ -105,7 +105,7 @@ class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -114,7 +114,7 @@ class Suppliers extends BOBasePage {
    * @param row
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row = 1) {
+  async getStatus(page, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
   }
 
@@ -125,12 +125,13 @@ class Suppliers extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row = 1, valueWanted = true) {
+  async setStatus(page, row = 1, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+    if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.enableColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -217,7 +218,7 @@ class Suppliers extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeSuppliersEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -230,7 +231,7 @@ class Suppliers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -255,16 +256,7 @@ class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
-  }
-
-  /**
-   * Get alert text message
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getAlertTextMessage(page) {
-    return this.getTextContent(page, this.alertTextBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Sort methods
@@ -280,7 +272,7 @@ class Suppliers extends BOBasePage {
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
+        rowContent = await this.getStatus(page, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }

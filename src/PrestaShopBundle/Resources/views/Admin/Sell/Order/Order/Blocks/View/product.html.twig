@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+
 {% set rowIsDisplayed =  (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
 <tr id="orderProduct_{{ product.orderDetailId }}" class="cellProduct{% if rowIsDisplayed %} d-none d-print-table-row{% endif %}">
   <td class="cellProductImg">
@@ -69,7 +70,7 @@
       {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
     {% endif %}
   </td>
-  <td class="cellProductAvailableQuantity text-center">{{ product.availableQuantity }}</td>
+  <td class="cellProductAvailableQuantity text-center{% if not isAvailableQuantityDisplayed %} d-none{% endif %}">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
   {% if orderForViewing.hasInvoice() %}
     <td>{{ product.orderInvoiceNumber }}</td>

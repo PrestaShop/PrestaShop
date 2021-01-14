@@ -89,7 +89,7 @@ describe('Enable display suppliers', async () => {
     it(`should check that the message alert contains '${test.args.action}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
 
-      const text = await suppliersPage.getAlertTextMessage(page);
+      const text = await suppliersPage.getAlertInfoBlockParagraphContent(page);
       await expect(text).to.contains(test.args.action);
     });
 

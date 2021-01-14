@@ -41,6 +41,9 @@
   </div>
 
   <div class="card-body">
+    <div class="spinner-order-products-container" id="orderProductsLoading">
+      <div class="spinner spinner-primary"></div>
+    </div>
     {% set formOptions = {
       'attr': {
         'data-order-id': orderForViewing.id,
@@ -71,7 +74,7 @@
         <th class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
           <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
         </th>
-        <th>
+        <th {% if not isAvailableQuantityDisplayed %}class="d-none"{% endif %}>
           <p>{{ 'Available'|trans({}, 'Admin.Global') }}</p>
         </th>
         <th>
@@ -94,15 +97,7 @@
       </tr>
       </thead>
       <tbody>
-      {% for product in orderForViewing.products.products %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
-          'product': product,
-          'productIndex': loop.index,
-          'paginationNum': paginationNum,
-          'isColumnLocationDisplayed': isColumnLocationDisplayed,
-          'isColumnRefundedDisplayed': isColumnRefundedDisplayed
-        } %}
-      {% endfor %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
       </tbody>
@@ -182,28 +177,21 @@
               </div>
             {% endif %}
 
-            {% if orderForViewing.prices.shippingPriceRaw.greaterThan(number(0)) %}
-              <div class="col-sm text-center">
-                <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-                <div class="shipping-price">
-                  <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                  <div class="cancel-product-element shipping-refund-amount{% if orderForViewing.prices.shippingRefundableAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
-                    <div class="input-group">
-                      {{ form_widget(cancelProductForm.shipping_amount) }}
-                      <div class="input-group-append">
-                        <div class="input-group-text">{{ orderCurrency.symbol }}</div>
-                      </div>
+            <div id="order-shipping-total-container" class="col-sm text-center{% if not orderForViewing.prices.shippingPriceRaw.greaterThan((number(0))) %} d-none{% endif %}">
+              <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+              <div class="shipping-price">
+                <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+                <div class="cancel-product-element shipping-refund-amount{% if orderForViewing.prices.shippingRefundableAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
+                  <div class="input-group">
+                    {{ form_widget(cancelProductForm.shipping_amount) }}
+                    <div class="input-group-append">
+                      <div class="input-group-text">{{ orderCurrency.symbol }}</div>
                     </div>
-                    <p class="text-center">(max {{ orderForViewing.prices.shippingRefundableAmountFormatted }} tax included)</p>
                   </div>
+                  <p class="text-center">(max {{ orderForViewing.prices.shippingRefundableAmountFormatted }} tax included)</p>
                 </div>
               </div>
-            {% else %}
-              {# No shippping, the form field is hidden in this div to avoid it being displayed through automatic form_rest #}
-              <div class="d-none">
-                {{ form_widget(cancelProductForm.shipping_amount) }}
-              </div>
-            {% endif %}
+            </div>
 
             {% if not orderForViewing.taxIncluded %}
               <div class="col-sm text-center">

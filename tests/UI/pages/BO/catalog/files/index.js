@@ -104,7 +104,7 @@ class Files extends BOBasePage {
       ),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -185,7 +185,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteFiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -208,10 +208,7 @@ class Files extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
-      if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
-      }
+      const rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;

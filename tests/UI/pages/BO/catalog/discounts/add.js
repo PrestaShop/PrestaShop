@@ -217,7 +217,7 @@ class AddCartRule extends BOBasePage {
 
     // Save and return successful message
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

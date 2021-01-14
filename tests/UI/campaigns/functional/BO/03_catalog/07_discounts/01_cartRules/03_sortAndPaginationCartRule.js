@@ -50,8 +50,13 @@ describe('Sort and pagination cart rules', async () => {
 
     const pageTitle = await cartRulesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+  });
 
-    numberOfCartRules = await cartRulesPage.getNumberOfElementInGrid(page);
+  it('should reset and get number of cart rules', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+    numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfCartRules).to.be.at.least(0);
   });
 
   // 1 - create 21 cart rules
@@ -166,12 +171,12 @@ describe('Sort and pagination cart rules', async () => {
       },
       {
         args: {
-          testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up',
+          testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down',
+          testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down', isDate: true,
         },
       },
       {
@@ -195,7 +200,7 @@ describe('Sort and pagination cart rules', async () => {
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await cartRulesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await cartRulesPage.sortArray(nonSortedTable, test.args.isFloat, test.args.isDate);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

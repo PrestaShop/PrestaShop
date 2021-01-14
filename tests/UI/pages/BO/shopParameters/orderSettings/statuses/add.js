@@ -36,7 +36,7 @@ class AddOrderStatus extends BOBasePage {
     await this.setValue(page, this.nameInput, orderStatusData.name);
 
     // Set icon for order status
-    await this.generateAndUploadImage(page, this.iconInput, `${orderStatusData.name}.jpg`);
+    await this.uploadFile(page, this.iconInput, `${orderStatusData.name}.jpg`);
 
     // Set color
     await this.setValue(page, this.colorInput, orderStatusData.color);
@@ -55,7 +55,7 @@ class AddOrderStatus extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

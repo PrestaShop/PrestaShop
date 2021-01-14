@@ -46,7 +46,7 @@ class Preferences extends BOBasePage {
       await page.$eval(`${this.euroCurrencyRestrictionsCheckbox(paymentModule)} + i`, el => el.click());
     }
     await page.click(this.currencyRestrictionsSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -65,7 +65,7 @@ class Preferences extends BOBasePage {
       await page.$eval(`${selector} + i`, el => el.click());
     }
     await page.click(this.groupRestrictionsSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -89,7 +89,7 @@ class Preferences extends BOBasePage {
       await page.$eval(`${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`, el => el.click());
     }
     await page.click(this.currencyRestrictionsSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -113,7 +113,7 @@ class Preferences extends BOBasePage {
       await page.$eval(`${this.carrierRestrictionsCheckbox(paymentModule, carrierID)} + i`, el => el.click());
     }
     await page.click(this.carrierRestrictionSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

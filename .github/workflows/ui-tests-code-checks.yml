@@ -38,8 +38,8 @@ jobs:
         run: npm install
 
       - name: Generate mocha reports with failed steps
-        run: GENERATE_FAILED_STEPS=true npm run functional-tests
+        run: GENERATE_FAILED_STEPS=true npm run all-tests
         continue-on-error: true
 
       - name: Checking doubles in steps identifiers
-        run: npm run step-idenfiers-checker
+        run: npm run step-identifiers-checker

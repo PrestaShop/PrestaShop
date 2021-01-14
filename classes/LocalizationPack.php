@@ -329,7 +329,7 @@ class LocalizationPackCore
                 /** @var Language $defaultLang */
                 $defaultLang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
-                $currency = new Currency();
+                $currency = $this->getExistingByIsoCodeOrCreate((string) $attributes['iso_code']);
                 $currency->name = (string) $attributes['name'];
                 $currency->iso_code = (string) $attributes['iso_code'];
                 $currency->iso_code_num = (int) $attributes['iso_code_num'];
@@ -339,13 +339,14 @@ class LocalizationPackCore
                 $currency->format = (int) $attributes['format'];
                 $currency->decimals = (int) $attributes['decimals'];
                 $currency->active = true;
+                $currency->deleted = false;
                 if (!$currency->validateFields()) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid currency properties.', [], 'Admin.International.Notification');
 
                     return false;
                 }
                 if (!Currency::exists($currency->iso_code)) {
-                    if (!$currency->add()) {
+                    if (!$currency->save()) {
                         $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while importing the currency: %s', [(string) ($attributes['name'])], 'Admin.International.Notification');
 
                         return false;
@@ -403,7 +404,7 @@ class LocalizationPackCore
     protected function setCurrencyCldrData(Currency $currency, Language $defaultLang)
     {
         $localeRepoCLDR = $this->getCldrLocaleRepository();
-        $cldrLocale = $localeRepoCLDR->getLocale($defaultLang->locale);
+        $cldrLocale = $localeRepoCLDR->getLocale($defaultLang->getLocale());
         $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
 
         $symbol = (string) $cldrCurrency->getSymbol();
@@ -616,5 +617,27 @@ class LocalizationPackCore
     public function getErrors()
     {
         return $this->_errors;
+    }
+
+    /**
+     * Return a currency (that can be soft deleted) if presents in the DB
+     * or a new one if not.
+     *
+     * @param string $isoCode
+     *
+     * @return Currency
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private function getExistingByIsoCodeOrCreate(string $isoCode): Currency
+    {
+        $currencies = Currency::findAllInstalled();
+        foreach ($currencies as $currency) {
+            if ($currency['iso_code'] === $isoCode) {
+                return new Currency($currency['id_currency']);
+            }
+        }
+
+        return new Currency();
     }
 }

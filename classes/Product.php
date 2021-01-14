@@ -3553,6 +3553,59 @@ class ProductCore extends ObjectModel
         return self::$_prices[$cache_id];
     }
 
+    /**
+     * @param int $orderId
+     * @param int $productId
+     * @param int $combinationId
+     * @param bool $withTaxes
+     * @param bool $useReduction
+     * @param bool $withEcoTax
+     *
+     * @return float|null
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getPriceFromOrder(
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax
+    ): ?float {
+        $sql = new DbQuery();
+        $sql->select('od.*, t.rate AS tax_rate');
+        $sql->from('order_detail', 'od');
+        $sql->where('od.`id_order` = ' . $orderId);
+        $sql->where('od.`product_id` = ' . $productId);
+        if (Combination::isFeatureActive()) {
+            $sql->where('od.`product_attribute_id` = ' . $combinationId);
+        }
+        $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
+        $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
+        $res = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
+        if (!is_array($res) || empty($res)) {
+            return null;
+        }
+
+        $orderDetail = $res[0];
+        if ($useReduction) {
+            // If we want price with reduction it is already the one stored in OrderDetail
+            $price = $withTaxes ? $orderDetail['unit_price_tax_incl'] : $orderDetail['unit_price_tax_excl'];
+        } else {
+            // Without reduction we use the original product price to compute the original price
+            $tax_rate = $withTaxes ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
+            $price = $orderDetail['original_product_price'] * $tax_rate;
+        }
+        $ecoTaxValue = 0;
+        if ($withEcoTax) {
+            $ecoTaxValue = $withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
+        }
+        $price += $ecoTaxValue;
+
+        return $price;
+    }
+
     public static function convertAndFormatPrice($price, $currency = false, Context $context = null)
     {
         if (!$context) {
@@ -3752,7 +3805,9 @@ class ProductCore extends ObjectModel
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($idProduct, $idProductAttribute);
         $nbProductInCart = 0;
 
-        if (!empty($cart)) {
+        // we don't substract products in cart if the cart is already attached to an order, since stock quantity
+        // has already been updated, this is only useful when the order has not yet been created
+        if (!empty($cart) && empty(Order::getByCartId($cart->id))) {
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {

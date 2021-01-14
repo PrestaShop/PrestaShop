@@ -29,6 +29,7 @@ export default {
   orderPaymentFormAmountInput: '#order_payment_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',
   viewOrderPaymentsBlock: '#view_order_payments_block',
+  viewOrderPaymentsAlert: '.js-view-order-payments-alert',
   privateNoteToggleBtn: '.js-private-note-toggle-btn',
   privateNoteBlock: '.js-private-note-block',
   privateNoteInput: '#private_note_note',
@@ -149,6 +150,7 @@ export default {
   orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
+  orderShippingTotalContainer: '#order-shipping-total-container',
   orderShippingTotal: '#orderShippingTotal',
   orderTaxesTotal: '#orderTaxesTotal',
   orderTotal: '#orderTotal',
@@ -194,4 +196,5 @@ export default {
     },
   },
   printOrderViewPageButton: '.js-print-order-view-page',
+  refreshProductsListLoadingSpinner: '#orderProductsPanel .spinner-order-products-container#orderProductsLoading',
 };

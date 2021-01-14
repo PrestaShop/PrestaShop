@@ -101,7 +101,7 @@ class Translations extends BOBasePage {
     await this.setValue(page, this.searchLanguageInput, language);
     await this.waitForSelectorAndClick(page, this.searchLanguageResult);
     await page.click(this.addUpdateLanguageButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

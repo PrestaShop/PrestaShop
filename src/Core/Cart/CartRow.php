@@ -107,6 +107,11 @@ class CartRow
     protected $roundType;
 
     /**
+     * @var int|null
+     */
+    protected $orderId;
+
+    /**
      * @var array previous data for product: array given by Cart::getProducts()
      */
     protected $rowData = [];
@@ -147,6 +152,7 @@ class CartRow
      * @param bool $useEcotax
      * @param int $precision
      * @param string $roundType see self::ROUND_MODE_*
+     * @param int|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      */
     public function __construct(
         $rowData,
@@ -158,7 +164,8 @@ class CartRow
         Database $databaseAdapter,
         $useEcotax,
         $precision,
-        $roundType
+        $roundType,
+        $orderId = null
     ) {
         $this->setRowData($rowData);
         $this->priceCalculator = $priceCalculator;
@@ -170,6 +177,7 @@ class CartRow
         $this->useEcotax = $useEcotax;
         $this->precision = $precision;
         $this->roundType = $roundType;
+        $this->orderId = $orderId;
     }
 
     /**
@@ -336,54 +344,57 @@ class CartRow
         // it expects a reference.
         $specificPriceOutput = null;
 
-        $priceTaxIncl = $this->priceCalculator->priceCalculation(
-            $shopId,
-            (int) $productId,
-            (int) $rowData['id_product_attribute'],
-            $countryId,
-            $stateId,
-            $zipCode,
-            $currencyId,
-            $groupId,
-            $quantity,
-            true,
-            6,
-            false,
-            true,
-            $this->useEcotax,
-            $specificPriceOutput,
-            true,
-            (int) $cart->id_customer ? (int) $cart->id_customer : null,
-            true,
-            (int) $cart->id,
-            $cartQuantity,
-            (int) $rowData['id_customization']
-        );
-        $priceTaxExcl = $this->priceCalculator->priceCalculation(
-            $shopId,
-            (int) $productId,
-            (int) $rowData['id_product_attribute'],
-            $countryId,
-            $stateId,
-            $zipCode,
-            $currencyId,
-            $groupId,
-            $quantity,
-            false,
-            6,
-            false,
-            true,
-            $this->useEcotax,
-            $specificPriceOutput,
-            true,
-            (int) $cart->id_customer ? (int) $cart->id_customer : null,
-            true,
-            (int) $cart->id,
-            $cartQuantity,
-            (int) $rowData['id_customization']
-        );
+        $productPrices = [
+            'price_tax_included' => [
+                'withTaxes' => true,
+            ],
+            'price_tax_excluded' => [
+                'withTaxes' => false,
+            ],
+        ];
+        foreach ($productPrices as $productPrice => $computationParameters) {
+            $productPrices[$productPrice]['value'] = null;
+            if (null !== $this->orderId) {
+                $productPrices[$productPrice]['value'] = $this->priceCalculator->getOrderPrice(
+                    $this->orderId,
+                    (int) $productId,
+                    (int) $rowData['id_product_attribute'],
+                    $computationParameters['withTaxes'],
+                    true,
+                    $this->useEcotax
+                );
+            }
+            if (null === $productPrices[$productPrice]['value']) {
+                $productPrices[$productPrice]['value'] = $this->priceCalculator->priceCalculation(
+                    $shopId,
+                    (int) $productId,
+                    (int) $rowData['id_product_attribute'],
+                    $countryId,
+                    $stateId,
+                    $zipCode,
+                    $currencyId,
+                    $groupId,
+                    $quantity,
+                    $computationParameters['withTaxes'],
+                    6,
+                    false,
+                    true,
+                    $this->useEcotax,
+                    $specificPriceOutput,
+                    true,
+                    (int) $cart->id_customer ? (int) $cart->id_customer : null,
+                    true,
+                    (int) $cart->id,
+                    $cartQuantity,
+                    (int) $rowData['id_customization']
+                );
+            }
+        }
 
-        return new AmountImmutable($priceTaxIncl, $priceTaxExcl);
+        return new AmountImmutable(
+            $productPrices['price_tax_included']['value'],
+            $productPrices['price_tax_excluded']['value']
+        );
     }
 
     /**

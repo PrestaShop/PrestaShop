@@ -57,7 +57,7 @@ class AddContact extends BOBasePage {
     await page.click(this.enableSaveMessagesLabel(contactData.saveMessage ? 1 : 0));
     // Save Contact
     await this.clickAndWaitForNavigation(page, this.saveContactButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

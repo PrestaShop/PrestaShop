@@ -214,8 +214,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     {
         $allowedFilters = [
             'id_log',
-            'firstname',
-            'lastname',
+            'employee',
             'severity',
             'message',
             'object_type',
@@ -245,7 +244,12 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
 
             if ('employee' == $filterName) {
-                $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
+                $qb->andWhere(
+                    'e.lastname LIKE :employee
+                    OR e.firstname LIKE :employee
+                    OR CONCAT(e.firstname, \' \', e.lastname) LIKE :employee
+                    OR CONCAT(e.lastname, \' \', e.firstname) LIKE :employee'
+                );
                 $qb->setParameter('employee', '%' . $filterValue . '%');
 
                 continue;

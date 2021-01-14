@@ -30,6 +30,7 @@ use Currency;
 use Db;
 use Image;
 use ImageManager;
+use Order;
 use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizatio
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -169,17 +171,28 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         unset($product);
 
-        ksort($products);
+        if (QuerySorting::DESC === $query->getProductsSorting()->getValue()) {
+            // reorder products by order_detail_id DESC
+            krsort($products);
+        } else {
+            // reorder products by order_detail_id ASC
+            ksort($products);
+        }
 
         $productsForViewing = [];
 
         $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
-
         foreach ($products as $product) {
             $unitPrice = $isOrderTaxExcluded ?
                 $product['unit_price_tax_excl'] :
                 $product['unit_price_tax_incl']
             ;
+
+            // if rounding type is set to "per item" we must round the unit price now, otherwise values won't match
+            // the totals in the order summary
+            if ((int) $order->round_type === Order::ROUND_ITEM) {
+                $unitPrice = (new Number((string) $unitPrice))->round($precision, $this->getNumberRoundMode());
+            }
 
             $totalPrice = $unitPrice *
                 (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
