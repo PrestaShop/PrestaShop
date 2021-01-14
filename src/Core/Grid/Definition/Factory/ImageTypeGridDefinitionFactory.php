@@ -245,6 +245,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 $this->buildBulkDeleteAction('admin_image_settings_bulk_delete')
             );
+
         return $bulkActions;
     }
 
@@ -296,6 +297,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'id_image_type'
                 )
             );
+
         return $rowActions;
     }
 }
