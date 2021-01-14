@@ -26,30 +26,30 @@
 {% form_theme imageTypeForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(imageTypeForm) }}
-<div class="card">
-  <div class="card-header">
-    <i class="material-icons">image</i>
-    {{ 'Image type'|trans({}, 'Admin.Design.Feature') }}
-  </div>
+  <div class="card">
+    <div class="card-header">
+      <i class="material-icons">image</i>
+      {{ 'Image type'|trans({}, 'Admin.Design.Feature') }}
+    </div>
 
-  <div class="card-block">
-    <div class="card-text">
-      {{ form_errors(imageTypeForm) }}
-      {% block image_type_form_widget %}
-        {{ form_widget(imageTypeForm) }}
-      {% endblock %}
+    <div class="card-block">
+      <div class="card-text">
+        {{ form_errors(imageTypeForm) }}
+        {% block image_type_form_widget %}
+          {{ form_widget(imageTypeForm) }}
+        {% endblock %}
+      </div>
     </div>
-  </div>
 
-  <div class="card-footer">
-    <div class="d-inline-flex">
-      <a href="{{ path('admin_image_settings_index') }}" class="btn btn-outline-secondary">
-        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-      </a>
-    </div>
-    <div class="d-inline-flex float-right">
-      <button class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    <div class="card-footer">
+      <div class="d-inline-flex">
+        <a href="{{ path('admin_image_settings_index') }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+      </div>
+      <div class="d-inline-flex float-right">
+        <button class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
     </div>
   </div>
-</div>
 {{ form_end(imageTypeForm) }}
