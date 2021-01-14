@@ -14,8 +14,4 @@ jobs:
         uses: z3by/block-merge-commits-action@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: test
-        run: |
-          echo "$GITHUB_CONTEXT"
-          echo ${{ github.event.pull_request.title }}
+          
