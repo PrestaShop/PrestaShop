@@ -26,36 +26,36 @@
 {% form_theme thumbnailRegenerationForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(thumbnailRegenerationForm, {'action': path('admin_image_settings_regenerate_thumbnails')}) }}
-<div class="card">
-  <div class="card-header">
-    <i class="material-icons">image</i>
-    {{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}
-  </div>
+  <div class="card">
+    <div class="card-header">
+      <i class="material-icons">image</i>
+      {{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}
+    </div>
 
-  <div class="card-block">
-    <div class="alert alert-warning">
-      <div class="alert-text">
-        {{ 'Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.'|trans({}, 'Admin.Design.Notification') }}
-        {{ 'Also, regenerating thumbnails for all existing images can take several minutes, please be patient.'|trans({}, 'Admin.Design.Notification') }}
+    <div class="card-block">
+      <div class="alert alert-warning">
+        <div class="alert-text">
+          {{ 'Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.'|trans({}, 'Admin.Design.Notification') }}
+          {{ 'Also, regenerating thumbnails for all existing images can take several minutes, please be patient.'|trans({}, 'Admin.Design.Notification') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card-text">
+      {{ form_errors(thumbnailRegenerationForm) }}
+
+      {% block thumbnail_regeneration_form_widget %}
+        {{ form_widget(thumbnailRegenerationForm) }}
+      {% endblock %}
+    </div>
+
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" onclick="return confirm({{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }});">
+          {{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}
+        </button>
       </div>
     </div>
   </div>
-
-  <div class="card-text">
-    {{ form_errors(thumbnailRegenerationForm) }}
-
-    {% block thumbnail_regeneration_form_widget %}
-      {{ form_widget(thumbnailRegenerationForm) }}
-    {% endblock %}
-  </div>
-
-  <div class="card-footer">
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" onclick="return confirm({{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }});">
-        {{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}
-      </button>
-    </div>
-  </div>
-</div>
 {{ form_end(thumbnailRegenerationForm) }}
 
