@@ -26,31 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Configuration\MultistoreConfigurator;
 use PrestaShop\PrestaShop\Core\Configuration\MultiStoreConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
  */
-class MaintenanceConfiguration implements MultiStoreConfiguratorInterface
+class MaintenanceConfiguration extends MultistoreConfigurator
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @var Context
-     */
-    private $shopContext;
-
-    public function __construct(Configuration $configuration, Context $shopContext)
-    {
-        $this->configuration = $configuration;
-        $this->shopContext = $shopContext;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -94,25 +78,6 @@ class MaintenanceConfiguration implements MultiStoreConfiguratorInterface
         return [];
     }
 
-    /**
-     * @param array $configuration
-     *
-     * @return array
-     */
-    public function removeDisabledFields(array $configuration): array
-    {
-        if ($this->shopContext->isAllShopContext()) {
-            return $configuration;
-        }
-
-        foreach ($configuration as $key => $value) {
-            if (substr($key, 0, 11) !== 'multistore_' && $configuration['multistore_' . $key] !== true) {
-                unset($configuration[$key]);
-            }
-        }
-
-        return $configuration;
-    }
 
     /**
      * @param array $configuration
