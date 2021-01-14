@@ -9,6 +9,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    run: |
+      echo "$GITHUB_CONTEXT"
+      echo ${{ github.event.pull_request.title }}
+
     steps:
       - name: Block Merge Commits
         uses: z3by/block-merge-commits-action@master
