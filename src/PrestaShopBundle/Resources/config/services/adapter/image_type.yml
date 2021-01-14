@@ -47,8 +47,14 @@ services:
         arguments:
             - '@translator'
             - '@prestashop.adapter.legacy.configuration'
+            - !php/const _PS_CAT_IMG_DIR_
+            - !php/const _PS_MANU_IMG_DIR_
+            - !php/const _PS_SUPP_IMG_DIR_
+            - !php/const _PS_PROD_IMG_DIR_
+            - !php/const _PS_STORE_IMG_DIR_
 
     prestashop.adapter.image_settings.helper:
         class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageSettingsHelper'
         arguments:
             - '@translator'
+            - !php/const _PS_PROD_IMG_DIR_
