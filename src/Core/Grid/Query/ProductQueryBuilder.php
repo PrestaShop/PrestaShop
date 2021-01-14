@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
@@ -83,7 +84,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextShopGroupId,
         $isStockSharingBetweenShopGroupEnabled,
         DoctrineFilterApplicatorInterface $filterApplicator,
-        ConfigurationInterface $configuration
+        Configuration $configuration
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
