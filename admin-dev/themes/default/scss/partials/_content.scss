@@ -4,7 +4,10 @@ body {
   height: 100%;
 }
 body {
-  font: 400 $font-size-base/$line-height-base $font-family-base;
+  font-weight: 400;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  font-family: $font-family-base;
   color: $text-color;
   background-color: $body-bg;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
