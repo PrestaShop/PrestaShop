@@ -32,7 +32,6 @@ use Image;
 use Product;
 use StockAvailable;
 
-
 /**
  * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
  */
