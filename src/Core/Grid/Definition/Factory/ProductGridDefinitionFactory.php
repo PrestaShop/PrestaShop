@@ -289,8 +289,9 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('price_tax_excluded')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
-                ->setAssociatedColumn('active')
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
