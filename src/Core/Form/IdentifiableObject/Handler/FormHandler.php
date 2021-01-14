@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Form\PartialFormInterface;
+use PrestaShopBundle\Form\Partial\PartialFormInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;

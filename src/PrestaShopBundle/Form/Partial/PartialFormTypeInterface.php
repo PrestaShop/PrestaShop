@@ -26,36 +26,16 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form;
+namespace PrestaShopBundle\Form\Partial;
 
 use Symfony\Component\Form\FormTypeInterface;
-use Symfony\Component\Form\ResolvedFormTypeFactoryInterface;
-use Symfony\Component\Form\ResolvedFormTypeInterface;
 
-class ResolvedPartialFormTypeFactory implements ResolvedFormTypeFactoryInterface
+/**
+ * A type that should be converted into a {@link PartialForm} instance.
+ *
+ * @see PartialFormBuilder
+ * @see ResolvedPartialFormType
+ */
+interface PartialFormTypeInterface extends FormTypeInterface
 {
-    /**
-     * @var ResolvedFormTypeFactoryInterface
-     */
-    private $resolvedFormTypeFactory;
-
-    /**
-     * @param ResolvedFormTypeFactoryInterface $resolvedFormTypeFactory
-     */
-    public function __construct(ResolvedFormTypeFactoryInterface $resolvedFormTypeFactory)
-    {
-        $this->resolvedFormTypeFactory = $resolvedFormTypeFactory;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createResolvedType(FormTypeInterface $type, array $typeExtensions, ResolvedFormTypeInterface $parent = null)
-    {
-        if ($type instanceof PartialFormTypeInterface) {
-            return new ResolvedPartialFormType($type, $typeExtensions, $parent);
-        }
-
-        return $this->resolvedFormTypeFactory->createResolvedType($type, $typeExtensions, $parent);
-    }
 }

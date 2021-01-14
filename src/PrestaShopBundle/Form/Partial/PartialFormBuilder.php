@@ -26,16 +26,28 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form;
+namespace PrestaShopBundle\Form\Partial;
 
-use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\FormBuilder;
 
 /**
- * A type that should be converted into a {@link PartialForm} instance.
+ * PartialFormBuilder is a form builder that returns a FormBuilder instead of a Form.
+ * Since the class used by the Symfony FormBuilder cannot be configured we need to override
+ * the builder.
  *
- * @see PartialFormBuilder
  * @see ResolvedPartialFormType
  */
-interface PartialFormTypeInterface extends FormTypeInterface
+class PartialFormBuilder extends FormBuilder
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getForm()
+    {
+        // Get dispatcher before it becomes ImmutableEventDispatcher
+        $dispatcher = $this->getEventDispatcher();
+        $form = parent::getForm();
+
+        return new PartialForm($form, $dispatcher);
+    }
 }

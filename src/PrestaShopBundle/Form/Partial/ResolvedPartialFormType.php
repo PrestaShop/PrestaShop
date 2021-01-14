@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form;
+namespace PrestaShopBundle\Form\Partial;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -34,6 +34,13 @@ use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormType;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
 
+/**
+ * ResolvedPartialFormType is the class responsible for building a FormBuilder we need it
+ * to use PartialFormBuilder which will itself create a PartialForm. In order to use this
+ * class we need to override the ResolvedFormTypeFactory service from Symfony.
+ *
+ * @see ResolvedPartialFormTypeFactory
+ */
 class ResolvedPartialFormType extends ResolvedFormType
 {
     /**

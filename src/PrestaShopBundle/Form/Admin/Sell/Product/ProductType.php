@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\PartialFormTypeInterface;
+use PrestaShopBundle\Form\Partial\PartialFormTypeInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;

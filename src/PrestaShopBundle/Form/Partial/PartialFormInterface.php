@@ -26,21 +26,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form;
+namespace PrestaShopBundle\Form\Partial;
 
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormInterface;
 
-class PartialFormBuilder extends FormBuilder
+/**
+ * PartialFormInterface is an extension of the FormInterface which gives more info to handle
+ * partial update correctly.
+ */
+interface PartialFormInterface extends FormInterface
 {
     /**
-     * {@inheritdoc}
+     * @return array|string|null
      */
-    public function getForm()
-    {
-        // Get dispatcher before it becomes ImmutableEventDispatcher
-        $dispatcher = $this->getEventDispatcher();
-        $form = parent::getForm();
-
-        return new PartialForm($form, $dispatcher);
-    }
+    public function getSubmittedData();
 }
