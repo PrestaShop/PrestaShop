@@ -383,12 +383,6 @@ $header-text-color: #4e6167 !default;
         }
       }
     }
-
-    @media (max-width: breakpoint-max("lg")) {
-      span {
-        display: none;
-      }
-    }
   }
 
   #header-employee-container {
@@ -408,10 +402,10 @@ $header-text-color: #4e6167 !default;
     color: $header-text-color;
     text-decoration: none;
 
-
     .selected-item {
       font-size: 0.8125rem;
       line-height: 17px;
+
       .material-icons {
         top: -1px;
         font-size: 1.25rem;
@@ -419,6 +413,14 @@ $header-text-color: #4e6167 !default;
         &.visibility {
           color: $medium-gray;
           @include transition(0.25s ease-out);
+        }
+      }
+
+      @media (max-width: breakpoint-max("lg")) {
+        font-size: 0;
+
+        .arrow-down {
+          display: none;
         }
       }
     }
