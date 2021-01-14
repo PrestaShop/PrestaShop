@@ -1,2 +1,13 @@
 imports:
     - { resource: form/*.yml }
+
+services:
+    _defaults:
+        public: true
+
+    # Decorates Symfony service to allow creating PartialForm instead of Form
+    prestashop.form.resolved_partial_form_type_factory:
+        class: 'PrestaShopBundle\Form\ResolvedPartialFormTypeFactory'
+        decorates: 'form.resolved_type_factory'
+        arguments:
+            - '@prestashop.form.resolved_partial_form_type_factory.inner'

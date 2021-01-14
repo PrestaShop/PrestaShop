@@ -106,7 +106,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
-            'use_partial_update' => $this->usePartialUpdate,
+            'method' => $this->usePartialUpdate ? Request::METHOD_PATCH : Request::METHOD_POST,
         ]);
 
         try {

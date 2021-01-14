@@ -28,9 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\PartialFormInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -135,8 +137,18 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
+        // When for is using PATCH method it only updates its data partially so we don't use the whole data from
+        // the form (which may contain initial and default data) but the extraData which only contains the submitted
+        // data from the request
+        $partialUpdate = false;
+        if ($form instanceof PartialFormInterface && Request::METHOD_PATCH === $form->getConfig()->getMethod()) {
+            $partialUpdate = true;
+            $data = $form->getSubmittedData();
+        }
+
         $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdate' . Container::camelize($form->getName()) . 'FormHandler', [
             'form_data' => &$data,
+            'partial_update' => $partialUpdate,
             'id' => $id,
         ]);
 
@@ -145,6 +157,7 @@ final class FormHandler implements FormHandlerInterface
         $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . Container::camelize($form->getName()) . 'FormHandler', [
             'id' => $id,
             'form_data' => &$data,
+            'partial_update' => $partialUpdate,
         ]);
 
         return FormHandlerResult::createWithId($id);

@@ -55,22 +55,6 @@ use Symfony\Component\DomCrawler\Form;
  */
 class ProductControllerTest extends WebTestCase
 {
-    /**
-     * @var bool
-     */
-    private $handlePartialUpdate;
-
-    /**
-     * @var bool
-     */
-    private $handleStrictPartialUpdate;
-
-    protected function setUp()
-    {
-        $this->handlePartialUpdate = true;
-        $this->handleStrictPartialUpdate = true;
-    }
-
     public function testCreateProduct(): int
     {
         $client = static::createClient();
@@ -120,7 +104,23 @@ class ProductControllerTest extends WebTestCase
         // Now we check that the correct data were use by the form handler
         $dataChecker = $client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.product_form_data_handler_checker');
         $updateData = $dataChecker->getLastUpdateData();
-        $this->assertHandlerData($expectedUpdateData, $updateData, $productId);
+        $this->assertEquals($expectedUpdateData, $updateData);
+
+        // Check that the form contains the expected content
+        foreach ($formModifications as $fieldName => $expectedValue) {
+            $formField = $productForm[$fieldName];
+            if (is_array($formField)) {
+                $formValue = [];
+                foreach ($formField as $subFormField) {
+                    if (null !== $subFormField->getValue()) {
+                        $formValue[] = $subFormField->getValue();
+                    }
+                }
+            } else {
+                $formValue = $formField->getValue();
+            }
+            $this->assertEquals($expectedValue, $formValue);
+        }
     }
 
     public function getProductEditionModifications()
@@ -151,31 +151,19 @@ class ProductControllerTest extends WebTestCase
             ],
         ];
 
+        // One new is selected, one is unselected In the end we only want the two that were selected
+        // and NOT the previous one
         yield [
             [
                 'product[shipping][carriers]' => [1, 3],
             ],
             [
                 'shipping' => [
-                    'carriers' => [1, 3],
+                    // Weird indexing right? Coming from the input names
+                    'carriers' => [0 => 1, 2 => 3],
                 ],
             ],
         ];
-    }
-
-    /**
-     * @param array $expectedData
-     * @param array $handlerData
-     */
-    private function assertHandlerData(array $expectedData, array $handlerData, int $productId): void
-    {
-        if ($this->handlePartialUpdate && !$this->handleStrictPartialUpdate) {
-            // This method is deprecated in PHPUnit for PHP 8.0 but we can't use more recent libraries that replace this
-            // because they require more recent version of PHP than ours, so for now we keep using this one
-            $this->assertArraySubset($expectedData, $handlerData);
-        } else {
-            $this->assertEquals($expectedData, $handlerData);
-        }
     }
 
     /**
