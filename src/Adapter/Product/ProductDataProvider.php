@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Configuration;
 use Context;
 use Image;
 use Product;
 use StockAvailable;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 
 
 /**
@@ -38,17 +38,6 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
  */
 class ProductDataProvider
 {
-
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * Get a new ProductCore instance.
      *
@@ -189,7 +178,7 @@ class ProductDataProvider
             $productId,
             true,
             null,
-            $this->configuration->getInt('PS_PRICE_DISPLAY_PRECISION'),
+            Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
             null,
             false,
             true,
