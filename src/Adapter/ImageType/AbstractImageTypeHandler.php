@@ -46,7 +46,7 @@ abstract class AbstractImageTypeHandler
      *
      * @return ImageType
      */
-    protected function getImageType(ImageTypeId $imageTypeId)
+    protected function getImageType(ImageTypeId $imageTypeId): ImageType
     {
         try {
             $imageType = new ImageType($imageTypeId->getValue());
