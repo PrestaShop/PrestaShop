@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmailLogsFilter;
@@ -120,9 +119,7 @@ class EmailController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
-     *
-     * @throws Exception
+     * @return RedirectResponse
      */
     public function saveOptionsAction(Request $request)
     {
