@@ -7332,7 +7332,7 @@ class ProductCore extends ObjectModel
         $emptyAttributeGroups = [];
         foreach ($idAttributes as $idAttributeGroup => $idAttribute) {
             if (is_numeric($idAttributeGroup) && empty($idAttribute)) {
-                $emptyAttributeGroups[] = (int)$idAttributeGroup;
+                $emptyAttributeGroups[] = (int) $idAttributeGroup;
             }
         }
 

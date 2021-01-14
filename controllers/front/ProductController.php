@@ -756,7 +756,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             !empty($independentIdAttribute) &&
                             !empty($product_for_template['attributes'])
                         ) {
-                            $currentAttributes = array();
+                            $currentAttributes = [];
                             foreach ($product_for_template['attributes'] as $attribute) {
                                 if (!empty($attribute['id_attribute'])) {
                                     $currentAttributes[$attribute['id_attribute_group']] = $attribute['id_attribute'];
@@ -776,7 +776,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                                         'html_color_code' => '',
                                         'texture' => '',
                                         'selected' => empty($currentAttributes[$idAttributeGroup]) ? true : false,
-                                    ]
+                                    ],
                                 ] + $group['attributes'];
                             }
                         }
