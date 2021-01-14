@@ -53,7 +53,7 @@ class ContextCore
     /** @var Cookie */
     public $cookie;
 
-    /** @var SessionInterface */
+    /** @var SessionInterface|null */
     public $session;
 
     /** @var Link */
