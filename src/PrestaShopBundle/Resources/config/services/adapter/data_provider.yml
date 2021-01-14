@@ -50,6 +50,8 @@ services:
 
     prestashop.adapter.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
 
     prestashop.adapter.data_provider.attachment:
         class: PrestaShop\PrestaShop\Adapter\Product\AttachmentDataProvider
