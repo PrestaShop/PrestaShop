@@ -26,36 +26,36 @@
 {% form_theme generationSettingsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(generationSettingsForm, {'action': path('admin_image_settings_save_options')}) }}
-<div class="card">
-  <div class="card-header">
-    <i class="material-icons">image</i>
-    {{ 'Images generation options'|trans({}, 'Admin.Design.Feature') }}
-  </div>
+  <div class="card">
+    <div class="card-header">
+      <i class="material-icons">image</i>
+      {{ 'Images generation options'|trans({}, 'Admin.Design.Feature') }}
+    </div>
 
-  <div class="card-block">
-    <div class="alert alert-info">
-      <div class="alert-text">
-        {{ 'JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.'|trans({}, 'Admin.Design.Help') }}
-        <br/><br/>
-        {{ 'WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'|trans({}, 'Admin.Design.Help') }}
+    <div class="card-block">
+      <div class="alert alert-info">
+        <div class="alert-text">
+          {{ 'JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.'|trans({}, 'Admin.Design.Help') }}
+          <br/><br/>
+          {{ 'WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'|trans({}, 'Admin.Design.Help') }}
+        </div>
+      </div>
+
+      <div class="card-text">
+        {{ form_errors(generationSettingsForm) }}
+
+        {% block generation_options_form_widget %}
+          {{ form_widget(generationSettingsForm) }}
+        {% endblock %}
       </div>
     </div>
 
-    <div class="card-text">
-      {{ form_errors(generationSettingsForm) }}
-
-      {% block generation_options_form_widget %}
-        {{ form_widget(generationSettingsForm) }}
-      {% endblock %}
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" id="form-generation-options-save-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
     </div>
   </div>
-
-  <div class="card-footer">
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" id="form-generation-options-save-button">
-        {{ 'Save'|trans({}, 'Admin.Actions') }}
-      </button>
-    </div>
-  </div>
-</div>
 {{ form_end(generationSettingsForm) }}
