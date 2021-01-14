@@ -243,9 +243,10 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
             );
     }
 
-    private function getInvoiceRowAction()
+    private function getInvoiceRowAction(): RowActionCollection
     {
-        return (new RowActionCollection())
+        $collection = new RowActionCollection();
+        $collection
             ->add(
                 (new LinkRowAction('print_invoice'))
                     ->setName($this->trans('View invoice', [], 'Admin.Orderscustomers.Feature'))
@@ -257,11 +258,13 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'use_inline_display' => true,
                     ])
             );
+        return $collection;
     }
 
-    private function getViewRowAction()
+    private function getViewRowAction(): RowActionCollection
     {
-        return (new RowActionCollection())
+        $collection = new RowActionCollection();
+        $collection
             ->add(
                 (new LinkRowAction('view'))
                     ->setName($this->trans('View', [], 'Admin.Actions'))
@@ -274,5 +277,6 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'clickable_row' => true,
                     ])
             );
+        return $collection;
     }
 }
