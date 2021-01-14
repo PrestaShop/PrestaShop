@@ -132,6 +132,9 @@
           {% if orderForViewing.shippingAddress.companyName is not empty %}
             <p class="mb-0">{{ orderForViewing.shippingAddress.companyName }}</p>
           {% endif %}
+          {% if orderForViewing.shippingAddress.vatNumber is not empty %}
+            <p class="mb-0">{{ orderForViewing.shippingAddress.vatNumber }}</p>
+          {% endif %}
           <p class="mb-0">{{ orderForViewing.shippingAddress.address1 }}</p>
           {% if orderForViewing.shippingAddress.address2 is not empty %}
             <p class="mb-0">{{ orderForViewing.shippingAddress.address2 }}</p>
@@ -181,6 +184,9 @@
           <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
           {% if orderForViewing.invoiceAddress.companyName is not empty %}
             <p class="mb-0">{{ orderForViewing.invoiceAddress.companyName }}</p>
+          {% endif %}
+          {% if orderForViewing.invoiceAddress.vatNumber is not empty %}
+            <p class="mb-0">{{ orderForViewing.invoiceAddress.vatNumber }}</p>
           {% endif %}
           <p class="mb-0">{{ orderForViewing.invoiceAddress.address1 }}</p>
           {% if orderForViewing.invoiceAddress.address2 is not empty %}

@@ -47,6 +47,12 @@ class OrderInvoiceAddressForViewing
      * @var string
      */
     private $companyName;
+
+    /**
+     * @var string
+     */
+    private $vatNumber;
+
     /**
      * @var string
      */
@@ -106,6 +112,7 @@ class OrderInvoiceAddressForViewing
         string $firstName,
         string $lastName,
         string $companyName,
+        string $vatNumber,
         string $address1,
         string $address2,
         string $stateName,
@@ -119,6 +126,7 @@ class OrderInvoiceAddressForViewing
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->companyName = $companyName;
+        $this->vatNumber = $vatNumber;
         $this->address1 = $address1;
         $this->address2 = $address2;
         $this->stateName = $stateName;
@@ -151,6 +159,14 @@ class OrderInvoiceAddressForViewing
     public function getCompanyName(): string
     {
         return $this->companyName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVatNumber(): string
+    {
+        return $this->vatNumber;
     }
 
     /**

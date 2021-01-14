@@ -47,6 +47,12 @@ class OrderShippingAddressForViewing
      * @var string
      */
     private $companyName;
+
+    /**
+     * @var string
+     */
+    private $vatNumber;
+
     /**
      * @var string
      */
@@ -92,6 +98,7 @@ class OrderShippingAddressForViewing
         string $firstName,
         string $lastName,
         string $companyName,
+        string $vatNumber,
         string $address1,
         string $address2,
         string $stateName,
@@ -105,6 +112,7 @@ class OrderShippingAddressForViewing
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->companyName = $companyName;
+        $this->vatNumber = $vatNumber;
         $this->address1 = $address1;
         $this->address2 = $address2;
         $this->stateName = $stateName;
@@ -137,6 +145,14 @@ class OrderShippingAddressForViewing
     public function getCompanyName(): string
     {
         return $this->companyName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVatNumber(): string
+    {
+        return $this->vatNumber;
     }
 
     /**
