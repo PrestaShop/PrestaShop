@@ -124,7 +124,7 @@ class EmailController extends FrameworkBundleAdminController
      *
      * @throws Exception
      */
-    public function saveOptionsAction(Request $request): Response
+    public function saveOptionsAction(Request $request)
     {
         $formHandler = $this->getEmailConfigurationFormHandler();
         $emailConfigurationForm = $formHandler->getForm();
