@@ -1,5 +1,5 @@
-// Make sure the charset is set appropriately
 @charset "UTF-8";
+
 //Compass is required to pre-compile this stylesheets to .css
 @import "~bourbon/app/assets/stylesheets/bourbon";
 
@@ -60,9 +60,9 @@
 	//Utility classes
   @import "vendor/bootstrap-sass/utilities";
   @import "vendor/bootstrap-sass/responsive-utilities";
-}
 
 //Moved out from .bootstrap prefix since modal's javascript appends the background overlay just before /body.
+}
 @import "vendor/bootstrap-sass/modals";
 @import "vendor/bootstrap-sass/carousel";
 
@@ -84,6 +84,7 @@
   @import "partials/date-range-picker";
   @import "partials/multistore";
   @import "partials/product";
+  @import "partials/buttons";
 
 	//Controllers
   @import "controllers/carrier-wizard";
@@ -96,9 +97,9 @@
   @import "controllers/themes";
   @import "controllers/order";
   @import "controllers/products";
-}
 
 //Plug-ins
+}
 @import "partials/tinymce";
 @import "partials/growl";
 @import "partials/chosen";

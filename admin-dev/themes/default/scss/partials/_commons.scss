@@ -99,35 +99,37 @@
   border-bottom: solid 1px #ccc !important;
 }
 //alert boxs
-@mixin alert-panel($icon,$color) {
+@mixin alert-panel($icon, $color, $border-color: $color) {
   position: relative;
   border: none;
-  @include padding-left(50px);
-  @include border-left(solid 3px lighten($color,9%));
+  padding: 16px 15px 16px 56px;
+  font-size: 14px;
+  border: solid 1px $border-color;
+  border-radius: 8px;
   &:before {
     position: absolute;
-    top: 6px;
+    top: 13px;
     display: block;
     height: 25px;
     width: 25px;
-    color: lighten($color,9%);
-    @include left(7px);
+    color: $border-color;
+    font-size: 24px;
+    @include left(15px);
     @extend .icon;
-		@extend .icon-3x;
 		@extend .#{$icon};
   }
 }
 .alert.alert-warning {
-  @include alert-panel(icon-exclamation-circle, $brand-warning);
+  @include alert-panel(icon-exclamation-circle, $brand-warning, $alert-warning-border);
 }
 .alert.alert-danger {
-  @include alert-panel(icon-exclamation-triangle, $brand-danger);
+  @include alert-panel(icon-exclamation-triangle, $brand-danger, $alert-danger-border);
 }
 .alert.alert-success {
-  @include alert-panel(icon-check-circle, $brand-success);
+  @include alert-panel(icon-check-circle, $brand-success, $alert-success-border);
 }
 .alert.alert-info {
-  @include alert-panel(icon-question-circle, $brand-info);
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
 }
 .alert.alert-addons {
   $alert-addons-border: lighten($brand-addons,10%);
