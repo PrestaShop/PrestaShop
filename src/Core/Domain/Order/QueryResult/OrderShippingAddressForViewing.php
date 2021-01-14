@@ -49,7 +49,7 @@ class OrderShippingAddressForViewing
     private $companyName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $vatNumber;
 
@@ -98,7 +98,6 @@ class OrderShippingAddressForViewing
         string $firstName,
         string $lastName,
         string $companyName,
-        string $vatNumber,
         string $address1,
         string $address2,
         string $stateName,
@@ -106,7 +105,8 @@ class OrderShippingAddressForViewing
         string $countryName,
         string $postCode,
         string $phone,
-        string $phoneMobile
+        string $phoneMobile,
+        ?string $vatNumber = null
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
@@ -148,9 +148,9 @@ class OrderShippingAddressForViewing
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getVatNumber(): string
+    public function getVatNumber(): ?string
     {
         return $this->vatNumber;
     }
