@@ -12,9 +12,7 @@ jobs:
       matrix:
         php: [ '7.3' ]
     env:
-      GC_INSTANCE_KEY: ${{ secrets.GC_INSTANCE_KEY }}
       GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
-      #GC_INSTANCE_PUB: ${{ secrets.GC_INSTANCE_PUB }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
       GC_ZONE: ${{ secrets.GC_ZONE }}
