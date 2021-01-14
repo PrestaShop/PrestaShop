@@ -29,9 +29,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\Form\FormInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller responsible of "Sell > Orders > Invoices" page.
@@ -43,18 +43,28 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response|null Template parameters
-     *
-     * @throws \Exception
+     * @Template("@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @return array Template parameters
      */
     public function indexAction(Request $request)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
         $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
         $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
         $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
 
-        return $this->renderForm($byDateForm, $byStatusForm, $optionsForm, $request);
+        return [
+            'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'generateByDateForm' => $byDateForm->createView(),
+            'generateByStatusForm' => $byStatusForm->createView(),
+            'invoiceOptionsForm' => $optionsForm->createView(),
+        ];
     }
 
     /**
@@ -64,22 +74,14 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function generatePdfByDateAction(Request $request)
     {
-        $byDateFormHandler = $this->get('prestashop.admin.order.invoices.by_date.form_handler');
+        $formHandler = $this->get('prestashop.admin.order.invoices.by_date.form_handler');
+        $this->processForm($formHandler, $request);
 
-        $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
-        $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
-        $byDateForm = $this->processForm($byDateFormHandler, $request);
-
-        return $this->renderForm(
-            $byDateForm,
-            $byStatusForm,
-            $optionsForm,
-            $request
-        );
+        return $this->redirectToRoute('admin_order_invoices');
     }
 
     /**
@@ -89,22 +91,14 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function generatePdfByStatusAction(Request $request)
     {
-        $byStatusFormHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
+        $formHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
+        $this->processForm($formHandler, $request);
 
-        $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
-        $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
-        $byStatusForm = $this->processForm($byStatusFormHandler, $request);
-
-        return $this->renderForm(
-            $byDateForm,
-            $byStatusForm,
-            $optionsForm,
-            $request
-        );
+        return $this->redirectToRoute('admin_order_invoices');
     }
 
     /**
@@ -114,39 +108,17 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function processAction(Request $request)
     {
-        $optionsFormHandler = $this->get('prestashop.admin.order.invoices.options.form_handler');
-        $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
-        $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
-        $optionsForm = $this->processForm($optionsFormHandler, $request);
+        $formHandler = $this->get('prestashop.admin.order.invoices.options.form_handler');
 
-        return $this->renderForm($byDateForm, $byStatusForm, $optionsForm, $request);
-    }
+        if ($this->processForm($formHandler, $request)) {
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        }
 
-    /**
-     * @param FormInterface $byDateForm
-     * @param FormInterface $byStatusForm
-     * @param FormInterface $optionsForm
-     * @param Request $request
-     *
-     * @return Response|null
-     */
-    protected function renderForm(FormInterface $byDateForm, FormInterface $byStatusForm, FormInterface $optionsForm, Request $request): ?Response
-    {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        return $this->render('@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig', [
-            'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
-            'generateByDateForm' => $byDateForm->createView(),
-            'generateByStatusForm' => $byStatusForm->createView(),
-            'invoiceOptionsForm' => $optionsForm->createView(),
-        ]);
+        return $this->redirectToRoute('admin_order_invoices');
     }
 
     /**
@@ -155,25 +127,22 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param FormHandlerInterface $formHandler
      * @param Request $request
      *
-     * @return FormInterface
-     *
-     * @throws \Exception
+     * @return bool false if an error occurred, true otherwise
      */
-    private function processForm(FormHandlerInterface $formHandler, Request $request): FormInterface
+    private function processForm(FormHandlerInterface $formHandler, Request $request)
     {
         $form = $formHandler->getForm();
         $form->submit($request->request->get($form->getName()));
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             if ($errors = $formHandler->save($form->getData())) {
                 $this->flashErrors($errors);
-            } else {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-                $this->redirectToRoute('admin_order_invoices');
+
+                return false;
             }
         }
 
-        return $form;
+        return true;
     }
 
     /**
