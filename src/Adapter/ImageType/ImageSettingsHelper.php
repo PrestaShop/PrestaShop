@@ -59,12 +59,13 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
 
     /**
      * @param TranslatorInterface $translator
+     * @param string $productImagesDir
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, string $productImagesDir)
     {
         $this->translator = $translator;
-        $this->productImagesDir = _PS_PROD_IMG_DIR_;
-        $this->showDuplicatesAlert = file_exists(_PS_PROD_IMG_DIR_ . 'duplicates/');
+        $this->productImagesDir = $productImagesDir;
+        $this->showDuplicatesAlert = file_exists($productImagesDir . 'duplicates/');
     }
 
     /**

@@ -67,17 +67,30 @@ class ImageGenerator implements ImageGeneratorInterface
 
     /**
      * @param TranslatorInterface $translator
+     * @param Configuration $configuration
+     * @param string $categoriesImageDir
+     * @param string $manufacturersImageDir
+     * @param string $suppliersImageDir
+     * @param string $productsImageDir
+     * @param string $storesImageDir
      */
-    public function __construct(TranslatorInterface $translator, Configuration $configuration)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        Configuration $configuration,
+        string $categoriesImageDir,
+        string $manufacturersImageDir,
+        string $suppliersImageDir,
+        string $productsImageDir,
+        string $storesImageDir
+    ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
         $this->process_dirs = [
-            ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
-            ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
-            ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
-            ['type' => 'products', 'dir' => _PS_PROD_IMG_DIR_],
-            ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
+            ['type' => 'categories', 'dir' => $categoriesImageDir],
+            ['type' => 'manufacturers', 'dir' => $manufacturersImageDir],
+            ['type' => 'suppliers', 'dir' => $suppliersImageDir],
+            ['type' => 'products', 'dir' => $productsImageDir],
+            ['type' => 'stores', 'dir' => $storesImageDir],
         ];
     }
 
