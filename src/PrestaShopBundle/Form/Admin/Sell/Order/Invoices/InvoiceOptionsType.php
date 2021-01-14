@@ -127,7 +127,6 @@ class InvoiceOptionsType extends TranslatorAwareType
                             'message' => $this->trans(
                                 'Invoice number must be a positive integer, or 0 if you want to keep the current number.',
                                 'Admin.Orderscustomers.Notification',
-                                ['%number%' => $this->nextInvoiceNumber]
                             ),
                         ]
                     ),
