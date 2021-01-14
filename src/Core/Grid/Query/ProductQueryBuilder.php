@@ -70,8 +70,9 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var DoctrineFilterApplicatorInterface
      */
     private $filterApplicator;
+
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
