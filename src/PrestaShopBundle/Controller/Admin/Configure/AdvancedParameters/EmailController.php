@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmailLogsFilter;
@@ -34,7 +35,6 @@ use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSend
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,9 +56,35 @@ class EmailController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, EmailLogsFilter $filters)
     {
-        $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
-        return $this->renderPage($request, $filters, $emailConfigurationForm);
+        $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
+        $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');
+
+        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class, [
+            'send_email_to' => $configuration->get('PS_SHOP_EMAIL'),
+        ]);
+
+        $isEmailLogsEnabled = $configuration->get('PS_LOG_EMAILS');
+
+        $presentedEmailLogsGrid = null;
+
+        if ($isEmailLogsEnabled) {
+            $emailLogsGridFactory = $this->get('prestashop.core.grid.factory.email_logs');
+            $emailLogsGrid = $emailLogsGridFactory->getGrid($filters);
+            $presentedEmailLogsGrid = $this->presentGrid($emailLogsGrid);
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/index.html.twig', [
+            'emailConfigurationForm' => $emailConfigurationForm->createView(),
+            'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
+            'smtpMailMethod' => MailOption::METHOD_SMTP,
+            'testEmailSendingForm' => $testEmailSendingForm->createView(),
+            'emailLogsGrid' => $presentedEmailLogsGrid,
+            'isEmailLogsEnabled' => $isEmailLogsEnabled,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -93,17 +119,18 @@ class EmailController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
-     * @param EmailLogsFilter $filters
      *
      * @return Response
+     *
+     * @throws Exception
      */
-    public function saveOptionsAction(Request $request, EmailLogsFilter $filters)
+    public function saveOptionsAction(Request $request): Response
     {
         $formHandler = $this->getEmailConfigurationFormHandler();
         $emailConfigurationForm = $formHandler->getForm();
         $emailConfigurationForm->handleRequest($request);
 
-        if ($emailConfigurationForm->isSubmitted() && $emailConfigurationForm->isValid()) {
+        if ($emailConfigurationForm->isSubmitted()) {
             $errors = $formHandler->save($emailConfigurationForm->getData());
 
             if (!empty($errors)) {
@@ -116,9 +143,7 @@ class EmailController extends FrameworkBundleAdminController
             }
         }
 
-        $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
-
-        return $this->renderPage($request, $filters, $emailConfigurationForm);
+        return $this->redirectToRoute('admin_emails_index');
     }
 
     /**
@@ -240,45 +265,6 @@ class EmailController extends FrameworkBundleAdminController
         }
 
         return $this->json($result);
-    }
-
-    /**
-     * @param Request $request
-     * @param EmailLogsFilter $filters
-     * @param FormInterface $emailConfigurationForm
-     *
-     * @return Response
-     */
-    protected function renderPage(Request $request, EmailLogsFilter $filters, FormInterface $emailConfigurationForm): Response
-    {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-
-        $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');
-
-        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class, [
-            'send_email_to' => $configuration->get('PS_SHOP_EMAIL'),
-        ]);
-
-        $isEmailLogsEnabled = $configuration->getBoolean('PS_LOG_EMAILS');
-
-        $presentedEmailLogsGrid = null;
-
-        if ($isEmailLogsEnabled) {
-            $emailLogsGridFactory = $this->get('prestashop.core.grid.factory.email_logs');
-            $emailLogsGrid = $emailLogsGridFactory->getGrid($filters);
-            $presentedEmailLogsGrid = $this->presentGrid($emailLogsGrid);
-        }
-
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/index.html.twig', [
-            'emailConfigurationForm' => $emailConfigurationForm->createView(),
-            'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
-            'smtpMailMethod' => MailOption::METHOD_SMTP,
-            'testEmailSendingForm' => $testEmailSendingForm->createView(),
-            'emailLogsGrid' => $presentedEmailLogsGrid,
-            'isEmailLogsEnabled' => $isEmailLogsEnabled,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-        ]);
     }
 
     /**
