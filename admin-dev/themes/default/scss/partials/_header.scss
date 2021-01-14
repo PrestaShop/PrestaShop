@@ -110,13 +110,6 @@ $search-border-color: #bbcdd2;
       font-size: 20px;
       margin-top: -4px;
     }
-		// hide label if width <= tablet landscape size
-    @media (max-width: breakpoint-max('lg')) {
-      span {
-        display: none;
-      }
-    }
-
     @media (max-width: $screen-sm-max) {
       padding: {
         left: 10px !important;
@@ -211,6 +204,18 @@ $search-border-color: #bbcdd2;
         display: inline-block !important;
         color: $header-text-color !important;
         text-decoration: none !important;
+        @media (max-width: breakpoint-max('lg')) {
+          font-size: 0;
+          width: 25px;
+          height: 25px;
+          margin-left: -25px;
+          top: -10px;
+          position: relative;
+          z-index: 50;
+          i {
+            display: none;
+          }
+        }
         &:hover {
           color: $brand-info !important;
         }

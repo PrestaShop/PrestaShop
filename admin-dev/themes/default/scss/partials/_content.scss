@@ -47,9 +47,10 @@ body {
     position: relative;
     padding: 20px;
     margin-bottom: 20px;
-    border: solid 1px darken($bg-content-color,10%);
+    border: 1px solid $card-border-color;
     background-color: white;
     @include border-radius(5px);
+    @include box-shadow(0 0 4px 0 rgba(0, 0, 0, 0.06));
     &.panel-highlighted {
       border-color: $brand-primary !important;
       @include box-shadow(rgba($brand-primary,.15) 0 0 0 6px inset !important);
@@ -61,9 +62,12 @@ body {
       text-overflow: ellipsis;
       white-space: nowrap;
       color: #555;
-      height: 32px;
+      padding: 10px;
+      > .btn-group {
+        margin-top: -7px;
+      }
       .btn {
-        padding: 4px 8px !important;
+        padding: 2px 6px !important;
       }
       a.btn {
         font-family: $font-family-sans-serif;
@@ -71,8 +75,12 @@ body {
         position: relative;
         top: 2px;
       }
-      i {
-        font-size: $icon-size-base;
+      > i {
+        font-size: 20px;
+        color: $card-icon-color;
+        margin-right: 5px;
+        margin-top: -2px;
+        vertical-align: middle;
       }
     }
     .panel {
@@ -85,13 +93,11 @@ body {
   h3:not(.modal-title),
   .panel-heading {
     border: none;
-    font-size: 1.2em;
-    line-height: 2.2em;
-    height: 2.2em;
+    font-size: 12px;
     text-transform: uppercase;
     border-bottom: solid 1px #EEEEEE;
-    @include padding(0, 0, 0, 5px);
-    @include margin(-20px, -16px, 15px, -16px);
+    padding: 10px;
+    @include margin(-20px, -20px, 15px, -20px);
     i,
     a {
       color: contrasted($bg-panel-heading-color);
@@ -114,8 +120,8 @@ body {
     .panel-heading-action {
       line-height: 0;
       position: absolute;
-      top: 2px;
-      @include right(0);
+      top: 6px;
+      @include right(7px);
       .btn {
         padding: 4px 8px !important;
       }
@@ -130,15 +136,12 @@ body {
       }
       > a.btn {
         position: absolute;
-        top: 0;
-        @include right(2px);
+        top: 7px;
+        @include right(6px);
       }
       a.list-toolbar-btn {
-        height: 30px;
-        width: 30px;
         color: #CCC;
         @include float(left);
-        @include border-left(solid 1px #eee);
         &:hover {
           text-decoration: none;
           color: $brand-primary;

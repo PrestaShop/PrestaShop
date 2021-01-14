@@ -1,6 +1,7 @@
 // PrestaShop Admin Theme Colors
 $main-color: #363A41 !default;
-$primary-color: $blueSkype !default;
+$primary-color: #25B9D7 !default;
+$primary-light-color: #7cd5e7 !default;
 $secondary-color: $greenPrestashop !default;
 $bg-content-color: #EFF1F2 !default;
 
@@ -8,13 +9,13 @@ $contrasted-dark-default: #333;
 $contrasted-light-default: white;
 $contrasted-lightness-threshold: 10%;
 
-$bg-page-head-color : $secondary-color;
+$bg-page-head-color: $secondary-color;
 $bg-panel-heading-color: hsl(hue($secondary-color), 10, 90);
 
 $badge-notif-color: $greenPrestashop;
 $brand-addons: $pinkPrestashop;
 
-$font-family-mono: 'Droid Sans Mono', Helvetica, Arial, sans-serif;
+$font-family-mono: 'Open Sans', Helvetica, Arial, sans-serif;
 
 // FontAwesome icons
 $icon-font-family: 'FontAwesome';
@@ -27,11 +28,15 @@ $tooltip-bg: #555;
 $tooltip-max-width: 250px;
 
 // Bootstrap variables
-$gray-darker: lighten(#000, 13.5%);  //#222
-$gray-dark: lighten(#000, 20%);  //#333
-$gray: lighten(#000, 33.5%);  //#555
-$gray-light: lighten(#000, 60%);  //#999
-$gray-lighter: lighten(#000, 93.5%);  //#eee
+$gray-darker: lighten(#000, 13.5%);
+$gray-dark: lighten(#000, 20%);
+$gray: lighten(#000, 33.5%);
+$gray-light: lighten(#000, 60%);
+$gray-lighter: lighten(#000, 93.5%);
+
+// Cards
+$card-border-color: #dbe6e9;
+$card-icon-color: #6c868e;
 
 // Brand colors
 $brand-primary: $primary-color !default;
@@ -41,21 +46,21 @@ $brand-warning: #fbbb22 !default;
 $brand-danger: #E08F95 !default;
 $brand-info: #25b9d7 !default;
 
-$alert-success-bg:            lighten($brand-success, 30%) !default;
-$alert-success-text:          $brand-success !default;
-$alert-success-border:        $brand-success !default;
+$alert-success-bg: #cbf2d4 !default;
+$alert-success-text: #363a41 !default;
+$alert-success-border: #53d572 !default;
 
-$alert-info-bg:               #DCF4F9 !default;
-$alert-info-text:             #1e94ab !default;
-$alert-info-border:           $brand-info !default;
+$alert-info-bg: #beeaf3 !default;
+$alert-info-text: #363a41 !default;
+$alert-info-border: #25b9d7 !default;
 
-$alert-warning-bg:            #FFF3D7 !default;
-$alert-warning-text:          #D2A63C !default;
-$alert-warning-border:        #D2A63C !default;
+$alert-warning-bg: #fffbd3 !default;
+$alert-warning-text: #363a41 !default;
+$alert-warning-border: #fab000 !default;
 
-$alert-danger-bg:             #FFE2E4 !default;
-$alert-danger-text:           #D27C82 !default;
-$alert-danger-border:         $brand-danger !default;
+$alert-danger-bg: #fbc6c3 !default;
+$alert-danger-text: #363a41 !default;
+$alert-danger-border: #f44336 !default;
 
 // Sidebar
 $sidebar-menu-color: #BEBEBE !default;
@@ -73,8 +78,8 @@ $text-color: $gray;
 
 // Typography
 $FontPathOpenSans: '../node_modules/open-sans-fonts/open-sans';
-$url-font-content-name : 'Open Sans' !default;
-$url-font-headings-name: 'Ubuntu Condensed' !default;
+$url-font-content-name: 'Open Sans' !default;
+$url-font-headings-name: 'Open Sans' !default;
 $font-family-sans-serif: $url-font-content-name, Helvetica, Arial, sans-serif;
 $headings-font-family: $url-font-headings-name, Helvetica, Arial, sans-serif;
 $font-size-base: 12px;
@@ -83,38 +88,40 @@ $line-height-computed: floor($font-size-base * $line-height-base);
 $headings-font-weight: 400;
 
 // Components
-$padding-base-vertical: 6px;
-$padding-base-horizontal: 8px;
-$border-radius-base: 3px;
+$padding-base-vertical: 8px;
+$padding-base-horizontal: 16px;
+$border-radius-base: 4px;
 
 // Tables
 
 // $table-bg: transparent  overall background-color
-$table-bg-accent: #f9f9f9;  //for striping
+$table-bg-accent: #f9f9f9;
 $table-bg-hover: #EDF7FB;
 
 // Buttons
 $btn-default-color: $main-color;
 $btn-default-bg: white;
-$btn-default-border: #DEDEDE;
+$btn-default-border: #bbcdd2;
 $btn-primary-color: $btn-default-color;
-$btn-primary-bg: #2eacce;
-$btn-primary-border: #2eacce;
+$btn-primary-bg: $primary-color;
+$btn-primary-border: $primary-color;
 
 // Forms
-$input-bg: #F5F8F9;
+$input-bg: #FFFFFF;
 $input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2);
 $input-group-addon-bg: #F5F8F9;
-$input-border: #C7D6DB;
+$input-border: #bbcdd2;
+$input-focus-background: #f4fcfd;
+$input-focus-border: $primary-color;
 // Dropdowns
 $dropdown-link-hover-color: white;
 $dropdown-link-hover-bg: $brand-primary;
 
 // Grid system
-$grid-gutter-width: 10px;  // Navbar
+$grid-gutter-width: 10px;
 
 // Basics of a navbar
-$navbar-height: 40px;  // Wells
+$navbar-height: 40px;
 $well-bg: #FCFDFE;
 
 // Media queries breakpoints
@@ -146,7 +153,7 @@ $container-tablet: 728px;
 $container-desktop: 940px;
 
 // Large screen / wide desktop
-$container-large-desktop: 1170px;  //light
+$container-large-desktop: 1170px;
 
 // Menu
 $gray-dark-menu: #363a41;
@@ -166,5 +173,4 @@ $medium-gray: #6c868e;
 $gray-medium: $medium-gray;
 
 // use rems to ensure homogeneity on all zoom scales
-// xs: 0, sm: 544px, md: 768px, lg: 1024px, xl: 1300px
 $grid-breakpoints: (xs: 0, sm: 34em, md: 48em, lg: 64em, xl: 81.25em);
