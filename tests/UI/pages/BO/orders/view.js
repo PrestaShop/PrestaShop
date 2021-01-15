@@ -9,8 +9,14 @@ class Order extends BOBasePage {
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
 
     // Customer card
+    this.customerInfoBlock = '#customerInfo';
+    this.ViewAllDetailsLink = '#viewFullDetails a';
+    this.customerEmailLink = '#customerEmail';
+    this.validatedOrders = '#validatedOrders span.badge';
     this.shippingAddressBlock = '#addressShipping';
     this.invoiceAddressBlock = '#addressInvoice';
+    this.privateNoteTextarea = '#private_note_note';
+    this.addNewPrivateNoteLink = '#privateNote a.js-private-note-toggle-btn';
 
     // Order page
     this.orderProductsTable = '#orderProductsTable';
@@ -272,6 +278,60 @@ class Order extends BOBasePage {
    */
   isReturnProductsButtonVisible(page) {
     return this.elementVisible(page, this.returnProductsButton, 2000);
+  }
+
+  /**
+   * Go to view full details page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToViewFullDetails(page) {
+    await this.clickAndWaitForNavigation(page, this.ViewAllDetailsLink);
+  }
+
+  /**
+   * Get customer information
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getCustomerInfoBlock(page) {
+    return this.getTextContent(page, this.customerInfoBlock);
+  }
+
+  /**
+   * Get customer email
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getCustomerEmail(page) {
+    return this.getTextContent(page, this.customerEmailLink);
+  }
+
+  /**
+   * Get validated orders number
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getValidatedOrdersNumber(page) {
+    return this.getNumberFromText(page, `${this.validatedOrders}.badge-dark`);
+  }
+
+  /**
+   * Is private note textarea visible
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isPrivateNoteTextareaVisible(page) {
+    return this.elementVisible(page, this.privateNoteTextarea, 2000);
+  }
+
+  /**
+   * Click on add new private note link
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async clickAddNewPrivateNote(page) {
+    await page.click(this.addNewPrivateNoteLink);
   }
 }
 
