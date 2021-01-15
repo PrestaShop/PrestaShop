@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -317,6 +318,8 @@ class LanguageController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+
         return [
             LanguageNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
@@ -326,6 +329,16 @@ class LanguageController extends FrameworkBundleAdminController
                 'You cannot change the status of the default language.',
                 'Admin.International.Notification'
             ),
+            UploadedImageConstraintException::class => [
+                UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
+                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                    $iniConfig->getUploadMaxSizeInBytes(),
+                ]),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Admin.Notifications.Error'
+                ),
+            ],
             CopyingNoPictureException::class => [
                 CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR => $this->trans(
                     'An error occurred while copying "No Picture" image to your product folder.',
