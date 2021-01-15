@@ -186,7 +186,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ),
 
-                //    @todo Implement remaining actions actions
+                //    @todo Implement remaining actions
                 //    ->add((new PreviewProductRowAction('preview_product'))
                 //        ->setName($this->trans('Preview', [], 'Admin.Actions'))
                 //        ->setIcon('remove_red_eye')
