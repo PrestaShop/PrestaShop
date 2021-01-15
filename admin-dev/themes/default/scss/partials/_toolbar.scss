@@ -8,7 +8,7 @@
   padding: 0 0 0 210px;
   margin: 0;
   color: #363a41;
-  background-color: white;
+  background-color: #ffffff;
   border-bottom: #dfdfdf 1px solid;
 
   transition: padding-left 0.5s ease-out;
@@ -38,15 +38,15 @@
     white-space: nowrap;
 
     a {
-      border-bottom: dotted 1px white;
+      border-bottom: dotted 1px #ffffff;
       &:hover {
-        color: black;
-        border-color: black;
+        color: #000000;
+        border-color: #000000;
       }
     }
   }
   a {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
   }
   h4.page-subtitle {
@@ -54,20 +54,23 @@
     position: absolute;
     margin-top: 60px;
     font-family: $url-font-content-name;
-    @include left($widthSidebarNav+20px);
+    @include left($widthSidebarNav + 20px);
     @media (max-width: $screen-tablet) {
       @include left(70px);
     }
   }
   .toolbarBox {
     position: absolute;
-    background-color: transparent !important;
+    background-color: transparent;
     @include right(0);
+
     @media (max-width: $screen-tablet) {
       width: 100%;
     }
+
     #toolbar-nav {
       border: none;
+
       @media (max-width: $screen-tablet) {
         padding-top: 25px;
         padding-bottom: 10px;
@@ -121,8 +124,8 @@
     margin: 0;
     font-size: 12px;
     line-height: 1.5;
-    color: black;
-    color: rgba(black, 0.5);
+    color: #000000;
+    color: rgba(#000000, 0.5);
     white-space: nowrap;
     list-style: none;
     background: transparent !important;

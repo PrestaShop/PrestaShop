@@ -60,9 +60,9 @@
   //Utility classes
   @import "vendor/bootstrap-sass/utilities";
   @import "vendor/bootstrap-sass/responsive-utilities";
-
-  //Moved out from .bootstrap prefix since modal's javascript appends the background overlay just before /body.
 }
+
+//Moved out from .bootstrap prefix since modal's javascript appends the background overlay just before /body.
 @import "vendor/bootstrap-sass/modals";
 @import "vendor/bootstrap-sass/carousel";
 
@@ -98,8 +98,9 @@
   @import "controllers/order";
   @import "controllers/products";
 
-  //Plug-ins
 }
+
+//Plug-ins
 @import "partials/tinymce";
 @import "partials/growl";
 @import "partials/chosen";
