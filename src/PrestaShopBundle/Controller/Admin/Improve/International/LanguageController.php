@@ -392,6 +392,10 @@ class LanguageController extends FrameworkBundleAdminController
                     'You cannot change the status of the default language.',
                     'Admin.International.Notification'
                 ),
+                DefaultLanguageException::CANNOT_DELETE_DEFAULT_ERROR => $this->trans(
+                    'You cannot delete default language.',
+                    'Admin.International.Notification'
+                ),
                 DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR => $this->trans(
                     'You cannot delete the language currently in use. Please select a different language.',
                     'Admin.International.Notification'
