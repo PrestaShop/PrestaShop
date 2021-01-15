@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Repository;
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 

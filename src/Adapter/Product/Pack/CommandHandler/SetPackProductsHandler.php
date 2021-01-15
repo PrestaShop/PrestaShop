@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\CommandHandler\SetPackProductsHandlerInterface;
 
 /**
  * Handles @see SetPackProductsCommand using legacy object model

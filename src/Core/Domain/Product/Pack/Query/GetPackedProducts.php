@@ -24,17 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Defines contract to handle @see RemoveAllProductsFromPackCommand
+ * Retrieves product from a pack
  */
-interface RemoveAllProductsFromPackHandlerInterface
+class GetPackedProducts
 {
     /**
-     * @param RemoveAllProductsFromPackCommand $command
+     * @var ProductId
      */
-    public function handle(RemoveAllProductsFromPackCommand $command): void;
+    private $packId;
+
+    /**
+     * @param int $packId id of product which represents the pack
+     */
+    public function __construct(int $packId)
+    {
+        $this->packId = new ProductId($packId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getPackId(): ProductId
+    {
+        return $this->packId;
+    }
 }

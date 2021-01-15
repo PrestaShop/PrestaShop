@@ -24,13 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
 
 /**
- * Id of product which is a pack.
+ * Defines contract to handle @see RemoveAllProductsFromPackCommand
  */
-class PackId extends ProductId
+interface RemoveAllProductsFromPackHandlerInterface
 {
+    /**
+     * @param RemoveAllProductsFromPackCommand $command
+     */
+    public function handle(RemoveAllProductsFromPackCommand $command): void;
 }
