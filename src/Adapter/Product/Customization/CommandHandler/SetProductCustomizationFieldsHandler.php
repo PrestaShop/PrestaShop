@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles @see  SetProductCustomizationFieldsCommand using legacy object model
+ * Handles @see SetProductCustomizationFieldsCommand using legacy object model
  */
 class SetProductCustomizationFieldsHandler implements SetProductCustomizationFieldsHandlerInterface
 {
