@@ -15,8 +15,10 @@ class Order extends BOBasePage {
     this.validatedOrders = '#validatedOrders span.badge';
     this.shippingAddressBlock = '#addressShipping';
     this.invoiceAddressBlock = '#addressInvoice';
+    this.privateNoteDiv = '#privateNote';
     this.privateNoteTextarea = '#private_note_note';
     this.addNewPrivateNoteLink = '#privateNote a.js-private-note-toggle-btn';
+    this.privateNoteSaveButton = `${this.privateNoteDiv} .js-private-note-btn`;
 
     // Order page
     this.orderProductsTable = '#orderProductsTable';
@@ -332,6 +334,29 @@ class Order extends BOBasePage {
    */
   async clickAddNewPrivateNote(page) {
     await page.click(this.addNewPrivateNoteLink);
+    await this.waitForVisibleSelector(page, this.privateNoteTextarea);
+  }
+
+  /**
+   * Set private note
+   * @param page
+   * @param note
+   * @returns {Promise<string>}
+   */
+  async setPrivateNote(page, note) {
+    await this.setValue(page, this.privateNoteTextarea, note);
+    await page.click(this.privateNoteSaveButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Get private note content
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getPrivateNoteContent(page) {
+    return this.getTextContent(page, this.privateNoteTextarea);
   }
 }
 
