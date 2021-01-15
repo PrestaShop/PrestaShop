@@ -25,9 +25,9 @@
     }
   }
   .mails_field {
-    border-bottom: 1px solid #eee;
     padding-bottom: 8px;
     margin-bottom: 16px;
+    border-bottom: 1px solid #eee;
     ul.nav-pills {
       margin-bottom: 5px;
     }
@@ -35,8 +35,8 @@
       font-size: 12px;
       &.badge-danger {
         color: $brand-danger;
-        border: solid 2px $brand-danger;
         background-color: transparent;
+        border: solid 2px $brand-danger;
       }
     }
     .panel-footer {

@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "scss-lint": "stylelint \"**/*.scss\" --formatter verbose",
+    "scss-fix": "stylelint \"**/*.scss\" --fix",
     "build": "webpack --bail --progress --mode production",
     "watch": "webpack --bail --progress --watch --mode development"
   },
@@ -28,6 +30,8 @@
     "postcss-loader": "^3.0.0",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.3",
+    "stylelint": "^12.0.0",
+    "stylelint-config-prestashop": "^1.0.4",
     "uglify-save-license": "^0.4.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41",

@@ -38,15 +38,15 @@
   border-color: #ccc !important;
 }
 .highlight {
-  background-color: #F7E69F;
+  background-color: #f7e69f;
 }
 .text-orange {
   color: $amber;
 }
 .badge {
   padding: 1px 5px;
-  font-weight: normal;
   font-size: 1em;
+  font-weight: normal;
   line-height: inherit;
   letter-spacing: 0.0625em;
   background-color: $brand-primary;
@@ -63,7 +63,7 @@
     background-color: $brand-danger;
   }
   &.badge-critical {
-    background-color: darken($brand-danger,15%);
+    background-color: darken($brand-danger, 15%);
   }
 }
 .label {
@@ -76,15 +76,15 @@
 .nav-tabs {
   border-bottom: none;
   li .badge {
+    color: #666;
     background-color: white;
     border: solid 2px #eee;
-    color: #666;
   }
   li a {
-    font-size: 1.1em;
     font-family: $headings-font-family;
-    text-transform: uppercase;
+    font-size: 1.1em;
     font-weight: 300;
+    text-transform: uppercase;
   }
   li.active {
     a,
@@ -101,22 +101,22 @@
 //alert boxs
 @mixin alert-panel($icon, $color, $border-color: $color) {
   position: relative;
-  border: none;
   padding: 16px 15px 16px 56px;
   font-size: 14px;
+  border: none;
   border: solid 1px $border-color;
   border-radius: 8px;
-  &:before {
+  &::before {
     position: absolute;
     top: 13px;
     display: block;
-    height: 25px;
     width: 25px;
-    color: $border-color;
+    height: 25px;
     font-size: 24px;
+    color: $border-color;
     @include left(15px);
     @extend .icon;
-		@extend .#{$icon};
+    @extend .#{$icon};
   }
 }
 .alert.alert-warning {
@@ -132,29 +132,24 @@
   @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
 }
 .alert.alert-addons {
-  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
-  background-color: $alert-info-bg;
-
-  a, p {
-    color: #363a41;
-  }
+  $alert-addons-border: lighten($brand-addons, 10%);
+  $alert-addons-text: $brand-addons;
+  @include alert-variant(#F3F3F2, $alert-addons-border, $alert-addons-text);
+  @include alert-panel(icon-puzzle-piece, $brand-addons);
 }
 .alert.alert-onboarding {
-  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
-  background-color: $alert-info-bg;
-
-  a, p {
-    color: #363a41;
-  }
-
-  &:before {
-    left: 25px;
+  $alert-addons-border: lighten($brand-info, 10%);
+  $alert-addons-text: $brand-info;
+  @include alert-variant(white, $alert-addons-border, $alert-addons-text);
+  @include alert-panel(icon-rocket, white);
+  &::before {
     top: 40px;
+    left: 25px;
     font-size: 98px;
   }
+  padding: 20px 20px 20px 160px;
   border: solid 2px $brand-info;
   box-shadow: inset 140px 0 0 $brand-info;
-  padding: 20px 20px 20px 160px;
   .onboarding-step {
     width: 100%;
     height: 2em;
@@ -177,21 +172,21 @@
     }
   }
   h4 {
-    font-weight: 100;
+    margin-bottom: 0.4em;
     font-size: 2.1em;
-    color: #383F50;
-    margin-bottom: .4em;
+    font-weight: 100;
+    color: #383f50;
   }
   p {
-    font-size: 1.1em;
-    color: lighten(#383F50,30%);
     margin-bottom: 1em;
+    font-size: 1.1em;
+    color: lighten(#383f50, 30%);
   }
   .onboarding-action-container {
     padding-top: 3em;
   }
   hr {
-    border-color: lighten($brand-info,30%);
+    border-color: lighten($brand-info, 30%);
   }
   .progress {
     @include border-radius(3em);
@@ -204,19 +199,19 @@
 }
 .alert.alert-message {
   @include alert-panel(icon-comment, $brand-warning);
-  border: solid 2px $brand-warning;
   background-color: white;
+  border: solid 2px $brand-warning;
 }
 .alert h4 {
-  font-size: 1.45em;
   margin-bottom: 1em;
+  font-size: 1.45em;
 }
 .overflow-y {
   max-height: 200px;
   margin-bottom: 15px;
   overflow-y: auto;
 }
-.input[type='password'] {
+.input[type="password"] {
   font-size: 2em !important;
 }
 .pagination {
@@ -226,16 +221,16 @@
   dd:not(:last-child) {
     margin-bottom: 10px;
   }
-//colors
+  //colors
 }
 .attributes-color-container {
+  display: block;
   width: 40px;
   height: 25px;
-  display: block;
   border: solid 1px black;
 }
 #mColorPickerInput {
-  color: #000000;
+  color: #000;
 }
 //modals
 .modal-content-overflow {

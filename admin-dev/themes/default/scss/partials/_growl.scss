@@ -8,8 +8,8 @@ $namespace: "growl";
 $duration: 0.4s;
 
 #growls {
-  z-index: 50000;
   position: fixed;
+  z-index: 50000;
 
   &.default {
     top: 100px;
@@ -33,16 +33,16 @@ $duration: 0.4s;
   }
 }
 .growl {
-  opacity: 1;
   position: relative;
+  opacity: 1;
   @include border-radius(4px);
   @include transition(all $duration ease-in-out);
 
   &.#{$namespace}-incoming {
-    opacity: 0.0;
+    opacity: 0;
   }
   &.#{$namespace}-outgoing {
-    opacity: 0.0;
+    opacity: 0;
   }
   &.#{$namespace}-small {
     width: 200px;
@@ -60,27 +60,27 @@ $duration: 0.4s;
     margin: 15px;
   }
   &.#{$namespace}-default {
-    color: #FFF;
+    color: #fff;
     background: gray;
   }
   &.#{$namespace}-error {
     color: white;
-    background: rgba($brand-danger,0.8);
+    background: rgba($brand-danger, 0.8);
   }
   &.#{$namespace}-notice {
     color: white;
-    background: rgba($brand-success,0.8);
+    background: rgba($brand-success, 0.8);
   }
   &.#{$namespace}-warning {
     color: white;
-    background: rgba($brand-warning,0.8);
+    background: rgba($brand-warning, 0.8);
   }
   .#{$namespace}-close {
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 18px;
-    font-weight: normal;
     font-family: helvetica, verdana, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 18px;
+    cursor: pointer;
     @include float(right);
   }
   .#{$namespace}-title {

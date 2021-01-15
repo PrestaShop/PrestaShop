@@ -2,51 +2,51 @@
   margin-left: 200px;
 }
 .nobootstrap {
-  background-color: white;
   min-width: 1200px;
-  padding: 110px 30px 100px 30px;
+  padding: 110px 30px 100px;
+  background-color: white;
   form p {
-    margin: .5em 0 0;
-    padding: 0 0 .5em;
+    padding: 0 0 0.5em;
+    margin: 0.5em 0 0;
   }
   fieldset {
-    background-color: #EBEDF4;
-    border: 1px solid #CCCED7;
-    color: #585A69;
-    margin: 0 0 10px 0;
     padding: 1em;
+    margin: 0 0 10px;
+    color: #585a69;
+    background-color: #ebedf4;
+    border: 1px solid #ccced7;
     img {
       padding: 0 4px 0 0;
       vertical-align: bottom;
     }
   }
   legend {
-    background: #EBEDF4;
-    border: 1px solid #CCCED7;
-    font-weight: 700;
+    padding: 0.2em 0.5em;
     margin: 0;
-    padding: .2em .5em;
+    font-weight: 700;
     text-align: left;
+    background: #ebedf4;
+    border: 1px solid #ccced7;
     a {
       color: #585984;
       text-decoration: none;
     }
   }
   label {
-    color: #585a69;
-    text-shadow: 0 1px 0 #fff;
     float: left;
     width: 250px;
-    padding: .2em .5em 0 0;
-    text-align: right;
+    padding: 0.2em 0.5em 0 0;
     font-weight: bold;
+    color: #585a69;
+    text-align: right;
+    text-shadow: 0 1px 0 #fff;
     &.t {
       float: none;
+      padding: 0 5px;
+      margin: 0;
       clear: none;
-      padding: 0 5px 0;
-      margin: 0px;
-      font-weight: normal;
       font-size: 12px;
+      font-weight: normal;
       text-shadow: none;
     }
   }
@@ -62,63 +62,63 @@
   }
   .margin-form {
     padding: 0 0 1em 260px;
-    color: #7F7F7F;
-    font-size: .85em;
+    font-size: 0.85em;
+    color: #7f7f7f;
   }
   .button {
+    padding: 3px 8px;
+    margin: 5px 0;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    white-space: nowrap;
+    vertical-align: middle;
     cursor: pointer;
-    background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
-    background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
-    border-color: #CCCCCC #BBBBBB #A0A0A0;
-    border-left: 1px solid #BBBBBB;
-    border-radius: 3px 3px 3px 3px;
-    border-right: 1px solid #BBBBBB;
+    background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent;
+    border-color: #ccc #bbb #a0a0a0;
     border-style: solid;
     border-width: 1px;
-    color: #000000;
-    margin: 5px 0;
+    border-right: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-radius: 3px;
     outline: medium none;
-    padding: 3px 8px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
-    text-shadow: 0 1px 0 #fff;
-    text-decoration: none;
     &:hover {
-      border-color: #AAA #999 #888;
+      border-color: #aaa #999 #888;
     }
   }
   input {
     vertical-align: middle;
   }
   select {
-    border: 1px solid #ccc;
     font-size: 12px;
+    border: 1px solid #ccc;
   }
   input,
   textarea,
   option {
-    color: #000;
-    font-size: 12px;
-    margin: 0;
     padding: 0;
+    margin: 0;
+    font-size: 12px;
+    color: #000;
   }
   input[type="text"],
   input[type="password"],
   input[type="file"],
   textarea {
-    border: 1px solid #ccc;
-    background-color: #fff;
     padding: 2px 4px;
+    background-color: #fff;
+    border: 1px solid #ccc;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
   }
   .table_grid {
     width: 100%;
   }
   .table {
+    padding: 0;
     background-color: #fff;
     border: 1px solid #ccc;
-    padding: 0;
     border-radius: 3px;
     th a {
       text-decoration: underline;
@@ -128,42 +128,42 @@
     }
     tr {
       th {
-        background-color: #F1F1F1;
-        color: #333;
-        font-size: 13px;
         padding: 4px 6px;
+        font-size: 13px;
+        color: #333;
         text-align: left;
+        background-color: #f1f1f1;
         &.right {
           text-align: center;
         }
       }
       td {
-        border-bottom: 1px solid #ccc;
-        color: #333;
-        font-size: 12px;
         padding: 4px 4px 4px 6px;
+        font-size: 12px;
+        color: #333;
+        border-bottom: 1px solid #ccc;
       }
       &.row_hover.filter:hover td {
-        background: #F1F9FF;
+        background: #f1f9ff;
       }
       td.row_hover:hover table tr td {
         background: none;
       }
       &.action_details td {
-        background: #FAFAFA;
+        background: #fafafa;
       }
       &.alt_row.action_details td {
-        background: #E8E8E8;
+        background: #e8e8e8;
       }
       td.empty {
-        background: #FFF !important;
+        background: #fff !important;
         border-bottom: none;
       }
       td.first {
-        border-left: 1px solid #DEDEDE;
+        border-left: 1px solid #dedede;
       }
       td.last {
-        border-right: 1px solid #DEDEDE;
+        border-right: 1px solid #dedede;
       }
       &.small td {
         height: 15px;
@@ -174,29 +174,29 @@
       .filter {
         background-color: #f1f9ff;
       }
-// Helper 1.6
+      // Helper 1.6
     }
   }
 }
 .nobootstrap {
   .form-group {
-    clear: both;
-    margin-bottom: 1em;
     float: left;
     width: 100%;
+    margin-bottom: 1em;
+    clear: both;
     > div {
       float: left;
     }
   }
   .panel:not(.bootstrap) {
-    background-color: #EBEDF4;
-    border: 1px solid #CCCED7;
-    color: #585A69;
-    margin: 0 0 10px 0;
-    padding: 1em;
+    box-sizing: border-box;
     float: left;
     width: 100%;
-    box-sizing: border-box;
+    padding: 1em;
+    margin: 0 0 10px;
+    color: #585a69;
+    background-color: #ebedf4;
+    border: 1px solid #ccced7;
     img {
       padding: 0 4px 0 0;
       vertical-align: bottom;
@@ -205,18 +205,18 @@
       position: relative;
       top: -25px;
       display: inline-block;
-      background: #EBEDF4;
-      border: 1px solid #CCCED7;
-      font-weight: 700;
+      padding: 0.2em 0.5em;
       margin: 0;
-      padding: .2em .5em;
+      font-weight: 700;
       text-align: left;
+      background: #ebedf4;
+      border: 1px solid #ccced7;
       a {
         color: #585984;
         text-decoration: none;
       }
       i {
-        font-family: 'FontAwesome';
+        font-family: "FontAwesome";
       }
     }
     .help-block {
@@ -228,9 +228,9 @@
       clear: both;
       line-height: 1.3em;
       label {
-        padding: 0 10px 0 5px;
         float: left;
         width: auto;
+        padding: 0 10px 0 5px;
       }
       input[type=checkbox],
       input[type=radio] {
@@ -239,40 +239,40 @@
     }
     .radio {
       label {
-        clear: both;
         width: auto;
         margin-right: 4px;
+        clear: both;
       }
     }
     button {
+      padding: 3px 8px;
+      margin: 5px 0;
+      color: #000;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: 0 1px 0 #fff;
+      white-space: nowrap;
+      vertical-align: middle;
       cursor: pointer;
-      background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
-      background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
-      border-color: #CCCCCC #BBBBBB #A0A0A0;
-      border-left: 1px solid #BBBBBB;
-      border-radius: 3px 3px 3px 3px;
-      border-right: 1px solid #BBBBBB;
+      background: -moz-linear-gradient(center top, #f9f9f9, #e3e3e3) repeat scroll 0 0 transparent;
+      background: -webkit-gradient(linear, center top, center bottom, from(#f9f9f9), to(#e3e3e3)) repeat scroll 0 0 transparent;
+      border-color: #ccc #bbb #a0a0a0;
       border-style: solid;
       border-width: 1px;
-      color: #000000;
-      margin: 5px 0;
+      border-right: 1px solid #bbb;
+      border-left: 1px solid #bbb;
+      border-radius: 3px;
       outline: medium none;
-      padding: 3px 8px;
-      text-align: center;
-      vertical-align: middle;
-      white-space: nowrap;
-      text-shadow: 0 1px 0 #fff;
-      text-decoration: none;
       &:hover {
-        border-color: #AAA #999 #888;
+        border-color: #aaa #999 #888;
       }
     }
     .tree-panel-heading-controls {
-      font-size: 13px;
-      background-color: #DDE0E9;
-      margin: -8px -8px 20px;
       padding: 5px;
-      border-bottom: solid 1px #DFDFDF;
+      margin: -8px -8px 20px;
+      font-size: 13px;
+      background-color: #dde0e9;
+      border-bottom: solid 1px #dfdfdf;
       a {
         display: inline-block;
         padding: 0 8px;
@@ -283,9 +283,9 @@
       padding: 0 0 0 20px;
       list-style: none;
       input {
-        vertical-align: baseline;
         margin-right: 4px;
         line-height: normal;
+        vertical-align: baseline;
       }
       i {
         font-size: $icon-size-base;
@@ -295,20 +295,20 @@
         padding: 2px 5px;
         @include border-radius(4px);
         label {
-          font-size: 13px;
           float: none;
-          text-shadow: none;
+          font-size: 13px;
           font-weight: 400;
+          text-shadow: none;
         }
         &:hover {
-          background-color: #eee;
           cursor: pointer;
+          background-color: #eee;
         }
       }
       .tree-selected {
-        background-color: #CCCED7;
+        background-color: #ccced7;
         &:hover {
-          background-color: darken(#CCCED7,15%);
+          background-color: darken(#ccced7, 15%);
         }
         i.tree-dot {
           background-color: #eee;
@@ -319,8 +319,8 @@
         margin: 3px 0;
       }
       i.tree-dot {
-        display: inline-block;
         position: relative;
+        display: inline-block;
         width: 6px;
         height: 6px;
         margin: 0 4px;

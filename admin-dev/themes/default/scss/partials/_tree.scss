@@ -1,7 +1,7 @@
 .tree-panel-heading-controls {
-  line-height: 2.2em;
   font-size: 1.1em;
-	//text-transform: uppercase
+  line-height: 2.2em;
+  //text-transform: uppercase
   color: $brand-primary;
   i {
     font-size: $icon-size-base;
@@ -11,9 +11,9 @@
   list-style: none;
   @include padding(0, 0, 0, 20px);
   input {
-    vertical-align: baseline;
     margin-right: 4px;
     line-height: normal;
+    vertical-align: baseline;
   }
   i {
     font-size: $icon-size-base;
@@ -26,23 +26,23 @@
       font-weight: 400;
     }
     &:hover {
-      background-color: #eee;
       cursor: pointer;
+      background-color: #eee;
     }
   }
   .tree-selected {
     color: white;
     background-color: $brand-primary;
     &:hover {
-      background-color: darken($brand-primary,5%);
+      background-color: darken($brand-primary, 5%);
     }
     i.tree-dot {
       background-color: white;
     }
   }
   i.tree-dot {
-    display: inline-block;
     position: relative;
+    display: inline-block;
     width: 6px;
     height: 6px;
     margin: 0 4px;
@@ -62,9 +62,9 @@
   display: inline-block;
 }
 .tree-panel-heading-controls {
-  margin: -20px -20px 20px;
   padding: 5px;
-  border-bottom: solid 1px #DFDFDF;
+  margin: -20px -20px 20px;
+  border-bottom: solid 1px #dfdfdf;
 }
 .tree-actions {
   .twitter-typeahead {
@@ -78,7 +78,7 @@
   }
 }
 .tree-panel-label-title {
-  font-weight: 400;
   margin: 0;
+  font-weight: 400;
   @include padding(0, 0, 0, 8px);
 }

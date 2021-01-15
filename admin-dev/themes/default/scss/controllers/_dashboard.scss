@@ -16,8 +16,8 @@
 }
 .number-monospace {
   font-family: $font-family-mono !important;
-  word-spacing: -0.3em;
   font-weight: 200;
+  word-spacing: -0.3em;
 }
 .color_success {
   color: $brand-success;
@@ -27,7 +27,7 @@
 }
 .dash_trend_down {
   color: $brand-danger;
-  &:before {
+  &::before {
     font-family: FontAwesome;
     content: "\f0ab";
     @include margin-right(4px);
@@ -35,14 +35,14 @@
 }
 .dash_trend_up {
   color: $brand-success;
-  &:before {
+  &::before {
     font-family: FontAwesome;
     content: "\f0aa";
     @include margin-right(4px);
   }
 }
 .dash_trend_right {
-  &:before {
+  &::before {
     font-family: FontAwesome;
     content: "\f0a9";
     @include margin-right(4px);
@@ -52,32 +52,32 @@
   section > section {
     header {
       padding: 3px 8px;
-      color: white;
       font-size: 1.2em;
+      color: white;
       background-color: $brand-primary;
       @include margin(0, 0, 3px, 0);
       .small {
         display: block;
         clear: both;
+        font-family: $font-family-sans-serif;
+        font-size: 0.8em;
         font-variant: small-cap;
         text-transform: uppercase;
-        font-size: 0.8em;
-        font-family: $font-family-sans-serif;
       }
     }
   }
   .data_list {
     @extend .list-group;
-		padding: 0;
+    padding: 0;
     @include margin(0, 0, 10px, 0);
     li {
       @extend .list-group-item;
-			position: relative;
+      position: relative;
     }
     .data_value {
-      line-height: 39px;
       position: absolute;
       top: 0;
+      line-height: 39px;
       @include right(0);
       @include padding(0, 10px, 0, 0);
     }
@@ -87,33 +87,33 @@
     border-top: solid 1px #ddd;
     @include margin(8px, 0, 10px, 0);
     li {
-      padding: 3px 0;
       position: relative;
-      border: none;
+      padding: 3px 0;
       margin: 0;
+      border: none;
       border-bottom: dashed 1px #ddd;
     }
     .data_label {
-      text-transform: uppercase;
       color: #bbb;
+      text-transform: uppercase;
     }
     .data_value {
-      line-height: 25px;
       position: absolute;
       top: 0;
       padding: 0;
+      line-height: 25px;
       @include right(0);
     }
   }
   .data_list_large {
     @extend .list-unstyled;
-		padding: 0;
+    padding: 0;
     @include margin(8px, 0, 10px, 0);
     li {
-      padding: 6px 0;
       position: relative;
-      border: none;
+      padding: 6px 0;
       margin: 0;
+      border: none;
     }
     .data_label {
       line-height: 0.8em;
@@ -122,10 +122,10 @@
       }
     }
     .data_value {
-      text-align: right;
-      line-height: 0.6em;
       position: absolute;
       top: 0;
+      line-height: 0.6em;
+      text-align: right;
       @include right(0);
       @include padding(8px, 0, 0, 0);
       small {
@@ -135,22 +135,22 @@
   }
   .data_list_vertical {
     @extend .list-unstyled;
-		@extend .row;
-		padding: 0;
+    @extend .row;
+    padding: 0;
     border: 1px solid #ddd;
     @include margin(0, 0, 10px, 0);
     @include border-radius(3px);
     li {
       @extend .col-xs-6;
-			padding: 6px;
+      padding: 6px;
       @include border-left(solid 1px #ddd);
       &:first-child {
         border: none;
       }
     }
     .data_label {
-      min-height: 32px;
       display: block;
+      min-height: 32px;
       line-height: 1em;
       text-align: center;
     }
@@ -168,22 +168,22 @@
       dl {
         @include box-shadow(0 0 0 2px white inset);
         dt {
-          color: #777;
+          height: 2.6em;
           padding: 0;
           margin: 0;
-          height: 2.6em;
+          color: #777;
         }
         dd.data_value {
           color: #aaa;
           @extend .clearfix;
-					small {
+          small {
             font-size: 0.5em;
           }
         }
         dd.dash_trend {
-          background-color: white;
           width: 80px;
           margin: 0 auto;
+          background-color: white;
           @include border-radius(3px);
         }
         &:hover {
@@ -204,12 +204,12 @@
       }
     }
     dl {
-      cursor: pointer;
-      margin: 0;
       min-height: 70px;
-      text-align: center;
-      background-color: white;
       padding: 10px;
+      margin: 0;
+      text-align: center;
+      cursor: pointer;
+      background-color: white;
       border-bottom: 1px solid #ddd;
       @include border-left(1px solid #ddd);
       &:first-child {
@@ -224,10 +224,10 @@
       }
     }
     dt {
-      text-align: center;
       height: 37px;
-      line-height: 1em;
       font: 400 1.1em/120% $headings-font-family;
+      line-height: 1em;
+      text-align: center;
     }
     dd {
       span {
@@ -252,8 +252,11 @@
     }
   }
   #dashaddons {
+    padding: 10px 20px;
+    font-size: 1.3em;
+    text-align: center;
     background-color: white;
-    border: 1px dashed #C0C0C0;
+    border: 1px dashed #c0c0c0;
     @include border-radius(3px);
     a {
       display: block;
@@ -261,9 +264,6 @@
         text-decoration: none;
       }
     }
-    padding: 10px 20px;
-    font-size: 1.3em;
-    text-align: center;
   }
   #dashactivity {
     svg {
@@ -280,11 +280,11 @@
     .data_value {
       min-width: 30px;
       text-align: center;
-      &:before {
+      &::before {
         @extend .icon-spin;
-				@extend .icon;
-				@extend .icon-refresh;
-				font-size: 14px;
+        @extend .icon;
+        @extend .icon-refresh;
+        font-size: 14px;
         color: #ccc;
       }
       span,
@@ -297,13 +297,13 @@
     }
   }
   .tooltip-panel {
-    padding: 10px;
     min-width: 150px;
+    padding: 10px;
   }
   .tooltip-panel-heading {
+    margin-bottom: 10px;
     font: 400 1.2em/$line-height-base $headings-font-family;
     text-align: center;
-    margin-bottom: 10px;
     text-transform: uppercase;
     border-bottom: 1px solid #ccc;
   }
@@ -351,25 +351,25 @@
 }
 #dash_version {
   @extend .panel;
-	padding: 0!important;
+  padding: 0 !important;
   overflow: hidden;
   iframe {
-    height: 80px;
     width: 100%;
+    height: 80px;
   }
 }
 #calendar {
   button.btn-default.active {
-    border-color: darken($brand-primary,10%);
-    color: white;
     font-weight: 700;
+    color: white;
     background-color: $brand-primary;
+    border-color: darken($brand-primary, 10%);
     @include box-shadow(none);
   }
   @media (max-width: $screen-phone) {
     padding: 10px !important;
     button.btn-default {
-      padding: 5px 5px;
+      padding: 5px;
     }
   }
 }

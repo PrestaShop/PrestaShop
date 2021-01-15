@@ -32,9 +32,9 @@
   @import "vendor/bootstrap-sass/tables";
   @import "vendor/bootstrap-sass/forms";
   @import "vendor/bootstrap-sass/buttons";
-	//Components
+  //Components
   @import "vendor/bootstrap-sass/component-animations";
-	//@import "vendor/bootstrap-sass/glyphicons"
+  //@import "vendor/bootstrap-sass/glyphicons"
   @import "vendor/bootstrap-sass/dropdowns";
   @import "vendor/bootstrap-sass/button-groups";
   @import "vendor/bootstrap-sass/input-groups";
@@ -45,7 +45,7 @@
   @import "vendor/bootstrap-sass/pager";
   @import "vendor/bootstrap-sass/labels";
   @import "vendor/bootstrap-sass/badges";
-	//@import "vendor/bootstrap-sass/jumbotron"
+  //@import "vendor/bootstrap-sass/jumbotron"
   @import "vendor/bootstrap-sass/thumbnails";
   @import "vendor/bootstrap-sass/alerts";
   @import "vendor/bootstrap-sass/progress-bars";
@@ -54,14 +54,14 @@
   @import "vendor/bootstrap-sass/panels";
   @import "vendor/bootstrap-sass/wells";
   @import "vendor/bootstrap-sass/close";
-	// Components w/ JavaScript
+  // Components w/ JavaScript
   @import "vendor/bootstrap-sass/tooltip";
   @import "vendor/bootstrap-sass/popovers";
-	//Utility classes
+  //Utility classes
   @import "vendor/bootstrap-sass/utilities";
   @import "vendor/bootstrap-sass/responsive-utilities";
 
-//Moved out from .bootstrap prefix since modal's javascript appends the background overlay just before /body.
+  //Moved out from .bootstrap prefix since modal's javascript appends the background overlay just before /body.
 }
 @import "vendor/bootstrap-sass/modals";
 @import "vendor/bootstrap-sass/carousel";
@@ -86,7 +86,7 @@
   @import "partials/product";
   @import "partials/buttons";
 
-	//Controllers
+  //Controllers
   @import "controllers/carrier-wizard";
   @import "controllers/dashboard";
   @import "controllers/login";
@@ -98,7 +98,7 @@
   @import "controllers/order";
   @import "controllers/products";
 
-//Plug-ins
+  //Plug-ins
 }
 @import "partials/tinymce";
 @import "partials/growl";

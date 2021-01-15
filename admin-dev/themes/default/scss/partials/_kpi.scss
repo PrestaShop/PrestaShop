@@ -2,8 +2,8 @@
   padding-bottom: 10px !important;
   .kpi-refresh {
     position: absolute;
-    z-index: 1;
     right: 20px;
+    z-index: 1;
   }
 }
 .box-stats {
@@ -17,17 +17,17 @@
     @include border-radius(3px);
   }
   .kpi-content {
-    width: 100%;
     position: relative;
+    width: 100%;
     @include padding-left(40px);
     @include float(left);
     i {
       position: absolute;
       top: 0;
       font-size: 26px;
-      text-align: center;
-      color: white;
       line-height: 26px;
+      color: white;
+      text-align: center;
       @include left(0);
       @include border-radius(3px);
     }
@@ -37,16 +37,16 @@
     }
     .subtitle {
       display: block;
-      text-transform: uppercase;
       color: #aaa;
+      text-transform: uppercase;
     }
     .value {
       display: block;
+      overflow: hidden;
       clear: both;
       font-size: 1.5em;
-      white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
+      white-space: nowrap;
     }
   }
   &:hover {
@@ -56,37 +56,37 @@
 .color1 {
   i,
   .boxchart-overlay {
-    color: #2BA8E3 !important;
+    color: #2ba8e3 !important;
   }
   .value {
-    color: #2BA8E3;
+    color: #2ba8e3;
   }
 }
 .color2 {
   i,
   .boxchart-overlay {
-    color: #FF5450 !important;
+    color: #ff5450 !important;
   }
   .value {
-    color: #FF5450;
+    color: #ff5450;
   }
 }
 .color3 {
   i,
   .boxchart-overlay {
-    color: #9E5BA1 !important;
+    color: #9e5ba1 !important;
   }
   .value {
-    color: #9E5BA1;
+    color: #9e5ba1;
   }
 }
 .color4 {
   i,
   .boxchart-overlay {
-    color: #95CC6B !important;
+    color: #95cc6b !important;
   }
   .value {
-    color: #95CC6B;
+    color: #95cc6b;
   }
 }
 .data_chart {
@@ -94,15 +94,15 @@
     fill: white;
   }
   path {
+    fill: none;
     stroke: white;
     stroke-width: 2;
-    fill: none;
   }
   line {
     stroke: black;
   }
   .area {
-    fill: rgba(white,0.30);
+    fill: rgba(white, 0.3);
     stroke-width: 0;
   }
 }

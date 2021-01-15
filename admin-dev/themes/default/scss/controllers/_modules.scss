@@ -2,16 +2,16 @@
   h3 {
     position: relative;
     top: 0;
-    margin: 0;
     padding: 0;
-    background-color: transparent;
+    margin: 0;
     color: $main-color;
+    background-color: transparent;
     @include left(0);
   }
 
   select.active {
+    background: lighten($brand-primary, 40%);
     border: solid 1px $brand-primary;
-    background: lighten($brand-primary,40%);
 
     option {
       background: white !important;
@@ -21,8 +21,8 @@
 
 .hook_panel {
   margin-bottom: 10px !important;
-  border: solid #E6E6E6 1px;
-  @include box-shadow(rgba(black,0.10) 0 -2px 0 inset);
+  border: solid #e6e6e6 1px;
+  @include box-shadow(rgba(black,0.1) 0 -2px 0 inset);
   @include border-radius(3px);
   @include padding(10px, 10px, 5px, 10px);
 }
@@ -37,12 +37,12 @@
 
 .hook_panel_header {
   @include margin(0, -10px, 0, -10px)
-	@include padding(0, 10px, 10px, 10px)
-	.hook_name {
+    @include padding(0, 10px, 10px, 10px)
+    .hook_name {
+    padding: 0 4px;
     font-size: 1.4em;
     color: $brand-primary;
     background-color: white;
-    padding: 0 4px;
     @include border-radius(3px);
   }
 }
@@ -66,10 +66,10 @@
     width: 100%;
     padding: 5px 0;
     margin-bottom: -1px;
-    border: solid 1px #9ED0EC;
+    border: solid 1px #9ed0ec;
 
     &.highlight {
-      background-color: #F7E69F;
+      background-color: #f7e69f;
     }
   }
 }
@@ -82,8 +82,8 @@
   display: table-cell;
   width: 22px;
   min-height: 35px;
-  vertical-align: middle;
   text-align: center;
+  vertical-align: middle;
   @include border-right(1px solid #ddd);
 }
 .module_col_position {
@@ -93,13 +93,13 @@
   @include text-align(right);
 
   .positions {
-    border: solid 1px #ccc;
-    background-color: #eee;
     padding: 0 5px;
     font-size: 1.4em;
     color: #aaa;
-    cursor: move;
     text-shadow: white 1px 1px;
+    cursor: move;
+    background-color: #eee;
+    border: solid 1px #ccc;
     @include border-radius(3px);
     @include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset);
   }
@@ -127,22 +127,22 @@
   }
 }
 li.sortable-placeholder {
-  border: 1px dashed #CCC;
-  background-color: #eee;
   margin: 4px;
+  background-color: #eee;
+  border: 1px dashed #ccc;
   @include border-radius(5px);
 }
 td.module_active {
-  background-color: lighten($brand-success,10%) !important;
+  background-color: lighten($brand-success, 10%) !important;
 }
 td.module_inactive {
-  background-color: lighten($gray,50%) !important;
+  background-color: lighten($gray, 50%) !important;
 }
 .module-badge-popular,
 .module-badge-partner,
 .module-badge-bought {
   @extend .badge;
-	font-size: 12px;
+  font-size: 12px;
 }
 .module-badge-popular {
   background-color: $brand-addons;
@@ -161,8 +161,8 @@ td.module_inactive {
     .list-group-item {
       position: relative;
       overflow: hidden;
-      white-space: nowrap;
       text-overflow: ellipsis;
+      white-space: nowrap;
       @include padding-right(35px);
       .badge {
         position: absolute;
@@ -175,27 +175,27 @@ td.module_inactive {
   margin-top: 30px;
 }
 .quickview-price {
-  color: #666;
   font-size: 1.8em;
+  color: #666;
   @include float(right);
 }
 //stars
 .rating {
-  unicode-bidi: bidi-override;
-  direction: rtl;
   font-size: 20px;
+  direction: rtl;
+  unicode-bidi: bidi-override;
   span.star {
-    font-family: $icon-font-family;
     display: inline-block;
-    &:before {
+    font-family: $icon-font-family;
+    &::before {
+      color: #bbb;
       content: "\f006";
       @include padding-right(3px);
-      color: #bbb;
     }
-    &.active:before,
-    &.active ~ span.star:before {
+    &.active::before,
+    &.active ~ span.star::before {
+      color: #f5ab35;
       content: "\f005";
-      color: #F5AB35;
     }
   }
 }
@@ -208,7 +208,7 @@ td.module_inactive {
 .modules-addons-info {
   text-align: center;
   h4 {
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
   }
 }
 .modules-addons-buttons {

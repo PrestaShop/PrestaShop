@@ -1,9 +1,9 @@
 // PrestaShop Admin Theme Colors
-$main-color: #363A41 !default;
-$primary-color: #25B9D7 !default;
+$main-color: #363a41 !default;
+$primary-color: #25b9d7 !default;
 $primary-light-color: #7cd5e7 !default;
 $secondary-color: $greenPrestashop !default;
-$bg-content-color: #EFF1F2 !default;
+$bg-content-color: #eff1f2 !default;
 
 $contrasted-dark-default: #333;
 $contrasted-light-default: white;
@@ -15,10 +15,10 @@ $bg-panel-heading-color: hsl(hue($secondary-color), 10, 90);
 $badge-notif-color: $greenPrestashop;
 $brand-addons: $pinkPrestashop;
 
-$font-family-mono: 'Open Sans', Helvetica, Arial, sans-serif;
+$font-family-mono: "Open Sans", helvetica, arial, sans-serif;
 
 // FontAwesome icons
-$icon-font-family: 'FontAwesome';
+$icon-font-family: "FontAwesome";
 $fa-css-prefix: icon;
 $icon-size-base: 14px;
 
@@ -41,9 +41,9 @@ $card-icon-color: #6c868e;
 // Brand colors
 $brand-primary: $primary-color !default;
 
-$brand-success: #72C279 !default;
+$brand-success: #72c279 !default;
 $brand-warning: #fbbb22 !default;
-$brand-danger: #E08F95 !default;
+$brand-danger: #e08f95 !default;
 $brand-info: #25b9d7 !default;
 
 $alert-success-bg: #cbf2d4 !default;
@@ -63,7 +63,7 @@ $alert-danger-text: #363a41 !default;
 $alert-danger-border: #f44336 !default;
 
 // Sidebar
-$sidebar-menu-color: #BEBEBE !default;
+$sidebar-menu-color: #bebebe !default;
 $sidebar-menu-active-color: white !default;
 $sidebar-menu-hover-color: white !default;
 $sidebar-menu-bg-hover-color: #282b30;
@@ -77,11 +77,11 @@ $body-bg: $bg-content-color;
 $text-color: $gray;
 
 // Typography
-$FontPathOpenSans: '../node_modules/open-sans-fonts/open-sans';
-$url-font-content-name: 'Open Sans' !default;
-$url-font-headings-name: 'Open Sans' !default;
-$font-family-sans-serif: $url-font-content-name, Helvetica, Arial, sans-serif;
-$headings-font-family: $url-font-headings-name, Helvetica, Arial, sans-serif;
+$FontPathOpenSans: "../node_modules/open-sans-fonts/open-sans";
+$url-font-content-name: "Open Sans" !default;
+$url-font-headings-name: "Open Sans" !default;
+$font-family-sans-serif: $url-font-content-name, helvetica, arial, sans-serif;
+$headings-font-family: $url-font-headings-name, helvetica, arial, sans-serif;
 $font-size-base: 12px;
 $line-height-base: 1.428571429;
 $line-height-computed: floor($font-size-base * $line-height-base);
@@ -96,7 +96,7 @@ $border-radius-base: 4px;
 
 // $table-bg: transparent  overall background-color
 $table-bg-accent: #f9f9f9;
-$table-bg-hover: #EDF7FB;
+$table-bg-hover: #edf7fb;
 
 // Buttons
 $btn-default-color: $main-color;
@@ -107,9 +107,9 @@ $btn-primary-bg: $primary-color;
 $btn-primary-border: $primary-color;
 
 // Forms
-$input-bg: #FFFFFF;
+$input-bg: #fff;
 $input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2);
-$input-group-addon-bg: #F5F8F9;
+$input-group-addon-bg: #f5f8f9;
 $input-border: #bbcdd2;
 $input-focus-background: #f4fcfd;
 $input-focus-border: $primary-color;
@@ -122,7 +122,7 @@ $grid-gutter-width: 10px;
 
 // Basics of a navbar
 $navbar-height: 40px;
-$well-bg: #FCFDFE;
+$well-bg: #fcfdfe;
 
 // Media queries breakpoints
 // Tiny screen / phone
@@ -164,11 +164,11 @@ $widthSidebarSubmenu: 200px;
 $menu-item-size: 34px;
 $min-height: 950px;
 $gray-dark-text: #bebebe;
-$gray-dark-text-hover: #ffffff;
+$gray-dark-text-hover: #fff;
 $size-navbar-width: 13.13rem;
 $size-navbar-width-mini: 3.125rem;
 $size-header-height: 2.5rem;
-$header-mobile-padding-y: .625rem;
+$header-mobile-padding-y: 0.625rem;
 $medium-gray: #6c868e;
 $gray-medium: $medium-gray;
 

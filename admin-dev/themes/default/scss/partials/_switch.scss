@@ -21,10 +21,10 @@
 @mixin switch-light() {
   @include switch-shared();
   position: relative;
-  overflow: visible;
   padding: 0;
-	// Position the label over all the elements, except the slide-button (<a>)
-	// Clicking anywhere on the label will change the switch-state
+  overflow: visible;
+  // Position the label over all the elements, except the slide-button (<a>)
+  // Clicking anywhere on the label will change the switch-state
   label {
     position: relative;
     z-index: 3;
@@ -33,8 +33,8 @@
   }	// Don't hide the input from screen-readers and keyboard access
   input {
     position: absolute;
-    opacity: 0;
     z-index: 5;
+    opacity: 0;
     &:checked ~ a {
       @include left(0);
     }
@@ -69,7 +69,7 @@
     padding: 0;
     @include left(50%);
   }
-// Radio Switch
+  // Radio Switch
 }
 @mixin switch-toggle() {
   @include switch-shared();
@@ -90,25 +90,25 @@
   a {
     position: absolute;
     top: 0;
-    padding: 0;
     z-index: 1;
     width: 50%;
     height: 100%;
+    padding: 0;
     color: white;
-    border: solid 1px #279CBB;
     background-color: #2eacce;
+    border: solid 1px #279cbb;
     @include left(0);
-    @include box-shadow('#1B7088' 0 -1px 0 inset);
+    @include box-shadow("#1B7088" 0 -1px 0 inset);
   }
   input:last-of-type:checked ~ a {
-    border: solid 1px #CA6F6F;
-    background-color: #E08F95;
+    background-color: #e08f95;
+    border: solid 1px #ca6f6f;
     @include left(50%);
-    @include box-shadow('#5C5C5C' 0 -1px 0 inset);
+    @include box-shadow("#5C5C5C" 0 -1px 0 inset);
   }
   input:disabled ~ a {
-    border: solid 1px lighten(gray,20%) !important;
-    background-color: lighten(gray,30%) !important;
+    background-color: lighten(gray, 30%) !important;
+    border: solid 1px lighten(gray, 20%) !important;
     @include box-shadow(lighten(gray,20%) 0 -1px 0 inset !important);
   }	//Generate styles for the multiple states
   @for $i from 1 through 3 {
@@ -143,18 +143,18 @@
   }
   .prestashop-switch {
     margin-top: 3px;
-    background-color: #eee;
-    border-radius: 3px;
     color: #333;
     text-align: center;
+    background-color: #eee;
+    border-radius: 3px;
     @include box-shadow(rgba(black,0.15) 0 1px 4px 1px inset);
     * {
       outline: 0 !important;
     }
     label {
-      text-transform: uppercase;
-      color: #bbb;
       font-weight: 400;
+      color: #bbb;
+      text-transform: uppercase;
       cursor: pointer;
       @include transition(color 0.2s ease-out);
     }
@@ -168,8 +168,8 @@
     }
     &.switch-light input:checked {
       ~ a {
+        background-color: lighten($brand-success, 10%);
         border: solid 1px $brand-success;
-        background-color: lighten($brand-success,10%);
         @include box-shadow($brand-success 0 -1px 0 inset);
       }
       ~ span span {
@@ -183,8 +183,8 @@
     }
     &.switch-light input {
       ~ a {
+        background-color: lighten($brand-danger, 10%);
         border: solid 1px $brand-danger;
-        background-color: lighten($brand-danger,10%);
         @include box-shadow($brand-danger 0 -1px 0 inset);
       }
       ~ span span {
@@ -197,4 +197,4 @@
       }
     }
   }
-};
+}

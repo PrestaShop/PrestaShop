@@ -1,16 +1,16 @@
 html,
 body {
-  min-height: 100%;
   height: 100%;
+  min-height: 100%;
 }
 body {
-  font-weight: 400;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
   font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: 400;
+  line-height: $line-height-base;
   color: $text-color;
   background-color: $body-bg;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   &.mobile {
     #content.bootstrap {
       @media (max-width: $screen-lg) {
@@ -50,22 +50,22 @@ body {
     position: relative;
     padding: 20px;
     margin-bottom: 20px;
-    border: 1px solid $card-border-color;
     background-color: white;
+    border: 1px solid $card-border-color;
     @include border-radius(5px);
     @include box-shadow(0 0 4px 0 rgba(0, 0, 0, 0.06));
     &.panel-highlighted {
       border-color: $brand-primary !important;
-      @include box-shadow(rgba($brand-primary,.15) 0 0 0 6px inset !important);
+      @include box-shadow(rgba($brand-primary,0.15) 0 0 0 6px inset !important);
     }
     .panel-heading {
+      padding: 10px;
       font-family: $headings-font-family;
-      font-weight: $headings-font-weight;
       font-size: 14px;
+      font-weight: $headings-font-weight;
+      color: #555;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: #555;
-      padding: 10px;
       > .btn-group {
         margin-top: -7px;
       }
@@ -73,21 +73,21 @@ body {
         padding: 2px 6px !important;
       }
       a.btn {
-        font-family: $font-family-sans-serif;
-        text-transform: none;
         position: relative;
         top: 2px;
+        font-family: $font-family-sans-serif;
+        text-transform: none;
       }
       > i {
+        margin-top: -2px;
+        margin-right: 5px;
         font-size: 20px;
         color: $card-icon-color;
-        margin-right: 5px;
-        margin-top: -2px;
         vertical-align: middle;
       }
     }
     .panel {
-      border: solid 1px #DDDDDD;
+      border: solid 1px #ddd;
     }
     .panel.tab-content {
       @include border-radius(0 0 3px 3px);
@@ -95,24 +95,24 @@ body {
   }
   h3:not(.modal-title),
   .panel-heading {
-    border: none;
+    padding: 10px;
     font-size: 12px;
     text-transform: uppercase;
-    border-bottom: solid 1px #EEEEEE;
-    padding: 10px;
+    border: none;
+    border-bottom: solid 1px #eee;
     @include margin(-20px, -20px, 15px, -20px);
     i,
     a {
       color: contrasted($bg-panel-heading-color);
     }
     .badge {
-      color: $gray;
-      font-size: 1.1em;
-      line-height: 1.2em;
       padding: 0 10px;
+      font-size: 1.1em;
       font-weight: 700;
-      border: solid 1px lighten($gray-light,25%);
+      line-height: 1.2em;
+      color: $gray;
       background-color: white;
+      border: solid 1px lighten($gray-light, 25%);
       @include margin-left(0.4em);
       @include border-radius(20px);
       a {
@@ -121,17 +121,17 @@ body {
       }
     }
     .panel-heading-action {
-      line-height: 0;
       position: absolute;
       top: 6px;
+      line-height: 0;
       @include right(7px);
       .btn {
         padding: 4px 8px !important;
       }
       .btn-group {
         position: absolute;
-        white-space: nowrap;
         top: -2px;
+        white-space: nowrap;
         @include right(2px);
         a.btn {
           float: none;
@@ -143,16 +143,16 @@ body {
         @include right(6px);
       }
       a.list-toolbar-btn {
-        color: #CCC;
+        color: #ccc;
         @include float(left);
         &:hover {
-          text-decoration: none;
           color: $brand-primary;
+          text-decoration: none;
         }
         i {
-          text-align: center;
           font-size: 18px;
           line-height: 30px;
+          text-align: center;
         }
       }
     }
@@ -175,33 +175,33 @@ body {
   }
   .breadcrumb {
     background-color: white;
-    border: solid 1px darken($bg-content-color,10%);
+    border: solid 1px darken($bg-content-color, 10%);
   }
   .panel.panel-sm {
     padding: 8px !important;
     .panel-heading {
-      font-size: 13px;
       margin: -8px -8px 10px;
-      @include ltr {
+      font-size: 13px;
+      @include ltr () {
         padding-left: 8px;
       }
-      @include rtl {
+      @include rtl () {
         padding-right: 8px;
       }
     }
     .form-group {
       margin-bottom: 8px;
     }
-//data-focus
+    //data-focus
   }
 }
 .data-focus {
   &.data-focus-primary {
-    background-color: $brand-primary;
     color: white;
+    background-color: $brand-primary;
     @include border-radius(10px);
   }
-//orders
+  //orders
 }
 #customer_part {
   .customerCard {
@@ -209,15 +209,15 @@ body {
       color: $brand-success;
       border: solid 2px $brand-success;
     }
-//modal
+    //modal
   }
 }
 body.display-modal {
   #content,
   #main {
-    margin: 0;
     padding: 0;
-    background: #F8F8F8;
+    margin: 0;
+    background: #f8f8f8;
   }
 }
 .bootstrap {
@@ -232,7 +232,7 @@ body.display-modal {
     .alert {
       text-align: left;
     }
-//todo: remove temp fix for bootstrap RC1 -> final
+    //todo: remove temp fix for bootstrap RC1 -> final
   }
 }
 .bootstrap {
@@ -248,9 +248,9 @@ body.display-modal {
   .panel {
     .panel-footer {
       height: 73px;
-      border-color: #eee;
-      background-color: #FCFDFE;
       margin: 15px -20px -20px;
+      background-color: #fcfdfe;
+      border-color: #eee;
       .btn.pull-right:not(:first-child) {
         @include margin-right(5px);
       }
@@ -262,10 +262,10 @@ body.display-modal {
 }
 #header {
   .panel-footer {
-    margin: 15px 0 0 !important;
     height: 40px !important;
+    margin: 15px 0 0 !important;
   }
-//help containers
+  //help containers
 }
 #main.helpOpen {
   width: 70%;
@@ -275,15 +275,15 @@ body.display-modal {
 }
 #help-container {
   position: relative;
-  margin: 0;
-  padding: 0;
+  box-sizing: border-box;
   float: right;
   width: 30%;
+  padding: 0;
+  margin: 0;
   margin-top: 181px;
   margin-bottom: 50px;
-  background-color: white;
-  box-sizing: border-box;
   overflow-x: hidden;
+  background-color: white;
   @media (max-width: $screen-lg) {
     display: none;
   }
@@ -299,7 +299,7 @@ body.display-modal {
       padding-left: $paddingLeftPageClosed;
 
       .page-head {
-        padding-left: $paddingLeftPageClosed - .9375rem;
+        padding-left: $paddingLeftPageClosed - 0.9375rem;
       }
     }
   }
