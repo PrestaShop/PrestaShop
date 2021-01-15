@@ -14,4 +14,3 @@ jobs:
         uses: z3by/block-merge-commits-action@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          
