@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Customization\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandlerInterface;
