@@ -221,6 +221,8 @@ abstract class ModuleCore implements ModuleInterface
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
+    public static $customer_dependent_module_list = ['ps_featuredproducts', 'ps_bestsellers', 'ps_specials', 'ps_crossselling', 'ps_newproducts'];
+
     /**
      * Set the flag to indicate we are doing an import.
      *
@@ -2455,6 +2457,10 @@ abstract class ModuleCore implements ModuleInterface
             $cache_array[] = (int) $this->context->currency->id;
         }
         $cache_array[] = (int) $this->context->country->id;
+
+        if (in_array($name, self::$customer_dependent_module_list) && !empty($this->context->customer->id)) {
+            $cache_array[] = (int) $this->context->customer->id;
+        }
 
         return implode('|', $cache_array);
     }
