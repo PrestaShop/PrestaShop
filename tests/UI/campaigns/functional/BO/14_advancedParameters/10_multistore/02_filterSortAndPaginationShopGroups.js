@@ -18,7 +18,7 @@ const ShopGroupFaker = require('@data/faker/shopGroup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_advancedParameters_multistore_filterSortAndPaginationShopGroups';
+const baseContext = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopGroups';
 
 let browserContext;
 let page;
