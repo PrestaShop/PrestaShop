@@ -11,6 +11,7 @@
     "selector-max-combinators": null,
     "selector-class-pattern": null,
     "selector-descendant-combinator-no-non-space": null,
-    "function-blacklist": null
+    "function-blacklist": null,
+    "scss/dollar-variable-pattern": null
   }
 }

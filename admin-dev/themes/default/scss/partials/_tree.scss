@@ -1,6 +1,9 @@
 .tree-panel-heading-controls {
   font-size: 1.1em;
   line-height: 2.2em;
+  padding: 5px;
+  margin: -20px -20px 20px;
+  border-bottom: solid 1px #dfdfdf;
   //text-transform: uppercase
   color: $brand-primary;
   i {
@@ -31,13 +34,13 @@
     }
   }
   .tree-selected {
-    color: white;
+    color: #ffffff;
     background-color: $brand-primary;
     &:hover {
       background-color: darken($brand-primary, 5%);
     }
     i.tree-dot {
-      background-color: white;
+      background-color: #ffffff;
     }
   }
   i.tree-dot {
@@ -60,13 +63,7 @@
 }
 .tree-actions {
   display: inline-block;
-}
-.tree-panel-heading-controls {
-  padding: 5px;
-  margin: -20px -20px 20px;
-  border-bottom: solid 1px #dfdfdf;
-}
-.tree-actions {
+
   .twitter-typeahead {
     @include padding(0,0,0,4px);
     position: relative;
