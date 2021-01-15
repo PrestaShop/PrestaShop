@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProduct;
 interface GetPackedProductsHandlerInterface
 {
     /**
-     * @param \PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts $query
+     * @param GetPackedProducts $query
      *
      * @return PackedProduct[]
      */

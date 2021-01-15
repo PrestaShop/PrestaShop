@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler;
 
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
