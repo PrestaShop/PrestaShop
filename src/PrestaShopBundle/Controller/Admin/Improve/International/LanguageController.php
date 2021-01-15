@@ -332,8 +332,8 @@ class LanguageController extends FrameworkBundleAdminController
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
-                    $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
