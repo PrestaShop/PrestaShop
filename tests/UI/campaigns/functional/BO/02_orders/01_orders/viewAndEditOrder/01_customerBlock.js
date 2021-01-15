@@ -320,6 +320,8 @@ describe('Check customer block in view order page', async () => {
     it('should add private note', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPrivateNote', baseContext);
 
+      await viewOrderPage.clickAddNewPrivateNote(page);
+
       const result = await viewOrderPage.setPrivateNote(page, privateNote);
       await expect(result).to.contains(viewOrderPage.successfulUpdateMessage);
     });
@@ -401,13 +403,6 @@ describe('Check customer block in view order page', async () => {
 
       const note = await viewOrderPage.getPrivateNoteContent(page);
       await expect(note).to.not.equal(privateNote);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersSecond', baseContext);
-
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
     });
   });
 
