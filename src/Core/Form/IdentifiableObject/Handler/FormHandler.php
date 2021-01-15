@@ -138,8 +138,9 @@ final class FormHandler implements FormHandlerInterface
 
         // When we do a partial update we don't use the whole data in the form but only the submitted ones which
         // represents what was actually changed
-        $partialUpdate = $form instanceof PartialFormInterface && $form->usePartialUpdate();
-        if ($partialUpdate) {
+        $partialUpdate = false;
+        if ($form instanceof PartialFormInterface && $form->usePartialUpdate()) {
+            $partialUpdate = true;
             $data = $form->getSubmittedData();
         }
 

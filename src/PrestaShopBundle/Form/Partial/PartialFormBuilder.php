@@ -31,10 +31,11 @@ namespace PrestaShopBundle\Form\Partial;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * PartialFormBuilder is a form builder that returns a FormBuilder instead of a Form.
+ * PartialFormBuilder is a form builder that returns a PartialForm instead of a Form.
  * Since the class used by the Symfony FormBuilder cannot be configured we need to override
  * the builder.
  *
+ * @see PartialForm
  * @see ResolvedPartialFormType
  */
 class PartialFormBuilder extends FormBuilder
@@ -44,8 +45,12 @@ class PartialFormBuilder extends FormBuilder
      */
     public function getForm()
     {
-        // Get dispatcher before it becomes ImmutableEventDispatcher
+        // Get dispatcher before it becomes ImmutableEventDispatcher so that PartialForm can add an internal listener
         $dispatcher = $this->getEventDispatcher();
+
+        // The purpose of this builder is only to change the type of the returned Form
+        // so we use the parent method and let it build the Form as usual, then the returned
+        // form is used as input for PartialForm which is mostly a wrapper
         $form = parent::getForm();
 
         return new PartialForm($form, $dispatcher);
