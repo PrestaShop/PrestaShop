@@ -95,12 +95,12 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
                     $maxFieldSqlCondition = "$sqlField <= :{$filterName}_max";
 
                     switch ($this->computeMinMaxCase($value)) {
-                        case self::CASE_BOTH_FIELDS_ARE_EQUAL:
+                        case self::CASE_BOTH_FIELDS_EXIST_NOT_EQUAL:
                             $qb->andWhere("$minFieldSqlCondition AND $maxFieldSqlCondition");
                             $qb->setParameter("{$filterName}_min", $value['min_field']);
                             $qb->setParameter("{$filterName}_max", $value['max_field']);
                             break;
-                        case self::CASE_BOTH_FIELDS_EXIST_NOT_EQUAL:
+                        case self::CASE_ONLY_MIN_FIELD_EXISTS:
                             $qb->andWhere($minFieldSqlCondition);
                             $qb->setParameter("{$filterName}_min", $value['min_field']);
                             break;
@@ -108,7 +108,7 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
                             $qb->andWhere($maxFieldSqlCondition);
                             $qb->setParameter("{$filterName}_max", $value['max_field']);
                             break;
-                        case self::CASE_ONLY_MIN_FIELD_EXISTS:
+                        case self::CASE_BOTH_FIELDS_ARE_EQUAL:
                             $qb->andWhere("$sqlField = :$filterName");
                             $qb->setParameter($filterName, $value['min_field']);
                             break;
