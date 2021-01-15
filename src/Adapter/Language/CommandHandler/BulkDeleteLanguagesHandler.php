@@ -55,7 +55,7 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
             $this->assertLanguageIsNotInUse($language);
 
             if (false === $language->delete()) {
-                throw new LanguageException(sprintf('Failed to delele language "%s"', $language->iso_code));
+                throw new LanguageException(sprintf('Failed to delete language "%s"', $language->iso_code));
             }
         }
     }

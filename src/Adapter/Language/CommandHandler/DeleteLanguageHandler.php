@@ -54,7 +54,7 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
         Shop::setContext(Shop::CONTEXT_ALL);
 
         if (false === $language->delete()) {
-            throw new LanguageException(sprintf('Failed to delele language "%s"', $language->iso_code));
+            throw new LanguageException(sprintf('Failed to delete language "%s"', $language->iso_code));
         }
     }
 }
