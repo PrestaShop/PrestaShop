@@ -49,7 +49,7 @@ Check customer block content
 - Shipping and invoice address
 - Private note
 Check that private note is closed by default
-Check that private note does not contain the other customer note
+Check that the other customer doesn't have the private note
 */
 describe('Check customer block in view order page', async () => {
   // before and after functions
@@ -311,7 +311,7 @@ describe('Check customer block in view order page', async () => {
     it('should view the 1st order for the same customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage3', baseContext);
 
-      await ordersPage.goToOrder(page, 2);
+      await ordersPage.goToOrder(page, 1);
 
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
@@ -324,38 +324,6 @@ describe('Check customer block in view order page', async () => {
 
       const result = await viewOrderPage.setPrivateNote(page, privateNote);
       await expect(result).to.contains(viewOrderPage.successfulUpdateMessage);
-    });
-
-    it('should go back to Orders page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage3', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should view the 2nd order for the same customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage4', baseContext);
-
-      await ordersPage.goToOrder(page, 2);
-
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
-    });
-
-    it('should check that the private note is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPrivateNoteTextVisible', baseContext);
-
-      const result = await viewOrderPage.isPrivateNoteTextareaVisible(page);
-      await expect(result).to.be.true;
-
-      const note = await viewOrderPage.getPrivateNoteContent(page);
-      await expect(note).to.equal(privateNote);
     });
 
     it('should go back to Orders page', async function () {
@@ -403,6 +371,54 @@ describe('Check customer block in view order page', async () => {
 
       const note = await viewOrderPage.getPrivateNoteContent(page);
       await expect(note).to.not.equal(privateNote);
+    });
+
+    it('should go back to Orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage3', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
+
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it(`should filter the Orders table by 'Customer: ${DefaultAccount.lastName}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterOrderTable4', baseContext);
+
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultAccount.lastName);
+
+      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+      await expect(textColumn).to.contains(DefaultAccount.lastName);
+    });
+
+    it('should view the 2nd order for the customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage4', baseContext);
+
+      await ordersPage.goToOrder(page, 2);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
+
+    it('should check that the private note is visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPrivateNoteTextVisible', baseContext);
+
+      const result = await viewOrderPage.isPrivateNoteTextareaVisible(page);
+      await expect(result).to.be.true;
+
+      const note = await viewOrderPage.getPrivateNoteContent(page);
+      await expect(note).to.equal(privateNote);
+    });
+
+    it('should delete private note', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deletePrivateNote', baseContext);
+
+      const result = await viewOrderPage.setPrivateNote(page, '');
+      await expect(result).to.contains(viewOrderPage.successfulUpdateMessage);
     });
   });
 
