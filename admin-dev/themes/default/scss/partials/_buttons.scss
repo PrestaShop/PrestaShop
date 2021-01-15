@@ -6,8 +6,8 @@
     }
     &.active,
     &:focus {
+      color: #fff;
       background-color: $primary-color;
-      color: #FFFFFF;
       border-color: $primary-color !important;
     }
   }

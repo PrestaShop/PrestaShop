@@ -11,7 +11,7 @@
 $spinnerSize: 32px;
 
 // MIXINS
-@mixin prefix ( $property, $value ) {
+@mixin prefix( $property, $value ) {
   -webkit-#{$property}: $value;
   -moz-#{$property}: $value;
   -ms-#{$property}: $value;
@@ -39,7 +39,7 @@ $spinnerSize: 32px;
   &[data-color=#{$name}] {
     background: $color;
     &:hover {
-      background-color: lighten( $color, 5% );
+      background-color: lighten($color, 5%);
     }
   }
 }
@@ -50,14 +50,14 @@ $spinnerSize: 32px;
 
   .ladda-spinner {
     position: absolute;
+    top: 50%;
     z-index: 2;
     display: inline-block;
     width: $spinnerSize;
     height: $spinnerSize;
-    top: 50%;
     margin-top: -$spinnerSize/2;
-    opacity: 0;
     pointer-events: none;
+    opacity: 0;
   }
 
   .ladda-label {
@@ -67,18 +67,18 @@ $spinnerSize: 32px;
 
   .ladda-progress {
     position: absolute;
+    top: 0;
     width: 0;
     height: 100%;
-    top: 0;
-    background: rgba( 0, 0, 0, 0.2 );
     visibility: hidden;
+    background: rgba(0, 0, 0, 0.2);
     opacity: 0;
     @include left(0);
     @include transition( 0.1s linear all );
 
     &[data-loading] .ladda-progress {
-      opacity: 1;
       visibility: visible;
+      opacity: 1;
     }
   }
 }
@@ -87,7 +87,7 @@ $spinnerSize: 32px;
 .ladda-button,
 .ladda-button .ladda-spinner,
 .ladda-button .ladda-label {
-  @include transition( 0.3s cubic-bezier(0.175, 0.885, 0.320, 1.275) background-color );
+  @include transition( 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background-color );
 }
 
 .ladda-button[data-style=zoom-in],
@@ -163,9 +163,9 @@ $spinnerSize: 32px;
     padding-top: 54px;
 
     .ladda-spinner {
-      opacity: 1;
       top: 14px;
       margin-top: 0;
+      opacity: 1;
     }
 
     &[data-size="s"],
@@ -276,13 +276,13 @@ $spinnerSize: 32px;
 
   &[data-loading] {
     .ladda-label {
-      opacity: 0;
       top: -1em;
+      opacity: 0;
     }
 
     .ladda-spinner {
-      opacity: 1;
       margin-top: -$spinnerSize/2;
+      opacity: 1;
     }
   }
 }
@@ -303,13 +303,13 @@ $spinnerSize: 32px;
 
   &[data-loading] {
     .ladda-label {
-      opacity: 0;
       top: 1em;
+      opacity: 0;
     }
 
     .ladda-spinner {
-      opacity: 1;
       margin-top: -$spinnerSize/2;
+      opacity: 1;
     }
   }
 }
@@ -368,8 +368,8 @@ $spinnerSize: 32px;
 
 // CONTRACT
 .ladda-button[data-style=contract] {
-  overflow: hidden;
   width: 100px;
+  overflow: hidden;
 
   .ladda-spinner {
     @include left(50%);
@@ -378,8 +378,8 @@ $spinnerSize: 32px;
 }
 
 .ladda-button[data-style=contract][data-loading] {
-  border-radius: 50%;
   width: 52px;
+  border-radius: 50%;
 
   .ladda-label {
     opacity: 0;
@@ -392,15 +392,15 @@ $spinnerSize: 32px;
 
 // OVERLAY
 .ladda-button[data-style=contract-overlay] {
-  overflow: hidden;
   width: 100px;
+  overflow: hidden;
 
-  @include ltr {
-    box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0);
+  @include ltr () {
+    box-shadow: 0 0 0 3000px rgba(0, 0, 0, 0);
   }
 
-  @include rtl {
-    box-shadow: 0px 3000px 0px 0px rgba(0,0,0,0);
+  @include rtl () {
+    box-shadow: 0 3000px 0 0 rgba(0, 0, 0, 0);
   }
 
   .ladda-spinner {
@@ -409,15 +409,15 @@ $spinnerSize: 32px;
   }
 
   &[data-loading] {
-    border-radius: 50%;
     width: 52px;
+    border-radius: 50%;
 
-    @include ltr {
-      box-shadow: 0px 0px 0px 3000px rgba(0,0,0,0.8);
+    @include ltr () {
+      box-shadow: 0 0 0 3000px rgba(0, 0, 0, 0.8);
     }
 
-    @include rtl {
-      box-shadow: 0px 3000px 0px 0px rgba(0,0,0,0.8);
+    @include rtl () {
+      box-shadow: 0 3000px 0 0 rgba(0, 0, 0, 0.8);
     }
 
     .ladda-label {
@@ -433,9 +433,9 @@ $spinnerSize: 32px;
 .ladda-button {
   &[disabled],
   &[data-loading] {
-    border-color: rgba( 0, 0, 0, 0.07 );
     cursor: default;
     background-color: #999;
+    border-color: rgba(0, 0, 0, 0.07);
 
     &:hover {
       cursor: default;

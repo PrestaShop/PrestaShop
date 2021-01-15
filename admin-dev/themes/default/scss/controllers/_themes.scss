@@ -1,37 +1,37 @@
 .theme-container {
+  position: relative;
   width: 100%;
   height: 300px;
   overflow: hidden;
+  background-color: rgba(#4d576e, 0.3);
   border: solid 1px #ccc;
-  position: relative;
-  background-color: rgba(#4D576E,.3);
   @include border-radius(3px);
   .theme-title {
-    text-align: center;
     height: 40px;
-    line-height: 40px;
-    font-size: 16px;
-    background-color: #4D576E;
-    color: white;
-    margin: 0 0 10px 0;
     padding: 0;
+    margin: 0 0 10px;
+    font-size: 16px;
+    line-height: 40px;
+    color: white;
+    text-align: center;
+    background-color: #4d576e;
     border-bottom: solid 1px white;
   }
   .thumbnail-wrapper {
     .action-wrapper {
-      display: none;
       position: absolute;
       top: 40px;
       left: 0;
+      display: none;
       .action-overlay {
         width: 100%;
         height: 260px;
-        @include background-image(linear-gradient(rgba(#4D576E,.5),#4D576E));
+        @include background-image(linear-gradient(rgba(#4D576E,0.5),#4D576E));
       }
       .action-buttons {
         position: absolute;
-        width: 100%;
         top: 130px;
+        width: 100%;
         text-align: center;
       }
     }
@@ -44,5 +44,5 @@
   }
 }
 .addons-style-search-bar {
-  padding-top: 0px;
+  padding-top: 0;
 }

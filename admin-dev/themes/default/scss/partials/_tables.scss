@@ -1,18 +1,18 @@
 .table {
-  border-collapse: separate;
-  border-spacing: 0 2px 0 0;
   margin-bottom: 5px;
+  border-spacing: 0 2px 0 0;
+  border-collapse: separate;
 
   thead {
     > tr > th {
-      border: none;
       font-weight: normal;
       vertical-align: top;
-      border-bottom: solid 1px darken(#CAE5F4,10%);
+      border: none;
+      border-bottom: solid 1px darken(#cae5f4, 10%);
 
       span.title_box {
-        color: #656565;
         display: block;
+        color: #656565;
         word-wrap: nowrap;
         white-space: nowrap;
         &.active {
@@ -25,22 +25,22 @@
           color: black;
         }
         .label-tooltip {
-          color: #3586AE;
-          background-color: lighten(#D8EDF7,5%);
-          border: none;
-          border-bottom: solid 1px #D8EDF7;
           padding: 0 5px;
+          color: #3586ae;
+          background-color: lighten(#d8edf7, 5%);
+          border: none;
+          border-bottom: solid 1px #d8edf7;
         }
       }
     }
     > tr.filter > th {
-      background-color: lighten(#CAE5F4,8%);
+      background-color: lighten(#cae5f4, 8%);
       input[type="text"].filter,
       input[type="password"].filter,
       select.filter {
-        font-size: 11px;
         padding: 4px;
-        border-color: darken(#CAE5F4,10%);
+        font-size: 11px;
+        border-color: darken(#cae5f4, 10%);
       }
     }
   }
@@ -53,20 +53,20 @@
   }
   tbody {
     > tr > td {
-      border-top: none;
-      color: lighten(black,40%);
-      background-color: white;
       padding: 3px 7px;
-      vertical-align: middle;
-      word-wrap: nowrap;
       font-size: 12px;
-      border-bottom: solid 1px #EAEDEF;
+      color: lighten(black, 40%);
+      word-wrap: nowrap;
+      vertical-align: middle;
+      background-color: white;
+      border-top: none;
+      border-bottom: solid 1px #eaedef;
     }
     > tr.odd > td {
-      background-color: #FCFDFE;
+      background-color: #fcfdfe;
     }
     > tr:hover > td {
-      background-color: darken(#FCFDFE,2%);
+      background-color: darken(#fcfdfe, 2%);
     }
   }
   td.center,
@@ -78,35 +78,35 @@
   }
   td.dragHandle {
     .dragGroup {
-      width: 80px;
-      cursor: move;
-      text-align: center;
       position: relative;
+      width: 80px;
       font-size: $icon-size-base;
+      text-align: center;
+      cursor: move;
       @include padding(4px, 4px, 4px, 20px);
       @include border-radius(5px);
       &:hover {
         color: white;
         background-color: $brand-primary !important;
       }
-      &:before {
+      &::before {
         @extend .icon;
-				@extend .icon-arrows;
-				display: block;
-        height: 16px;
-        width: 16px;
+        @extend .icon-arrows;
         position: absolute;
         top: 8px;
+        display: block;
+        width: 16px;
+        height: 16px;
         @include left(6px);
       }
       .positions {
         display: inline-block;
-        border: solid 1px #ccc;
-        background-color: #eee;
+        width: 43px;
         padding: 0 5px;
         color: #aaa;
-        width: 43px;
         text-shadow: white 1px 1px;
+        background-color: #eee;
+        border: solid 1px #ccc;
         @include border-radius(3px);
         @include box-shadow(rgba(0,0,0,0.2) 0 1px 3px inset);
       }
@@ -124,7 +124,7 @@
   }
   tr.myDragClass {
     padding: 10px;
-    background-color: #EEEEEE;
+    background-color: #eee;
     td {
       color: white !important;
       background-color: $brand-primary !important;
@@ -138,8 +138,8 @@
   }
 }
 tr.highlighted td {
-  background-color: $brand-primary !important;
   color: white !important;
+  background-color: $brand-primary !important;
 }
 .bulk-actions {
   @include margin(17px, 0, 0, 0);
@@ -148,11 +148,11 @@ tr.highlighted td {
   }
 }
 .list-action-enable {
-  font-size: 1.3em;
   display: inline-block;
   width: 30px;
+  font-size: 1.3em;
+  color: rgba(white, 0.8);
   text-align: center;
-  color: rgba(white,0.8);
   @include border-radius(3px);
   &.action-enabled {
     color: $brand-success;
@@ -161,25 +161,25 @@ tr.highlighted td {
     color: $brand-danger;
   }
   &:hover {
-    color: #25B9D7;
+    color: #25b9d7;
   }
 }
 .list-empty {
-  background-color: #FCFDFE !important;
+  background-color: #fcfdfe !important;
   .list-empty-msg {
-    text-align: center;
     display: block;
     width: 50%;
     margin: 20px auto;
-    color: #999;
     font-family: $headings-font-family;
     font-size: 1.4em;
+    color: #999;
+    text-align: center;
   }
   .list-empty-icon {
-    color: #dedede;
     display: block;
     clear: both;
     font-size: $icon-size-base*6;
+    color: #dedede;
     text-shadow: white 1px 1px 0;
   }
 }
@@ -222,24 +222,24 @@ tr.highlighted td {
       width: 100% !important;
     }
     tr {
-      border: 1px solid #ccc;
-      @include box-shadow(#EAEDEF 0 2px 0 0 );
       width: 100%;
       margin-bottom: 6px;
+      border: 1px solid #ccc;
+      @include box-shadow(#EAEDEF 0 2px 0 0 );
       &:last-child {
         border-bottom: 1px solid #ccc;
       }
     }
     td {
       position: relative;
-      padding-left: 35% !important;
       width: 100% !important;
-      text-align: left !important;
-      line-height: 2em !important;
-      font-size: 1.15em !important;
-      white-space: nowrap;
+      padding-left: 35% !important;
       overflow: hidden;
+      font-size: 1.15em !important;
+      line-height: 2em !important;
+      text-align: left !important;
       text-overflow: ellipsis;
+      white-space: nowrap;
       &:last-child {
         border: none;
       }
@@ -250,38 +250,38 @@ tr.highlighted td {
         ul.dropdown-menu,
         .dropdown-menu li {
           position: relative;
+          z-index: 13;
+          display: inline-block;
+          float: right;
           padding: 0;
           margin: 0;
-          float: right;
-          display: inline-block;
           background: transparent;
           border: none;
-          z-index: 13;
           @include box-shadow(none);
         }
       }
       .dropdown-menu li a,
       a.btn,
       button.btn {
+        z-index: 13;
+        display: inline-block;
+        float: right;
+        padding: 12px 10px !important;
+        margin: 0 !important;
+        margin-right: 5px;
+        font-weight: bold;
+        color: $brand-primary;
         background-color: white;
         border: none;
-        padding: 12px 10px !important;
-        margin-right: 5px;
-        display: inline-block;
-        margin: 0 !important;
-        float: right;
-        border-left: 1px solid #EAEDEF;
-        z-index: 13;
-        color: $brand-primary;
-        font-weight: bold;
+        border-left: 1px solid #eaedef;
         @include box-shadow(none);
         @include border-radius(0);
         i {
           color: $brand-primary;
         }
         &:hover {
-          background-color: $brand-primary;
           color: white;
+          background-color: $brand-primary;
           i {
             color: white;
           }
@@ -289,28 +289,28 @@ tr.highlighted td {
       }
     }
     .odd td {
-      background-color: #FCFDFE !important;
+      background-color: #fcfdfe !important;
     }
     td.row-selector {
       display: none;
     }
-    td:before {
+    td::before {
       position: absolute;
       top: 4px;
       left: 12px;
       width: 30%;
-      border-right: 1px solid #EAEDEF;
       padding-right: 10px;
-      white-space: nowrap;
-      color: #aaa;
-      text-align: right;
       font-size: 0.9em;
       font-style: italic;
+      color: #aaa;
+      text-align: right;
+      white-space: nowrap;
+      border-right: 1px solid #eaedef;
     }
     td:last-child {
-      text-align: right !important;
       padding: 0 !important;
-      &:before {
+      text-align: right !important;
+      &::before {
         content: none !important;
       }
     }
@@ -321,8 +321,8 @@ tr.highlighted td {
   .table-responsive {
     width: 100%;
     margin-bottom: ($line-height-computed * 0.75);
-    overflow-y: hidden;
     overflow-x: auto;
+    overflow-y: hidden;
     border: 1px solid $table-border-color;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-overflow-scrolling: touch;
@@ -366,4 +366,4 @@ tr.highlighted td {
       }
     }
   }
-};
+}

@@ -1,13 +1,13 @@
 .js-mobile-menu {
   display: none;
-  float: left;
-  cursor: pointer;
-  padding-top: 0;
-  margin-left: 0.6rem;
-  margin-right: 0.6rem;
-  font-size: 1.8rem;
   flex-direction: column;
   justify-content: center;
+  float: left;
+  padding-top: 0;
+  margin-right: 0.6rem;
+  margin-left: 0.6rem;
+  font-size: 1.8rem;
+  cursor: pointer;
 
   @include media-breakpoint-down(md) {
     display: inline-flex;
@@ -19,34 +19,34 @@
   top: 0;
   bottom: 0;
   z-index: 502;
-  background: $gray-dark-menu;
   width: $size-navbar-width;
-  margin-top: $size-header-height;
   height: 100%;
+  margin-top: $size-header-height;
   overflow-y: auto;
-  transition: all .5s ease-out;
+  background: $gray-dark-menu;
+  transition: all 0.5s ease-out;
 
   .material-icons {
-    color: white;
     font-size: 1.188rem;
     line-height: inherit;
+    color: white;
   }
 
   &.mobile-nav {
-    margin-left: -100%;
     width: 70%;
-    margin-top: $size-header-height + (.625rem * 2);
+    margin-top: $size-header-height + (0.625rem * 2);
+    margin-left: -100%;
 
     &::before {
-      content: '\e5cd';
       position: fixed;
-      left: 75%;
       top: 5rem;
-      font-size: 1.5rem;
-      color: #ffffff;
-      font-family: 'Material Icons';
+      left: 75%;
       display: block;
+      font-family: "Material Icons";
+      font-size: 1.5rem;
+      color: #fff;
       pointer-events: none;
+      content: "\e5cd";
 
       @include media-breakpoint-only(md) {
         left: 50%;
@@ -79,10 +79,10 @@
     }
 
     .employee_avatar {
-      text-decoration: none;
-      text-align: center;
-      padding-left: 1.5rem;
       padding-top: 1rem;
+      padding-left: 1.5rem;
+      text-align: center;
+      text-decoration: none;
 
       @include media-breakpoint-down(md) {
         display: flex;
@@ -98,19 +98,19 @@
       }
 
       .material-icons {
-        line-height: 3.75rem;
         font-size: 3.75rem;
+        line-height: 3.75rem;
 
         @include media-breakpoint-down(md) {
-          line-height: 4.6875rem;
           font-size: 4.6875rem;
+          line-height: 4.6875rem;
         }
       }
 
       span {
-        color: white;
         display: block;
         margin-bottom: 0.625rem;
+        color: white;
 
         @include media-breakpoint-down(md) {
           font-size: 1rem;
@@ -135,8 +135,8 @@
 
     .shop-list {
       padding-bottom: 1rem;
-      text-align: center;
       font-weight: bold;
+      text-align: center;
 
       a {
         @include media-breakpoint-down(md) {
@@ -154,19 +154,19 @@
     }
 
     .shop-list-title {
-      color: $brand-primary;
-      text-transform: uppercase;
-      font-size: 1rem;
-      text-align: center;
       margin-bottom: 0.9375rem;
+      font-size: 1rem;
+      color: $brand-primary;
+      text-align: center;
+      text-transform: uppercase;
 
       &::after {
-        font-family: 'Material Icons';
-        content: "\E313";
+        margin-left: 0.625rem;
+        font-family: "Material Icons";
         font-size: 1.25rem;
         line-height: 1.375rem;
-        margin-left: 0.625rem;
         vertical-align: bottom;
+        content: "\E313";
       }
     }
 
@@ -206,17 +206,17 @@
       }
 
       li:first-child a {
+        padding: 0.9375rem 1.25rem;
+        font-size: 0.9375rem;
         color: $brand-primary;
         text-transform: uppercase;
-        font-size: 0.9375rem;
-        padding: 0.9375rem 1.25rem;
       }
     }
   }
 }
 
 .main-menu {
-  padding: 0 0 13.313rem 0;
+  padding: 0 0 13.313rem;
   margin: 0;
 
   &.sidebar-closed {
@@ -246,22 +246,22 @@
     display: block;
 
     #header_logout {
-      color: #F44336;
       margin-top: 1rem;
+      color: #f44336;
 
       i {
-        color: #F44336;
-        margin-right: .625rem;
+        margin-right: 0.625rem;
+        color: #f44336;
       }
     }
 
     &[data-submenu] {
       @include media-breakpoint-down(md) {
         a.link {
-          font-size: 1rem;
-          padding-top: .5rem;
-          padding-bottom: .5rem;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
           padding-left: 1.5rem;
+          font-size: 1rem;
           line-height: inherit;
 
           .material-icons {
@@ -286,8 +286,8 @@
 
     &.link-active {
       > .link {
-        border-left: .25rem solid #25b9d7;
-        padding-left: .638rem;
+        padding-left: 0.638rem;
+        border-left: 0.25rem solid #25b9d7;
 
         .material-icons {
           &:first-child {
@@ -308,18 +308,18 @@
     }
 
     > .link {
-      font-size: .75rem;
       display: flex;
-      height: initial;
-      line-height: 1rem;
       align-items: end;
+      height: initial;
+      padding: 0.5rem 0.3125rem 0.5rem 0.938rem;
+      overflow: hidden;
+      font-size: 0.75rem;
+      line-height: 1rem;
       color: $gray-dark-text;
       text-decoration: none;
-      padding: 0.5rem .3125rem 0.5rem .938rem;
+      text-overflow: initial;
       word-break: break-word;
       white-space: initial;
-      text-overflow: initial;
-      overflow: hidden;
       @include media-breakpoint-down(md) {
         font-size: 1rem;
       }
@@ -330,10 +330,10 @@
 
       .sub-tabs-arrow {
         margin-left: auto;
-        visibility: hidden;
+        line-height: inherit;
         color: #6c868e;
         vertical-align: middle;
-        line-height: inherit;
+        visibility: hidden;
       }
     }
 
@@ -341,8 +341,8 @@
     &.link-active,
     &.-hover {
       & > .link {
-        background: #202226;
         color: white;
+        background: #202226;
         transition: background 300ms ease;
 
         @include media-breakpoint-down(md) {
@@ -360,23 +360,23 @@
     }
 
     > .submenu {
+      display: none;
+      padding-left: 2.75rem;
+      white-space: nowrap;
       list-style: none;
       background: #202226;
-      display: none;
-      white-space: nowrap;
-      padding-left: 2.75rem;
 
       & > li {
         @include media-breakpoint-down(md) {
           a.link {
-            color: #BEBEBE;
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
+            color: #bebebe;
           }
         }
 
         &:first-of-type {
-          padding-top: .625rem;
+          padding-top: 0.625rem;
 
           @include media-breakpoint-down(md) {
             padding-top: 0;
@@ -384,7 +384,7 @@
         }
 
         &:last-of-type {
-          padding-bottom: .750rem;
+          padding-bottom: 0.75rem;
 
           @include media-breakpoint-down(md) {
             padding-bottom: 0;
@@ -410,18 +410,18 @@
   .link-leveltwo {
     @extend .link-levelone;
 
-		&.link-active {
+    &.link-active {
       > .link {
         padding-left: 0;
-        border-left: none;
         color: white;
+        border-left: none;
       }
     }
 
     > .link {
       height: initial;
-      line-height: 0.9rem;
       padding: 0.3125rem 0.3rem 0.3125rem 0;
+      line-height: 0.9rem;
 
       @include media-breakpoint-down(md) {
         padding-top: 1.4rem;
@@ -438,19 +438,19 @@
 
 .category-title {
   display: block;
-  font-weight: bold;
+  padding: 0.875rem 0 0.75rem;
+  margin: 1.813rem 0 0 0.938rem;
   font-size: 0.75rem;
+  font-weight: bold;
   border-top: 1px solid #bbcdd2;
-  margin: 1.813rem 0 0 .938rem;
-  padding: .875rem 0 .750rem 0;
 
   @include media-breakpoint-down(md) {
-    line-height: 1.25rem;
+    padding-bottom: 0.25rem;
     margin-top: 1rem;
-    border-top: none;
     font-size: 1rem;
-    padding-bottom: .25rem;
     font-weight: normal;
+    line-height: 1.25rem;
+    border-top: none;
   }
 
   & > .title {
@@ -460,14 +460,14 @@
 }
 
 .menu-collapse {
-  height: .813rem;
-  font-size: 2rem;
   display: block;
-  cursor: pointer;
-  text-align: right;
-  padding: .688rem .938rem 1.188rem 0;
-  line-height: .813rem;
+  height: 0.813rem;
+  padding: 0.688rem 0.938rem 1.188rem 0;
+  font-size: 2rem;
+  line-height: 0.813rem;
   color: $gray-dark-text;
+  text-align: right;
+  cursor: pointer;
 
   @include media-breakpoint-down(md) {
     display: none;
@@ -475,7 +475,7 @@
   }
 
   .material-icons {
-    color: #BEBEBE;
+    color: #bebebe;
 
     &:last-child {
       margin-left: -1.313rem;
@@ -490,17 +490,17 @@
   }
 
   .menu-collapse {
+    padding-right: 0.8rem;
     transform: rotate(180deg);
-    padding-right: .8rem;
   }
 
   .nav-bar {
-    overflow: visible !important;
     width: $size-navbar-width-mini;
+    overflow: visible !important;
 
     &-overflow {
-      overflow: hidden;
       height: 100%;
+      overflow: hidden;
     }
 
     .main-menu {
@@ -516,8 +516,8 @@
       }
 
       .category-title {
-        margin-top: 0.8rem;
         padding-bottom: 0;
+        margin-top: 0.8rem;
       }
 
       .link-levelone {
@@ -531,8 +531,8 @@
 
         &.ul-open {
           > .link {
-            transition: all 0s ease 0s;
             width: 14.6875rem;
+            transition: all 0s ease 0s;
 
             > span {
               display: inline-block;
@@ -542,9 +542,9 @@
 
           ul.submenu {
             position: absolute !important;
+            left: 50px;
             display: block !important;
             width: 200px !important;
-            left: 50px;
             padding-left: 5px;
           }
         }
@@ -552,7 +552,7 @@
         .link-leveltwo {
           &:first-of-type {
             padding-top: 0 !important;
-            margin-top: .2rem;
+            margin-top: 0.2rem;
           }
 
           &:last-of-type {
@@ -568,15 +568,15 @@
     }
 
     @media (max-height: 870px) {			// this two tabs need to be flipped, otherwise
-			// css issue with bottom of the page
+      // css issue with bottom of the page
       #subtab-ShopParameters.ul-open,
       #subtab-AdminAdvancedParameters.ul-open {
         ul.submenu {
           display: flex !important;
           flex-direction: column-reverse;
+          margin-top: 35px;
           transform: rotate(180deg);
           transform-origin: top;
-          margin-top: 35px;
 
           li {
             transform: rotate(180deg);
@@ -592,15 +592,15 @@
 }
 
 .mobile-layer {
-  display: none;
-  transition: all 0.2s ease-in-out;
   position: fixed;
-  background: rgba(0,0,0,.8);
-  width: 100%;
-  height: 100%;
-  z-index: 501;
   top: 0;
   left: 0;
+  z-index: 501;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  transition: all 0.2s ease-in-out;
 
   &.expanded {
     display: block;

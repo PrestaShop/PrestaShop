@@ -1,13 +1,13 @@
 #footer {
-  display: block;
-  width: 100%;
-  height: 50px;
   position: fixed;
   bottom: 0;
   z-index: 600;
-  background-color: rgba(black,0.8);
-  color: #aaa;
+  display: block;
+  width: 100%;
+  height: 50px;
   line-height: 50px;
+  color: #aaa;
+  background-color: rgba(black, 0.8);
   @include animate(fadeInUp, 0.3s);
   a {
     color: #ccc;
@@ -16,21 +16,21 @@
     display: none !important;
   }
   #go-top {
-    display: block;
-    height: 30px;
-    width: 30px;
     position: fixed;
     right: 10px;
     bottom: 10px;
     z-index: 9003;
-    padding: 0px 6px;
-    margin: -2px 0px 0px;
-    text-align: center;
-    line-height: 30px;
-    text-decoration: none;
-    color: #fff;
-    cursor: pointer;
+    display: block;
+    width: 30px;
+    height: 30px;
+    padding: 0 6px;
+    margin: -2px 0 0;
     font-size: 16px;
+    line-height: 30px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
     background-color: $main-color;
     @include right(10px);
     &:hover {
@@ -49,11 +49,11 @@
     }
   }
   .footer-contact {
-    padding: 7px 0 0 0;
-    line-height: 35px;
-    white-space: nowrap;
+    padding: 7px 0 0;
     overflow: hidden;
+    line-height: 35px;
     text-overflow: ellipsis;
+    white-space: nowrap;
     @include margin(0,0,6px,6px);
     strong {
       font-weight: 400;
@@ -63,10 +63,10 @@
 }
 a.link-social {
   i {
-    font-size: 14px;
+    display: inline-block;
     width: 24px;
     height: 24px;
-    display: inline-block;
+    font-size: 14px;
     line-height: 24px !important;
     text-align: center;
     @include margin(0, 4px, 0, 0);
@@ -78,25 +78,25 @@ a.link-social {
 }
 .link-youtube i {
   color: white;
-  background-color: #FF0000;
+  background-color: #f00;
   &:hover {
-    color: #FF0000;
+    color: #f00;
     background-color: white;
   }
 }
 .link-twitter i {
   color: white;
-  background-color: #7CCEEF;
+  background-color: #7cceef;
   &:hover {
-    color: #7CCEEF;
+    color: #7cceef;
     background-color: white;
   }
 }
 .link-facebook i {
   color: white;
-  background-color: #557DBB;
+  background-color: #557dbb;
   &:hover {
-    color: #557DBB;
+    color: #557dbb;
     background-color: white;
   }
 }

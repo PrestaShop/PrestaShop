@@ -12,7 +12,7 @@
   .stepContainer {
     position: relative;
     display: block;
-		//overflow: hidden
+    //overflow: hidden
     clear: both;
     div.content {
       position: absolute;
@@ -21,8 +21,8 @@
       clear: both;
     }
     .StepTitle {
-      display: block;
       position: relative;
+      display: block;
       clear: both;
     }
   }
@@ -30,21 +30,21 @@
     position: relative;
     display: block;
     float: left;
-    list-style: none;
-    padding: 0;
-    margin: 0 0 10px 0;
-    clear: both;
     width: 100%;
+    padding: 0;
+    margin: 0 0 10px;
+    clear: both;
+    list-style: none;
     &.nbr_steps_4 {
       li {
-        width: 25%;
         float: left;
+        width: 25%;
       }
     }
     &.nbr_steps_5 {
       li {
-        width: 25%;
         float: left;
+        width: 25%;
       }
     }
   }
@@ -53,11 +53,11 @@
     display: block;
     overflow: hidden;
     a {
-      color: #ccc;
-      height: 32px;
-      display: block;
       position: relative;
+      display: block;
+      height: 32px;
       margin: 0 16px 0 0;
+      color: #ccc;
       text-decoration: none;
       outline-style: none;
       .stepNumber {
@@ -65,59 +65,59 @@
         float: left;
         width: 24px;
         height: 32px;
-        margin-right: 3px;
-        text-align: center;
         padding: 0 5px;
+        margin-right: 3px;
         font-size: 30px;
         line-height: 32px;
         color: white;
+        text-align: center;
       }
       .stepDesc {
         position: relative;
-        text-align: left;
-        font-size: 13px;
-        height: 32px;
         display: table-cell;
-        vertical-align: middle;
+        height: 32px;
+        font-size: 13px;
         line-height: 13px;
+        text-align: left;
+        vertical-align: middle;
       }
       .chevron {
-        border: 16px solid transparent;
-        border-left: 14px solid white;
-        border-right: 0;
         position: absolute;
-        right: -16px;
         top: 0;
-        &:after {
-          border: 16px solid transparent;
-          border-left: 14px solid #ccc;
-          border-right: 0;
+        right: -16px;
+        border: 16px solid transparent;
+        border-right: 0;
+        border-left: 14px solid white;
+        &::after {
           position: absolute;
-          content: "";
-          right: 2px;
           top: -16px;
+          right: 2px;
+          content: "";
+          border: 16px solid transparent;
+          border-right: 0;
+          border-left: 14px solid #ccc;
         }
       }
     }
     a.disabled {
       color: #777;
       background-color: #ccc;
-      .chevron:after {
+      .chevron::after {
         border-left: 14px solid #ccc;
       }
     }
     a.selected {
-      color: #F8F8F8;
+      color: #f8f8f8;
       cursor: text;
       background-color: $main-color;
-      .chevron:after {
+      .chevron::after {
         border-left: 14px solid $main-color;
       }
     }
     a.done {
       color: white;
       background-color: $brand-success;
-      .chevron:after {
+      .chevron::after {
         border-left: 14px solid $brand-success;
       }
     }
@@ -129,23 +129,23 @@
     position: relative;
     display: none;
     float: left;
-    margin: 4px 0 0 5px;
     padding: 5px;
-    border: 1px solid #FFD700;
-    background-color: #FFFFDD;
-    color: #5A5655;
+    margin: 4px 0 0 5px;
+    color: #5a5655;
+    background-color: #ffd;
+    border: 1px solid #ffd700;
     @include border-radius(5px);
   }
   .msgBox .content {
-    padding: 0px;
     float: left;
+    padding: 0;
   }
   #carrier_logo_block {
     right: 10px;
   }
   .wizard_error {
     @extend .alert;
-		@extend .alert-danger;
+    @extend .alert-danger;
   }
   .range_inf td,
   .range_sup td {
@@ -153,8 +153,8 @@
   }
   .range_type {
     width: 220px;
-    text-align: right;
     font-weight: bold;
+    text-align: right;
   }
   .range_data {
     width: 110px;

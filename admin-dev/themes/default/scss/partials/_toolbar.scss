@@ -1,24 +1,24 @@
 .page-head {
-  width: 100%;
-  height: 100px;
-  margin: 0;
   position: fixed;
   top: $size-header-height;
+  left: 0;
   z-index: 499;
-  background-color: white;
-  border-bottom: #DFDFDF 1px solid;
-  color: #363A41;
+  width: 100%;
+  height: 100px;
   padding: 0 0 0 210px;
+  margin: 0;
+  color: #363a41;
+  background-color: white;
+  border-bottom: #dfdfdf 1px solid;
+
+  transition: padding-left 0.5s ease-out;
 
   .mobile & {
     top: $size-header-height + ($header-mobile-padding-y * 2);
   }
-  @media (max-width: breakpoint-max('md')) {
+  @media (max-width: breakpoint-max("md")) {
     padding: 0;
   }
-
-  transition: padding-left .5s ease-out;
-  left: 0;
 
   &.with-tabs {
     height: 140px;
@@ -27,15 +27,15 @@
     padding-left: 15px;
   }
   .page-title {
-    float: left;
-    clear: left;
     position: relative;
-    margin: 0 0 .9375rem;
+    float: left;
+    padding: 0.3125rem 0;
+    margin: 0 0 0.9375rem;
+    clear: left;
     font: 20pt $font-family-sans-serif;
-    color: #363A41;
-    white-space: nowrap;
-    padding: .3125rem 0;
     line-height: 1.2;
+    color: #363a41;
+    white-space: nowrap;
 
     a {
       border-bottom: dotted 1px white;
@@ -53,8 +53,8 @@
     @include float(left);
     position: absolute;
     margin-top: 60px;
-    @include left($widthSidebarNav+20px);
     font-family: $url-font-content-name;
+    @include left($widthSidebarNav+20px);
     @media (max-width: $screen-tablet) {
       @include left(70px);
     }
@@ -72,24 +72,24 @@
         padding-top: 25px;
         padding-bottom: 10px;
         margin-top: 30px;
-        background: #ffffff;
+        background: #fff;
       }
     }
     .btn-toolbar {
-      margin: 0;
       justify-content: flex-end;
+      margin: 0;
       @include padding(3px, 0, 0, 0);
       .toolbar_btn {
         position: relative;
         padding: 20px 5px !important;
+        overflow: hidden;
         font-size: 12px;
         line-height: 8px;
         color: $main-color;
         text-align: center;
+        text-overflow: ellipsis;
         text-shadow: none;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         @include margin(0, 3px, 2px, 0);
         @media (max-width: $screen-desktop) {
           width: 46px;
@@ -116,17 +116,17 @@
     }
   }
   ul.page-breadcrumb {
-    list-style: none;
+    float: left;
+    padding: 0.3125rem 0;
     margin: 0;
-    padding: .3125rem 0;
+    font-size: 12px;
     line-height: 1.5;
     color: black;
-    font-size: 12px;
-    color: rgba(black,0.5);
+    color: rgba(black, 0.5);
+    white-space: nowrap;
+    list-style: none;
     background: transparent !important;
     border: none !important;
-    white-space: nowrap;
-    float: left;
     @include border-radius(0);
     li {
       i {
@@ -137,18 +137,18 @@
         position: absolute;
         top: 2px;
         font-size: 42px;
-        color: darken($secondary-color,15%);
+        color: darken($secondary-color, 15%);
         @include padding-right(5px);
         @include border-right(solid 1px darken($secondary-color,15%));
         @include left(-60px);
       }
-      &:before {
-        color: darken($secondary-color,15%);
+      &::before {
+        color: darken($secondary-color, 15%);
       }
       a {
-        color: #363A41;
+        color: #363a41;
         &:hover {
-          color: #363A41;
+          color: #363a41;
         }
       }
     }
@@ -158,25 +158,25 @@
     background-color: #fff;
 
     ul {
+      font-weight: 400;
       border-top: 1px solid #dfdfdf;
       border-bottom: 1px solid #dfdfdf;
-      font-weight: 400;
     }
     li {
       display: inline-block;
 
       a {
-        padding: .9375rem 1.25rem;
-        vertical-align: middle;
-        color: #6c868e;
         box-sizing: border-box;
-        font-size: .875rem;
+        padding: 0.9375rem 1.25rem;
+        font-size: 0.875rem;
         line-height: 1.5;
+        color: #6c868e;
+        vertical-align: middle;
 
         &.current {
-          border-bottom: 3px solid #3ed2f0;
-          background-color: #f4f9fb;
           color: #363a41;
+          background-color: #f4f9fb;
+          border-bottom: 3px solid #3ed2f0;
         }
       }
     }
@@ -188,6 +188,6 @@
   }
 }
 .page-header-toolbar-back {
-  border: none !important;
   display: inline-block;
+  border: none !important;
 }
