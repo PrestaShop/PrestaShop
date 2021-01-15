@@ -26,37 +26,64 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPackUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult;
 
 /**
- * Handles @see SetPackProductsCommand using legacy object model
+ * Holds packed product data
  */
-final class SetPackProductsHandler extends AbstractProductHandler implements SetPackProductsHandlerInterface
+class PackedProduct
 {
     /**
-     * @var ProductPackUpdater
+     * @var int
      */
-    private $productPackUpdater;
+    private $productId;
 
     /**
-     * @param ProductPackUpdater $productPackUpdater
+     * @var int
+     */
+    private $quantity;
+
+    /**
+     * @var int
+     */
+    private $combinationId;
+
+    /**
+     * @param int $productId
+     * @param int $quantity
+     * @param int $combinationId
      */
     public function __construct(
-        ProductPackUpdater $productPackUpdater
+        int $productId,
+        int $quantity,
+        int $combinationId
     ) {
-        $this->productPackUpdater = $productPackUpdater;
+        $this->productId = $productId;
+        $this->quantity = $quantity;
+        $this->combinationId = $combinationId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    public function handle(SetPackProductsCommand $command): void
+    public function getProductId(): int
     {
-        $this->productPackUpdater->setPackProducts($command->getPackId(), $command->getProducts());
+        return $this->productId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
     }
 }

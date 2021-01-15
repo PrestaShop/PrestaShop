@@ -26,64 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\CommandHandler\RemoveAllProductsFromPackHandlerInterface;
 
 /**
- * Holds packed product data
+ * Handles @see RemoveAllProductsFromPackCommand using legacy object model
  */
-class PackedProduct
+final class RemoveAllProductsFromPackHandler extends AbstractProductHandler implements RemoveAllProductsFromPackHandlerInterface
 {
     /**
-     * @var int
+     * @var ProductPackUpdater
      */
-    private $productId;
+    private $productPackUpdater;
 
     /**
-     * @var int
-     */
-    private $quantity;
-
-    /**
-     * @var int
-     */
-    private $combinationId;
-
-    /**
-     * @param int $productId
-     * @param int $quantity
-     * @param int $combinationId
+     * @param ProductPackUpdater $productPackUpdater
      */
     public function __construct(
-        int $productId,
-        int $quantity,
-        int $combinationId
+        ProductPackUpdater $productPackUpdater
     ) {
-        $this->productId = $productId;
-        $this->quantity = $quantity;
-        $this->combinationId = $combinationId;
+        $this->productPackUpdater = $productPackUpdater;
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getProductId(): int
+    public function handle(RemoveAllProductsFromPackCommand $command): void
     {
-        return $this->productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCombinationId(): int
-    {
-        return $this->combinationId;
+        $this->productPackUpdater->setPackProducts($command->getPackId(), []);
     }
 }

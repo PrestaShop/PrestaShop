@@ -26,17 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
 use RuntimeException;
 
 /**
  * Sets products of product pack
- *
- * @todo this should be moved into a new PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command namespace
  */
 class SetPackProductsCommand
 {
