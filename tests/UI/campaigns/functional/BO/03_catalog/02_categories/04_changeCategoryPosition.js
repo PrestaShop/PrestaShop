@@ -29,7 +29,7 @@ describe('Change category position', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-  });await categoriesPage.closeSfToolBar(page);
+  }); await categoriesPage.closeSfToolBar(page);
 
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);

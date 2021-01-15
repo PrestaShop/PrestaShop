@@ -161,7 +161,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage1', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -211,7 +211,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage2', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -287,7 +287,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should go back to Orders page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -309,7 +309,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should view the 1st order for the same customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage3', baseContext);
 
       await ordersPage.goToOrder(page, 2);
 
@@ -325,7 +325,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should go back to Orders page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage3', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -338,7 +338,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should view the 2nd order for the same customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage4', baseContext);
 
       await ordersPage.goToOrder(page, 2);
 
@@ -357,7 +357,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should go back to Orders page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage4', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -370,7 +370,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterTableSecond', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterOrderTable3', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
@@ -379,7 +379,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPageSecond', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage5', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -429,7 +429,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should filter list by lastName', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByLastname', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await customersPage.filterCustomers(page, 'input', 'lastname', customerData.lastName);
 
