@@ -72,7 +72,7 @@ jobs:
             token: ${{ secrets.GITHUB_TOKEN }}
             commit-message: Updated JS Routing file
             title: 'Updated JS Routing file'
-            body: >
+            body: |
                     | Questions         | Answers
                     | ----------------- | -------------------------------------------------------
                     | Branch?           | develop
