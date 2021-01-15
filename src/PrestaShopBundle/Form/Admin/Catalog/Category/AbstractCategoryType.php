@@ -283,7 +283,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         new Length([
                             'max' => SeoSettings::MAX_KEYWORDS_LENGTH,
                             'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
+                                'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
                                     '%limit%' => SeoSettings::MAX_KEYWORDS_LENGTH,
