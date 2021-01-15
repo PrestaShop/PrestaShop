@@ -54,5 +54,5 @@ final class SeoSettings
     /**
      * Maximum length of SEO keywords (value is constrained by database)
      */
-    const MAX_KEYWORDS_LENGTH = 255;
+    public const MAX_KEYWORDS_LENGTH = 255;
 }
