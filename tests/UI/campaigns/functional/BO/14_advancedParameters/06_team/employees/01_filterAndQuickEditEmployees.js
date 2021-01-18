@@ -8,7 +8,7 @@ const loginCommon = require('@commonTests/loginBO');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
-const {DefaultAccount} = require('@data/demo/employees');
+const {DefaultEmployee} = require('@data/demo/employees');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard/index');
@@ -96,7 +96,7 @@ describe('Filter And Quick Edit Employees', async () => {
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: DefaultAccount.lastName,
+            filterValue: DefaultEmployee.lastName,
           },
       },
       {

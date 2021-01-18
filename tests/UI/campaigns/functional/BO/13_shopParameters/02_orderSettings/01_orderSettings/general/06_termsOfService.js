@@ -15,7 +15,7 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -119,7 +119,7 @@ describe('Enable terms of service', async () => {
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultAccount);
+        await checkoutPage.customerLogin(page, DefaultCustomer);
       }
 
       // Address step - Go to delivery step

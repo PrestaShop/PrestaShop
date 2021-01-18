@@ -16,7 +16,7 @@ const checkoutPage = require('@pages/FO/checkout');
 const foLoginPage = require('@pages/FO/login');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {DefaultFrTax} = require('@data/demo/tax');
 
 // Import test context
@@ -181,7 +181,7 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        await foLoginPage.customerLogin(page, DefaultAccount);
+        await foLoginPage.customerLogin(page, DefaultCustomer);
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
       });
