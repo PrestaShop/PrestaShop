@@ -138,6 +138,16 @@ class ShopSettings extends BOBasePage {
 
     return this.getTextContent(page, columnSelector);
   }
+
+  /**
+   * Go to edit shop group page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async gotoEditShopPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
 }
 
 module.exports = new ShopSettings();
