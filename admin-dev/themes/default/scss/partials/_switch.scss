@@ -43,7 +43,7 @@
     position: absolute;
     width: 100%;
     margin: 0;
-    font-weight: normal;
+    font-weight: 500;
     @include text-align(left);
     @include left(0);
     span {
@@ -94,7 +94,7 @@
     width: 50%;
     height: 100%;
     padding: 0;
-    color: white;
+    color: #fff;
     background-color: #2eacce;
     border: solid 1px #279cbb;
     @include left(0);
@@ -107,9 +107,11 @@
     @include box-shadow("#5C5C5C" 0 -1px 0 inset);
   }
   input:disabled ~ a {
-    background-color: lighten(gray, 30%) !important;
-    border: solid 1px lighten(gray, 20%) !important;
-    @include box-shadow(lighten(gray,20%) 0 -1px 0 inset !important);
+    // stylelint-disable
+    background-color: lighten(#808080, 30%) !important;
+    border: solid 1px lighten(#808080, 20%) !important;
+    @include box-shadow(lighten(#808080,20%) 0 -1px 0 inset !important);
+    // stylelint-enable
   }	//Generate styles for the multiple states
   @for $i from 1 through 3 {
     $state: $i + 2;
@@ -148,7 +150,9 @@
     background-color: #eee;
     border-radius: 3px;
     @include box-shadow(rgba(black,0.15) 0 1px 4px 1px inset);
+
     * {
+      // stylelint-disable-next-line
       outline: 0 !important;
     }
     label {
@@ -159,7 +163,7 @@
       @include transition(color 0.2s ease-out);
     }
     input:checked + label {
-      color: white;
+      color: #fff;
     }
     > span {
       color: #666;
@@ -174,7 +178,7 @@
       }
       ~ span span {
         &:first-of-type {
-          color: white;
+          color: #fff;
         }
         &:last-of-type {
           color: #ccc;
@@ -192,7 +196,7 @@
           color: #ccc;
         }
         &:last-of-type {
-          color: white;
+          color: #fff;
         }
       }
     }

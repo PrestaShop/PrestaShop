@@ -8,7 +8,7 @@
   padding: 0 0 0 210px;
   margin: 0;
   color: #363a41;
-  background-color: #ffffff;
+  background-color: #fff;
   border-bottom: #dfdfdf 1px solid;
 
   transition: padding-left 0.5s ease-out;
@@ -38,15 +38,15 @@
     white-space: nowrap;
 
     a {
-      border-bottom: dotted 1px #ffffff;
+      border-bottom: dotted 1px #fff;
       &:hover {
-        color: #000000;
-        border-color: #000000;
+        color: #000;
+        border-color: #000;
       }
     }
   }
   a {
-    color: #ffffff;
+    color: #fff;
     text-decoration: none;
   }
   h4.page-subtitle {
@@ -82,9 +82,10 @@
       justify-content: flex-end;
       margin: 0;
       @include padding(3px, 0, 0, 0);
+
       .toolbar_btn {
         position: relative;
-        padding: 20px 5px !important;
+        padding: 20px 5px;
         overflow: hidden;
         font-size: 12px;
         line-height: 8px;
@@ -124,12 +125,14 @@
     margin: 0;
     font-size: 12px;
     line-height: 1.5;
-    color: #000000;
-    color: rgba(#000000, 0.5);
+    color: #000;
+    color: rgba(#000, 0.5);
     white-space: nowrap;
     list-style: none;
+    /* stylelint-disable */
     background: transparent !important;
     border: none !important;
+    /* stylelint-enable */
     @include border-radius(0);
     li {
       i {
@@ -185,12 +188,14 @@
     }
   }
 }
+
 .page-sidebar-closed {
   .page-head {
     padding-left: 4.0625rem;
   }
 }
+
 .page-header-toolbar-back {
   display: inline-block;
-  border: none !important;
+  border: none;
 }
