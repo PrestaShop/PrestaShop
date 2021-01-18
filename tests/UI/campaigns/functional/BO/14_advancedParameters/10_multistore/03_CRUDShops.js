@@ -105,7 +105,7 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
   // 3 : Update shop
   describe('Update shop', async () => {
     it('should go to edit the created shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditShopGroupPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditShopPage', baseContext);
 
       await shopPage.filterTable(page, 'a!name', createShopData.name);
 
@@ -116,66 +116,26 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
     });
 
     it('should edit shop and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateShopGroup', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateShop', baseContext);
 
       const textResult = await addShopPage.setShop(page, updateShopData);
       await expect(textResult).to.contains(addShopPage.successfulUpdateMessage);
     });
   });
 
- /* // 6 : Delete the shop
+  // 4 : Delete the shop
   describe('delete shop', async () => {
-    it('should go to the created shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedShopPage', baseContext);
-
-      await multiStorePage.goToShopPage(page, shopID);
-
-      const pageTitle = await shopPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(updateShopData.name);
-    });
-
     it('should delete the shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteShop', baseContext);
 
-      const numberOfShops = await shopPage.getNumberOfElementInGrid(page);
-      await expect(numberOfShops).to.be.above(1);
-
-      await shopPage.filterTable(page, 'a!name', shopData.name);
+      await shopPage.filterTable(page, 'a!name', updateShopData.name);
 
       const textResult = await shopPage.deleteShop(page, 1);
       await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
-
-      const numberOfShopsAfterDelete = await shopPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopsAfterDelete).to.be.equal(1);
-    });
-
-    it('should go to "Advanced parameters > Multi store" page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePageToDeleteShopGroup2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.multistoreLink,
-      );
-
-      const pageTitle = await multiStorePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(multiStorePage.pageTitle);
-    });
-
-    it('should delete the shop group', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteEditedSHopGroup', baseContext);
-
-      await multiStorePage.filterTable(page, 'a!name', updateShopData.name);
-
-      const textResult = await multiStorePage.deleteShopGroup(page, 1);
-      await expect(textResult).to.contains(multiStorePage.successfulDeleteMessage);
-
-      const numberOfShopsAfterDelete = await multiStorePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShopsAfterDelete).to.be.equal(numberOfShops);
     });
   });
 
-  // 7 : Disable multi store
+  // 5 : Disable multi store
   describe('Disable multistore', async () => {
     it('should go to "Shop parameters > General" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
@@ -198,5 +158,5 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
       const result = await generalPage.setMultiStoreStatus(page, false);
       await expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
-  });*/
+  });
 });
