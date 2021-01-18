@@ -5,7 +5,7 @@
 
   thead {
     > tr > th {
-      font-weight: normal;
+      font-weight: 500;
       vertical-align: top;
       border: none;
       border-bottom: solid 1px darken(#cae5f4, 10%);
@@ -16,13 +16,13 @@
         word-wrap: nowrap;
         white-space: nowrap;
         &.active {
-          font-weight: bold;
+          font-weight: 700;
         }
         a {
           text-decoration: none;
         }
         a.active {
-          color: black;
+          color: #000;
         }
         .label-tooltip {
           padding: 0 5px;
@@ -55,10 +55,10 @@
     > tr > td {
       padding: 3px 7px;
       font-size: 12px;
-      color: lighten(black, 40%);
+      color: lighten(#000, 40%);
       word-wrap: nowrap;
       vertical-align: middle;
-      background-color: white;
+      background-color: #fff;
       border-top: none;
       border-bottom: solid 1px #eaedef;
     }
@@ -85,10 +85,12 @@
       cursor: move;
       @include padding(4px, 4px, 4px, 20px);
       @include border-radius(5px);
+
       &:hover {
-        color: white;
-        background-color: $brand-primary !important;
+        color: #fff;
+        background-color: $brand-primary;
       }
+
       &::before {
         @extend .icon;
         @extend .icon-arrows;
@@ -104,7 +106,7 @@
         width: 43px;
         padding: 0 5px;
         color: #aaa;
-        text-shadow: white 1px 1px;
+        text-shadow: #fff 1px 1px;
         background-color: #eee;
         border: solid 1px #ccc;
         @include border-radius(3px);
@@ -126,7 +128,7 @@
     padding: 10px;
     background-color: #eee;
     td {
-      color: white !important;
+      color: #fff;
       background-color: $brand-primary !important;
       @include transform(translate(5px,10px));
     }
@@ -138,7 +140,7 @@
   }
 }
 tr.highlighted td {
-  color: white !important;
+  color: #fff;
   background-color: $brand-primary !important;
 }
 .bulk-actions {
@@ -151,7 +153,7 @@ tr.highlighted td {
   display: inline-block;
   width: 30px;
   font-size: 1.3em;
-  color: rgba(white, 0.8);
+  color: rgba(#fff, 0.8);
   text-align: center;
   @include border-radius(3px);
   &.action-enabled {
@@ -166,6 +168,7 @@ tr.highlighted td {
 }
 .list-empty {
   background-color: #fcfdfe !important;
+
   .list-empty-msg {
     display: block;
     width: 50%;
@@ -178,9 +181,9 @@ tr.highlighted td {
   .list-empty-icon {
     display: block;
     clear: both;
-    font-size: $icon-size-base*6;
+    font-size: $icon-size-base * 6;
     color: #dedede;
-    text-shadow: white 1px 1px 0;
+    text-shadow: #fff 1px 1px 0;
   }
 }
 .date_range .input-group:first-child {
@@ -241,7 +244,12 @@ tr.highlighted td {
       text-overflow: ellipsis;
       white-space: nowrap;
       &:last-child {
+        padding: 0 !important;
+        text-align: right !important;
         border: none;
+        &::before {
+          content: none !important;
+        }
       }
       .btn-group-action {
         .dropdown-toggle {
@@ -269,9 +277,9 @@ tr.highlighted td {
         padding: 12px 10px !important;
         margin: 0 !important;
         margin-right: 5px;
-        font-weight: bold;
+        font-weight: 700;
         color: $brand-primary;
-        background-color: white;
+        background-color: #fff;
         border: none;
         border-left: 1px solid #eaedef;
         @include box-shadow(none);
@@ -280,10 +288,10 @@ tr.highlighted td {
           color: $brand-primary;
         }
         &:hover {
-          color: white;
+          color: #fff;
           background-color: $brand-primary;
           i {
-            color: white;
+            color: #fff;
           }
         }
       }
@@ -306,13 +314,6 @@ tr.highlighted td {
       text-align: right;
       white-space: nowrap;
       border-right: 1px solid #eaedef;
-    }
-    td:last-child {
-      padding: 0 !important;
-      text-align: right !important;
-      &::before {
-        content: none !important;
-      }
     }
     .btn-group {
       float: none !important;
