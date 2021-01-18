@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Partial;
 
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * PartialFormBuilder is a form builder that returns a PartialForm instead of a Form.
@@ -41,7 +42,7 @@ use Symfony\Component\Form\FormBuilder;
 class PartialFormBuilder extends FormBuilder
 {
     /**
-     * {@inheritdoc}
+     * @return PartialForm|FormInterface
      */
     public function getForm()
     {

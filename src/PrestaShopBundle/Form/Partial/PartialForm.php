@@ -304,7 +304,7 @@ class PartialForm implements \IteratorAggregate, PartialFormInterface
 
     public function getRoot()
     {
-        return $this->innerForm->getRoot();
+        return $this->getParent() ? $this->getParent()->getRoot() : $this;
     }
 
     public function isRoot()
