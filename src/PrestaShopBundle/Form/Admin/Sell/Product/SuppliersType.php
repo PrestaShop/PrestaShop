@@ -76,18 +76,9 @@ class SuppliersType extends TranslatorAwareType
                 'expanded' => true,
                 'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
             ])
+            ->add('supplier_references', CollectionType::class, [
+                'entry_type' => SupplierReferencesType::class,
+            ])
         ;
-
-        foreach ($suppliers as $supplierId) {
-            $builder->add('product_suppliers_by_supplier_' . $supplierId, CollectionType::class, [
-                'entry_type' => ProductSupplierType::class,
-                'label' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'entry_options' => [
-                    'label' => false,
-                ],
-            ]);
-        }
     }
 }
