@@ -35,52 +35,53 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInterface
 {
     /**
-     * @param ProductId $productId
-     * @param array $formData
-     *
-     * @return RemoveAllAssociatedProductSuppliersCommand|SetProductSuppliersCommand|null
+     * {@inheritDoc}
      */
-    public function buildCommand(ProductId $productId, array $formData)
+    public function buildCommand(ProductId $productId, array $formData): array
     {
         if (!isset($formData['suppliers'])) {
-            return null;
+            return [];
         }
 
         $suppliers = $formData['suppliers'];
 
-        if (isset($suppliers['supplier_ids']) && empty($suppliers['supplier_ids'])) {
-            return new RemoveAllAssociatedProductSuppliersCommand($productId->getValue());
+        if (isset($suppliers['supplier_references']) && empty($suppliers['supplier_references'])) {
+            return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue())];
         }
 
         $productSuppliers = [];
-        foreach ($suppliers['supplier_ids'] as $supplierId) {
-            foreach ($suppliers['product_suppliers_by_supplier_' . $supplierId] as $productSupplierData) {
-                $productSuppliers[] = $this->formatProductSupplier($supplierId, $productSupplierData);
+        foreach ($suppliers['supplier_references'] as $supplierId => $supplierReferenceForm) {
+            foreach ($supplierReferenceForm['product_supplier_collection'] as $productSupplierData) {
+                $productSuppliers[] = $this->formatProductSupplier($productId->getValue(), $supplierId, $productSupplierData);
             }
         }
 
-        return new SetProductSuppliersCommand(
-            $productId->getValue(),
-            $productSuppliers,
-            $suppliers['default_supplier_id']
-        );
+        return [
+            new SetProductSuppliersCommand(
+                $productId->getValue(),
+                $productSuppliers,
+                $suppliers['default_supplier_id']
+            ),
+        ];
     }
 
     /**
+     * @param int $productId
      * @param int $supplierId
      * @param array $productSupplierData
      *
      * @return array<string, mixed>
      */
-    private function formatProductSupplier(int $supplierId, array $productSupplierData): array
+    private function formatProductSupplier(int $productId, int $supplierId, array $productSupplierData): array
     {
         return [
+            'product_id' => $productId,
             'supplier_id' => $supplierId,
             'currency_id' => (int) $productSupplierData['currency_id'],
             'reference' => $productSupplierData['supplier_reference'],
-            'price_tax_excluded' => $productSupplierData['supplier_price_tax_excluded'],
+            'price_tax_excluded' => (string) $productSupplierData['supplier_price_tax_excluded'],
             'combination_id' => (int) $productSupplierData['combination_id'],
-            'product_supplier_id' => $productSupplierData['product_supplier_id'],
+            'product_supplier_id' => (int) $productSupplierData['product_supplier_id'],
         ];
     }
 }
