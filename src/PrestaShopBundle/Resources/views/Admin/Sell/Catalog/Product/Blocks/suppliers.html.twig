@@ -39,7 +39,7 @@
   <table class="table">
     <thead class="thead-default">
     <tr>
-{#              <th>{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>#}
+      <th>{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>
       <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
       <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
       <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
@@ -48,7 +48,7 @@
     <tbody>
     {% for productSupplierField in supplierReferenceForm.product_supplier_collection %}
       <tr>
-{#                <td>{{ supplier_combination.vars.value.label }}</td>#}
+        <td>{{ productSupplierField.vars.value.product_name }}</td>
         <td>{{ form_widget(productSupplierField.supplier_reference) }}</td>
         <td>{{ form_widget(productSupplierField.supplier_price_tax_excluded) }}</td>
         <td>{{ form_widget(productSupplierField.currency_id) }}</td>
