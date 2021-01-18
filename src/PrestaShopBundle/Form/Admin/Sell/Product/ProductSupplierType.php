@@ -74,11 +74,9 @@ class ProductSupplierType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('product_name', HiddenType::class)
             ->add('product_supplier_id', HiddenType::class)
-            ->add('combination_id', HiddenType::class, [
-                'label' => false,
-                'required' => false,
-            ])
+            ->add('combination_id', HiddenType::class)
             ->add('supplier_reference', TextType::class, [
                 'empty_data' => '',
             ])
