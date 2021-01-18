@@ -23,7 +23,7 @@ const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPaginati
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const DefaultCustomerAccount = require('@data/demo/customer');
+const {DefaultAccount} = require('@data/demo/customer');
 
 let browserContext;
 let page;
@@ -141,7 +141,7 @@ describe('Filter, sort and pagination logs', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomerAccount.DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultAccount);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -206,7 +206,39 @@ describe('Filter, sort and pagination logs', async () => {
       const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfElements).to.be.equal(numberOfLogs + 11);
     });
-    const tests = [
+
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await logsPage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await logsPage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 2 - Filter logs
+  describe('Filter Logs', async () => {
+    [
       {
         args:
           {
@@ -216,8 +248,7 @@ describe('Filter, sort and pagination logs', async () => {
             filterValue: 50,
           },
       },
-      // Filter by employee not working, skipping it https://github.com/PrestaShop/PrestaShop/issues/22078
-      /* {
+      {
         args:
           {
             testIdentifier: 'filterByEmployee',
@@ -225,12 +256,12 @@ describe('Filter, sort and pagination logs', async () => {
             filterBy: 'employee',
             filterValue: DefaultAccount.firstName,
           },
-      }, */
+      },
       {
         args:
           {
             testIdentifier: 'filterBySeverity',
-            filterType: 'select',
+            filterType: 'input',
             filterBy: 'severity',
             filterValue: 'Error',
           },
@@ -271,9 +302,7 @@ describe('Filter, sort and pagination logs', async () => {
             filterValue: 1,
           },
       },
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
@@ -303,37 +332,6 @@ describe('Filter, sort and pagination logs', async () => {
       });
     });
 
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
-
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
-      expect(paginationNumber).to.contains('(page 1 / 2)');
-    });
-
-    it('should click on next', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
-
-      const paginationNumber = await logsPage.paginationNext(page);
-      expect(paginationNumber).to.contains('(page 2 / 2)');
-    });
-
-    it('should click on previous', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
-
-      const paginationNumber = await logsPage.paginationPrevious(page);
-      expect(paginationNumber).to.contains('(page 1 / 2)');
-    });
-
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
-
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
-      expect(paginationNumber).to.contains('(page 1 / 1)');
-    });
-  });
-
-  // 2 - Filter logs
-  describe('Filter Logs', async () => {
     it('should filter logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
@@ -357,107 +355,105 @@ describe('Filter, sort and pagination logs', async () => {
   });
 
   // 3 : Sort logs
-  const tests = [
-    {
-      args:
-        {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_log', sortDirection: 'desc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByEmployeeAsc', sortBy: 'employee', sortDirection: 'asc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByEmployeeDesc', sortBy: 'employee', sortDirection: 'desc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortBySeverityDesc', sortBy: 'severity', sortDirection: 'desc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortBySeverityAsc', sortBy: 'severity', sortDirection: 'asc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByMessageDesc', sortBy: 'message', sortDirection: 'desc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByMessageAsc', sortBy: 'message', sortDirection: 'asc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByObjectTypeDesc', sortBy: 'object_type', sortDirection: 'desc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByObjectTypeAsc', sortBy: 'object_type', sortDirection: 'asc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByObjectIDDesc', sortBy: 'object_id', sortDirection: 'desc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByObjectIDAsc', sortBy: 'object_id', sortDirection: 'asc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByErrorCodeDesc', sortBy: 'error_code', sortDirection: 'desc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByErrorCodeDAsc', sortBy: 'error_code', sortDirection: 'asc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByDateAddDesc', sortBy: 'date_add', sortDirection: 'desc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByDateAddAsc', sortBy: 'date_add', sortDirection: 'asc',
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_log', sortDirection: 'asc', isFloat: true,
-        },
-    },
-  ];
-
   describe('Sort logs table', async () => {
-    tests.forEach((test) => {
+    [
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdDesc', sortBy: 'id_log', sortDirection: 'desc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByEmployeeAsc', sortBy: 'employee', sortDirection: 'asc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByEmployeeDesc', sortBy: 'employee', sortDirection: 'desc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortBySeverityDesc', sortBy: 'severity', sortDirection: 'desc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortBySeverityAsc', sortBy: 'severity', sortDirection: 'asc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByMessageDesc', sortBy: 'message', sortDirection: 'desc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByMessageAsc', sortBy: 'message', sortDirection: 'asc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByObjectTypeDesc', sortBy: 'object_type', sortDirection: 'desc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByObjectTypeAsc', sortBy: 'object_type', sortDirection: 'asc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByObjectIDDesc', sortBy: 'object_id', sortDirection: 'desc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByObjectIDAsc', sortBy: 'object_id', sortDirection: 'asc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByErrorCodeDesc', sortBy: 'error_code', sortDirection: 'desc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByErrorCodeDAsc', sortBy: 'error_code', sortDirection: 'asc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByDateAddDesc', sortBy: 'date_add', sortDirection: 'desc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByDateAddAsc', sortBy: 'date_add', sortDirection: 'asc',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdAsc', sortBy: 'id_log', sortDirection: 'asc', isFloat: true,
+          },
+      },
+    ].forEach((test) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
