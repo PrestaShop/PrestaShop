@@ -27,7 +27,13 @@ export default {
   productForm: 'form[name=product]',
   suppliersBlock: '#product_suppliers',
   supplierReferencesBlock: '#product_suppliers_supplier_references',
+  supplierReferencesContainer: '#product_suppliers_supplier_references > .col-sm',
   supplierSelectionBlock: '#product_suppliers_supplier_ids',
   defaultSupplierSelectionBlock: '#product_suppliers_default_supplier_id',
+  selectedDefaultSupplierInput: 'input[name="product[suppliers][default_supplier_id]"]:checked',
   productFormSubmitButton: 'button[name="product[save]"]',
+  supplierReferenceProductCollection: (index) => `#product_suppliers_supplier_references_${index}_product_suppliers_collection`,
+  supplierReferenceSupplierIdInput: (index) => `#product_suppliers_supplier_references_${index}_supplier_id`,
+  supplierReferenceSupplierNameInput: (index) => `#product_suppliers_supplier_references_${index}_supplier_name`,
+  supplierReferenceIsDefaultInput: (index) => `#product_suppliers_supplier_references_${index}_is_default`,
 };

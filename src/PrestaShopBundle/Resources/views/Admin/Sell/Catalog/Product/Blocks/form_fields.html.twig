@@ -24,8 +24,11 @@
  * #}
 
 {%- block supplier_references_row -%}
-<div class="row" id="supplier_reference_row_{% if form.vars.value is not null %}{{ form.vars.value.supplier_id }}{% else %}__SUPPLIER_ID__{% endif %}">
+<div class="row supplier_references_row" id="supplier_reference_row_{% if form.vars.value is not null %}{{ form.vars.value.supplier_id }}{% else %}__SUPPLIER_ID__{% endif %}">
   <div class="col">
+    {{ form_row(form.supplier_id) }}
+    {{ form_row(form.is_default) }}
+    {{ form_row(form.supplier_name) }}
     {# We need to check if value is not null because in prototype it is null else we display a placeholder #}
     <div>{% if form.vars.value is not null %}{{ form.vars.value.supplier_name }}{% else %}__SUPPLIER_NAME__{% endif %}</div>
     <table class="table">
@@ -58,7 +61,7 @@
   {% if prototype is defined %}
     {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
   {% endif %}
-  <div class="form-group row supplier_references_row" {{ block('widget_attributes') }}>
+  <div class="form-group row" {{ block('widget_attributes') }}>
     <div class="col-sm">
       {{- block('form_rows') -}}
     </div>
