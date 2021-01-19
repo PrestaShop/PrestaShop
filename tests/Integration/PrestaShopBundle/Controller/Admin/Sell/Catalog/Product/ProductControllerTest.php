@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use DOMDocument;
+use DOMElement;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandler;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -35,6 +37,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
+use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Form;
 
 /**
@@ -95,6 +98,8 @@ class ProductControllerTest extends WebTestCase
         $crawler = $client->request('GET', $createUrl);
 
         $productForm = $this->fillPartialProductForm($crawler, $formModifications);
+        $hasCarriers = isset($expectedUpdateData['shipping']['carriers']);
+        $hasEmptyCarriers = isset($expectedUpdateData['shipping']['carriers']) && empty($expectedUpdateData['shipping']['carriers']);
         $client->submit($productForm);
 
         // If update happens correctly then we are redirect to the same edition page
@@ -112,8 +117,8 @@ class ProductControllerTest extends WebTestCase
             if (is_array($formField)) {
                 $formValue = [];
                 foreach ($formField as $subFormField) {
-                    if (null !== $subFormField->getValue()) {
-                        $formValue[] = $subFormField->getValue();
+                    if ($subFormField->getValue()) {
+                        $formValue[] = (string) $subFormField->getValue();
                     }
                 }
             } else {
@@ -159,8 +164,18 @@ class ProductControllerTest extends WebTestCase
             ],
             [
                 'shipping' => [
-                    // Weird indexing right? Coming from the input names
-                    'carriers' => [0 => 1, 2 => 3],
+                    'carriers' => [1, 3],
+                ],
+            ],
+        ];
+
+        yield [
+            [
+                'product[shipping][carriers]' => [],
+            ],
+            [
+                'shipping' => [
+                    'carriers' => [''],
                 ],
             ],
         ];
@@ -246,15 +261,57 @@ class ProductControllerTest extends WebTestCase
         // Remove unnecessary form fields
         $formFields = $productForm->all();
         foreach ($formFields as $formField) {
+            $fieldName = str_replace('[]', '', $formField->getName());
             if (in_array($formField->getName(), ['_method', 'product[_token]'])) {
                 continue;
             }
 
-            if (!array_key_exists($formField->getName(), $formModifications)) {
-                $productForm->remove($formField->getName());
+            $productForm->remove($fieldName);
+        }
+
+        // Just like we do in the Front thanks to javascript (see partial-form-updater.js) here we build a partial
+        // form with hidden inputs
+        foreach ($formModifications as $fieldName => $formFieldValues) {
+            if (!is_array($formFieldValues)) {
+                $formFieldValues = [$formFieldValues];
+            } else {
+                // We need the [] suffix for input name so that the Form loops through the values
+                $fieldName = $fieldName . '[]';
+                if (empty($formFieldValues)) {
+                    // Just like in FO for empty array we force to send at least empty string or the field is ignored
+                    $formFieldValues[] = '';
+                }
+            }
+
+            foreach ($formFieldValues as $formFieldValue) {
+                $hiddenInputNode = $this->createHiddenInput($fieldName, (string) $formFieldValue);
+                $productForm->set(new InputFormField($hiddenInputNode));
             }
         }
 
         return $productForm;
+    }
+
+    /**
+     * @param string $name
+     * @param string $inputValue
+     *
+     * @return DOMElement
+     */
+    private function createHiddenInput(string $name, string $inputValue): DOMElement
+    {
+        $document = new DOMDocument();
+        $node = $document->createElement('input');
+
+        $attributes = [
+            'name' => $name,
+            'type' => 'hidden',
+            'value' => $inputValue,
+        ];
+        foreach ($attributes as $name => $value) {
+            $node->setAttribute($name, $value);
+        }
+
+        return $node;
     }
 }
