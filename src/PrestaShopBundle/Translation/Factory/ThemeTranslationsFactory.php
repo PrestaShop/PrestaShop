@@ -46,6 +46,8 @@ class ThemeTranslationsFactory extends TranslationsFactory
     public function __construct(ThemeProvider $themeProvider)
     {
         $this->themeProvider = $themeProvider;
+
+        parent::__construct([$themeProvider]);
     }
 
     /**

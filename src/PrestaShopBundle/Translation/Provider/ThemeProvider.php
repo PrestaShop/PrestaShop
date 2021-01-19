@@ -27,14 +27,21 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class ThemeProvider extends AbstractProvider
+class ThemeProvider implements ProviderInterface
 {
+    const DEFAULT_LOCALE = 'en-US';
+
     /**
      * @var string the theme name
      */
@@ -66,32 +73,41 @@ class ThemeProvider extends AbstractProvider
     public $defaultTranslationDir;
 
     /**
-     * Get domain.
-     *
-     * @deprecated since 1.7.6, to be removed in the next major
-     *
-     * @return mixed
+     * @var LoaderInterface the loader interface
      */
-    public function getDomain()
-    {
-        @trigger_error(
-            'getDomain function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
+    private $databaseLoader;
 
-        return $this->domain;
+    /**
+     * @var string the resource directory
+     */
+    protected $resourceDirectory;
+
+    /**
+     * @var string the Catalogue locale
+     */
+    protected $locale;
+
+    /**
+     * @var string the Catalogue domain
+     */
+    protected $domain;
+
+    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
+    {
+        $this->databaseLoader = $databaseLoader;
+        $this->resourceDirectory = $resourceDirectory;
+        $this->locale = self::DEFAULT_LOCALE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getTranslationDomains()
+    public function getDirectories()
     {
-        if (empty($this->domain)) {
-            return ['*'];
-        }
-
-        return ['^' . $this->domain];
+        return [
+            $this->getResourceDirectory(),
+            $this->getThemeResourcesDirectory(),
+        ];
     }
 
     /**
@@ -109,15 +125,64 @@ class ThemeProvider extends AbstractProvider
     /**
      * {@inheritdoc}
      */
-    public function getIdentifier()
+    public function getTranslationDomains()
     {
-        return 'theme';
+        if (empty($this->domain)) {
+            return ['*'];
+        }
+
+        return ['^' . $this->domain];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue()
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale(string $locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Get the PrestaShop locale from real locale.
+     *
+     * @return string The PrestaShop locale
+     *
+     * @deprecated since 1.7.6, to be removed in the next major
+     */
+    public function getPrestaShopLocale()
+    {
+        @trigger_error(
+            '`ThemeProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
+        return Converter::toPrestaShopLocale($this->locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessageCatalogue(): MessageCatalogueInterface
     {
         $xlfCatalogue = $this->getXliffCatalogue();
         $databaseCatalogue = $this->getDatabaseCatalogue();
@@ -126,6 +191,81 @@ class ThemeProvider extends AbstractProvider
         $xlfCatalogue->addCatalogue($databaseCatalogue);
 
         return $xlfCatalogue;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
+     */
+    public function getDefaultCatalogue($empty = true)
+    {
+        $defaultCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                [$this->getDefaultResourceDirectory()],
+                $this->locale,
+                $filter
+            );
+            $defaultCatalogue->addCatalogue($filteredCatalogue);
+        }
+
+        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
+            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        }
+
+        return $defaultCatalogue;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
+     */
+    public function getXliffCatalogue()
+    {
+        $xlfCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                $this->getDirectories(),
+                $this->locale,
+                $filter
+            );
+            $xlfCatalogue->addCatalogue($filteredCatalogue);
+        }
+
+        return $xlfCatalogue;
+    }
+
+    /**
+     * Get the Catalogue from database only.
+     *
+     * @param null $theme
+     *
+     * @return MessageCatalogue A MessageCatalogue instance
+     */
+    public function getDatabaseCatalogue($theme = null)
+    {
+        if (null === $theme) {
+            $theme = $this->themeName;
+        }
+
+        $databaseCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getTranslationDomains() as $translationDomain) {
+            if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
+                continue;
+            }
+            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
+
+            if ($domainCatalogue instanceof MessageCatalogue) {
+                $databaseCatalogue->addCatalogue($domainCatalogue);
+            }
+        }
+
+        return $databaseCatalogue;
     }
 
     /**
@@ -146,14 +286,68 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
+     * @return LoaderInterface
+     */
+    public function getDatabaseLoader()
+    {
+        return $this->databaseLoader;
+    }
+
+    /**
+     * Empties out the catalogue by removing translations but leaving keys
+     *
+     * @param MessageCatalogueInterface $messageCatalogue
+     *
+     * @return MessageCatalogueInterface Empty the catalogue
+     */
+    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    {
+        foreach ($messageCatalogue->all() as $domain => $messages) {
+            foreach (array_keys($messages) as $translationKey) {
+                $messageCatalogue->set($translationKey, '', $domain);
+            }
+        }
+
+        return $messageCatalogue;
+    }
+
+    /**
+     * @param array $paths a list of paths when we can look for translations
+     * @param string $locale the Symfony (not the PrestaShop one) locale
+     * @param string|null $pattern a regular expression
+     *
+     * @return MessageCatalogue
+     *
+     * @throws FileNotFoundException
+     */
+    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    {
+        return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
+    }
+
+    /**
+     * Get domain.
+     *
+     * @deprecated since 1.7.6, to be removed in the next major
+     *
+     * @return mixed
+     */
+    public function getDomain()
+    {
+        @trigger_error(
+            'getDomain function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
+        return $this->domain;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function getDirectories()
+    public function getIdentifier(): string
     {
-        return [
-            $this->getResourceDirectory(),
-            $this->getThemeResourcesDirectory(),
-        ];
+        return 'theme';
     }
 
     /**
@@ -174,20 +368,6 @@ class ThemeProvider extends AbstractProvider
         $this->themeName = $themeName;
 
         return $this;
-    }
-
-    /**
-     * @param string|null $themeName
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getDatabaseCatalogue($themeName = null)
-    {
-        if (null === $themeName) {
-            $themeName = $this->themeName;
-        }
-
-        return parent::getDatabaseCatalogue($themeName);
     }
 
     /**
@@ -227,7 +407,7 @@ class ThemeProvider extends AbstractProvider
     {
         $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
 
-        return $this->getCatalogueFromPaths($path, $this->locale, current($this->getFilters()));
+        return $this->getCatalogueFromPaths([$path], $this->locale, current($this->getFilters()));
     }
 
     /**

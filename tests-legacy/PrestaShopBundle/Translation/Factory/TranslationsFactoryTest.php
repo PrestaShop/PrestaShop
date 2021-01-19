@@ -40,7 +40,7 @@ class TranslationsFactoryTest extends TestCase
 
     protected function setUp()
     {
-        $this->providerMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\AbstractProvider')
+        $this->providerMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\BackOfficeProvider')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -59,19 +59,19 @@ class TranslationsFactoryTest extends TestCase
         $this->providerMock->method('getDatabaseCatalogue')
             ->willReturn(new MessageCatalogue('en-US'));
 
-        $this->factory = new TranslationsFactory();
+        $this->factory = new TranslationsFactory([$this->providerMock]);
     }
 
     public function testCreateCatalogueWithoutProviderFails()
     {
         $this->expectException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
         $expected = $this->factory
-            ->createCatalogue($this->providerMock->getIdentifier());
+            ->createCatalogue('non-existent-provider');
     }
 
     public function testCreateCatalogueWithProvider()
     {
-        $this->factory->addProvider($this->providerMock);
+        $this->factory = new TranslationsFactory([$this->providerMock]);
 
         $expected = $this->factory
             ->createCatalogue($this->providerMock->getIdentifier());
@@ -83,7 +83,7 @@ class TranslationsFactoryTest extends TestCase
     {
         $this->expectException('PrestaShopBundle\Translation\Factory\ProviderNotFoundException');
         $expected = $this->factory
-            ->createTranslationsArray($this->providerMock->getIdentifier());
+            ->createTranslationsArray('non-existent-provider');
     }
 
     public function testCreateTranslationsArrayWithProvider()
@@ -91,7 +91,7 @@ class TranslationsFactoryTest extends TestCase
         $this->providerMock->method('getXliffCatalogue')
             ->willReturn(new MessageCatalogue('en-US'));
 
-        $this->factory->addProvider($this->providerMock);
+        $this->factory = new TranslationsFactory([$this->providerMock]);
 
         $expected = $this->factory
             ->createTranslationsArray($this->providerMock->getIdentifier());

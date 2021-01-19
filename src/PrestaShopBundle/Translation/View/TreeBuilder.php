@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Translation\View;
 
 use Doctrine\Common\Util\Inflector;
-use PrestaShopBundle\Translation\Provider\AbstractProvider;
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder
@@ -52,12 +52,12 @@ class TreeBuilder
     }
 
     /**
-     * @param AbstractProvider $provider
+     * @param ProviderInterface $provider
      * @param null $search
      *
      * @return array|mixed
      */
-    public function makeTranslationArray(AbstractProvider $provider, $search = null)
+    public function makeTranslationArray(ProviderInterface $provider, $search = null)
     {
         $provider->setLocale($this->locale);
 

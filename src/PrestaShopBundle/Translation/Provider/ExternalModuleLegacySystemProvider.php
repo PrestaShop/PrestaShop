@@ -28,11 +28,13 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\DomainNormalizer;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Exception\UnsupportedModuleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -40,8 +42,30 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Be able to retrieve information from legacy translation files
  */
-class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface, UseModuleInterface
+class ExternalModuleLegacySystemProvider implements ProviderInterface
 {
+    const DEFAULT_LOCALE = 'en-US';
+
+    /**
+     * @var LoaderInterface the loader interface
+     */
+    private $databaseLoader;
+
+    /**
+     * @var string the resource directory
+     */
+    protected $resourceDirectory;
+
+    /**
+     * @var string the Catalogue locale
+     */
+    protected $locale;
+
+    /**
+     * @var string the Catalogue domain
+     */
+    protected $domain;
+
     /**
      * @var ModuleProvider Module provider
      */
@@ -77,8 +101,185 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         $this->moduleProvider = $moduleProvider;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
+        $this->databaseLoader = $databaseLoader;
+        $this->resourceDirectory = $resourceDirectory;
+        $this->locale = self::DEFAULT_LOCALE;
+    }
 
-        parent::__construct($databaseLoader, $resourceDirectory);
+    /**
+     * {@inheritdoc}
+     */
+    public function getDirectories()
+    {
+        return [$this->getResourceDirectory()];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale(string $locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDomain($domain)
+    {
+        throw new InvalidArgumentException(__CLASS__ . ' does not allow calls to setDomain()');
+    }
+
+    /**
+     * Get the PrestaShop locale from real locale.
+     *
+     * @return string The PrestaShop locale
+     *
+     * @deprecated since 1.7.6, to be removed in the next major
+     */
+    public function getPrestaShopLocale()
+    {
+        @trigger_error(
+            '`ExternalModuleLegacySystemProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
+        return Converter::toPrestaShopLocale($this->locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessageCatalogue(): MessageCatalogueInterface
+    {
+        $messageCatalogue = $this->getDefaultCatalogue();
+
+        $translatedCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
+        $messageCatalogue->addCatalogue($translatedCatalogue);
+
+        $databaseCatalogue = $this->getDatabaseCatalogue();
+        $messageCatalogue->addCatalogue($databaseCatalogue);
+
+        return $messageCatalogue;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
+     */
+    public function getDefaultCatalogue($empty = true)
+    {
+        $defaultCatalogue = $this->getCachedDefaultCatalogue();
+
+        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
+            return $this->emptyCatalogue(clone $defaultCatalogue);
+        }
+
+        return $defaultCatalogue;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
+     */
+    public function getXliffCatalogue()
+    {
+        try {
+            $translationCatalogue = $this->moduleProvider
+                ->setModuleName($this->moduleName)
+                ->setLocale($this->locale)
+                ->getXliffCatalogue()
+            ;
+        } catch (FileNotFoundException $exception) {
+            $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
+        }
+
+        return $translationCatalogue;
+    }
+
+    /**
+     * Get the Catalogue from database only.
+     *
+     * @param null $theme
+     *
+     * @return MessageCatalogue A MessageCatalogue instance
+     */
+    public function getDatabaseCatalogue($theme = null)
+    {
+        $databaseCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getTranslationDomains() as $translationDomain) {
+            if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
+                continue;
+            }
+            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
+
+            if ($domainCatalogue instanceof MessageCatalogue) {
+                $databaseCatalogue->addCatalogue($domainCatalogue);
+            }
+        }
+
+        return $databaseCatalogue;
+    }
+
+    /**
+     * @return string Path to app/Resources/translations/{locale}
+     */
+    public function getResourceDirectory()
+    {
+        return $this->getDefaultResourceDirectory();
+    }
+
+    /**
+     * @return LoaderInterface
+     */
+    public function getDatabaseLoader()
+    {
+        return $this->databaseLoader;
+    }
+
+    /**
+     * Empties out the catalogue by removing translations but leaving keys
+     *
+     * @param MessageCatalogueInterface $messageCatalogue
+     *
+     * @return MessageCatalogueInterface Empty the catalogue
+     */
+    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    {
+        foreach ($messageCatalogue->all() as $domain => $messages) {
+            foreach (array_keys($messages) as $translationKey) {
+                $messageCatalogue->set($translationKey, '', $domain);
+            }
+        }
+
+        return $messageCatalogue;
+    }
+
+    /**
+     * @param array $paths a list of paths when we can look for translations
+     * @param string $locale the Symfony (not the PrestaShop one) locale
+     * @param string|null $pattern a regular expression
+     *
+     * @return MessageCatalogue
+     *
+     * @throws FileNotFoundException
+     */
+    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    {
+        return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
 
     /**
@@ -100,7 +301,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     /**
      * {@inheritdoc}
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'external_legacy_module';
     }
@@ -123,61 +324,11 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     }
 
     /**
-     * @param string $domain
-     *
-     * @return AbstractProvider|SearchProviderInterface|void
-     */
-    public function setDomain($domain)
-    {
-        throw new InvalidArgumentException(__CLASS__ . ' does not allow calls to setDomain()');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = $this->getCachedDefaultCatalogue();
-
-        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
-            return $this->emptyCatalogue(clone $defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getXliffCatalogue()
-    {
-        try {
-            $translationCatalogue = $this->moduleProvider
-                ->setModuleName($this->moduleName)
-                ->setLocale($this->locale)
-                ->getXliffCatalogue()
-            ;
-        } catch (FileNotFoundException $exception) {
-            $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
-        }
-
-        return $translationCatalogue;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResourceDirectory()
-    {
-        return $this->getDefaultResourceDirectory();
     }
 
     /**
@@ -221,22 +372,6 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         }
 
         return $legacyFilesCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMessageCatalogue()
-    {
-        $messageCatalogue = $this->getDefaultCatalogue();
-
-        $translatedCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
-        $messageCatalogue->addCatalogue($translatedCatalogue);
-
-        $databaseCatalogue = $this->getDatabaseCatalogue();
-        $messageCatalogue->addCatalogue($databaseCatalogue);
-
-        return $messageCatalogue;
     }
 
     /**

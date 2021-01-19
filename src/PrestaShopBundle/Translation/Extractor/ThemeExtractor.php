@@ -88,7 +88,7 @@ class ThemeExtractor
      *
      * @return $this
      */
-    public function setThemeProvider(ThemeProvider $themeProvider)
+    public function setThemeProvider(ThemeProvider $themeProvider): ThemeExtractor
     {
         $this->themeProvider = $themeProvider;
 

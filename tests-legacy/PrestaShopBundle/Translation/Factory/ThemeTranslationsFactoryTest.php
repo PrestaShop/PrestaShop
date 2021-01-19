@@ -50,12 +50,9 @@ class ThemeTranslationsFactoryTest extends TestCase
 
     protected function setUp()
     {
-        $this->themeProviderMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\ThemeProvider')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->themeProviderMock = $this->mockThemeProvider();
 
         $this->factory = new ThemeTranslationsFactory($this->themeProviderMock);
-        $this->factory->addProvider($this->mockThemeProvider());
     }
 
     /**
@@ -67,13 +64,13 @@ class ThemeTranslationsFactoryTest extends TestCase
     public function testCreateCatalogue($theme, $locale)
     {
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('setThemeName')
             ->with($theme)
             ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('setLocale')
             ->with($locale)
             ->willReturn($this->themeProviderMock);
@@ -113,7 +110,7 @@ class ThemeTranslationsFactoryTest extends TestCase
             ->willReturn($this->themeProviderMock);
 
         $this->themeProviderMock
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('setLocale')
             ->with($locale)
             ->willReturn($this->themeProviderMock);

@@ -27,7 +27,7 @@
 
 namespace PrestaShopBundle\Translation\Factory;
 
-use PrestaShopBundle\Translation\Provider\AbstractProvider;
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 
 /**
@@ -41,6 +41,14 @@ class TranslationsFactory implements TranslationsFactoryInterface
      * @var array the list of translation providers
      */
     private $providers = [];
+
+    /**
+     * @param ProviderInterface[] $providers
+     */
+    public function __construct(array $providers)
+    {
+        $this->providers = $providers;
+    }
 
     /**
      * {@inheritdoc}
@@ -70,13 +78,5 @@ class TranslationsFactory implements TranslationsFactoryInterface
         }
 
         throw new ProviderNotFoundException($domainIdentifier);
-    }
-
-    /**
-     * @param AbstractProvider $provider
-     */
-    public function addProvider(AbstractProvider $provider)
-    {
-        $this->providers[] = $provider;
     }
 }
