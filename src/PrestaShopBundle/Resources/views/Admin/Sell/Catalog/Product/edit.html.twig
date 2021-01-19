@@ -73,7 +73,7 @@
       {% block product_tab_options %}
         <div role="tabpanel" class="form-contenttab tab-pane" id="options-tab">
           {{ form_widget(productForm.options) }}
-            <div id="product-suppliers">
+            <div id="product_suppliers">
               {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/suppliers.html.twig', {
                 'productForm': productForm,
               }) }}

@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import ProductMap from '../product-map';
 import ProductPartialUpdater from './product-partial-updater';
 
@@ -45,4 +46,5 @@ $(() => {
     const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
     new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
   }
+  new ProductSuppliersManager();
 });
