@@ -50,7 +50,6 @@ export default class ProductSuppliersManager {
 
     selectedSuppliers.forEach((supplier) => {
       const supplierReferencesContent = supplierReferencesPrototype.replace(/__SUPPLIER_ID__/g, supplier.id)
-        .replace(/__PRODUCT_SUPPLIER_ENTRY__/g, '0')
         .replace(/__SUPPLIER_NAME__/g, supplier.name);
 
       this.$supplierReferencesBlock.append(supplierReferencesContent);
@@ -60,7 +59,18 @@ export default class ProductSuppliersManager {
 
       const $productSuppliersTbody = this.$supplierReferencesBlock.find(`#supplier_${supplier.id} table tbody`);
 
-      $productSuppliersTbody.append(productSupplierPrototype);
+      //@todo: replace with real product combinations from ajax or where?
+      const combinations = [
+        {name: 'test1', id: 1},
+        {name: 'test2', id: 2},
+        {name: 'test3', id: 3},
+      ];
+      combinations.forEach((combination) => {
+        const productSupplierContent = productSupplierPrototype
+          .replace(/__COMBINATION_ID__/g, combination.id)
+          .replace(/__PRODUCT_NAME__/g, combination.name);
+        $productSuppliersTbody.append(productSupplierContent);
+      });
     });
   }
 
