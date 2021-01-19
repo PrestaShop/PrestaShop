@@ -57,7 +57,7 @@ export default class ProductSuppliersManager {
       const productSupplierPrototype = this.$supplierReferencesBlock
         .find(`#product_suppliers_supplier_references_${supplier.id}_product_suppliers_collection`).data('prototype');
 
-      const $productSuppliersTbody = this.$supplierReferencesBlock.find(`#supplier_${supplier.id} table tbody`);
+      const $productSuppliersTbody = this.$supplierReferencesBlock.find(`#supplier_reference_row_${supplier.id} table tbody`);
 
       //@todo: replace with real product combinations from ajax or where?
       const combinations = [
