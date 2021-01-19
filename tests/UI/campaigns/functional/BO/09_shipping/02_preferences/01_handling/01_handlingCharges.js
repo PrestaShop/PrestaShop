@@ -25,7 +25,6 @@ const checkoutPage = require('@pages/FO/checkout');
 const {groupAccess} = require('@data/demo/groupAccess');
 const {DefaultAccount} = require('@data/demo/customer');
 const CarrierFaker = require('@data/faker/carrier');
-const GroupFaker = require('@data/faker/group');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -83,7 +82,7 @@ describe('Handling charges', async () => {
   // 1 - Choose display tax excluded in FO
   describe('Choose Price display method: tax excluded', async () => {
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -98,7 +97,7 @@ describe('Handling charges', async () => {
     });
 
     it('should go to Groups page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage1', baseContext);
 
       await customerSettingsPage.goToGroupsPage(page);
 
@@ -107,7 +106,7 @@ describe('Handling charges', async () => {
     });
 
     it(`should filter by '${groupAccess.customer.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName1', baseContext);
 
       await groupsPage.filterTable(page, 'input', 'b!name', groupAccess.customer.name);
 
@@ -116,7 +115,7 @@ describe('Handling charges', async () => {
     });
 
     it('should go to edit group page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage1', baseContext);
 
       await groupsPage.gotoEditGroupPage(page, 1);
 
@@ -125,7 +124,7 @@ describe('Handling charges', async () => {
     });
 
     it('should update group by choosing \'Tax excluded\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateGroup', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateGroup1', baseContext);
 
       const textResult = await addGroupPage.setPriceDisplayMethod(page, priceDisplayMethod[0]);
       await expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
@@ -135,7 +134,7 @@ describe('Handling charges', async () => {
   // 2 - Create carrier and enable Add handling costs
   describe('Create new carrier and enable \'Add handling costs\'', async () => {
     it('should go to \'Shipping > Carriers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -180,7 +179,7 @@ describe('Handling charges', async () => {
   // 3 - Go to FO and check shipping cost for the new carrier
   describe(`Check shipping cost for the carrier '${createCarrierData.name}' in FO`, async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop1', baseContext);
 
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
@@ -193,7 +192,7 @@ describe('Handling charges', async () => {
     });
 
     it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO1', baseContext);
 
       await homePage.goToLoginPage(page);
 
@@ -202,7 +201,7 @@ describe('Handling charges', async () => {
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO1', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultAccount);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
@@ -230,7 +229,7 @@ describe('Handling charges', async () => {
     });
 
     it('should select the new carrier and check the chipping cost', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrier', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingCost1', baseContext);
 
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
@@ -239,7 +238,7 @@ describe('Handling charges', async () => {
     });
 
     it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstSighOutFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO1', baseContext);
 
       await checkoutPage.goToHomePage(page);
       await checkoutPage.logout(page);
@@ -252,7 +251,7 @@ describe('Handling charges', async () => {
   // 4 - Update handling charges value
   describe('Update handling charges', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 
@@ -270,17 +269,17 @@ describe('Handling charges', async () => {
     });
 
     it('should update \'Handling charges\' value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateHandlingCharges', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateHandlingCharges1', baseContext);
 
       const textResult = await preferencesPage.setHandlingCharges(page, updateHandlingChargesValue);
       await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
     });
   });
 
-  // 5 - Go to FO and check shipping cost for the carrier : My carrier
+  // 5 - Go to FO and check shipping cost for the created carrier
   describe(`Check shipping cost for the carrier '${createCarrierData.name}' in FO`, async () => {
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop2', baseContext);
 
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
@@ -293,7 +292,7 @@ describe('Handling charges', async () => {
     });
 
     it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO2', baseContext);
 
       await homePage.goToLoginPage(page);
       const pageTitle = await foLoginPage.getPageTitle(page);
@@ -301,7 +300,7 @@ describe('Handling charges', async () => {
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO2', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultAccount);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
@@ -309,7 +308,7 @@ describe('Handling charges', async () => {
     });
 
     it('should create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstCreateOrder', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'secondCreateOrder', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -329,7 +328,7 @@ describe('Handling charges', async () => {
     });
 
     it('should select the new carrier and check the chipping cost', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrier', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingCost2', baseContext);
 
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
 
@@ -338,7 +337,7 @@ describe('Handling charges', async () => {
     });
 
     it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstSighOutFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signOutFo2', baseContext);
 
       await checkoutPage.goToHomePage(page);
       await checkoutPage.logout(page);
@@ -351,7 +350,7 @@ describe('Handling charges', async () => {
   // 6 - Go back to default handling cost value
   describe('Go back to default handling cost value', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 
@@ -360,7 +359,7 @@ describe('Handling charges', async () => {
     });
 
     it('should update \'Handling charges\' value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateHandlingCharges', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateHandlingCharges2', baseContext);
 
       const textResult = await preferencesPage.setHandlingCharges(page, defaultHandlingChargesValue);
       await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
@@ -370,7 +369,7 @@ describe('Handling charges', async () => {
   // 7 - Delete the new carrier
   describe('Delete carrier', async () => {
     it('should go to \'Shipping > Carriers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -403,10 +402,10 @@ describe('Handling charges', async () => {
     });
   });
 
-  // 8 - Go back to default value for price display method Tax exclude
+  // 8 - Go back to default value for price display method : Tax exclude
   describe('Choose Price display method: tax excluded', async () => {
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -421,7 +420,7 @@ describe('Handling charges', async () => {
     });
 
     it('should go to Groups page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage2', baseContext);
 
       await customerSettingsPage.goToGroupsPage(page);
 
@@ -430,7 +429,7 @@ describe('Handling charges', async () => {
     });
 
     it(`should filter by '${groupAccess.customer.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName2', baseContext);
 
       await groupsPage.filterTable(page, 'input', 'b!name', groupAccess.customer.name);
 
@@ -439,7 +438,7 @@ describe('Handling charges', async () => {
     });
 
     it('should go to edit group page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditGroupPage2', baseContext);
 
       await groupsPage.gotoEditGroupPage(page, 1);
 
@@ -448,7 +447,7 @@ describe('Handling charges', async () => {
     });
 
     it('should update group by choosing \'Tax included\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateGroup', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateGroup2', baseContext);
 
       const textResult = await addGroupPage.setPriceDisplayMethod(page, priceDisplayMethod[1]);
       await expect(textResult).to.contains(groupsPage.successfulUpdateMessage);
