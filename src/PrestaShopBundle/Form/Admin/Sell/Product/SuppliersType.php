@@ -81,7 +81,7 @@ class SuppliersType extends TranslatorAwareType
                 'entry_type' => SupplierReferencesType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype_name' => '__SUPPLIER_REFERENCE_PROTOTYPE__',
+                'prototype_name' => '__SUPPLIER_ID__',
             ])
         ;
     }

@@ -24,21 +24,23 @@
  * #}
 
 {%- block supplier_references_row -%}
-  {# We need to check if value is not null because in prototype it is null else we display a placeholder #}
-  <div>{% if form.vars.value is not null %}{{ form.vars.value.supplier_name }}{% else %}__supplier_name__{% endif %}</div>
-  <table class="table">
-    <thead class="thead-default">
-    <tr>
-      <th>{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{ form_row(form.product_suppliers_collection) }}
-    </tbody>
-  </table>
+  <div id="supplier___SUPPLIER_ID__">
+    {# We need to check if value is not null because in prototype it is null else we display a placeholder #}
+    <div>{% if form.vars.value is not null %}{{ form.vars.value.supplier_name }}{% else %}__SUPPLIER_NAME__{% endif %}</div>
+    <table class="table">
+      <thead class="thead-default">
+      <tr>
+        <th>{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>
+        <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
+        <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+        <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{ form_row(form.product_suppliers_collection) }}
+      </tbody>
+    </table>
+  </div>
 {%- endblock supplier_references_row -%}
 
 {%- block product_supplier_row -%}
