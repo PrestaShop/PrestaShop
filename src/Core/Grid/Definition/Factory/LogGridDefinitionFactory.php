@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarC
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -48,39 +47,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var string the URL to reset Grid filters
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string the URL for redirection
-     */
-    private $redirectionUrl;
-
-    /**
-     * LogGridDefinitionFactory constructor.
-     *
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
-    }
+    public const GRID_ID = 'logs';
 
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'logs';
+        return self::GRID_ID;
     }
 
     /**
@@ -239,10 +213,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_logs_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

@@ -10,7 +10,9 @@ admin_metas_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:search'
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.meta
+    redirectRoute: admin_metas_index
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:submitFiltermeta
 
