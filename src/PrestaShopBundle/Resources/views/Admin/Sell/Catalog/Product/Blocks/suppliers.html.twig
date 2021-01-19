@@ -29,27 +29,7 @@
 {% block form_product_suppliers %}
   <div class="row">
     <div class="col">
-      {# this whole div is equivalent to form_row(suppliersForm.supplier_ids) using choice_attributes parameter to have the data-label #}
-      <div class="form-group row">
-        {{ form_label(suppliersForm) }}
-        <div class="col-sm">
-          <div id="product_suppliers_supplier_ids">
-            {% for index, choice in suppliersForm.supplier_ids.vars.choices %}
-              <div class="form-check">
-                <label class="">
-                  <input type="checkbox" id="product_suppliers_supplier_ids_{{ index }}"
-                         name="product[suppliers][supplier_ids][]"
-                         class="form-check-input" value="{{ choice.value }}"
-                         data-label="{{ choice.label }}"
-                  >
-                  {{ choice.label }}
-                </label>
-              </div>
-            {% endfor %}
-          </div>
-          {{ suppliersForm.supplier_ids.setRendered(true) }}
-        </div>
-      </div>
+      {{ form_row(suppliersForm.supplier_ids) }}
     </div>
     <div class="col">
       {{ form_row(suppliersForm.default_supplier_id) }}
