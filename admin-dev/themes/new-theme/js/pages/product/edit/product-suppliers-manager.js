@@ -31,6 +31,7 @@ export default class ProductSuppliersManager {
   constructor() {
     this.$supplierSelectionBlock = $(ProductMap.supplierSelectionBlock);
     this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
+    this.$supplierReferencesContainer = $(ProductMap.supplierReferencesContainer);
     this.eventemitter = window.prestashop.instance.eventEmitter;
 
     this.init();
@@ -46,18 +47,26 @@ export default class ProductSuppliersManager {
     const selectedSuppliers = this.getSelectedSuppliers();
     const supplierReferencesPrototype = this.$supplierReferencesBlock.data('prototype');
 
-    this.$supplierReferencesBlock.empty();
+    this.$supplierReferencesContainer.empty();
 
-    selectedSuppliers.forEach((supplier) => {
-      const supplierReferencesContent = supplierReferencesPrototype.replace(/__SUPPLIER_ID__/g, supplier.id)
+    selectedSuppliers.forEach((supplier, index) => {
+      // We use index as the collection key
+      const supplierReferencesContent = supplierReferencesPrototype.replace(/__SUPPLIER_ID__/g, index)
         .replace(/__SUPPLIER_NAME__/g, supplier.name);
 
-      this.$supplierReferencesBlock.append(supplierReferencesContent);
+      this.$supplierReferencesContainer.append(supplierReferencesContent);
+      const appendedSupplier = this.$supplierReferencesContainer.find(ProductMap.supplierReferenceProductCollection(index));
 
-      const productSupplierPrototype = this.$supplierReferencesBlock
-        .find(`#product_suppliers_supplier_references_${supplier.id}_product_suppliers_collection`).data('prototype');
+      // Fill hidden inputs
+      $(ProductMap.supplierReferenceSupplierIdInput(index)).val(supplier.id);
+      $(ProductMap.supplierReferenceSupplierNameInput(index)).val(supplier.name);
 
-      const $productSuppliersTbody = this.$supplierReferencesBlock.find(`#supplier_reference_row_${supplier.id} table tbody`);
+      const selectedDefaultSupplierInput = $(ProductMap.selectedDefaultSupplierInput);
+      const selectedDefaultSupplierId = selectedDefaultSupplierInput.val();
+      $(ProductMap.supplierReferenceIsDefaultInput(index)).val(selectedDefaultSupplierId === supplier.id);
+
+      const productSupplierPrototype = appendedSupplier.data('prototype');
+      const $productSuppliersTbody = this.$supplierReferencesBlock.find(`#supplier_reference_row_${index} table tbody`);
 
       //@todo: replace with real product combinations from ajax or where?
       const combinations = [
