@@ -46,6 +46,8 @@ use Symfony\Component\Form\FormView;
  */
 class PartialForm implements \IteratorAggregate, PartialFormInterface
 {
+    public const USE_PARTIAL_UPDATE_OPTION = 'use_partial_update';
+
     /**
      * @var Form
      */
@@ -98,11 +100,11 @@ class PartialForm implements \IteratorAggregate, PartialFormInterface
      */
     public function usePartialUpdate(): bool
     {
-        if (!$this->getConfig()->hasOption('use_partial_update')) {
+        if (!$this->getConfig()->hasOption(static::USE_PARTIAL_UPDATE_OPTION)) {
             return false;
         }
 
-        return $this->getConfig()->getOption('use_partial_update');
+        return $this->getConfig()->getOption(static::USE_PARTIAL_UPDATE_OPTION);
     }
 
     public function submit($submittedData, $clearMissing = true)
