@@ -435,7 +435,7 @@
           text-align: center;
 
           i {
-            margin-right: .5rem;
+            margin-right: 0.5rem;
           }
         }
       }
@@ -559,5 +559,19 @@ input#partial_refund_shipping {
 .discountList {
   &-name {
     max-width: 400px;
+  }
+}
+
+@media (max-width: 374px) {
+  #order-view-page {
+    .order-actions {
+      &-print {
+        max-width: 186px;
+      }
+
+      .select-status {
+        max-width: 150px;
+      }
+    }
   }
 }
