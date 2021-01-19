@@ -71,12 +71,9 @@
     </thead>
     <tbody>
     {% for productSupplierField in supplierReferenceForm.product_suppliers_collection %}
-      <tr>
-        <td>{{ productSupplierField.vars.value.product_name }}</td>
-        <td>{{ form_widget(productSupplierField.supplier_reference) }}</td>
-        <td>{{ form_widget(productSupplierField.supplier_price_tax_excluded) }}</td>
-        <td>{{ form_widget(productSupplierField.currency_id) }}</td>
-      </tr>
+      {% form_theme productSupplierField '@PrestaShop/Admin/Sell/Catalog/Product/Blocks/product_supplier_collection_widget.html.twig' %}
+
+      {{ form_widget(productSupplierField) }}
     {% endfor %}
     </tbody>
   </table>
