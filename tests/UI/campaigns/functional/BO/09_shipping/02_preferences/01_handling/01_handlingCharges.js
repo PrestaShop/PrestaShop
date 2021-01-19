@@ -58,7 +58,7 @@ Go back to default value : Handling charges
 Delete created carrier
 Go back to default value : tax included in Customer group page
  */
-describe('Handling charges', async () => {
+describe('Test handling charges for carriers in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -177,7 +177,7 @@ describe('Handling charges', async () => {
   });
 
   // 3 - Go to FO and check shipping cost for the new carrier
-  describe(`Check shipping cost for the carrier '${createCarrierData.name}' in FO`, async () => {
+  describe(`Check shipping costs for the carrier '${createCarrierData.name}' in FO`, async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop1', baseContext);
 
@@ -228,7 +228,7 @@ describe('Handling charges', async () => {
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
     });
 
-    it('should select the new carrier and check the chipping cost', async function () {
+    it('should select the new carrier and check the chipping costs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingCost1', baseContext);
 
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
@@ -277,7 +277,7 @@ describe('Handling charges', async () => {
   });
 
   // 5 - Go to FO and check shipping cost for the created carrier
-  describe(`Check shipping cost for the carrier '${createCarrierData.name}' in FO`, async () => {
+  describe(`Check shipping costs for the carrier '${createCarrierData.name}' in FO`, async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstViewMyShop2', baseContext);
 
@@ -327,7 +327,7 @@ describe('Handling charges', async () => {
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
     });
 
-    it('should select the new carrier and check the chipping cost', async function () {
+    it('should select the new carrier and check the chipping costs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingCost2', baseContext);
 
       await checkoutPage.chooseShippingMethodAndAddComment(page, newCarrierID);
