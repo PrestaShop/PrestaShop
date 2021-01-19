@@ -12,7 +12,14 @@ jobs:
         with:
           node-version: '10.x'
 
-      - run: cd ./admin-dev/themes/new-theme && npm install && npm run scss-lint
+      - name: BackOffice Theme `new-theme`
+        run: cd ./admin-dev/themes/new-theme && npm install && npm run scss-lint
+
+      - name: BackOffice Theme `default`
+        run: cd ./admin-dev/themes/default && npm install && npm run scss-lint
+
+      - name: FrontOffice Theme `classic`
+        run: cd themes/classic/_dev && npm install && npm run scss-lint
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
