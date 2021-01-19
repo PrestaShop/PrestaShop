@@ -1,3 +1,4 @@
+// stylelint-disable
 @font-face {
   font-family: "Material Icons";
   font-style: normal;
@@ -11,10 +12,10 @@
 
 .material-icons {
   display: inline-block;
-  font-family: "Material Icons";
+  font-family: "Material Icons", sans-serif;
   font-size: 24px;  /* Preferred icon size */
   font-style: normal;
-  font-weight: normal;
+  font-weight: 500;
   line-height: 1;
   text-transform: none;
   letter-spacing: normal;

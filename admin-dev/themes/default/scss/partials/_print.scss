@@ -57,9 +57,6 @@
       .row {
         margin-bottom: 20px !important;
       }
-      .panel {
-        clear: both !important;
-      }
       .btn {
         display: none !important;
       }
@@ -68,8 +65,8 @@
       }
       .nav-tabs li a {
         display: none;
-        background-color: white !important;
-        border-bottom-color: white !important;
+        background-color: #fff !important;
+        border-bottom-color: #fff !important;
       }
       .tab-content > .tab-pane {
         display: block !important;
@@ -95,12 +92,12 @@
       }
       #status {
         tr:first-child td {
-          font-weight: bold !important;
+          font-weight: 700 !important;
         }
       }
       .table {
         margin-bottom: 10px !important;
-        border: solid 1px black !important;
+        border: solid 1px #000 !important;
         th {
           font-style: italic;
         }
@@ -114,7 +111,7 @@
       }
       .kpi-container.panel {
         margin: 30px 0 20px !important;
-        border: solid 1px black !important;
+        border: solid 1px #000 !important;
         .box-stats {
           width: 25% !important;
           height: auto !important;
@@ -126,9 +123,9 @@
         }
       }
       .alert {
-        border: 1px solid black !important;
+        border: 1px solid #000 !important;
         &::before {
-          color: black !important;
+          color: #000 !important;
         }
       }
       .table-responsive {

@@ -34,7 +34,7 @@
 }
 .thumbnail,
 .img-thumbnail {
-  background-color: white;
+  background-color: #fff;
   border-color: #ccc !important;
 }
 .highlight {
@@ -46,7 +46,7 @@
 .badge {
   padding: 1px 5px;
   font-size: 1em;
-  font-weight: normal;
+  font-weight: 500;
   line-height: inherit;
   letter-spacing: 0.0625em;
   background-color: $brand-primary;
@@ -77,7 +77,7 @@
   border-bottom: none;
   li .badge {
     color: #666;
-    background-color: white;
+    background-color: #fff;
     border: solid 2px #eee;
   }
   li a {
@@ -90,7 +90,7 @@
     a,
     a:hover,
     a:focus {
-      background-color: white;
+      background-color: #fff;
     }
   }
 }
@@ -141,8 +141,8 @@
 .alert.alert-onboarding {
   $alert-addons-border: lighten($brand-info, 10%);
   $alert-addons-text: $brand-info;
-  @include alert-variant(white, $alert-addons-border, $alert-addons-text);
-  @include alert-panel(icon-rocket, white);
+  @include alert-variant(#ffffff, $alert-addons-border, $alert-addons-text);
+  @include alert-panel(icon-rocket, #ffffff);
   &::before {
     top: 40px;
     left: 25px;
@@ -200,7 +200,7 @@
 }
 .alert.alert-message {
   @include alert-panel(icon-comment, $brand-warning);
-  background-color: white;
+  background-color: #fff;
   border: solid 2px $brand-warning;
 }
 .alert h4 {
@@ -228,7 +228,7 @@
   display: block;
   width: 40px;
   height: 25px;
-  border: solid 1px black;
+  border: solid 1px #000;
 }
 #mColorPickerInput {
   color: #000;

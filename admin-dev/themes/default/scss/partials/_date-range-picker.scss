@@ -1,4 +1,4 @@
-$color-bright: white;
+$color-bright: #fff;
 
 $color-calendar: #00a4e7;
 $color-calendar-compare: #ff8000;
@@ -65,7 +65,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
       display: inline-block;
       width: 100%;
       padding: 10px;
-      background-color: white;
+      background-color: #fff;
     }
     .form-date-actions {
       border: solid 1px #ccc;
@@ -106,7 +106,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
       tr th {
         height: 1.5em;
         font-size: 0.7em;
-        color: white;
+        color: #fff;
         text-transform: uppercase;
         background-color: darken($color-calendar, 5%);
       }
@@ -114,6 +114,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         font-size: 1.4em;
         font-weight: 200;
         color: $color-calendar-day-selected;
+        cursor: pointer;
         background-color: $color-bright;
         border-bottom: 1px solid darken($color-calendar, 5%);
       }
@@ -125,7 +126,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
       text-align: center;
     }
     tr {
-      border-bottom: solid 1px white;
+      border-bottom: solid 1px #fff;
     }
     td {
       height: 2.4em;
@@ -256,7 +257,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         text-transform: uppercase;
         cursor: pointer;
         &:hover {
-          color: white;
+          color: #fff;
           background-color: $color-calendar-day-selected;
         }
         &.active {
@@ -283,14 +284,12 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         height: 2em;
         font-size: 1.3em;
         line-height: 2em;
+
         &:hover {
-          color: white;
+          color: #fff;
           background-color: darken($color-calendar, 5%);
         }
       }
-    }
-    thead tr:first-child th {
-      cursor: pointer;
     }
   }
 }
@@ -330,6 +329,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
   -o-animation: one 0.2s ease-in-out;
   animation: one 0.2s ease-in-out;
 }
+// stylelint-disable-next-line
 @-webkit-keyframes one {
   0% {
     background-color: $color-calendar;
@@ -339,6 +339,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
   }
 }
 
+// stylelint-disable-next-line
 @-webkit-keyframes two {
   0% {
     @include box-shadow($color-calendar 0 0 0 20px inset);

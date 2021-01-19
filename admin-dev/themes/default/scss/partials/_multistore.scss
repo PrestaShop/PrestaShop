@@ -7,10 +7,10 @@
     top: 0;
     bottom: 0;
     padding: 0 7px;
-    font-family: FontAwesome;
+    font-family: FontAwesome, sans-serif;
     font-size: 14px;
     line-height: 22px;
-    color: white;
+    color: #fff;
     pointer-events: none;
     content: "\f0d7";
     background-color: darken($secondary-color, 15%);
@@ -24,7 +24,7 @@
     margin: 0;
     line-height: 20px;
     color: #666;
-    background: white;
+    background: #fff;
     border: 1px solid darken($secondary-color, 15%);
     outline: none;
     -webkit-appearance: none;
@@ -64,7 +64,7 @@
       margin-right: 1px;
       border-color: transparent;
       border-width: 7px;
-      border-bottom-color: white;
+      border-bottom-color: #fff;
     }
     &::before {
       margin-left: -8px;
@@ -74,7 +74,7 @@
     }
     li:first-child a {
       font-size: 0.875rem !important;
-      font-weight: bold;
+      font-weight: 700;
       color: $brand-info !important;
     }
     li:not(:first-child) {
@@ -138,6 +138,8 @@
     cursor: pointer;
   }
 }
+
+// stylelint-disable-next-line
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .custom-select select {
     @include padding-right(30px);

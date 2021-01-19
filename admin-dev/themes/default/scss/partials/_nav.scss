@@ -29,7 +29,7 @@
   .material-icons {
     font-size: 1.188rem;
     line-height: inherit;
-    color: white;
+    color: #fff;
   }
 
   &.mobile-nav {
@@ -42,7 +42,7 @@
       top: 5rem;
       left: 75%;
       display: block;
-      font-family: "Material Icons";
+      font-family: "Material Icons", sans-serif;
       font-size: 1.5rem;
       color: #fff;
       pointer-events: none;
@@ -110,7 +110,7 @@
       span {
         display: block;
         margin-bottom: 0.625rem;
-        color: white;
+        color: #fff;
 
         @include media-breakpoint-down(md) {
           font-size: 1rem;
@@ -135,7 +135,7 @@
 
     .shop-list {
       padding-bottom: 1rem;
-      font-weight: bold;
+      font-weight: 700;
       text-align: center;
 
       a {
@@ -162,7 +162,7 @@
 
       &::after {
         margin-left: 0.625rem;
-        font-family: "Material Icons";
+        font-family: "Material Icons", sans-serif;
         font-size: 1.25rem;
         line-height: 1.375rem;
         vertical-align: bottom;
@@ -178,12 +178,12 @@
       }
 
       li {
-        background-color: white;
+        background-color: #fff;
         border-bottom: $gray-light 1px solid;
 
         &.group a {
           padding: 0.9375rem 2.5rem;
-          font-weight: bold;
+          font-weight: 700;
         }
 
         &.shop {
@@ -341,7 +341,7 @@
     &.link-active,
     &.-hover {
       & > .link {
-        color: white;
+        color: #fff;
         background: #202226;
         transition: background 300ms ease;
 
@@ -413,7 +413,7 @@
     &.link-active {
       > .link {
         padding-left: 0;
-        color: white;
+        color: #fff;
         border-left: none;
       }
     }
@@ -441,20 +441,20 @@
   padding: 0.875rem 0 0.75rem;
   margin: 1.813rem 0 0 0.938rem;
   font-size: 0.75rem;
-  font-weight: bold;
+  font-weight: 700;
   border-top: 1px solid #bbcdd2;
 
   @include media-breakpoint-down(md) {
     padding-bottom: 0.25rem;
     margin-top: 1rem;
     font-size: 1rem;
-    font-weight: normal;
+    font-weight: 500;
     line-height: 1.25rem;
     border-top: none;
   }
 
   & > .title {
-    color: white;
+    color: #fff;
     background: $gray-dark-menu;
   }
 }

@@ -42,6 +42,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
   user-select: none;
 
   background-color: #fff;
+  // stylelint-disable-next-line
   background-image: linear-gradient(to top, #eee 0%, #fff 50%);
 
   background-clip: padding-box;
@@ -56,7 +57,6 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 .select2-container.select2-drop-above .select2-choice {
   border-bottom-color: #aaa;
   border-radius: 0 0 4px 4px;
-  //background-image: linear-gradient(to bottom, #eee 0%, #fff 90%);
 }
 
 .select2-container.select2-allowclear .select2-choice .select2-chosen {
@@ -306,7 +306,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 }
 
 .select2-results li.select2-result-with-children > .select2-result-label {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .select2-results .select2-result-label {
@@ -405,22 +405,17 @@ disabled look for disabled choices in the results dropdown
   position: relative;
   height: auto !important;
   height: 1%;
+  min-height: 26px;
   padding: 0;
   margin: 0;
   overflow: hidden;
   cursor: text;
-
   background-color: #fff;
-
   border: 1px solid #aaa;
 }
 
 .select2-locked {
   padding: 3px 5px !important;
-}
-
-.select2-container-multi .select2-choices {
-  min-height: 26px;
 }
 
 .select2-container-multi.select2-container-active .select2-choices {
@@ -479,10 +474,12 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
   user-select: none;
 
   background-color: #e4e4e4;
+  // stylelint-disable
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eee));
   background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
   background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
   background-image: linear-gradient(to top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+  // stylelint-enable
   filter: progid:dximagetransform.microsoft.gradient(startColorstr="#eeeeee", endColorstr="#f4f4f4", GradientType=0);
 
   background-clip: padding-box;
@@ -590,6 +587,7 @@ html[dir="rtl"] .select2-search-choice-close {
 
 /* Retina-ize icons */
 
+// stylelint-disable-next-line
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 2dppx)  {
   .select2-search input,
   .select2-search-choice-close,
@@ -597,6 +595,7 @@ html[dir="rtl"] .select2-search-choice-close {
   .select2-container .select2-choice .select2-arrow b {
     background-image: url("../img/select2x2.png") !important;
     background-repeat: no-repeat !important;
+    // stylelint-disable-next-line
     background-size: 60px 40px !important;
   }
 

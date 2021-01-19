@@ -290,7 +290,7 @@ $search-border-color: #bbcdd2;
           font-size: 14px;
           &:hover {
             .material-icons {
-              color: white;
+              color: #fff;
             }
           }
           &.username {
@@ -354,7 +354,7 @@ $search-border-color: #bbcdd2;
     @include border-radius(0, 55px, 55px, 0);
     font-style: italic;
     color: $main-color;
-    background: white;
+    background: #fff;
     border: 1px solid $search-border-color;
     border-left: none;
     &::placeholder {
@@ -446,12 +446,12 @@ $search-border-color: #bbcdd2;
   width: 35px;
   height: 35px;
   text-align: center;
-  background-color: rgba(black, 0.4);
+  background-color: rgba(#000, 0.4);
   @include left(0);
   i {
     font-size: 20px;
     line-height: 35px;
-    color: rgba(white, 0.6);
+    color: rgba(#fff, 0.6);
   }
 }
 #notification,
@@ -514,7 +514,7 @@ $search-border-color: #bbcdd2;
       margin-right: 1px;
       border-color: transparent;
       border-width: 7px;
-      border-bottom-color: white;
+      border-bottom-color: #fff;
     }
     &::before {
       border-color: transparent;
@@ -543,7 +543,7 @@ $search-border-color: #bbcdd2;
           }
           .nav-link {
             padding: 0.9375rem 0.9375rem 0.625rem;
-            font-family: Open Sans, sans-serif;
+            font-family: "Open Sans", sans-serif;
             font-size: 0.9rem;
             font-weight: 400;
             color: #6c868e;
@@ -567,7 +567,7 @@ $search-border-color: #bbcdd2;
             color: #6c868e;
             text-align: center;
             &::after {
-              font-family: "Material Icons";
+              font-family: "Material Icons", sans-serif;
               font-size: 5.625rem;
               color: #bbcdd2;
               content: "\E7F5";
