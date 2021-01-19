@@ -48,7 +48,7 @@
             <strong class="text-muted">Guest</strong>
           {% endif %}
         </div>
-        <div id ="viewFullDetails" class="col-md-6 text-right">
+        <div id="viewFullDetails" class="col-md-6 text-right">
           <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
