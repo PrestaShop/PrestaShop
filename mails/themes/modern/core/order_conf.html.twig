@@ -345,18 +345,22 @@
                                     </td>
                                     <td bgcolor="#FDFDFD" colspan="3"> {total_products} </td>
                                   </tr>
+                                  {% if total_discounts matches '/[1-9]/' %}
                                   <tr class="order_summary">
                                     <td bgcolor="#FDFDFD" colspan="3" align="right">
                                       {{ 'Discounts'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
                                     <td bgcolor="#FDFDFD" colspan="3"> {total_discounts} </td>
                                   </tr>
+                                  {% endif %}
+                                  {% if total_wrapping matches '/[1-9]/' %}
                                   <tr class="order_summary">
                                     <td bgcolor="#FDFDFD" colspan="3" align="right">
                                       {{ 'Gift-wrapping'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
                                     <td bgcolor="#FDFDFD" colspan="3"> {total_wrapping} </td>
                                   </tr>
+                                  {% endif %}
                                   <tr class="order_summary">
                                     <td bgcolor="#FDFDFD" colspan="3" align="right">
                                       {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
