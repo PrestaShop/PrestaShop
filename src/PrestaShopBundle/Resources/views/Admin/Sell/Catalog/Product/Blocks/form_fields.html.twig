@@ -24,9 +24,10 @@
  * #}
 
 {%- block supplier_references_row -%}
-  <div id="supplier___SUPPLIER_ID__">
+<div class="row" id="supplier_refrence_row_{% if form.vars.value is not null %}{{ form.vars.value.supplier_id }}{% else %}__SUPPLIER_ID__{% endif %}">
+  <div class="col">
     {# We need to check if value is not null because in prototype it is null else we display a placeholder #}
-    <div>{% if form.vars.value is not null %}{{ form.vars.value.supplier_name }}{% else %}__SUPPLIER_NAME__{% endif %}</div>
+    <div>{% if form.vars.value is not null %}{{ form.vars.value.supplier_name }}{% else %}__supplier_name__{% endif %}</div>
     <table class="table">
       <thead class="thead-default">
       <tr>
@@ -36,11 +37,10 @@
         <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
       </tr>
       </thead>
-      <tbody>
       {{ form_row(form.product_suppliers_collection) }}
-      </tbody>
     </table>
   </div>
+</div>
 {%- endblock supplier_references_row -%}
 
 {%- block product_supplier_row -%}
@@ -53,11 +53,23 @@
   </tr>
 {%- endblock product_supplier_row -%}
 
-{# Override collection template to remove the label column #}
-{% block collection_row %}
-  <div class="form-group row">
+{# Override suppliers reference collection template to remove the label column #}
+{%- block _product_suppliers_supplier_references_row -%}
+  {% if prototype is defined %}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+  {% endif %}
+  <div class="form-group row supplier_references_row" {{ block('widget_attributes') }}>
     <div class="col-sm">
-      {{ form_widget(form) }}
+      {{- block('form_rows') -}}
     </div>
   </div>
-{% endblock collection_row %}
+{%- endblock -%}
+
+{%- block _product_suppliers_supplier_references_entry_product_suppliers_collection_row -%}
+  {% if prototype is defined %}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+  {% endif %}
+  <tbody class="product_suppliers_collection" {{ block('widget_attributes') }}>
+    {{- block('form_rows') -}}
+  </tbody>
+{%- endblock -%}
