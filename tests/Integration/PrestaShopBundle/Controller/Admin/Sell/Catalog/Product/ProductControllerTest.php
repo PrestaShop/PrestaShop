@@ -169,6 +169,7 @@ class ProductControllerTest extends WebTestCase
             ],
         ];
 
+        // Clear all carriers
         yield [
             [
                 'product[shipping][carriers]' => [],
@@ -176,6 +177,41 @@ class ProductControllerTest extends WebTestCase
             [
                 'shipping' => [
                     'carriers' => [''],
+                ],
+            ],
+        ];
+
+        yield [
+            [
+                'product[basic][name][1]' => 'Test Update Multi fields',
+                'product[basic][description][1]' => 'Product description',
+                'product[basic][description_short][1]' => 'Product short description',
+                'product[price][price_tax_excluded]' => '10.42',
+                'product[price][on_sale]' => 1,
+                'product[shipping][carriers]' => [4],
+                'product[shipping][delivery_time_in_stock_note][1]' => 'In stock',
+            ],
+            [
+                'basic' => [
+                    'name' => [
+                        1 => 'Test Update Multi fields',
+                    ],
+                    'description' => [
+                        1 => 'Product description',
+                    ],
+                    'description_short' => [
+                        1 => 'Product short description',
+                    ],
+                ],
+                'price' => [
+                    'price_tax_excluded' => 10.42,
+                    'on_sale' => 1,
+                ],
+                'shipping' => [
+                    'carriers' => [4],
+                    'delivery_time_in_stock_note' => [
+                        1 => 'In stock',
+                    ],
                 ],
             ],
         ];
