@@ -25,5 +25,11 @@
 
 export default {
   productForm: 'form[name=product]',
+  suppliersBlock: '#product_suppliers',
+  supplierReferencesBlock: '#supplierReferences',
+  supplierReferencePrototype: '#supplierReferencePrototype',
+  productSupplierPrototype: '#productSupplierPrototype',
+  supplierSelectionBlock: '#product_suppliers_supplier_ids',
+  defaultSupplierSelectionBlock: '#product_suppliers_default_supplier_id',
   productFormSubmitButton: 'button[name="product[save]"]',
 };

@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,13 +21,37 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% set suppliersForm = productForm.suppliers %}
 
 <div class="row">
   <div class="col">
-    {{ form_row(suppliersForm.supplier_ids) }}
+    {# {{ form_row(suppliersForm.supplier_ids) }} #}
+
+    <div class="form-group row">
+      <label class="form-control-label">{{ form_label(suppliersForm.supplier_ids) }}</label>
+      <div class="col-sm">
+        <div id="product_suppliers_supplier_ids">
+
+          {% for index, choice in suppliersForm.supplier_ids.vars.choices %}
+            <div class="form-check">
+              <label for="product_suppliers_supplier_ids_{{ index }}">
+                <input type="checkbox" id="product_suppliers_supplier_ids_{{ index }}"
+                       name="product[suppliers][supplier_ids][]"
+                       class="form-check-input" value="{{ choice.value }}"
+                       data-label="{{ choice.label }}"
+                >
+                  {{ choice.label }}
+              </label>
+            </div>
+          {% endfor %}
+          {{ suppliersForm.supplier_ids.setRendered(true) }}
+
+        </div>
+      </div>
+    </div>
+
   </div>
   <div class="col">
     {{ form_row(suppliersForm.default_supplier_id) }}
@@ -35,7 +59,7 @@
 </div>
 
 {% for supplierReferenceForm in suppliersForm.supplier_references %}
-    <div>{{ supplierReferenceForm.vars.value.supplier_name }}</div>
+  <div>{{ supplierReferenceForm.vars.value.supplier_name }}</div>
   <table class="table">
     <thead class="thead-default">
     <tr>
@@ -46,7 +70,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for productSupplierField in supplierReferenceForm.product_supplier_collection %}
+    {% for productSupplierField in supplierReferenceForm.product_suppliers_collection %}
       <tr>
         <td>{{ productSupplierField.vars.value.product_name }}</td>
         <td>{{ form_widget(productSupplierField.supplier_reference) }}</td>
@@ -54,9 +78,20 @@
         <td>{{ form_widget(productSupplierField.currency_id) }}</td>
       </tr>
     {% endfor %}
-
     </tbody>
   </table>
-  {#    setRendered(true) to avoid rendering twice#}
+  {# setRendered(true) to avoid rendering twice #}
   {{ supplierReferenceForm.setRendered(true) }}
 {% endfor %}
+
+<div id="supplierReferences">
+
+</div>
+
+<script id="productSupplierPrototype" type="text/template">
+  {{ form_widget(suppliersForm.supplier_references.vars.prototype.product_suppliers_collection.vars.prototype) }}
+</script>
+
+<script id="supplierReferencePrototype" type="text/template">
+  {{ form_widget(suppliersForm.supplier_references.vars.prototype) }}
+</script>

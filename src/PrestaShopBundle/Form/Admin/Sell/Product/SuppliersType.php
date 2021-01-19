@@ -77,7 +77,11 @@ class SuppliersType extends TranslatorAwareType
                 'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
             ])
             ->add('supplier_references', CollectionType::class, [
+                'label' => false,
                 'entry_type' => SupplierReferencesType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype_name' => '__SUPPLIER_REFERENCE_PROTOTYPE__',
             ])
         ;
     }
