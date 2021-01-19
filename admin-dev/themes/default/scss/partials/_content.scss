@@ -50,7 +50,7 @@ body {
     position: relative;
     padding: 20px;
     margin-bottom: 20px;
-    background-color: white;
+    background-color: #fff;
     border: 1px solid $card-border-color;
     @include border-radius(5px);
     @include box-shadow(0 0 4px 0 rgba(0, 0, 0, 0.06));
@@ -111,7 +111,7 @@ body {
       font-weight: 700;
       line-height: 1.2em;
       color: $gray;
-      background-color: white;
+      background-color: #fff;
       border: solid 1px lighten($gray-light, 25%);
       @include margin-left(0.4em);
       @include border-radius(20px);
@@ -174,7 +174,7 @@ body {
     z-index: 99;
   }
   .breadcrumb {
-    background-color: white;
+    background-color: #fff;
     border: solid 1px darken($bg-content-color, 10%);
   }
   .panel.panel-sm {
@@ -197,7 +197,7 @@ body {
 }
 .data-focus {
   &.data-focus-primary {
-    color: white;
+    color: #fff;
     background-color: $brand-primary;
     @include border-radius(10px);
   }
@@ -221,6 +221,13 @@ body.display-modal {
   }
 }
 .bootstrap {
+  input[type="text"],
+  input[type="search"],
+  input[type="password"],
+  textarea,
+  select {
+    @extend .form-control;
+  }
   .modal {
     .alert {
       h3 {
@@ -234,17 +241,7 @@ body.display-modal {
     }
     //todo: remove temp fix for bootstrap RC1 -> final
   }
-}
-.bootstrap {
-  input[type="text"],
-  input[type="search"],
-  input[type="password"],
-  textarea,
-  select {
-    @extend .form-control;
-  }
-}
-.bootstrap {
+
   .panel {
     .panel-footer {
       height: 73px;
@@ -283,7 +280,8 @@ body.display-modal {
   margin-top: 181px;
   margin-bottom: 50px;
   overflow-x: hidden;
-  background-color: white;
+  background-color: #fff;
+
   @media (max-width: $screen-lg) {
     display: none;
   }

@@ -26,7 +26,7 @@
       top: 0;
       font-size: 26px;
       line-height: 26px;
-      color: white;
+      color: #fff;
       text-align: center;
       @include left(0);
       @include border-radius(3px);
@@ -91,18 +91,18 @@
 }
 .data_chart {
   rect {
-    fill: white;
+    fill: #fff;
   }
   path {
     fill: none;
-    stroke: white;
+    stroke: #fff;
     stroke-width: 2;
   }
   line {
-    stroke: black;
+    stroke: #000;
   }
   .area {
-    fill: rgba(white, 0.3);
+    fill: rgba(#fff, 0.3);
     stroke-width: 0;
   }
 }

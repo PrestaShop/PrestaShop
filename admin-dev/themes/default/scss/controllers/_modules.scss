@@ -14,7 +14,7 @@
     border: solid 1px $brand-primary;
 
     option {
-      background: white !important;
+      background: #fff !important;
     }
   }
 }
@@ -42,7 +42,7 @@
     padding: 0 4px;
     font-size: 1.4em;
     color: $brand-primary;
-    background-color: white;
+    background-color: #fff;
     @include border-radius(3px);
   }
 }
@@ -72,8 +72,7 @@
       background-color: #f7e69f;
     }
   }
-}
-.module_list {
+
   .draggable {
     cursor: pointer;
   }
@@ -96,7 +95,7 @@
     padding: 0 5px;
     font-size: 1.4em;
     color: #aaa;
-    text-shadow: white 1px 1px;
+    text-shadow: #fff 1px 1px;
     cursor: move;
     background-color: #eee;
     border: solid 1px #ccc;

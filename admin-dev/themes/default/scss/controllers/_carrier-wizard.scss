@@ -69,7 +69,7 @@
         margin-right: 3px;
         font-size: 30px;
         line-height: 32px;
-        color: white;
+        color: #fff;
         text-align: center;
       }
       .stepDesc {
@@ -87,7 +87,7 @@
         right: -16px;
         border: 16px solid transparent;
         border-right: 0;
-        border-left: 14px solid white;
+        border-left: 14px solid #fff;
         &::after {
           position: absolute;
           top: -16px;
@@ -115,7 +115,7 @@
       }
     }
     a.done {
-      color: white;
+      color: #fff;
       background-color: $brand-success;
       .chevron::after {
         border-left: 14px solid $brand-success;
@@ -153,7 +153,7 @@
   }
   .range_type {
     width: 220px;
-    font-weight: bold;
+    font-weight: 700;
     text-align: right;
   }
   .range_data {

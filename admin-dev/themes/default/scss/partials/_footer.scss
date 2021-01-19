@@ -7,7 +7,7 @@
   height: 50px;
   line-height: 50px;
   color: #aaa;
-  background-color: rgba(black, 0.8);
+  background-color: rgba(#000, 0.8);
   @include animate(fadeInUp, 0.3s);
   a {
     color: #ccc;
@@ -40,12 +40,12 @@
   a.footer_link {
     color: $brand-primary;
     &:hover {
-      color: white;
+      color: #fff;
       text-decoration: none;
     }
     i {
       font-size: $icon-size-base;
-      color: white;
+      color: #fff;
     }
   }
   .footer-contact {
@@ -57,7 +57,7 @@
     @include margin(0,0,6px,6px);
     strong {
       font-weight: 400;
-      color: white;
+      color: #fff;
     }
   }
 }
@@ -77,35 +77,35 @@ a.link-social {
   }
 }
 .link-youtube i {
-  color: white;
+  color: #fff;
   background-color: #f00;
   &:hover {
     color: #f00;
-    background-color: white;
+    background-color: #fff;
   }
 }
 .link-twitter i {
-  color: white;
+  color: #fff;
   background-color: #7cceef;
   &:hover {
     color: #7cceef;
-    background-color: white;
+    background-color: #fff;
   }
 }
 .link-facebook i {
-  color: white;
+  color: #fff;
   background-color: #557dbb;
   &:hover {
     color: #557dbb;
-    background-color: white;
+    background-color: #fff;
   }
 }
 .link-github i {
-  color: black;
-  background-color: white;
+  color: #000;
+  background-color: #fff;
   &:hover {
-    color: white;
-    background-color: black;
+    color: #fff;
+    background-color: #000;
   }
 }
 .status-page-dot {

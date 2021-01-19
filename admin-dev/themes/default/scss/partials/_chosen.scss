@@ -70,7 +70,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       }
       &.group-result {
         display: list-item;
-        font-weight: bold;
+        font-weight: 700;
         color: #999;
         cursor: default;
       }
@@ -82,7 +82,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
         cursor: pointer;
       }
       &.highlighted {
-        color: white;
+        color: #fff;
         background-color: $link-color;
         em {
           background: transparent;
@@ -104,7 +104,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     width: 321px;
     margin: 0 4px;
     text-align: center;
-    background: white;
+    background: #fff;
     span {
       display: inline-block;
       width: 9px;
@@ -143,11 +143,13 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       text-decoration: none;
       cursor: pointer;
     }
+    // stylelint-disable-next-line
     &:span {
       display: block;
       @include margin-right(26px);
       @include text-overflow();
     }
+    // stylelint-disable-next-line
     &:abbr {
       position: absolute;
       top: ($chosen-height - 10px) / 2;
@@ -283,7 +285,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       @include padding(3px, 20px, 3px, 5px);
       @include border-top-radius($chosen-border-radius);
       @include border-bottom-radius($chosen-border-radius);
-      @include gradient-vertical(white, $gray-lighter);
+      @include gradient-vertical(#ffffff, $gray-lighter);
       @include box-shadow($chosen-box-shadow);
       .search-choice-close {
         position: absolute;

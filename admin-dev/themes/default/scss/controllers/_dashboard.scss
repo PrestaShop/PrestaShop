@@ -28,7 +28,7 @@
 .dash_trend_down {
   color: $brand-danger;
   &::before {
-    font-family: FontAwesome;
+    font-family: FontAwesome, sans-serif;
     content: "\f0ab";
     @include margin-right(4px);
   }
@@ -36,14 +36,14 @@
 .dash_trend_up {
   color: $brand-success;
   &::before {
-    font-family: FontAwesome;
+    font-family: FontAwesome, sans-serif;
     content: "\f0aa";
     @include margin-right(4px);
   }
 }
 .dash_trend_right {
   &::before {
-    font-family: FontAwesome;
+    font-family: FontAwesome, sans-serif;
     content: "\f0a9";
     @include margin-right(4px);
   }
@@ -53,7 +53,7 @@
     header {
       padding: 3px 8px;
       font-size: 1.2em;
-      color: white;
+      color: #fff;
       background-color: $brand-primary;
       @include margin(0, 0, 3px, 0);
       .small {
@@ -166,7 +166,7 @@
     #dashtrends_toolbar {
       margin: 0 -16px 10px;
       dl {
-        @include box-shadow(0 0 0 2px white inset);
+        @include box-shadow(0 0 0 2px #ffffff inset);
         dt {
           height: 2.6em;
           padding: 0;
@@ -183,7 +183,7 @@
         dd.dash_trend {
           width: 80px;
           margin: 0 auto;
-          background-color: white;
+          background-color: #fff;
           @include border-radius(3px);
         }
         &:hover {
@@ -198,7 +198,7 @@
         &.active {
           dt,
           dd.data_value {
-            color: white;
+            color: #fff;
           }
         }
       }
@@ -209,7 +209,7 @@
       margin: 0;
       text-align: center;
       cursor: pointer;
-      background-color: white;
+      background-color: #fff;
       border-bottom: 1px solid #ddd;
       @include border-left(1px solid #ddd);
       &:first-child {
@@ -217,15 +217,15 @@
       }
       &.active {
         background-color: $brand-primary;
-        @include box-shadow(white 0 0 0 2px inset);
+        @include box-shadow(#ffffff 0 0 0 2px inset);
         dt {
-          color: white;
+          color: #fff;
         }
       }
     }
     dt {
       height: 37px;
-      font: 400 1.1em/120% $headings-font-family;
+      font: 400 1.1em / 120% $headings-font-family;
       line-height: 1em;
       text-align: center;
     }
@@ -247,7 +247,7 @@
   #dashproducts {
     nav {
       margin-bottom: 10px;
-      font: 400 1.1em/120% $headings-font-family;
+      font: 400 1.1em / 120% $headings-font-family;
       text-transform: uppercase;
     }
   }
@@ -255,7 +255,7 @@
     padding: 10px 20px;
     font-size: 1.3em;
     text-align: center;
-    background-color: white;
+    background-color: #fff;
     border: 1px dashed #c0c0c0;
     @include border-radius(3px);
     a {
@@ -302,7 +302,7 @@
   }
   .tooltip-panel-heading {
     margin-bottom: 10px;
-    font: 400 1.2em/$line-height-base $headings-font-family;
+    font: 400 1.2em / $line-height-base $headings-font-family;
     text-align: center;
     text-transform: uppercase;
     border-bottom: 1px solid #ccc;
@@ -312,6 +312,7 @@
   -webkit-animation-#{$name}: $value;
   animation-#{$name}: $value;
 }
+// stylelint-disable
 @mixin keyframes($name) {
   @-webkit-keyframes $name {
     @content;
@@ -329,6 +330,7 @@
     @content;
   }
 }
+// stylelint-enable
 .data_loading {
   opacity: 1;
   @include animation(name,bounceG);
@@ -361,7 +363,7 @@
 #calendar {
   button.btn-default.active {
     font-weight: 700;
-    color: white;
+    color: #fff;
     background-color: $brand-primary;
     border-color: darken($brand-primary, 10%);
     @include box-shadow(none);

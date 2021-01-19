@@ -6,7 +6,7 @@ $secondary-color: $greenPrestashop !default;
 $bg-content-color: #eff1f2 !default;
 
 $contrasted-dark-default: #333;
-$contrasted-light-default: white;
+$contrasted-light-default: #fff;
 $contrasted-lightness-threshold: 10%;
 
 $bg-page-head-color: $secondary-color;
@@ -64,8 +64,8 @@ $alert-danger-border: #f44336 !default;
 
 // Sidebar
 $sidebar-menu-color: #bebebe !default;
-$sidebar-menu-active-color: white !default;
-$sidebar-menu-hover-color: white !default;
+$sidebar-menu-active-color: #fff !default;
+$sidebar-menu-hover-color: #fff !default;
 $sidebar-menu-bg-hover-color: #282b30;
 
 // Toolbar
@@ -100,7 +100,7 @@ $table-bg-hover: #edf7fb;
 
 // Buttons
 $btn-default-color: $main-color;
-$btn-default-bg: white;
+$btn-default-bg: #fff;
 $btn-default-border: #bbcdd2;
 $btn-primary-color: $btn-default-color;
 $btn-primary-bg: $primary-color;
@@ -114,7 +114,7 @@ $input-border: #bbcdd2;
 $input-focus-background: #f4fcfd;
 $input-focus-border: $primary-color;
 // Dropdowns
-$dropdown-link-hover-color: white;
+$dropdown-link-hover-color: #fff;
 $dropdown-link-hover-bg: $brand-primary;
 
 // Grid system

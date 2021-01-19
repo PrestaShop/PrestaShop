@@ -1,7 +1,7 @@
 //form
 label.control-label {
   font-size: 13px;
-  font-weight: normal;
+  font-weight: 500;
   color: #666;
 }
 label.control-label span.label-tooltip {
@@ -18,7 +18,7 @@ label.required::before {
   position: relative;
   font-size: 14px;
   line-height: 12px;
-  color: red;
+  color: #f00;
   content: "*";
 }
 .tooltip {
@@ -80,7 +80,7 @@ input[type="color"]:hover,
   }
   &:hover {
     .caret {
-      border-top-color: white !important;
+      border-top-color: #fff !important;
     }
   }
   &.btn-default {
@@ -88,20 +88,20 @@ input[type="color"]:hover,
       color: $gray;
     }
     &:hover {
-      color: white;
+      color: #fff;
       background-color: $brand-primary;
       border-color: darken($brand-primary, 10%);
       @include box-shadow(none);
       i {
-        color: white;
+        color: #fff;
       }
     }
   }
   &.btn-primary {
     i {
-      color: white;
+      color: #fff;
     }
-    color: white;
+    color: #fff;
     text-transform: uppercase;
     background-color: $brand-primary;
     &:hover {
@@ -121,7 +121,7 @@ input[type="color"]:hover,
     padding: 5px 10px;
     &:hover {
       i {
-        color: white;
+        color: #fff;
       }
     }
   }
@@ -165,7 +165,7 @@ input[type="color"]:hover,
 .tt-dropdown-menu {
   font-size: 0.9em;
   text-transform: none;
-  background-color: white;
+  background-color: #fff;
   border: solid 1px #ccc;
 }
 .tt-suggestions {
@@ -185,7 +185,7 @@ input[type="color"]:hover,
   min-height: 30px;
   padding: 0 3px;
   overflow: auto;
-  background-color: white;
+  background-color: #fff;
   border: solid 1px #ccc;
   @include border-radius(3px);
   @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset);
@@ -196,12 +196,12 @@ input[type="color"]:hover,
     display: inline-block;
     padding: 2px 5px;
     margin: 3px;
-    color: white;
+    color: #fff;
     background-color: lighten($brand-primary, 15%);
     border: 1px solid $brand-primary;
     border-radius: 2px;
     > a {
-      font-weight: bold;
+      font-weight: 700;
       color: $brand-primary;
       text-decoration: none;
       @include padding-left(5px);
@@ -230,8 +230,7 @@ input[type="color"]:hover,
     }
     .input-group {
       margin: 4px 0;
-    }
-    .input-group {
+
       input[type="text"],
       input[type="search"],
       input[type="password"],
