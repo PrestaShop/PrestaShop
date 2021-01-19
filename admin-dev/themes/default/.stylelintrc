@@ -15,6 +15,7 @@
     "property-no-vendor-prefix": null,
     "property-blacklist": null,
     "declaration-no-important": null,
+    "selector-max-attribute": null,
     "scss/dollar-variable-pattern": null,
     "scss/dollar-variable-default": null
   }
