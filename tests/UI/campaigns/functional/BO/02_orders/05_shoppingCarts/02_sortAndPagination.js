@@ -161,10 +161,10 @@ describe('sort and pagination shopping carts', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the item number to 300 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
-      const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, '300');
       expect(paginationNumber).to.equal('1');
     });
   });
