@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class CustomerNameValidator extends ConstraintValidator
 {
     const PATTERN_NAME = '/^(?!\s*$)(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。]|[。\.](?:\s|$))*$/u';
-    const PATTERN_DOT_SPACED = '/[\.。](\s{1}[^\ ]|$)/';
+    const PATTERN_DOT_SPACED = '/(?!^)[\.。](\s{1}[^\ ]|$)/';
 
     /**
      * @var CharacterCleaner
@@ -99,11 +99,6 @@ class CustomerNameValidator extends ConstraintValidator
         if (mb_strpos($name, '.') === false && mb_strpos($name, '。') === false) {
             return true;
         }
-
-        if (mb_strpos($name, '.') === 0 || mb_strpos($name, '。') === 0) {
-            return false;
-        }
-
         $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_DOT_SPACED);
 
         return (bool) preg_match($pattern, $name);
