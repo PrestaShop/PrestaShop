@@ -86,6 +86,50 @@
 .module-modal-dialog {
   width: 50%;
   height: 85%;
+
+  @include media-breakpoint-down(sm) {
+    width: calc(100% - 2rem);
+    margin: auto;
+
+    .modal-header {
+      > div {
+        display: flex;
+
+        h1 {
+          font-size: 1rem;
+        }
+
+        img {
+          width: 40px;
+          margin-right: 1rem;
+        }
+      }
+    }
+
+    .tab-content {
+      padding: 0;
+    }
+
+    .navbar {
+      padding: 0;
+    }
+
+    .nav {
+      flex-wrap: nowrap;
+      overflow: scroll;
+
+      li {
+        display: flex;
+
+        .nav-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: max-content;
+        }
+      }
+    }
+  }
 }
 .module-modal-content {
   border: none;
@@ -98,6 +142,10 @@
 
 .module-short-list {
   margin: 2em 0;
+
+  @include media-breakpoint-down(md) {
+    margin: 1rem 0;
+  }
 
   .module-list-empty {
     padding: 20px;
@@ -132,8 +180,20 @@
   }
 
   .module-item-wrapper-list {
-    @media (max-width: 33.9em) {
-      text-align: center;
+    > div {
+      @media (max-width: 33.9em) {
+        &:first-of-type {
+          width: 25%;
+        }
+
+        &:last-of-type {
+          width: 75%;
+
+          > div:not(.modal) {
+            position: initial;
+          }
+        }
+      }
     }
 
     .module-logo-thumb-list {
@@ -154,6 +214,10 @@
       margin: 0;
       font-weight: bolder;
       color: $gray-dark;
+
+      @media (max-width: 33.9em) {
+        padding-right: 1.5rem;
+      }
     }
     .module-version-author-list {
       overflow: hidden;
@@ -269,6 +333,12 @@
   position: absolute;
   top: 7px;
   right: 7px;
+
+  @media (max-width: 33.9em) {
+    top: 0;
+    right: 1rem;
+  }
+
   &.md-checkbox label {
     padding: 0;
   }
@@ -387,7 +457,18 @@
     h3 {
       margin-top: 30px;
       font-size: 14px;
+
+      @include media-breakpoint-down(md) {
+        margin-top: 1rem;
+      }
     }
+  }
+}
+
+.top-menu-separator {
+  @include media-breakpoint-down(md) {
+    margin-top: 1rem;
+    margin-bottom: 0;
   }
 }
 
@@ -635,6 +716,22 @@ form#importDropzone {
   }
 }
 
+.modules-list {
+  .module-item {
+    &:first-of-type {
+      .container-fluid {
+        @include border-top-radius(5px);
+      }
+    }
+
+    &:last-of-type {
+      .container-fluid {
+        @include border-bottom-radius(5px);
+      }
+    }
+  }
+}
+
 .module-list {
   &-disabled {
     @extend .module-list;
@@ -788,6 +885,10 @@ form#importDropzone {
 }
 
 .module-actions {
+  @media (max-width: 33.9em) {
+    margin-top: 1rem;
+  }
+
   // @toDo: move to ui kit
   .dropdown-toggle-split-text {
     margin-left: 10px !important;

@@ -56,7 +56,7 @@ class AddAddress extends BOBasePage {
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
     // Save address
     await this.clickAndWaitForNavigation(page, this.saveAddressButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

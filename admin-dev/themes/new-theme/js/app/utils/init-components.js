@@ -31,6 +31,8 @@ import ChoiceTable from '@js/components/choice-table.js';
 import ChoiceTree from '@js/components/form/choice-tree.js';
 import MultipleChoiceTable from '@js/components/multiple-choice-table.js';
 import GeneratableInput from '@js/components/generatable-input.js';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import {EventEmitter} from '@components/event-emitter';
 
 const initPrestashopComponents = () => {
@@ -83,6 +85,8 @@ const initPrestashopComponents = () => {
     ChoiceTree,
     MultipleChoiceTable,
     GeneratableInput,
+    CountryStateSelectionToggler,
+    CountryDniRequiredToggler,
   };
 };
 export default initPrestashopComponents;

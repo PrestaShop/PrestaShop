@@ -108,7 +108,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteFiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -189,7 +189,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteFiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

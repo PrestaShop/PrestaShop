@@ -96,7 +96,7 @@ class AddCarrier extends BOBasePage {
     await page.click(this.finishButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

@@ -24,6 +24,41 @@ $header-text-color: #4e6167 !default;
     }
     .notification-center .dropdown-menu {
       margin-top: 0.3125rem;
+
+      @include media-breakpoint-down("sm") {
+        // stylelint-disable-next-line
+        left: 50% !important;
+        min-width: 21rem;
+        // stylelint-disable-next-line
+        height: auto !important;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 8px 16px 0 rgba(#000, 0.1);
+        @include border-radius(5px);
+
+        .notifications {
+          min-width: auto;
+
+          .tab-content {
+            border-top: 0;
+          }
+
+          .nav {
+            .nav-link {
+              font-size: 1rem;
+
+              &.active {
+                color: $gray-dark;
+                background: #f4fcfd;
+              }
+            }
+          }
+          &::before,
+          &::after {
+            content: none;
+          }
+        }
+      }
     }
     > .material-icons:not(.js-mobile-menu) {
       padding-top: 0.625rem;
@@ -339,13 +374,13 @@ $header-text-color: #4e6167 !default;
       > .material-icons {
         padding-right: 0.3125rem;
         font-size: 1.25rem;
-        color: $primary;
+        color: $medium-gray;
       }
-    }
 
-    @media (max-width: breakpoint-max("lg")) {
-      span {
-        display: none;
+      &:hover {
+        .material-icons {
+          color: $primary;
+        }
       }
     }
   }
@@ -367,25 +402,49 @@ $header-text-color: #4e6167 !default;
     color: $header-text-color;
     text-decoration: none;
 
-    &:hover {
-      color: $primary;
-    }
-
     .selected-item {
       font-size: 0.8125rem;
       line-height: 17px;
+
       .material-icons {
         top: -1px;
         font-size: 1.25rem;
+
         &.visibility {
-          color: $primary;
+          color: $medium-gray;
+          @include transition(0.25s ease-out);
+        }
+      }
+
+      @media (max-width: breakpoint-max("lg")) {
+        font-size: 0;
+
+        .arrow-down {
+          display: none;
+        }
+      }
+    }
+
+    &:hover {
+      color: $primary;
+
+      .selected-item {
+        .material-icons {
+          &.visibility {
+            color: $primary;
+          }
         }
       }
     }
   }
+
   &.show {
     .selected-item {
       color: $primary;
+
+      .material-icons.visibility {
+        color: $primary;
+      }
     }
   }
   .dropdown-menu {

@@ -142,7 +142,7 @@ class Profiles extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteProfiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 
@@ -179,7 +179,7 @@ class Profiles extends BOBasePage {
     ]);
 
     await this.confirmDeleteProfiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

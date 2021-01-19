@@ -765,8 +765,8 @@ namespace PrestaShopBundle\Install {
                 $mailTheme,
                 $locale,
                 false,
-                !empty($coreOutputFolder) ? $coreOutputFolder : '',
-                !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
+                '',
+                ''
             );
             /** @var CommandBusInterface $commandBus */
             $commandBus = $sfContainer->get('prestashop.core.command_bus');

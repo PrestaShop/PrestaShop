@@ -61,12 +61,12 @@
         <div class="col-md-2 hidden-sm-down" id="_desktop_logo">
             {if $page.page_name == 'index'}
               <h1>
-                <a href="{$urls.base_url}">
+                <a href="{$urls.pages.index}">
                   <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy">
                 </a>
               </h1>
             {else}
-                <a href="{$urls.base_url}">
+                <a href="{$urls.pages.index}">
                   <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy">
                 </a>
             {/if}

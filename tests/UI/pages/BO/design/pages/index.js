@@ -133,7 +133,7 @@ class Pages extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDeleteFromTable(page, table);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -161,7 +161,7 @@ class Pages extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDeleteFromTable(page, table);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -234,7 +234,7 @@ class Pages extends BOBasePage {
       page,
       enable ? this.bulkActionsEnableButton(table) : this.bulkActionsDisableButton(table),
     );
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

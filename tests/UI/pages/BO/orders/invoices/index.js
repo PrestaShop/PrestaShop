@@ -69,7 +69,7 @@ class Invoice extends BOBasePage {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
     await page.click(this.generatePdfByDateButton);
 
-    return this.getTextContent(page, this.alertTextBlock);
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
@@ -122,7 +122,7 @@ class Invoice extends BOBasePage {
    */
   async generatePDFByStatusAndFail(page) {
     await page.click(this.generatePdfByStatusButton);
-    return this.getTextContent(page, this.alertTextBlock);
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
@@ -141,7 +141,7 @@ class Invoice extends BOBasePage {
    */
   async saveInvoiceOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveInvoiceOptionsButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

@@ -24,9 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;

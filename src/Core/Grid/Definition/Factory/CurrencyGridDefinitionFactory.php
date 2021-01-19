@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Currency\NameColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -92,7 +93,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'id_currency',
                     ])
             )
-            ->add((new DataColumn('name'))
+            ->add((new NameColumn('name'))
             ->setName($this->trans('Currency', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',

@@ -35,4 +35,15 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ProductCommandCollection extends ArrayCollection
 {
+    /**
+     * Merge array of commands into the collection
+     *
+     * @param array $commands
+     */
+    public function merge(array $commands): void
+    {
+        foreach ($commands as $command) {
+            $this->add($command);
+        }
+    }
 }

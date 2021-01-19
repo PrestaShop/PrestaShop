@@ -204,10 +204,7 @@ describe('Filter Products', async () => {
         );
 
         if (isActionPerformed) {
-          const resultMessage = await productsPage.getTextContent(
-            page,
-            productsPage.alertSuccessBlockParagraph,
-          );
+          const resultMessage = await productsPage.getAlertSuccessBlockParagraphContent(page);
 
           if (productStatus.args.enable) {
             await expect(resultMessage).to.contains(productsPage.productActivatedSuccessfulMessage);

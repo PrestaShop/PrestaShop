@@ -237,7 +237,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
-                    if ($shipping['url'] && $shipping['tracking_number']) {
+                    if ($shipping['url']) {
                         $tracking_line = '<a href="' . str_replace(
                             '@',
                             $shipping['tracking_number'],

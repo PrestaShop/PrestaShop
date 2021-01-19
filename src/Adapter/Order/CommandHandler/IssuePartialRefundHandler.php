@@ -146,7 +146,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             if ($shouldReinjectProducts) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
-            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'action' => CancellationActionType::PARTIAL_REFUND], null, false, true, false, $order->id_shop);
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'cancel_quantity' => $productRefund['quantity'], 'cancel_amount' => $productRefund['amount'], 'action' => CancellationActionType::PARTIAL_REFUND], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight
