@@ -158,7 +158,7 @@ export default class ProductPartialUpdater {
     // This way only updated AND new values remain
     Object.keys(this.initialData).forEach((fieldName) => {
       const fieldValue = this.initialData[fieldName];
-      // Field is absent in the new data (it was not in the initial) we force it to empty string (not null
+      // Field is absent in the new data (it was present in the initial) we force it to empty string (not null
       // or it will be ignored)
       if (!Object.prototype.hasOwnProperty.call(currentData, fieldName)) {
         currentData[fieldName] = '';
