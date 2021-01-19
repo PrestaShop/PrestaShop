@@ -105,10 +105,10 @@
                 {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
               <button type="button" class="btn btn-outline-primary" id="js-send-process-order-email-btn">
-                {{ 'Send prepared order to customer'|trans({}, 'Admin.Orderscustomers.Help') }}
+                {{ 'Send pre-filled order to the customer by email'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
               <a id="js-process-order-link" href="#" target="_blank" class="btn btn-outline-primary">
-                {{ 'Finish the order in front-office'|trans({}, 'Admin.Orderscustomers.Help') }}
+                {{ 'Proceed to checkout in the front office'|trans({}, 'Admin.Orderscustomers.Help') }}
               </a>
             
               {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
