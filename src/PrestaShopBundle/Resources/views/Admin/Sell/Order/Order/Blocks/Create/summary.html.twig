@@ -104,12 +104,28 @@
               <button class="btn btn-primary" type="submit" id="create-order-button">
                 {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
-              <button type="button" class="btn btn-outline-primary" id="js-send-process-order-email-btn">
-                {{ 'Send pre-filled order to the customer by email'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </button>
-              <a id="js-process-order-link" href="#" target="_blank" class="btn btn-outline-primary">
-                {{ 'Proceed to checkout in the front office'|trans({}, 'Admin.Orderscustomers.Help') }}
-              </a>
+
+              <div class="btn-group">
+                <button
+                  class="btn btn-outline-primary dropdown-toggle"
+                  type="button"
+                  id="dropdown-menu-actions"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  {{ 'More actions'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdown-menu-actions">
+                  <button class="dropdown-item" id="js-send-process-order-email-btn">
+                    {{ 'Send pre-filled order to the customer by email'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  </button>
+                  <a class="dropdown-item" id="js-process-order-link">
+                    {{ 'Proceed to checkout in the front office'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  </a>
+                </div>
+              </div>
             
               {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
             </div>
