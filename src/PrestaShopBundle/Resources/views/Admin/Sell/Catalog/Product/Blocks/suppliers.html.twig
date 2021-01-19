@@ -27,24 +27,35 @@
 {% form_theme suppliersForm '@PrestaShop/Admin/Sell/Catalog/Product/Blocks/form_fields.html.twig' %}
 
 {% block form_product_suppliers %}
-<div class="row">
-  <div class="col">
-    {{ form_row(suppliersForm.supplier_ids) }}
+  <div class="row">
+    <div class="col">
+      <div class="form-group row">
+        {{ form_label(suppliersForm) }}
+        <div class="col-sm">
+          <div id="product_suppliers_supplier_ids">
+            {% for index, choice in suppliersForm.supplier_ids.vars.choices %}
+              <div class="form-check">
+                <label class="">
+                  <input type="checkbox" id="product_suppliers_supplier_ids_{{ index }}"
+                         name="product[suppliers][supplier_ids][]"
+                         class="form-check-input" value="{{ choice.value }}"
+                         data-label="{{ choice.label }}"
+                  >
+                  {{ choice.label }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+          {{ suppliersForm.supplier_ids.setRendered(true) }}
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      {{ form_row(suppliersForm.default_supplier_id) }}
+    </div>
   </div>
-  <div class="col">
-    {{ form_row(suppliersForm.default_supplier_id) }}
+
+  <div id="supplierReferences">
+    {{ form_row(suppliersForm.supplier_references) }}
   </div>
-</div>
-
-<div id="supplierReferences">
-  {{ form_row(suppliersForm.supplier_references) }}
-</div>
-
-<script id="productSupplierPrototype" type="text/template">
-  {{ form_widget(suppliersForm.supplier_references.vars.prototype.product_suppliers_collection.vars.prototype) }}
-</script>
-
-<script id="supplierReferencePrototype" type="text/template">
-  {{ form_widget(suppliersForm.supplier_references.vars.prototype) }}
-</script>
 {% endblock %}

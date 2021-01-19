@@ -29,15 +29,8 @@ const {$} = window;
 
 export default class ProductSuppliersManager {
   constructor() {
-    this.$productForm = $(ProductMap.productForm);
-    this.$suppliersBlock = $(ProductMap.suppliersBlock);
     this.$supplierSelectionBlock = $(ProductMap.supplierSelectionBlock);
-    this.$defaultSupplierSelectionBlock = $(ProductMap.defaultSupplierSelectionBlock);
     this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
-    this.$supplierReferencePrototype = $(ProductMap.supplierReferencePrototype);
-    this.$productSupplierPrototype = $(ProductMap.productSupplierPrototype);
-    this.supplierReferencePrototypePlaceholder = '__SUPPLIER_REFERENCE_PROTOTYPE__';
-    this.productSupplierPrototypePlaceholder = '__PRODUCT_SUPPLIER_PROTOTYPE__';
     this.eventemitter = window.prestashop.instance.eventEmitter;
 
     this.init();
@@ -51,22 +44,23 @@ export default class ProductSuppliersManager {
 
   renderSupplierReferences() {
     const selectedSuppliers = this.getSelectedSuppliers();
+    const supplierReferencesPrototype = this.$supplierReferencesBlock.data('prototype');
 
-    const $supplierReferencePrototype = $(this.$supplierReferencePrototype.html()).clone();
-    const $productSupplierPrototype = $(this.$productSupplierPrototype.html()).clone();
-    const supplierRefPlaceholder = this.supplierReferencePrototypePlaceholder;
-    const productSupplierPlaceholder = this.productSupplierPrototypePlaceholder;
+    this.$supplierReferencesBlock.empty();
 
     selectedSuppliers.forEach((supplier) => {
-      const $productSupplierTemplate = $productSupplierPrototype.html();
-      //@todo: loop through combinations and add its index instead of 0
-      const productSupplierHtml = $productSupplierTemplate.split(productSupplierPlaceholder).join('0').split(supplierRefPlaceholder).join(supplier.id);
+      const supplierReferencesContent = supplierReferencesPrototype.replace(/__SUPPLIER_ID__/g, supplier.id)
+        .replace(/__PRODUCT_SUPPLIER_ENTRY__/g, '0')
+        .replace(/__SUPPLIER_NAME__/g, supplier.name);
 
-      $supplierReferencePrototype.find(`#product_suppliers_supplier_references_${supplierRefPlaceholder}_product_suppliers_collection`).append(productSupplierHtml);
-      const templateHtml = $supplierReferencePrototype.html().split(supplierRefPlaceholder).join(supplier.id);
+      this.$supplierReferencesBlock.append(supplierReferencesContent);
 
-      this.$supplierReferencesBlock.append(supplier.name);
-      this.$supplierReferencesBlock.append(templateHtml);
+      const productSupplierPrototype = this.$supplierReferencesBlock
+        .find(`#product_suppliers_supplier_references_${supplier.id}_product_suppliers_collection`).data('prototype');
+
+      const $productSuppliersTbody = this.$supplierReferencesBlock.find(`#supplier_${supplier.id} table tbody`);
+
+      $productSuppliersTbody.append(productSupplierPrototype);
     });
   }
 
