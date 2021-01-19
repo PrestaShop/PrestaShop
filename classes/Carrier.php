@@ -1605,12 +1605,12 @@ class CarrierCore extends ObjectModel
                 $carrier_sizes = [
                     'width' => (int) $carrier->max_width,
                     'height' => (int) $carrier->max_height,
-                    'depth' => (int) $carrier->max_depth
+                    'depth' => (int) $carrier->max_depth,
                 ];
                 $product_sizes = [
                     'width' => (int) $product->width,
                     'height' => (int) $product->height,
-                    'depth' => (int) $product->depth
+                    'depth' => (int) $product->depth,
                 ];
 
                 if (($carrier_sizes['width'] > 0 && $carrier_sizes['width'] < $product_sizes['width'])
