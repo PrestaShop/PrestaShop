@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShopDatabaseException;
 use PrestashopInstallerException;
+use SimpleXMLElement;
 
 class XmlLoader
 {
@@ -365,6 +366,59 @@ class XmlLoader
         }
 
         return file_exists($this->lang_path . $this->getFallBackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso : 'en';
+    }
+
+    /**
+     * Special case for "country" entity.
+     */
+    public function populateEntityCountry()
+    {
+        $xml = $this->loadEntity('country');
+
+        // Read list of fields
+        if (empty($xml->fields)) {
+            throw new PrestashopInstallerException('List of fields not found for entity country');
+        }
+        $langs = [];
+        $languageList = LanguageList::getInstance();
+        foreach ($this->languages as $id_lang => $iso) {
+            $langs[$id_lang] = $languageList->getCountriesByLanguage($iso);
+        }
+
+        // Load all row for current entity and prepare data to be populated
+        $i = 0;
+        if ($xml->entities->country instanceof SimpleXMLElement) {
+            foreach ($xml->entities->country as $node) {
+                $data = [];
+
+                // Read attributes
+                $identifier = '';
+                foreach ($node->attributes() as $k => $v) {
+                    if ($k == 'id') {
+                        $identifier = (string) $v;
+                        continue;
+                    }
+                    $data[$k] = (string) $v;
+                }
+
+                // Load multilang data
+                $data_lang = [];
+                foreach ($langs as $id_lang => $countries) {
+                    $data_lang['name'][$id_lang] = $countries[strtolower($identifier)] ?? '';
+                }
+
+                $data = $this->rewriteRelationedData('country', $data);
+                $this->createEntity('country', $identifier, (string) $xml->fields['class'], $data, $data_lang);
+                ++$i;
+
+                if ($i >= 100) {
+                    $this->flushDelayedInserts();
+                    $i = 0;
+                }
+            }
+        }
+
+        $this->flushDelayedInserts();
     }
 
     /**
@@ -1335,7 +1389,7 @@ class XmlLoader
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
      */
-    public function createXmlEntityNodes($entity, array $nodes, \SimpleXMLElement $entities)
+    public function createXmlEntityNodes($entity, array $nodes, SimpleXMLElement $entities)
     {
         $types = array_merge($this->getColumns($entity), $this->getColumns($entity, true));
         foreach ($nodes as $id => $node) {
