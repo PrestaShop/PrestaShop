@@ -29,6 +29,7 @@
 {% block form_product_suppliers %}
   <div class="row">
     <div class="col">
+      {# this whole div is equivalent to form_row(suppliersForm.supplier_ids) using choice_attributes parameter to have the data-label #}
       <div class="form-group row">
         {{ form_label(suppliersForm) }}
         <div class="col-sm">
@@ -55,7 +56,5 @@
     </div>
   </div>
 
-  <div id="supplierReferences">
-    {{ form_row(suppliersForm.supplier_references) }}
-  </div>
+  {{ form_row(suppliersForm.supplier_references) }}
 {% endblock %}
