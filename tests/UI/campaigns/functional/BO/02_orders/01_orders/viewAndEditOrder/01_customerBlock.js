@@ -439,10 +439,10 @@ describe('Check customer block in view order page', async () => {
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
-    it('should filter list by lastName', async function () {
+    it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'lastname', customerData.lastName);
+      await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
 
       const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'lastname');
       await expect(textResult).to.contains(customerData.lastName);
