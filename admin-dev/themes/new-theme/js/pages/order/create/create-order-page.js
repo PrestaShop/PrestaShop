@@ -300,6 +300,7 @@ export default class CreateOrderPage {
       this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+      this.productRenderer.renderList(cartInfo.products);
       this.summaryRenderer.render(cartInfo);
     });
   }
