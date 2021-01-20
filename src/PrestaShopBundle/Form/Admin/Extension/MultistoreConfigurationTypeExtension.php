@@ -28,13 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Extension;
 
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxAttacher;
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -42,76 +38,25 @@ use Symfony\Component\Form\FormEvents;
 class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
 {
     /**
-     * @var FeatureInterface
+     * @var MultistoreCheckboxAttacher
      */
-    private $multistoreFeature;
+    private $multistoreCheckboxAttacher;
 
-    /**
-     * @var MultistoreContextCheckerInterface
-     */
-    private $multistoreContext;
-
-    /**
-     * @var ShopConfigurationInterface
-     */
-    private $configuration;
-
-    public function __construct(
-        FeatureInterface $multistoreFeature,
-        MultistoreContextCheckerInterface $multistoreContext,
-        ShopConfigurationInterface $configuration
-    ) {
-        $this->multistoreFeature = $multistoreFeature;
-        $this->multistoreContext = $multistoreContext;
-        $this->configuration = $configuration;
+    public function __construct(MultistoreCheckboxAttacher $multistoreCheckboxAttacher) {
+        $this->multistoreCheckboxAttacher = $multistoreCheckboxAttacher;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if (!$this->multistoreFeature->isUsed() || $this->multistoreContext->isAllShopContext()) {
+        if (!$this->multistoreCheckboxAttacher->shouldAddCheckboxes()) {
             return;
         }
 
-        $configuration = $this->configuration;
-        $multistoreContext = $this->multistoreContext;
+        $checkboxAttacher = $this->multistoreCheckboxAttacher;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($configuration, $multistoreContext) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($checkboxAttacher) {
             $form = $event->getForm();
-            foreach ($form->all() as $child) {
-                $options = $child->getConfig()->getOptions();
-                if (!isset($options['attr']['multistore_configuration_key'])) {
-                    continue;
-                }
-
-                // Check if current configuration is overidden by current shop / group shop context
-                $shopConstraint = new ShopConstraint(
-                    $multistoreContext->getContextShopId(),
-                    $multistoreContext->getContextShopGroup()->id,
-                    true
-                );
-                $isOveriddenInCurrentContext = $configuration->has($options['attr']['multistore_configuration_key'], $shopConstraint);
-
-                // update current field with disabled attribute
-                $options['attr']['disabled'] = !$multistoreContext->isAllShopContext() && !$isOveriddenInCurrentContext;
-                $form->add(
-                    $child->getName(),
-                    get_class($child->getConfig()->getType()->getInnerType()),
-                    $options
-                );
-
-                // for each field in the configuration form, we add a multistore checkbox
-                $fieldName = 'multistore_' . $child->getName();
-                $form->add($fieldName, CheckboxType::class, [
-                    'required' => false,
-                    'data' => $isOveriddenInCurrentContext,
-                    'label' => false,
-                    'attr' => [
-                        'material_design' => true,
-                        'class' => 'multistore-checkbox',
-                        'multistore_configuration_key' => $options['attr']['multistore_configuration_key'],
-                    ],
-                ]);
-            }
+            $checkboxAttacher->addCheckboxes($form);
         });
     }
 
