@@ -43,6 +43,7 @@ abstract class MultistoreConfigurator implements DataConfigurationInterface
 
     /**
      * MultistoreConfigurator constructor.
+     *
      * @param Configuration $configuration
      * @param Context $shopContext
      */
