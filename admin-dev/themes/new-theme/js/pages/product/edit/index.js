@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import Serp from '@app/utils/serp';
 import ProductMap from '../product-map';
 import ProductPartialUpdater from './product-partial-updater';
 
@@ -35,14 +36,34 @@ $(() => {
       'TinyMCEEditor',
       'TranslatableInput',
       'EventEmitter',
+      'TextWithLengthCounter',
     ],
   );
 
   const $productForm = $(ProductMap.productForm);
 
-  // Form has productId data means that we are in edit mode
-  if ($productForm.data('productId')) {
-    const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
-    new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
+  // Init Serp component to preview Search engine display
+  const translatorInput = window.prestashop.instance.translatableInput;
+  new Serp(
+    {
+      container: '#serp-app',
+      defaultTitle: '.serp-default-title:input',
+      watchedTitle: '.serp-watched-title:input',
+      defaultDescription: '.serp-default-description',
+      watchedDescription: '.serp-watched-description',
+      watchedMetaUrl: '.serp-watched-url:input',
+      multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
+      multiLanguageItem: translatorInput.localeItemSelector,
+    },
+    $('#product_preview').data('seo-url'),
+  );
+
+  // Form has no productId data means that we are in creation mode
+  if (!$productForm.data('productId')) {
+    return;
   }
+
+  // From here we init component specific to edition
+  const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
+  new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
 });
