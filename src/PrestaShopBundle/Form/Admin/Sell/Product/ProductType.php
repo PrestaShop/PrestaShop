@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -35,12 +36,32 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This is the parent product form type
  */
 class ProductType extends TranslatorAwareType
 {
+    /**
+     * @var ProductProvider
+     */
+    private $productUrlProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ProductProvider $productUrlProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ProductProvider $productUrlProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->productUrlProvider = $productUrlProvider;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -71,7 +92,7 @@ class ProductType extends TranslatorAwareType
                     'label' => $this->trans('Preview', 'Admin.Actions'),
                     'attr' => [
                         'class' => 'btn-secondary',
-                        'data-seo-url' => 'http://www.google.fr',
+                        'data-seo-url' => $this->productUrlProvider->getUrl((int) $options['product_id'], '{friendly-url}'),
                     ],
                 ])
             ;
