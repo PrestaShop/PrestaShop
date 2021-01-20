@@ -46,5 +46,6 @@ class ProductSettings
      */
     const MAX_NAME_LENGTH = 128;
     const MAX_MPN_LENGTH = 40;
-    //@todo: finish up with properties that doesn't have related ValueObjects like description, meta_description etc. (see Product.php)
+    const MAX_META_TITLE_LENGTH = 70;
+    const MAX_META_DESCRIPTION_LENGTH = 160;
 }
