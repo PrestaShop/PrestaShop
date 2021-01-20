@@ -140,6 +140,8 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
                 }
             }
         }
+
+        return '';
     }
 
     public function getNodeName($params)
