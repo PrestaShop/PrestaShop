@@ -901,3 +901,11 @@ form#importDropzone {
   }
 }
 /* stylelint-enable declaration-no-important */
+
+@include media-breakpoint-down(xs) {
+  .module-catalog-page {
+    #search-input-group {
+      margin-bottom: 0.75rem;
+    }
+  }
+}
