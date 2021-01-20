@@ -71,3 +71,19 @@
     }
   }
 }
+
+@include media-breakpoint-down(xs) {
+  .adminthemes {
+    .nav.nav-pills {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: scroll;
+
+      li {
+        a {
+          width: max-content;
+        }
+      }
+    }
+  }
+}
