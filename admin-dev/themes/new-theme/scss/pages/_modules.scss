@@ -922,5 +922,19 @@ form#importDropzone {
         font-weight: 500;
       }
     }
+
+    .module-sorting {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .module-stars,
+    .module-price {
+      bottom: 60px;
+    }
+
+    .module-actions {
+      padding: 0 0.5rem;
+    }
   }
 }
