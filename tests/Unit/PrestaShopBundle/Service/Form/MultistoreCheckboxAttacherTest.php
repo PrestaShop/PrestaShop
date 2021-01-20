@@ -26,15 +26,15 @@
 
 declare(strict_types=1);
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\Test\TypeTestCase;
-use PrestaShopBundle\Service\Form\MultistoreCheckboxAttacher;
 use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxAttacher;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\Form\Test\TypeTestCase;
 
 class MultistoreCheckboxAttacherTest extends TypeTestCase
 {
@@ -131,6 +131,7 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
 
     /**
      * @param bool $isMultistoreUsed
+     *
      * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function createMultistoreFeatureMock(bool $isMultistoreUsed = true): MockObject
