@@ -43,6 +43,7 @@ class MultistoreCheckboxAttacher
 
     /**
      * MultistoreCheckboxAttacher constructor.
+     *
      * @param FeatureInterface $multistoreFeature
      * @param ShopConfigurationInterface $configuration
      * @param MultistoreContextCheckerInterface $context
@@ -51,8 +52,7 @@ class MultistoreCheckboxAttacher
         FeatureInterface $multistoreFeature,
         ShopConfigurationInterface $configuration,
         MultistoreContextCheckerInterface $context
-    )
-    {
+    ) {
         $this->multistoreFeature = $multistoreFeature;
         $this->configuration = $configuration;
         $this->context = $context;
@@ -74,6 +74,7 @@ class MultistoreCheckboxAttacher
      * Adds multistore checkboxes to form fields if needed,
      *
      * @param FormInterface $form (passed by reference)
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
     public function addCheckboxes(FormInterface &$form): void
