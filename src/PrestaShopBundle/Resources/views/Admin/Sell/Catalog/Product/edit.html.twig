@@ -53,7 +53,7 @@
 
     <div id="form_content" class="tab-content">
       {% block product_tab_basic %}
-        <div role="tabpanel" class="form-contenttab tab-pane active" id="basic-tab">
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
           {{ form_widget(productForm.basic) }}
         </div>
       {% endblock %}
@@ -65,13 +65,13 @@
       {% endblock %}
 
       {% block product_tab_pricing %}
-        <div role="tabpanel" class="form-contenttab tab-pane" id="pricing-tab">
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="pricing-tab">
           {{ form_widget(productForm.price) }}
         </div>
       {% endblock %}
 
       {% block product_tab_shipping %}
-        <div role="tabpanel" class="form-contenttab tab-pane" id="shipping-tab">
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="shipping-tab">
           {{ form_widget(productForm.shipping) }}
         </div>
       {% endblock %}
@@ -83,7 +83,7 @@
       {% endblock %}
 
       {% block product_tab_options %}
-        <div role="tabpanel" class="form-contenttab tab-pane" id="options-tab">
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="options-tab">
           {{ form_widget(productForm.options) }}
         </div>
       {% endblock %}
