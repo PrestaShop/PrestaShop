@@ -91,7 +91,13 @@
 }
 
 @include media-breakpoint-down(xs) {
-  #product_catalog_category_tree_filter {
-    margin-bottom: 0.75rem;
+  .products-catalog {
+    #product_catalog_category_tree_filter {
+      margin-bottom: 0.75rem;
+    }
+
+    .form-min-max {
+      min-width: 6rem;
+    }
   }
 }
