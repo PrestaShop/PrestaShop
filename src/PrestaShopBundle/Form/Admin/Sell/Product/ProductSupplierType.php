@@ -88,6 +88,7 @@ class ProductSupplierType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
+                'data' => '0',
             ])
             ->add('currency_id', ChoiceType::class, [
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),

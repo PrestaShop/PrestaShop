@@ -50,8 +50,15 @@ final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInter
         }
 
         $productSuppliers = [];
-        foreach ($suppliers['supplier_references'] as $supplierId => $supplierReferenceForm) {
-            foreach ($supplierReferenceForm['product_supplier_collection'] as $productSupplierData) {
+        $defaultSupplierId = (int) $suppliers['default_supplier_id'];
+        foreach ($suppliers['supplier_references'] as $supplierReferenceForm) {
+            $supplierId = (int) $supplierReferenceForm['supplier_id'];
+
+            if (null === $defaultSupplierId || $supplierReferenceForm['is_default']) {
+                $defaultSupplierId = $supplierId;
+            }
+
+            foreach ($supplierReferenceForm['product_suppliers_collection'] as $productSupplierData) {
                 $productSuppliers[] = $this->formatProductSupplier($productId->getValue(), $supplierId, $productSupplierData);
             }
         }
@@ -60,7 +67,7 @@ final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInter
             new SetProductSuppliersCommand(
                 $productId->getValue(),
                 $productSuppliers,
-                $suppliers['default_supplier_id']
+                $defaultSupplierId
             ),
         ];
     }
