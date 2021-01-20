@@ -76,7 +76,7 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
         ];
     }
 
-    /***
+    /**
      * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
     public function testAddCheckboxes(): void
@@ -94,10 +94,14 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
         $this->assertTrue($form->has('second_field'));
         $this->assertFalse($form->has('multistore_second_field'));
 
+        // the added multistore checkbox must have the correct `multistore_configuration_key` attribute
         $multistoreFirstFieldCheckboxOptions = $form->get('multistore_first_field')->getConfig()->getOptions();
         $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['attr']['multistore_configuration_key']);
     }
 
+    /**
+     * @return FormInterface
+     */
     private function getFormToTest(): FormInterface
     {
         $formFactory = Forms::createFormFactoryBuilder()->getFormFactory();
