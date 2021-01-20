@@ -1,4 +1,4 @@
-import ProductMap from "@pages/product/product-map";
+import ProductMap from '@pages/product/product-map';
 
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
@@ -33,54 +33,66 @@ export default class ProductSuppliersManager {
     this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
     this.$supplierReferencesContainer = $(ProductMap.supplierReferencesContainer);
     this.eventemitter = window.prestashop.instance.eventEmitter;
+    this.suppliers = [];
 
     this.init();
   }
 
   init() {
-    this.$supplierSelectionBlock.on('change', 'input', () => {
-      this.renderSupplierReferences();
+    this.$supplierSelectionBlock.on('change', 'input', (e) => {
+      const input = e.currentTarget;
+      if (input.checked) {
+        this.appendSupplier({
+          id: input.value,
+          name: input.dataset.label,
+        });
+      } else {
+        this.removeSupplier(input.value);
+      }
     });
   }
 
-  renderSupplierReferences() {
-    const selectedSuppliers = this.getSelectedSuppliers();
+  appendSupplier(supplier) {
     const supplierReferencesPrototype = this.$supplierReferencesBlock.data('prototype');
+    const index = this.getSelectedSuppliers().length - 1;
 
-    this.$supplierReferencesContainer.empty();
+    const supplierReferencesContent = supplierReferencesPrototype
+      .replace(/__SUPPLIER_ID__/g, supplier.id)
+      .replace(/__SUPPLIER_REFERENCE_INDEX__/g, index)
+      .replace(/__SUPPLIER_NAME__/g, supplier.name);
 
-    selectedSuppliers.forEach((supplier, index) => {
-      // We use index as the collection key
-      const supplierReferencesContent = supplierReferencesPrototype.replace(/__SUPPLIER_ID__/g, index)
-        .replace(/__SUPPLIER_NAME__/g, supplier.name);
+    this.$supplierReferencesContainer.append(supplierReferencesContent);
+    const appendedSupplier = this.$supplierReferencesContainer
+      .find(ProductMap.supplierReferenceProductCollection(index));
+    // Fill hidden inputs
+    $(ProductMap.supplierReferenceSupplierIdInput(index)).val(supplier.id);
+    $(ProductMap.supplierReferenceSupplierNameInput(index)).val(supplier.name);
 
-      this.$supplierReferencesContainer.append(supplierReferencesContent);
-      const appendedSupplier = this.$supplierReferencesContainer.find(ProductMap.supplierReferenceProductCollection(index));
+    const selectedDefaultSupplierInput = $(ProductMap.selectedDefaultSupplierInput);
+    const selectedDefaultSupplierId = selectedDefaultSupplierInput.val();
+    $(ProductMap.supplierReferenceIsDefaultInput(index)).val(selectedDefaultSupplierId === supplier.id);
 
-      // Fill hidden inputs
-      $(ProductMap.supplierReferenceSupplierIdInput(index)).val(supplier.id);
-      $(ProductMap.supplierReferenceSupplierNameInput(index)).val(supplier.name);
+    const productSupplierPrototype = appendedSupplier.data('prototype');
+    const $productSuppliersTbody = this.$supplierReferencesBlock
+      .find(`#supplier_reference_row_${supplier.id} table tbody`);
 
-      const selectedDefaultSupplierInput = $(ProductMap.selectedDefaultSupplierInput);
-      const selectedDefaultSupplierId = selectedDefaultSupplierInput.val();
-      $(ProductMap.supplierReferenceIsDefaultInput(index)).val(selectedDefaultSupplierId === supplier.id);
-
-      const productSupplierPrototype = appendedSupplier.data('prototype');
-      const $productSuppliersTbody = this.$supplierReferencesBlock.find(`#supplier_reference_row_${index} table tbody`);
-
-      //@todo: replace with real product combinations from ajax or where?
-      const combinations = [
-        {name: 'test1', id: 1},
-        {name: 'test2', id: 2},
-        {name: 'test3', id: 3},
-      ];
-      combinations.forEach((combination) => {
-        const productSupplierContent = productSupplierPrototype
-          .replace(/__COMBINATION_ID__/g, combination.id)
-          .replace(/__PRODUCT_NAME__/g, combination.name);
-        $productSuppliersTbody.append(productSupplierContent);
-      });
+    // @todo: replace with real product combinations from ajax or where?
+    const combinations = [
+      {name: 'test1', id: 1},
+      {name: 'test2', id: 2},
+      {name: 'test3', id: 3},
+    ];
+    combinations.forEach((combination, key) => {
+      const productSupplierContent = productSupplierPrototype
+        .replace(/__PRODUCT_SUPPLIER_INDEX__/g, key)
+        .replace(/__PRODUCT_NAME__/g, combination.name);
+      $productSuppliersTbody.append(productSupplierContent);
     });
+  }
+
+  removeSupplier(supplierId) {
+    const supplierRow = this.$supplierReferencesContainer.find(`#supplier_reference_row_${supplierId}`);
+    supplierRow.remove();
   }
 
   getSelectedSuppliers() {
