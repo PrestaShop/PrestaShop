@@ -29,11 +29,11 @@ const {$} = window;
 
 export default class ProductSuppliersManager {
   constructor() {
+    this.combinations = $(ProductMap.suppliersBlock).data('combinations');
     this.$supplierSelectionBlock = $(ProductMap.supplierSelectionBlock);
     this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
     this.$supplierReferencesContainer = $(ProductMap.supplierReferencesContainer);
     this.eventemitter = window.prestashop.instance.eventEmitter;
-    this.suppliers = [];
 
     this.init();
   }
@@ -76,16 +76,10 @@ export default class ProductSuppliersManager {
     const $productSuppliersTbody = this.$supplierReferencesBlock
       .find(`#supplier_reference_row_${supplier.id} table tbody`);
 
-    // @todo: replace with real product combinations from ajax or where?
-    const combinations = [
-      {name: 'test1', id: 1},
-      {name: 'test2', id: 2},
-      {name: 'test3', id: 3},
-    ];
-    combinations.forEach((combination, key) => {
+    Object.entries(this.combinations).forEach(([name, id]) => {
       const productSupplierContent = productSupplierPrototype
-        .replace(/__PRODUCT_SUPPLIER_INDEX__/g, key)
-        .replace(/__PRODUCT_NAME__/g, combination.name);
+        .replace(/__PRODUCT_SUPPLIER_INDEX__/g, id)
+        .replace(/__PRODUCT_NAME__/g, name);
       $productSuppliersTbody.append(productSupplierContent);
     });
   }

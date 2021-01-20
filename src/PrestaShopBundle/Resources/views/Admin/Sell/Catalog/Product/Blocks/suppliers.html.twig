@@ -27,14 +27,16 @@
 {% form_theme suppliersForm '@PrestaShop/Admin/Sell/Catalog/Product/Blocks/form_fields.html.twig' %}
 
 {% block form_product_suppliers %}
-  <div class="row">
-    <div class="col">
-      {{ form_row(suppliersForm.supplier_ids) }}
+  <div id="product_suppliers" data-combinations="{{ suppliersForm.vars.attr['data-combinations'] }}">
+    <div class="row">
+      <div class="col">
+        {{ form_row(suppliersForm.supplier_ids) }}
+      </div>
+      <div class="col">
+        {{ form_row(suppliersForm.default_supplier_id) }}
+      </div>
     </div>
-    <div class="col">
-      {{ form_row(suppliersForm.default_supplier_id) }}
-    </div>
-  </div>
 
-  {{ form_row(suppliersForm.supplier_references) }}
+    {{ form_row(suppliersForm.supplier_references) }}
+  </div>
 {% endblock %}
