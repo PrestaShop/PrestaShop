@@ -125,9 +125,10 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         $failedIdList = [];
+        $duplicateProducts = [];
         foreach ($productIdList as $productId) {
             try {
-                $this->duplicateProduct($productId);
+                $duplicateProducts[] = $this->duplicateProduct($productId);
             } catch (\Exception $e) {
                 $failedIdList[] = $productId;
 
@@ -139,7 +140,11 @@ class AdminProductDataUpdater implements ProductInterface
             throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
 
-        return true;
+        if (count($productIdList) > 1 && $duplicateProducts < 1) {
+            return false;
+        }
+
+        return $duplicateProducts;
     }
 
     /**

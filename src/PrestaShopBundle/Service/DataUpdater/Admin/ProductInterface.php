@@ -63,7 +63,7 @@ interface ProductInterface
      *
      * @throws \PrestaShopBundle\Exception\UpdateProductException if duplication failed
      *
-     * @return bool true when succeed
+     * @return mixed|array|bool duplicates products list or false when all failed
      */
     public function duplicateProductIdList(array $productIdList);
 

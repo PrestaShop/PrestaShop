@@ -853,7 +853,8 @@ class ProductController extends FrameworkBundleAdminController
                         $hookEventParameters
                     );
                     // Hooks: managed in ProductUpdater
-                    $productUpdater->duplicateProductIdList($productIdList);
+                    $duplicateProducstId = $productUpdater->duplicateProductIdList($productIdList);
+                    $hookEventParameters['duplicate_products_id'] = $duplicateProducstId;
                     if (empty($hasMessages)) {
                         $this->addFlash(
                             'success',
@@ -1073,6 +1074,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     // Hooks: managed in ProductUpdater
                     $duplicateProductId = $productUpdater->duplicateProduct($id);
+                    $hookEventParameters['duplicate_product_id'] = $duplicateProductId;
                     $this->addFlash(
                         'success',
                         $this->trans('Product successfully duplicated.', 'Admin.Catalog.Notification')
