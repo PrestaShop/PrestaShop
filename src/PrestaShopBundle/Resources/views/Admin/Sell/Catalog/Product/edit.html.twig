@@ -76,6 +76,12 @@
         </div>
       {% endblock %}
 
+      {% block product_tab_seo %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/seo.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
       {% block product_tab_options %}
         <div role="tabpanel" class="form-contenttab tab-pane" id="options-tab">
           {{ form_widget(productForm.options) }}

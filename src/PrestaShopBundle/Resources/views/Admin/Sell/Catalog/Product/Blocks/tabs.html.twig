@@ -25,6 +25,7 @@
 {% set isBasicTabValid = productForm.basic.description.vars.valid and productForm.basic.description_short.vars.valid %}
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
+{% set isSEOTabValid = productForm.seo.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid %}
 {% set isStockTabValid = productForm.stock.vars.valid %}
 
@@ -53,6 +54,12 @@
     <li id="shipping-tab-nav" class="nav-item{% if not isShippingTabValid %} has-error{% endif %}">
       <a href="#shipping-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+
+    <li id="options-tab-nav" class="nav-item{% if not isSEOTabValid %} has-error{% endif %}">
+      <a href="#seo-tab" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
 
