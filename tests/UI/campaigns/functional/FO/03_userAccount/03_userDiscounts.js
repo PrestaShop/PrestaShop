@@ -76,7 +76,7 @@ describe('View vouchers on FO account page', async () => {
 
   describe('Create customer in BO', async () => {
     it('should go to customers page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToCreate', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -206,7 +206,7 @@ describe('View vouchers on FO account page', async () => {
 
   describe('Delete the created customer', async () => {
     it('should go customers page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
