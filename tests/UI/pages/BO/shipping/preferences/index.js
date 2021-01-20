@@ -8,11 +8,32 @@ class Preferences extends BOBasePage {
     this.pageTitle = 'Preferences •';
     this.successfulUpdateMessage = 'Update successful';
 
+    // Handling form selectors
+    this.handlingForm = '#handling';
+    this.handlingChargesInput = '#form_handling_shipping_handling_charges';
+    this.saveHandlingButton = `${this.handlingForm} button`;
+
     // Carrier options selectors
-    this.carrierOptionForm = '#configuration_form';
+    this.carrierOptionForm = '#carrier-options';
     this.defaultCarrierSelect = '#form_carrier_options_default_carrier';
     this.sortBySelect = '#form_carrier_options_carrier_default_order_by';
-    this.saveCarrierOptionsButton = `${this.carrierOptionForm} .card-footer button`;
+    this.saveCarrierOptionsButton = `${this.carrierOptionForm} button`;
+  }
+
+  /* Handling methods */
+
+  /**
+   * Set handling charges button
+   * @param page
+   * @param value
+   * @returns {Promise<string>}
+   */
+  async setHandlingCharges(page, value) {
+    await this.setValue(page, this.handlingChargesInput, value);
+
+    // Save handling form and return successful message
+    await this.clickAndWaitForNavigation(page, this.saveHandlingButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Carrier options methods */
