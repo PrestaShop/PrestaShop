@@ -73,6 +73,12 @@ export default class ProductRenderer {
         $template.find(createOrderMap.listedProductQtyInput).data('attribute-id', product.attributeId);
         $template.find(createOrderMap.listedProductQtyInput).data('customization-id', customizationId);
         $template.find(createOrderMap.listedProductQtyInput).data('prev-qty', product.quantity);
+        this.renderStock(
+          $template.find(createOrderMap.listedProductQtyStock),
+          $template.find(createOrderMap.listedProductQtyInput),
+          product.stock,
+          product.availableOutOfStock || (product.stock <= 0)
+        );
         $template.find(createOrderMap.productTotalPriceField).text(product.price);
         $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
         $template.find(createOrderMap.productRemoveBtn).data('attribute-id', product.attributeId);
@@ -160,7 +166,12 @@ export default class ProductRenderer {
    * @param {object} product
    */
   renderProductMetadata(product) {
-    this.renderStock(product.stock, product.availableOutOfStock || (product.stock <= 0));
+    this.renderStock(
+      $(createOrderMap.inStockCounter),
+      $(createOrderMap.quantityInput),
+      product.stock,
+      product.availableOutOfStock || (product.stock <= 0)
+    );
     this._renderCombinations(product.combinations);
     this._renderCustomizations(product.customizationFields);
   }
@@ -168,16 +179,18 @@ export default class ProductRenderer {
   /**
    * Updates stock text helper value
    *
+   * @param {object} inputStockCounter
+   * @param {object} inputQuantity
    * @param {number} stock
    * @param {boolean} infinitMax
    */
-  renderStock(stock, infinitMax) {
-    $(createOrderMap.inStockCounter).text(stock);
+  renderStock(inputStockCounter, inputQuantity, stock, infinitMax) {
+    inputStockCounter.text(stock);
 
     if (!infinitMax) {
-      $(createOrderMap.quantityInput).attr('max', stock);
+      inputQuantity.attr('max', stock);
     } else {
-      $(createOrderMap.quantityInput).removeAttr('max');
+      inputQuantity.removeAttr('max');
     }
   }
 

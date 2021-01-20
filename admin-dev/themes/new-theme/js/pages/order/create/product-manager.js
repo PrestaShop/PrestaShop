@@ -149,6 +149,7 @@ export default class ProductManager {
     // on success
     EventEmitter.on(eventMap.productQtyChanged, cartInfo => {
       this.productRenderer.cleanCartBlockAlerts();
+      $(createOrderMap.createOrderButton).prop('disabled', false);
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
 
       enableQtyInputs();
@@ -157,6 +158,7 @@ export default class ProductManager {
     // on failure
     EventEmitter.on(eventMap.productQtyChangeFailed, e => {
       this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
+      $(createOrderMap.createOrderButton).prop('disabled', true);
       enableQtyInputs();
     });
   }

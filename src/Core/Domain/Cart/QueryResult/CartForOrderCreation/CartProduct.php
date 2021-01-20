@@ -81,6 +81,16 @@ class CartProduct
     private $customization;
 
     /**
+     * @var int
+     */
+    private $stock;
+
+    /**
+     * @var bool
+     */
+    private $availableOutOfStock;
+
+    /**
      * @var bool
      */
     private $isGift;
@@ -98,6 +108,8 @@ class CartProduct
      * @param string $price
      * @param string $imageLink
      * @param Customization|null $customization
+     * @param int $stock
+     * @param bool $availableOutOfStock
      * @param bool $isGift
      */
     public function __construct(
@@ -111,6 +123,8 @@ class CartProduct
         string $price,
         string $imageLink,
         ?Customization $customization,
+        int $stock,
+        bool $availableOutOfStock,
         bool $isGift = false
     ) {
         $this->productId = $productId;
@@ -123,6 +137,8 @@ class CartProduct
         $this->price = $price;
         $this->imageLink = $imageLink;
         $this->customization = $customization;
+        $this->stock = $stock;
+        $this->availableOutOfStock = $availableOutOfStock;
         $this->isGift = $isGift;
     }
 
@@ -204,6 +220,22 @@ class CartProduct
     public function getCustomization(): ?Customization
     {
         return $this->customization;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStock(): int
+    {
+        return $this->stock;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableOutOfStock(): bool
+    {
+        return $this->availableOutOfStock;
     }
 
     /**
