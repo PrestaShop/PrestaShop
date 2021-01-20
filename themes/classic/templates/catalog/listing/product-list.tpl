@@ -70,7 +70,15 @@
         <div id="js-product-list-top"></div>
 
         <div id="js-product-list">
-          {include file='errors/not-found.tpl'}
+          {capture assign="errorTitle"}
+            {l s='No products available yet' d='Shop.Theme.Catalog'}
+          {/capture}
+
+          {capture assign="errorSubtitle"}
+            {l s='Stay tuned! More products will be shown here as they are added.' d='Shop.Theme.Catalog'}
+          {/capture}
+
+          {include file='errors/not-found.tpl' title=$errorTitle subtitle=$errorSubtitle}
         </div>
 
         <div id="js-product-list-bottom"></div>

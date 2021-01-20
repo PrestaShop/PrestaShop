@@ -24,9 +24,17 @@
  *}
 <section id="content" class="page-content page-not-found">
   {block name='page_content'}
+    {if isset($title)}
+      <h4>{block name="searchTitle"}{$title}{/block}</h4>
+    {else}
+      <h4>{block name="searchTitle"}{l s='Sorry for the inconvenience.' d='Shop.Theme.Global'}{/block}</h4>
+    {/if}
 
-    <h4>{l s='Sorry for the inconvenience.' d='Shop.Theme.Global'}</h4>
-    <p>{l s='Search again what you are looking for' d='Shop.Theme.Global'}</p>
+    {if isset($subtitle)}
+      <p>{block name="searchSubtitle"}{$subtitle}{/block}</p>
+    {else}
+      <p>{block name="searchSubtitle"}{l s='Search again what you are looking for.' d='Shop.Theme.Global'}{/block}</p>
+    {/if}
 
     {block name='search'}
       {hook h='displaySearch'}
