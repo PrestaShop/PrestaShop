@@ -609,7 +609,7 @@ class CarrierCore extends ObjectModel
 						ORDER BY n DESC
 						LIMIT 1
 					) most_used'
-                );
+        );
     }
 
     /**
@@ -1602,14 +1602,20 @@ class CarrierCore extends ObjectModel
                 $carrier = new Carrier($id_carrier);
 
                 // Get the sizes of the carrier and the product and sort them to check if the carrier can take the product.
-                $carrier_sizes = [(int) $carrier->max_width, (int) $carrier->max_height, (int) $carrier->max_depth];
-                $product_sizes = [(int) $product->width, (int) $product->height, (int) $product->depth];
-                rsort($carrier_sizes, SORT_NUMERIC);
-                rsort($product_sizes, SORT_NUMERIC);
+                $carrier_sizes = [
+                    'width' => (int) $carrier->max_width,
+                    'height' => (int) $carrier->max_height,
+                    'depth' => (int) $carrier->max_depth,
+                ];
+                $product_sizes = [
+                    'width' => (int) $product->width,
+                    'height' => (int) $product->height,
+                    'depth' => (int) $product->depth,
+                ];
 
-                if (($carrier_sizes[0] > 0 && $carrier_sizes[0] < $product_sizes[0])
-                    || ($carrier_sizes[1] > 0 && $carrier_sizes[1] < $product_sizes[1])
-                    || ($carrier_sizes[2] > 0 && $carrier_sizes[2] < $product_sizes[2])) {
+                if (($carrier_sizes['width'] > 0 && $carrier_sizes['width'] < $product_sizes['width'])
+                    || ($carrier_sizes['height'] > 0 && $carrier_sizes['height'] < $product_sizes['height'])
+                    || ($carrier_sizes['depth'] > 0 && $carrier_sizes['depth'] < $product_sizes['depth'])) {
                     $error[$carrier->id] = Carrier::SHIPPING_SIZE_EXCEPTION;
                     unset($carrier_list[$key]);
                 }
