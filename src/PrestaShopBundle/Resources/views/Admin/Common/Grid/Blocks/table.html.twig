@@ -24,6 +24,14 @@
  *#}
 
 {{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form', 'class': 'table-responsive'}}) }}
+
+{{ renderhook('displayAdminGridTableBefore', {
+    'grid': grid,
+    'legacy_controller': app.request.attributes.get('_legacy_controller'),
+    'controller': app.request.attributes.get('_controller')
+  })
+}}
+
 <table class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
        id="{{ grid.id }}_grid_table"
        data-query="{{ grid.data.query }}"
@@ -55,4 +63,12 @@
   </tbody>
   {% block grid_table_footer %}{% endblock %}
 </table>
+
+{{ renderhook('displayAdminGridTableAfter', {
+      'grid': grid,
+      'legacy_controller': app.request.attributes.get('_legacy_controller'),
+      'controller': app.request.attributes.get('_controller')
+    })
+}}
+
 {{ form_end(grid.filter_form) }}
