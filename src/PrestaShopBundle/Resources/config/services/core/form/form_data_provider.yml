@@ -154,3 +154,4 @@ services:
       arguments:
           - '@prestashop.core.query_bus'
           - '@prestashop.adapter.form.choice_provider.combination_name_by_id_choice_provider'
+          - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().id'

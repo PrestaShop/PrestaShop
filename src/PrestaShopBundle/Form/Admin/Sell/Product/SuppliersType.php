@@ -69,7 +69,7 @@ class SuppliersType extends TranslatorAwareType
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,
-                'choice_attr' => function($choice, $name) {
+                'choice_attr' => function ($choice, $name) {
                     return ['data-label' => $name];
                 },
                 'label' => $this->trans('Choose the suppliers associated with this product', 'Admin.Catalog.Feature'),

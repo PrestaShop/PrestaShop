@@ -54,16 +54,24 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $combinationNameByIdChoiceProvider;
 
     /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param ConfigurableFormChoiceProviderInterface $combinationNameByIdChoiceProvider
+     * @param int $defaultCurrencyId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         //@todo: to mege already existing productSuppliers with combinations (if its number was updated)
-        ConfigurableFormChoiceProviderInterface $combinationNameByIdChoiceProvider
+        ConfigurableFormChoiceProviderInterface $combinationNameByIdChoiceProvider,
+        int $defaultCurrencyId
     ) {
         $this->queryBus = $queryBus;
         $this->combinationNameByIdChoiceProvider = $combinationNameByIdChoiceProvider;
+        $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
     /**
@@ -282,6 +290,22 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $suppliersData['supplier_references'][$index]['supplier_id'] = $supplierId;
             $suppliersData['supplier_references'][$index]['supplier_name'] = $supplierOption->getSupplierName();
 
+            $combinationNamesById = $this->combinationNameByIdChoiceProvider->getChoices([
+                'product_id' => $productForEditing->getProductId(),
+            ]);
+            $emptyDatasetForCombinations = [];
+            foreach ($combinationNamesById as $name => $id) {
+                $emptyDatasetForCombinations[] = [
+                    'product_supplier_id' => null,
+                    'product_name' => $name,
+                    'supplier_price_tax_excluded' => '0',
+                    'supplier_reference' => '',
+                    'currency_id' => $this->defaultCurrencyId,
+                    'combination_id' => $id,
+                ];
+            }
+
+            $productSuppliersCollection = [];
             $i = 0;
             foreach ($supplierOption->getProductSuppliersForEditing() as $supplierForEditing) {
                 $supplierForEditing = [
@@ -292,11 +316,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'currency_id' => $supplierForEditing->getCurrencyId(),
                     'combination_id' => $supplierForEditing->getCombinationId(),
                 ];
-
-                $suppliersData['supplier_references'][$index]['product_suppliers_collection'][$i] = $supplierForEditing;
+                $productSuppliersCollection[$i] = $supplierForEditing;
 
                 ++$i;
             }
+
+            $suppliersData['supplier_references'][$index]['product_suppliers_collection'] =
+                array_merge($emptyDatasetForCombinations, $productSuppliersCollection);
         }
 
         return $suppliersData;
