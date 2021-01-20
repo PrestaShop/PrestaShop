@@ -38,10 +38,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class MultistoreCheckboxAttacherTest extends TypeTestCase
 {
-    public $mockedMultistoreFeature;
-    public $mockedMultistoreContext;
     public $mockedShopConfiguration;
-    public $mockedTranslator;
 
     protected function setUp()
     {
@@ -142,6 +139,10 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
         return $stub;
     }
 
+    /**
+     * @param bool $isAllShopContext
+     * @return MockObject
+     */
     private function createMultistoreContextMock(bool $isAllShopContext = false): MockObject
     {
         $shopGroupObject = new stdClass();
@@ -154,6 +155,9 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
         return $stub;
     }
 
+    /**
+     * @return MockObject
+     */
     private function createShopConfigurationMock(): MockObject
     {
         $stub = $this->createMock(ShopConfiguration::class);
