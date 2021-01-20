@@ -140,7 +140,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
 
-        if (count($productIdList) > 1 && $duplicateProducts < 1) {
+        if (count($productIdList) > 1 && count($duplicateProducts) < 1) {
             return false;
         }
 
