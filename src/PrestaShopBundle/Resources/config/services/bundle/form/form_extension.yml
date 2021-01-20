@@ -35,8 +35,13 @@ services:
     form.extension.multistore_configuration:
         class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreConfigurationTypeExtension'
         arguments:
-            - '@prestashop.adapter.feature.multistore'
-            - '@prestashop.adapter.shop.context'
-            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.multistore_checkbox_attacher'
         tags:
             - { name: form.type_extension, extended_type: PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType }
+
+    prestashop.multistore_checkbox_attacher:
+        class: PrestaShopBundle\Service\Form\MultistoreCheckboxAttacher
+        arguments:
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
