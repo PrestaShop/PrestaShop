@@ -145,6 +145,7 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
 
     /**
      * @param bool $isAllShopContext
+     *
      * @return MockObject
      */
     private function createMultistoreContextMock(bool $isAllShopContext = false): MockObject

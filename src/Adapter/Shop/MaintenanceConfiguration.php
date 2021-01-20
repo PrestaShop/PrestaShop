@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Core\Configuration\MultistoreConfigurator;
-use PrestaShop\PrestaShop\Core\Configuration\MultiStoreConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -77,7 +76,6 @@ class MaintenanceConfiguration extends MultistoreConfigurator
 
         return [];
     }
-
 
     /**
      * @param array $configuration
