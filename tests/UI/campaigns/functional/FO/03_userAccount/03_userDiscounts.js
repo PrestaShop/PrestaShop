@@ -14,10 +14,8 @@ const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foVouchersPage = require('@pages/FO/myAccount/vouchers');
-
-// Import data
-const CartRuleFaker = require('@data/faker/cartRule');
-const {DefaultAccount} = require('@data/demo/customer');
+const customersPage = require('@pages/BO/customers');
+const addCustomerPage = require('@pages/BO/customers/add');
 
 // import test context
 const testContext = require('@utils/testContext');
@@ -27,10 +25,18 @@ const baseContext = 'functional_FO_userAccount_userDiscounts';
 let browserContext;
 let page;
 
+// Create customer data
+const CustomerFaker = require('@data/faker/customer');
+
+const customerData = new CustomerFaker();
+
+// Create cart rule data
+const CartRuleFaker = require('@data/faker/cartRule');
+
 const firstCartRule = new CartRuleFaker(
   {
-    code: 'defaultAccountFirstCartRule',
-    customer: DefaultAccount.email,
+    code: 'customerDataFirstCartRule',
+    customer: customerData.email,
     discountType: 'Percent',
     discountPercent: 20,
   },
@@ -38,8 +44,8 @@ const firstCartRule = new CartRuleFaker(
 
 const secondCartRule = new CartRuleFaker(
   {
-    code: 'defaultAccountSecondCartRule',
-    customer: DefaultAccount.email,
+    code: 'customerDataSecondCartRule',
+    customer: customerData.email,
     freeShipping: true,
   },
 );
@@ -47,7 +53,7 @@ const secondCartRule = new CartRuleFaker(
 const createdCartRules = [firstCartRule, secondCartRule];
 
 /*
-Created 2 cart rules for default account in BO
+Created 2 cart rules for customer in BO
 Go To FO
 Sign in
 Check cart rules in account page
@@ -64,11 +70,43 @@ describe('View vouchers on FO account page', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Create 2 cart rules', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
+
+  describe('Create customer in BO', async () => {
+    it('should go to customers page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customersParentLink,
+        dashboardPage.customersLink,
+      );
+
+      await customersPage.closeSfToolBar(page);
+
+      const pageTitle = await customersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
+    it('should go to add new customer page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
+
+      await customersPage.goToAddNewCustomerPage(page);
+      const pageTitle = await addCustomerPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+    });
+
+    it('should create customer and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
+
+      const textResult = await addCustomerPage.createEditCustomer(page, customerData);
+      await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+    });
+  });
+
+  describe('Create 2 cart rules', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
@@ -100,7 +138,7 @@ describe('View vouchers on FO account page', async () => {
     });
   });
 
-  describe('Verify created cart rules for default account', async () => {
+  describe('Verify created cart rules for customer', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
@@ -120,10 +158,10 @@ describe('View vouchers on FO account page', async () => {
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
-    it('should sign in with default customer', async function () {
+    it('should sign in with created customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, customerData);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -163,6 +201,37 @@ describe('View vouchers on FO account page', async () => {
 
       const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
       await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+    });
+  });
+
+  describe('Delete the created customer', async () => {
+    it('should go customers page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customersParentLink,
+        dashboardPage.customersLink,
+      );
+
+      const pageTitle = await customersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customersPage.pageTitle);
+    });
+
+    it('should filter list by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+
+      await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
+
+      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      await expect(textResult).to.contains(customerData.email);
+    });
+
+    it('should delete customer and check Result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
+
+      const deleteTextResult = await customersPage.deleteCustomer(page, 1);
+      await expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
     });
   });
 });

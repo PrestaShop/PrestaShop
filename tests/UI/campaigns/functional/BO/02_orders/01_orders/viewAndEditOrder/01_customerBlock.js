@@ -444,8 +444,8 @@ describe('Check customer block in view order page', async () => {
 
       await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'lastname');
-      await expect(textResult).to.contains(customerData.lastName);
+      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      await expect(textResult).to.contains(customerData.email);
     });
 
     it('should delete customer and check Result', async function () {
