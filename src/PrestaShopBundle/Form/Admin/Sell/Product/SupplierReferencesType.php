@@ -45,7 +45,7 @@ class SupplierReferencesType extends AbstractType
                 'entry_type' => ProductSupplierType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype_name' => '__COMBINATION_ID__',
+                'prototype_name' => '__PRODUCT_SUPPLIER_INDEX__',
             ]);
     }
 }
