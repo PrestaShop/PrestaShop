@@ -118,7 +118,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
     {
         if (in_array($node_name, ['description', 'schema', 'api'])) {
-            return;
+            return '';
         }
 
         if (isset($this->parentNode)) {
