@@ -266,18 +266,21 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         foreach ($productSupplierOptions->getOptionsBySupplier() as $key => $supplierOption) {
             $supplierId = $supplierOption->getSupplierId();
-            $suppliersData['supplier_ids'][$supplierId] = $supplierId;
+            $suppliersData['supplier_ids'][$key] = $supplierId;
             $suppliersData['supplier_references'][$key]['is_default'] = $supplierId === $defaultSupplierId;
             $suppliersData['supplier_references'][$key]['supplier_id'] = $supplierId;
             $suppliersData['supplier_references'][$key]['supplier_name'] = $supplierOption->getSupplierName();
 
+            $i = 0;
             foreach ($supplierOption->getProductSuppliersForEditing() as $index => $supplierForEditing) {
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$index]['product_supplier_id'] = $supplierForEditing->getProductSupplierId();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$index]['product_name'] = $supplierForEditing->getProductName();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$index]['supplier_price_tax_excluded'] = $supplierForEditing->getPriceTaxExcluded();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$index]['supplier_reference'] = $supplierForEditing->getReference();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$index]['currency_id'] = $supplierForEditing->getCurrencyId();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$index]['combination_id'] = $supplierForEditing->getCombinationId();
+                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['product_supplier_id'] = $supplierForEditing->getProductSupplierId();
+                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['product_name'] = $supplierForEditing->getProductName();
+                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['supplier_price_tax_excluded'] = $supplierForEditing->getPriceTaxExcluded();
+                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['supplier_reference'] = $supplierForEditing->getReference();
+                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['currency_id'] = $supplierForEditing->getCurrencyId();
+                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['combination_id'] = $supplierForEditing->getCombinationId();
+
+                ++$i;
             }
         }
 

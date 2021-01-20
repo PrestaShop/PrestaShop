@@ -48,6 +48,8 @@
 
 {%- block product_supplier_row -%}
   <tr>
+    {{ form_widget(form.product_supplier_id) }}
+    {{ form_widget(form.combination_id) }}
     {# We need to check if value is not null because in prototype it is null else we display a placeholder #}
     <td>{% if form.vars.value is not null %}{{ form.vars.value.product_name }}{% else %}__PRODUCT_NAME__{% endif %}</td>
     <td>{{ form_widget(form.supplier_reference) }}</td>
