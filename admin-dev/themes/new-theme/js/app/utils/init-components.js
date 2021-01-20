@@ -33,6 +33,7 @@ import MultipleChoiceTable from '@js/components/multiple-choice-table.js';
 import GeneratableInput from '@js/components/generatable-input.js';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
+import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import {EventEmitter} from '@components/event-emitter';
 
 const initPrestashopComponents = () => {
@@ -87,6 +88,7 @@ const initPrestashopComponents = () => {
     GeneratableInput,
     CountryStateSelectionToggler,
     CountryDniRequiredToggler,
+    TextWithLengthCounter,
   };
 };
 export default initPrestashopComponents;
