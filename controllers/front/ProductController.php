@@ -775,7 +775,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                                         'name' => '-',
                                         'html_color_code' => '',
                                         'texture' => '',
-                                        'selected' => empty($currentAttributes[$idAttributeGroup]) ? true : false,
+                                        'selected' => empty($currentAttributes[$idAttributeGroup]),
                                     ],
                                 ] + $group['attributes'];
                             }
