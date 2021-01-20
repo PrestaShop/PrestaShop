@@ -113,6 +113,14 @@ table .column-filters td:last-child .grid-reset-button {
             }
           }
         }
+
+        &.column-filters {
+          @include media-breakpoint-down(xs) {
+            input {
+              min-width: 6rem;
+            }
+          }
+        }
       }
     }
     tbody {
