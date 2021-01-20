@@ -27,13 +27,13 @@
     {if isset($title)}
       <h4>{block name="searchTitle"}{$title}{/block}</h4>
     {else}
-      <h4>{block name="searchTitle"}{l s='Sorry for the inconvenience.' d='Shop.Theme.Global'}{/block}</h4>
+      <h4>{block name="searchTitle"}{l s='No matches were found for your search' d='Shop.Theme.Global'}{/block}</h4>
     {/if}
 
     {if isset($subtitle)}
       <p>{block name="searchSubtitle"}{$subtitle}{/block}</p>
     {else}
-      <p>{block name="searchSubtitle"}{l s='Search again what you are looking for.' d='Shop.Theme.Global'}{/block}</p>
+      <p>{block name="searchSubtitle"}{l s='Please try other keywords to describe what you are searching for.' d='Shop.Theme.Global'}{/block}</p>
     {/if}
 
     {block name='search'}
