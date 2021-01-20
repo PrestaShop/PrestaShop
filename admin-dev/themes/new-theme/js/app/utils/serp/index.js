@@ -107,8 +107,13 @@ class SerpApp {
   }
 
   setUrl(rewrite) {
+    // We replace two placeholders because there was a typo in the initial one
     this.data.url = this.originalUrl.replace(
       '{friendy-url}',
+      rewrite,
+    );
+    this.data.url = this.data.url.replace(
+      '{friendly-url}',
       rewrite,
     );
   }

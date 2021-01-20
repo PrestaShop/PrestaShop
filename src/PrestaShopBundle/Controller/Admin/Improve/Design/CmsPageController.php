@@ -193,7 +193,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $formData['page_category_id'] = $categoryParentId;
         }
         $form = $formBuilder->getForm($formData, [
-            'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')->getUrl(0, '{friendy-url}'),
+            'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')->getUrl(0, '{friendly-url}'),
         ]);
         $form->handleRequest($request);
 
@@ -260,7 +260,7 @@ class CmsPageController extends FrameworkBundleAdminController
                     'cmsPageId' => $cmsPageId,
                 ]),
                 'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                    ->getUrl($cmsPageId, '{friendy-url}'),
+                    ->getUrl($cmsPageId, '{friendly-url}'),
             ]);
             $form->handleRequest($request);
         } catch (Exception $e) {
