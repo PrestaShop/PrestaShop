@@ -11,6 +11,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 const multiStorePage = require('@pages/BO/advancedParameters/multistore');
 const addShopPage = require('@pages/BO/advancedParameters/multistore/shop/add');
+const addShopUrlPage = require('@pages/BO/advancedParameters/multistore/shop/addURL');
 const shopPage = require('@pages/BO/advancedParameters/multistore/shop/index');
 
 // Import data
@@ -120,6 +121,24 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
 
       const textResult = await addShopPage.setShop(page, updateShopData);
       await expect(textResult).to.contains(addShopPage.successfulUpdateMessage);
+    });
+
+    it('should go to add URL', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
+
+      await shopPage.filterTable(page, 'a!name', updateShopData.name);
+
+      await shopPage.goToSetURL(page, 1);
+
+      const pageTitle = await addShopUrlPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
+    });
+
+    it('should set URL', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
+
+      const textResult = await addShopUrlPage.setVirtualUrl(page, updateShopData);
+      await expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
     });
   });
 
