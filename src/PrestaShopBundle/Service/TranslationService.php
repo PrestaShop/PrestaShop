@@ -31,6 +31,7 @@ use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
+use PrestaShopBundle\Translation\Provider\UseModuleInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
@@ -159,7 +160,7 @@ class TranslationService
             $translationProvider->setThemeName($theme);
         } else {
             $translationProvider = $this->container->get('prestashop.translation.search_provider');
-            if ($module !== null) {
+            if ($module !== null && $translationProvider instanceof UseModuleInterface) {
                 $translationProvider->setModuleName($module);
             }
         }

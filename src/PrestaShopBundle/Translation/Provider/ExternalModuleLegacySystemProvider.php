@@ -311,7 +311,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      */
     public function setModuleName($moduleName)
     {
-        if (null === $this->moduleName || empty($this->moduleName)) {
+        if (null === $moduleName || empty($moduleName)) {
             UnsupportedModuleException::moduleNotProvided(self::getIdentifier());
         }
 

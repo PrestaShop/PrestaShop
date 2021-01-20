@@ -36,7 +36,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Able to search translations for a specific translation domains across multiple sources
  */
-class SearchProvider implements ProviderInterface
+class SearchProvider implements ProviderInterface, UseModuleInterface
 {
     const DEFAULT_LOCALE = 'en-US';
 
@@ -351,7 +351,7 @@ class SearchProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setModuleName($moduleName)
+    public function setModuleName(string $moduleName)
     {
         $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
     }
