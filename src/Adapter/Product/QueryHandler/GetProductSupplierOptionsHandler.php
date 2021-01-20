@@ -62,7 +62,12 @@ final class GetProductSupplierOptionsHandler extends AbstractProductHandler impl
     public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
     {
         $product = $this->getProduct($query->getProductId());
-        $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(new GetProductSuppliersForEditing((int) $product->id));
+        $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(
+            new GetProductSuppliersForEditing(
+                (int) $product->id,
+                (bool) $product->cache_default_attribute
+            )
+        );
         $supplierOptions = [];
 
         $processedSuppliers = [];

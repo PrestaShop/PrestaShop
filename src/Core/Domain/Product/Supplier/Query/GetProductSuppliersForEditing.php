@@ -41,11 +41,18 @@ class GetProductSuppliersForEditing
     private $productId;
 
     /**
-     * @param int $productId
+     * @var bool
      */
-    public function __construct(int $productId)
+    private $combinationsOnly;
+
+    /**
+     * @param int $productId
+     * @param bool $combinationsOnly
+     */
+    public function __construct(int $productId, bool $combinationsOnly)
     {
         $this->productId = new ProductId($productId);
+        $this->combinationsOnly = $combinationsOnly;
     }
 
     /**
@@ -54,5 +61,13 @@ class GetProductSuppliersForEditing
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function combinationsOnly(): bool
+    {
+        return $this->combinationsOnly;
     }
 }

@@ -49,6 +49,10 @@ final class GetProductSuppliersForEditingHandler implements GetProductSuppliersF
 
         /** @var ProductSupplierEntity $productSupplier */
         foreach (ProductSupplierEntity::getSupplierCollection($productIdValue, false) as $productSupplier) {
+            if ($query->combinationsOnly() && !$productSupplier->id_product_attribute) {
+                continue;
+            }
+
             $productSuppliers[] = new ProductSupplierForEditing(
                     (int) $productSupplier->id,
                     (int) $productSupplier->id_product,
