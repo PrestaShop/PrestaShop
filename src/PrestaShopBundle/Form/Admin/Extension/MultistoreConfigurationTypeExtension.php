@@ -42,7 +42,8 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
      */
     private $multistoreCheckboxAttacher;
 
-    public function __construct(MultistoreCheckboxAttacher $multistoreCheckboxAttacher) {
+    public function __construct(MultistoreCheckboxAttacher $multistoreCheckboxAttacher)
+    {
         $this->multistoreCheckboxAttacher = $multistoreCheckboxAttacher;
     }
 
