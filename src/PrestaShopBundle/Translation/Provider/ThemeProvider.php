@@ -198,7 +198,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue($empty = true)
+    public function getDefaultCatalogue(bool $empty = true)
     {
         $defaultCatalogue = new MessageCatalogue($this->locale);
 

@@ -176,7 +176,7 @@ class SearchProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue($empty = true)
+    public function getDefaultCatalogue(bool $empty = true)
     {
         try {
             $defaultCatalogue = new MessageCatalogue($this->locale);

@@ -178,7 +178,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue($empty = true)
+    public function getDefaultCatalogue(bool $empty = true)
     {
         $defaultCatalogue = $this->getCachedDefaultCatalogue();
 
