@@ -71,7 +71,7 @@
 
         <div id="js-product-list">
           {block name='product_list_empty'}
-            {include file='errors/not-found.tpl'}
+            {include file='errors/no-products.tpl'}
           {/block}
         </div>
 
