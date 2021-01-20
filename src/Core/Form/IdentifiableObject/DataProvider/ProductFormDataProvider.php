@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -48,11 +49,21 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var ConfigurableFormChoiceProviderInterface
      */
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    private $combinationNameByIdChoiceProvider;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     * @param ConfigurableFormChoiceProviderInterface $combinationNameByIdChoiceProvider
+     */
+    public function __construct(
+        CommandBusInterface $queryBus,
+        //@todo: to mege already existing productSuppliers with combinations (if its number was updated)
+        ConfigurableFormChoiceProviderInterface $combinationNameByIdChoiceProvider
+    ) {
         $this->queryBus = $queryBus;
+        $this->combinationNameByIdChoiceProvider = $combinationNameByIdChoiceProvider;
     }
 
     /**
@@ -252,21 +263,25 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'default_supplier_id' => $defaultSupplierId,
         ];
 
-        foreach ($productSupplierOptions->getOptionsBySupplier() as $key => $supplierOption) {
+        foreach ($productSupplierOptions->getOptionsBySupplier() as $index => $supplierOption) {
             $supplierId = $supplierOption->getSupplierId();
-            $suppliersData['supplier_ids'][$key] = $supplierId;
-            $suppliersData['supplier_references'][$key]['is_default'] = $supplierId === $defaultSupplierId;
-            $suppliersData['supplier_references'][$key]['supplier_id'] = $supplierId;
-            $suppliersData['supplier_references'][$key]['supplier_name'] = $supplierOption->getSupplierName();
+            $suppliersData['supplier_ids'][$index] = $supplierId;
+            $suppliersData['supplier_references'][$index]['is_default'] = $supplierId === $defaultSupplierId;
+            $suppliersData['supplier_references'][$index]['supplier_id'] = $supplierId;
+            $suppliersData['supplier_references'][$index]['supplier_name'] = $supplierOption->getSupplierName();
 
             $i = 0;
-            foreach ($supplierOption->getProductSuppliersForEditing() as $index => $supplierForEditing) {
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['product_supplier_id'] = $supplierForEditing->getProductSupplierId();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['product_name'] = $supplierForEditing->getProductName();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['supplier_price_tax_excluded'] = $supplierForEditing->getPriceTaxExcluded();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['supplier_reference'] = $supplierForEditing->getReference();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['currency_id'] = $supplierForEditing->getCurrencyId();
-                $suppliersData['supplier_references'][$key]['product_suppliers_collection'][$i]['combination_id'] = $supplierForEditing->getCombinationId();
+            foreach ($supplierOption->getProductSuppliersForEditing() as $supplierForEditing) {
+                $supplierForEditing = [
+                    'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                    'product_name' => $supplierForEditing->getProductName(),
+                    'supplier_price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                    'supplier_reference' => $supplierForEditing->getReference(),
+                    'currency_id' => $supplierForEditing->getCurrencyId(),
+                    'combination_id' => $supplierForEditing->getCombinationId(),
+                ];
+
+                $suppliersData['supplier_references'][$index]['product_suppliers_collection'][$i] = $supplierForEditing;
 
                 ++$i;
             }
