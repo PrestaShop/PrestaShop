@@ -29,6 +29,5 @@ Feature: Search shops given a search term (BO)
     When I search for shops with the term "THIRD" I should get the following results:
       | name             | group_name             | color | group_color |
       | test_third_shop  | test_second_shop_group | blue  | green       |
-    When I search for shops with the term "doesnt_exist" I should get the following results:
-      | name             | group_name | color | group_color |
+    When I search for shops with the term "doesnt_exist" I should not get any results
     When I search for shops with the term " " I should get a SearchShopException
