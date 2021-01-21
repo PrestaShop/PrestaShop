@@ -67,7 +67,7 @@
 {/block}
 
 {block name='page_footer'}
-  <a id="back_to_login" href="{$urls.pages.my_account}" class="account-link">
+  <a id="back-to-login" href="{$urls.pages.my_account}" class="account-link">
     <i class="material-icons">&#xE5CB;</i>
     <span>{l s='Back to login' d='Shop.Theme.Actions'}</span>
   </a>
