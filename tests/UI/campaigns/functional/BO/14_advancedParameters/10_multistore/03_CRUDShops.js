@@ -135,7 +135,7 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
     });
 
     it('should go to add URL', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddURL', baseContext);
 
       await shopPage.filterTable(page, 'a!name', updateShopData.name);
 
