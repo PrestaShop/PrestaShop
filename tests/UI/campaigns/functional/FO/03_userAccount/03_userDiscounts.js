@@ -27,7 +27,7 @@ let page;
 
 
 const today = new Date();
-// Create a previous date for cart rules (yyy-mm-dd)
+// Create a previous date for cart rules (yyyy-mm-dd)
 today.setFullYear(today.getFullYear() - 1);
 const previousDate = today.toISOString().slice(0, 10);
 
