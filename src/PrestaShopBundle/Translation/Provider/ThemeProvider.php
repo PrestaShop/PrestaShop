@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
@@ -35,11 +36,10 @@ use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class ThemeProvider implements ProviderInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
+    public const DEFAULT_LOCALE = 'en-US';
 
     /**
      * @var string the theme name
@@ -101,7 +101,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return [
             $this->getResourceDirectory(),
@@ -112,7 +112,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         if (empty($this->domain)) {
             return ['*'];
@@ -124,7 +124,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationDomains()
+    public function getTranslationDomains(): array
     {
         if (empty($this->domain)) {
             return ['*'];
@@ -136,7 +136,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -144,7 +144,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * @param string $locale
      */
-    public function setLocale(string $locale)
+    public function setLocale(string $locale): self
     {
         $this->locale = $locale;
 
@@ -154,7 +154,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): self
     {
         $this->domain = $domain;
 
@@ -168,7 +168,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @deprecated since 1.7.6, to be removed in the next major
      */
-    public function getPrestaShopLocale()
+    public function getPrestaShopLocale(): string
     {
         @trigger_error(
             '`ThemeProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
@@ -183,7 +183,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @TODO: Don't know why default catalogue was not taken
      */
-    public function getMessageCatalogue(): MessageCatalogueInterface
+    public function getMessageCatalogue(): MessageCatalogue
     {
         $xlfCatalogue = $this->getXliffCatalogue();
         $databaseCatalogue = $this->getDatabaseCatalogue();
@@ -199,7 +199,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(bool $empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogue
     {
         $defaultCatalogue = new MessageCatalogue($this->locale);
 
@@ -224,7 +224,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getXliffCatalogue()
+    public function getXliffCatalogue(): MessageCatalogue
     {
         $xlfCatalogue = new MessageCatalogue($this->locale);
 
@@ -243,14 +243,14 @@ class ThemeProvider implements ProviderInterface
     /**
      * Get the Catalogue from database only.
      *
-     * @param null $theme
+     * @param string|null $themeName
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function getDatabaseCatalogue($theme = null)
+    public function getDatabaseCatalogue(string $themeName = null): MessageCatalogue
     {
-        if (null === $theme) {
-            $theme = $this->themeName;
+        if (null === $themeName) {
+            $themeName = $this->themeName;
         }
 
         $databaseCatalogue = new MessageCatalogue($this->locale);
@@ -259,7 +259,7 @@ class ThemeProvider implements ProviderInterface
             if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
                 continue;
             }
-            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $themeName);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -274,7 +274,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @return string Path to app/themes/{themeName}/translations/{locale}
      */
-    public function getResourceDirectory($baseDir = null)
+    public function getResourceDirectory($baseDir = null): string
     {
         if (null === $baseDir) {
             $baseDir = $this->resourceDirectory;
@@ -289,7 +289,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * @return DatabaseTranslationLoader
      */
-    public function getDatabaseLoader()
+    public function getDatabaseLoader(): DatabaseTranslationLoader
     {
         return $this->databaseLoader;
     }
@@ -297,11 +297,11 @@ class ThemeProvider implements ProviderInterface
     /**
      * Empties out the catalogue by removing translations but leaving keys
      *
-     * @param MessageCatalogueInterface $messageCatalogue
+     * @param MessageCatalogue $messageCatalogue
      *
-     * @return MessageCatalogueInterface Empty the catalogue
+     * @return MessageCatalogue Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    public function emptyCatalogue(MessageCatalogue $messageCatalogue): MessageCatalogue
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
@@ -321,7 +321,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
     {
         return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
@@ -331,9 +331,9 @@ class ThemeProvider implements ProviderInterface
      *
      * @deprecated since 1.7.6, to be removed in the next major
      *
-     * @return mixed
+     * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         @trigger_error(
             'getDomain function is deprecated and will be removed in the next major',
@@ -354,7 +354,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * @return string the path to the Theme translations folder
      */
-    public function getThemeResourcesDirectory()
+    public function getThemeResourcesDirectory(): string
     {
         return $this->getResourceDirectory($this->themeResourcesDirectory);
     }
@@ -364,7 +364,7 @@ class ThemeProvider implements ProviderInterface
      *
      * @return self
      */
-    public function setThemeName($themeName)
+    public function setThemeName(string $themeName): self
     {
         $this->themeName = $themeName;
 
@@ -376,7 +376,7 @@ class ThemeProvider implements ProviderInterface
      *
      * Will update translations files of the Theme
      */
-    public function synchronizeTheme()
+    public function synchronizeTheme(): void
     {
         $theme = $this->themeRepository->getInstanceByName($this->themeName);
 
@@ -400,11 +400,9 @@ class ThemeProvider implements ProviderInterface
     }
 
     /**
-     * @return MessageCatalogueInterface
-     *
-     * @throws \Exception
+     * @throws FileNotFoundException
      */
-    public function getThemeCatalogue()
+    public function getThemeCatalogue(): MessageCatalogue
     {
         $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
 
@@ -414,7 +412,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getDefaultResourceDirectory(): string
     {
         return $this->defaultTranslationDir . DIRECTORY_SEPARATOR . $this->locale;
     }

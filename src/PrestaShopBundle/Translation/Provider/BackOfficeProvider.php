@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
@@ -37,7 +38,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class BackOfficeProvider implements ProviderInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
+    public const DEFAULT_LOCALE = 'en-US';
 
     /**
      * @var DatabaseTranslationLoader
@@ -69,7 +70,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return [$this->getResourceDirectory()];
     }
@@ -77,7 +78,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -85,7 +86,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * @param string $locale
      */
-    public function setLocale(string $locale)
+    public function setLocale(string $locale): self
     {
         $this->locale = $locale;
 
@@ -95,7 +96,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): self
     {
         $this->domain = $domain;
 
@@ -109,7 +110,7 @@ class BackOfficeProvider implements ProviderInterface
      *
      * @deprecated since 1.7.6, to be removed in the next major
      */
-    public function getPrestaShopLocale()
+    public function getPrestaShopLocale(): string
     {
         @trigger_error(
             '`BackOfficeProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
@@ -122,7 +123,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue(): MessageCatalogueInterface
+    public function getMessageCatalogue(): MessageCatalogue
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
@@ -142,7 +143,7 @@ class BackOfficeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(bool $empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogue
     {
         $defaultCatalogue = new MessageCatalogue($this->locale);
 
@@ -167,7 +168,7 @@ class BackOfficeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getXliffCatalogue()
+    public function getXliffCatalogue(): MessageCatalogue
     {
         $xlfCatalogue = new MessageCatalogue($this->locale);
 
@@ -186,18 +187,18 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * Get the Catalogue from database only.
      *
-     * @param null $theme
+     * @param string|null $themeName
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function getDatabaseCatalogue($theme = null)
+    public function getDatabaseCatalogue(string $themeName = null): MessageCatalogue
     {
         $databaseCatalogue = new MessageCatalogue($this->locale);
         if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
             return $databaseCatalogue;
         }
         foreach ($this->getTranslationDomains() as $translationDomain) {
-            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $themeName);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -210,7 +211,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * @return string Path to app/Resources/translations/{locale}
      */
-    public function getResourceDirectory()
+    public function getResourceDirectory(): string
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->locale;
     }
@@ -218,7 +219,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * @return DatabaseTranslationLoader
      */
-    public function getDatabaseLoader()
+    public function getDatabaseLoader(): DatabaseTranslationLoader
     {
         return $this->databaseLoader;
     }
@@ -226,11 +227,11 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * Empties out the catalogue by removing translations but leaving keys
      *
-     * @param MessageCatalogueInterface $messageCatalogue
+     * @param MessageCatalogue $messageCatalogue
      *
-     * @return MessageCatalogueInterface Empty the catalogue
+     * @return MessageCatalogue Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    public function emptyCatalogue(MessageCatalogue $messageCatalogue): MessageCatalogue
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
@@ -250,7 +251,7 @@ class BackOfficeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
     {
         return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
@@ -258,7 +259,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationDomains()
+    public function getTranslationDomains(): array
     {
         return [
             '^Admin[A-Z]',
@@ -269,7 +270,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             '#^Admin[A-Z]#',
@@ -288,7 +289,7 @@ class BackOfficeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getDefaultResourceDirectory(): string
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }

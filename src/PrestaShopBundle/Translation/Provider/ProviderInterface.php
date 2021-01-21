@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 
 interface ProviderInterface
 {
@@ -44,28 +43,28 @@ interface ProviderInterface
     public function getIdentifier(): string;
 
     /**
-     * @return MessageCatalogueInterface
+     * @return MessageCatalogue
      */
-    public function getMessageCatalogue(): MessageCatalogueInterface;
+    public function getMessageCatalogue(): MessageCatalogue;
 
     /**
      * Get the default (aka untranslated) catalogue
      *
      * @param bool $empty if true, empty the catalogue values (keep the keys)
      *
-     * @return MessageCatalogueInterface Return a default catalogue with all keys
+     * @return MessageCatalogue Return a default catalogue with all keys
      */
-    public function getDefaultCatalogue(bool $empty = true);
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogue;
 
     /**
      * @return MessageCatalogue
      */
-    public function getXliffCatalogue();
+    public function getXliffCatalogue(): MessageCatalogue;
 
     /**
      * @param string|null $themeName the Theme name
      *
      * @return MessageCatalogue
      */
-    public function getDatabaseCatalogue($themeName = null);
+    public function getDatabaseCatalogue(string $themeName = null): MessageCatalogue;
 }

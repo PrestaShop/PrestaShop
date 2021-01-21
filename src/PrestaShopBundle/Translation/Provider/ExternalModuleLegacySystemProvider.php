@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
@@ -37,14 +38,13 @@ use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Be able to retrieve information from legacy translation files
  */
 class ExternalModuleLegacySystemProvider implements ProviderInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
+    public const DEFAULT_LOCALE = 'en-US';
 
     /**
      * @var DatabaseTranslationLoader
@@ -109,7 +109,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return [$this->getResourceDirectory()];
     }
@@ -117,7 +117,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -125,7 +125,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * @param string $locale
      */
-    public function setLocale(string $locale)
+    public function setLocale(string $locale): self
     {
         $this->locale = $locale;
 
@@ -135,7 +135,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain)
     {
         throw new InvalidArgumentException(__CLASS__ . ' does not allow calls to setDomain()');
     }
@@ -147,7 +147,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      *
      * @deprecated since 1.7.6, to be removed in the next major
      */
-    public function getPrestaShopLocale()
+    public function getPrestaShopLocale(): string
     {
         @trigger_error(
             '`ExternalModuleLegacySystemProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
@@ -160,7 +160,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue(): MessageCatalogueInterface
+    public function getMessageCatalogue(): MessageCatalogue
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
@@ -175,10 +175,8 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(bool $empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogue
     {
         $defaultCatalogue = $this->getCachedDefaultCatalogue();
 
@@ -191,10 +189,8 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @throws FileNotFoundException
      */
-    public function getXliffCatalogue()
+    public function getXliffCatalogue(): MessageCatalogue
     {
         try {
             $translationCatalogue = $this->moduleProvider
@@ -212,11 +208,11 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * Get the Catalogue from database only.
      *
-     * @param null $theme
+     * @param string|null $themeName
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function getDatabaseCatalogue($theme = null)
+    public function getDatabaseCatalogue(string $themeName = null): MessageCatalogue
     {
         $databaseCatalogue = new MessageCatalogue($this->locale);
 
@@ -224,7 +220,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
             if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
                 continue;
             }
-            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $themeName);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -237,7 +233,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * @return string Path to app/Resources/translations/{locale}
      */
-    public function getResourceDirectory()
+    public function getResourceDirectory(): string
     {
         return $this->getDefaultResourceDirectory();
     }
@@ -245,7 +241,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * @return DatabaseTranslationLoader
      */
-    public function getDatabaseLoader()
+    public function getDatabaseLoader(): DatabaseTranslationLoader
     {
         return $this->databaseLoader;
     }
@@ -253,11 +249,11 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * Empties out the catalogue by removing translations but leaving keys
      *
-     * @param MessageCatalogueInterface $messageCatalogue
+     * @param MessageCatalogue $messageCatalogue
      *
-     * @return MessageCatalogueInterface Empty the catalogue
+     * @return MessageCatalogue Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    public function emptyCatalogue(MessageCatalogue $messageCatalogue): MessageCatalogue
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
@@ -277,7 +273,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
     {
         return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
@@ -285,7 +281,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return ['#^' . preg_quote($this->domain) . '([A-Z]|$)#'];
     }
@@ -293,7 +289,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationDomains()
+    public function getTranslationDomains(): array
     {
         return ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
     }
@@ -309,9 +305,9 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setModuleName($moduleName)
+    public function setModuleName(string $moduleName): self
     {
-        if (null === $moduleName || empty($moduleName)) {
+        if (empty($moduleName)) {
             UnsupportedModuleException::moduleNotProvided(self::getIdentifier());
         }
 
@@ -326,7 +322,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getDefaultResourceDirectory(): string
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
     }
@@ -334,9 +330,9 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * Builds the catalogue including the translated wordings ONLY
      *
-     * @return MessageCatalogueInterface
+     * @return MessageCatalogue
      */
-    private function buildTranslationCatalogueFromLegacyFiles()
+    private function buildTranslationCatalogueFromLegacyFiles(): MessageCatalogue
     {
         // the message catalogue needs to be indexed by original wording, but legacy files are indexed by hash
         // therefore, we need to build the default catalogue (by analyzing source code)
@@ -378,11 +374,11 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      * Replaces dots in the catalogue's domain names
      * and filters out domains not corresponding to the one from this module
      *
-     * @param MessageCatalogueInterface $catalogue
+     * @param MessageCatalogue $catalogue
      *
      * @return MessageCatalogue
      */
-    private function filterDomains(MessageCatalogueInterface $catalogue)
+    private function filterDomains(MessageCatalogue $catalogue): MessageCatalogue
     {
         $normalizer = new DomainNormalizer();
         $newCatalogue = new MessageCatalogue($catalogue->getLocale());
@@ -414,7 +410,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      *
      * @return MessageCatalogue
      */
-    private function buildFreshDefaultCatalogue()
+    private function buildFreshDefaultCatalogue(): MessageCatalogue
     {
         $defaultCatalogue = new MessageCatalogue($this->locale);
 
@@ -444,7 +440,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      *
      * @return MessageCatalogue
      */
-    private function getCachedDefaultCatalogue()
+    private function getCachedDefaultCatalogue(): MessageCatalogue
     {
         $catalogueCacheKey = $this->moduleName . '|' . $this->locale;
 

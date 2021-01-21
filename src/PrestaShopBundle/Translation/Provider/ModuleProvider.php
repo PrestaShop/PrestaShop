@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
@@ -31,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Translation provider for a specific native module (maintained by the core team)
@@ -39,7 +39,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class ModuleProvider implements ProviderInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
+    public const DEFAULT_LOCALE = 'en-US';
 
     /**
      * @var string the module name
@@ -76,7 +76,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return [$this->getResourceDirectory()];
     }
@@ -84,7 +84,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
     }
@@ -92,7 +92,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationDomains()
+    public function getTranslationDomains(): array
     {
         return ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
     }
@@ -100,7 +100,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -108,7 +108,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * @param string $locale
      */
-    public function setLocale(string $locale)
+    public function setLocale(string $locale): self
     {
         $this->locale = $locale;
 
@@ -118,7 +118,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): self
     {
         $this->domain = $domain;
 
@@ -132,7 +132,7 @@ class ModuleProvider implements ProviderInterface
      *
      * @deprecated since 1.7.6, to be removed in the next major
      */
-    public function getPrestaShopLocale()
+    public function getPrestaShopLocale(): string
     {
         @trigger_error(
             '`ModuleProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
@@ -145,7 +145,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue(): MessageCatalogueInterface
+    public function getMessageCatalogue(): MessageCatalogue
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
@@ -165,7 +165,7 @@ class ModuleProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(bool $empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogue
     {
         $defaultCatalogue = new MessageCatalogue($this->locale);
 
@@ -190,7 +190,7 @@ class ModuleProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getXliffCatalogue()
+    public function getXliffCatalogue(): MessageCatalogue
     {
         $xlfCatalogue = new MessageCatalogue($this->locale);
 
@@ -209,11 +209,11 @@ class ModuleProvider implements ProviderInterface
     /**
      * Get the Catalogue from database only.
      *
-     * @param null $theme
+     * @param string|null $themeName
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function getDatabaseCatalogue($theme = null)
+    public function getDatabaseCatalogue(string $themeName = null): MessageCatalogue
     {
         $databaseCatalogue = new MessageCatalogue($this->locale);
 
@@ -221,7 +221,7 @@ class ModuleProvider implements ProviderInterface
             if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
                 continue;
             }
-            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $themeName);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -234,7 +234,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * @return string Path to app/Resources/translations/{locale}
      */
-    public function getResourceDirectory()
+    public function getResourceDirectory(): string
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->locale;
     }
@@ -242,7 +242,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * @return DatabaseTranslationLoader
      */
-    public function getDatabaseLoader()
+    public function getDatabaseLoader(): DatabaseTranslationLoader
     {
         return $this->databaseLoader;
     }
@@ -250,11 +250,11 @@ class ModuleProvider implements ProviderInterface
     /**
      * Empties out the catalogue by removing translations but leaving keys
      *
-     * @param MessageCatalogueInterface $messageCatalogue
+     * @param MessageCatalogue $messageCatalogue
      *
-     * @return MessageCatalogueInterface Empty the catalogue
+     * @return MessageCatalogue Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    public function emptyCatalogue(MessageCatalogue $messageCatalogue): MessageCatalogue
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
@@ -274,7 +274,7 @@ class ModuleProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
     {
         return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
@@ -290,7 +290,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setModuleName($moduleName)
+    public function setModuleName(string $moduleName): self
     {
         $this->moduleName = $moduleName;
 
@@ -300,7 +300,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getDefaultResourceDirectory(): string
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }

@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
@@ -30,14 +31,13 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Able to search translations for a specific translation domains across multiple sources
  */
 class SearchProvider implements ProviderInterface, UseModuleInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
+    public const DEFAULT_LOCALE = 'en-US';
 
     /**
      * @var string the "modules" directory path
@@ -85,7 +85,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return [$this->getResourceDirectory()];
     }
@@ -93,7 +93,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return ['#^' . preg_quote($this->domain, '#') . '([A-Z]|\.|$)#'];
     }
@@ -101,7 +101,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getTranslationDomains()
+    public function getTranslationDomains(): array
     {
         return ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
     }
@@ -109,7 +109,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -117,7 +117,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * @param string $locale
      */
-    public function setLocale(string $locale)
+    public function setLocale(string $locale): self
     {
         $this->externalModuleLegacySystemProvider->setLocale($locale);
         $this->locale = $locale;
@@ -128,7 +128,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): self
     {
         $this->domain = $domain;
 
@@ -142,7 +142,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
      *
      * @deprecated since 1.7.6, to be removed in the next major
      */
-    public function getPrestaShopLocale()
+    public function getPrestaShopLocale(): string
     {
         @trigger_error(
             '`SearchProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
@@ -155,7 +155,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue(): MessageCatalogueInterface
+    public function getMessageCatalogue(): MessageCatalogue
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
@@ -175,7 +175,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(bool $empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogue
     {
         try {
             $defaultCatalogue = new MessageCatalogue($this->locale);
@@ -205,7 +205,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
      *
      * @throws FileNotFoundException
      */
-    public function getXliffCatalogue()
+    public function getXliffCatalogue(): MessageCatalogue
     {
         try {
             $xliffCatalogue = new MessageCatalogue($this->locale);
@@ -229,11 +229,11 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * Get the Catalogue from database only.
      *
-     * @param null $theme
+     * @param string|null $themeName
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function getDatabaseCatalogue($theme = null)
+    public function getDatabaseCatalogue(string $themeName = null): MessageCatalogue
     {
         $databaseCatalogue = new MessageCatalogue($this->locale);
 
@@ -241,7 +241,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
             if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
                 continue;
             }
-            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $themeName);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -254,7 +254,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * @return string Path to app/Resources/translations/{locale}
      */
-    public function getResourceDirectory()
+    public function getResourceDirectory(): string
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->locale;
     }
@@ -262,7 +262,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * @return DatabaseTranslationLoader
      */
-    public function getDatabaseLoader()
+    public function getDatabaseLoader(): DatabaseTranslationLoader
     {
         return $this->databaseLoader;
     }
@@ -270,11 +270,11 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * Empties out the catalogue by removing translations but leaving keys
      *
-     * @param MessageCatalogueInterface $messageCatalogue
+     * @param MessageCatalogue $messageCatalogue
      *
-     * @return MessageCatalogueInterface Empty the catalogue
+     * @return MessageCatalogue Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    public function emptyCatalogue(MessageCatalogue $messageCatalogue): MessageCatalogue
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
@@ -294,7 +294,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
     {
         return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
@@ -304,9 +304,9 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
      *
      * @deprecated since 1.7.6, to be removed in the next major
      *
-     * @return mixed
+     * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         @trigger_error(
             __METHOD__ . ' function is deprecated and will be removed in the next major',
@@ -327,7 +327,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getDefaultResourceDirectory(): string
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
@@ -337,7 +337,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
      *
      * @return string
      */
-    public function getModuleDirectory()
+    public function getModuleDirectory(): string
     {
         @trigger_error(
             __METHOD__ . ' function is deprecated and will be removed in the next major',
@@ -350,7 +350,7 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setModuleName(string $moduleName)
+    public function setModuleName(string $moduleName): void
     {
         $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
     }
@@ -358,11 +358,11 @@ class SearchProvider implements ProviderInterface, UseModuleInterface
     /**
      * Filters the catalogue so that only domains matching the filters are kept
      *
-     * @param MessageCatalogueInterface $defaultCatalogue
+     * @param MessageCatalogue $defaultCatalogue
      *
      * @return MessageCatalogue
      */
-    private function filterCatalogue(MessageCatalogueInterface $defaultCatalogue)
+    private function filterCatalogue(MessageCatalogue $defaultCatalogue): MessageCatalogue
     {
         // return only elements whose domain matches the filters
         $filters = $this->getFilters();
