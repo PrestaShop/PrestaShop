@@ -11,8 +11,9 @@ const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 const multiStorePage = require('@pages/BO/advancedParameters/multistore');
 const addShopPage = require('@pages/BO/advancedParameters/multistore/shop/add');
-const addShopUrlPage = require('@pages/BO/advancedParameters/multistore/shop/addURL');
+const addShopUrlPage = require('@pages/BO/advancedParameters/multistore/url/addURL');
 const shopPage = require('@pages/BO/advancedParameters/multistore/shop/index');
+const shopURLPage = require('@pages/BO/advancedParameters/multistore/url/index');
 
 // Import data
 const ShopFaker = require('@data/faker/shop');
@@ -27,6 +28,7 @@ let page;
 
 const createShopData = new ShopFaker({shopGroup: 'Default', categoryRoot: 'Home'});
 const updateShopData = new ShopFaker({shopGroup: 'Default', categoryRoot: 'Home'});
+let shopID = 0;
 
 // Create, Read, Update and Delete shop in BO
 describe('Create, Read, Update and Delete shop in BO', async () => {
@@ -101,6 +103,15 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
       const textResult = await addShopPage.setShop(page, createShopData);
       await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
     });
+
+    it('should get the id of the new shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getShopID', baseContext);
+
+      const numberOfShops = await shopPage.getNumberOfElementInGrid(page);
+      await expect(numberOfShops).to.be.above(0);
+
+      shopID = await shopPage.getTextColumn(page, 1, 'id_shop');
+    });
   });
 
   // 3 : Update shop
@@ -142,8 +153,27 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
     });
   });
 
+  // 4 : Delete shop URL
+  describe('delete shop URL', async () => {
+    it('should delete the shop URL', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteShopURL', baseContext);
+
+      const textResult = await shopURLPage.deleteShopURL(page, 1);
+      await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
+    });
+  });
+
   // 4 : Delete the shop
   describe('delete shop', async () => {
+    it('should go to the created shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedShopPage', baseContext);
+
+      await multiStorePage.goToShopPage(page, shopID);
+
+      const pageTitle = await shopPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(updateShopData.name);
+    });
+
     it('should delete the shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteShop', baseContext);
 
