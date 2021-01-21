@@ -171,6 +171,16 @@
       <title>Order status update - Event</title>
       <description>This hook launches modules when the status of an order changes</description>
     </hook>
+    <hook id="displayAdminGridTableBefore">
+      <name>displayAdminGridTableBefore</name>
+      <title>Display before Grid table</title>
+      <description>This hook adds new blocks before Grid component table</description>
+    </hook>
+    <hook id="displayAdminGridTableAfter">
+      <name>displayAdminGridTableAfter</name>
+      <title>Display after Grid table</title>
+      <description>This hook adds new blocks after Grid component table</description>
+    </hook>
     <hook id="displayAdminOrder">
       <name>displayAdminOrder</name>
       <title>Display new elements in the Back Office, tab AdminOrder</title>
