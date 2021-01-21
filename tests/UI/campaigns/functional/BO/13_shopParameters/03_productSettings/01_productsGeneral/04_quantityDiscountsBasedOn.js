@@ -45,16 +45,16 @@ const productWithCombinations = new ProductFaker(
 const firstAttributeToChoose = {color: 'White'};
 const secondAttributeToChoose = {color: 'Black'};
 
-const firstCartTotalTTC = 30;
-const secondCartTotalTTC = 40;
+const firstCartTotalATI = 30;
+const secondCartTotalATI = 40;
 let numberOfProducts = 0;
 
 /*
 Choose quantity discounts based on 'Products'
 Create product with combinations and add a specific price(discount 50% for the first combination)
-Add the combinations to the cart and check the price TTC
+Add the combinations to the cart and check the price ATI
 Choose quantity discounts based on 'Combinations'
-Check the cart price TTC
+Check the cart price ATI
  */
 describe('Choose quantity discount based on', async () => {
   // before and after functions
@@ -128,16 +128,16 @@ describe('Choose quantity discount based on', async () => {
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
-  it('should preview product and check price TTC in FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceTTC', baseContext);
+  it('should preview product and check price ATI in FO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceATI', baseContext);
 
     page = await addProductPage.previewProduct(page);
 
     await foProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
     await foProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
 
-    const priceTTC = await cartPage.getTTCPrice(page);
-    await expect(priceTTC).to.equal(firstCartTotalTTC);
+    const priceATI = await cartPage.getATIPrice(page);
+    await expect(priceATI).to.equal(firstCartTotalATI);
 
     page = await cartPage.closePage(browserContext, page, 0);
   });
@@ -162,14 +162,14 @@ describe('Choose quantity discount based on', async () => {
     await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
   });
 
-  it('should view my shop and check price TTC in FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceTTC', baseContext);
+  it('should view my shop and check ATI price in FO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceATI', baseContext);
 
     page = await productSettingsPage.viewMyShop(page);
 
     await foProductPage.goToCartPage(page);
-    const priceTTC = await cartPage.getTTCPrice(page);
-    await expect(priceTTC).to.equal(secondCartTotalTTC);
+    const priceATI = await cartPage.getATIPrice(page);
+    await expect(priceATI).to.equal(secondCartTotalATI);
 
     page = await cartPage.closePage(browserContext, page, 0);
   });

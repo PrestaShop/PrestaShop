@@ -52,9 +52,8 @@ class Brands extends BOBasePage {
 
     // Brands list Selectors
     this.brandsTableColumnLogoImg = row => `${this.tableColumn('manufacturer', row, 'logo')} img`;
-    this.brandsTableEnableColumn = row => `${this.tableColumn('manufacturer', row, 'active')}`;
-    this.brandsEnableColumnValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-valid`;
-    this.brandsEnableColumnNotValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-not-valid`;
+    this.brandsTableColumnStatus = row => `${this.tableColumn('manufacturer', row, 'active')} .ps-switch`;
+    this.brandsTableColumnStatusToggleInput = row => `${this.brandsTableColumnStatus(row)} input`;
     this.viewBrandLink = row => `${this.actionsColumn('manufacturer', row)} a.grid-view-row-link`;
     this.editBrandLink = row => `${this.dropdownToggleMenu('manufacturer', row)} a.grid-edit-row-link`;
     this.bulkActionsEnableButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_enable_selection`;
@@ -179,13 +178,21 @@ class Brands extends BOBasePage {
   }
 
   /**
-   * Get toggle column value for a row (Brands list)
+   * Get brand status
    * @param page
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
-    return this.elementVisible(page, this.brandsEnableColumnValidIcon(row), 100);
+  async getBrandStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.brandsTableColumnStatusToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -195,12 +202,12 @@ class Brands extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.brandsTableEnableColumn(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.brandsTableEnableColumn(row));
+  async setBrandStatus(page, row, valueWanted = true) {
+    if (await this.getBrandStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.brandsTableColumnStatus(row));
       return true;
     }
+
     return false;
   }
 
@@ -268,7 +275,7 @@ class Brands extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDelete(page, table);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -307,7 +314,7 @@ class Brands extends BOBasePage {
    * @param enable
    * @return {Promise<string>}
    */
-  async changeBrandsEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetBrandsStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel('manufacturer'), el => el.click()),
@@ -320,7 +327,7 @@ class Brands extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -349,7 +356,7 @@ class Brands extends BOBasePage {
       await this.waitForVisibleSelector(page, `${this.confirmDeleteModal('manufacturer_address')}.show`);
     }
     await this.confirmDelete(page, table);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -398,7 +405,7 @@ class Brands extends BOBasePage {
       name: await this.getTextColumnFromTableBrands(page, row, 'name'),
       addresses: await this.getTextColumnFromTableBrands(page, row, 'addresses_count'),
       products: await this.getTextColumnFromTableBrands(page, row, 'products_count'),
-      status: await this.getToggleColumnValue(page, row),
+      status: await this.getBrandStatus(page, row),
     };
   }
 
@@ -472,12 +479,14 @@ class Brands extends BOBasePage {
   async sortTable(page, table, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(table, sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(table, sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /**
@@ -500,15 +509,6 @@ class Brands extends BOBasePage {
    */
   async sortTableAddresses(page, sortBy, sortDirection = 'asc') {
     return this.sortTable(page, 'manufacturer_address', sortBy, sortDirection);
-  }
-
-  /**
-   * Get alert text message
-   * @param page
-   * @return {Promise<string>}
-   */
-  getAlertTextMessage(page) {
-    return this.getTextContent(page, this.alertTextBlock);
   }
 
   // Export methods

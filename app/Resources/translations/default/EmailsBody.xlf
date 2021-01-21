@@ -1358,6 +1358,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="mails/themes/modern/core/productoutofstock.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fdabff209ef55c524b662ea9f2991ad3">
+        <source>There are now less than [1]{last_qty}[/1] of [1]{product}[/1] in stock.</source>
+        <target>There are now less than [1]{last_qty}[/1] of [1]{product}[/1] in stock.</target>
+        <note>Line: 176</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="mails/themes/modern/core/refund.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9b45ae8a346e0587013cdb1494e113d8">

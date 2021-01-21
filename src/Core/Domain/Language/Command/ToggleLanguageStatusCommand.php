@@ -40,7 +40,7 @@ class ToggleLanguageStatusCommand implements ToggleLanguageStatusCommandInterfac
     private $expectedStatus;
 
     /**
-     * @var int
+     * @var LanguageId
      */
     private $languageId;
 
@@ -59,7 +59,7 @@ class ToggleLanguageStatusCommand implements ToggleLanguageStatusCommandInterfac
     }
 
     /**
-     * @return int|LanguageId
+     * @return LanguageId
      */
     public function getLanguageId()
     {

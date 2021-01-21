@@ -27,39 +27,34 @@
     {% set refMenu = menu.refMenu %}
     <div id="{{refMenu}}" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-flip="false">
       <span class="js-selected-item selected-item module-category-selector-label">
-        {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
+        {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
       </span>
       <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
     </div>
 
-    <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
-      <ul class="items-list js-items-list">
-        <li class="module-category-reset">
-          <a class="dropdown-item" href="#">
-            {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
-          </a>
-        </li>
-        <li class="module-category-menu module-category-recently-used"
-          data-category-ref="recently-used"
-          data-category-display-name="{{ 'Recently Used'|trans({}, 'Admin.Modules.Feature') }}"
-        >
-          <a class="dropdown-item" href="#">
-            {{ 'Recently Used'|trans({}, 'Admin.Modules.Feature') }}
-          </a>
-        </li>
-        </li>
-        {% for subMenu in menu.subMenu %}
-          <li class="module-category-menu"
+    <div class="ps-dropdown-menu dropdown-menu module-category-selector items-list js-items-list" aria-labelledby="{{refMenu}}">
+      <a class="dropdown-item module-category-reset">
+        {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
+      </a>
+
+      <a 
+        class="dropdown-item module-category-menu module-category-recently-used"
+        data-category-ref="recently-used"
+        data-category-display-name="{{ 'Recently used'|trans({}, 'Admin.Modules.Feature') }}"
+      >
+        {{ 'Recently used'|trans({}, 'Admin.Modules.Feature') }}
+      </a>
+
+      {% for subMenu in menu.subMenu %}
+          <a 
+            class="dropdown-item module-category-menu"
             {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
             data-category-ref="{{subMenu.refMenu}}"
             data-category-display-name="{{subMenu.name|trans({}, 'Admin.Modules.Feature')}}"
           >
-            <a class="dropdown-item" href="#">
-              {{subMenu.name|trans({}, 'Admin.Modules.Feature')}}<span class="float-right">{{subMenu.modules|length }}</span>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
+            {{subMenu.name|trans({}, 'Admin.Modules.Feature')}}<span class="float-right">{{subMenu.modules|length }}</span>
+          </a>
+      {% endfor %}
     </div>
   {% endfor %}
 </div>

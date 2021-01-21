@@ -29,6 +29,7 @@ namespace LegacyTests\Unit\Core\Grid\Presenter;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
@@ -70,6 +71,7 @@ class GridPresenterTest extends TestCase
             'pagination' => ['offset', 'limit'],
             'sorting' => ['order_by', 'order_way'],
             'filters' => [],
+            'view_options' => [],
         ];
 
         $this->assertInternalType('array', $presentedGrid);
@@ -102,6 +104,8 @@ class GridPresenterTest extends TestCase
             ->willReturn(new BulkActionCollection());
         $definition->method('getGridActions')
             ->willReturn(new GridActionCollection());
+        $definition->method('getViewOptions')
+            ->willReturn(new ViewOptionsCollection());
         $definition->method('getFilters')
             ->willReturn(new FilterCollection());
 

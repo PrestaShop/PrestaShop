@@ -24,11 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\Adapter;
+namespace Tests\Unit\Adapter\Presenter;
 
 use PHPUnit\Framework\TestCase;
-use Tests\Unit\Adapter\Presenter\DummyLog;
-use Tests\Unit\Adapter\Presenter\LazyArrayImplementation;
 
 class LazyArrayTest extends TestCase
 {

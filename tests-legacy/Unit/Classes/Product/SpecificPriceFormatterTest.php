@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Unit\Classes\Product\SpecificPrice;
+namespace LegacyTests\Unit\Classes\Product;
 
 use Context;
 use Configuration;

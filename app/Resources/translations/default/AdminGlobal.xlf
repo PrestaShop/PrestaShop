@@ -634,7 +634,7 @@
       <trans-unit id="003bf65ada43328a6164e2c681516a0e">
         <source>30 day</source>
         <target>30 day</target>
-        <note>Line: 598</note>
+        <note>Line: 599</note>
       </trans-unit>
     </body>
   </file>
@@ -735,7 +735,7 @@
       <trans-unit id="d2ce009594dcc60befa6a4e6cbeb71fc">
         <source>Week</source>
         <target>Week</target>
-        <note>Line: 122</note>
+        <note>Line: 121</note>
       </trans-unit>
     </body>
   </file>
@@ -869,12 +869,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
         <source>URL</source>
         <target>URL</target>
-        <note>Line: 27</note>
+        <note>Line: 21</note>
       </trans-unit>
       <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
         <source>Meta title</source>
         <target>Meta title</target>
-        <note>Line: 56</note>
+        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>
@@ -883,12 +883,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="b9b371458ab7c314f88b81c553f6ce51">
         <source>Hook</source>
         <target>Hook</target>
-        <note>Line: 103</note>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
-        <note>Line: 131</note>
+        <note>Line: 125</note>
       </trans-unit>
     </body>
   </file>
@@ -897,7 +897,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="97e7c9a7d06eac006a28bf05467fcc8b">
         <source>Link</source>
         <target>Link</target>
-        <note>Line: 1338</note>
+        <note>Line: 1369</note>
       </trans-unit>
     </body>
   </file>
@@ -1396,22 +1396,22 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="887ee91702c962a70b87cbef07bbcaec">
         <source>tax excl.</source>
         <target>tax excl.</target>
-        <note>Line: 102</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="e2e79605fc9450ec17957cf0e910f5c6">
         <source>tax incl.</source>
         <target>tax incl.</target>
-        <note>Line: 109</note>
+        <note>Line: 110</note>
       </trans-unit>
       <trans-unit id="aa52110dbfce51cc1ec8a163264151e2">
         <source>Existing</source>
         <target>Existing</target>
-        <note>Line: 124</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>Line: 125</note>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>

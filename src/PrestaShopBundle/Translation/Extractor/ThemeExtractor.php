@@ -241,7 +241,7 @@ class ThemeExtractor
     }
 
     /**
-     * @param $outputPath
+     * @param string $outputPath
      *
      * @return $this
      */

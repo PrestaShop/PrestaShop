@@ -52,7 +52,7 @@ class AddressFactory
     /**
      * Check if an address exists depending on given $id_address.
      *
-     * @param $id_address
+     * @param int $id_address
      *
      * @return bool
      */

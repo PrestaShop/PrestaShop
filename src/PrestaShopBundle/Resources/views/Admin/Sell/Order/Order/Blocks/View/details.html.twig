@@ -32,7 +32,7 @@
 {% endset %}
 
 {% set carriersTitle %}
-  {{ 'Carriers'|trans({}, 'Admin.Shipping.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
+  {{ 'Carriers'|trans({}, 'Admin.Shipping.Feature') }} (<span class="count">{{ orderForViewing.shipping.carriers|length }}</span>)
 {% endset %}
 
 {% set merchantReturnsTitle %}
@@ -108,6 +108,14 @@
         {% endblock %}
       {% endembed %}
     </div>
+
+    {% if orderForViewing.shipping.recycledPackaging %}
+      <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+    {% endif %}
+
+    {% if orderForViewing.shipping.giftWrapping %}
+      <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+    {% endif %}
   </div>
 </div>
 

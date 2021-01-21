@@ -170,10 +170,10 @@ class AdminModulesControllerCore extends AdminController
     public function ajaxProcessRefreshModuleList($force_reload_cache = false)
     {
         // Refresh modules_list.xml every week
-        if (!$this->isFresh(Module::CACHE_FILE_MODULES_LIST, 86400) || $force_reload_cache) {
-            if ($this->refresh(Module::CACHE_FILE_MODULES_LIST, 'https://' . $this->xml_modules_list)) {
+        if (!Tools::isFileFresh(Module::CACHE_FILE_MODULES_LIST, 86400) || $force_reload_cache) {
+            if (Tools::refreshFile(Module::CACHE_FILE_MODULES_LIST, 'https://' . $this->xml_modules_list)) {
                 $this->status = 'refresh';
-            } elseif ($this->refresh(Module::CACHE_FILE_MODULES_LIST, 'http://' . $this->xml_modules_list)) {
+            } elseif (Tools::refreshFile(Module::CACHE_FILE_MODULES_LIST, 'http://' . $this->xml_modules_list)) {
                 $this->status = 'refresh';
             } else {
                 $this->status = 'error';
@@ -184,7 +184,7 @@ class AdminModulesControllerCore extends AdminController
 
         // If logged to Addons Webservices, refresh default country native modules list every day
         if ($this->status != 'error') {
-            if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400) || $force_reload_cache) {
+            if (!Tools::isFileFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400) || $force_reload_cache) {
                 if (file_put_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'))) {
                     $this->status = 'refresh';
                 } else {
@@ -194,7 +194,7 @@ class AdminModulesControllerCore extends AdminController
                 $this->status = 'cache';
             }
 
-            if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400) || $force_reload_cache) {
+            if (!Tools::isFileFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400) || $force_reload_cache) {
                 if (file_put_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, Tools::addonsRequest('must-have'))) {
                     $this->status = 'refresh';
                 } else {
@@ -207,7 +207,7 @@ class AdminModulesControllerCore extends AdminController
 
         // If logged to Addons Webservices, refresh customer modules list every 5 minutes
         if ($this->logged_on_addons && $this->status != 'error') {
-            if (!$this->isFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 300) || $force_reload_cache) {
+            if (!Tools::isFileFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 300) || $force_reload_cache) {
                 if (file_put_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_CUSTOMER_MODULES_LIST, Tools::addonsRequest('customer'))) {
                     $this->status = 'refresh';
                 } else {

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 
 /**
@@ -63,7 +63,7 @@ class Reduction
     private $type;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $value;
 
@@ -78,7 +78,7 @@ class Reduction
         $this->assertIsAllowedType($type);
         $this->assertIsValidValue($type, $value);
         $this->type = $type;
-        $this->value = new Number((string) $value);
+        $this->value = new DecimalNumber((string) $value);
     }
 
     /**
@@ -90,9 +90,9 @@ class Reduction
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getValue(): Number
+    public function getValue(): DecimalNumber
     {
         return $this->value;
     }
@@ -110,8 +110,8 @@ class Reduction
     }
 
     /**
-     * @param $type
-     * @param $value
+     * @param string $type
+     * @param float $value
      *
      * @throws DomainConstraintException
      */

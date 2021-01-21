@@ -29,11 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Configuration;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tools;
@@ -43,11 +42,9 @@ use Tools;
  *
  * @internal
  */
-abstract class AbstractImageUploader implements ImageUploaderInterface
+abstract class AbstractImageUploader
 {
     /**
-     * Check if image is allowed to be uploaded.
-     *
      * @param UploadedFile $image
      *
      * @throws UploadedImageConstraintException
@@ -91,8 +88,8 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
     /**
      * Uploads resized image from temporary folder to image destination
      *
-     * @param $temporaryImageName
-     * @param $destination
+     * @param string $temporaryImageName
+     * @param string $destination
      *
      * @throws ImageOptimizationException
      * @throws MemoryLimitException
@@ -134,7 +131,6 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
         } catch (PrestaShopException $e) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
-
         if (!$resized) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
@@ -143,7 +139,7 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
     }
 
     /**
-     * Resizes the image depending from its type
+     * Resizes the image depending on its type
      *
      * @param int $id
      * @param string $imageDir

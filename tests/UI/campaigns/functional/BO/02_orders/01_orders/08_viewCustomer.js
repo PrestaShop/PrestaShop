@@ -9,7 +9,7 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
-const customersPage = require('@pages/BO/customers/view');
+const viewCustomerPage = require('@pages/BO/customers/view');
 
 // Import customer 'J. DOE'
 const {DefaultAccount} = require('@data/demo/customer');
@@ -89,8 +89,8 @@ describe('View customer from orders page', async () => {
     // Click on customer link first row
     page = await ordersPage.viewCustomer(page, 1);
 
-    const pageTitle = await customersPage.getPageTitle(page);
+    const pageTitle = await viewCustomerPage.getPageTitle(page);
     await expect(pageTitle).to
-      .contains(`${customersPage.pageTitle} ${DefaultAccount.firstName[0]}. ${DefaultAccount.lastName}`);
+      .contains(`${viewCustomerPage.pageTitle} ${DefaultAccount.firstName[0]}. ${DefaultAccount.lastName}`);
   });
 });

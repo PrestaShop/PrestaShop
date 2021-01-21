@@ -63,7 +63,9 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $config
+     *
+     * @return array<int, string>
      */
     public function testConfiguration(array $config)
     {
@@ -102,8 +104,11 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
         $errors = [];
 
         if (false === $result || is_string($result)) {
-            $errors[] =
-                $this->translator->trans('Error: Please check your configuration', [], 'Admin.Advparameters.Feature');
+            $errors[] = $this->translator->trans(
+                'Error: Please check your configuration',
+                [],
+                'Admin.Advparameters.Feature'
+            );
         }
 
         if (is_string($result)) {

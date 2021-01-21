@@ -60,7 +60,7 @@ class AddressId
     /**
      * Validates that the value is integer and is greater than zero
      *
-     * @param $value
+     * @param int $value
      *
      * @throws AddressConstraintException
      */

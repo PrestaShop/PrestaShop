@@ -403,6 +403,7 @@ GitHub contributors:
 - Lucas CERDAN
 - Lucas Rolff
 - LucasC
+- Ludovic CHEVRAUX
 - Luis David de la Fuente
 - Lyo Nick
 - LyoNick
@@ -494,6 +495,7 @@ GitHub contributors:
 - montes
 - mplh
 - mRaigne
+- mushroot
 - MustangZhong
 - nache
 - natrim
@@ -677,6 +679,7 @@ GitHub contributors:
 - Stanislav Yordanov
 - Stefano Kowalke
 - Stephan Obadia
+- Stephane Decisy
 - Steven "SDF" Sulley
 - Steven Sulley
 - stickyrst

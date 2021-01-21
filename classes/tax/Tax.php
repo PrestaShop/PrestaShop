@@ -25,7 +25,9 @@
  */
 class TaxCore extends ObjectModel
 {
-    /** @var string Name */
+    const TAX_DEFAULT_PRECISION = 3;
+
+    /** @var array<int,string> Name */
     public $name;
 
     /** @var float Rate (%) */
@@ -250,13 +252,13 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns the product tax.
+     * Returns the product tax rate.
      *
      * @param int $id_product
      * @param int $id_address
      * @param Context $context
      *
-     * @return Tax
+     * @return float
      */
     public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
     {

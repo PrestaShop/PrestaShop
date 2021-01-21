@@ -329,7 +329,7 @@ class Number implements NumberInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'numberSymbols' => $this->getSymbolsByNumberingSystem()->toArray(),

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Security\Voter;
 
 use Access;
+use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -73,6 +74,7 @@ class PageVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
+        /** @var Employee $user */
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
         $action = $this->buildAction($subject, $attribute);

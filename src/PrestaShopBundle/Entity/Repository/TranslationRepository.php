@@ -31,8 +31,8 @@ use Doctrine\ORM\EntityRepository;
 class TranslationRepository extends EntityRepository
 {
     /**
-     * @param $language
-     * @param $theme
+     * @param string $language
+     * @param string $theme
      *
      * @return array
      */

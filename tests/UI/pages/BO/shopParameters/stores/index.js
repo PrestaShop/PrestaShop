@@ -6,6 +6,7 @@ class Stores extends BOBasePage {
     super();
 
     this.pageTitle = 'Stores •';
+    this.contactFormSuccessfulUpdateMessage = 'The settings have been successfully updated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -19,6 +20,11 @@ class Stores extends BOBasePage {
 
     // Table selectors
     this.gridTable = '#table-store';
+
+    // Sort selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
@@ -63,6 +69,28 @@ class Stores extends BOBasePage {
     this.enableSelectionink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.disableSelectionLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Contact details form
+    this.contactDetailsForm = '#store_fieldset_contact';
+    this.nameInput = `${this.contactDetailsForm} input[name='PS_SHOP_NAME']`;
+    this.emailInput = `${this.contactDetailsForm} input[name='PS_SHOP_EMAIL']`;
+    this.registrationNumberTextarea = '#conf_id_PS_SHOP_DETAILS textarea[name=\'PS_SHOP_DETAILS\']';
+    this.address1Input = `${this.contactDetailsForm} input[name='PS_SHOP_ADDR1']`;
+    this.address2Input = `${this.contactDetailsForm} input[name='PS_SHOP_ADDR2']`;
+    this.postcodeInput = `${this.contactDetailsForm} input[name='PS_SHOP_CODE']`;
+    this.cityInput = `${this.contactDetailsForm} input[name='PS_SHOP_CITY']`;
+    this.countrySelect = '#PS_SHOP_COUNTRY_ID';
+    this.phoneInput = `${this.contactDetailsForm} input[name='PS_SHOP_PHONE']`;
+    this.faxInput = `${this.contactDetailsForm} input[name='PS_SHOP_FAX']`;
+    this.saveButton = `${this.contactDetailsForm} button[name='submitOptionsstore']`;
   }
 
   /* Header methods */
@@ -192,6 +220,25 @@ class Stores extends BOBasePage {
   }
 
   /**
+   * Get column content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    // Get text column from each row
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
    * Get Store status
    * @param page
    * @param row
@@ -244,7 +291,7 @@ class Stores extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Bulk actions methods */
@@ -312,7 +359,132 @@ class Stores extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_store':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'sl!name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'sl!address1':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      case 'city':
+        columnSelector = this.sortColumnDiv(5);
+        break;
+
+      case 'postcode':
+        columnSelector = this.sortColumnDiv(6);
+        break;
+
+      case 'st!name':
+        columnSelector = this.sortColumnDiv(7);
+        break;
+
+      case 'cl!name':
+        columnSelector = this.sortColumnDiv(8);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Form functions */
+  /**
+   * Se contact details
+   * @param page
+   * @param storeContactData
+   * @returns {Promise<unknown>}
+   */
+  async setContactDetails(page, storeContactData) {
+    // Set name
+    await this.setValue(page, this.nameInput, storeContactData.name);
+
+    // Set email and registration number inputs
+    await this.setValue(page, this.emailInput, storeContactData.email);
+    await this.setValue(page, this.registrationNumberTextarea, storeContactData.registrationNumber);
+
+    // Set address inputs
+    await this.setValue(page, this.address1Input, storeContactData.address1);
+    await this.setValue(page, this.address2Input, storeContactData.address2);
+    await this.setValue(page, this.postcodeInput, storeContactData.postcode);
+    await this.setValue(page, this.cityInput, storeContactData.city);
+    await this.selectByVisibleText(page, this.countrySelect, storeContactData.country);
+
+    // Set phone inputs
+    await this.setValue(page, this.phoneInput, storeContactData.phone);
+    await this.setValue(page, this.faxInput, storeContactData.fax);
+
+    // Save contact details
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+
+    // Return successful message
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 

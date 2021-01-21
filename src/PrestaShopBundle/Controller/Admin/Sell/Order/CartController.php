@@ -32,23 +32,26 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
@@ -108,7 +111,10 @@ class CartController extends FrameworkBundleAdminController
     public function getInfoAction(int $cartId)
     {
         try {
-            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+            $cartInfo = $this->getQueryBus()->handle(
+                (new GetCartForOrderCreation($cartId))
+                    ->setHideDiscounts(true)
+            );
 
             return $this->json($cartInfo);
         } catch (Exception $e) {
@@ -258,19 +264,26 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function setFreeShippingAction(Request $request, int $cartId)
+    public function updateDeliverySettingsAction(Request $request, int $cartId)
     {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $recycledPackagingEnabled = (bool) $configuration->get('PS_RECYCLABLE_PACK');
+        $giftSettingsEnabled = (bool) $configuration->get('PS_GIFT_WRAPPING');
+
         try {
-            $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
+            $this->getCommandBus()->handle(new UpdateCartDeliverySettingsCommand(
                 $cartId,
-                $request->request->getBoolean('freeShipping')
+                $request->request->getBoolean('freeShipping'),
+                ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', null) : null),
+                ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', null) : null),
+                ((!empty($request->request->get('giftMessage', null))) ? $request->request->get('giftMessage', null) : null)
             ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                Response::HTTP_BAD_REQUEST
             );
         }
     }
@@ -360,7 +373,7 @@ class CartController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                $this->getErrorCode($e)
             );
         }
     }
@@ -384,6 +397,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $deleteSpecificPriceCommand = new DeleteSpecificPriceByCartProductCommand($cartId, $productId);
 
+            // @todo: this shouldn't be used use UpdateProductPriceInCartCommand
             $addSpecificPriceCommand = new AddSpecificPriceCommand(
                 $productId,
                 Reduction::TYPE_AMOUNT,
@@ -429,12 +443,15 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $newQty = $request->request->getInt('newQty');
+            $attributeId = $request->request->getInt('attributeId');
+
+            $giftedQuantity = $this->getProductGiftedQuantity($cartId, $productId, $attributeId);
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
-                $newQty,
-                $request->request->getInt('attributeId') ?: null,
+                $newQty + $giftedQuantity,
+                $attributeId ?: null,
                 $request->request->getInt('customizationId') ?: null
             ));
 
@@ -487,13 +504,16 @@ class CartController extends FrameworkBundleAdminController
     /**
      * @param int $cartId
      *
-     * @return CartInformation
+     * @return CartForOrderCreation
      *
      * @throws CartConstraintException
      */
-    private function getCartInfo(int $cartId): CartInformation
+    private function getCartInfo(int $cartId): CartForOrderCreation
     {
-        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        return $this->getQueryBus()->handle(
+            (new GetCartForOrderCreation($cartId))
+                ->setHideDiscounts(true)
+        );
     }
 
     /**
@@ -527,6 +547,7 @@ class CartController extends FrameworkBundleAdminController
     private function getErrorMessages(Exception $e)
     {
         $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+        $minimalQuantity = $e instanceof MinimalQuantityException ? $e->getMinimalQuantity() : 0;
 
         return [
             CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
@@ -568,6 +589,10 @@ class CartController extends FrameworkBundleAdminController
                     ['%limit%' => CustomizationSettings::MAX_TEXT_LENGTH]
                 ),
             ],
+            ProductCustomizationNotFoundException::class => $this->trans(
+                'Product customization could not be found. Go to Catalog > Products to customize the product.',
+                'Admin.Catalog.Notification'
+            ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock.',
                 'Admin.Catalog.Notification'
@@ -582,6 +607,63 @@ class CartController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            InvalidGiftMessageException::class => $this->trans(
+                'Gift message not valid',
+                'Admin.Notifications.Error'
+            ),
+            MinimalQuantityException::class => $this->trans(
+                'You must add a minimum quantity of %d',
+                'Admin.Orderscustomers.Notification',
+                [
+                    $minimalQuantity,
+                ]
+            ),
         ];
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return int
+     */
+    private function getErrorCode(Exception $e): int
+    {
+        switch (get_class($e)) {
+            case ProductOutOfStockException::class:
+                return Response::HTTP_CONFLICT;
+        }
+
+        return Response::HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    /**
+     * This method will be removed in the next patch version. We rely on Cart ObjectModel to simplify the code
+     * It returns the number of items of the specific product/attribute that are gift for the cart
+     *
+     * @param int $cartId
+     * @param int $productId
+     * @param int|null $attributeId
+     *
+     * @return int
+     */
+    private function getProductGiftedQuantity(int $cartId, int $productId, ?int $attributeId): int
+    {
+        $cart = new \Cart($cartId);
+        $giftCartRules = $cart->getCartRules(\CartRule::FILTER_ACTION_GIFT, false);
+        if (count($giftCartRules) <= 0) {
+            return 0;
+        }
+
+        $giftedQuantity = 0;
+        foreach ($giftCartRules as $giftCartRule) {
+            if (
+                $productId == $giftCartRule['gift_product'] &&
+                (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
+            ) {
+                ++$giftedQuantity;
+            }
+        }
+
+        return $giftedQuantity;
     }
 }

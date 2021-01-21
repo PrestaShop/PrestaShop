@@ -21,6 +21,7 @@ class AddAddress extends BOBasePage {
     this.customerSecondAddressInput = '#customer_address_address2';
     this.customerAddressCityInput = '#customer_address_city';
     this.customerAddressCountrySelect = '#customer_address_id_country';
+    this.customerAddressCountryOption = `${this.customerAddressCountrySelect} option`;
     this.customerAddressPhoneInput = '#customer_address_phone';
     this.customerAddressOtherInput = '#customer_address_other';
     this.saveAddressButton = '#save-button';
@@ -55,7 +56,16 @@ class AddAddress extends BOBasePage {
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
     // Save address
     await this.clickAndWaitForNavigation(page, this.saveAddressButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Get selected country by default in form
+   * @param page
+   * @return {Promise<string>}
+   */
+  getSelectedCountry(page) {
+    return this.getTextContent(page, `${this.customerAddressCountryOption}[selected]`, false);
   }
 }
 

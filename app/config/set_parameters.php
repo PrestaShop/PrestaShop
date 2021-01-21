@@ -55,7 +55,29 @@ if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
         $container->setParameter($key, $value);
     }
 
-    $container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+    $driver = 'array';
+    $cacheType = [
+        'CacheMemcache' => ['memcache'],
+        'CacheMemcached' => ['memcached'],
+        'CacheApc' => ['apcu', 'apc'],
+        'CacheXcache' => ['xcache'],
+    ];
+
+    if (isset(
+            $parameters['parameters']['ps_cache_enable'],
+            $parameters['parameters']['ps_caching'],
+            $cacheType[$parameters['parameters']['ps_caching']]
+        )
+        && true === $parameters['parameters']['ps_cache_enable']
+    ) {
+        foreach ($cacheType[$parameters['parameters']['ps_caching']] as $type) {
+            if (extension_loaded($type)) {
+                $driver = $type;
+                break;
+            }
+        }
+    }
+    $container->setParameter('cache.driver', $driver);
 
     // Parameter used only in dev and test env
     $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');

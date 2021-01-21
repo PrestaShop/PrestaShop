@@ -26,9 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
@@ -50,6 +49,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
     /**
@@ -63,7 +63,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var ConfigurableFormChoiceProviderInterface
      */
     private $languageChoiceProvider;
 
@@ -71,13 +71,13 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetActionUrl
      * @param string $redirectionUrl
-     * @param FormChoiceProviderInterface $languageChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $languageChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $resetActionUrl,
         $redirectionUrl,
-        FormChoiceProviderInterface $languageChoiceProvider
+        ConfigurableFormChoiceProviderInterface $languageChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->resetActionUrl = $resetActionUrl;
@@ -202,7 +202,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_lang', ChoiceType::class))
                     ->setTypeOptions([
                         'required' => false,
-                        'choices' => $this->languageChoiceProvider->getChoices(),
+                        'choices' => $this->languageChoiceProvider->getChoices([]),
                         'choice_translation_domain' => false,
                     ])
                     ->setAssociatedColumn('language')
@@ -272,12 +272,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_email_logs'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_emails_delete_bulk',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_emails_delete_bulk')
             );
     }
 }

@@ -112,4 +112,11 @@ interface NumberInterface
      * @return int
      */
     public function getSecondaryGroupSize();
+
+    /**
+     * To array function.
+     *
+     * @return array
+     */
+    public function toArray(): array;
 }

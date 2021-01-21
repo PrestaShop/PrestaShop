@@ -28,8 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\Decimal\Number;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -43,27 +44,27 @@ class UpdateProductShippingCommand
     private $productId;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $width;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $height;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $depth;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $weight;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $additionalShippingCost;
 
@@ -73,9 +74,9 @@ class UpdateProductShippingCommand
     private $carrierReferences;
 
     /**
-     * @var DeliveryTimeNotesType
+     * @var DeliveryTimeNoteType
      */
-    private $deliveryTimeNotesType;
+    private $deliveryTimeNoteType;
 
     /**
      * @var string[]|null
@@ -104,9 +105,9 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getWidth(): ?Number
+    public function getWidth(): ?DecimalNumber
     {
         return $this->width;
     }
@@ -118,15 +119,17 @@ class UpdateProductShippingCommand
      */
     public function setWidth(string $width): UpdateProductShippingCommand
     {
-        $this->width = new Number($width);
+        $width = new DecimalNumber($width);
+        $this->assertPackageDimensionIsPositiveOrZero($width, 'width');
+        $this->width = $width;
 
         return $this;
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getHeight(): ?Number
+    public function getHeight(): ?DecimalNumber
     {
         return $this->height;
     }
@@ -138,15 +141,17 @@ class UpdateProductShippingCommand
      */
     public function setHeight(string $height): UpdateProductShippingCommand
     {
-        $this->height = new Number($height);
+        $height = new DecimalNumber($height);
+        $this->assertPackageDimensionIsPositiveOrZero($height, 'height');
+        $this->height = $height;
 
         return $this;
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getDepth(): ?Number
+    public function getDepth(): ?DecimalNumber
     {
         return $this->depth;
     }
@@ -158,15 +163,17 @@ class UpdateProductShippingCommand
      */
     public function setDepth(string $depth): UpdateProductShippingCommand
     {
-        $this->depth = new Number($depth);
+        $depth = new DecimalNumber($depth);
+        $this->assertPackageDimensionIsPositiveOrZero($depth, 'depth');
+        $this->depth = $depth;
 
         return $this;
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getWeight(): ?Number
+    public function getWeight(): ?DecimalNumber
     {
         return $this->weight;
     }
@@ -178,15 +185,17 @@ class UpdateProductShippingCommand
      */
     public function setWeight(string $weight): UpdateProductShippingCommand
     {
-        $this->weight = new Number($weight);
+        $weight = new DecimalNumber($weight);
+        $this->assertPackageDimensionIsPositiveOrZero($weight, 'weight');
+        $this->weight = $weight;
 
         return $this;
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getAdditionalShippingCost(): ?Number
+    public function getAdditionalShippingCost(): ?DecimalNumber
     {
         return $this->additionalShippingCost;
     }
@@ -198,7 +207,7 @@ class UpdateProductShippingCommand
      */
     public function setAdditionalShippingCost(string $additionalShippingCost): UpdateProductShippingCommand
     {
-        $this->additionalShippingCost = new Number($additionalShippingCost);
+        $this->additionalShippingCost = new DecimalNumber($additionalShippingCost);
 
         return $this;
     }
@@ -224,11 +233,11 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return DeliveryTimeNotesType|null
+     * @return DeliveryTimeNoteType|null
      */
-    public function getDeliveryTimeNotesType(): ?DeliveryTimeNotesType
+    public function getDeliveryTimeNoteType(): ?DeliveryTimeNoteType
     {
-        return $this->deliveryTimeNotesType;
+        return $this->deliveryTimeNoteType;
     }
 
     /**
@@ -236,9 +245,9 @@ class UpdateProductShippingCommand
      *
      * @return UpdateProductShippingCommand
      */
-    public function setDeliveryTimeNotesType(int $type): UpdateProductShippingCommand
+    public function setDeliveryTimeNoteType(int $type): UpdateProductShippingCommand
     {
-        $this->deliveryTimeNotesType = new DeliveryTimeNotesType($type);
+        $this->deliveryTimeNoteType = new DeliveryTimeNoteType($type);
 
         return $this;
     }
@@ -276,10 +285,39 @@ class UpdateProductShippingCommand
      *
      * @return UpdateProductShippingCommand
      */
-    public function setLocalizedDeliveryTimeOutOfStockNotes(array $localizedDeliveryTimeOutOfStockNotes)
+    public function setLocalizedDeliveryTimeOutOfStockNotes(array $localizedDeliveryTimeOutOfStockNotes): UpdateProductShippingCommand
     {
         $this->localizedDeliveryTimeOutOfStockNotes = $localizedDeliveryTimeOutOfStockNotes;
 
         return $this;
+    }
+
+    /**
+     * @todo: dimensions deserves dedicated VO and might be worth reusing in Carriers page.
+     *
+     * @todo Check https://github.com/PrestaShop/PrestaShop/issues/19666#issuecomment-756088706
+     *
+     * @param DecimalNumber $value
+     * @param string $dimensionName
+     *
+     * @throws ProductConstraintException
+     */
+    private function assertPackageDimensionIsPositiveOrZero(DecimalNumber $value, string $dimensionName): void
+    {
+        if ($value->isGreaterOrEqualThanZero()) {
+            return;
+        }
+
+        $codeByDimension = [
+            'width' => ProductConstraintException::INVALID_WIDTH,
+            'height' => ProductConstraintException::INVALID_HEIGHT,
+            'depth' => ProductConstraintException::INVALID_DEPTH,
+            'weight' => ProductConstraintException::INVALID_WEIGHT,
+        ];
+
+        throw new ProductConstraintException(
+            sprintf('Invalid product %s, it must be positive number or zero', $dimensionName),
+            $codeByDimension[$dimensionName]
+        );
     }
 }

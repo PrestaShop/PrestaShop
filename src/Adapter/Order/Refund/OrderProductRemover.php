@@ -24,19 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
 use Cart;
 use CartRule;
-use Configuration;
 use Db;
 use Order;
 use OrderCartRule;
 use OrderDetail;
-use OrderHistory;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
+use SpecificPrice;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class OrderProductRemover
@@ -65,9 +68,11 @@ class OrderProductRemover
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
-     * @param int $quantity
+     * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
+     *
+     * @return array
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, int $quantity)
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true): array
     {
         $cart = new Cart($order->id_cart);
 
@@ -78,28 +83,53 @@ class OrderProductRemover
             $this->deleteCustomization($order, $orderDetail);
         }
 
-        $this->updateCart($cart, $orderDetail);
+        $updatedProducts = [];
+        if ($updateCart) {
+            $updatedProducts = $this->updateCart($cart, $orderDetail);
+        }
+
+        $this->deleteSpecificPrice($order, $orderDetail, $cart);
 
         $this->deleteOrderDetail(
             $order,
             $orderDetail
         );
+
+        return $updatedProducts;
     }
 
     /**
      * @param Cart $cart
      * @param OrderDetail $orderDetail
+     *
+     * @return CartProductUpdate[]
      */
-    private function updateCart(Cart $cart, OrderDetail $orderDetail)
+    private function updateCart(Cart $cart, OrderDetail $orderDetail): array
     {
+        $cartComparator = new CartProductsComparator($cart);
+        $knownUpdates = [
+            new CartProductUpdate(
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                -$orderDetail->product_quantity,
+                false
+            ),
+        ];
+
         $cart->updateQty(
             $orderDetail->product_quantity,
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
             false,
-            'down'
+            'down',
+            0,
+            null,
+            true,
+            false,
+            false // Do not preserve gift removal
         );
-        $cart->update();
+
+        return $cartComparator->getUpdatedProducts($knownUpdates);
     }
 
     /**
@@ -116,21 +146,6 @@ class OrderProductRemover
     ) {
         if (!$orderDetail->delete()) {
             throw new DeleteProductFromOrderException('Could not delete order detail');
-        }
-        if (count($order->getProductsDetail()) == 0) {
-            $history = new OrderHistory();
-            $history->id_order = (int) $order->id;
-            $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $order);
-            if (!$history->addWithemail()) {
-                // email failure must not block order update process
-                $this->logger->warning(
-                    $this->translator->trans(
-                        'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.',
-                        [],
-                        'Admin.Orderscustomers.Notification'
-                    )
-                );
-            }
         }
 
         $order->update();
@@ -186,6 +201,43 @@ class OrderProductRemover
         foreach ($removedOrderCartRules as $removedOrderCartRuleId) {
             $orderCartRule = new OrderCartRule($removedOrderCartRuleId);
             $orderCartRule->delete();
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param Cart $cart
+     */
+    private function deleteSpecificPrice(
+        Order $order,
+        OrderDetail $orderDetail,
+        Cart $cart
+    ): void {
+        $productQuantity = $cart->getProductQuantity($orderDetail->product_id, $orderDetail->product_attribute_id);
+        if (!isset($productQuantity['quantity']) || (int) $productQuantity['quantity'] > 0) {
+            return;
+        }
+
+        // WARNING: DO NOT use SpecificPrice::getSpecificPrice as it filters out fields that are not in database
+        // hence it ignores the customer or cart restriction and results are biased
+        $existingSpecificPriceId = SpecificPrice::exists(
+            (int) $orderDetail->product_id,
+            (int) $orderDetail->product_attribute_id,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $order->id_cart
+        );
+        if (!empty($existingSpecificPriceId)) {
+            $specificPrice = new SpecificPrice($existingSpecificPriceId);
+            $specificPrice->delete();
         }
     }
 }

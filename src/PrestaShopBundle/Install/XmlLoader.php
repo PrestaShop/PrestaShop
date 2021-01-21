@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShopDatabaseException;
 use PrestashopInstallerException;
+use SimpleXMLElement;
 
 class XmlLoader
 {
@@ -185,7 +186,7 @@ class XmlLoader
                 $xml = $this->loadEntity($entity);
 
                 // Store entities dependencies (with field type="relation")
-                if ($xml->fields) {
+                if ($xml instanceof \SimpleXMLElement && isset($xml->fields, $xml->fields->field)) {
                     foreach ($xml->fields->field as $field) {
                         if ($field['relation'] && $field['relation'] != $entity) {
                             if (!isset($dependencies[(string) $field['relation']])) {
@@ -259,7 +260,7 @@ class XmlLoader
         $xml = $this->loadEntity($entity);
 
         // Read list of fields
-        if (!is_object($xml) || !$xml->fields) {
+        if (!$xml instanceof \SimpleXMLElement && !empty($xml->fields)) {
             throw new PrestashopInstallerException('List of fields not found for entity ' . $entity);
         }
 
@@ -368,6 +369,59 @@ class XmlLoader
     }
 
     /**
+     * Special case for "country" entity.
+     */
+    public function populateEntityCountry()
+    {
+        $xml = $this->loadEntity('country');
+
+        // Read list of fields
+        if (empty($xml->fields)) {
+            throw new PrestashopInstallerException('List of fields not found for entity country');
+        }
+        $langs = [];
+        $languageList = LanguageList::getInstance();
+        foreach ($this->languages as $id_lang => $iso) {
+            $langs[$id_lang] = $languageList->getCountriesByLanguage($iso);
+        }
+
+        // Load all row for current entity and prepare data to be populated
+        $i = 0;
+        if ($xml->entities->country instanceof SimpleXMLElement) {
+            foreach ($xml->entities->country as $node) {
+                $data = [];
+
+                // Read attributes
+                $identifier = '';
+                foreach ($node->attributes() as $k => $v) {
+                    if ($k == 'id') {
+                        $identifier = (string) $v;
+                        continue;
+                    }
+                    $data[$k] = (string) $v;
+                }
+
+                // Load multilang data
+                $data_lang = [];
+                foreach ($langs as $id_lang => $countries) {
+                    $data_lang['name'][$id_lang] = $countries[strtolower($identifier)] ?? '';
+                }
+
+                $data = $this->rewriteRelationedData('country', $data);
+                $this->createEntity('country', $identifier, (string) $xml->fields['class'], $data, $data_lang);
+                ++$i;
+
+                if ($i >= 100) {
+                    $this->flushDelayedInserts();
+                    $i = 0;
+                }
+            }
+        }
+
+        $this->flushDelayedInserts();
+    }
+
+    /**
      * Special case for "tag" entity.
      */
     public function populateEntityTag()
@@ -407,13 +461,13 @@ class XmlLoader
      * @param string $entity Name of the entity to load (eg. 'tab')
      * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
-     * @return \SimpleXMLElement
+     * @return \SimpleXMLElement|null
      */
     protected function loadEntity($entity, $iso = null)
     {
         if (!isset($this->cache_xml_entity[$this->path_type][$entity][$iso])) {
             if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_') {
-                return;
+                return null;
             }
 
             $path = $this->data_path . $entity . '.xml';
@@ -1335,7 +1389,7 @@ class XmlLoader
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
      */
-    public function createXmlEntityNodes($entity, array $nodes, \SimpleXMLElement $entities)
+    public function createXmlEntityNodes($entity, array $nodes, SimpleXMLElement $entities)
     {
         $types = array_merge($this->getColumns($entity), $this->getColumns($entity, true));
         foreach ($nodes as $id => $node) {

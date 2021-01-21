@@ -16,31 +16,43 @@
   &.checkout {
     padding-top: 0;
     padding-bottom: 1.75rem;
-    margin-top: 1rem;
+
+    .btn-primary {
+      width: 100%;
+    }
+  }
+
+  &.cart-detailed-subtotals + .cart-summary-totals .cart-total {
+    border-top: 1px solid $border-gray;
   }
 
   &.cart-summary-totals {
-    padding: 0 1rem 1rem;
+    padding: 0 1.25rem 0.825rem;
+
     .cart-summary-line {
       padding: 0.5rem 0.2rem 0;
 
       &:last-child {
         margin-bottom: 0;
       }
+
       &.cart-total {
-        padding: 0.5rem;
-        background-color: $gray-light;
+        padding: 1rem 0;
+
         .label,
         .value {
-          font-weight: 600;
+          font-weight: 700;
         }
+
         .label {
           font-size: 1rem;
         }
+
         .value {
-          font-size: 1.125rem;
+          font-size: 1rem;
         }
       }
+
       span {
         &.sub {
           float: none;
@@ -56,41 +68,59 @@
   @include clearfix();
   margin-bottom: 0.315rem;
   clear: both;
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
   .label {
     padding-left: 0;
-    font-weight: 500;
+    font-weight: 400;
     color: $gray-dark;
     white-space: inherit;
   }
+
   .value {
     float: right;
+    font-weight: 600;
     color: $gray-darker;
   }
+
   &.cart-summary-subtotals {
     .label,
     .value {
       font-weight: 500;
     }
   }
+
+  .label,
+  .value {
+    font-size: 1rem;
+  }
 }
 
 /** CART BODY **/
 .cart-grid-body {
+  margin-bottom: 0.75rem;
+
   a.label {
     &:hover {
       color: $brand-primary;
     }
   }
+
   .card-block {
     padding: 1rem;
     h1 {
       margin-bottom: 0;
+      font-size: 1.5rem;
+      font-weight: 400;
     }
   }
+
   .cart-overview {
     padding: 1rem;
   }
-  margin-bottom: 0.75rem;
 }
 
 /** CART RIGHT **/
@@ -113,12 +143,14 @@
       }
     }
   }
+
   .cart-summary-line {
     &.cart-subtotal-products {
       .label,
       .value {
         font-weight: 600;
       }
+
       .value {
         font-size: 1rem;
       }
@@ -131,12 +163,14 @@
 
   .promo-code {
     padding: 1rem;
+
     .alert-danger {
       position: relative;
       display: none;
       margin-top: 1.25rem;
       color: #fff;
       background: $brand-danger;
+
       &::after {
         position: absolute;
         bottom: 100%;
@@ -151,10 +185,12 @@
         border-bottom-color: $brand-danger;
       }
     }
+
     form {
       text-align: center;
     }
   }
+
   .promo-input {
     width: 50%;
     height: 2.5rem;
@@ -162,6 +198,7 @@
     color: $gray-darker;
     text-indent: 0.625rem;
     border: $gray 1px solid;
+
     + button {
       margin-top: -4px;
       margin-left: -1px;
@@ -169,32 +206,38 @@
       border: 2px solid $brand-primary;
     }
   }
+
   .cart-summary-line .label,
   .promo-name {
     margin-bottom: 0;
     font-weight: 600;
     color: $brand-warning;
+
     a {
       display: inline-block;
       font-weight: 500;
       color: $gray-darker;
     }
   }
+
   .promo-name {
     .cart-summary-line {
       .label {
         font-weight: 500;
         color: $gray-dark;
       }
+
       span {
         color: $warning-second;
       }
     }
+
     .material-icons {
       margin-left: 0.4rem;
       font-size: 1.2rem;
     }
   }
+
   .promo-code-button {
     display: block;
     padding: 0 0 1rem;
@@ -207,6 +250,7 @@
     &.cancel-promo {
       margin-bottom: 0;
       color: $brand-primary;
+
       &[aria-expanded="true"] {
         display: block;
         padding: 0;
@@ -214,11 +258,13 @@
       }
     }
   }
+
   &.promo-highlighted {
     padding: 0 1rem;
     margin-bottom: 0;
     text-align: center;
   }
+
   p {
     margin-bottom: 0;
   }
@@ -236,16 +282,20 @@
   > .product-line-info {
     > .label {
       padding: 0;
+      font-weight: 600;
       line-height: inherit;
       text-align: left;
       white-space: inherit;
     }
+
     > .out-of-stock {
       color: #f00;
     }
+
     > .available {
       color: $brand-success;
     }
+
     > .unit-price-cart {
       padding-left: 0.3125rem;
       font-size: 0.875rem;
@@ -260,6 +310,7 @@
   .product-price {
     line-height: 36px;
     color: $gray-darker;
+
     .remove-from-cart {
       display: inline-block;
       margin-top: 0.3125rem;
@@ -279,21 +330,26 @@
   .cart-items {
     padding: 1rem 0;
   }
+
   .cart-item {
     border-bottom: 1px solid $gray-light;
+
     &:last-child {
       border-bottom: 0;
     }
   }
+
   .cart-grid-body {
     .cart-overview {
       padding: 0;
     }
+
     .no-items {
       display: inline-block;
       padding: 1rem;
     }
   }
+
   .product-line-grid-left {
     // stylelint-disable-next-line
     padding-right: 0 !important;
@@ -305,6 +361,7 @@
     .qty {
       width: 100%;
     }
+
     .price {
       width: 100%;
     }

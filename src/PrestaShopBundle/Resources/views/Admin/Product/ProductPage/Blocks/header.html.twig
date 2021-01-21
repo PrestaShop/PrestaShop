@@ -34,7 +34,7 @@
 
     <div class="col-xxl-10">
       <div class="row">
-        <div class="col-md-7 big-input {{ 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 ? 'friendly-url-force-update' : '' }}" id="form_step1_names">
+        <div class="col-md-7 big-input {{ configuration('PS_FORCE_FRIENDLY_PRODUCT') == 1 ? 'friendly-url-force-update' : '' }}" id="form_step1_names">
           {{ form_widget(formName) }}
         </div>
         <div class="col-sm-7 col-md-2 form_step1_type_product">

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
 
 use InvalidArgumentException;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -48,12 +48,12 @@ class UpdateProductInOrderCommand
     private $orderDetailId;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $priceTaxIncluded;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $priceTaxExcluded;
 
@@ -86,8 +86,8 @@ class UpdateProductInOrderCommand
         $this->orderId = new OrderId($orderId);
         $this->orderDetailId = $orderDetailId;
         try {
-            $this->priceTaxIncluded = new Number($priceTaxIncluded);
-            $this->priceTaxExcluded = new Number($priceTaxExcluded);
+            $this->priceTaxIncluded = new DecimalNumber($priceTaxIncluded);
+            $this->priceTaxExcluded = new DecimalNumber($priceTaxExcluded);
         } catch (InvalidArgumentException $e) {
             throw new InvalidAmountException();
         }
@@ -112,7 +112,7 @@ class UpdateProductInOrderCommand
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
     public function getPriceTaxIncluded()
     {
@@ -120,7 +120,7 @@ class UpdateProductInOrderCommand
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
     public function getPriceTaxExcluded()
     {

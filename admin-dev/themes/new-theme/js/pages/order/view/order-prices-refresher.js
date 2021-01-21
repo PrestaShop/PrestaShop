@@ -34,14 +34,73 @@ export default class OrderPricesRefresher {
   }
 
   refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
-      .then((response) => {
-        $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
-        $(OrderViewPageMap.orderDiscountsTotal).text(`-${response.discountsAmountFormatted}`);
-        $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
-        $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
-        $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
-        $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
+    $.getJSON(this.router.generate('admin_orders_get_prices', {orderId})).then((response) => {
+      $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
+      $(OrderViewPageMap.orderDiscountsTotal).text(`-${response.discountsAmountFormatted}`);
+      $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
+      $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
+      $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
+      $(OrderViewPageMap.orderShippingTotalContainer).toggleClass('d-none', !response.shippingTotalDisplayed);
+      $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
+    });
+  }
+
+  refreshProductPrices(orderId) {
+    $.getJSON(this.router.generate('admin_orders_product_prices', {orderId})).then((productPricesList) => {
+      productPricesList.forEach((productPrices) => {
+        const orderProductTrId = OrderViewPageMap.productsTableRow(productPrices.orderDetailId);
+
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(productPrices.unitPrice);
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).text(productPrices.quantity);
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`).text(productPrices.availableQuantity);
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditTotalPrice}`).text(productPrices.totalPrice);
+
+        // update order row price values
+        const productEditButton = $(OrderViewPageMap.productEditBtn(productPrices.orderDetailId));
+
+        productEditButton.data('product-price-tax-incl', productPrices.unitPriceTaxInclRaw);
+        productEditButton.data('product-price-tax-excl', productPrices.unitPriceTaxExclRaw);
+        productEditButton.data('product-quantity', productPrices.quantity);
       });
+    });
+  }
+
+  checkOtherProductPricesMatch(givenPrice, productId, combinationId, invoiceId, orderDetailId) {
+    const productRows = document.querySelectorAll('tr.cellProduct');
+    // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
+    const expectedProductId = Number(productId);
+    const expectedCombinationId = Number(combinationId);
+    const expectedGivenPrice = Number(givenPrice);
+    let unmatchingPriceExists = false;
+
+    productRows.forEach((productRow) => {
+      const productRowId = $(productRow).attr('id');
+
+      // No need to check edited row (especially if it's the only one for this product)
+      if (orderDetailId && productRowId === `orderProduct_${orderDetailId}`) {
+        return;
+      }
+
+      const productEditBtn = $(`#${productRowId} ${OrderViewPageMap.productEditButtons}`);
+      const currentOrderInvoiceId = Number(productEditBtn.data('order-invoice-id'));
+
+      // No need to check target invoice, only if others have matching products
+      if (invoiceId && currentOrderInvoiceId && invoiceId === currentOrderInvoiceId) {
+        return;
+      }
+
+      const currentProductId = Number(productEditBtn.data('product-id'));
+      const currentCombinationId = Number(productEditBtn.data('combination-id'));
+
+      if (currentProductId !== expectedProductId || currentCombinationId !== expectedCombinationId) {
+        return;
+      }
+
+      if (expectedGivenPrice !== Number(productEditBtn.data('product-price-tax-incl'))) {
+        unmatchingPriceExists = true;
+      }
+    });
+
+    return !unmatchingPriceExists;
   }
 }

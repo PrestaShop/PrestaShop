@@ -28,7 +28,7 @@ class AddSupplier extends BOBasePage {
     this.metaTitleInput = id => `#supplier_meta_title_${id}`;
     this.metaDescriptionTextarea = id => `#supplier_meta_description_${id}`;
     this.metaKeywordsInput = id => `#supplier_meta_keyword_${id}-tokenfield`;
-    this.enabledSwitchLabel = id => `label[for='supplier_is_enabled_${id}']`;
+    this.statusToggleInput = toggle => `#supplier_is_enabled_${toggle}`;
     // Selectors for Meta keywords
     this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
     this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
@@ -56,8 +56,9 @@ class AddSupplier extends BOBasePage {
     await this.setValue(page, this.postalCodeInput, supplierData.postalCode);
     await this.setValue(page, this.cityInput, supplierData.city);
     await this.setValue(page, this.countryInput, supplierData.country);
+
     // Add logo
-    await this.generateAndUploadImage(page, this.logoFileInput, supplierData.logo);
+    await this.uploadFile(page, this.logoFileInput, supplierData.logo);
 
     // Fill Description, meta title, meta description and meta keywords in english
     await this.changeLanguageForSelectors(page, 'en');
@@ -77,16 +78,12 @@ class AddSupplier extends BOBasePage {
     await this.deleteKeywords(page, 'fr');
     await this.addKeywords(page, supplierData.metaKeywords, 2);
 
-    // set enabled value
-    if (supplierData.enabled) {
-      await page.click(this.enabledSwitchLabel(1));
-    } else {
-      await page.click(this.enabledSwitchLabel(0));
-    }
+    // Set status value
+    await page.check(this.statusToggleInput(supplierData.enabled ? 1 : 0));
 
     // Save Supplier
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

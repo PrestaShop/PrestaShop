@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -42,12 +42,12 @@ class UpdateProductPricesCommand
     private $productId;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $price;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $ecotax;
 
@@ -62,12 +62,12 @@ class UpdateProductPricesCommand
     private $onSale;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $wholesalePrice;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     private $unitPrice;
 
@@ -93,9 +93,9 @@ class UpdateProductPricesCommand
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getPrice(): ?Number
+    public function getPrice(): ?DecimalNumber
     {
         return $this->price;
     }
@@ -107,15 +107,15 @@ class UpdateProductPricesCommand
      */
     public function setPrice(string $price): self
     {
-        $this->price = new Number($price);
+        $this->price = new DecimalNumber($price);
 
         return $this;
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getEcotax(): ?Number
+    public function getEcotax(): ?DecimalNumber
     {
         return $this->ecotax;
     }
@@ -127,7 +127,7 @@ class UpdateProductPricesCommand
      */
     public function setEcotax(string $ecotax): self
     {
-        $this->ecotax = new Number($ecotax);
+        $this->ecotax = new DecimalNumber($ecotax);
 
         return $this;
     }
@@ -173,9 +173,9 @@ class UpdateProductPricesCommand
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getWholesalePrice(): ?Number
+    public function getWholesalePrice(): ?DecimalNumber
     {
         return $this->wholesalePrice;
     }
@@ -187,15 +187,15 @@ class UpdateProductPricesCommand
      */
     public function setWholesalePrice(string $wholesalePrice): self
     {
-        $this->wholesalePrice = new Number($wholesalePrice);
+        $this->wholesalePrice = new DecimalNumber($wholesalePrice);
 
         return $this;
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getUnitPrice(): ?Number
+    public function getUnitPrice(): ?DecimalNumber
     {
         return $this->unitPrice;
     }
@@ -207,7 +207,7 @@ class UpdateProductPricesCommand
      */
     public function setUnitPrice(string $unitPrice): self
     {
-        $this->unitPrice = new Number($unitPrice);
+        $this->unitPrice = new DecimalNumber($unitPrice);
 
         return $this;
     }

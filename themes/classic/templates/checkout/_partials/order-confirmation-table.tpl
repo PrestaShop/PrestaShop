@@ -39,7 +39,7 @@
         <div class="order-line row">
           <div class="col-sm-2 col-xs-3">
             <span class="image">
-              {if $product.cover}
+              {if !empty($product.cover)}
                 <img src="{$product.cover.medium.url}" loading="lazy" />
               {else}
                 <img src="{$urls.no_picture_image.bySize.medium_default.url}" loading="lazy" />

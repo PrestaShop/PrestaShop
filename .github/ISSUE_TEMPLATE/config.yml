@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: I need help
+    url: https://devdocs.prestashop.com/1.7/faq/i-need-help/
+    about: If you have questions or need help

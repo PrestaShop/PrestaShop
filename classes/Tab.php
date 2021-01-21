@@ -196,6 +196,14 @@ class TabCore extends ObjectModel
     }
 
     /**
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        self::$_getIdFromClassName = null;
+    }
+
+    /**
      * Get tab id.
      *
      * @return int tab id
@@ -688,11 +696,12 @@ class TabCore extends ObjectModel
     public static function getTabModulesList($idTab)
     {
         $modulesList = ['default_list' => [], 'slider_list' => []];
-        $xmlTabModulesList = false;
 
-        if (file_exists(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST)) {
-            $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
+        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, Tools::CACHE_LIFETIME_SECONDS)) {
+            Tools::refreshFile(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
         }
+
+        $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
 
         $className = null;
         $displayType = 'default_list';

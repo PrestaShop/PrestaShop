@@ -130,7 +130,7 @@ final class EditCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler 
         //if `date from` value is being updated
         if (null !== $commandDateFrom) {
             //and if `date to` is set in database
-            if (UtilsDateTime::NULL_VALUE !== $modelDateTo) {
+            if (UtilsDateTime::NULL_DATETIME !== $modelDateTo) {
                 //asserts that range between these values is not inverse
                 $this->assertDateRangeIsNotInverse($commandDateFrom, new DateTime($modelDateTo));
             }
@@ -141,7 +141,7 @@ final class EditCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler 
         //if `date to` value is being updated
         if (null !== $commandDateTo) {
             //and if `date from` is set in database
-            if (UtilsDateTime::NULL_VALUE !== $modelDateFrom) {
+            if (UtilsDateTime::NULL_DATETIME !== $modelDateFrom) {
                 //asserts that range between these values is not inverse
                 $this->assertDateRangeIsNotInverse(new DateTime($modelDateFrom), $commandDateTo);
             }

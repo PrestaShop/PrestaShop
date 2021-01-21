@@ -60,5 +60,7 @@ class ExportThemeCommand extends ContainerAwareCommand
         );
         $formattedBlock = $formatter->formatBlock($successMsg, 'info', true);
         $output->writeln($formattedBlock);
+
+        return 0;
     }
 }

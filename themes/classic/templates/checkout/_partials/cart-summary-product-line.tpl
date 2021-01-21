@@ -33,7 +33,9 @@
     </a>
   </div>
   <div class="media-body">
-    <span class="product-name">{$product.name}</span>
+    <span class="product-name">
+        <a href="{$product.url}" target="_blank" rel="noopener noreferrer nofollow">{$product.name}</a>
+    </span>
     <span class="product-quantity">x{$product.quantity}</span>
     <span class="product-price float-xs-right">{$product.price}</span>
     {hook h='displayProductPriceBlock' product=$product type="unit_price"}

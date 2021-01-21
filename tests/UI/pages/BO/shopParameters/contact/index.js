@@ -29,7 +29,7 @@ class Contacts extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_all';
+    this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_selection';
     // Sort Selectors
     this.tableHead = `${this.contactsGridPanel} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -156,14 +156,14 @@ class Contacts extends BOBasePage {
         `${this.listTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
 
+    // Click on delete
     await Promise.all([
       page.click(this.deleteRowLink(row)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteContact(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -181,8 +181,6 @@ class Contacts extends BOBasePage {
    * @return {Promise<string>}
    */
   async deleteContactsBulkActions(page) {
-    // Add listener to dialog to accept deletion
-    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -193,9 +191,15 @@ class Contacts extends BOBasePage {
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteContact(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort methods */
@@ -209,12 +213,14 @@ class Contacts extends BOBasePage {
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 

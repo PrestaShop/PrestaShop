@@ -93,12 +93,12 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
         $specificPrice->id_cart = $command->getCartId() ?? 0;
         $specificPrice->id_product_attribute = $command->getProductAttributeId() ?? 0;
         $specificPrice->id_currency = $command->getCurrencyId() ?? 0;
-        $specificPrice->id_specific_price_rule = $command->getCartRuleId() ?? 0;
+        $specificPrice->id_specific_price_rule = $command->getCatalogPriceRuleId() ?? 0;
         $specificPrice->id_country = $command->getCountryId() ?? 0;
         $specificPrice->id_group = $command->getGroupId() ?? 0;
         $specificPrice->id_customer = $command->getCustomerId() ?? 0;
-        $specificPrice->from = DateTime::NULL_VALUE;
-        $specificPrice->to = DateTime::NULL_VALUE;
+        $specificPrice->from = DateTime::NULL_DATETIME;
+        $specificPrice->to = DateTime::NULL_DATETIME;
 
         $from = $command->getDateTimeFrom();
         $to = $command->getDateTimeTo();

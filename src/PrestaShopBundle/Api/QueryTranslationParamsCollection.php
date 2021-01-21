@@ -49,7 +49,7 @@ class QueryTranslationParamsCollection extends QueryParamsCollection
     }
 
     /**
-     * @param $queryParams
+     * @param array $queryParams
      *
      * @return mixed
      */

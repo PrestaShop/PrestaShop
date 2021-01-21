@@ -28,7 +28,7 @@ class Profiles extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
+    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_delete_selection`;
     // Delete modal
     this.confirmDeleteModal = '#profile-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
@@ -142,7 +142,7 @@ class Profiles extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteProfiles(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 
@@ -161,7 +161,6 @@ class Profiles extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteBulkActions(page) {
-    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -170,11 +169,17 @@ class Profiles extends BOBasePage {
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, this.bulkActionsDeleteButton),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteProfiles(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -219,10 +224,7 @@ class Profiles extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextContent(page, this.profilesListTableColumn(i, column));
-      if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
-      }
+      const rowContent = await this.getTextContent(page, this.profilesListTableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
@@ -238,12 +240,14 @@ class Profiles extends BOBasePage {
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 

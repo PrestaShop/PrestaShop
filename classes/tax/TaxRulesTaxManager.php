@@ -51,7 +51,8 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
             $this->configurationManager = $configurationManager;
         }
 
-        $this->address = $address;
+        // We clone the address so that the information use by this TaxManager never change (address can be modified somewhere else)
+        $this->address = clone $address;
         $this->type = $type;
     }
 

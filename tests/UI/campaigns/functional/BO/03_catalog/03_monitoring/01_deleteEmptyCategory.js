@@ -40,6 +40,9 @@ describe('Create empty category and delete it from monitoring page', async () =>
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create category image
+    await files.generateImage(`${createCategoryData.name}.jpg`);
   });
 
   after(async () => {

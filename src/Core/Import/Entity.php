@@ -60,7 +60,7 @@ final class Entity
      *
      * @param string $importType
      *
-     * @return string
+     * @return int
      */
     public static function getFromName($importType)
     {

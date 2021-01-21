@@ -8,16 +8,19 @@ class AddProduct extends BOBasePage {
     this.pageTitle = 'Product •';
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
+    this.duplicateSuccessfulMessage = 'Product successfully duplicated.';
     this.errorMessage = 'Unable to update settings.';
     this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
       + ` It should have ${number} characters or less.`;
+
+
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
     this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
-    this.productPriceTtcInput = '#form_step1_price_ttc_shortcut';
+    this.productPriceAtiInput = '#form_step1_price_ttc_shortcut';
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.goToCatalogButton = '#product_form_save_go_to_catalog_btn';
     this.previewProductLink = 'a#product_form_preview_btn';
@@ -29,6 +32,10 @@ class AddProduct extends BOBasePage {
     this.productDeleteLink = '.product-footer a.delete';
     this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
 
+    this.packItemsInput = '#form_step1_inputPackItems';
+    this.packsearchResult = '#js_form_step1_inputPackItems .tt-selectable tr:nth-child(1) td:nth-child(1)';
+    this.packQuantityInput = '#form_step1_inputPackItems-curPackItemQty';
+    this.addProductToPackButton = '#form_step1_inputPackItems-curPackItemAdd';
     // Form nav
     this.formNavList = '#form-nav';
     this.forNavlistItemLink = id => `${this.formNavList} #tab_step${id} a`;
@@ -79,7 +86,7 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Set Name, type of product, Reference, price ttc, description and short description
+   * Set Name, type of product, Reference, price ATI, description and short description
    * @param page
    * @param productData
    * @return {Promise<void>}
@@ -94,7 +101,7 @@ class AddProduct extends BOBasePage {
       await this.setValue(page, this.productQuantityInput, productData.quantity.toString());
     }
     await this.selectByVisibleText(page, this.productTaxRuleSelect, productData.taxRule);
-    await this.setValue(page, this.productPriceTtcInput, productData.price.toString());
+    await this.setValue(page, this.productPriceAtiInput, productData.price.toString());
   }
 
   /**
@@ -117,8 +124,14 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page) {
-    await page.click(this.saveProductButton);
-    return this.closeGrowlMessage(page);
+    const [growlTextMessage] = await Promise.all([
+      this.getGrowlMessageContent(page),
+      page.click(this.saveProductButton),
+    ]);
+
+    await this.closeGrowlMessage(page);
+
+    return growlTextMessage;
   }
 
   /**
@@ -130,6 +143,9 @@ class AddProduct extends BOBasePage {
   async createEditBasicProduct(page, productData) {
     await this.setBasicSetting(page, productData);
     await this.setProductStatus(page, productData.status);
+    if (productData.type === 'Pack of products') {
+      await this.addPackOfProducts(page, productData.pack);
+    }
     return this.saveProduct(page);
   }
 
@@ -195,6 +211,20 @@ class AddProduct extends BOBasePage {
   }
 
   /**
+   * @override
+   * Select, unselect checkbox
+   * @param page
+   * @param checkboxSelector, selector of checkbox
+   * @param valueWanted, true if we want to select checkBox, false otherwise
+   * @return {Promise<void>}
+   */
+  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
+      await page.$eval(checkboxSelector, el => el.click());
+    }
+  }
+
+  /**
    * Set quantity for all combinations
    * @param page
    * @param quantity
@@ -241,7 +271,7 @@ class AddProduct extends BOBasePage {
       page.click(this.productDeleteLink),
     ]);
     await this.clickAndWaitForNavigation(page, this.modalDialogYesButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -367,12 +397,15 @@ class AddProduct extends BOBasePage {
     await this.setValue(page, this.startingAtInput, specificPriceData.startingAt.toString());
     await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount.toString());
     await this.selectByVisibleText(page, this.reductionType, specificPriceData.reductionType);
+
     // Apply specific price
-    await Promise.all([
-      this.scrollTo(page, this.applyButton),
+    await this.scrollTo(page, this.applyButton);
+    const [growlMessageText] = await Promise.all([
+      this.getGrowlMessageContent(page),
       page.click(this.applyButton),
     ]);
-    const growlMessageText = await this.closeGrowlMessage(page);
+
+    await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);
     return growlMessageText;
   }
@@ -402,6 +435,42 @@ class AddProduct extends BOBasePage {
    */
   async goToCatalogPage(page) {
     await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
+  }
+
+  /**
+   * Add product to pack
+   * @param page
+   * @param product
+   * @param quantity
+   * @returns {Promise<void>}
+   */
+  async addProductToPack(page, product, quantity) {
+    await page.type(this.packItemsInput, product);
+    await this.waitForSelectorAndClick(page, this.packsearchResult);
+    await this.setValue(page, this.packQuantityInput, quantity.toString());
+    await page.click(this.addProductToPackButton);
+  }
+
+  /**
+   * Add pack of products
+   * @param page
+   * @param pack
+   * @returns {Promise<void>}
+   */
+  async addPackOfProducts(page, pack) {
+    const keys = Object.keys(pack);
+    for (let i = 0; i < keys.length; i += 1) {
+      await this.addProductToPack(page, keys[i], pack[keys[i]]);
+    }
+  }
+
+  /**
+   * Get product name from input
+   * @param page
+   * @return {Promise<string>}
+   */
+  getProductName(page) {
+    return this.getAttributeContent(page, this.productNameInput, 'value');
   }
 }
 

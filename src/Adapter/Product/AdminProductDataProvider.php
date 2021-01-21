@@ -428,7 +428,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      *
      * @param string[] $coreParameters The new Core route parameters
      *
-     * @return string[] The URL parameters for Legacy URL (GETs)
+     * @return array<string, int|string> The URL parameters for Legacy URL (GETs)
      */
     public function mapLegacyParametersProductForm($coreParameters = [])
     {

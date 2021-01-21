@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use Cookie;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -51,6 +53,10 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('back_cookie_lifetime', TextType::class, [
                 'required' => true,
+            ])
+            ->add('cookie_samesite', ChoiceType::class, [
+                'required' => true,
+                'choices' => Cookie::SAMESITE_AVAILABLE_VALUES,
             ]);
     }
 

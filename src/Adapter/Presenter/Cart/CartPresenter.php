@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use ProductAssembler;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
 use Tools;
@@ -95,6 +96,10 @@ class CartPresenter implements PresenterInterface
      */
     private function presentProduct(array $rawProduct)
     {
+        $assembler = new ProductAssembler(Context::getContext());
+        $assembledProduct = $assembler->assembleProduct($rawProduct);
+        $rawProduct = array_merge($assembledProduct, $rawProduct);
+
         $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::isCatalogMode();
@@ -577,19 +582,6 @@ class CartPresenter implements PresenterInterface
             } else {
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
-                $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
-                $currencyTo = new \Currency($cart->id_currency);
-                if ($currencyFrom->conversion_rate == 0) {
-                    $totalCartVoucherReduction = 0;
-                } else {
-                    // convert to default currency
-                    $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
-                    $totalCartVoucherReduction /= $currencyFrom->conversion_rate;
-                    if ($defaultCurrencyId == $currencyTo->id) {
-                        // convert to destination currency
-                        $totalCartVoucherReduction *= $currencyTo->conversion_rate;
-                    }
-                }
             }
 
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
@@ -600,7 +592,7 @@ class CartPresenter implements PresenterInterface
                     'Admin.Shipping.Feature'
                 );
             } else {
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
+                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
             }
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(

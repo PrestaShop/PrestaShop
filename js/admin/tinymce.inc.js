@@ -49,7 +49,8 @@ function tinySetup(config) {
     selector: '.rte',
     plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
     browser_spellcheck: true,
-    toolbar1: 'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+    toolbar1:
+      'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
     toolbar2: '',
     external_filemanager_path: baseAdminDir + 'filemanager/',
     filemanager_title: 'File manager',
@@ -70,6 +71,10 @@ function tinySetup(config) {
     init_instance_callback: 'changeToMaterial',
     rel_list: [{title: 'nofollow', value: 'nofollow'}]
   };
+
+  if (typeof window.defaultTinyMceConfig !== 'undefined') {
+    Object.assign(default_config, window.defaultTinyMceConfig);
+  }
 
   $.each(default_config, function(index, el) {
     if (config[index] === undefined) config[index] = el;

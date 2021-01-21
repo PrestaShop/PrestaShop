@@ -272,6 +272,8 @@ class AddressController extends FrameworkBundleAdminController
         if (!empty($formData['id_customer'])) {
             /** @var CustomerDataProvider $customerDataProvider */
             $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
+            /** @todo To Remove when PHPStan is fixed https://github.com/phpstan/phpstan/issues/3700 */
+            /** @phpstan-ignore-next-line */
             $customerId = $formData['id_customer'];
             $customer = $customerDataProvider->getCustomer($customerId);
             $formData['first_name'] = $customer->firstname;
@@ -312,6 +314,7 @@ class AddressController extends FrameworkBundleAdminController
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'cancelPath' => $request->query->has('back') ? $request->query->get('back') : $this->generateUrl('admin_addresses_index'),
         ]);
     }
 
@@ -566,7 +569,7 @@ class AddressController extends FrameworkBundleAdminController
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(
                         '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
-                        ['refreshCartAddresses' => 'false']
+                        ['refreshCartAddresses' => 'true']
                     );
                 }
 

@@ -88,7 +88,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
             $data['dni']
         ));
 
-        /** @var UploadedFile $uploadedFlagImage */
+        /** @var UploadedFile $uploadedLogo */
         $uploadedLogo = $data['logo'];
 
         if ($uploadedLogo instanceof UploadedFile) {
@@ -103,7 +103,7 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
      */
     public function update($supplierId, array $data)
     {
-        /** @var UploadedFile $uploadedFlagImage */
+        /** @var UploadedFile $uploadedLogo */
         $uploadedLogo = $data['logo'];
         $logo = null;
 

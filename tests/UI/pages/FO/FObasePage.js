@@ -12,7 +12,9 @@ module.exports = class FOBasePage extends CommonPage {
     this.cartProductsCount = '#_desktop_cart span.cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
+    this.accountLink = `${this.userInfoLink} .user-info a.account`;
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
+    this.viewMyCustomerAccountLink = `${this.userInfoLink} .account`;
     this.contactLink = '#contact-link';
     this.categoryMenu = id => `#category-${id} a`;
     this.languageSelectorDiv = '#_desktop_language_selector';
@@ -24,12 +26,17 @@ module.exports = class FOBasePage extends CommonPage {
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
+    this.contactUsLink = '#link-static-page-contact-2';
     // footer links
     this.footerLinksDiv = '#footer div.links';
     this.wrapperDiv = position => `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(${position})`;
     this.wrapperTitle = position => `${this.wrapperDiv(position)} p`;
     this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
+    this.wrapperContactBlockDiv = '#footer div.block-contact';
+
+    // Alert block selectors
+    this.alertSuccessBlock = '.alert-success ul li';
   }
 
   /**
@@ -80,6 +87,15 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async isCustomerConnected(page) {
     return this.elementVisible(page, this.logoutLink, 1000);
+  }
+
+  /**
+   * Click on link to go to account page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToMyAccountPage(page) {
+    await this.clickAndWaitForNavigation(page, this.accountLink);
   }
 
   /**
@@ -167,6 +183,15 @@ module.exports = class FOBasePage extends CommonPage {
   }
 
   /**
+   * Get store information
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getStoreInformation(page) {
+    return this.getTextContent(page, this.wrapperContactBlockDiv);
+  }
+
+  /**
    * Get cart notifications number
    * @param page
    * @returns {Promise<number>}
@@ -218,5 +243,23 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToSitemapPage(page) {
     await this.clickAndWaitForNavigation(page, this.siteMapLink);
+  }
+
+  /**
+   * CLick on contact us link on footer and go to page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToContactUsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.contactUsLink);
+  }
+
+  /**
+   * Go to your account page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToYourAccountPage(page) {
+    await this.clickAndWaitForNavigation(page, this.viewMyCustomerAccountLink);
   }
 };

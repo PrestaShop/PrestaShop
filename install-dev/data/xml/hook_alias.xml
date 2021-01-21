@@ -345,5 +345,9 @@
       <alias>displayBackOfficeOrderActions</alias>
       <name>displayAdminOrderSide</name>
     </hook_alias>
+    <hook_alias id="actionFrontControllerAfterInit">
+      <alias>actionFrontControllerAfterInit</alias>
+      <name>actionFrontControllerInitAfter</name>
+    </hook_alias>
   </entities>
 </entity_hook_alias>

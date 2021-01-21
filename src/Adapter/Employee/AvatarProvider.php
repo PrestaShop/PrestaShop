@@ -52,6 +52,6 @@ final class AvatarProvider implements AvatarProviderInterface
      */
     public function getDefaultAvatarUrl()
     {
-        return $this->tools->getAdminImageUrl('prestashop-avatar.png');
+        return $this->tools->getAdminImageUrl('pr/default.jpg');
     }
 }

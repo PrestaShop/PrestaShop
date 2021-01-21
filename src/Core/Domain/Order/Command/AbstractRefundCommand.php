@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use InvalidArgumentException;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -69,7 +69,7 @@ abstract class AbstractRefundCommand
     protected $voucherRefundType;
 
     /**
-     * @var Number|null
+     * @var DecimalNumber|null
      */
     protected $voucherRefundAmount;
 
@@ -101,7 +101,7 @@ abstract class AbstractRefundCommand
         $this->voucherRefundType = $voucherRefundType;
         if (null !== $voucherRefundAmount) {
             try {
-                $this->voucherRefundAmount = new Number($voucherRefundAmount);
+                $this->voucherRefundAmount = new DecimalNumber($voucherRefundAmount);
             } catch (InvalidArgumentException $e) {
                 throw new InvalidAmountException();
             }
@@ -161,9 +161,9 @@ abstract class AbstractRefundCommand
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getVoucherRefundAmount(): ?Number
+    public function getVoucherRefundAmount(): ?DecimalNumber
     {
         return $this->voucherRefundAmount;
     }

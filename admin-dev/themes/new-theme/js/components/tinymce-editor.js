@@ -141,6 +141,9 @@ class TinyMCEEditor {
     editor.on('blur', () => {
       window.tinyMCE.triggerSave();
     });
+    EventEmitter.emit('tinymceEditorSetup', {
+      editor,
+    });
   }
 
   /**

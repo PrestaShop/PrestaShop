@@ -28,7 +28,7 @@ namespace LegacyTests\Unit\Adapter\Module\Tab;
 
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Route;
@@ -192,7 +192,7 @@ class ModuleTabRegisterTest extends UnitTestCase
 
     protected function buildRoutingConfigLoaderMock()
     {
-        $moduleRoutingLoader = $this->getMockBuilder(LoaderInterface::class)
+        $moduleRoutingLoader = $this->getMockBuilder(Loader::class)
             ->setMethods(['import', 'load', 'supports', 'getResolver', 'setResolver'])
             ->disableOriginalConstructor()
             ->getMock()

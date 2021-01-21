@@ -96,6 +96,7 @@ class Home extends FOBasePage {
    */
   async proceedToCheckout(page) {
     await this.clickAndWaitForNavigation(page, this.blockCartModalCheckoutLink);
+    await page.waitForLoadState('domcontentloaded');
   }
 
   /**

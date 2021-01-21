@@ -29,21 +29,18 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 use Cart;
 use Combination;
 use Configuration;
-use Context;
 use Currency;
 use Customer;
 use Group;
 use Order;
-use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopException;
 use Product;
-use SpecificPrice;
 use Validate;
 
 /**
@@ -114,119 +111,11 @@ abstract class AbstractOrderHandler
     }
 
     /**
-     * @param Number $priceTaxIncluded
-     * @param Number $priceTaxExcluded
-     * @param Order $order
-     * @param Cart $cart
-     * @param Product $product
-     * @param Combination|null $combination
-     *
-     * @return SpecificPrice|void
-     */
-    protected function createSpecificPriceIfNeeded(
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
-        Order $order,
-        Cart $cart,
-        Product $product,
-        $combination
-    ): ?SpecificPrice {
-        // Check it the SpecificPrice has already been added by restoreOrderProductsSpecificPrices, if yes ignore new
-        // price because the first one is kept
-        if (SpecificPrice::exists(
-            $product->id,
-            $combination ? $combination->id : 0,
-            0,
-            0,
-            0,
-            $order->id_currency,
-            $order->id_customer,
-            1,
-            DateTime::NULL_VALUE,
-            DateTime::NULL_VALUE
-        )) {
-            return null;
-        }
-
-        $initialProductPriceTaxExcl = Product::getPriceStatic(
-            $product->id,
-            false,
-            $combination ? $combination->id : null,
-            $this->getPrecisionFromCart($cart),
-            null,
-            false,
-            true,
-            1,
-            false,
-            $order->id_customer,
-            $cart->id,
-            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
-        );
-
-        // Better check with price tax excluded since it's the one saved in database, if the price matches
-        // the product's one no need for specific price
-        if ($priceTaxExcluded->equals(new Number((string) $initialProductPriceTaxExcl))) {
-            return null;
-        }
-
-        $specificPrice = new SpecificPrice();
-        $specificPrice->id_shop = 0;
-        $specificPrice->id_cart = 0;
-        $specificPrice->id_shop_group = 0;
-        $specificPrice->id_currency = $order->id_currency;
-        $specificPrice->id_country = 0;
-        $specificPrice->id_group = 0;
-        $specificPrice->id_customer = $order->id_customer;
-        $specificPrice->id_product = $product->id;
-        $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-        $specificPrice->price = (float) (string) $priceTaxExcluded;
-        $specificPrice->from_quantity = 1;
-        $specificPrice->reduction = 0;
-        $specificPrice->reduction_type = 'amount';
-        $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
-        $specificPrice->from = '0000-00-00 00:00:00';
-        $specificPrice->to = '0000-00-00 00:00:00';
-        $specificPrice->add();
-
-        return $specificPrice;
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return Cart
-     */
-    protected function createNewOrEditExistingCart(Order $order)
-    {
-        $cartId = Cart::getCartIdByOrderId($order->id);
-        if ($cartId) {
-            $cart = new Cart($cartId);
-        } else {
-            $cart = new Cart();
-            $cart->id_shop_group = $order->id_shop_group;
-            $cart->id_shop = $order->id_shop;
-            $cart->id_customer = $order->id_customer;
-            $cart->id_carrier = $order->id_carrier;
-            $cart->id_address_delivery = $order->id_address_delivery;
-            $cart->id_address_invoice = $order->id_address_invoice;
-            $cart->id_currency = $order->id_currency;
-            $cart->id_lang = $order->id_lang;
-            $cart->secure_key = $order->secure_key;
-
-            $cart->add();
-        }
-
-        Context::getContext()->cart = $cart;
-
-        return $cart;
-    }
-
-    /**
      * @param int $combinationId
      *
      * @return Combination|null
      */
-    protected function getCombination($combinationId)
+    protected function getCombination(int $combinationId)
     {
         $combination = null;
 
@@ -259,20 +148,28 @@ abstract class AbstractOrderHandler
     }
 
     /**
-     * Clean all the specific prices that were created but this handler
-     *
-     * @param SpecificPrice[] $temporarySpecificPrices
-     *
-     * @throws \PrestaShopException
+     * @return string
      */
-    protected function clearTemporarySpecificPrices(array $temporarySpecificPrices): void
+    protected function getNumberRoundMode(): string
     {
-        if (empty($temporarySpecificPrices)) {
-            return;
-        }
+        return RoundModeConverter::getNumberRoundMode((int) Configuration::get('PS_PRICE_ROUND_MODE'));
+    }
 
-        foreach ($temporarySpecificPrices as $specificPrice) {
-            $specificPrice->delete();
-        }
+    /**
+     * Delivery option consists of deliveryAddress and carrierId.
+     *
+     * Legacy multishipping feature used comma separated carriers in delivery option (e.g. {'1':'6,7'}
+     * Now that multishipping is gone - delivery option should consist of one carrier and one address.
+     *
+     * However the structure of deliveryOptions is still used with comma in legacy, so
+     * this method provides assurance for deliveryOption structure until major refactoring
+     *
+     * @param int $carrierId
+     *
+     * @return string
+     */
+    protected function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
+    {
+        return sprintf('%d,', $carrierId);
     }
 }

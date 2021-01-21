@@ -46,8 +46,8 @@ export default {
   cartAddressesChanged: 'OrderCreateCartAddressesChanged',
   // when cart delivery option has been changed
   cartDeliveryOptionChanged: 'OrderCreateCartDeliveryOptionChanged',
-  // when cart free shipping value has been changed
-  cartFreeShippingSet: 'OrderCreateCartFreeShippingSet',
+  // when cart delivery setting has been changed
+  cartDeliverySettingChanged: 'OrderCreateCartDeliverySettingChangedSet',
   // when cart rules search action is done
   cartRuleSearched: 'OrderCreateCartRuleSearched',
   // when cart rule is removed from cart

@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 
 /**
  * Transfers product shipping information data
@@ -36,27 +36,27 @@ use PrestaShop\Decimal\Number;
 class ProductShippingInformation
 {
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $width;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $height;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $depth;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $weight;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $additionalShippingCost;
 
@@ -81,22 +81,22 @@ class ProductShippingInformation
     private $localizedDeliveryTimeOutOfStockNotes;
 
     /**
-     * @param Number $width
-     * @param Number $height
-     * @param Number $depth
-     * @param Number $weight
-     * @param Number $additionalShippingCost
+     * @param DecimalNumber $width
+     * @param DecimalNumber $height
+     * @param DecimalNumber $depth
+     * @param DecimalNumber $weight
+     * @param DecimalNumber $additionalShippingCost
      * @param int[] $carrierReferences
      * @param int $deliveryTimeNotesType
      * @param string[] $localizedDeliveryTimeInStockNotes
      * @param string[] $localizedDeliveryTimeOutOfStockNotes
      */
     public function __construct(
-        Number $width,
-        Number $height,
-        Number $depth,
-        Number $weight,
-        Number $additionalShippingCost,
+        DecimalNumber $width,
+        DecimalNumber $height,
+        DecimalNumber $depth,
+        DecimalNumber $weight,
+        DecimalNumber $additionalShippingCost,
         array $carrierReferences,
         int $deliveryTimeNotesType,
         array $localizedDeliveryTimeInStockNotes,
@@ -114,41 +114,41 @@ class ProductShippingInformation
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getWidth(): Number
+    public function getWidth(): DecimalNumber
     {
         return $this->width;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getHeight(): Number
+    public function getHeight(): DecimalNumber
     {
         return $this->height;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getDepth(): Number
+    public function getDepth(): DecimalNumber
     {
         return $this->depth;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getWeight(): Number
+    public function getWeight(): DecimalNumber
     {
         return $this->weight;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getAdditionalShippingCost(): Number
+    public function getAdditionalShippingCost(): DecimalNumber
     {
         return $this->additionalShippingCost;
     }
@@ -164,7 +164,7 @@ class ProductShippingInformation
     /**
      * @return int
      */
-    public function getDeliveryTimeNotesType(): int
+    public function getDeliveryTimeNoteType(): int
     {
         return $this->deliveryTimeNotesType;
     }

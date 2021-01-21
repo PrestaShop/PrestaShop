@@ -6,7 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.logs'
-            - '@prestashop.core.grid.data_factory.log'
+            - '@prestashop.core.grid.data.factory.log_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -85,6 +85,22 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.customer'
             - '@prestashop.core.grid.data_provider.customer_decorator'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.customer.discount:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.customer.discount'
+            - '@prestashop.core.grid.data_provider.customer_discount'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.customer.address:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.customer.address'
+            - '@prestashop.core.grid.data_provider.customer_address_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -223,6 +239,14 @@ services:
             - '@prestashop.core.grid.data.factory.order_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.grid_factory.cart_rule:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+          - '@prestashop.core.grid.definition.factory.cart_rule'
+          - '@prestashop.core.grid.data.factory.cart_rule'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.grid_factory.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'

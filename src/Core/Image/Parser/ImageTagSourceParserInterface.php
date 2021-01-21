@@ -34,7 +34,7 @@ interface ImageTagSourceParserInterface
     /**
      * @param string $imageTag Example '<img src="..path/to/image.jpg">'
      *
-     * @return string Parsed "src" attribute
+     * @return string|null Parsed "src" attribute
      */
-    public function parse($imageTag);
+    public function parse(string $imageTag): ?string;
 }

@@ -21,11 +21,11 @@ class ModuleManager extends BOBasePage {
     // Status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
-    this.statusDropdownItemLink = ref => `${this.statusDropdownMenu} ul li[data-status-ref='${ref}'] a`;
+    this.statusDropdownItemLink = ref => `${this.statusDropdownMenu} a[data-status-ref='${ref}']`;
     // Categories
     this.categoriesSelectDiv = '#categories';
     this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
-    this.categoryDropdownItem = cat => `${this.categoriesDropdownDiv} li[data-category-display-name='${cat}']`;
+    this.categoryDropdownItem = cat => `${this.categoriesDropdownDiv} a[data-category-display-name='${cat}']`;
   }
 
   /*
@@ -68,14 +68,13 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterByStatus(page, enabled) {
-    await Promise.all([
-      page.click(this.statusDropdownDiv),
-      this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='true']`),
-    ]);
-    await Promise.all([
-      page.click(this.statusDropdownItemLink(enabled ? 1 : 0)),
-      this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='false']`),
-    ]);
+    // Open dropdown
+    await page.click(this.statusDropdownDiv);
+    await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='true']`);
+
+    // Select dropdown item
+    await page.click(this.statusDropdownItemLink(enabled ? 1 : 0));
+    await this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='false']`);
   }
 
   /**

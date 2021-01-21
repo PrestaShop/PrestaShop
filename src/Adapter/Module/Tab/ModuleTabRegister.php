@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -82,7 +82,7 @@ class ModuleTabRegister
     private $languages;
 
     /**
-     * @var LoaderInterface
+     * @var Loader
      */
     private $routingConfigLoader;
 
@@ -93,7 +93,7 @@ class ModuleTabRegister
      * @param TranslatorInterface $translator
      * @param Filesystem $filesystem
      * @param array $languages
-     * @param LoaderInterface $routingConfigLoader
+     * @param Loader $routingConfigLoader
      */
     public function __construct(
         TabRepository $tabRepository,
@@ -102,7 +102,7 @@ class ModuleTabRegister
         TranslatorInterface $translator,
         Filesystem $filesystem,
         array $languages,
-        LoaderInterface $routingConfigLoader
+        Loader $routingConfigLoader
     ) {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;

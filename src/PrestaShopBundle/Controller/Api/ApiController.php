@@ -73,9 +73,9 @@ abstract class ApiController
     }
 
     /**
-     * @param $content
+     * @param string $content
      *
-     * @return mixed
+     * @return array
      */
     protected function guardAgainstInvalidJsonBody($content)
     {

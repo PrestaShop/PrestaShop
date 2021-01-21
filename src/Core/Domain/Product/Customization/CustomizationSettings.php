@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 /**
  * Defines settings for customizations
  */
-final class CustomizationSettings
+class CustomizationSettings
 {
     /**
      * Maximum allowed length for customization text field value

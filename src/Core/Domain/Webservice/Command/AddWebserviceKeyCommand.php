@@ -44,7 +44,7 @@ class AddWebserviceKeyCommand
     private $description;
 
     /**
-     * @var string
+     * @var bool
      */
     private $status;
 
@@ -96,7 +96,7 @@ class AddWebserviceKeyCommand
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getStatus()
     {

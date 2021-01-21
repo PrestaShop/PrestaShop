@@ -39,9 +39,9 @@ class Suppliers extends BOBasePage {
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.editRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-edit-row-link`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
-    // enable column
-    this.enableColumn = row => this.tableColumn(row, 'active');
-    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    // Column status
+    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -108,7 +108,7 @@ class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSuppliers(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -117,8 +117,16 @@ class Suppliers extends BOBasePage {
    * @param row
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row = 1) {
-    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+  async getStatus(page, row = 1) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.statusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -128,12 +136,12 @@ class Suppliers extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row = 1, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.enableColumn(row), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.enableColumn(row));
+  async setStatus(page, row = 1, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -220,7 +228,7 @@ class Suppliers extends BOBasePage {
    * @param enable
    * @return {Promise<string>}
    */
-  async changeSuppliersEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -233,7 +241,7 @@ class Suppliers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -258,7 +266,7 @@ class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSuppliers(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -270,13 +278,6 @@ class Suppliers extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
-  /**
-   * Get alert text message
-   * @returns {Promise<string>}
-   */
-  getAlertTextMessage(page) {
-    return this.getTextContent(page, this.alertTextBlock);
-  }
 
   // Sort methods
   /**
@@ -291,7 +292,7 @@ class Suppliers extends BOBasePage {
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
+        rowContent = await this.getStatus(page, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
@@ -308,12 +309,14 @@ class Suppliers extends BOBasePage {
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /* Pagination methods */

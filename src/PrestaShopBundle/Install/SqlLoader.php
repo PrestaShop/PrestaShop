@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Install;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use Db;
 use PrestashopInstallerException;
 
 class SqlLoader
@@ -47,7 +47,7 @@ class SqlLoader
     protected $errors = [];
 
     /**
-     * @param Db $db
+     * @param Db|null $db
      */
     public function __construct(Db $db = null)
     {

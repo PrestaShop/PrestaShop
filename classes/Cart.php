@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Cart\Calculator;
 use PrestaShop\PrestaShop\Core\Cart\CartRow;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CartCore extends ObjectModel
 {
@@ -266,7 +267,7 @@ class CartCore extends ObjectModel
         }
 
         $return = parent::add($autoDate, $nullValues);
-        Hook::exec('actionCartSave');
+        Hook::exec('actionCartSave', ['cart' => $this]);
 
         return $return;
     }
@@ -293,7 +294,7 @@ class CartCore extends ObjectModel
 
         $this->_products = null;
         $return = parent::update($nullValues);
-        Hook::exec('actionCartSave');
+        Hook::exec('actionCartSave', ['cart' => $this]);
 
         return $return;
     }
@@ -329,6 +330,32 @@ class CartCore extends ObjectModel
             SET `id_address_delivery` = ' . (int) $id_address_new . '
             WHERE  `id_cart` = ' . (int) $this->id . '
                 AND `id_address_delivery` = ' . (int) $id_address;
+        Db::getInstance()->execute($sql);
+    }
+
+    /**
+     * Update the Delivery Address ID of the Cart.
+     *
+     * @param int $currentAddressId Current Address ID to change
+     * @param int $newAddressId New Address ID
+     */
+    public function updateDeliveryAddressId(int $currentAddressId, int $newAddressId)
+    {
+        if (!isset($this->id_address_delivery) || (int) $this->id_address_delivery === $currentAddressId) {
+            $this->id_address_delivery = $newAddressId;
+            $this->update();
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+        SET `id_address_delivery` = ' . $newAddressId . '
+        WHERE  `id_cart` = ' . (int) $this->id . '
+            AND `id_address_delivery` = ' . $currentAddressId;
+        Db::getInstance()->execute($sql);
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
+            SET `id_address_delivery` = ' . $newAddressId . '
+            WHERE  `id_cart` = ' . (int) $this->id . '
+                AND `id_address_delivery` = ' . $currentAddressId;
         Db::getInstance()->execute($sql);
     }
 
@@ -431,7 +458,7 @@ class CartCore extends ObjectModel
         if ($cart_vat_amount == 0 || $cartAmountTaxExcluded == 0) {
             return 0;
         } else {
-            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, 3);
+            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, Tax::TAX_DEFAULT_PRECISION);
         }
     }
 
@@ -476,7 +503,7 @@ class CartCore extends ObjectModel
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                . ' ORDER by cr.priority ASC'
+                . ' ORDER by cr.priority ASC, cr.gift_product DESC'
             );
             Cache::store($cache_key, $result);
         } else {
@@ -546,7 +573,7 @@ class CartCore extends ObjectModel
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                . ' ORDER BY cr.priority ASC'
+                . ' ORDER BY cr.priority ASC, cr.gift_product DESC'
             );
             Cache::store($cache_key, $result);
         } else {
@@ -619,10 +646,11 @@ class CartCore extends ObjectModel
      * @param bool $id_product
      * @param int $id_country
      * @param bool $fullInfos
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return array Products
      */
-    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true)
+    public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true, bool $keepOrderPrices = false)
     {
         if (!$this->id) {
             return [];
@@ -813,15 +841,16 @@ class CartCore extends ObjectModel
                 }
 
                 if (!$row['is_gift'] || (int) $row['cart_quantity'] === $givenAwayQuantity) {
-                    $row = $this->applyProductCalculations($row, $cart_shop_context);
+                    $row = $this->applyProductCalculations($row, $cart_shop_context, null, $keepOrderPrices);
                 } else {
                     // Separate products given away from those manually added to cart
-                    $this->_products[] = $this->applyProductCalculations($row, $cart_shop_context, $givenAwayQuantity);
+                    $this->_products[] = $this->applyProductCalculations($row, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
                     unset($row['is_gift']);
                     $row = $this->applyProductCalculations(
                         $row,
                         $cart_shop_context,
-                        $row['cart_quantity'] - $givenAwayQuantity
+                        $row['cart_quantity'] - $givenAwayQuantity,
+                        $keepOrderPrices
                     );
                 }
 
@@ -838,10 +867,11 @@ class CartCore extends ObjectModel
      * @param $row
      * @param $shopContext
      * @param $productQuantity
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return mixed
      */
-    protected function applyProductCalculations($row, $shopContext, $productQuantity = null)
+    protected function applyProductCalculations($row, $shopContext, $productQuantity = null, bool $keepOrderPrices = false)
     {
         if (null === $productQuantity) {
             $productQuantity = (int) $row['cart_quantity'];
@@ -883,90 +913,20 @@ class CartCore extends ObjectModel
         $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 
         $specific_price_output = null;
+        // Specify the orderId if needed so that Product::getPriceStatic returns the prices saved in OrderDetails
+        $orderId = null;
+        if ($keepOrderPrices) {
+            $orderId = Order::getIdByCartId($this->id);
+            $orderId = (int) $orderId ?: null;
+        }
 
-        $row['price_without_reduction'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            true,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            false,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization']
-        );
-
-        $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            false,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            false,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization']
-        );
-
-        $row['price_with_reduction'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            true,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            true,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization']
-        );
-
-        $row['price'] = $row['price_with_reduction_without_tax'] = Product::getPriceStatic(
-            (int) $row['id_product'],
-            false,
-            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
-            6,
-            null,
-            false,
-            true,
-            $productQuantity,
-            false,
-            (int) $this->id_customer ? (int) $this->id_customer : null,
-            (int) $this->id,
-            $address_id,
-            $specific_price_output,
-            true,
-            true,
-            $shopContext,
-            true,
-            $row['id_customization']
-        );
+        if (!empty($orderId)) {
+            $orderPrices = $this->getOrderPrices($row, $orderId, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            $row = array_merge($row, $orderPrices);
+        } else {
+            $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $shopContext, $specific_price_output);
+            $row = array_merge($row, $cartPrices);
+        }
 
         switch (Configuration::get('PS_ROUND_TYPE')) {
             case Order::ROUND_TOTAL:
@@ -1024,6 +984,200 @@ class CartCore extends ObjectModel
         return Product::getTaxesInformations($row, $shopContext);
     }
 
+    /**
+     * @param array $productRow
+     * @param int $productQuantity
+     * @param int|null $addressId
+     * @param Context $shopContext
+     * @param array|false|null $specificPriceOutput
+     *
+     * @return array
+     */
+    private function getCartPrices(
+        array $productRow,
+        int $productQuantity,
+        ?int $addressId,
+        Context $shopContext,
+        &$specificPriceOutput
+    ): array {
+        $cartPrices = [];
+        $cartPrices['price_without_reduction'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            true,
+            false,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        $cartPrices['price_without_reduction_without_tax'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            false,
+            false,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        $cartPrices['price_with_reduction'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            true,
+            true,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        $cartPrices['price'] = $cartPrices['price_with_reduction_without_tax'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : null,
+            (int) $productRow['id_customization'],
+            false,
+            true,
+            true,
+            $productQuantity,
+            $addressId,
+            $shopContext,
+            $specificPriceOutput
+        );
+
+        return $cartPrices;
+    }
+
+    /**
+     * @param int $productId
+     * @param int $combinationId
+     * @param int $customizationId
+     * @param bool $withTaxes
+     * @param bool $useReduction
+     * @param bool $withEcoTax
+     * @param int $productQuantity
+     * @param int|null $addressId
+     * @param Context $shopContext
+     * @param array|false|null $specificPriceOutput
+     *
+     * @return float
+     */
+    private function getCartPriceFromCatalog(
+        int $productId,
+        int $combinationId,
+        int $customizationId,
+        bool $withTaxes,
+        bool $useReduction,
+        bool $withEcoTax,
+        int $productQuantity,
+        ?int $addressId,
+        Context $shopContext,
+        &$specificPriceOutput
+    ): float {
+        return Product::getPriceStatic(
+            $productId,
+            $withTaxes,
+            $combinationId,
+            6,
+            null,
+            false,
+            $useReduction,
+            $productQuantity,
+            false,
+            (int) $this->id_customer ? (int) $this->id_customer : null,
+            (int) $this->id,
+            $addressId,
+            $specificPriceOutput,
+            $withEcoTax,
+            true,
+            $shopContext,
+            true,
+            $customizationId
+        );
+    }
+
+    /**
+     * @param array $productRow
+     * @param int $orderId
+     * @param int $productQuantity
+     * @param int|null $addressId
+     * @param Context $shopContext
+     * @param array|false|null $specificPriceOutput
+     *
+     * @return array
+     */
+    private function getOrderPrices(
+        array $productRow,
+        int $orderId,
+        int $productQuantity,
+        ?int $addressId,
+        Context $shopContext,
+        &$specificPriceOutput
+    ): array {
+        $orderPrices = [];
+        $orderPrices['price_without_reduction'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            true,
+            false,
+            true
+        );
+
+        $orderPrices['price_without_reduction_without_tax'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            false,
+            false,
+            true
+        );
+
+        $orderPrices['price_with_reduction'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            true,
+            true,
+            true
+        );
+
+        $orderPrices['price'] = $orderPrices['price_with_reduction_without_tax'] = Product::getPriceFromOrder(
+            $orderId,
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            false,
+            true,
+            true
+        );
+
+        // If the product price was not found in the order, use cart prices as fallback
+        if (false !== array_search(null, $orderPrices)) {
+            $cartPrices = $this->getCartPrices(
+                $productRow,
+                $productQuantity,
+                $addressId,
+                $shopContext,
+                $specificPriceOutput
+            );
+            foreach ($orderPrices as $orderPrice => $value) {
+                if (null === $value) {
+                    $orderPrices[$orderPrice] = $cartPrices[$orderPrice];
+                }
+            }
+        }
+
+        return $orderPrices;
+    }
+
     public static function cacheSomeAttributesLists($ipa_list, $id_lang)
     {
         if (!Combination::isFeatureActive()) {
@@ -1066,9 +1220,11 @@ class CartCore extends ObjectModel
             ORDER BY ag.`position` ASC, a.`position` ASC'
         );
 
+        $colon = Context::getContext()->getTranslator()->trans(': ', [], 'Shop.Pdf');
         foreach ($result as $row) {
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes'] .= $row['public_group_name'] . ' : ' . $row['attribute_name'] . $separator . ' ';
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
+            $key = $row['id_product_attribute'] . '-' . $id_lang;
+            self::$_attributesLists[$key]['attributes'] .= $row['public_group_name'] . $colon . $row['attribute_name'] . $separator . ' ';
+            self::$_attributesLists[$key]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
         }
 
         foreach ($pa_implode as $id_product_attribute) {
@@ -1297,8 +1453,9 @@ class CartCore extends ObjectModel
      * @param Shop|null $shop
      * @param bool $auto_add_cart_rule
      * @param bool $skipAvailabilityCheckOutOfStock
+     * @param bool $preserveGiftRemoval
      *
-     * @return bool Whether the quantity has been successfully updated
+     * @return bool|int Whether the quantity has been successfully updated
      */
     public function updateQty(
         $quantity,
@@ -1309,7 +1466,8 @@ class CartCore extends ObjectModel
         $id_address_delivery = 0,
         Shop $shop = null,
         $auto_add_cart_rule = true,
-        $skipAvailabilityCheckOutOfStock = false
+        $skipAvailabilityCheckOutOfStock = false,
+        bool $preserveGiftRemoval = true
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1380,7 +1538,7 @@ class CartCore extends ObjectModel
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
-            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization);
+            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
         }
 
         if (!$product->available_for_order
@@ -1403,7 +1561,7 @@ class CartCore extends ObjectModel
         /* Update quantity if product already exist */
         if (!empty($cartProductQuantity['quantity'])) {
             $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
-            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
+            $availableOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product->id));
 
             if ($operator == 'up') {
                 $updateQuantity = '+ ' . $quantity;
@@ -1423,7 +1581,7 @@ class CartCore extends ObjectModel
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
-                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization);
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
                 }
             } else {
                 return false;
@@ -1684,6 +1842,7 @@ class CartCore extends ObjectModel
      * @param int $id_product_attribute Attribute ID if needed
      * @param int $id_customization Customization id
      * @param int $id_address_delivery Delivery Address id
+     * @param bool $preserveGiftsRemoval If true gift are not removed so product is still in cart
      *
      * @return bool Whether the product has been successfully deleted
      */
@@ -1691,7 +1850,8 @@ class CartCore extends ObjectModel
         $id_product,
         $id_product_attribute = 0,
         $id_customization = 0,
-        $id_address_delivery = 0
+        $id_address_delivery = 0,
+        bool $preserveGiftsRemoval = true
     ) {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -1732,15 +1892,18 @@ class CartCore extends ObjectModel
             );
         }
 
-        $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-        if ($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
-            return Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
-                WHERE `id_cart` = ' . (int) $this->id . '
-                AND `id_product` = ' . (int) $id_product .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
-            );
+        if ($preserveGiftsRemoval) {
+            $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
+            if (isset($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute])
+                && $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
+                return Db::getInstance()->execute(
+                    'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                    SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
+                    WHERE `id_cart` = ' . (int) $this->id . '
+                    AND `id_product` = ' . (int) $id_product .
+                    ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                );
+            }
         }
 
         /* Product deletion */
@@ -1897,6 +2060,7 @@ class CartCore extends ObjectModel
      * @param array $products
      * @param int $id_carrier
      * @param bool $use_cache @deprecated
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return float Order total
      *
@@ -1907,7 +2071,8 @@ class CartCore extends ObjectModel
         $type = Cart::BOTH,
         $products = null,
         $id_carrier = null,
-        $use_cache = false
+        $use_cache = false,
+        bool $keepOrderPrices = false
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
@@ -1950,7 +2115,7 @@ class CartCore extends ObjectModel
 
         // filter products
         if (null === $products) {
-            $products = $this->getProducts();
+            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
         }
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
@@ -1973,7 +2138,7 @@ class CartCore extends ObjectModel
         }
 
         $computePrecision = Context::getContext()->getComputingPrecision();
-        $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision);
+        $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
@@ -2028,12 +2193,18 @@ class CartCore extends ObjectModel
      * @param array $cartRules list of cart rules to apply
      * @param int $id_carrier carrier id (fees calculation)
      * @param int|null $computePrecision
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null)
+    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, bool $keepOrderPrices = false)
     {
-        $calculator = new Calculator($this, $id_carrier, $computePrecision);
+        $orderId = null;
+        if ($keepOrderPrices) {
+            $orderId = Order::getIdByCartId($this->id);
+            $orderId = (int) $orderId ?: null;
+        }
+        $calculator = new Calculator($this, $id_carrier, $computePrecision, $orderId);
 
         /** @var PriceCalculator $priceCalculator */
         $priceCalculator = ServiceLocator::get(PriceCalculator::class);
@@ -2064,7 +2235,8 @@ class CartCore extends ObjectModel
                 new Database(),
                 $useEcotax,
                 $precision,
-                $roundType
+                $roundType,
+                $orderId
             );
             $calculator->addCartRow($cartRow);
         }
@@ -2915,23 +3087,14 @@ class CartCore extends ObjectModel
             $order_by_price = !Configuration::get('PS_CARRIER_DEFAULT_SORT');
         }
         if (null === $order_way) {
-            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER');
+            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER') ? 1 : -1;
         }
 
         if ($order_by_price) {
-            if ($order_way) {
-                return ($option1['total_price_with_tax'] < $option2['total_price_with_tax']) * 2 - 1;
-            } else {
-                // return -1 or 1
-                return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1;
-            }
-        } elseif ($order_way) {
-            // return -1 or 1
-            return ($option1['position'] < $option2['position']) * 2 - 1;
-        } else {
-            // return -1 or 1
-            return ($option1['position'] >= $option2['position']) * 2 - 1;
+            return $option1['total_price_with_tax'] < $option2['total_price_with_tax'] ? $order_way : -$order_way;
         }
+
+        return $option1['position'] < $option2['position'] ? $order_way : -$order_way;
     }
 
     /**
@@ -3343,11 +3506,18 @@ class CartCore extends ObjectModel
      * @param array|null $product_list list of product concerned by the shipping.
      *                                 If null, all the product of the cart are used to calculate the shipping cost
      * @param int|null $id_zone Zone ID
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return float|bool Shipping total, false if not possible to ship with the given carrier
      */
-    public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
-    {
+    public function getPackageShippingCost(
+        $id_carrier = null,
+        $use_tax = true,
+        Country $default_country = null,
+        $product_list = null,
+        $id_zone = null,
+        bool $keepOrderPrices = false
+    ) {
         if ($this->isVirtualCart()) {
             return 0;
         }
@@ -3357,7 +3527,7 @@ class CartCore extends ObjectModel
         }
 
         if (null === $product_list) {
-            $products = $this->getProducts(false, false, null, true);
+            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
         } else {
             foreach ($product_list as $key => $value) {
                 if ($value['is_virtual'] == 1) {
@@ -3395,7 +3565,7 @@ class CartCore extends ObjectModel
         }
 
         // Order total in default currency without fees
-        $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
+        $order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list, $id_carrier, false, $keepOrderPrices);
 
         // Start with shipping cost at 0
         $shipping_cost = 0;
@@ -3634,7 +3804,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, 2);
+        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
         Cache::store($cache_id, $shipping_cost);
 
         return $shipping_cost;
@@ -3765,16 +3935,38 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Return useful information about the cart.
+     * Return useful information about the cart for display purpose.
+     * Products are splitted between paid ones and gift
+     * Gift price and shipping (if shipping is free) are removed from Discounts
+     * Any cart data modification for display purpose is made here.
      *
      * @return array Cart details
      */
     public function getSummaryDetails($id_lang = null, $refresh = false)
     {
-        $context = Context::getContext();
         if (!$id_lang) {
-            $id_lang = $context->language->id;
+            $id_lang = Context::getContext()->language->id;
         }
+        $summary = $this->getRawSummaryDetails($id_lang, (bool) $refresh);
+
+        return $this->alterSummaryForDisplay($summary, (bool) $refresh);
+    }
+
+    /**
+     * Returns useful raw information about the cart.
+     * Products, Discounts, Prices ... are returned in an array without any modification.
+     *
+     * @param int $id_lang
+     * @param bool $refresh
+     *
+     * @return array Cart details
+     *
+     * @throws PrestaShopException
+     * @throws LocalizationException
+     */
+    public function getRawSummaryDetails(int $id_lang, bool $refresh = false): array
+    {
+        $context = Context::getContext();
 
         $delivery = new Address((int) $this->id_address_delivery);
         $invoice = new Address((int) $this->id_address_invoice);
@@ -3793,8 +3985,6 @@ class CartCore extends ObjectModel
         if ($total_tax < 0) {
             $total_tax = 0;
         }
-
-        $currency = new Currency($this->id_currency);
 
         $products = $this->getProducts($refresh);
 
@@ -3815,80 +4005,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $gift_products = [];
-        $cart_rules = $this->getCartRules();
         $total_shipping = $this->getTotalShippingCost();
-        $total_shipping_tax_exc = $this->getTotalShippingCost(null, false);
-        $total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-        $total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $total_discounts = $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
-        $total_discounts_tax_exc = $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
-
-        // The cart content is altered for display
-        foreach ($cart_rules as &$cart_rule) {
-            // If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
-            if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
-                $cart_rule['value_real'] -= $total_shipping;
-                $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                if ($total_discounts > $cart_rule['value_real']) {
-                    $total_discounts -= $total_shipping;
-                }
-                if ($total_discounts_tax_exc > $cart_rule['value_tax_exc']) {
-                    $total_discounts_tax_exc -= $total_shipping_tax_exc;
-                }
-
-                // Update total shipping
-                $total_shipping = 0;
-                $total_shipping_tax_exc = 0;
-            }
-
-            if ($cart_rule['gift_product']) {
-                foreach ($products as $key => &$product) {
-                    if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
-                        // Update total products
-                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-
-                        // Update total discounts
-                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-
-                        // Update cart rule value
-                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
-
-                        // Update product quantity
-                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
-                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
-                        --$product['cart_quantity'];
-
-                        if (!$product['cart_quantity']) {
-                            unset($products[$key]);
-                        }
-
-                        // Add a new product line
-                        $gift_product = $product;
-                        $gift_product['cart_quantity'] = 1;
-                        $gift_product['price'] = 0;
-                        $gift_product['price_wt'] = 0;
-                        $gift_product['total_wt'] = 0;
-                        $gift_product['total'] = 0;
-                        $gift_product['is_gift'] = true;
-                        $gift_products[] = $gift_product;
-
-                        break; // One gift product per cart rule
-                    }
-                }
-            }
-        }
-
-        foreach ($cart_rules as $key => &$cart_rule) {
-            if (((float) $cart_rule['value_real'] == 0 && (int) $cart_rule['free_shipping'] == 0)) {
-                unset($cart_rules[$key]);
-            }
-        }
 
         $summary = [
             'delivery' => $delivery,
@@ -3897,17 +4014,16 @@ class CartCore extends ObjectModel
             'invoice_state' => State::getNameById($invoice->id_state),
             'formattedAddresses' => $formatted_addresses,
             'products' => array_values($products),
-            'gift_products' => $gift_products,
-            'discounts' => array_values($cart_rules),
+            'discounts' => array_values($this->getCartRules()),
             'is_virtual_cart' => (int) $this->isVirtualCart(),
-            'total_discounts' => $total_discounts,
-            'total_discounts_tax_exc' => $total_discounts_tax_exc,
+            'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
+            'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
             'total_wrapping' => $this->getOrderTotal(true, Cart::ONLY_WRAPPING),
             'total_wrapping_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_WRAPPING),
             'total_shipping' => $total_shipping,
-            'total_shipping_tax_exc' => $total_shipping_tax_exc,
-            'total_products_wt' => $total_products_wt,
-            'total_products' => $total_products,
+            'total_shipping_tax_exc' => $this->getTotalShippingCost(null, false),
+            'total_products_wt' => $this->getOrderTotal(true, Cart::ONLY_PRODUCTS),
+            'total_products' => $this->getOrderTotal(false, Cart::ONLY_PRODUCTS),
             'total_price' => $base_total_tax_inc,
             'total_tax' => $total_tax,
             'total_price_without_tax' => $base_total_tax_exc,
@@ -4016,7 +4132,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
-                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1) 
+                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1)
                 AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
@@ -4295,7 +4411,7 @@ class CartCore extends ObjectModel
     /**
      * Duplicate this Cart in the database.
      *
-     * @return array Duplicated cart, with success bool
+     * @return array|bool Duplicated cart, with success bool
      */
     public function duplicate()
     {
@@ -5077,5 +5193,122 @@ class CartCore extends ObjectModel
         $this->mergeGiftsProductsQuantity();
 
         return $products;
+    }
+
+    /**
+     * @return Country
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function getTaxCountry(): Country
+    {
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($this, $taxAddressType) ? $this->{$taxAddressType} : $this->id_address_delivery;
+        $taxAddress = new Address($taxAddressId);
+
+        return new Country($taxAddress->id_country);
+    }
+
+    /**
+     * Alter raw cart details to adapt to display use case.
+     *
+     * @param array $summary
+     * @param bool $refresh
+     *
+     * @return array
+     */
+    private function alterSummaryForDisplay(array $summary, bool $refresh = false): array
+    {
+        $context = Context::getContext();
+        $currency = new Currency($this->id_currency);
+
+        $gift_products = [];
+        $products = $summary['products'];
+        $cart_rules = $summary['discounts'];
+        $total_shipping = $summary['total_shipping'];
+        $total_discounts = $summary['total_discounts'];
+        $total_discounts_tax_exc = $summary['total_discounts_tax_exc'];
+        $total_shipping_tax_exc = $summary['total_shipping_tax_exc'];
+        $total_products = $summary['total_products'];
+        $total_products_wt = $summary['total_products_wt'];
+
+        // The cart content is altered for display
+        foreach ($cart_rules as &$cart_rule) {
+            // If the cart rule is automatic (without any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
+            if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
+                $cart_rule['value_real'] -= $total_shipping;
+                $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
+                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                if ($total_discounts > $cart_rule['value_real']) {
+                    $total_discounts -= $total_shipping;
+                }
+                if ($total_discounts_tax_exc > $cart_rule['value_tax_exc']) {
+                    $total_discounts_tax_exc -= $total_shipping_tax_exc;
+                }
+
+                // Update total shipping
+                $total_shipping = 0;
+                $total_shipping_tax_exc = 0;
+            }
+
+            if ($cart_rule['gift_product']) {
+                foreach ($products as $key => &$product) {
+                    if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
+                        // Update total products
+                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+
+                        // Update total discounts
+                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+
+                        // Update cart rule value
+                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+
+                        // Update product quantity
+                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        --$product['cart_quantity'];
+
+                        if (!$product['cart_quantity']) {
+                            unset($products[$key]);
+                        }
+
+                        // Add a new product line
+                        $gift_product = $product;
+                        $gift_product['cart_quantity'] = 1;
+                        $gift_product['price'] = 0;
+                        $gift_product['price_wt'] = 0;
+                        $gift_product['total_wt'] = 0;
+                        $gift_product['total'] = 0;
+                        $gift_product['is_gift'] = true;
+                        $gift_products[] = $gift_product;
+
+                        break; // One gift product per cart rule
+                    }
+                }
+            }
+        }
+
+        foreach ($cart_rules as $key => &$cart_rule) {
+            if (((float) $cart_rule['value_real'] == 0 && (int) $cart_rule['free_shipping'] == 0)) {
+                unset($cart_rules[$key]);
+            }
+        }
+
+        $summary['discounts'] = $cart_rules;
+        $summary['total_shipping'] = $total_shipping;
+        $summary['total_discounts'] = $total_discounts;
+        $summary['total_discounts_tax_exc'] = $total_discounts_tax_exc;
+        $summary['total_shipping_tax_exc'] = $total_shipping_tax_exc;
+        $summary['total_products'] = $total_products;
+        $summary['total_products_wt'] = $total_products_wt;
+        $summary['products'] = $products;
+        $summary['gift_products'] = $gift_products;
+
+        return $summary;
     }
 }

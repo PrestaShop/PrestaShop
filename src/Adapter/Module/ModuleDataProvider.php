@@ -77,7 +77,7 @@ class ModuleDataProvider
     }
 
     /**
-     * @param $employeeID
+     * @param int $employeeID
      */
     public function setEmployeeId($employeeID)
     {
@@ -101,7 +101,7 @@ class ModuleDataProvider
             $lastAccessDate = '0000-00-00 00:00:00';
 
             if (!Tools::isPHPCLI() && null !== $this->entityManager && $this->employeeID) {
-                $moduleID = (int) $result['id'];
+                $moduleID = isset($result['id']) ? (int) $result['id'] : 0;
 
                 $qb = $this->entityManager->createQueryBuilder();
                 $qb->select('mh')
@@ -291,7 +291,7 @@ class ModuleDataProvider
      *
      * @param string $name The technical module name to check
      *
-     * @return int The devices enabled for this module
+     * @return int|false The devices enabled for this module
      */
     private function getDeviceStatus($name)
     {

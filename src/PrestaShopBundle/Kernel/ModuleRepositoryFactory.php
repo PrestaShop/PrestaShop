@@ -40,12 +40,12 @@ use PrestaShop\PrestaShop\Adapter\Environment;
 class ModuleRepositoryFactory
 {
     /**
-     * @var self
+     * @var self|null
      */
     private static $instance;
 
     /**
-     * @var string
+     * @var array|null
      */
     private $parameters;
 
@@ -146,6 +146,10 @@ class ModuleRepositoryFactory
             $config = require $this->getParametersFile();
             $this->parameters = $config['parameters'];
         }
+
+        array_walk($this->parameters, function (&$param) {
+            $param = str_replace('%%', '%', $param);
+        });
 
         return $this->parameters;
     }

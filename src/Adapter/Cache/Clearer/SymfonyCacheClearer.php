@@ -26,7 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
+use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Tools;
 
 /**
@@ -41,6 +46,43 @@ final class SymfonyCacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
-        Tools::clearSf2Cache();
+        /*  @var KernelInterface */
+        global $kernel;
+
+        if (empty($kernel)) {
+            Tools::clearSf2Cache();
+
+            return;
+        }
+
+        register_shutdown_function(function () use ($kernel) {
+            // The cache may have been removed by Tools::clearSf2Cache, it happens during install
+            // process, in which case we don't run the cache:clear command because it is not only
+            // useless it will simply fail as the container caches classes have been removed
+            $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . _PS_ENV_ . '/';
+            if (!file_exists($cacheDir)) {
+                return;
+            }
+
+            $application = new Application($kernel);
+            $application->setAutoExit(false);
+
+            // Clear cache
+            $input = new ArrayInput([
+                'command' => 'cache:clear',
+                '--no-warmup' => true,
+                '--env' => _PS_ENV_,
+            ]);
+
+            $output = new NullOutput();
+            $application->run($input, $output);
+
+            // Reboot kernel
+            $realCacheDir = $kernel->getContainer()->getParameter('kernel.cache_dir');
+            $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
+            $kernel->reboot($warmupDir);
+
+            Hook::exec('actionClearSf2Cache');
+        });
     }
 }

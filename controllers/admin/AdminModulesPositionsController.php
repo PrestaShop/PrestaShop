@@ -446,12 +446,11 @@ class AdminModulesPositionsControllerCore extends AdminController
                     . $this->trans('___________ CUSTOM ___________', [], 'Admin.Design.Feature')
                     . '</option>';
 
-        /** @todo do something better with controllers */
-        $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
-        ksort($controllers);
+        $controllers = Dispatcher::getControllersPhpselfList(_PS_FRONT_CONTROLLER_DIR_);
+        asort($controllers);
 
         foreach ($file_list as $k => $v) {
-            if (!array_key_exists($v, $controllers)) {
+            if (!in_array($v, $controllers)) {
                 $content .= '<option value="' . $v . '">' . $v . '</option>';
             }
         }
@@ -459,7 +458,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         $content .= '<option disabled="disabled">' . $this->trans('____________ CORE ____________', [], 'Admin.Design.Feature') . '</option>';
 
         foreach ($controllers as $k => $v) {
-            $content .= '<option value="' . $k . '">' . $k . '</option>';
+            $content .= '<option value="' . $v . '">' . $v . '</option>';
         }
 
         $modules_controllers_type = ['admin' => $this->trans('Admin modules controller', [], 'Admin.Design.Feature'), 'front' => $this->trans('Front modules controller', [], 'Admin.Design.Feature')];

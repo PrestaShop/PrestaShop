@@ -27,7 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Customer;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
@@ -89,12 +88,9 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
      */
     public function setPrivateNoteAboutCustomer($privateNote, $reference)
     {
-        /** @var Customer $customer */
-        $customer = $this->getSharedStorage()->get($reference);
+        $customerId = $this->getSharedStorage()->get($reference);
 
-        $this->getCommandBus()->handle(new SetPrivateNoteAboutCustomerCommand((int) $customer->id, $privateNote));
-
-        $this->getSharedStorage()->set($reference, new Customer($customer->id));
+        $this->getCommandBus()->handle(new SetPrivateNoteAboutCustomerCommand((int) $customerId, $privateNote));
     }
 
     /**

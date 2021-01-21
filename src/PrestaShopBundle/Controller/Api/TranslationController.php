@@ -287,7 +287,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $content
+     * @param array $content
      */
     private function guardAgainstInvalidTranslationEditRequest($content)
     {
@@ -307,7 +307,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $content
+     * @param array $content
      */
     protected function guardAgainstInvalidTranslationResetRequest($content)
     {
@@ -326,8 +326,8 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $lang
-     * @param $type
+     * @param string $lang
+     * @param string|null $type
      * @param string $theme Selected theme name
      * @param null $search
      *
@@ -398,7 +398,7 @@ class TranslationController extends ApiController
      * Make final tree.
      *
      * @param TreeBuilder $treeBuilder
-     * @param $catalogue
+     * @param array $catalogue
      * @param string|null $theme
      * @param string|null $search
      * @param string|null $module

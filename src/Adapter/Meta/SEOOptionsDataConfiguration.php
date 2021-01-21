@@ -51,7 +51,7 @@ class SEOOptionsDataConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'product_attributes_in_title' => $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE'),
+            'product_attributes_in_title' => (bool) $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE'),
         ];
     }
 

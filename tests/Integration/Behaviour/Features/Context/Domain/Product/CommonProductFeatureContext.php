@@ -24,17 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
+use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -44,7 +47,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function addCombinationsToProduct(string $productReference, TableNode $tableNode)
+    public function addCombinationsToProduct(string $productReference, TableNode $tableNode): void
     {
         $details = $tableNode->getColumnsHash();
         $combinationsDetails = [];
@@ -65,20 +68,26 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         foreach ($combinations as $combination) {
             $this->getSharedStorage()->set($combination->reference, (int) $combination->id);
         }
+
+        // Product class has a lot of cache that is set as soon as the product is created, including for prices
+        // which are cached for each combinations. Since it was cached when the combinations did not exist we need
+        // to clear it so that the newly created combinations' prices are correctly computed next time they are needed.
+        Product::resetStaticCache();
     }
 
     /**
-     * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
-     * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/
+     * @Then /^product "(.+)" localized "(.+)" should be:$/
+     * @Given /^product "(.+)" localized "(.+)" is:$/
+     *
+     * localizedValues transformation handled by @see LocalizedArrayTransformContext
      *
      * @param string $productReference
      * @param string $fieldName
-     * @param string $localizedValues
+     * @param array $expectedLocalizedValues
      */
-    public function assertLocalizedProperty(string $productReference, string $fieldName, string $localizedValues)
+    public function assertLocalizedProperty(string $productReference, string $fieldName, array $expectedLocalizedValues): void
     {
         $productForEditing = $this->getProductForEditing($productReference);
-        $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
         if ('tags' === $fieldName) {
             UpdateTagsFeatureContext::assertLocalizedTags(
@@ -88,6 +97,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
             return;
         }
+
+        $htmlEncodedProperties = ['description', 'description_short'];
 
         foreach ($expectedLocalizedValues as $langId => $expectedValue) {
             $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
@@ -101,7 +112,10 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
                 ));
             }
 
-            $actualValue = $actualValues[$langId];
+            $actualValue = in_array($fieldName, $htmlEncodedProperties) ?
+                html_entity_decode($actualValues[$langId]) :
+                $actualValues[$langId]
+            ;
 
             if ($expectedValue !== $actualValue) {
                 throw new RuntimeException(
@@ -118,41 +132,17 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following values:
+     * @Then product :reference should not exist anymore
      *
-     * @param string $productReference
-     * @param TableNode $table
+     * @param string $reference
      */
-    public function assertProductFields(string $productReference, TableNode $table)
+    public function assertProductDoesNotExistAnymore(string $reference): void
     {
-        $productForEditing = $this->getProductForEditing($productReference);
-        $data = $table->getRowsHash();
-
-        $this->assertBoolProperty($productForEditing, $data, 'active');
-
-        // Assertions checking isset() can hide some errors if it doesn't find array key,
-        // to make sure all provided fields were checked we need to unset every asserted field
-        // and finally, if provided data is not empty, it means there are some unnasserted values left
-        Assert::assertEmpty($data, sprintf('Some provided product fields haven\'t been asserted: %s', var_export($data, true)));
-    }
-
-    /**
-     * @When I update product :productReference prices and apply non-existing tax rules group
-     *
-     * @param string $productReference
-     */
-    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
-    {
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        $command = new UpdateProductPricesCommand($productId);
-        // this id value does not exist, it is used on purpose.
-        $command->setTaxRulesGroupId(50000000);
-
         try {
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
+            $this->getProductForEditing($reference);
+            throw new RuntimeException(sprintf('Product "%s" was not expected to exist, but it was found', $reference));
+        } catch (ProductNotFoundException $e) {
+            // intentional. Means product is not found and test should pass
         }
     }
 
@@ -162,7 +152,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param string $productTypeName
      */
-    public function assertProductType(string $productReference, string $productTypeName)
+    public function assertProductType(string $productReference, string $productTypeName): void
     {
         $editableProduct = $this->getProductForEditing($productReference);
         Assert::assertEquals(
@@ -178,6 +168,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @Then I should get error that product :fieldName is invalid
+     *
+     * @param string $fieldName
      */
     public function assertConstraintError(string $fieldName): void
     {
@@ -210,7 +202,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
-            'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
             'tag' => ProductConstraintException::INVALID_TAG,
             'width' => ProductConstraintException::INVALID_WIDTH,
             'height' => ProductConstraintException::INVALID_HEIGHT,
@@ -219,6 +210,17 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'additional_shipping_cost' => ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST,
             'delivery_in_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES,
             'delivery_out_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES,
+            'redirect_target' => ProductConstraintException::INVALID_REDIRECT_TARGET,
+            'redirect_type' => ProductConstraintException::INVALID_REDIRECT_TYPE,
+            'meta_title' => ProductConstraintException::INVALID_META_TITLE,
+            'meta_description' => ProductConstraintException::INVALID_META_DESCRIPTION,
+            'link_rewrite' => ProductConstraintException::INVALID_LINK_REWRITE,
+            'minimal_quantity' => ProductConstraintException::INVALID_MINIMAL_QUANTITY,
+            'available_now_labels' => ProductConstraintException::INVALID_AVAILABLE_NOW,
+            'available_later_labels' => ProductConstraintException::INVALID_AVAILABLE_LATER,
+            'available_date' => ProductConstraintException::INVALID_AVAILABLE_DATE,
+            'low_stock_threshold' => ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD,
+            'low_stock_alert' => ProductConstraintException::INVALID_LOW_STOCK_ALERT,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

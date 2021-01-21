@@ -52,7 +52,7 @@ final class ManufacturerFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CommandBusInterface $bus
-     * @param $multistoreEnabled
+     * @param bool $multistoreEnabled
      * @param int[] $defaultShopAssociation
      */
     public function __construct(

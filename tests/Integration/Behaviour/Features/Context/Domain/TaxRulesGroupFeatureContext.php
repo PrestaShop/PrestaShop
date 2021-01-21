@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use RuntimeException;
 use TaxRulesGroup;
 
@@ -58,5 +59,13 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     public function assertTaxRuleGroupExists(string $name)
     {
         self::getTaxRulesGroupByName($name);
+    }
+
+    /**
+     * @Then I should get error that tax rules group does not exist
+     */
+    public function assertLastErrorIsTaxRulesGroupNotFound(): void
+    {
+        $this->assertLastErrorIs(TaxRulesGroupNotFoundException::class);
     }
 }

@@ -49,6 +49,7 @@ define('_PS_TMP_IMG_', _PS_IMG_.'tmp/');
 define('_THEME_CAT_DIR_', _PS_IMG_.'c/');
 define('_THEME_EMPLOYEE_DIR_', _PS_IMG_.'e/');
 define('_THEME_PROD_DIR_', _PS_IMG_.'p/');
+define('_THEME_PROFILE_DIR_', _PS_IMG_.'pr/');
 define('_THEME_MANU_DIR_', _PS_IMG_.'m/');
 define('_THEME_SUP_DIR_', _PS_IMG_.'su/');
 define('_THEME_SHIP_DIR_', _PS_IMG_.'s/');

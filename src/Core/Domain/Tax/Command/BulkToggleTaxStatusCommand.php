@@ -89,7 +89,7 @@ class BulkToggleTaxStatusCommand
     /**
      * Validates that value is of type boolean
      *
-     * @param $value
+     * @param mixed $value
      *
      * @throws TaxConstraintException
      */

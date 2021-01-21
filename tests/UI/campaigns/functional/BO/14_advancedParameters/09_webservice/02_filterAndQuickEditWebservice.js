@@ -97,7 +97,7 @@ describe('Filter and quick edit webservice', async () => {
     tests = [
       {args: {filterType: 'input', filterBy: 'key', filterValue: firstWebServiceData.key}},
       {args: {filterType: 'input', filterBy: 'description', filterValue: firstWebServiceData.keyDescription}},
-      {args: {filterType: 'select', filterBy: 'active', filterValue: firstWebServiceData.status}, expected: 'check'},
+      {args: {filterType: 'select', filterBy: 'active', filterValue: firstWebServiceData.status}},
     ];
 
     tests.forEach((test, index) => {
@@ -119,12 +119,12 @@ describe('Filter and quick edit webservice', async () => {
         const numberOfElementAfterFilter = await webservicePage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
-          const key = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
-
-          if (test.expected !== undefined) {
-            await expect(key).to.contains(test.expected);
+          if (test.args.filterBy === 'active') {
+            const wenServiceStatus = await webservicePage.getStatus(page, i);
+            await expect(wenServiceStatus).to.equal(test.args.filterValue);
           } else {
-            await expect(key).to.contains(test.args.filterValue);
+            const textColumn = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
+            await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
       });
@@ -162,7 +162,7 @@ describe('Filter and quick edit webservice', async () => {
       it(`should ${webservice.args.status} the webservice`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${webservice.args.status}Webservice`, baseContext);
 
-        const isActionPerformed = await webservicePage.updateToggleColumnValue(
+        const isActionPerformed = await webservicePage.setStatus(
           page,
           1,
           webservice.args.enable,
@@ -173,7 +173,7 @@ describe('Filter and quick edit webservice', async () => {
           await expect(resultMessage).to.contains(webservicePage.successfulUpdateStatusMessage);
         }
 
-        const webserviceStatus = await webservicePage.getToggleColumnValue(page, 1);
+        const webserviceStatus = await webservicePage.getStatus(page, 1);
         await expect(webserviceStatus).to.be.equal(webservice.args.enable);
       });
     });

@@ -124,7 +124,7 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Get Categories formatted like ajax_product_file.php.
      *
-     * @param $limit
+     * @param int $limit
      * @param Request $request
      *
      * @return JsonResponse

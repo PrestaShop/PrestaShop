@@ -25,10 +25,10 @@
  */
 class OrderStateCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var array<string> Name */
     public $name;
 
-    /** @var string Template name if there is any e-mail to send */
+    /** @var array<string> Template name if there is any e-mail to send */
     public $template;
 
     /** @var bool Send an e-mail to customer ? */

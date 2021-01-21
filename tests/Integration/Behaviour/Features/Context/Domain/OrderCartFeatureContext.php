@@ -27,8 +27,8 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use PHPUnit\Framework\Assert as Assert;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -84,21 +84,39 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         $duplicatedCartId = SharedStorage::getStorage()->get($duplicatedCartReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
-        /** @var CartInformation $cartInformation */
-        $cartInformation = $this->getQueryBus()->handle(new GetCartInformation($cartId));
-        /** @var CartInformation $duplicatedCartInformation */
-        $duplicatedCartInformation = $this->getQueryBus()->handle(new GetCartInformation($duplicatedCartId));
+        /** @var CartForOrderCreation $cartForOrderCreation */
+        $cartForOrderCreation = $this->getQueryBus()->handle(new GetCartForOrderCreation($cartId));
+        /** @var CartForOrderCreation $duplicatedCartForOrderCreation */
+        $duplicatedCartForOrderCreation = $this->getQueryBus()->handle(new GetCartForOrderCreation($duplicatedCartId));
 
-        Assert::assertNotSame($cartInformation->getCartId(), $duplicatedCartInformation->getCartId());
+        Assert::assertNotSame($cartForOrderCreation->getCartId(), $duplicatedCartForOrderCreation->getCartId());
 
-        Assert::assertEquals($cartInformation->getCartRules(), $duplicatedCartInformation->getCartRules());
-        Assert::assertEquals($cartInformation->getAddresses(), $duplicatedCartInformation->getAddresses());
-        Assert::assertEquals($cartInformation->getCurrencyId(), $duplicatedCartInformation->getCurrencyId());
-        Assert::assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
-        Assert::assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
+        Assert::assertEquals($cartForOrderCreation->getCartRules(), $duplicatedCartForOrderCreation->getCartRules());
+        Assert::assertEquals($cartForOrderCreation->getAddresses(), $duplicatedCartForOrderCreation->getAddresses());
+        Assert::assertEquals($cartForOrderCreation->getCurrencyId(), $duplicatedCartForOrderCreation->getCurrencyId());
+        Assert::assertEquals($cartForOrderCreation->getProducts(), $duplicatedCartForOrderCreation->getProducts());
+        Assert::assertEquals($cartForOrderCreation->getLangId(), $duplicatedCartForOrderCreation->getLangId());
         Assert::assertEquals(
-            $this->convertSummaryToArray($cartInformation->getSummary()),
-            $this->convertSummaryToArray($duplicatedCartInformation->getSummary())
+            $this->convertSummaryToArray($cartForOrderCreation->getSummary()),
+            $this->convertSummaryToArray($duplicatedCartForOrderCreation->getSummary())
+        );
+
+        // Test with discounts hidden
+        /** @var CartForOrderCreation $cartForOrderCreation */
+        $cartForOrderCreation = $this->getQueryBus()->handle((new GetCartForOrderCreation($cartId))->setHideDiscounts(true));
+        /** @var CartForOrderCreation $duplicatedCartForOrderCreation */
+        $duplicatedCartForOrderCreation = $this->getQueryBus()->handle((new GetCartForOrderCreation($duplicatedCartId))->setHideDiscounts(true));
+
+        Assert::assertNotSame($cartForOrderCreation->getCartId(), $duplicatedCartForOrderCreation->getCartId());
+
+        Assert::assertEquals($cartForOrderCreation->getCartRules(), $duplicatedCartForOrderCreation->getCartRules());
+        Assert::assertEquals($cartForOrderCreation->getAddresses(), $duplicatedCartForOrderCreation->getAddresses());
+        Assert::assertEquals($cartForOrderCreation->getCurrencyId(), $duplicatedCartForOrderCreation->getCurrencyId());
+        Assert::assertEquals($cartForOrderCreation->getProducts(), $duplicatedCartForOrderCreation->getProducts());
+        Assert::assertEquals($cartForOrderCreation->getLangId(), $duplicatedCartForOrderCreation->getLangId());
+        Assert::assertEquals(
+            $this->convertSummaryToArray($cartForOrderCreation->getSummary()),
+            $this->convertSummaryToArray($duplicatedCartForOrderCreation->getSummary())
         );
     }
 
@@ -107,11 +125,11 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
      * - order message
      * - process order link
      *
-     * @param CartInformation\CartSummary $cartSummary
+     * @param CartForOrderCreation\CartSummary $cartSummary
      *
      * @return array
      */
-    private function convertSummaryToArray(CartInformation\CartSummary $cartSummary): array
+    private function convertSummaryToArray(CartForOrderCreation\CartSummary $cartSummary): array
     {
         return [
             $cartSummary->getTotalDiscount(),

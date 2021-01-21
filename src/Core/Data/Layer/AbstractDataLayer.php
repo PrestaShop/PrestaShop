@@ -28,6 +28,9 @@
 namespace PrestaShop\PrestaShop\Core\Data\Layer;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface as CldrCurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface as CurrencyCurrencyDataLayerInterface;
 
 /**
  * Abstract data layer class
@@ -43,7 +46,7 @@ abstract class AbstractDataLayer
     /**
      * The lower data layer to communicate with (read/write).
      *
-     * @var AbstractDataLayer|null
+     * @var CldrCurrencyDataLayerInterface|CldrLocaleDataLayerInterface|CurrencyCurrencyDataLayerInterface|null
      */
     protected $lowerDataLayer;
 
@@ -77,11 +80,9 @@ abstract class AbstractDataLayer
      *
      * Lower layer might be called if nothing found in current layer
      *
-     * @param mixed $id
-     *                  The data object identifier
+     * @param string $id The data object identifier
      *
-     * @return mixed|null
-     *                    A data object. Null if not found.
+     * @return mixed|null A data object. Null if not found.
      *
      * @throws DataLayerException
      */
@@ -137,8 +138,7 @@ abstract class AbstractDataLayer
     /**
      * Propagate read to the lower layer.
      *
-     * @param $field
-     *  The field to read
+     * @param string $field The field to read
      *
      * @return mixed|null
      *
@@ -268,14 +268,11 @@ abstract class AbstractDataLayer
      *
      * Might be a file access, cache read, DB select...
      *
-     * @param mixed $id
-     *                  The data object identifier
+     * @param mixed $id The data object identifier
      *
-     * @return mixed|null
-     *                    The wanted data object (null if not found)
+     * @return mixed|null The wanted data object (null if not found)
      *
-     * @throws DataLayerException
-     *                            When read fails
+     * @throws DataLayerException When read fails
      */
     abstract protected function doRead($id);
 

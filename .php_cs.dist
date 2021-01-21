@@ -7,6 +7,7 @@ $finder = PhpCsFixer\Finder::create()->in([
     __DIR__.'/classes',
     __DIR__.'/controllers',
     __DIR__.'/tests',
+    __DIR__.'/tools/profiling',
 ]);
 
 return PhpCsFixer\Config::create()
@@ -42,6 +43,7 @@ return PhpCsFixer\Config::create()
         'self_accessor' => false,
         'yoda_style' => null,
         'single_line_throw' => false,
+        'no_alias_language_construct_call' => false,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');

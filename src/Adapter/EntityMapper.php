@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Cache;
 use Db;
 use DbQuery;
+use ObjectModel;
 use Shop;
 
 /**
@@ -41,12 +42,12 @@ class EntityMapper
     /**
      * Load ObjectModel.
      *
-     * @param $id
-     * @param $id_lang
-     * @param $entity \ObjectModel
-     * @param $entity_defs
-     * @param $id_shop
-     * @param $should_cache_objects
+     * @param int $id
+     * @param int $id_lang
+     * @param ObjectModel $entity
+     * @param array<string,string|array> $entity_defs
+     * @param int $id_shop
+     * @param bool $should_cache_objects
      *
      * @throws \PrestaShopDatabaseException
      */

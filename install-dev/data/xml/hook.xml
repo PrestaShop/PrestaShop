@@ -16,6 +16,16 @@
       <title>Maintenance Page</title>
       <description>This hook displays new elements on the maintenance page</description>
     </hook>
+    <hook id="displayCartModalContent">
+      <name>displayCartModalContent</name>
+      <title>Content of Add-to-cart modal</title>
+      <description>This hook displays content in the middle of the window that appears after adding product to cart</description>
+    </hook>
+    <hook id="displayCartModalFooter">
+      <name>displayCartModalFooter</name>
+      <title>Bottom of Add-to-cart modal</title>
+      <description>This hook displays content in the bottom of window that appears after adding product to cart</description>
+    </hook>
     <hook id="displayProductPageDrawer">
       <name>displayProductPageDrawer</name>
       <title>Product Page Drawer</title>
@@ -71,8 +81,8 @@
       <title>Homepage content</title>
       <description>This hook displays new elements on the homepage</description>
     </hook>
-    <hook id="Header">
-      <name>Header</name>
+    <hook id="displayHeader">
+      <name>displayHeader</name>
       <title>Pages html head section</title>
       <description>This hook adds additional elements in the head section of your pages (head section of html)</description>
     </hook>
@@ -160,6 +170,16 @@
       <name>actionOrderStatusUpdate</name>
       <title>Order status update - Event</title>
       <description>This hook launches modules when the status of an order changes</description>
+    </hook>
+    <hook id="displayAdminGridTableBefore">
+      <name>displayAdminGridTableBefore</name>
+      <title>Display before Grid table</title>
+      <description>This hook adds new blocks before Grid component table</description>
+    </hook>
+    <hook id="displayAdminGridTableAfter">
+      <name>displayAdminGridTableAfter</name>
+      <title>Display after Grid table</title>
+      <description>This hook adds new blocks after Grid component table</description>
     </hook>
     <hook id="displayAdminOrder">
       <name>displayAdminOrder</name>
@@ -796,10 +816,71 @@
       <title>Manage elements added to the "prestashop" javascript object</title>
       <description>This hook allows you to customize the "prestashop" javascript object that is included in all front office pages</description>
     </hook>
-    <hook id="actionFrontControllerAfterInit">
-      <name>actionFrontControllerAfterInit</name>
+    <hook id="actionFrontControllerInitAfter">
+      <name>actionFrontControllerInitAfter</name>
       <title>Perform actions after front office controller initialization</title>
       <description>This hook is launched after the initialization of all front office controllers</description>
+    </hook>
+    <hook id="actionFrontControllerInitBefore">
+      <name>actionFrontControllerInitBefore</name>
+      <title>Perform actions before front office controller initialization</title>
+      <description>This hook is launched before the initialization of all front office controllers</description>
+    </hook>
+    <hook id="actionAdminControllerInitAfter">
+      <name>actionAdminControllerInitAfter</name>
+      <title>Perform actions after admin controller initialization</title>
+      <description>This hook is launched after the initialization of all admin controllers</description>
+    </hook>
+    <hook id="actionAdminControllerInitBefore">
+      <name>actionAdminControllerInitBefore</name>
+      <title>Perform actions before admin controller initialization</title>
+      <description>This hook is launched before the initialization of all admin controllers</description>
+    </hook>
+    <hook id="actionControllerInitAfter">
+      <name>actionControllerInitAfter</name>
+      <title>Perform actions after controller initialization</title>
+      <description>This hook is launched after the initialization of all controllers</description>
+    </hook>
+    <hook id="actionControllerInitBefore">
+      <name>actionControllerInitBefore</name>
+      <title>Perform actions before controller initialization</title>
+      <description>This hook is launched before the initialization of all controllers</description>
+    </hook>
+
+    <hook id="actionAdminLoginControllerBefore">
+      <name>actionAdminLoginControllerBefore</name>
+      <title>Perform actions before admin login controller initialization</title>
+      <description>This hook is launched before the initialization of the login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerLoginBefore">
+      <name>actionAdminLoginControllerLoginBefore</name>
+      <title>Perform actions before admin login controller login action initialization</title>
+      <description>This hook is launched before the initialization of the login action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerLoginAfter">
+      <name>actionAdminLoginControllerLoginAfter</name>
+      <title>Perform actions after admin login controller login action initialization</title>
+      <description>This hook is launched after the initialization of the login action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerForgotBefore">
+      <name>actionAdminLoginControllerForgotBefore</name>
+      <title>Perform actions before admin login controller forgot action initialization</title>
+      <description>This hook is launched before the initialization of the forgot action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerForgotAfter">
+      <name>actionAdminLoginControllerForgotAfter</name>
+      <title>Perform actions after admin login controller forgot action initialization</title>
+      <description>This hook is launched after the initialization of the forgot action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerResetBefore">
+      <name>actionAdminLoginControllerResetBefore</name>
+      <title>Perform actions before admin login controller reset action initialization</title>
+      <description>This hook is launched before the initialization of the reset action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerResetAfter">
+      <name>actionAdminLoginControllerResetAfter</name>
+      <title>Perform actions after admin login controller reset action initialization</title>
+      <description>This hook is launched after the initialization of the reset action in login controller</description>
     </hook>
     <hook id="actionAdministrationPageForm">
       <name>actionAdministrationPageForm</name>
@@ -2584,6 +2665,11 @@
       <title>Category footer</title>
       <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
+    <hook id="displayHeaderCategory">
+      <name>displayHeaderCategory</name>
+      <title>Category header</title>
+      <description>This hook adds new blocks above the products listing in a category/search</description>
+    </hook>
     <hook id="actionAdminAdministrationControllerPostProcessBefore">
       <name>actionAdminAdministrationControllerPostProcessBefore</name>
       <title>On post-process in Admin Configure Advanced Parameters Administration Controller</title>
@@ -2753,6 +2839,21 @@
       <name>actionOverrideEmployeeImage</name>
       <title>Get Employee Image</title>
       <description>This hook is used to get the employee image</description>
+    </hook>
+    <hook id="actionProductSearchProviderRunQueryBefore">
+      <name>actionProductSearchProviderRunQueryBefore</name>
+      <title>Runs an action before ProductSearchProviderInterface::RunQuery()</title>
+      <description>Required to modify an SQL query before executing it</description>
+    </hook>
+    <hook id="actionProductSearchProviderRunQueryAfter">
+      <name>actionProductSearchProviderRunQueryAfter</name>
+      <title>Runs an action after ProductSearchProviderInterface::RunQuery()</title>
+      <description>Required to return a previous state of an SQL query or/and to change a result of the SQL query after executing it</description>
+    </hook>
+    <hook id="actionFrontControllerSetVariables">
+      <name>actionFrontControllerSetVariables</name>
+      <title>Add variables in JavaScript object and Smarty templates</title>
+      <description>Add variables to javascript object that is available in Front Office. These are also available in smarty templates in modules.your_module_name.</description>
     </hook>
   </entities>
 </entity_hook>

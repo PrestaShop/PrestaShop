@@ -174,7 +174,9 @@ module.exports = class CommonPage {
     await page.click(selector, {clickCount: 3});
     // Delete text from input before typing
     await page.press(selector, 'Delete');
-    await page.type(selector, value);
+    if (value !== null) {
+      await page.type(selector, value.toString());
+    }
   }
 
   /**
@@ -233,7 +235,8 @@ module.exports = class CommonPage {
           value: option.value,
         })),
     );
-    options = await options.filter(option => textValue === option.textContent);
+
+    options = await options.filter(option => textValue === option.textContent.trim());
     if (options.length !== 0) {
       const elementValue = await options[0].value;
       await page.selectOption(selector, elementValue);
@@ -309,10 +312,15 @@ module.exports = class CommonPage {
    * @param isFloat
    * @return {Promise<*>}
    */
-  async sortArray(arrayToSort, isFloat = false) {
+  async sortArray(arrayToSort, isFloat = false, isDate = false) {
     if (isFloat) {
       return arrayToSort.sort((a, b) => a - b);
     }
+
+    if (isDate) {
+      return arrayToSort.sort((a, b) => new Date(a) - new Date(b));
+    }
+
     return arrayToSort.sort((a, b) => a.localeCompare(b));
   }
 
@@ -337,5 +345,44 @@ module.exports = class CommonPage {
    */
   uppercaseFirstCharacter(word) {
     return `${word[0].toUpperCase()}${word.slice(1)}`;
+  }
+
+  /**
+   * Upload file in input type=file selector
+   * @param page
+   * @param selector
+   * @param filePath
+   * @return {Promise<void>}
+   */
+  async uploadFile(page, selector, filePath) {
+    const input = await page.$(selector);
+    await input.setInputFiles(filePath);
+  }
+
+  /**
+   * Get a float price from text
+   * @param page
+   * @param selector
+   * @param timeout
+   * @returns {Promise<number>}
+   */
+  async getPriceFromText(page, selector, timeout = 0) {
+    await page.waitForTimeout(timeout);
+    const text = await this.getTextContent(page, selector);
+
+    const number = Number(text.replace(/[^0-9.-]+/g, ''));
+
+    return parseFloat(number);
+  }
+
+  /**
+   * Get parent element from selector
+   * @param page
+   * @param selector
+   * @return {Promise<ElementHandle>}
+   */
+  getParentElement(page, selector) {
+    /* eslint-env browser */
+    return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
   }
 };

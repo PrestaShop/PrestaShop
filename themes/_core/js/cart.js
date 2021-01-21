@@ -29,7 +29,7 @@ import {refreshCheckoutPage} from './common';
 $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.resp.cart;
-    let getCartViewUrl = $('.js-cart').data('refresh-url');
+    const getCartViewUrl = $('.js-cart').data('refresh-url');
 
     if (!getCartViewUrl) {
       return;
@@ -46,22 +46,38 @@ $(document).ready(() => {
 
     $.post(getCartViewUrl, requestData)
       .then((resp) => {
-        $(prestashop.selectors.cart.detailedTotals).replaceWith(resp.cart_detailed_totals);
-        $(prestashop.selectors.cart.summaryItemsSubtotal).replaceWith(resp.cart_summary_items_subtotal);
-        $(prestashop.selectors.cart.summarySubTotalsContainer).replaceWith(resp.cart_summary_subtotals_container);
-        $(prestashop.selectors.cart.summaryProducts).replaceWith(resp.cart_summary_products);
-        $(prestashop.selectors.cart.summaryTotals).replaceWith(resp.cart_summary_totals);
-        $(prestashop.selectors.cart.detailedActions).replaceWith(resp.cart_detailed_actions);
+        $(prestashop.selectors.cart.detailedTotals).replaceWith(
+          resp.cart_detailed_totals,
+        );
+        $(prestashop.selectors.cart.summaryItemsSubtotal).replaceWith(
+          resp.cart_summary_items_subtotal,
+        );
+        $(prestashop.selectors.cart.summarySubTotalsContainer).replaceWith(
+          resp.cart_summary_subtotals_container,
+        );
+        $(prestashop.selectors.cart.summaryProducts).replaceWith(
+          resp.cart_summary_products,
+        );
+        $(prestashop.selectors.cart.summaryTotals).replaceWith(
+          resp.cart_summary_totals,
+        );
+        $(prestashop.selectors.cart.detailedActions).replaceWith(
+          resp.cart_detailed_actions,
+        );
         $(prestashop.selectors.cart.voucher).replaceWith(resp.cart_voucher);
         $(prestashop.selectors.cart.overview).replaceWith(resp.cart_detailed);
-        $(prestashop.selectors.cart.summaryTop).replaceWith(resp.cart_summary_top);
+        $(prestashop.selectors.cart.summaryTop).replaceWith(
+          resp.cart_summary_top,
+        );
 
         $(prestashop.selectors.cart.productCustomizationId).val(0);
 
-        $(prestashop.selectors.cart.lineProductQuantity).each((index, input) => {
-          let $input = $(input);
-          $input.attr('value', $input.val());
-        });
+        $(prestashop.selectors.cart.lineProductQuantity).each(
+          (index, input) => {
+            const $input = $(input);
+            $input.attr('value', $input.val());
+          },
+        );
 
         if ($(prestashop.selectors.checkout.cartPaymentStepRefresh).length) {
           // we get the refresh flag : on payment step we need to refresh page to be sure
@@ -76,71 +92,70 @@ $(document).ready(() => {
       });
   });
 
-  let $body = $('body');
+  const $body = $('body');
 
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
-    if (
-      $(prestashop.selectors.quantityWanted).val() > $('[data-stock]').data('stock') &&
-      $('[data-allow-oosp]').data('allow-oosp').length === 0
-    ) {
-      $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
-    } else {
-      const $form = $(event.target.form);
-      const query = `${$form.serialize()}&add=1&action=update`;
-      const actionURL = $form.attr('action');
 
-      const isQuantityInputValid = ($input) => {
-        let validInput = true;
+    $('[data-button-action="add-to-cart"]').prop('disabled', true);
 
-        $input.each((index, input) => {
-          const $input = $(input);
-          const minimalValue = parseInt($input.attr('min'), 10);
-          if (minimalValue && $input.val() < minimalValue) {
-            onInvalidQuantity($input);
-            validInput = false;
-          }
-        });
+    const $form = $(event.target.form);
+    const query = `${$form.serialize()}&add=1&action=update`;
+    const actionURL = $form.attr('action');
 
-        return validInput;
-      };
+    const isQuantityInputValid = ($input) => {
+      let validInput = true;
 
-      let onInvalidQuantity = ($input) => {
-        $input
-          .parents(prestashop.selectors.product.addToCart)
-          .first()
-          .find(prestashop.selectors.product.minimalQuantity)
-          .addClass('error');
-        $input.parent().find('label').addClass('error');
-      };
+      $input.each((index, input) => {
+        const $currentInput = $(input);
+        const minimalValue = parseInt($currentInput.attr('min'), 10);
+        if (minimalValue && $currentInput.val() < minimalValue) {
+          onInvalidQuantity($currentInput);
+          validInput = false;
+        }
+      });
 
-      const $quantityInput = $form.find('input[min]');
-      if (!isQuantityInputValid($quantityInput)) {
-        onInvalidQuantity($quantityInput);
+      return validInput;
+    };
 
-        return;
-      }
+    let onInvalidQuantity = ($input) => {
+      $input
+        .parents(prestashop.selectors.product.addToCart)
+        .first()
+        .find(prestashop.selectors.product.minimalQuantity)
+        .addClass('error');
+      $input
+        .parent()
+        .find('label')
+        .addClass('error');
+    };
 
-      $.post(actionURL, query, null, 'json')
-        .then((resp) => {
-          prestashop.emit('updateCart', {
-            reason: {
-              idProduct: resp.id_product,
-              idProductAttribute: resp.id_product_attribute,
-              idCustomization: resp.id_customization,
-              linkAction: 'add-to-cart',
-              cart: resp.cart,
-            },
-            resp,
-          });
-        })
-        .fail((resp) => {
-          prestashop.emit('handleError', {
-            eventType: 'addProductToCart',
-            resp,
-          });
-        });
+    const $quantityInput = $form.find('input[min]');
+    if (!isQuantityInputValid($quantityInput)) {
+      onInvalidQuantity($quantityInput);
+
+      return;
     }
+
+    $.post(actionURL, query, null, 'json')
+      .then((resp) => {
+        prestashop.emit('updateCart', {
+          reason: {
+            idProduct: resp.id_product,
+            idProductAttribute: resp.id_product_attribute,
+            idCustomization: resp.id_customization,
+            linkAction: 'add-to-cart',
+            cart: resp.cart,
+          },
+          resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.emit('handleError', {
+          eventType: 'addProductToCart',
+          resp,
+        });
+      });
   });
 
   $body.on('submit', '[data-link-action="add-voucher"]', (event) => {
@@ -150,16 +165,23 @@ $(document).ready(() => {
     const getCartViewUrl = $addVoucherForm.attr('action');
 
     if ($addVoucherForm.find('[name=action]').length === 0) {
-      $addVoucherForm.append($('<input>', {type: 'hidden', name: 'ajax', value: 1}));
+      $addVoucherForm.append(
+        $('<input>', {type: 'hidden', name: 'ajax', value: 1}),
+      );
     }
     if ($addVoucherForm.find('[name=action]').length === 0) {
-      $addVoucherForm.append($('<input>', {type: 'hidden', name: 'action', value: 'update'}));
+      $addVoucherForm.append(
+        $('<input>', {type: 'hidden', name: 'action', value: 'update'}),
+      );
     }
 
     $.post(getCartViewUrl, $addVoucherForm.serialize(), null, 'json')
       .then((resp) => {
         if (resp.hasError) {
-          $('.js-error').show().find('.js-error-text').text(resp.errors[0]);
+          $('.js-error')
+            .show()
+            .find('.js-error-text')
+            .text(resp.errors[0]);
 
           return;
         }

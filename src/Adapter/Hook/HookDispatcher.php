@@ -52,7 +52,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     private $renderingContent = [];
 
     /**
-     * @var bool
+     * @var bool|callable
      */
     private $propagationStoppedCalledBy = false;
 
@@ -140,10 +140,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
             if ($event instanceof RenderingHookEvent) {
                 $listenerName = $event->popListener() ?: $listener[1];
 
-                $eventContent = $event->popContent();
-                $this->renderingContent[$listenerName] = (!is_string($eventContent) || strlen($eventContent) > strlen($obContent))
-                    ? $eventContent
-                    : $obContent;
+                $this->renderingContent[$listenerName] = $event->popContent();
             }
             if ($event->isPropagationStopped()) {
                 $this->propagationStoppedCalledBy = $listener;
@@ -158,7 +155,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     /**
      * Creates a HookEvent, sets its parameters, and dispatches it.
      *
-     * @param $eventName string The hook name
+     * @param string $eventName The hook name
      * @param array $parameters Hook parameters
      *
      * @return Event the event that has been passed to each listener
@@ -179,7 +176,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      * @param string $eventName the hook name
      * @param array $parameters Hook parameters
      *
-     * @return Event The event that has been passed to each listener. Contains the responses.
+     * @return RenderingHookEvent The event that has been passed to each listener. Contains the responses.
      *
      * @throws \Exception
      */
@@ -188,7 +185,10 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         $event = new RenderingHookEvent();
         $event->setHookParameters($parameters);
 
-        return $this->dispatch($eventName, $event);
+        /** @var RenderingHookEvent $eventDispatched */
+        $eventDispatched = $this->dispatch($eventName, $event);
+
+        return $eventDispatched;
     }
 
     /**

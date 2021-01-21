@@ -260,12 +260,12 @@ class AdminStoresControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                     'hint' => $this->trans('Whether or not to display this store.', [], 'Admin.Shopparameters.Help'),
@@ -333,7 +333,7 @@ class AdminStoresControllerCore extends AdminController
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
-                if (!in_array($kp, ['checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'])) {
+                if (is_string($vp)) {
                     $_POST[$kp] = trim($vp);
                 }
                 if ('hours' === $kp) {

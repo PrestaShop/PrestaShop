@@ -43,6 +43,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Profile;
+use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,6 +56,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ModuleController extends ModuleAbstractController
 {
     const CONTROLLER_NAME = 'ADMINMODULESSF';
+
+    const MAX_MODULES_DISPLAYED = 6;
 
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
@@ -87,8 +90,6 @@ class ModuleController extends ModuleAbstractController
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -127,6 +128,7 @@ class ModuleController extends ModuleAbstractController
         return $this->render(
             '@PrestaShop/Admin/Module/manage.html.twig',
             [
+                'maxModulesDisplayed' => self::MAX_MODULES_DISPLAYED,
                 'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
@@ -262,7 +264,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
+     * @param int $moduleId
      *
      * @return Response
      */
@@ -385,10 +387,6 @@ class ModuleController extends ModuleAbstractController
         $moduleManager->setActionParams($request->request->get('actionParams', []));
         $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        // Get accessed module object
-        $moduleAccessed = $moduleRepository->getModule($module);
-        // Get accessed module DB Id
-        $moduleAccessedId = (int) $moduleAccessed->database->get('id');
         $response = [$module => []];
 
         if (!method_exists($moduleManager, $action)) {
@@ -478,6 +476,10 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
 
+            // Get accessed module object
+            $moduleAccessed = $moduleRepository->getModule($module);
+            // Get accessed module DB Id
+            $moduleAccessedId = (int) $moduleAccessed->database->get('id');
             $logger = $this->container->get('logger');
             $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id' => $moduleAccessedId]);
         }
@@ -528,11 +530,27 @@ class ModuleController extends ModuleAbstractController
 
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleZipManager = $this->get('prestashop.module.zip.manager');
+        $serverParams = new ServerParams();
+        $moduleName = '';
 
         try {
+            if ($serverParams->hasPostMaxSizeBeenExceeded()) {
+                throw new Exception($this->trans(
+                    'The uploaded file exceeds the post_max_size directive in php.ini',
+                    'Admin.Notifications.Error'
+                ));
+            }
+
             $fileUploaded = $request->files->get('file_uploaded');
             $constraints = [
-                new Assert\NotNull(),
+                new Assert\NotNull(
+                    [
+                        'message' => $this->trans(
+                            'The file is missing.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]
+                ),
                 new Assert\File(
                     [
                         'maxSize' => ini_get('upload_max_filesize'),
@@ -770,7 +788,7 @@ class ModuleController extends ModuleAbstractController
      *
      * @param array $pageVoter
      *
-     * @return void|JsonResponse
+     * @return JsonResponse|null
      */
     private function checkPermissions(array $pageVoter)
     {
@@ -786,12 +804,14 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**
      * @param string $pageVoter
      *
-     * @return JsonResponse
+     * @return JsonResponse|null
      */
     private function checkPermission($pageVoter)
     {
@@ -803,6 +823,8 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**
@@ -814,8 +836,9 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /** @var CategoriesProvider */
-        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+        /** @var CategoriesProvider $categoriesProvider */
+        $categoriesProvider = $this->get('prestashop.categories_provider');
+        $categories = $categoriesProvider->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {
             $collection = AddonsCollection::createFrom($category->modules);

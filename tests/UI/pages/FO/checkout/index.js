@@ -12,6 +12,8 @@ class Checkout extends FOBasePage {
       + `[data-module-name='${name}']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
+    this.termsOfServiceLink = '#cta-terms-and-conditions-0';
+    this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -44,7 +46,11 @@ class Checkout extends FOBasePage {
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     // Shipping method step
     this.deliveryStepSection = '#checkout-delivery-step';
+    this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = id => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
+    this.deliveryOptionNameSpan = id => `${this.deliveryOptionLabel(id)} span.carrier-name`;
+    this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
+    this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
@@ -99,6 +105,59 @@ class Checkout extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethod));
     await this.setValue(page, this.deliveryMessage, comment);
     return this.goToPaymentStep(page);
+  }
+
+  /**
+   * Is shipping method exist
+   * @param page
+   * @param shippingMethod
+   * @returns {Promise<boolean>}
+   */
+  isShippingMethodVisible(page, shippingMethod) {
+    return this.elementVisible(page, this.deliveryOptionLabel(shippingMethod), 2000);
+  }
+
+  /**
+   * Get selected shipping method name
+   * @param page
+   * @return {Promise<string>}
+   */
+  async getSelectedShippingMethod(page) {
+    // Get checkbox radios
+    const optionsRadiosElement = await page.$$(this.deliveryOptionsRadios);
+    let selectedOptionId = 0;
+
+    // Get id of selected option
+    for (let position = 1; position <= optionsRadiosElement.length; position++) {
+      if (await (await optionsRadiosElement[position - 1].getProperty('checked')).jsonValue()) {
+        selectedOptionId = position;
+        break;
+      }
+    }
+
+    // Return text of the selected option
+    if (selectedOptionId !== 0) {
+      return this.getTextContent(page, this.deliveryOptionNameSpan(selectedOptionId));
+    }
+    throw new Error('No selected option was found');
+  }
+
+  /**
+   * Get all carriers prices
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersPrices(page) {
+    return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
+  }
+
+  /**
+   * Get all carriers names
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersNames(page) {
+    return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
   }
 
   /**
@@ -184,6 +243,16 @@ class Checkout extends FOBasePage {
    */
   isConditionToApproveCheckboxVisible(page) {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
+  }
+
+  /**
+   * Get terms of service page title
+   * @param page
+   * @returns {Promise<text>}
+   */
+  async getTermsOfServicePageTitle(page) {
+    await page.click(this.termsOfServiceLink);
+    return this.getTextContent(page, this.termsOfServiceModalDiv);
   }
 
   /**

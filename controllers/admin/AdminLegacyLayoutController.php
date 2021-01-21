@@ -101,6 +101,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
     }
 
     /**
+     * This helps avoiding handling legacy processes when in Symfony Controllers.
+     * Otherwise when using POST action to render form you sometimes get an exception.
+     */
+    public function initProcess()
+    {
+    }
+
+    /**
      * @param bool $isNewTheme
      */
     public function setMedia($isNewTheme = false)
@@ -143,7 +151,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $isProductPage = ('AdminProducts' === $this->controller_name);
 
         $vars = [
-            'viewport_scale' => $isProductPage ? '0.75' : '1',
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
@@ -189,7 +196,5 @@ class AdminLegacyLayoutControllerCore extends AdminController
         parent::display();
         $this->outPutHtml = ob_get_contents();
         ob_end_clean();
-
-        $this->outPutHtml;
     }
 }

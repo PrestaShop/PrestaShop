@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data;
 
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
+use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 
 /**
  * Interface GridDataInterface exposes contract for final grid data.
@@ -36,7 +36,7 @@ interface GridDataInterface
     /**
      * Returns final grid rows ready for rendering.
      *
-     * @return RecordCollection
+     * @return RecordCollectionInterface
      */
     public function getRecords();
 

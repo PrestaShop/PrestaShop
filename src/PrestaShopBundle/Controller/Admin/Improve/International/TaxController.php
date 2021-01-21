@@ -67,11 +67,10 @@ class TaxController extends FrameworkBundleAdminController
 
         $taxGridFactory = $this->get('prestashop.core.grid.factory.tax');
         $taxGrid = $taxGridFactory->getGrid($filters);
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $taxOptionsForm = $this->getTaxOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/index.html.twig', [
-            'taxGrid' => $gridPresenter->present($taxGrid),
+            'taxGrid' => $this->presentGrid($taxGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'taxOptionsForm' => $taxOptionsForm->createView(),
@@ -114,6 +113,8 @@ class TaxController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Provides filters functionality.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")

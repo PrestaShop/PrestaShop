@@ -51,7 +51,6 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
     const GRID_ID = 'attribute_group';
 
     use BulkDeleteActionTrait;
-
     use DeleteActionTrait;
 
     /**

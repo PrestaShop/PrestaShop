@@ -115,11 +115,11 @@ class OrderCarrierCore extends ObjectModel
             } else {
                 //if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
-                $img_url = $link->getImageLink($link_rewrite, $img['id_image']);
+                $img_url = !empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
             }
             $prod_url = $prod_obj->getLink();
 
-            $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product">';
+            $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="https://schema.org/Product">';
             $metadata .= "\n" . '   <meta itemprop="name" content="' . htmlspecialchars($product['product_name']) . '"/>';
             $metadata .= "\n" . '   <link itemprop="image" href="' . $img_url . '"/>';
             $metadata .= "\n" . '   <link itemprop="url" href="' . $prod_url . '"/>';

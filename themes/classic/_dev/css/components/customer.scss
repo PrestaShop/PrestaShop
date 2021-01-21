@@ -188,9 +188,9 @@
 
 /*** Order details page ***/
 .page-order-detail {
-  font-size: 0.875rem;
-  color: $gray;
-
+  #content {
+    font-size: 0.875rem;
+  }
   .box {
     @include customer-area-base-box();
     margin-bottom: 1rem;
@@ -233,6 +233,7 @@
 
   .addresses {
     margin: 0 -0.9375rem;
+
     h4 {
       font-size: $base-font-size;
       font-weight: 700;

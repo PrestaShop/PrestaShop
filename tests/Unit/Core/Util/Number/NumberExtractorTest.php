@@ -30,7 +30,7 @@ namespace Tests\Unit\Core\Util\Number;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -55,7 +55,7 @@ class NumberExtractorTest extends TestCase
      * @param $path
      * @param $expectedResult
      */
-    public function testItExtractsNumberFromArrayOrObject($resource, string $path, Number $expectedResult)
+    public function testItExtractsNumberFromArrayOrObject($resource, string $path, DecimalNumber $expectedResult)
     {
         $actualResult = $this->numberExtractor->extract($resource, $path);
 
@@ -86,27 +86,27 @@ class NumberExtractorTest extends TestCase
         yield [
             ['test' => 15],
             '[test]',
-            new Number('15'),
+            new DecimalNumber('15'),
         ];
         yield [
             ['test' => ['hello' => '13']],
             '[test][hello]',
-            new Number('13'),
+            new DecimalNumber('13'),
         ];
         yield [
             ['test' => ['hello' => [1 => 17.3]]],
             '[test][hello][1]',
-            new Number('17.3'),
+            new DecimalNumber('17.3'),
         ];
         yield [
             $fakeClass,
             'test',
-            new Number('17'),
+            new DecimalNumber('17'),
         ];
         yield [
             $fakeClass,
             'obj2.test2',
-            new Number('19.5'),
+            new DecimalNumber('19.5'),
         ];
     }
 

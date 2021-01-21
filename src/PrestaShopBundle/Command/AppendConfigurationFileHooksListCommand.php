@@ -64,7 +64,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             $io->warning('Dev or test environment is required to fully list all the hooks');
 
-            return;
+            return 1;
         }
 
         $hookNames = $this->getHookNames();
@@ -80,10 +80,12 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
             $io->title('Hooks added to configuration file');
             $io->note(sprintf('Total hooks added: %s', count($addedHooks)));
 
-            return;
+            return 0;
         }
 
         $io->note('No new hooks have been added to configuration file');
+
+        return 0;
     }
 
     /**

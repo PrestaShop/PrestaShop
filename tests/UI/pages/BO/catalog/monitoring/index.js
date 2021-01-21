@@ -35,7 +35,7 @@ class Monitoring extends BOBasePage {
     this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
     } a.grid-delete-row-link`;
     this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
-    this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
+    this.deleteModeInput = position => `#delete_categories_delete_mode_${position} + i`;
     this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
     this.submitDeleteCategoryButton = `${this.deleteModeCategoryModal} button.js-submit-delete-categories`;
     // Sort Selectors
@@ -153,7 +153,7 @@ class Monitoring extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(table));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Categories methods */
@@ -199,17 +199,17 @@ class Monitoring extends BOBasePage {
     // choose deletion mode
     await page.click(this.deleteModeInput(deletionModePosition));
     await this.clickAndWaitForNavigation(page, this.submitDeleteCategoryButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
-   * Get toggle column value for a row
+   * Get status
    * @param page
    * @param table
    * @param row
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, table, row = 1) {
+  async getStatus(page, table, row = 1) {
     return this.elementVisible(page, this.enableColumnValidIcon(table, row), 100);
   }
 
@@ -227,7 +227,7 @@ class Monitoring extends BOBasePage {
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.tableColumn(table, i, column));
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, table, i).toString();
+        rowContent = await this.getStatus(page, table, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
@@ -245,12 +245,14 @@ class Monitoring extends BOBasePage {
   async sortTable(page, table, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(table, sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(table, sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 

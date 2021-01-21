@@ -1,0 +1,45 @@
+name: UI tests code checks
+
+on:
+  pull_request:
+      types: [opened,edited,reopened,synchronize,labeled]
+
+defaults:
+  run:
+      working-directory: ./tests/UI/
+
+jobs:
+
+  ESLint:
+    runs-on: ubuntu-latest
+    name: ESLint
+    if: contains(github.event.pull_request.labels.*.name, 'TE')
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies in UI tests directory
+        run: npm install
+
+      - name: Check eslint errors
+        run: npm run lint
+
+  Steps-identifiers:
+    runs-on: ubuntu-latest
+    name: Checking doubles in steps identifiers
+    if: contains(github.event.pull_request.labels.*.name, 'TE')
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies in UI tests directory
+        run: npm install
+
+      - name: Generate mocha reports with failed steps
+        run: GENERATE_FAILED_STEPS=true npm run all-tests
+        continue-on-error: true
+
+      - name: Checking doubles in steps identifiers
+        run: npm run step-identifiers-checker

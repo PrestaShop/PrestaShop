@@ -31,17 +31,18 @@ class Taxes extends BOBasePage {
     this.searchFilterButton = `${this.taxesGridTable} .grid-search-button`;
     this.taxesGridRow = row => `${this.taxesGridTable} tbody tr:nth-child(${row})`;
     this.taxesGridColumn = (row, column) => `${this.taxesGridRow(row)} td.column-${column}`;
+    this.taxesGridStatusColumn = row => `${this.taxesGridColumn(row, 'active')} .ps-switch`;
+    this.taxesGridStatusColumnToggleInput = row => `${this.taxesGridStatusColumn(row)} input`;
     this.taxesGridActionsColumn = row => this.taxesGridColumn(row, 'actions');
     this.taxesGridColumnEditLink = row => `${this.taxesGridActionsColumn(row)} a.grid-edit-row-link`;
     this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
     this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a.grid-delete-row-link`;
-    this.toggleColumnValidIcon = (row, column) => `${this.taxesGridColumn(row, column)} i.grid-toggler-icon-valid`;
 
     // Form Taxes Options
-    this.enabledTaxSwitchLabel = id => `label[for='form_enable_tax_${id}']`;
-    this.displayTaxInCartSwitchLabel = id => `label[for='form_display_tax_in_cart_${id}']`;
+    this.taxStatusToggleInput = toggle => `#form_enable_tax_${toggle}`;
+    this.displayTaxInCartToggleInput = toggle => `#form_display_tax_in_cart_${toggle}`;
     this.taxAddressTypeSelect = '#form_tax_address_type';
-    this.useEcoTaxSwitchLabel = id => `label[for='form_use_eco_tax_${id}']`;
+    this.useEcoTaxToggleInput = toggle => `#form_use_eco_tax_${toggle}`;
     this.ecoTaxSelect = '#form_eco_tax_rule_group';
     this.saveTaxOptionButton = '#form-tax-options-save-button';
 
@@ -119,11 +120,18 @@ class Taxes extends BOBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @param column
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row, column) {
-    return this.elementVisible(page, this.toggleColumnValidIcon(row, column), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.taxesGridStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -133,12 +141,12 @@ class Taxes extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.taxesGridColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row, 'active') !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.taxesGridColumn(row, 'active'));
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.taxesGridStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -209,7 +217,7 @@ class Taxes extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteTaxes(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -218,7 +226,7 @@ class Taxes extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeTaxesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllLabel, el => el.click()),
@@ -231,7 +239,7 @@ class Taxes extends BOBasePage {
     ]);
     // Click to change status
     await this.clickAndWaitForNavigation(page, enable ? this.enableSelectionButton : this.disableSelectionButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -256,7 +264,7 @@ class Taxes extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteTaxes(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -275,28 +283,22 @@ class Taxes extends BOBasePage {
    * @returns {Promise<string>}
    */
   async updateTaxOption(page, taxOptionData) {
+    await page.check(this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
     if (taxOptionData.enabled) {
-      await page.click(this.enabledTaxSwitchLabel(1));
-      if (taxOptionData.displayInShoppingCart) {
-        await page.click(this.displayTaxInCartSwitchLabel(1));
-      } else {
-        await page.click(this.displayTaxInCartSwitchLabel(0));
-      }
-    } else {
-      await page.click(this.enabledTaxSwitchLabel(0));
+      await page.check(this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));
     }
+
     await this.selectByVisibleText(page, this.taxAddressTypeSelect, taxOptionData.basedOn);
-    if (taxOptionData.useEcoTax) {
-      await page.click(this.useEcoTaxSwitchLabel(1));
-      if (taxOptionData.ecoTax !== undefined) {
-        await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
-      }
-    } else {
-      await page.click(this.useEcoTaxSwitchLabel(0));
+
+    await page.check(this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
+
+    if (taxOptionData.useEcoTax && taxOptionData.ecoTax !== undefined) {
+      await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
     }
+
     // Click on save tax Option
     await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -319,12 +321,14 @@ class Taxes extends BOBasePage {
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /* Pagination methods */

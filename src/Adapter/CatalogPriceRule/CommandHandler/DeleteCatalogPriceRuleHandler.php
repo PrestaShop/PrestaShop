@@ -44,7 +44,7 @@ final class DeleteCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandle
         $catalogPriceRuleId = $command->getCatalogPriceRuleId();
         $specificPriceRule = $this->getSpecificPriceRule($catalogPriceRuleId);
 
-        if (null === $this->deleteSpecificPriceRule($specificPriceRule)) {
+        if (!$this->deleteSpecificPriceRule($specificPriceRule)) {
             throw new CannotDeleteCatalogPriceRuleException(sprintf('Cannot delete SpecificPriceRule object with id "%s".', $catalogPriceRuleId->getValue()), CannotDeleteCatalogPriceRuleException::FAILED_DELETE);
         }
     }

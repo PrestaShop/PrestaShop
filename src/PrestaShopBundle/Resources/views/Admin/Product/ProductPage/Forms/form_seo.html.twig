@@ -73,7 +73,7 @@
     <div class="col-md-9">
       <div class="alert alert-info" role="alert">
         <p class="alert-text">
-          {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
+          {% if configuration('PS_REWRITING_SETTINGS') == 0 %}
             <strong>{{ 'Friendly URLs are currently disabled.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
             {{ 'To enable it, go to [1]SEO and URLs[/1]'|trans({}, 'Admin.Catalog.Notification')|replace({'[1]': '<a href="' ~ getAdminLink("AdminMeta") ~ '#meta_fieldset_general">', '[/1]': '</a>'})|raw }}
           {% else %}
@@ -82,7 +82,7 @@
           {% endif %}
         </p>
         <p class="alert-text">
-          {% if 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 %}
+          {% if configuration('PS_FORCE_FRIENDLY_PRODUCT') == 1 %}
             <strong>{{ 'The "Force update of friendly URL" option is currently enabled.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
             {# "It" refers to the option "Force update of friendly URL" #}
             {{ 'To disable it, go to [1]Product Settings[/1]'|trans({}, 'Admin.Catalog.Notification')|replace({'[1]': '<a href="' ~ getAdminLink("AdminPPreferences") ~ '#configuration_fieldset_products">', '[/1]': '</a>'})|raw }}

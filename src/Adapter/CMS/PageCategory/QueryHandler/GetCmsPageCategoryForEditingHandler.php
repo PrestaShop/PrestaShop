@@ -55,20 +55,20 @@ final class GetCmsPageCategoryForEditingHandler implements GetCmsPageCategoryFor
                 throw new CmsPageCategoryNotFoundException(sprintf('Cms category object with id "%s" has not been found', $query->getCmsPageCategoryId()->getValue()));
             }
 
-            $shopIds = is_array($cmsPageCategory->getAssociatedShops()) ? $cmsPageCategory->getAssociatedShops() : [];
+            $shopIds = $cmsPageCategory->getAssociatedShops();
         } catch (PrestaShopException $exception) {
             throw new CmsPageCategoryException(sprintf('An error occurred when retrieving cms page category data with id %s', $query->getCmsPageCategoryId()->getValue()), 0, $exception);
         }
 
         return new EditableCmsPageCategory(
-            is_array($cmsPageCategory->name) ? $cmsPageCategory->name : [],
+            $cmsPageCategory->name,
             $cmsPageCategory->active,
             (int) $cmsPageCategory->id_parent,
-            is_array($cmsPageCategory->description) ? $cmsPageCategory->description : [],
-            is_array($cmsPageCategory->meta_description) ? $cmsPageCategory->meta_description : [],
-            is_array($cmsPageCategory->meta_keywords) ? $cmsPageCategory->meta_keywords : [],
-            is_array($cmsPageCategory->meta_title) ? $cmsPageCategory->meta_title : [],
-            is_array($cmsPageCategory->link_rewrite) ? $cmsPageCategory->link_rewrite : [],
+            $cmsPageCategory->description,
+            $cmsPageCategory->meta_description,
+            $cmsPageCategory->meta_keywords,
+            $cmsPageCategory->meta_title,
+            $cmsPageCategory->link_rewrite,
             $shopIds
         );
     }

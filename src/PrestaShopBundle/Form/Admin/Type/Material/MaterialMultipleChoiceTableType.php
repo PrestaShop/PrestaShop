@@ -74,6 +74,8 @@ class MaterialMultipleChoiceTableType extends AbstractType
         $view->vars['choices'] = $options['choices'];
         $view->vars['scrollable'] = $options['scrollable'];
         $view->vars['headers_to_disable'] = $options['headers_to_disable'];
+        $view->vars['headers_fixed'] = $options['headers_fixed'];
+        $view->vars['table_label'] = $options['table_label'];
     }
 
     /**
@@ -108,6 +110,8 @@ class MaterialMultipleChoiceTableType extends AbstractType
             ->setDefaults([
                 'scrollable' => true,
                 'headers_to_disable' => [],
+                'headers_fixed' => false,
+                'table_label' => false,
             ])
         ;
 
@@ -115,6 +119,8 @@ class MaterialMultipleChoiceTableType extends AbstractType
         $resolver->setAllowedTypes('multiple_choices', 'array');
         $resolver->setAllowedTypes('scrollable', 'bool');
         $resolver->setAllowedTypes('headers_to_disable', 'array');
+        $resolver->setAllowedTypes('headers_fixed', 'bool');
+        $resolver->setAllowedTypes('table_label', ['bool', 'string']);
     }
 
     /**

@@ -7,7 +7,7 @@ module.exports = class Product {
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;
     this.description = productToCreate.description === undefined ? faker.lorem.sentence() : productToCreate.description;
-    this.reference = faker.random.alphaNumeric(7);
+    this.reference = productToCreate.reference || faker.random.alphaNumeric(7);
     this.quantity = productToCreate.quantity === undefined
       ? faker.random.number({min: 1, max: 9})
       : productToCreate.quantity;
@@ -15,6 +15,10 @@ module.exports = class Product {
     this.combinations = productToCreate.combinations || {
       Color: ['White', 'Black'],
       Size: ['S', 'M'],
+    };
+    this.pack = productToCreate.pack || {
+      demo_1: faker.random.number({min: 10, max: 100}),
+      demo_2: faker.random.number({min: 10, max: 100}),
     };
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
     this.specificPrice = productToCreate.specificPrice || {

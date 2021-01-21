@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Core\Addon;
+namespace LegacyTests\Unit\Core\Addon\Theme;
 
 use LegacyTests\TestCase\FakeConfiguration;
 use Phake;

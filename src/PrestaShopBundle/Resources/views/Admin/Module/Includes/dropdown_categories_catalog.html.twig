@@ -32,25 +32,22 @@
       <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
     </div>
 
-    <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
-      <ul class="items-list js-items-list">
-        <li class="module-category-reset">
-          <a class="dropdown-item" href="#">
-            {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
-          </a>
-        </li>
+    <div class="ps-dropdown-menu dropdown-menu module-category-selector items-list js-items-list" aria-labelledby="{{refMenu}}">
+        <a class="dropdown-item module-category-reset">
+          {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
+        </a>
+
         {% for subMenu in menu.subMenu %}
-          <li class="module-category-menu"
+          <a 
+            class="dropdown-item" 
+            class="module-category-menu"
             {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
             data-category-ref="{{subMenu.refMenu}}"
             data-category-display-name="{{subMenu.name}}"
           >
-            <a  class="dropdown-item" href="#">
-              {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
-            </a>
-          </li>
+            {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
+          </a>
         {% endfor %}
-      </ul>
     </div>
   {% endfor %}
 </div>

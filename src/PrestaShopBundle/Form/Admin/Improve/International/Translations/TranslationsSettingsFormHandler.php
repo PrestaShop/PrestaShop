@@ -48,7 +48,7 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
     protected $hookName;
 
     /**
-     * @var array the list of Form Types
+     * @var string
      */
     protected $form;
 

@@ -86,7 +86,7 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $foldersRemoveList = [];
+    protected $foldersRemoveList = ['.docker'];
 
     /**
      * Pattern of files or directories to remove.
@@ -507,7 +507,7 @@ class ReleaseCreator
     {
         $this->consoleWriter->displayText("Running composer install...", ConsoleWriter::COLOR_YELLOW);
         $argProjectPath = escapeshellarg($this->tempProjectPath);
-        $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
+        $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
         if ($returnCode !== 0) {

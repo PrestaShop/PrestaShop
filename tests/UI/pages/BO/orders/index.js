@@ -231,7 +231,7 @@ class Order extends BOBasePage {
       page,
       this.updateStatusInTableDropdownChoice(row, status.id),
     );
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -277,6 +277,17 @@ class Order extends BOBasePage {
     );
   }
 
+  /**
+   * Get order total price
+   * @param page
+   * @param row
+   * @return {number}
+   */
+  async getOrderATIPrice(page, row) {
+    // Delete the first character (currency symbol) before getting price ATI
+    return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
+  }
+
 
   /* Bulk actions methods */
 
@@ -314,7 +325,7 @@ class Order extends BOBasePage {
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
     await this.clickAndWaitForNavigation(page, this.updateOrdersStatusModalButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 
@@ -331,12 +342,12 @@ class Order extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
 
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 

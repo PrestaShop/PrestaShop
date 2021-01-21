@@ -489,9 +489,6 @@ class MailCore extends ObjectModel
                 $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
-            $templateVars = array_map(['Tools', 'htmlentitiesDecodeUTF8'], $templateVars);
-            $templateVars = array_map(['Tools', 'stripslashes'], $templateVars);
-
             if (false !== Configuration::get('PS_LOGO_MAIL') &&
                 file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
             ) {
@@ -540,6 +537,14 @@ class MailCore extends ObjectModel
             );
             $templateVars['{history_url}'] = Context::getContext()->link->getPageLink(
                 'history',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
+            $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
+                'order-slip',
                 true,
                 $idLang,
                 null,

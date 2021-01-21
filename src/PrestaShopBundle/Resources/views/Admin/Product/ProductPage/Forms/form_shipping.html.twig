@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set dimension_unit, weight_unit = 'PS_DIMENSION_UNIT'|configuration, 'PS_WEIGHT_UNIT'|configuration %}
+{% set dimension_unit, weight_unit = configuration('PS_DIMENSION_UNIT'), configuration('PS_WEIGHT_UNIT') %}
 
 <div class="col-md-12 pb-1">
   <h2>{{ 'Package dimension'|trans({}, 'Admin.Catalog.Feature') }}</h2>

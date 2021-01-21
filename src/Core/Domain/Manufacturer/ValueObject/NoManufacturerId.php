@@ -38,15 +38,15 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
  *
  * This picture might help understanding the situation: https://pbs.twimg.com/media/DusCOfyXcAA9_F7.jpg
  */
-class NoManufacturerId extends ManufacturerId
+class NoManufacturerId implements ManufacturerIdInterface
 {
     const NO_MANUFACTURER_ID = 0;
 
     /**
-     * This class is used to remove association with manufacturer
+     * {@inheritdoc}
      */
-    public function __construct()
+    public function getValue()
     {
-        $this->id = static::NO_MANUFACTURER_ID;
+        return static::NO_MANUFACTURER_ID;
     }
 }

@@ -42,6 +42,7 @@ class Install extends CommonPage {
 
     // Selectors for step 5
     this.fifthStepPageTitle = '#dbPart h2';
+    this.dbServerInput = '#dbServer';
     this.dbLoginInput = '#dbLogin';
     this.dbNameInput = '#dbName';
     this.dbPasswordInput = '#dbPassword';
@@ -117,7 +118,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async fillInformationForm(page) {
-    await page.type(this.shopNameInput, global.INSTALL.SHOPNAME);
+    await page.type(this.shopNameInput, global.INSTALL.SHOP_NAME);
     await page.selectOption(this.countrySelect, global.INSTALL.COUNTRY);
     await page.type(this.firstNameInput, global.BO.FIRSTNAME);
     await page.type(this.lastNameInput, global.BO.LASTNAME);
@@ -132,6 +133,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async fillDatabaseForm(page) {
+    await this.setValue(page, this.dbServerInput, global.INSTALL.DB_SERVER);
     await this.setValue(page, this.dbNameInput, global.INSTALL.DB_NAME);
     await this.setValue(page, this.dbLoginInput, global.INSTALL.DB_USER);
     await this.setValue(page, this.dbPasswordInput, global.INSTALL.DB_PASSWD);

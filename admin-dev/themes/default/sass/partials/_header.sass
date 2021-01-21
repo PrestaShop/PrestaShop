@@ -48,7 +48,7 @@ $search-border-color: #bbcdd2
 			right: 0.5rem
 
 		// hide on very small screens
-		&.hide-mobile-sm
+		&.hide-mobile-sm, #gamification_notif
 			@media (max-width: breakpoint-max('sm'))
 				display: none
 
@@ -101,11 +101,6 @@ $search-border-color: #bbcdd2
 			font-size: 20px
 			margin-top: -4px
 
-		// hide label if width <= tablet landscape size
-		@media (max-width: breakpoint-max('lg'))
-			span
-				display: none
-
 		@media (max-width: $screen-sm-max)
 			padding:
 				left: 10px !important
@@ -126,7 +121,8 @@ $search-border-color: #bbcdd2
 			color: $header-text-color !important
 			&:hover, &:focus
 				color: $brand-info !important
-
+				i
+					color: $brand-info
 		li
 			list-style: none
 			display: block
@@ -162,7 +158,7 @@ $search-border-color: #bbcdd2
 		white-space: nowrap
 		overflow-x: hidden
 		i
-			color: $brand-info
+			color: $medium-gray
 		@media (max-width: 320px)
 			max-width: 140px
 
@@ -173,13 +169,24 @@ $search-border-color: #bbcdd2
 				.dropdown-toggle
 					background: none !important
 					color: $brand-info !important
+
 			.material-icons
-				color: $brand-info
+				color: $medium-gray
 				top: -1px
 			.dropdown-toggle
 				display: inline-block !important
 				color: $header-text-color !important
 				text-decoration: none !important
+				@media (max-width: breakpoint-max('lg'))
+					font-size: 0
+					width: 25px
+					height: 25px
+					margin-left: -25px
+					top: -10px
+					position: relative
+					z-index: 50
+					i
+						display: none
 				&:hover
 					color: $brand-info !important
 				i
@@ -196,11 +203,9 @@ $search-border-color: #bbcdd2
 		padding: 0
 		margin-right: 0
 		margin-bottom: 0
+		margin-left: 0
 		display: flex
 		align-items: center
-
-		.mobile &
-			display: none
 
 		#employee_infos
 			list-style-type: none
@@ -219,14 +224,6 @@ $search-border-color: #bbcdd2
 						width: 3.8rem
 						height: 3.8rem
 
-				@media (max-width: $screen-sm)
-					li
-						color: white
-						font-size: 1.2em
-						text-transform: uppercase
-						i
-							font-size: 1.3em
-							color: $brand-primary
 				.employee-wrapper
 					&-avatar
 						float: left

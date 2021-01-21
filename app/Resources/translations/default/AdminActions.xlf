@@ -390,7 +390,7 @@
       <trans-unit id="805770b4d5275340eea669259671e8ed">
         <source>Display email address</source>
         <target>Display email address</target>
-        <note>Line: 142</note>
+        <note>Line: 145</note>
       </trans-unit>
     </body>
   </file>
@@ -631,7 +631,7 @@
       <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
         <source>New product</source>
         <target>New product</target>
-        <note>Line: 372</note>
+        <note>Line: 368</note>
       </trans-unit>
     </body>
   </file>
@@ -1088,7 +1088,7 @@
       <trans-unit id="1dda0a32a88a31cac7f6b103ff13e2ac">
         <source>View pack content</source>
         <target>View pack content</target>
-        <note>Line: 173</note>
+        <note>Line: 175</note>
       </trans-unit>
     </body>
   </file>

@@ -26,9 +26,9 @@
 {% trans_default_domain "Admin.Design.Feature" %}
 
 {% block content %}
-  <div class="row">
+  <div class="row m-0">
     {% if not canMove %}
-      <p class="alert alert-warning">
+      <p class="alert alert-warning alert-can-move">
         {{ 'If you want to order/move the following data, please select a shop from the shop list.' | trans({}, 'Admin.Design.Notification') }}
       </p>
     {% endif %}
@@ -81,11 +81,21 @@
           </form>
         </div>
 
-        <form id="module-positions-form" method="post" action="{{ path('admin_modules_positions_unhook') }}" data-update-url="{{ path('api_improve_design_positions_update') }}">
+        <form id="module-positions-form" method="post" action="{{ path('admin_modules_positions_unhook') }}" data-update-url="{{ path('api_improve_design_positions_update') }}" data-togglestatus-url="{{ path('admin_modules_positions_toggle_status') }}">
           {% for hook in hooks %}
             <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}"{% if not hook['position'] %} style="display:none;"{% endif %}>
               <a name="{{ hook['name'] }}"></a>
               <header class="hook-panel-header">
+                <span class="hook-status">
+                   <input
+                      class="switch-input-md hook-switch-action"
+                      data-toggle="switch"
+                      data-hook-id="{{ hook['id_hook'] }}"
+                      type="checkbox"
+                      value="{{ hook['active'] }}"
+                      {{ hook['active'] ? 'checked="checked"' : '' }}
+                    />
+                </span>
                 <span class="hook-name">{{ hook['name'] }}</span>
                 <label class="badge badge-pill float-right">
                   {% if hook['modules_count'] and canMove %}
@@ -103,7 +113,7 @@
               </header>
 
               {% if hook['modules_count'] %}
-                <section class="module-list">
+                <section class="module-list{% if not hook['active'] %}-disabled{% endif %}">
                   <ul class="list-unstyled{% if hook['modules_count'] > 1 %} sortable{% endif %}">
                     {% for module in hook['modules'] if modules[module['id_module']] is defined %}
                       {% set moduleInstance = modules[module['id_module']] %}

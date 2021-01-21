@@ -153,10 +153,10 @@ export default class ProductRenderer {
   /**
    * Renders available fields related to selected product
    *
-   * @param product
+   * @param {object} product
    */
   renderProductMetadata(product) {
-    this.renderStock(product.stock);
+    this.renderStock(product.stock, product.availableOutOfStock || (product.stock <= 0));
     this.renderCombinations(product.combinations);
     this.renderCustomizations(product.customizationFields);
   }
@@ -164,11 +164,17 @@ export default class ProductRenderer {
   /**
    * Updates stock text helper value
    *
-   * @param stock
+   * @param {number} stock
+   * @param {boolean} infinitMax
    */
-  renderStock(stock) {
+  renderStock(stock, infinitMax) {
     $(createOrderMap.inStockCounter).text(stock);
-    $(createOrderMap.quantityInput).attr('max', stock);
+
+    if (!infinitMax) {
+      $(createOrderMap.quantityInput).attr('max', stock);
+    } else {
+      $(createOrderMap.quantityInput).removeAttr('max');
+    }
   }
 
   /**
@@ -275,9 +281,7 @@ export default class ProductRenderer {
         $template.on('change', (e) => {
           const fileName = e.target.files[0].name;
 
-          $(e.target)
-            .next('.custom-file-label')
-            .html(fileName);
+          $(e.target).next('.custom-file-label').html(fileName);
         });
       }
 

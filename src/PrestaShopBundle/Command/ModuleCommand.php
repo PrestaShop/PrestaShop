@@ -28,7 +28,10 @@ namespace PrestaShopBundle\Command;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShopBundle\Translation\Translator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,22 +51,22 @@ class ModuleCommand extends ContainerAwareCommand
     ];
 
     /**
-     * @var \Symfony\Component\Console\Helper\FormatterHelper
+     * @var FormatterHelper
      */
     protected $formatter;
 
     /**
-     * @var \PrestaShopBundle\Translation\Translator
+     * @var Translator
      */
     protected $translator;
 
     /**
-     * @var \Symfony\Component\Console\Input\Input
+     * @var InputInterface
      */
     protected $input;
 
     /**
-     * @var \Symfony\Component\Console\Output\Output
+     * @var OutputInterface
      */
     protected $output;
 
@@ -111,7 +114,7 @@ class ModuleCommand extends ContainerAwareCommand
                 'error'
             );
 
-            return;
+            return 1;
         }
 
         if ($action === 'configure') {
@@ -119,6 +122,8 @@ class ModuleCommand extends ContainerAwareCommand
         } else {
             $this->executeGenericModuleAction($action, $moduleName);
         }
+
+        return 0;
     }
 
     protected function executeConfigureModuleAction($moduleName, $file = null)
@@ -156,7 +161,7 @@ class ModuleCommand extends ContainerAwareCommand
     protected function executeGenericModuleAction($action, $moduleName)
     {
         /**
-         * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+         * @var ModuleManager
          */
         $moduleManager = $this->getContainer()->get('prestashop.module.manager');
         if ($moduleManager->{$action}($moduleName)) {

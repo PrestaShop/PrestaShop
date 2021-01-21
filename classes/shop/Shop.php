@@ -520,26 +520,30 @@ class ShopCore extends ObjectModel
     /**
      * Get shop URL.
      *
-     * @param string $auto_secure_mode if set to true, secure mode will be checked
-     * @param string $add_base_uri if set to true, shop base uri will be added
+     * @param bool $auto_secure_mode if set to true, secure mode will be checked
+     * @param bool $add_base_uri if set to true, shop base uri will be added
      *
-     * @return string complete base url of current shop
+     * @return string|bool complete base url of current shop
      */
     public function getBaseURL($auto_secure_mode = false, $add_base_uri = true)
     {
-        if (($auto_secure_mode && Tools::usingSecureMode() && !$this->domain_ssl) || !$this->domain) {
-            return false;
+        if ($auto_secure_mode && Tools::usingSecureMode()) {
+            if (!$this->domain_ssl) {
+                return false;
+            }
+            $url = 'https://' . $this->domain_ssl;
+        } else {
+            if (!$this->domain) {
+                return false;
+            }
+            $url = 'http://' . $this->domain;
         }
-
-        $url = [];
-        $url['protocol'] = $auto_secure_mode && Tools::usingSecureMode() ? 'https://' : 'http://';
-        $url['domain'] = $auto_secure_mode && Tools::usingSecureMode() ? $this->domain_ssl : $this->domain;
 
         if ($add_base_uri) {
-            $url['base_uri'] = $this->getBaseURI();
+            $url .= $this->getBaseURI();
         }
 
-        return implode('', $url);
+        return $url;
     }
 
     /**
@@ -828,7 +832,7 @@ class ShopCore extends ObjectModel
      *
      * @param int $shop_id
      *
-     * @return array
+     * @return array|bool
      */
     public static function getShop($shop_id)
     {
@@ -878,8 +882,9 @@ class ShopCore extends ObjectModel
      * Retrieve group ID of a shop.
      *
      * @param int $shop_id Shop ID
+     * @param bool $as_id
      *
-     * @return int Group ID
+     * @return int|array Group ID
      */
     public static function getGroupFromShop($shop_id, $as_id = true)
     {

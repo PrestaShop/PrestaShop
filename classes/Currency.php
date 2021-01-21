@@ -60,7 +60,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Numeric ISO 4217 code of this currency.
      *
-     * @var string
+     * @var string|null
      */
     public $numeric_iso_code;
 
@@ -175,7 +175,7 @@ class CurrencyCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3],
-            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3],
+            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'allow_null' => true, 'validate' => 'isNumericIsoCode', 'size' => 3],
             'precision' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -478,7 +478,7 @@ class CurrencyCore extends ObjectModel
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
 
-        $this->deleted = 1;
+        $this->deleted = true;
 
         // Remove currency restrictions
         $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
@@ -559,6 +559,10 @@ class CurrencyCore extends ObjectModel
         $id_lang = $this->id_lang;
         if (null === $id_lang) {
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        if (!isset($this->symbol[$id_lang])) {
+            return '';
         }
 
         return Tools::ucfirst($this->symbol[$id_lang]);
@@ -1157,13 +1161,9 @@ class CurrencyCore extends ObjectModel
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
-            if (empty($language->locale)) {
-                // Language doesn't have locale we can't install this language
-                continue;
-            }
 
             // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $localeRepoCLDR->getLocale($language->locale);
+            $cldrLocale = $localeRepoCLDR->getLocale($language->getLocale());
             // CLDR currency gives data from CLDR reference, for the given language
             $cldrCurrency = $cldrLocale->getCurrency($this->iso_code);
 

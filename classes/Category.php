@@ -658,7 +658,7 @@ class CategoryCore extends ObjectModel
      * @param int|bool $idLang Language ID
      *                         `false` if language filter should not be applied
      * @param bool $active Only return active categories
-     * @param null $groups
+     * @param array|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by
@@ -932,9 +932,9 @@ class CategoryCore extends ObjectModel
      * Returns category products.
      *
      * @param int $idLang Language ID
-     * @param int $p Page number
-     * @param int $n Number of products per page
-     * @param string|null $orderyBy ORDER BY column
+     * @param int $pageNumber Page number
+     * @param int $productPerPage Number of products per page
+     * @param string|null $orderBy ORDER BY column
      * @param string|null $orderWay Order way
      * @param bool $getTotal If set to true, returns the total number of results only
      * @param bool $active If set to true, finds only active products
@@ -950,9 +950,9 @@ class CategoryCore extends ObjectModel
      */
     public function getProducts(
         $idLang,
-        $p,
-        $n,
-        $orderyBy = null,
+        $pageNumber,
+        $productPerPage,
+        $orderBy = null,
         $orderWay = null,
         $getTotal = false,
         $active = true,
@@ -986,28 +986,28 @@ class CategoryCore extends ObjectModel
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
 
-        if ($p < 1) {
-            $p = 1;
+        if ($pageNumber < 1) {
+            $pageNumber = 1;
         }
 
         /** Tools::strtolower is a fix for all modules which are now using lowercase values for 'orderBy' parameter */
-        $orderyBy = Validate::isOrderBy($orderyBy) ? Tools::strtolower($orderyBy) : 'position';
+        $orderBy = Validate::isOrderBy($orderBy) ? Tools::strtolower($orderBy) : 'position';
         $orderWay = Validate::isOrderWay($orderWay) ? Tools::strtoupper($orderWay) : 'ASC';
 
         $orderByPrefix = false;
-        if ($orderyBy == 'id_product' || $orderyBy == 'date_add' || $orderyBy == 'date_upd') {
+        if ($orderBy === 'id_product' || $orderBy === 'date_add' || $orderBy === 'date_upd') {
             $orderByPrefix = 'p';
-        } elseif ($orderyBy == 'name') {
+        } elseif ($orderBy === 'name') {
             $orderByPrefix = 'pl';
-        } elseif ($orderyBy == 'manufacturer' || $orderyBy == 'manufacturer_name') {
+        } elseif ($orderBy === 'manufacturer' || $orderBy === 'manufacturer_name') {
             $orderByPrefix = 'm';
-            $orderyBy = 'name';
-        } elseif ($orderyBy == 'position') {
+            $orderBy = 'name';
+        } elseif ($orderBy === 'position') {
             $orderByPrefix = 'cp';
         }
 
-        if ($orderyBy == 'price') {
-            $orderyBy = 'orderprice';
+        if ($orderBy === 'price') {
+            $orderBy = 'orderprice';
         }
 
         $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
@@ -1049,9 +1049,9 @@ class CategoryCore extends ObjectModel
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
-        } else {
-            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderyBy) . '` ' . pSQL($orderWay) . '
-			LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
+        } elseif ($orderBy !== 'orderprice') {
+            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
+			LIMIT ' . (((int) $pageNumber - 1) * (int) $productPerPage) . ',' . (int) $productPerPage;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
@@ -1060,8 +1060,9 @@ class CategoryCore extends ObjectModel
             return [];
         }
 
-        if ($orderyBy == 'orderprice') {
+        if ($orderBy === 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
+            $result = array_slice($result, (int) (($pageNumber - 1) * $productPerPage), (int) $productPerPage);
         }
 
         // Modify SQL result
@@ -1601,7 +1602,7 @@ class CategoryCore extends ObjectModel
         $row = Db::getInstance()->getRow('
 		SELECT `id_category`
 		FROM ' . _DB_PREFIX_ . 'category c
-		WHERE c.`id_category` = ' . (int) $idCategory);
+		WHERE c.`id_category` = ' . (int) $idCategory, false);
 
         return isset($row['id_category']);
     }
@@ -2438,6 +2439,6 @@ class CategoryCore extends ObjectModel
 		SELECT `id_category`
 		FROM `' . _DB_PREFIX_ . 'category_shop`
 		WHERE `id_category` = ' . (int) $this->id . '
-		AND `id_shop` = ' . (int) $idShop);
+		AND `id_shop` = ' . (int) $idShop, false);
     }
 }

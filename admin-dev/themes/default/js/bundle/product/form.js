@@ -398,7 +398,7 @@ var featuresCollection = (function() {
         e.preventDefault();
         var _this = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             _this.closest('.product-feature').remove();
           }
@@ -878,7 +878,7 @@ var form = (function() {
       $('.product-footer .delete', elem).click(function(e) {
         e.preventDefault();
         var _this = $(this);
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             window.location = _this.attr('href');
           }
@@ -1018,7 +1018,7 @@ var customFieldCollection = (function() {
         e.preventDefault();
         var _this = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             _this.parent().parent().parent().remove();
           }
@@ -1098,7 +1098,7 @@ var virtualProduct = (function() {
         e.preventDefault();
         var $deleteButton = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             getOnDeleteVirtualProductFileHandler($deleteButton);
           }
@@ -1538,7 +1538,7 @@ var formImagesProduct = (function() {
       });
     },
     'delete': function(id) {
-      modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+      modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
         onContinue: function() {
           $.ajax({
             url: dropZoneElem.find('.dz-preview[data-id="' + id + '"]').attr('url-delete'),

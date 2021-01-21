@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Domain\ValueObject;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
@@ -36,7 +36,7 @@ class MoneyTest extends TestCase
 {
     public function testCreateWithPositiveValue()
     {
-        $money = new Money(new Number('100'), new CurrencyId(10));
+        $money = new Money(new DecimalNumber('100'), new CurrencyId(10));
 
         $this->assertEquals('100', (string) $money->getAmount());
         $this->assertEquals('', $money->getAmount()->getSign());
@@ -46,6 +46,6 @@ class MoneyTest extends TestCase
     {
         $this->expectException(DomainConstraintException::class, 'Money amount cannot be lower than zero, -100 given');
 
-        $money = new Money(new Number('-100'), new CurrencyId(10));
+        $money = new Money(new DecimalNumber('-100'), new CurrencyId(10));
     }
 }

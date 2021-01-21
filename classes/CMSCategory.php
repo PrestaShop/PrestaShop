@@ -30,13 +30,13 @@ class CMSCategoryCore extends ObjectModel
     /** @var int CMSCategory ID */
     public $id_cms_category;
 
-    /** @var string Name */
+    /** @var array<string> Name */
     public $name;
 
     /** @var bool Status for display */
     public $active = 1;
 
-    /** @var string Description */
+    /** @var array<string> Description */
     public $description;
 
     /** @var int Parent CMSCategory ID */
@@ -48,16 +48,16 @@ class CMSCategoryCore extends ObjectModel
     /** @var int Parents number */
     public $level_depth;
 
-    /** @var string string used in rewrited URL */
+    /** @var array<string> string used in rewrited URL */
     public $link_rewrite;
 
-    /** @var string Meta title */
+    /** @var array<string> Meta title */
     public $meta_title;
 
-    /** @var string Meta keywords */
+    /** @var array<string> Meta keywords */
     public $meta_keywords;
 
-    /** @var string Meta description */
+    /** @var array<string> Meta description */
     public $meta_description;
 
     /** @var string Object creation date */

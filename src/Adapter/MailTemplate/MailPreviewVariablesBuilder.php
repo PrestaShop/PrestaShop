@@ -148,7 +148,7 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param array $parameters
      * @param null $domain
      * @param null $local
@@ -359,6 +359,7 @@ final class MailPreviewVariablesBuilder
 
             $productTemplate = [
                 'id_product' => $product['id_product'],
+                'id_product_attribute' => $product['id_product_attribute'],
                 'reference' => $product['reference'],
                 'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                 'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),

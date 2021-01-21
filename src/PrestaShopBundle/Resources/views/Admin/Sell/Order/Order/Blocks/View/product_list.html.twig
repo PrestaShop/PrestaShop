@@ -1,0 +1,10 @@
+{% for product in orderForViewing.products.products %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
+        'product': product,
+        'productIndex': loop.index,
+        'paginationNum': paginationNum,
+        'isColumnLocationDisplayed': isColumnLocationDisplayed,
+        'isColumnRefundedDisplayed': isColumnRefundedDisplayed,
+        'isAvailableQuantityDisplayed': isAvailableQuantityDisplayed
+    } %}
+{% endfor %}

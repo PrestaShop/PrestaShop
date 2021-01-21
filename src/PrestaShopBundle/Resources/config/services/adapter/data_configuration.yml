@@ -76,7 +76,9 @@ services:
 
     prestashop.adapter.general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
-        arguments: ['@prestashop.adapter.legacy.configuration']
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.legacy.context").getContext().cookie'
 
     prestashop.adapter.maintenance.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'

@@ -54,7 +54,7 @@ final class ImportDataFormatter
     }
 
     /**
-     * @param $value
+     * @param string|int $value
      *
      * @return bool
      */
@@ -97,7 +97,7 @@ final class ImportDataFormatter
     /**
      * Split the field by separator.
      *
-     * @param string $field
+     * @param string|null $field
      * @param string $separator
      *
      * @return array
@@ -108,7 +108,7 @@ final class ImportDataFormatter
             return [];
         }
 
-        if (is_null($separator) || trim($separator) == '') {
+        if (trim($separator) == '') {
             $separator = ',';
         }
 

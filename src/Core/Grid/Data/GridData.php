@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 final class GridData implements GridDataInterface
 {
     /**
-     * @var array
+     * @var RecordCollectionInterface
      */
     private $records;
 

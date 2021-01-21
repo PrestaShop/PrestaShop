@@ -32,7 +32,21 @@
       'configurationPage': '{{ path('admin_module_configure_action', {'module_name': ':number:'})|e('js') }}',
       'moduleImport': '{{ path('admin_module_import')|e('js') }}',
       'notificationsCount': '{{ path('admin_module_notification_count')|e('js') }}',
+      'maintenancePage': '{{ path('admin_maintenance')|e('js') }}',
     };
+
+    var moduleTranslations = {
+      'singleModuleModalUpdateTitle': '{{ "Are you sure you want to upgrade this module?"|trans({}, 'Admin.Modules.Notification') }}',
+      'multipleModuleModalUpdateTitle': '{{ "Are you sure you want to upgrade these modules?"|trans({}, 'Admin.Modules.Notification') }}',
+      'moduleModalUpdateCancel': '{{ "Cancel"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateMaintenance': '{{ "Go to maintenance page"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateUpgrade': '{{ "Upgrade"|trans({}, 'Admin.Actions') }}',
+      'upgradeAnywayButtonText': '{{ "Upgrade anyway"|trans({}, 'Admin.Actions') }}',
+      'moduleModalUpdateConfirmMessage': '{{ "We strongly advise you to upgrade the modules on maintenance mode to avoid any cache issues."|trans({}, 'Admin.Modules.Notification') }}',
+    };
+
+    // Need to come from the backend
+    var isShopMaintenance = !{{ 'PS_SHOP_ENABLE'|configuration|intCast }};
   </script>
   <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/module.bundle.js') }}"></script>

@@ -54,6 +54,8 @@ describe('Update default language', async () => {
           dashboardPage.localizationLink,
         );
 
+        await localizationPage.closeSfToolBar(page);
+
         const pageTitle = await localizationPage.getPageTitle(page);
         await expect(pageTitle).to.contains(localizationPage.pageTitle);
       });

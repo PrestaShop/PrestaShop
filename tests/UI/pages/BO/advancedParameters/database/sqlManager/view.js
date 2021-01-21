@@ -9,7 +9,12 @@ class ViewSQLQuery extends BOBasePage {
 
     // Selectors
     this.sqlQueryResultTitle = '#main-div  div.card-header h3';
-    this.tableColumnName = id => `#main-div .table th:nth-child(${id})`;
+    this.resultsTable = '#main-div .table';
+    this.tableColumnName = id => `${this.resultsTable} th:nth-child(${id})`;
+    this.tableBody = `${this.resultsTable} tbody`;
+    this.tableRows = `${this.tableBody} tr`;
+    this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
   }
 
   /*
@@ -32,6 +37,17 @@ class ViewSQLQuery extends BOBasePage {
    */
   getColumnName(page, id = 1) {
     return this.getTextContent(page, this.tableColumnName(id));
+  }
+
+  /**
+   * Get text from column in results table
+   * @param page
+   * @param row
+   * @param column
+   * @return {Promise<string>}
+   */
+  getTextColumn(page, row, column) {
+    return this.getTextContent(page, this.tableColumn(row, column));
   }
 }
 

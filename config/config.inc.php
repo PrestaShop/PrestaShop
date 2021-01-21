@@ -79,9 +79,12 @@ if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
 }
 
 if (_PS_DEBUG_PROFILING_) {
+    include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
     include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 }
 
@@ -168,10 +171,10 @@ if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 }
 
+$force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
 if (defined('_PS_ADMIN_DIR_')) {
-    $cookie = new Cookie('psAdmin', '', $cookie_lifetime);
+    $cookie = new Cookie('psAdmin', '', $cookie_lifetime, null, false, $force_ssl);
 } else {
-    $force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
     if ($context->shop->getGroup()->share_order) {
         $cookie = new Cookie('ps-sg' . $context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
     } else {
@@ -203,9 +206,10 @@ if (defined('_PS_ADMIN_DIR_')) {
 if (isset($cookie->id_lang) && $cookie->id_lang) {
     $language = new Language($cookie->id_lang);
 }
-if (!isset($language) || !Validate::isLoadedObject($language)) {
+if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop()) {
     $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 }
+
 $context->language = $language;
 
 /* Get smarty */

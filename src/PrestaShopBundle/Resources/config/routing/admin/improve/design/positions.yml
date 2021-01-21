@@ -13,3 +13,11 @@ admin_modules_positions_unhook:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:unhook'
         _legacy_controller: AdminModulesPositions
         _legacy_link: AdminModulesPositions:unhook
+
+admin_modules_positions_toggle_status:
+    path: /toggle-status
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:toggleStatus'
+        _legacy_controller: AdminModulesPositions
+        _legacy_link: AdminModulesPositions

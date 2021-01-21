@@ -41,22 +41,27 @@ class ThemeManagerBuilder
 {
     private $context;
     private $db;
+    private $themeValidator;
 
-    public function __construct(Context $context, Db $db)
+    public function __construct(Context $context, Db $db, ThemeValidator $themeValidator = null)
     {
         $this->context = $context;
         $this->db = $db;
+        $this->themeValidator = $themeValidator;
     }
 
     public function build()
     {
         $configuration = new Configuration();
         $configuration->restrictUpdatesTo($this->context->shop);
+        if (null === $this->themeValidator) {
+            $this->themeValidator = new ThemeValidator($this->context->getTranslator(), new Configuration());
+        }
 
         return new ThemeManager(
             $this->context->shop,
             $configuration,
-            new ThemeValidator($this->context->getTranslator(), new Configuration()),
+            $this->themeValidator,
             $this->context->getTranslator(),
             $this->context->employee,
             new Filesystem(),

@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Address;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderDeliveryAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -39,6 +41,28 @@ use Validate;
  */
 final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler implements ChangeOrderDeliveryAddressHandlerInterface
 {
+    /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @var OrderDetailUpdater
+     */
+    private $orderDetailTaxUpdater;
+
+    /**
+     * @param OrderAmountUpdater $orderAmountUpdater
+     * @param OrderDetailUpdater $orderDetailTaxUpdater
+     */
+    public function __construct(
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderDetailUpdater $orderDetailTaxUpdater
+    ) {
+        $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderDetailTaxUpdater = $orderDetailTaxUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -53,11 +77,14 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
             throw new OrderException('New delivery address is not valid');
         }
 
-        $order->id_address_delivery = $address->id;
-        $cart->id_address_delivery = $address->id;
-
-        $order->update();
-        $order->refreshShippingCost();
+        $cart->updateDeliveryAddressId((int) $cart->id_address_delivery, (int) $address->id);
+        $cart->setDeliveryOption([
+            (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
+        ]);
         $cart->update();
+
+        $order->id_address_delivery = $address->id;
+        $this->orderDetailTaxUpdater->updateOrderDetailsTaxes($order);
+        $this->orderAmountUpdater->update($order, $cart);
     }
 }

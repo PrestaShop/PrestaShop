@@ -76,11 +76,11 @@ admin_carts_edit_language:
   options:
     expose: true
 
-admin_carts_set_free_shipping:
-  path: /{cartId}/rules/free-shipping
+admin_carts_set_delivery_settings:
+  path: /{cartId}/rules/delivery-settings
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:setFreeShipping
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:updateDeliverySettings
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+

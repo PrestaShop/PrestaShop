@@ -392,7 +392,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'en-US',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'AZN',
-                'formattedPrice' => 'AZN1,234,568.12',
+                'formattedPrice' => '₼1,234,568.12',
             ],
         ];
     }

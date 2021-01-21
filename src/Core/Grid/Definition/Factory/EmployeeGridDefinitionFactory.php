@@ -51,6 +51,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
     /**
@@ -289,16 +290,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_employees_bulk_delete',
-                        'confirm_message' => $this->trans(
-                            'Delete selected item?',
-                            [],
-                            'Admin.Notifications.Warning'
-                        ),
-                    ])
+                $this->buildBulkDeleteAction('admin_employees_bulk_delete')
             );
     }
 }

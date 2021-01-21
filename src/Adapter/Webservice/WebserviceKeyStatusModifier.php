@@ -91,7 +91,7 @@ final class WebserviceKeyStatusModifier
      * Updates status for multiple fields.
      *
      * @param array $columnIds
-     * @param int $status
+     * @param bool $status
      *
      * @return bool
      *

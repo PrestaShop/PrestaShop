@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -57,7 +58,7 @@ class ContextCore
     /** @var Country */
     public $country;
 
-    /** @var Employee */
+    /** @var Employee|null */
     public $employee;
 
     /** @var AdminController|FrontController */
@@ -66,16 +67,16 @@ class ContextCore
     /** @var string */
     public $override_controller_name_for_translations;
 
-    /** @var Language */
+    /** @var Language|InstallLanguage */
     public $language;
 
-    /** @var Currency */
+    /** @var Currency|null */
     public $currency;
 
     /**
      * Current locale instance.
      *
-     * @var Locale
+     * @var Locale|null
      */
     public $currentLocale;
 
@@ -244,7 +245,7 @@ class ContextCore
     }
 
     /**
-     * @return Locale
+     * @return Locale|null
      */
     public function getCurrentLocale()
     {
@@ -286,7 +287,7 @@ class ContextCore
     /**
      * Get a singleton instance of Context object.
      *
-     * @return Context
+     * @return Context|null
      */
     public static function getContext()
     {
@@ -429,9 +430,9 @@ class ContextCore
         $translator->clearLanguage($locale);
 
         $adminContext = defined('_PS_ADMIN_DIR_');
-        // Do not load DB translations when $this->language is PrestashopBundle\Install\Language
+        // Do not load DB translations when $this->language is InstallLanguage
         // because it means that we're looking for the installer translations, so we're not yet connected to the DB
-        $withDB = !$this->language instanceof PrestashopBundle\Install\Language;
+        $withDB = !$this->language instanceof InstallLanguage;
         $theme = $this->shop !== null ? $this->shop->theme : null;
         (new TranslatorLanguageLoader($adminContext))->loadLanguage($translator, $locale, $withDB, $theme);
 

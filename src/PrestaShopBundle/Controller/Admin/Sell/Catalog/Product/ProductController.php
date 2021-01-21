@@ -28,9 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -51,22 +57,131 @@ use Symfony\Component\HttpFoundation\Response;
 class ProductController extends FrameworkBundleAdminController
 {
     /**
+     * Used to validate connected user authorizations.
+     */
+    private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
+
+    /**
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request): Response
+    {
+        $productForm = $this->getProductFormBuilder()->getForm();
+
+        try {
+            $productForm->handleRequest($request);
+
+            $result = $this->getProductFormHandler()->handle($productForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $result->getIdentifiableObjectId()]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->renderProductForm($productForm);
+    }
+
+    /**
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
+     * @param Request $request
      * @param int $productId
      *
      * @return Response
      */
-    public function editAction(int $productId): Response
+    public function editAction(Request $request, int $productId): Response
     {
-        $productPriceForm = $this->createForm(ProductPriceType::class, [
-            'price_tax_excluded' => 100,
-            'price_tax_included' => 110,
-            'tax_rule_group' => 1,
+        $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
+            'product_id' => $productId,
+            // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
+            // 'method' => Request::METHOD_PATCH,
+            'method' => Request::METHOD_POST,
         ]);
 
+        try {
+            $productForm->handleRequest($request);
+
+            $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->renderProductForm($productForm, $productId);
+    }
+
+    /**
+     * @param FormInterface $productForm
+     * @param int|null $productId
+     *
+     * @return Response
+     */
+    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
+    {
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
+
+        $statsLink = null !== $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null;
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
-            'productPriceForm' => $productPriceForm->createView(),
+            'showContentHeader' => false,
+            'productForm' => $productForm->createView(),
+            'productId' => $productId,
+            'statsLink' => $statsLink,
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+            'isMultiShopContext' => $isMultiShopContext,
+            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
+    }
+
+    /**
+     * Gets form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getProductFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.product_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getProductFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.product_form_handler');
+    }
+
+    /**
+     * Gets an error by exception class and its code.
+     *
+     * @param Exception $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e): array
+    {
+        // @todo: all the constraint error messages are missing for now (see ProductConstraintException)
+        return [
+            ProductConstraintException::class => [
+                ProductConstraintException::INVALID_PRICE => $this->trans(
+                    'Product price is invalid',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }

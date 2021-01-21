@@ -26,9 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Carrier;
+use Currency;
+use Customer;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use Shop;
+use Validate;
 
 /**
  * @internal
@@ -36,17 +44,64 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandl
 final class UpdateCartCarrierHandler extends AbstractCartHandler implements UpdateCartCarrierHandlerInterface
 {
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(ContextStateManager $contextStateManager)
+    {
+        $this->contextStateManager = $contextStateManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateCartCarrierCommand $command)
     {
+        $this->assertActiveCarrier($command->getNewCarrierId());
+
         $cart = $this->getCart($command->getCartId());
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setShop(new Shop($cart->id_shop))
+        ;
 
-        $cart->setDeliveryOption([
-            $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
-        ]);
+        try {
+            $cart->setDeliveryOption([
+                (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
+            ]);
 
-        $cart->update();
+            $cart->update();
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+    }
+
+    /**
+     * @param int $carrierId
+     *
+     * @throws CartConstraintException
+     */
+    private function assertActiveCarrier(int $carrierId): void
+    {
+        if (0 === $carrierId) {
+            return;
+        }
+
+        $carrier = new Carrier($carrierId);
+
+        if (!Validate::isLoadedObject($carrier) || (int) $carrier->id !== $carrierId) {
+            throw new CartConstraintException(sprintf('Carrier with id "%d" was not found', $carrierId), CartConstraintException::INVALID_CARRIER);
+        }
+        if (!$carrier->active) {
+            throw new CartConstraintException(sprintf('Carrier with id "%d" is not active', $carrierId), CartConstraintException::INVALID_CARRIER);
+        }
     }
 
     /**
@@ -64,6 +119,6 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
      */
     private function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
     {
-        return sprintf('%s,', $carrierId);
+        return sprintf('%d,', $carrierId);
     }
 }

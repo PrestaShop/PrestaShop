@@ -18,6 +18,8 @@ class Employees extends BOBasePage {
     this.employeesListForm = '#employee_grid';
     this.employeesListTableRow = row => `${this.employeesListForm} tbody tr:nth-child(${row})`;
     this.employeesListTableColumn = (row, column) => `${this.employeesListTableRow(row)} td.column-${column}`;
+    this.employeesListTableStatusColumn = row => `${this.employeesListTableColumn(row, 'active')} .ps-switch`;
+    this.employeesListTableStatusColumnToggleInput = row => `${this.employeesListTableStatusColumn(row)} input`;
     this.employeesListTableColumnAction = row => this.employeesListTableColumn(row, 'actions');
     this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
@@ -40,14 +42,24 @@ class Employees extends BOBasePage {
     // Delete modal
     this.confirmDeleteModal = '#employee-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+    // Sort Selectors
+    this.tableHead = `${this.employeeGridPanel} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    // Pages selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.employeesListForm} .col-form-label`;
+    this.paginationNextLink = `${this.employeesListForm} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.employeesListForm} [aria-label='Previous']`;
   }
 
   /*
   Methods
    */
 
+  // Header methods
   /**
-   * Go to new Page Employee page
+   * Go to new Employee page
    * @param page
    * @returns {Promise<void>}
    */
@@ -55,6 +67,17 @@ class Employees extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.addNewEmployeeLink);
   }
 
+  // Tab methods
+  /**
+   * Go to Profiles page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToProfilesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.profilesTab);
+  }
+
+  // Columns methods
   /**
    * Get number of elements in grid
    * @param page
@@ -126,8 +149,16 @@ class Employees extends BOBasePage {
    * @param row, row in table
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row) {
-    return this.elementVisible(page, this.employeesListColumnValidIcon(row), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.employeesListTableStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -137,16 +168,12 @@ class Employees extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.employeesListTableColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
-      page.click(this.employeesListTableColumn(row, 'active'));
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.employeesListColumnValidIcon(row) : this.employeesListColumnNotValidIcon(row)),
-      );
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.employeesListTableStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -171,11 +198,11 @@ class Employees extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteEmployees(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
-   * Confirm delete with in modal
+   * Confirm delete in modal
    * @param page
    * @return {Promise<void>}
    */
@@ -189,7 +216,7 @@ class Employees extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -202,7 +229,7 @@ class Employees extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -211,7 +238,6 @@ class Employees extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteBulkActions(page) {
-    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -222,18 +248,89 @@ class Employees extends BOBasePage {
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteEmployees(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param page
+   * @param column
+   * @returns {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      let rowContent = await this.getTextContent(page, this.employeesListTableColumn(i, column));
+      if (column === 'active') {
+        rowContent = await this.getStatus(page, i).toString();
+      }
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
-   * Go to Profiles page
+   * Sort table
    * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
    * @returns {Promise<void>}
    */
-  async goToProfilesPage(page) {
-    await this.clickAndWaitForNavigation(page, this.profilesTab);
+  async sortTable(page, sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  // Pagination methods
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Pagination next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Pagination previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getTextContent(page, this.paginationLabel);
   }
 }
 

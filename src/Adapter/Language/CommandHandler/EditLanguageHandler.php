@@ -230,9 +230,10 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
             return;
         }
 
-        if ($language->iso_code === $command->getIsoCode()->getValue()
-            && Language::getIdByIso($command->getIsoCode()->getValue())
+        /* @phpstan-ignore-next-line */
+        if ($language->iso_code === $command->getIsoCode()->getValue() && Language::getIdByIso($command->getIsoCode()->getValue())
         ) {
+            /* @phpstan-ignore-next-line */
             throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()), LanguageConstraintException::INVALID_ISO_CODE);
         }
     }

@@ -56,7 +56,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $contextShop;
     /** @var AdminProductWrapper */
     private $adminProductWrapper;
-    /** @var array */
+    /** @var array<int|array> */
     private $locales;
     /** @var string */
     private $defaultLocale;

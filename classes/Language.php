@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
+use Symfony\Component\Intl\Intl;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
@@ -45,6 +46,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     const PACK_DOWNLOAD_TIMEOUT = 20;
 
+    /** @var int */
     public $id;
 
     /** @var string Name */
@@ -584,6 +586,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             $modList = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
             foreach ($modList as $mod) {
+                if (!is_dir(_PS_MODULE_DIR_ . $mod)) {
+                    continue;
+                }
                 Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/' . $this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_ . $mod . '/mails/', SCANDIR_SORT_NONE);
                 if (is_array($files) && count($files) <= 2) {
@@ -643,7 +648,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param int|false $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array<int|Language> Language information
+     * @return array<int|array> Language information
      */
     public static function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
@@ -715,6 +720,26 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
+     * Provides locale by language id (e.g. en-US, fr-FR, ru-RU)
+     *
+     * @param int $langId
+     *
+     * @return string|null
+     */
+    public static function getLocaleById(int $langId): ?string
+    {
+        $locale = Db::getInstance()->getValue('
+            SELECT `locale` FROM `' . _DB_PREFIX_ . 'lang` WHERE `id_lang` = ' . $langId
+        );
+
+        if (!$locale) {
+            return null;
+        }
+
+        return $locale;
+    }
+
+    /**
      * Returns language information form the all_languages file using IETF language tag
      *
      * @param string $locale IETF language tag
@@ -783,7 +808,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $key = 'Language::getIdByLocale_' . $locale;
         if ($noCache || !Cache::isStored($key)) {
-            $idLang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'');
+            $idLang = Db::getInstance()
+                ->getValue(
+                    'SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang`
+                    WHERE `locale` = \'' . pSQL(strtolower($locale)) . '\'
+                    OR `language_code` = \'' . pSQL(strtolower($locale)) . '\''
+                );
 
             Cache::store($key, $idLang);
 
@@ -1410,34 +1440,36 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         Hook::exec('actionUpdateLangAfter', ['lang' => $language]);
     }
 
+    /**
+     * @param Language $lang
+     *
+     * @throws PrestaShopDatabaseException
+     */
     public static function updateMultilangFromCldr($lang)
     {
-        $cldrLocale = $lang->getLocale();
-        $cldrFile = _PS_TRANSLATIONS_DIR_ . 'cldr/datas/main/' . $cldrLocale . '/territories.json';
+        // Fetch all countries from DB in specified locale
+        $sql = 'SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
+                INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
+                WHERE cl.`id_lang` = "' . (int) $lang->id . '" ';
+        $translatableCountries = Db::getInstance()->executeS($sql, true, false);
 
-        if (file_exists($cldrFile)) {
-            $cldrContent = json_decode(file_get_contents($cldrFile), true);
+        if (empty($translatableCountries)) {
+            return;
+        }
 
-            if (!empty($cldrContent)) {
-                $translatableCountries = Db::getInstance()->executeS('SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
-                    INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
-                    WHERE cl.`id_lang` = "' . (int) $lang->id . '" ', true, false);
-
-                if (!empty($translatableCountries)) {
-                    $cldrLanguages = $cldrContent['main'][$cldrLocale]['localeDisplayNames']['territories'];
-
-                    foreach ($translatableCountries as $country) {
-                        if (isset($cldrLanguages[$country['iso_code']]) &&
-                            !empty($cldrLanguages[$country['iso_code']])
-                        ) {
-                            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
-                                SET `name` = "' . pSQL(ucwords($cldrLanguages[$country['iso_code']])) . '"
-                                WHERE `id_country` = "' . (int) $country['id_country'] . '" AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
-                            Db::getInstance()->execute($sql);
-                        }
-                    }
-                }
+        // Fetch all countries from Intl in specified locale
+        $langCountries = (new self())->getCountries($lang->locale);
+        foreach ($translatableCountries as $country) {
+            $isoCode = strtolower($country['iso_code']);
+            if (empty($langCountries[$isoCode])) {
+                continue;
             }
+            // Translate the country name
+            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
+                    SET `name` = "' . pSQL($langCountries[$isoCode]) . '"
+                    WHERE `id_country` = "' . (int) $country['id_country'] . '"
+                    AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
+            Db::getInstance()->execute($sql);
         }
     }
 
@@ -1629,5 +1661,19 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public function isRTL()
     {
         return $this->is_rtl;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return array<string, string>
+     */
+    private function getCountries(string $locale): array
+    {
+        Locale::setDefault($locale);
+        $countries = Intl::getRegionBundle()->getCountryNames();
+        $countries = array_change_key_case($countries, CASE_LOWER);
+
+        return $countries;
     }
 }

@@ -36,6 +36,8 @@
         {include file='catalog/_partials/subcategories.tpl' subcategories=$subcategories}
       {/if}
     {/block}
+    
+    {hook h="displayHeaderCategory"}
 
     <section id="products">
       {if $listing.products|count}
@@ -58,7 +60,7 @@
           {/block}
         </div>
 
-        <div id="js-product-list-bottom">
+        <div>
           {block name='product_list_bottom'}
             {include file='catalog/_partials/products-bottom.tpl' listing=$listing}
           {/block}

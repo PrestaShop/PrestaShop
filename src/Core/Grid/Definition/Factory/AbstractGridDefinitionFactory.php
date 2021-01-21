@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -87,7 +89,8 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getColumns(),
             $this->getFilters(),
             $this->getGridActions(),
-            $this->getBulkActions()
+            $this->getBulkActions(),
+            $this->getViewOptions()
         );
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', [
@@ -138,6 +141,17 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected function getBulkActions()
     {
         return new BulkActionCollection();
+    }
+
+    /**
+     * Get defined grid view options.
+     * Override this method to define custom view options collection.
+     *
+     * @return ViewOptionsCollectionInterface
+     */
+    protected function getViewOptions()
+    {
+        return new ViewOptionsCollection();
     }
 
     /**

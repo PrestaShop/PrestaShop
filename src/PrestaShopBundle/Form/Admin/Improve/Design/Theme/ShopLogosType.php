@@ -37,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class ThemeLogosType is used to configure theme's logos.
@@ -267,8 +268,8 @@ class ShopLogosType extends AbstractType
     /**
      * Gets the checkbox form fields which are the source of multi-store behavior.
      *
-     * @param $form
-     * @param $suffix
+     * @param FormInterface $form
+     * @param string $suffix
      *
      * @return array
      */

@@ -28,10 +28,10 @@ class Categories extends BOBasePage {
     } a.grid-view-row-link`;
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a.grid-edit-row-link`;
-    this.categoriesListColumnValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } i.grid-toggler-icon-valid`;
-    this.categoriesListColumnNotValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } i.grid-toggler-icon-not-valid`;
+
+    this.categoriesListColumnStatus = row => `${this.categoriesListTableColumn(row, 'active')} .ps-switch`;
+    this.categoriesListColumnStatusToggleInput = row => `${this.categoriesListColumnStatus(row)} input`;
+
     // Filters
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
     this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
@@ -130,36 +130,39 @@ class Categories extends BOBasePage {
    * Get Value of column Displayed
    * @param page
    * @param row, row in table
-   * @param column, column to check
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(page, row, column) {
-    return this.elementVisible(page, this.categoriesListColumnValidIcon(row, column), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.categoriesListColumnStatusToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
    * Quick edit toggle column value
    * @param page
    * @param row, row in table
-   * @param column, column to update
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, column, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.categoriesListTableColumn(row, column), 2000);
-    if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
-      await page.click(`${this.categoriesListTableColumn(row, column)} i`);
+  async setStatus(page, row, valueWanted = true) {
+    if (await this.getStatus(page, row) !== valueWanted) {
+      await page.click(this.categoriesListColumnStatus(row));
+
       await this.waitForVisibleSelector(
         page,
-        (
-          valueWanted
-            ? this.categoriesListColumnValidIcon(row, column)
-            : this.categoriesListColumnNotValidIcon(row, column)
-        ),
-        15000,
+        `${this.categoriesListColumnStatusToggleInput(row)}[value='${valueWanted ? 1 : 0}']:checked`,
       );
+
       return true;
     }
+
     return false;
   }
 
@@ -186,7 +189,7 @@ class Categories extends BOBasePage {
       name: await this.getTextColumnFromTableCategories(page, row, 'name'),
       description: await this.getTextColumnFromTableCategories(page, row, 'description'),
       position: parseFloat(await this.getTextColumnFromTableCategories(page, row, 'position')),
-      status: await this.getToggleColumnValue(page, row, 'active'),
+      status: await this.getStatus(page, row),
     };
   }
 
@@ -260,7 +263,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -270,7 +273,7 @@ class Categories extends BOBasePage {
    * @return {Promise<void>}
    */
   async chooseOptionAndDelete(page, modeID) {
-    await page.click(this.deleteCategoryModalModeInput(modeID));
+    await page.check(this.deleteCategoryModalModeInput(modeID));
     await this.clickAndWaitForNavigation(page, this.deleteCategoryModalDeleteButton);
     await this.waitForVisibleSelector(page, this.alertSuccessBlockParagraph);
   }
@@ -281,7 +284,7 @@ class Categories extends BOBasePage {
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeCategoriesEnabledColumnBulkActions(page, enable = true) {
+  async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),
@@ -294,7 +297,7 @@ class Categories extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -320,7 +323,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -336,7 +339,7 @@ class Categories extends BOBasePage {
       this.categoriesListTableDraggableColumn(categoryRow),
       this.categoriesListTableDraggableColumn(position),
     );
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 
   /* Sort methods */
@@ -350,13 +353,15 @@ class Categories extends BOBasePage {
   async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 500) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   // Export methods
@@ -399,7 +404,7 @@ class Categories extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditHomeCategoryPage(page) {
-    await this.waitForSelectorAndClick(page, this.editHomeCategoryButton);
+    await this.clickAndWaitForNavigation(page, this.editHomeCategoryButton);
   }
 
   /* Pagination methods */
@@ -419,7 +424,11 @@ class Categories extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
-    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
     return this.getPaginationLabel(page);
   }
 

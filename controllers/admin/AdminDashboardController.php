@@ -227,16 +227,6 @@ class AdminDashboardControllerCore extends AdminController
             return parent::renderOptions();
         }
 
-        // $translations = array(
-        // 	'Calendar' => $this->trans('Calendar', array(),'Admin.Global'),
-        // 	'Day' => $this->trans('Day', array(), 'Admin.Global'),
-        // 	'Month' => $this->trans('Month', array(), 'Admin.Global'),
-        // 	'Year' => $this->trans('Year', array(), 'Admin.Global'),
-        // 	'From' => $this->trans('From:', array(), 'Admin.Global'),
-        // 	'To' => $this->trans('To:', array(), 'Admin.Global'),
-        // 	'Save' => $this->trans('Save', array(), 'Admin.Global')
-        // );
-
         $testStatsDateUpdate = $this->context->cookie->__get('stats_date_update');
         if (!empty($testStatsDateUpdate) && $this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
             switch ($this->context->employee->preselect_date_range) {
@@ -312,7 +302,6 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to,
             'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne', $params),
             'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo', $params),
-            //'translations' => $translations,
             'action' => '#',
             'warning' => $this->getWarningDomainName(),
             'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),

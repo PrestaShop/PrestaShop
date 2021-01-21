@@ -89,7 +89,7 @@ class AdminTabsControllerTest extends UnitTestCase
     {
         $dbMock = $this->getMockBuilder('\DbPDO')
             ->disableOriginalConstructor()
-            ->setMethods(array('query', 'executeS', 'getMsgError'))
+            ->setMethods(array('query', 'executeS', 'getMsgError', 'getValue'))
             ->getMock();
 
         $dbMock->expects($this->any())

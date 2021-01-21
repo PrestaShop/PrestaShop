@@ -33,6 +33,7 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,6 +51,11 @@ class ImportType extends TranslatorAwareType
         $builder
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
+                'required' => true,
+                'label' => $this->trans('What do you want to import?', 'Admin.Advparameters.Feature'),
+                'row_attr' => [
+                    'class' => 'js-entity-select',
+                ],
                 'choices' => [
                     $this->trans('Categories', 'Admin.Global') => Entity::TYPE_CATEGORIES,
                     $this->trans('Products', 'Admin.Global') => Entity::TYPE_PRODUCTS,
@@ -64,17 +70,62 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('file', FileType::class, [
                 'required' => false,
+                'label' => $this->trans('Select a file to import', 'Admin.Advparameters.Feature'),
             ])
             ->add('iso_lang', ChoiceType::class, [
+                'required' => true,
                 'choices' => $this->getLocaleChoices(),
+                'label' => $this->trans('Language of the file', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('The locale must be installed', 'Admin.Advparameters.Notification'),
             ])
-            ->add('separator', TextType::class)
-            ->add('multiple_value_separator', TextType::class)
-            ->add('truncate', SwitchType::class)
-            ->add('match_ref', SwitchType::class)
-            ->add('regenerate', SwitchType::class)
-            ->add('forceIDs', SwitchType::class)
-            ->add('sendemail', SwitchType::class);
+            ->add('separator', TextType::class, [
+                'label' => $this->trans('Field separator', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('e.g. 1; Blouse; 129.90; 5', 'Admin.Advparameters.Help'),
+            ])
+            ->add('multiple_value_separator', TextType::class, [
+                'label' => $this->trans('Multiple value separator', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('e.g. Blouse; red.jpg, blue.jpg, green.jpg; 129.90 ', 'Admin.Advparameters.Help'),
+            ])
+            ->add('truncate', SwitchType::class, [
+                'row_attr' => [
+                    'class' => 'js-truncate-form-group',
+                ],
+                'label' => $this->trans(
+                    'Delete all [1]categories[/1] before import',
+                    'Admin.Advparameters.Feature',
+                    [
+                        '[1]' => '<span class="js-entity-name">',
+                        '[/1]' => '</span>',
+                    ]
+                ),
+            ])
+            ->add('match_ref', SwitchType::class, [
+                'row_attr' => [
+                    'class' => 'js-match-ref-form-group',
+                ],
+                'label' => $this->trans('Use product reference as key', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('If enabled, the product\'s reference number MUST be unique!', 'Admin.Advparameters.Help'),
+            ])
+            ->add('regenerate', SwitchType::class, [
+                'row_attr' => [
+                    'class' => 'js-regenerate-form-group',
+                ],
+                'label' => $this->trans('Skip thumbnails regeneration', 'Admin.Advparameters.Feature'),
+            ])
+            ->add('forceIDs', SwitchType::class, [
+                'row_attr' => [
+                    'class' => 'js-force-ids-form-group',
+                ],
+                'label' => $this->trans('Force all ID numbers', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Enable this option to keep your imported items’ ID number as is. Otherwise, PrestaShop will ignore them and create auto-incremented ID numbers.', 'Admin.Advparameters.Help'),
+            ])
+            ->add('sendemail', SwitchType::class, [
+                'label' => $this->trans('Send notification email', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Receive an email when the import is complete. It can be useful when handling large files, as the import may take some time.', 'Admin.Advparameters.Help'),
+            ])
+            ->add('submitImportFile', SubmitType::class, [
+                'label' => $this->trans('Next step', 'Admin.Advparameters.Feature'),
+            ]);
 
         $builder->get('entity')
             ->addModelTransformer(new CallbackTransformer(

@@ -113,7 +113,7 @@ class ProductImageController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/ProductImage/form.html.twig")
      *
-     * @param $idImage
+     * @param string|int $idImage
      * @param Request $request
      *
      * @return array|JsonResponse|Response

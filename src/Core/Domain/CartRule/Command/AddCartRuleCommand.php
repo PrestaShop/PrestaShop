@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
 use DateTime;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
@@ -200,7 +200,7 @@ class AddCartRuleCommand
         $this->setTotalQuantity($totalQuantity);
         $this->setQuantityPerUser($quantityPerUser);
         $this->minimumAmountCondition = new MoneyAmountCondition(
-            new Money(new Number((string) $minimumAmount), new CurrencyId($minimumAmountCurrencyId)),
+            new Money(new DecimalNumber((string) $minimumAmount), new CurrencyId($minimumAmountCurrencyId)),
             $isMinimumAmountTaxExcluded,
             $isMinimumAmountShippingExcluded
         );

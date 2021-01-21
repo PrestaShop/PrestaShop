@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search;
 
-use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -72,7 +71,6 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
     {
-        /** @var AdminFilter $adminFilter */
         $adminFilter = $this->adminFilterRepository->findByEmployeeAndRouteParams(
             $employeeId,
             $shopId,

@@ -929,7 +929,7 @@ if (isset($_POST['submit'])) {
         }
 
         $file_path = $current_path.$subfolder.$subdir.$file;
-    //check if file have illegal caracter
+    //check if file have illegal character
 
     $filename = substr($file, 0, '-'.(strlen($file_array['extension']) + 1));
 

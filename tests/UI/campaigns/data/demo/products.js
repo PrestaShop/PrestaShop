@@ -46,6 +46,15 @@ module.exports = {
       quantity: 1200,
       status: true,
     },
+    demo_13: {
+      id: 8,
+      name: 'Mug Today is a good day',
+      reference: 'demo_13',
+      category: 'Home Accessories',
+      price: 14.28,
+      quantity: 300,
+      status: true,
+    },
     demo_14: {
       id: 19,
       name: 'Customizable mug',

@@ -17,8 +17,8 @@ class AddCustomer extends BOBasePage {
     this.yearOfBirthSelect = 'select#customer_birthday_year';
     this.monthOfBirthSelect = 'select#customer_birthday_month';
     this.dayOfBirthSelect = 'select#customer_birthday_day';
-    this.enabledSwitchLabel = id => `label[for='customer_is_enabled_${id}']`;
-    this.partnerOffersSwitchLabel = id => `label[for='customer_is_partner_offers_subscribed_${id}']`;
+    this.statusToggleInput = toggle => `#customer_is_enabled_${toggle}`;
+    this.partnerOffersToggleInput = toggle => `#customer_is_partner_offers_subscribed_${toggle}`;
     this.groupAccessCheckbox = id => `#customer_group_ids_${id}`;
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
@@ -36,7 +36,15 @@ class AddCustomer extends BOBasePage {
    * @return {Promise<void>}
    */
   async fillCustomerForm(page, customerData) {
-    await page.click(this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
+    // Click on label for social input
+    const socialTitleElement = await this.getParentElement(
+      page,
+      this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1),
+    );
+
+    await socialTitleElement.click();
+
+    // Fill form
     await this.setValue(page, this.firstNameInput, customerData.firstName);
     await this.setValue(page, this.lastNameInput, customerData.lastName);
     await this.setValue(page, this.emailInput, customerData.email);
@@ -44,8 +52,8 @@ class AddCustomer extends BOBasePage {
     await page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
     await page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
     await page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
-    await page.click(this.enabledSwitchLabel(customerData.enabled ? 1 : 0));
-    await page.click(this.partnerOffersSwitchLabel(customerData.partnerOffers ? 1 : 0));
+    await page.check(this.statusToggleInput(customerData.enabled ? 1 : 0));
+    await page.check(this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
     await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
   }
@@ -63,7 +71,7 @@ class AddCustomer extends BOBasePage {
 
     // Save Customer
     await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

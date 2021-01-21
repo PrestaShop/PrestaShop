@@ -11,6 +11,8 @@ $color-separator: #dfdfdf;
 $background-info: #dcf4f9;
 $purple: #34219e;
 $bright-status-text: #383838;
+$color-error: #c05c67 !default;
+$color-active: #25b9d7 !default;
 
 // Sizes
 
@@ -19,12 +21,11 @@ $size-navbar-width-mini: 3.125rem;
 $size-navbar-link-height: 1.75rem;
 $size-header-height: 2.5rem;
 $size-header-toolbar-height: 5.313rem;
-$header-mobile-padding-y: .625rem;
+$header-mobile-padding-y: 0.625rem;
 
 // Imported from bootstrap
 
 $grid-gutter-width: 1.875rem;
-$border-radius: 0;
 $enable-transitions: true;
 
 //UI Kit variables - to be removed
@@ -47,10 +48,10 @@ $brand-primary: $primary;
 $brand-secondary: $secondary;
 $brand-info: #5bc0de !default;
 $brand-warning: #f0ad4e !default;
-$font-size-base: .875rem;
+$font-size-base: 0.875rem;
 $font-weight-normal: 400;
 $font-weight-semibold: 600;
-$font-size-xs: .625rem;
+$font-size-xs: 0.625rem;
 $font-size-h1: 1.5rem;
 $nav-tabs-active-link-hover-border-color: $brand-primary;
 $link-color: $brand-primary;
@@ -64,7 +65,7 @@ $spacing-widths: (
   xs: $spacing-base / 3,
   s: $spacing-base / 2,
   n: $spacing-base,
-  l: $spacing-base * 2
+  l: $spacing-base * 2,
 );
 $grid-breakpoints: (
   xs: 0,
@@ -72,14 +73,14 @@ $grid-breakpoints: (
   md: 768px,
   lg: 1024px,
   xl: 1300px,
-  xxl: 1600px // PS custom
+  xxl: 1600px, // PS custom
 );
 
 $card-border-color: #dbe6e9 !default;
 $module-logo-size: 45px;
 
-$card-spacer-x: .625rem !default;
-$card-spacer-y: .625rem !default;
+$card-spacer-x: 0.625rem !default;
+$card-spacer-y: 0.625rem !default;
 $card-border-width: 1px !default;
 $card-border-radius: 5px !default;
 $card-border-radius-inner: $card-border-radius !default;

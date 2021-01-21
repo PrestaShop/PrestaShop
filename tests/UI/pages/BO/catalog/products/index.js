@@ -11,6 +11,8 @@ class Product extends BOBasePage {
     this.productMultiDeletedSuccessfulMessage = 'Product(s) successfully deleted.';
     this.productDeactivatedSuccessfulMessage = 'Product successfully deactivated.';
     this.productActivatedSuccessfulMessage = 'Product successfully activated.';
+    this.productMultiActivatedSuccessfulMessage = 'Product(s) successfully activated.';
+    this.productMultiDeactivatedSuccessfulMessage = 'Product(s) successfully deactivated.';
 
     // Selectors
     // List of products
@@ -22,11 +24,16 @@ class Product extends BOBasePage {
     this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
     this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
     this.dropdownMenuDeleteLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
+    this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
+    this.dropdownMenuDuplicateLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
     this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
+    this.productBulkMenuButtonState = state => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
+    this.productBulkEnableLink = `${this.productBulkDropdownMenu} a[onclick*='activate_all']`;
+    this.productBulkDisableLink = `${this.productBulkDropdownMenu} a[onclick*='deactivate_all']`;
     // Filters input
     this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
     this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
@@ -45,10 +52,10 @@ class Product extends BOBasePage {
     this.productsListTableColumnReference = row => `${this.productsListTableRow(row)} td:nth-child(5)`;
     this.productsListTableColumnCategory = row => `${this.productsListTableRow(row)} td:nth-child(6)`;
     this.productsListTableColumnPrice = row => `${this.productsListTableRow(row)} td:nth-child(7)`;
-    this.productsListTableColumnPriceTTC = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
+    this.productsListTableColumnPriceATI = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
-    this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10)`;
-    this.productsListTableColumnStatusEnabled = row => `${this.productsListTableColumnStatus(row)} .action-enabled`;
+    this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10) .ps-switch`;
+    this.productsListTableColumnStatusInput = row => `${this.productsListTableColumnStatus(row)} input`;
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
@@ -150,7 +157,7 @@ class Product extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getProductPriceFromList(page, row, withTaxes) {
-    const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
+    const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPrice;
     const text = await this.getTextContent(page, selector(row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
     return parseFloat(price);
@@ -183,10 +190,16 @@ class Product extends BOBasePage {
    * Get Product Status
    * @param page
    * @param row
-   * @returns {Promise<string>}
+   * @returns {Promise<boolean>}
    */
   async getProductStatusFromList(page, row) {
-    return this.getTextContent(page, this.productsListTableColumnStatus(row));
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.productsListTableColumnStatusInput(row)}[checked]`,
+      'value',
+    );
+
+    return inputValue !== '0';
   }
 
   /**
@@ -389,6 +402,49 @@ class Product extends BOBasePage {
   }
 
   /**
+   * Open row dropdown for a product
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async openProductDropdown(page, row) {
+    await Promise.all([
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(row)),
+    ]);
+  }
+
+  /**
+   * Preview product from list
+   * @param page
+   * @param row
+   * @return {Promise<Page>}
+   */
+  async previewProduct(page, row) {
+    // Open dropdown
+    await this.openProductDropdown(page, row);
+
+    // Open product in a new tab
+    return this.openLinkWithTargetBlank(page, this.dropdownMenuPreviewLink(row));
+  }
+
+  /**
+   * Duplicate product
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async duplicateProduct(page, row) {
+    // Open dropdown
+    await this.openProductDropdown(page, row);
+
+    // Duplicate product and go to add product page
+    await this.clickAndWaitForNavigation(page, this.dropdownMenuDuplicateLink(row));
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
    * Delete product with dropdown Menu
    * @param page
    * @param productData
@@ -410,7 +466,7 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -426,7 +482,7 @@ class Product extends BOBasePage {
     ]);
 
     await Promise.all([
-      this.waitForVisibleSelector(page, `${this.productBulkMenuButton}[aria-expanded='true']`),
+      this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
       page.click(this.productBulkMenuButton),
     ]);
 
@@ -436,17 +492,28 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
-   * Get Value of column Displayed
+   * Bulk set status
    * @param page
-   * @param row, row in table
-   * @return {Promise<boolean>}
+   * @param status
+   * @return {Promise<string>}
    */
-  async getToggleColumnValue(page, row) {
-    return this.elementVisible(page, this.productsListTableColumnStatusEnabled(row), 100);
+  async bulkSetStatus(page, status) {
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.productBulkMenuButton),
+      page.click(this.selectAllBulkCheckboxLabel),
+    ]);
+
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
+      page.click(this.productBulkMenuButton),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, status ? this.productBulkEnableLink : this.productBulkDisableLink);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -456,13 +523,13 @@ class Product extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.productsListTableColumnStatus(row), 2000);
-    const actualValue = await this.getToggleColumnValue(page, row);
+  async setProductStatus(page, row, valueWanted = true) {
+    const actualValue = await this.getProductStatusFromList(page, row);
     if (actualValue !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.productsListTableColumnStatus(row));
       return true;
     }
+
     return false;
   }
 
@@ -488,14 +555,15 @@ class Product extends BOBasePage {
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
-    let i = 0;
 
-    while (await this.elementNotVisible(page, sortColumnDiv, 500) && i < 2) {
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 2000);
   }
 
   /* Pagination methods */

@@ -55,7 +55,7 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
      *
      * @param AddCustomizationCommand $command
      *
-     * @return int
+     * @return CustomizationId|null
      *
      * @throws CartNotFoundException
      * @throws CustomizationConstraintException

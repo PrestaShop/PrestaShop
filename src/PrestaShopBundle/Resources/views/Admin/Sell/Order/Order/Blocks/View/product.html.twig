@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+
 {% set rowIsDisplayed =  (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
 <tr id="orderProduct_{{ product.orderDetailId }}" class="cellProduct{% if rowIsDisplayed %} d-none d-print-table-row{% endif %}">
   <td class="cellProductImg">
@@ -69,7 +70,7 @@
       {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
     {% endif %}
   </td>
-  <td class="cellProductAvailableQuantity text-center">{{ product.availableQuantity }}</td>
+  <td class="cellProductAvailableQuantity text-center{% if not isAvailableQuantityDisplayed %} d-none{% endif %}">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
   {% if orderForViewing.hasInvoice() %}
     <td>{{ product.orderInvoiceNumber }}</td>
@@ -83,6 +84,8 @@
         data-placement="top"
         data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
         data-order-detail-id="{{ product.orderDetailId }}"
+        data-product-id="{{ product.id }}"
+        data-combination-id="{{ product.combinationId }}"
         data-product-quantity="{{ product.quantity }}"
         data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
         data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
@@ -157,7 +160,7 @@
               <div class="mr-4">
                 <p><strong>{{ customization.name }}</strong></p>
                 <p>
-                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, 'type': customization.type, "name": customization.name, "value": customization.value})}}" download>
+                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, 'name': customization.name|url_encode|replace({'%': '_'}), "value": customization.value})}}" download>
                     <img src="{{ customization.image }}" alt="{{ customization.name }}">
                   </a>
                 </p>

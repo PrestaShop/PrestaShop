@@ -24,14 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Integration;
+namespace LegacyTests\Integration\classes\module;
 
 use LegacyTests\TestCase\IntegrationTestCase;
 
 use LegacyTests\TestCase\Module as HelperModule;
 use Module;
 
-class ModulesGetOverrideTest extends IntegrationTestCase
+class ModuleGetOverrideTest extends IntegrationTestCase
 {
     /**
      * @return array a list of modules to control override features.

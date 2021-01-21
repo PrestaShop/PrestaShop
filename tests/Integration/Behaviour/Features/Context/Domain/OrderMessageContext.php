@@ -27,8 +27,12 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use OrderMessage;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\AddOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
+use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderMessageContext extends AbstractDomainFeatureContext
 {
@@ -65,5 +69,50 @@ class OrderMessageContext extends AbstractDomainFeatureContext
         );
 
         $this->getSharedStorage()->set($reference, new OrderMessage($orderMessageId->getValue()));
+    }
+
+    /**
+     * @Then order :orderReference must have no customer message
+     *
+     * @param string $orderReference
+     *
+     * @throws RuntimeException
+     */
+    public function orderMustHaveNoCustomerMessage(string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        if (0 !== count($orderForViewing->getMessages()->getMessages())) {
+            throw new RuntimeException(sprintf('Order #%s do have messages', $orderId));
+        }
+    }
+
+    /**
+     * @Then order :orderReference must have customer message with content :messageContent
+     *
+     * @param string $orderReference
+     * @param string $messageContent
+     *
+     * @throws RuntimeException
+     */
+    public function orderMustHaveCustomerMessage(string $orderReference, string $messageContent)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $messageFound = false;
+        foreach ($orderForViewing->getMessages()->getMessages() as $orderMessageForViewing) {
+            if (0 === strcmp($orderMessageForViewing->getMessage(), $messageContent)) {
+                $messageFound = true;
+            }
+        }
+        if (!$messageFound) {
+            throw new RuntimeException(sprintf('Message "%s" not found in Order #%s messages', $messageContent, $orderId));
+        }
     }
 }

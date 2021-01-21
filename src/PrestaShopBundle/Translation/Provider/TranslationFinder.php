@@ -82,8 +82,8 @@ class TranslationFinder
     }
 
     /**
-     * @param $paths
-     * @param $pattern
+     * @param string|string[] $paths
+     * @param string $pattern
      *
      * @return Finder
      *

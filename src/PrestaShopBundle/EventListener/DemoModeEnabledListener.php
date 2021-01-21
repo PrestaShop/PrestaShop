@@ -33,7 +33,7 @@ use ReflectionClass;
 use ReflectionObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -54,7 +54,7 @@ class DemoModeEnabledListener
     private $translator;
 
     /**
-     * @var SessionInterface
+     * @var Session
      */
     private $session;
 
@@ -73,14 +73,14 @@ class DemoModeEnabledListener
      *
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param SessionInterface $session
+     * @param Session $session
      * @param Reader $annotationReader
-     * @param $isDemoModeEnabled
+     * @param bool $isDemoModeEnabled
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
-        SessionInterface $session,
+        Session $session,
         Reader $annotationReader,
         $isDemoModeEnabled
     ) {
@@ -149,7 +149,7 @@ class DemoModeEnabledListener
     /**
      * Retrieve DemoRestricted Annotation.
      *
-     * @param Controller $controllerObject
+     * @param object $controllerObject
      * @param string $methodName
      *
      * @return DemoRestricted|null

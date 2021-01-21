@@ -29,16 +29,17 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Configuration;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Uploads manufacturer logo image
  */
-final class ManufacturerImageUploader extends AbstractImageUploader
+final class ManufacturerImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
      * {@inheritdoc}

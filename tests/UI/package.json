@@ -7,11 +7,15 @@
   },
   "scripts": {
     "linkchecker": "./node_modules/mocha/bin/mocha campaigns/tools/linkchecker.js",
-    "lint": "eslint  --fix --ignore-path .gitignore .",
+    "lint-fix": "eslint --fix --ignore-path .gitignore .",
+    "lint": "eslint --ignore-path .gitignore .",
     "specific-test": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
     "sanity-tests": "./node_modules/mocha/bin/mocha --file campaigns/utils/setup.js campaigns/sanity/*",
-    "sanity-travis": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
-    "functional-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/*"
+    "sanity-tests-fast-fail": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
+    "functional-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/*",
+    "regression-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/regression/*",
+    "all-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*",
+    "step-identifiers-checker": "node campaigns/tools/stepIdentifiersChecker.js "
   },
   "_moduleAliases": {
     "@pages": "pages",
@@ -45,7 +49,7 @@
     "mochawesome": "^2.3.0",
     "module-alias": "^2.2.2",
     "pdfjs-dist": "^2.3.200",
-    "playwright": "^1.1.1"
+    "playwright": "1.6.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
