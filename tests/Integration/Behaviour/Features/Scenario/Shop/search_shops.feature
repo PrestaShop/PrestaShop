@@ -10,11 +10,11 @@ Feature: Search shops given a search term (BO)
   Background:
     Given multiple shop context is loaded
     Given shop "shop1" with name "test_shop" exists
+
+  Scenario: I search for existing shops
     Given I add a shop group "shopGroup2" with name "test_second_shop_group" and color "green"
     And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "test_second_shop_group"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
-
-  Scenario: I search for existing shops
     When I search for shops with the term "test" I should get the following results:
       | name             | group_name             | color | group_color |
       | test_shop        | Default                |       |             |
