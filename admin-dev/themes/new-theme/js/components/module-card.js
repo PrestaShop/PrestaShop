@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import ConfirmModal from '@components/modal';
 
 const {$} = window;
 
@@ -150,12 +151,47 @@ export default class ModuleCard {
       );
     });
 
-    $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function () {
-      return (
-        self.dispatchPreEvent('update', this)
-        && self.confirmAction('update', this)
-        && self.requestToController('update', $(this))
-      );
+    $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function (event) {
+      event.preventDefault();
+      const modal = $(`#${$(this).data('confirm_modal')}`);
+      const isMaintenanceMode = window.isShopMaintenance;
+
+      if (modal.length !== 1) {
+        // Modal body element
+        const maintenanceLink = document.createElement('a');
+        maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
+        maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
+        maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
+
+        const updateConfirmModal = new ConfirmModal(
+          {
+            id: 'confirm-module-update-modal',
+            confirmTitle: window.moduleTranslations.singleModuleModalUpdateTitle,
+            closeButtonLabel: window.moduleTranslations.moduleModalUpdateCancel,
+            confirmButtonLabel: isMaintenanceMode
+              ? window.moduleTranslations.moduleModalUpdateUpgrade
+              : window.moduleTranslations.upgradeAnywayButtonText,
+            confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
+            confirmMessage: isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+            closable: true,
+            customButtons: isMaintenanceMode ? [] : [maintenanceLink],
+          },
+
+          () => self.dispatchPreEvent('update', this)
+            && self.confirmAction('update', this)
+            && self.requestToController('update', $(this)),
+        );
+
+        updateConfirmModal.show();
+      } else {
+        return (
+          self.dispatchPreEvent('update', this)
+          && self.confirmAction('update', this)
+          && self.requestToController('update', $(this))
+        );
+      }
+
+      return false;
     });
 
     $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {

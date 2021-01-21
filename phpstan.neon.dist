@@ -19,3 +19,12 @@ parameters:
 		- Order
 		- OrderInvoice
 		- Product
+
+includes:
+    - vendor/prestashop/phpstan-prestashop/extension.neon
+
+services:
+	strictTypesForNewClassesRuleConfigurationFileLoader:
+		class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
+		arguments:
+			- .github/workflows/phpstan/list.php

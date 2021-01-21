@@ -39,10 +39,10 @@ class PricesCommandBuilder implements ProductCommandBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData)
+    public function buildCommand(ProductId $productId, array $formData): array
     {
         if (!isset($formData['price'])) {
-            return null;
+            return [];
         }
 
         $priceData = $formData['price'];
@@ -70,6 +70,6 @@ class PricesCommandBuilder implements ProductCommandBuilderInterface
             $command->setUnity((string) $priceData['unity']);
         }
 
-        return $command;
+        return [$command];
     }
 }

@@ -932,13 +932,15 @@ services:
 
     form.type.manufacturer_address:
         class: 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.adapter.form.choice_provider.manufacturer_name_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
             - '@prestashop.adapter.form.choice_provider.country_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
-            - '@translator'
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoicesAttributes()'
+            - '@prestashop.router'
         tags:
             - { name: form.type }
 
@@ -996,12 +998,11 @@ services:
     form.type.sell.supplier:
         class: 'PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType'
         arguments:
-            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoicesAttributes()'
             - '@prestashop.adapter.form.choice_provider.country_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@router'
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
         tags:
           - { name: form.type }
@@ -1260,6 +1261,17 @@ services:
             - '@prestashop.core.form.choice_provider.carrier_by_reference_id'
             - '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
         public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.options_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\OptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
+            - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
+            - '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
         tags:
             - { name: form.type }
 

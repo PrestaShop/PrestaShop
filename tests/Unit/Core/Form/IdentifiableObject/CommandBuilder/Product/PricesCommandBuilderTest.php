@@ -37,13 +37,13 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
      * @dataProvider getExpectedCommands
      *
      * @param array $formData
-     * @param UpdateProductPricesCommand|null $expectedCommand
+     * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, ?UpdateProductPricesCommand $expectedCommand)
+    public function testBuildCommand(array $formData, array $expectedCommands)
     {
         $builder = new PricesCommandBuilder();
-        $builtCommand = $builder->buildCommand($this->getProductId(), $formData);
-        $this->assertEquals($expectedCommand, $builtCommand);
+        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     public function getExpectedCommands()
@@ -52,7 +52,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'no_price_data' => ['useless value'],
             ],
-            null,
+            [],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -62,7 +62,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'not_handled' => 0,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -74,7 +74,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'price_tax_excluded' => 45.56,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -87,7 +87,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'price_tax_included' => '65.56', // Price tax included is ignored
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -99,7 +99,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'ecotax' => '45.56',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -111,7 +111,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'tax_rules_group_id' => '42',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -123,7 +123,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'on_sale' => '42',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -135,7 +135,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'on_sale' => '0',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -147,7 +147,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'wholesale_price' => '45.56',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -159,7 +159,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'unit_price' => '45.56',
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
@@ -171,7 +171,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'unity' => 'kg',
                 ],
             ],
-            $command,
+            [$command],
         ];
     }
 }

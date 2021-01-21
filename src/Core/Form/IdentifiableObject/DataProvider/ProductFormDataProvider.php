@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 
@@ -64,6 +65,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'basic' => $this->extractBasicData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
+            'options' => $this->extractOptionsData($productForEditing),
         ];
     }
 
@@ -146,5 +148,42 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'delivery_time_out_stock_note' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
             'carriers' => $shipping->getCarrierReferences(),
         ];
+    }
+
+    private function extractOptionsData(ProductForEditing $productForEditing): array
+    {
+        $options = $productForEditing->getOptions();
+        $details = $productForEditing->getDetails();
+
+        return [
+            'active' => $options->isActive(),
+            'visibility' => $options->getVisibility(),
+            'available_for_order' => $options->isAvailableForOrder(),
+            'show_price' => $options->showPrice(),
+            'online_only' => $options->isOnlineOnly(),
+            'show_condition' => $options->showCondition(),
+            'condition' => $options->getCondition(),
+            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
+            'mpn' => $details->getMpn(),
+            'upc' => $details->getUpc(),
+            'ean_13' => $details->getEan13(),
+            'isbn' => $details->getIsbn(),
+            'reference' => $details->getReference(),
+        ];
+    }
+
+    /**
+     * @param LocalizedTags[] $localizedTagsList
+     *
+     * @return array<int, string>
+     */
+    private function presentTags(array $localizedTagsList): array
+    {
+        $tags = [];
+        foreach ($localizedTagsList as $localizedTags) {
+            $tags[$localizedTags->getLanguageId()] = implode(',', $localizedTags->getTags());
+        }
+
+        return $tags;
     }
 }

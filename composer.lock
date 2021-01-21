@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a30571d9a8b17340cf72e71cb77f2cd",
+    "content-hash": "4df9779a0cd4118a5deb93d658813651",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -9710,6 +9710,58 @@
                 "xunit"
             ],
             "time": "2020-01-08T08:45:45+00:00"
+        },
+        {
+            "name": "prestashop/phpstan-prestashop",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/phpstan-prestashop.git",
+                "reference": "f6eec01334d6ef2e7c6a92796d9f0ba2c45d1944"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/phpstan-prestashop/zipball/f6eec01334d6ef2e7c6a92796d9f0ba2c45d1944",
+                "reference": "f6eec01334d6ef2e7c6a92796d9f0ba2c45d1944",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "phpstan/phpstan": "^0.12.48"
+            },
+            "require-dev": {
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "phpstan/phpstan-strict-rules": "^0.12.5",
+                "phpunit/phpunit": "^7.5.20",
+                "symfony/console": "^5.2"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon",
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStanForPrestaShop\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PrestaShop extensions for PHPStan",
+            "support": {
+                "issues": "https://github.com/PrestaShop/phpstan-prestashop/issues",
+                "source": "https://github.com/PrestaShop/phpstan-prestashop/tree/1.0.0"
+            },
+            "time": "2021-01-07T16:32:53+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

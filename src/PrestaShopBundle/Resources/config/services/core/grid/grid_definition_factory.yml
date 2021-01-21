@@ -13,9 +13,6 @@ services:
     prestashop.core.grid.definition.factory.logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
-            - "@=service('router').generate('admin_logs_index')"
         public: true
 
     prestashop.core.grid.definition.factory.email_logs:
@@ -30,9 +27,6 @@ services:
     prestashop.core.grid.definition.factory.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'sqlmanager', 'action': 'index'})"
-            - "@=service('router').generate('admin_sql_requests_index')"
         public: true
 
     prestashop.core.grid.definition.factory.backup:
@@ -45,8 +39,6 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'webservice', 'action': 'index'})"
-            - "@=service('router').generate('admin_webservice_keys_index')"
         public: true
 
     prestashop.core.grid.definition.factory.meta:

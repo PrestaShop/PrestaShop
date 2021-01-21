@@ -89,6 +89,10 @@
     box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
     @include border-radius(4px);
 
+    @include media-breakpoint-down(sm) {
+      width: 100%;
+    }
+
     select.form-control {
       @include border-radius(4px);
     }
@@ -178,6 +182,10 @@
     .table {
       table-layout: fixed;
 
+      @include media-breakpoint-down(sm) {
+        table-layout: unset;
+      }
+
       thead {
         th {
           &.product-title {
@@ -227,6 +235,10 @@
       }
       .bulk-qty {
         max-width: 100px;
+
+        @include media-breakpoint-down(sm) {
+          max-width: 60px;
+        }
       }
       .update-qty {
         color: #fff;
@@ -234,6 +246,47 @@
       }
       .qty {
         padding-left: 20px;
+      }
+
+
+      @include media-breakpoint-down(sm) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        > div {
+          width: 55%;
+
+          .update-qty {
+            display: flex;
+            align-items: center;
+            max-width: 90%;
+            // stylelint-disable-next-line
+            margin-right: 0 !important;
+            white-space: inherit;
+          }
+
+          &:first-of-type {
+            width: 45%;
+          }
+
+          &:last-of-type {
+            display: flex;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+
+  .content-topbar {
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+      margin-bottom: 0.5rem;
+
+      &-right {
+        // stylelint-disable-next-line
+        display: none !important;
       }
     }
   }

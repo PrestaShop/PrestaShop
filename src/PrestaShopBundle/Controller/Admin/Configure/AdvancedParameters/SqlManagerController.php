@@ -81,9 +81,6 @@ class SqlManagerController extends FrameworkBundleAdminController
         $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
         $grid = $gridLogFactory->getGrid($filters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
@@ -99,11 +96,13 @@ class SqlManagerController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),
-            'requestSqlGrid' => $presentedGrid,
+            'requestSqlGrid' => $this->presentGrid($grid),
         ]);
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *

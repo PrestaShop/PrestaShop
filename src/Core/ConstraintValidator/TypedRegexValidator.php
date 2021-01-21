@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -111,6 +114,9 @@ class TypedRegexValidator extends ConstraintValidator
             TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
             TypedRegex::TYPE_FILE_NAME => '/^[a-zA-Z0-9_.-]+$/',
             TypedRegex::TYPE_DNI_LITE => AddressConstraint::DNI_LITE_PATTERN,
+            TypedRegex::TYPE_UPC => Upc::VALID_PATTERN,
+            TypedRegex::TYPE_EAN_13 => Ean13::VALID_PATTERN,
+            TypedRegex::TYPE_ISBN => Isbn::VALID_PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {

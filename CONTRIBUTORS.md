@@ -403,6 +403,7 @@ GitHub contributors:
 - Lucas CERDAN
 - Lucas Rolff
 - LucasC
+- Ludovic CHEVRAUX
 - Luis David de la Fuente
 - Lyo Nick
 - LyoNick

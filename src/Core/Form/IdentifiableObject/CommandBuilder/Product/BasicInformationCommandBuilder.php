@@ -40,10 +40,10 @@ class BasicInformationCommandBuilder implements ProductCommandBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData)
+    public function buildCommand(ProductId $productId, array $formData): array
     {
         if (!isset($formData['basic'])) {
-            return null;
+            return [];
         }
 
         $basicData = $formData['basic'];
@@ -62,6 +62,6 @@ class BasicInformationCommandBuilder implements ProductCommandBuilderInterface
             $command->setLocalizedShortDescriptions($basicData['description_short']);
         }
 
-        return $command;
+        return [$command];
     }
 }
