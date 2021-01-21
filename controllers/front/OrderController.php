@@ -397,7 +397,8 @@ class OrderControllerCore extends FrontController
                     $this->context->cart->getGiftWrappingPrice(
                         $checkoutDeliveryStep->getIncludeTaxes()
                     )
-                );
+                )
+                ->setSeparatePackagesAllowed((bool)Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
 
             $checkoutProcess->addStep($checkoutDeliveryStep);
         }
