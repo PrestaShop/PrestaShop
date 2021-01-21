@@ -27,9 +27,9 @@
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -44,9 +44,13 @@ class SearchProviderTest extends TestCase
 
     protected function setUp()
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)
-            ->getMock()
-        ;
+        $loader = $this->getMockBuilder(DatabaseTranslationLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $loader
+            ->method('load')
+            ->willReturn(new MessageCatalogue('fr-FR'));
+
         $externalSystemProvider = $this->getMockBuilder(ExternalModuleLegacySystemProvider::class)
             ->disableOriginalConstructor()
             ->getMock()

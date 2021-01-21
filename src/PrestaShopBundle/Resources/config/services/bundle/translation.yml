@@ -17,7 +17,6 @@ services:
                 - '@prestashop.translation.search_provider'
                 - '@prestashop.translation.external_module_provider'
 
-
     ps.translations_factory:
         alias: "prestashop.translation.translations_factory"
 

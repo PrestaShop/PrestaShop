@@ -32,9 +32,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class DatabaseTranslationLoader
+class DatabaseTranslationLoader implements LoaderInterface
 {
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -50,13 +51,14 @@ class DatabaseTranslationLoader
     /**
      * Loads all user translations according to search parameters
      *
+     * @param mixed $resource
      * @param string $locale
      * @param string $domain
      * @param string|null $theme
      *
      * @return MessageCatalogue
      */
-    public function load(string $locale, string $domain = 'messages', ?string $theme = null): MessageCatalogue
+    public function load($resource, $locale, $domain = 'messages', ?string $theme = null): MessageCatalogue
     {
         static $langs = [];
         $catalogue = new MessageCatalogue($locale);
@@ -97,7 +99,7 @@ class DatabaseTranslationLoader
      * @param QueryBuilder $queryBuilder
      * @param Lang $currentLang
      */
-    private function addLangConstraint(QueryBuilder $queryBuilder, Lang $currentLang)
+    private function addLangConstraint(QueryBuilder $queryBuilder, Lang $currentLang): void
     {
         $queryBuilder->andWhere('t.lang =:lang')
             ->setParameter('lang', $currentLang);
@@ -107,7 +109,7 @@ class DatabaseTranslationLoader
      * @param QueryBuilder $queryBuilder
      * @param string|null $theme
      */
-    private function addThemeConstraint(QueryBuilder $queryBuilder, ?string $theme = null)
+    private function addThemeConstraint(QueryBuilder $queryBuilder, ?string $theme = null): void
     {
         if (null === $theme) {
             $queryBuilder->andWhere('t.theme IS NULL');
@@ -122,7 +124,7 @@ class DatabaseTranslationLoader
      * @param QueryBuilder $queryBuilder
      * @param string $domain
      */
-    private function addDomainConstraint(QueryBuilder $queryBuilder, $domain)
+    private function addDomainConstraint(QueryBuilder $queryBuilder, string $domain): void
     {
         if ($domain !== '*') {
             $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')

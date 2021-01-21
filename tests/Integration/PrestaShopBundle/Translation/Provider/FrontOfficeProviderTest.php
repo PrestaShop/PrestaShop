@@ -27,8 +27,8 @@
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -43,8 +43,12 @@ class FrontOfficeProviderTest extends TestCase
 
     protected function setUp()
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)
+        $loader = $this->getMockBuilder(DatabaseTranslationLoader::class)
+            ->disableOriginalConstructor()
             ->getMock();
+        $loader
+            ->method('load')
+            ->willReturn(new MessageCatalogue('fr-FR'));
 
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
 
