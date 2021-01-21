@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Translation\Provider;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
@@ -42,7 +41,7 @@ class ModulesProvider implements ProviderInterface
     const DEFAULT_LOCALE = 'en-US';
 
     /**
-     * @var LoaderInterface the loader interface
+     * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
 
@@ -61,7 +60,7 @@ class ModulesProvider implements ProviderInterface
      */
     protected $domain;
 
-    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
+    public function __construct(DatabaseTranslationLoader $databaseLoader, $resourceDirectory)
     {
         $this->databaseLoader = $databaseLoader;
         $this->resourceDirectory = $resourceDirectory;
@@ -218,7 +217,7 @@ class ModulesProvider implements ProviderInterface
             if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
                 continue;
             }
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -237,7 +236,7 @@ class ModulesProvider implements ProviderInterface
     }
 
     /**
-     * @return LoaderInterface
+     * @return DatabaseTranslationLoader
      */
     public function getDatabaseLoader()
     {

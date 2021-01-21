@@ -47,7 +47,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     const DEFAULT_LOCALE = 'en-US';
 
     /**
-     * @var LoaderInterface the loader interface
+     * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
 
@@ -92,7 +92,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     private $defaultCatalogueCache;
 
     public function __construct(
-        LoaderInterface $databaseLoader,
+        DatabaseTranslationLoader $databaseLoader,
         $resourceDirectory,
         LoaderInterface $legacyFileLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor,
@@ -224,7 +224,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
             if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
                 continue;
             }
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -243,7 +243,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     }
 
     /**
-     * @return LoaderInterface
+     * @return DatabaseTranslationLoader
      */
     public function getDatabaseLoader()
     {

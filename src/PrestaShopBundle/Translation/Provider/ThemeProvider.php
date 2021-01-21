@@ -34,7 +34,6 @@ use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
@@ -73,7 +72,7 @@ class ThemeProvider implements ProviderInterface
     public $defaultTranslationDir;
 
     /**
-     * @var LoaderInterface the loader interface
+     * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
 
@@ -92,7 +91,7 @@ class ThemeProvider implements ProviderInterface
      */
     protected $domain;
 
-    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
+    public function __construct(DatabaseTranslationLoader $databaseLoader, $resourceDirectory)
     {
         $this->databaseLoader = $databaseLoader;
         $this->resourceDirectory = $resourceDirectory;
@@ -181,6 +180,8 @@ class ThemeProvider implements ProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @TODO: Don't know why default catalogue was not taken
      */
     public function getMessageCatalogue(): MessageCatalogueInterface
     {
@@ -258,7 +259,7 @@ class ThemeProvider implements ProviderInterface
             if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
                 continue;
             }
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $theme);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
@@ -286,7 +287,7 @@ class ThemeProvider implements ProviderInterface
     }
 
     /**
-     * @return LoaderInterface
+     * @return DatabaseTranslationLoader
      */
     public function getDatabaseLoader()
     {
