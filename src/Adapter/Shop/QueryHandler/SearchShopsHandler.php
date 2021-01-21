@@ -63,7 +63,6 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
         $result = [];
 
         foreach ($shopList as $shop) {
-            // @todo add $shop['shopGroup']['color'] parameter when PR 20125 is merged
             $result[] = new FoundShop(
                 $shop['id'],
                 $shop['color'] ?? '',
