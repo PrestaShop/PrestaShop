@@ -32,6 +32,7 @@ use Db;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -130,45 +131,70 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Transform table:name,group_name,color,group_color
+     *
+     * @param TableNode $tableNode
+     *
+     * @return array
+     */
+    public function transformShops(TableNode $shopsTable): array
+    {
+        $dataRows = $shopsTable->getHash();
+        $foundShops = [];
+
+        foreach ($dataRows as $row) {
+            $foundShops[] = new FoundShop(
+                4, // id not relevant for the test
+                $row['color'],
+                $row['name'],
+                4, // id not relevant for the test
+                $row['group_name'],
+                $row['group_color']
+            );
+        }
+
+        return $foundShops;
+    }
+
+    /**
      * @When I search for shops with the term :searchTerm I should get the following results:
      *
      * @param string $searchTerm
-     * @param TableNode $table
+     * @param array $expectedShops
      */
-    public function assertFoundShops(string $searchTerm, TableNode $table): void
+    public function assertFoundShops(string $searchTerm, array $expectedShops): void
     {
-        $expectedShops = $table->getColumnsHash();
         $foundShops = $this->getQueryBus()->handle(new SearchShops($searchTerm));
 
-        foreach ($expectedShops as $key => $currentExpectedShop) {
+        foreach ($expectedShops as $currentExpectedShop) {
             $wasCurrentExpectedShopFound = false;
             foreach ($foundShops as $currentFoundShop) {
-                if ($currentExpectedShop['name'] === $currentFoundShop->getName()) {
+                if ($currentExpectedShop->getName() === $currentFoundShop->getName()) {
                     $wasCurrentExpectedShopFound = true;
                     Assert::assertEquals(
-                        $currentExpectedShop['group_name'],
+                        $currentExpectedShop->getGroupName(),
                         $currentFoundShop->getGroupName(),
                         sprintf(
                             'Expected and found shops\'s groups don\'t match (%s and %s)',
-                            $currentExpectedShop['group_name'],
+                            $currentExpectedShop->getGroupName(),
                             $currentFoundShop->getGroupName()
                         )
                     );
                     Assert::assertEquals(
-                        $currentExpectedShop['group_color'],
+                        $currentExpectedShop->getGroupColor(),
                         $currentFoundShop->getGroupColor(),
                         sprintf(
                             'Expected and found shop groups\'s colors don\'t match (%s and %s)',
-                            $currentExpectedShop['group_color'],
+                            $currentExpectedShop->getGroupColor(),
                             $currentFoundShop->getGroupColor()
                         )
                     );
                     Assert::assertEquals(
-                        $currentExpectedShop['color'],
+                        $currentExpectedShop->getColor(),
                         $currentFoundShop->getColor(),
                         sprintf(
                             'Expected and found shops\'s colors don\'t match (%s and %s)',
-                            $currentExpectedShop['color'],
+                            $currentExpectedShop->getColor(),
                             $currentFoundShop->getColor()
                         )
                     );
@@ -178,8 +204,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             if (!$wasCurrentExpectedShopFound) {
                 throw new RuntimeException(sprintf(
                     'Expected shop with name %s in shop group %s was not found',
-                    $currentExpectedShop['name'],
-                    $currentExpectedShop['group_name']
+                    $currentExpectedShop->getName(),
+                    $currentExpectedShop->getGroupName()
                 ));
             }
         }
