@@ -20,8 +20,8 @@ class PasswordReminder extends FOBasePage {
   Methods
    */
 
-  /** Fill the reset password email form field and click "send reset link" button
-   *
+  /**
+   * Fill the reset password email form field and click "send reset link" button
    * @param page
    * @param email
    * @returns {Promise<void>}
