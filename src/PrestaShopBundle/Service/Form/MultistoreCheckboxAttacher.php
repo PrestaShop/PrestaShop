@@ -41,6 +41,8 @@ class MultistoreCheckboxAttacher
     private $configuration;
     private $context;
 
+    public const MULTISTORE_FIELD_PREFIX = 'multistore_';
+
     /**
      * MultistoreCheckboxAttacher constructor.
      *
@@ -102,7 +104,7 @@ class MultistoreCheckboxAttacher
             );
 
             // for each field in the configuration form, we add a multistore checkbox
-            $fieldName = 'multistore_' . $child->getName();
+            $fieldName = self::MULTISTORE_FIELD_PREFIX . $child->getName();
             $form->add($fieldName, CheckboxType::class, [
                 'required' => false,
                 'data' => $isOveriddenInCurrentContext,
