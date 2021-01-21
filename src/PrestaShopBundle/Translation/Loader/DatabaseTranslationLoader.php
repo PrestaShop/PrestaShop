@@ -32,9 +32,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class DatabaseTranslationLoader
+class DatabaseTranslationLoader implements LoaderInterface
 {
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -50,13 +51,14 @@ class DatabaseTranslationLoader
     /**
      * Loads all user translations according to search parameters
      *
+     * @param mixed $resource
      * @param string $locale
      * @param string $domain
      * @param string|null $theme
      *
      * @return MessageCatalogue
      */
-    public function load(string $locale, string $domain = 'messages', ?string $theme = null): MessageCatalogue
+    public function load($resource, $locale, $domain = 'messages', ?string $theme = null): MessageCatalogue
     {
         static $langs = [];
         $catalogue = new MessageCatalogue($locale);

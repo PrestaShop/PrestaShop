@@ -298,7 +298,7 @@ class ThemeProviderTest extends TestCase
 
     public function testGetDatabaseCatalogue()
     {
-        // theme doesn't match. When theme is not given, DEFAULT_THEME theme is taken
+        // Translations in DB don't have theme name
         $provider = new ThemeProvider(
             $this->databaseTranslationLoader,
             self::$tempDir
@@ -315,7 +315,7 @@ class ThemeProviderTest extends TestCase
         $messages = $catalogue->all();
         $this->assertEmpty($messages);
 
-        // Test with classic theme
+        // Translations in DB have theme name but no theme selected in provider
         $dbTranslations = self::$dbTranslations;
         foreach ($dbTranslations as &$dbTranslation) {
             $dbTranslation['theme'] = self::THEME_NAME;
@@ -328,13 +328,30 @@ class ThemeProviderTest extends TestCase
         $provider->defaultTranslationDir = self::$tempDir;
         $provider->themeResourcesDirectory = self::$tempThemesDir;
         $provider->filesystem = new Filesystem();
-        $provider->setThemeName(self::THEME_NAME);
         $catalogue = $provider->getDatabaseCatalogue();
 
         $domains = $catalogue->getDomains();
         $this->assertEmpty($domains);
 
+        // Translations in DB have theme name, no theme selected in provider but given as parameter
         $catalogue = $provider->getDatabaseCatalogue(self::THEME_NAME);
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        $this->assertSame([
+            'AdminSomeDomain',
+            'ModulesDomainShop',
+            'ShopDomain',
+        ], $domains);
+
+        $messages = $catalogue->all();
+        foreach (self::$dbWordings as $key => $value) {
+            $this->assertSame($value, $messages[$key]);
+        }
+
+        // Translations in DB have theme name, theme selected in provider and no parameter to method call
+        $provider->setThemeName(self::THEME_NAME);
+        $catalogue = $provider->getDatabaseCatalogue();
         $domains = $catalogue->getDomains();
         sort($domains);
 

@@ -216,12 +216,12 @@ class ModuleProvider implements ProviderInterface
     public function getDatabaseCatalogue(string $themeName = null): MessageCatalogue
     {
         $databaseCatalogue = new MessageCatalogue($this->locale);
+        if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
+            return $databaseCatalogue;
+        }
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
-            if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
-                continue;
-            }
-            $domainCatalogue = $this->getDatabaseLoader()->load($this->locale, $translationDomain, $themeName);
+            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $themeName);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
