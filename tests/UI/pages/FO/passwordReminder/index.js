@@ -31,8 +31,8 @@ class PasswordReminder extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.sendResetLinkButton);
   }
 
-  /** Check that the success alert message is visible
-   *
+  /**
+   * Check that the success alert message is visible
    * @param page
    * @returns {Promise<boolean>}
    */
