@@ -136,7 +136,7 @@ class SecurityController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Employees Sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Employees sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
             ]
         );
