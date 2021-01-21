@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Configuration;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxAttacher;
 
 abstract class MultistoreConfigurator implements DataConfigurationInterface
 {
@@ -62,14 +63,16 @@ abstract class MultistoreConfigurator implements DataConfigurationInterface
      *
      * @return array
      */
-    protected function removeDisabledFields(array $configuration): array
+    public function removeDisabledFields(array $configuration): array
     {
         if ($this->shopContext->isAllShopContext()) {
             return $configuration;
         }
 
+        $prefix = MultistoreCheckboxAttacher::MULTISTORE_FIELD_PREFIX;
+
         foreach ($configuration as $key => $value) {
-            if (substr($key, 0, 11) !== 'multistore_' && $configuration['multistore_' . $key] !== true) {
+            if (substr($key, 0, strlen($prefix)) !== $prefix && isset($configuration[$prefix . $key]) && $configuration[$prefix . $key] !== true) {
                 unset($configuration[$key]);
             }
         }
