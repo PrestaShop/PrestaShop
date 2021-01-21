@@ -25,6 +25,12 @@ const baseContext = 'functional_FO_userAccount_userDiscounts';
 let browserContext;
 let page;
 
+
+const today = new Date();
+// Create a previous date for cart rules (yyyy-mm-dd)
+today.setFullYear(today.getFullYear() - 1);
+const previousDate = today.toISOString().slice(0, 10);
+
 // Create customer data
 const CustomerFaker = require('@data/faker/customer');
 
@@ -39,6 +45,7 @@ const firstCartRule = new CartRuleFaker(
     customer: customerData.email,
     discountType: 'Percent',
     discountPercent: 20,
+    dateFrom: previousDate,
   },
 );
 
@@ -47,6 +54,7 @@ const secondCartRule = new CartRuleFaker(
     code: 'customerDataSecondCartRule',
     customer: customerData.email,
     freeShipping: true,
+    dateFrom: previousDate,
   },
 );
 
