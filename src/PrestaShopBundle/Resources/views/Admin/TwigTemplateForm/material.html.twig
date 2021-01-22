@@ -94,7 +94,7 @@
        value="{{ choice[choice_value] }}"
        {% if choice[choice_value] in selected_values %}checked{% endif %}
        {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
-       {% if required %}required {% endif %}
+       {% if required %}required{% endif %}
       >
       <i class="form-check-round"></i>
       {{ choice[choice_label] }}
