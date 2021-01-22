@@ -417,9 +417,6 @@
   }
 
   #product-images-form-container {
-    position: absolute;
-    top: 0;
-    right: 0;
     z-index: 0;
     float: left;
     min-height: 200px;
@@ -438,7 +435,7 @@
 
   #product-images-container {
     position: relative;
-    display: inline-block;
+    display: flex;
     width: 100%;
     border: solid 1px $gray-light;
     .dropzone-expander {
