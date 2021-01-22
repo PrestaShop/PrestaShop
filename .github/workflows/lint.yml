@@ -5,7 +5,7 @@ jobs:
     name: SCSS Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
@@ -19,7 +19,7 @@ jobs:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
             fetch-depth: 0
 
@@ -43,7 +43,7 @@ jobs:
           with:
               php-version: '7.4'
               extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-      -   uses: actions/checkout@v1
+      -   uses: actions/checkout@v2
           with:
               fetch-depth: 0
 
@@ -84,7 +84,7 @@ jobs:
           with:
               php-version: '7.4'
               extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-      -   uses: actions/checkout@v1
+      -   uses: actions/checkout@v2
           with:
               fetch-depth: 0
 

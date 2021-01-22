@@ -10,7 +10,7 @@ jobs:
         with:
           php-version: '7.4'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
