@@ -39,7 +39,7 @@ npm install
 
 | Parameter           | Description                                          |
 |---------------------|----------------------------------------------------- |
-| SMTP_SERVER             | The smtp server address for maildev (default to **`127.0.0.1`**)(This option is usefull if you use a specific test environnement)|
+| SMTP_SERVER             | The smtp server address for maildev (default to **`127.0.0.1`**)|
 | SMTP_PORT            | The smtp port for maildev (default to **`1025`**)|
 ### Playwright parameters
 
