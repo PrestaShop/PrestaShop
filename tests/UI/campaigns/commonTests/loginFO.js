@@ -10,6 +10,8 @@ module.exports = {
     await loginPage.goTo(page, global.FO.URL);
     await myAccountPage.goToLoginPage(page);
     await loginPage.customerLogin(page, customer);
+    const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     const pageTitle = await myAccountPage.getPageTitle(page);
     await expect(pageTitle).to.contains(myAccountPage.pageTitle);
   },
@@ -18,7 +20,7 @@ module.exports = {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'logoutFO');
     await loginPage.goToMyAccountPage(page);
     await loginPage.logout(page);
-    const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(loginPage.pageTitle);
+    const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+    await expect(isCustomerConnected, 'Customer is still connected').to.be.false;
   },
 };

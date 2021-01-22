@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const mailHelper = require('@utils/mailHelper');
 
 // Importing pages
 // BO pages
@@ -19,7 +20,6 @@ const passwordReminderPage = require('@pages/FO/passwordReminder');
 const {DefaultAccount} = require('@data/demo/customer');
 
 
-
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -28,21 +28,13 @@ const baseContext = 'functional_FO_userAccount_editInformation';
 let browserContext;
 let page;
 let newMail;
-const smtpServer = '172.17.0.1';
-const smtpPort = '1025';
-const testMailSubject = "Test message -- Prestashop"
-const resetPasswordMailSubject = 'Password query confirmation'
+const smtpServer = global.maildevConfig.smtpServer;
+const smtpPort = global.maildevConfig.smtpPort;
+const testMailSubject = 'Test message -- Prestashop';
+const resetPasswordMailSubject = 'Password query confirmation';
 
-// Enable maildev
-const MailDev = require('maildev');
+let mailListener = mailHelper.createMailListener()
 
-const maildev = new MailDev({
-  smtp: smtpPort,
-});
-// Handle every new email
-maildev.on('new', (email) => {
-  newMail = email;
-});
 
 /*
 Go to the smtp parameters page
@@ -58,17 +50,16 @@ describe('Password reminder', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    maildev.listen((err) => {
-      if(err) return console.log(err);
+    mailHelper.startListener(mailListener)
+    // Handle every new email
+    mailListener.on('new', (email) => {
+      newMail = email;
     });
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    maildev.close((err) => {
-      console.log('MailDev SMTP Server Shutdown');
-      if(err) return console.log(err);
-    });
+    mailHelper.stopListener(mailListener)
   });
 
   describe('Go to BO to setup the smtp parameters', async () => {
@@ -185,7 +176,7 @@ describe('Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetMailParameters', baseContext);
 
       const successParametersReset = await emailPage.resetDefaultParameters(page);
-      await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);;
+      await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
     });
 
     it('should logout from BO', async function () {

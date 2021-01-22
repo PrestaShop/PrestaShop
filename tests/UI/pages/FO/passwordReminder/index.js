@@ -9,11 +9,11 @@ class PasswordReminder extends FOBasePage {
 
     // Selectors
     this.emailFormField = '#email';
-    this.backToLoginLink = '#back_to_login'
+    this.backToLoginLink = '#back_to_login';
     this.sendResetLinkButton = '#send_reset_link';
 
     // Success message
-    this.sendResetLinkSuccessAlert = '.ps-alert-success'
+    this.sendResetLinkSuccessAlert = '.ps-alert-success';
   }
 
   /*
@@ -39,7 +39,6 @@ class PasswordReminder extends FOBasePage {
   async checkResetLinkSuccess(page) {
     return this.getTextContent(page, this.sendResetLinkSuccessAlert);
   }
-
 }
 
 module.exports = new PasswordReminder();
