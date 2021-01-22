@@ -28,12 +28,12 @@ const baseContext = 'functional_FO_userAccount_editInformation';
 let browserContext;
 let page;
 let newMail;
-const smtpServer = global.maildevConfig.smtpServer;
-const smtpPort = global.maildevConfig.smtpPort;
+const {smtpServer} = global.maildevConfig;
+const {smtpPort} = global.maildevConfig;
 const testMailSubject = 'Test message -- Prestashop';
 const resetPasswordMailSubject = 'Password query confirmation';
 
-let mailListener = mailHelper.createMailListener()
+const mailListener = mailHelper.createMailListener();
 
 
 /*
@@ -50,7 +50,7 @@ describe('Password reminder', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    mailHelper.startListener(mailListener)
+    mailHelper.startListener(mailListener);
     // Handle every new email
     mailListener.on('new', (email) => {
       newMail = email;
@@ -59,7 +59,7 @@ describe('Password reminder', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    mailHelper.stopListener(mailListener)
+    mailHelper.stopListener(mailListener);
   });
 
   describe('Go to BO to setup the smtp parameters', async () => {

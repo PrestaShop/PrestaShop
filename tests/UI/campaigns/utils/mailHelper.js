@@ -1,4 +1,5 @@
 const MailDev = require('maildev');
+
 module.exports = {
   /**
    *
@@ -16,7 +17,7 @@ module.exports = {
    */
   startListener(mailListener) {
     mailListener.listen((err) => {
-      if(err) {
+      if (err) {
         throw new Error(err);
       }
     });
@@ -27,7 +28,7 @@ module.exports = {
    */
   stopListener(mailListener) {
     mailListener.close((err) => {
-      if(err) {
+      if (err) {
         throw new Error(err);
       }
     });

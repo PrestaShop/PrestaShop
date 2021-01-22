@@ -245,7 +245,6 @@ class Email extends BOBasePage {
   async sendTestEmail(page, email) {
     await this.setValue(page, this.sendTestEmailInput, email);
     await page.click(this.sendTestEmailButton);
-    await page.screenshot({ path: '../screenshot.png', fullPage: true })
     return this.getTextContent(page, this.sendTestEmailAlertParagraph);
   }
 
