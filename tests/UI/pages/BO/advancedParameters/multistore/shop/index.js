@@ -45,6 +45,11 @@ class ShopSettings extends BOBasePage {
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Methods */
@@ -161,6 +166,24 @@ class ShopSettings extends BOBasePage {
   }
 
   /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
    * Go to edit shop group page
    * @param page
    * @param row
@@ -223,6 +246,45 @@ class ShopSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_shop':
+        columnSelector = this.sortColumnDiv(1);
+        break;
+
+      case 'a!name':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'gs!name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'cl!name':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      case 'url':
+        columnSelector = this.sortColumnDiv(5);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 }
 

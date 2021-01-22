@@ -11,7 +11,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 const multiStorePage = require('@pages/BO/advancedParameters/multistore');
 const addShopPage = require('@pages/BO/advancedParameters/multistore/shop/add');
-const shopPage = require('@pages/BO/advancedParameters/multistore/shop');
+const shopsPage = require('@pages/BO/advancedParameters/multistore/shop');
 
 // Import data
 const ShopFaker = require('@data/faker/shop');
@@ -28,8 +28,9 @@ const ShopData = new ShopFaker({name: 'todelete0', shopGroup: 'Default', categor
 /*
 Enable multistore
 Create 20 shops
-Filter by : Id and shop name, shop group, root category, URL
+Filter by: Id, shop name, shop group, root category and URL
 Pagination between pages
+Sort table by: Id, shop name, shop group, root category and URL
 Delete the created shop
 Disable multistore
  */
@@ -91,7 +92,7 @@ describe('Filter, sort and pagination shops', async () => {
     });
 
     it('should go to add new shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewShopsPage', baseContext);
 
       await multiStorePage.goToNewShopPage(page);
 
@@ -107,14 +108,14 @@ describe('Filter, sort and pagination shops', async () => {
     });
   });
 
-  // 3 : Create 20 shop
-  new Array(20).fill(0, 0, 20).forEach((test, index) => {
+  // 3 : Create 19 shops
+  Array(19).fill(0, 0, 19).forEach((test, index) => {
     describe(`Create shop n°${index + 1}`, async () => {
-      const ShopData = new ShopFaker({name: `todelete${index + 1}`, shopGroup: 'Default', categoryRoot: 'Home'});
+      const ShopData = new ShopFaker({name: `Todelete${index + 1}`, shopGroup: 'Default', categoryRoot: 'Home'});
       it('should go to add new shop page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopPage${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopsPage${index}`, baseContext);
 
-        await shopPage.goToNewShopPage(page);
+        await shopsPage.goToNewShopPage(page);
 
         const pageTitle = await addShopPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addShopPage.pageTitleCreate);
@@ -129,24 +130,24 @@ describe('Filter, sort and pagination shops', async () => {
     });
   });
 
-  // 4 : filter shop
+  // 4 : Filter shops
   describe('Filter shop table', async () => {
     [
       {args: {filterBy: 'id_shop', filterValue: 10}},
-      {args: {filterBy: 'a!name', filterValue: 'todelete10'}},
+      {args: {filterBy: 'a!name', filterValue: 'Todelete10'}},
       {args: {filterBy: 'gs!name', filterValue: 'Default'}},
       {args: {filterBy: 'cl!name', filterValue: 'Home'}},
-      {args: {filterBy: 'url', filterValue: 'Click here to set a URL for this shop.'}},
+      {args: {filterBy: 'url', filterValue: 'Click here'}},
     ].forEach((test, index) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.filterBy}`, baseContext);
 
-        await shopPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+        await shopsPage.filterTable(page, test.args.filterBy, test.args.filterValue);
 
-        const numberOfElementAfterFilter = await shopPage.getNumberOfElementInGrid(page);
+        const numberOfElementAfterFilter = await shopsPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
-          const textColumn = await shopPage.getTextColumn(page, i, test.args.filterBy);
+          const textColumn = await shopsPage.getTextColumn(page, i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -154,58 +155,144 @@ describe('Filter, sort and pagination shops', async () => {
       it('should reset filter and check the number of shops', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
-        const numberOfElement = await shopPage.resetAndGetNumberOfLines(page);
+        const numberOfElement = await shopsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfElement).to.be.above(20);
       });
     });
   });
 
-  // 5 : pagination
+  // 5 : Pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await shopPage.selectPaginationLimit(page, '20');
+      const paginationNumber = await shopsPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await shopPage.paginationNext(page);
+      const paginationNumber = await shopsPage.paginationNext(page);
       expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await shopPage.paginationPrevious(page);
+      const paginationNumber = await shopsPage.paginationPrevious(page);
       expect(paginationNumber).to.equal('1');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await shopPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await shopsPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');
     });
   });
 
-  // 6 : Delete shop created
-  describe('delete all shops created', async () => {
-    new Array(20).fill(0, 0, 20).forEach((test, index) => {
-      it(`should delete the shop 'todelete${index}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteShop${index}`, baseContext);
+  // 6 : Sort
+  describe('Sort shops table', async () => {
+    [
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdDesc', sortBy: 'id_shop', sortDirection: 'down', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopNameAsc', sortBy: 'a!name', sortDirection: 'up',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopNameDesc', sortBy: 'a!name', sortDirection: 'down',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopGroupAsc', sortBy: 'gs!name', sortDirection: 'up',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopGroupDesc', sortBy: 'gs!name', sortDirection: 'down',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByMessageAsc', sortBy: 'cl!name', sortDirection: 'up',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByRootCategoryDesc', sortBy: 'cl!name', sortDirection: 'down',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByURLAsc', sortBy: 'url', sortDirection: 'up',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByURLDesc', sortBy: 'url', sortDirection: 'down',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdAsc', sortBy: 'id_shop', sortDirection: 'up', isFloat: true,
+          },
+      },
+    ].forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await shopPage.filterTable(page, 'a!name', `todelete${index}`);
+        let nonSortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await shopsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const textResult = await shopPage.deleteShop(page, 1);
-        await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
+        let sortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await shopsPage.sortArray(nonSortedTable, test.args.isFloat);
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
       });
     });
   });
 
-  // 7 : Disable multi store
+  // 7 : Delete all shops created
+  describe('delete all shops created', async () => {
+    new Array(20).fill(0, 0, 20).forEach((test, index) => {
+      it(`should delete the shop 'Todelete${index}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `deleteShop${index}`, baseContext);
+
+        await shopsPage.filterTable(page, 'a!name', `Todelete${index}`);
+
+        const textResult = await shopsPage.deleteShop(page, 1);
+        await expect(textResult).to.contains(shopsPage.successfulDeleteMessage);
+      });
+    });
+  });
+
+  // 8 : Disable multi store
   describe('Disable multistore', async () => {
     it('should go to "Shop parameters > General" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
