@@ -48,7 +48,7 @@
     margin-top: 115px;
     transform-style: preserve-3d;
     @include perspective(1000px);
-    //@include animate(fadeInDown, 0.3s)
+
     &.flip {
       .flipper {
         @include rotateY(180deg);
