@@ -192,7 +192,6 @@ body {
     .form-group {
       margin-bottom: 8px;
     }
-    //data-focus
   }
 }
 .data-focus {
@@ -201,7 +200,6 @@ body {
     background-color: $brand-primary;
     @include border-radius(10px);
   }
-  //orders
 }
 #customer_part {
   .customerCard {
@@ -209,7 +207,6 @@ body {
       color: $brand-success;
       border: solid 2px $brand-success;
     }
-    //modal
   }
 }
 body.display-modal {
@@ -262,7 +259,6 @@ body.display-modal {
     height: 40px !important;
     margin: 15px 0 0 !important;
   }
-  //help containers
 }
 #main.helpOpen {
   width: 70%;

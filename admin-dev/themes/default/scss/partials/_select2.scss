@@ -150,7 +150,6 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 }
 
 .select2-drop-active {
-  //border: 1px solid #5897fb;
   border-top: none;
 }
 
@@ -232,7 +231,6 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 
 .select2-container-active .select2-choice,
 .select2-container-active .select2-choices {
-  //border: 1px solid #5897fb;
   outline: none;
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -251,7 +249,6 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 
 .select2-dropdown-open.select2-drop-above .select2-choice,
 .select2-dropdown-open.select2-drop-above .select2-choices {
-  //border: 1px solid #5897fb;
   border-top-color: transparent;
 }
 
@@ -419,7 +416,6 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-container-multi.select2-container-active .select2-choices {
-  //border: 1px solid #5897fb;
   outline: none;
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -620,7 +616,6 @@ html[dir="rtl"] .select2-search-choice-close {
 }
 
 .form-control.select2-container.select2-dropdown-open {
-  //border-color: #5897FB;
   border-radius: 3px 3px 0 0;
 }
 
