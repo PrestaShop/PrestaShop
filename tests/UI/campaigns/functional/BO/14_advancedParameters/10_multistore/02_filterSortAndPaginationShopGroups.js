@@ -30,6 +30,7 @@ Enable multistore
 Create 20 shop groups
 Filter by : Id and shop group
 Pagination between pages
+Sort table
 Delete the created shop groups
 Disable multistore
  */
@@ -123,8 +124,8 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
-  // 4 : filter shop groups
-  describe('Filter shop group table', async () => {
+  // 4 : Filter shop groups
+  describe('Filter shop groups table', async () => {
     [
       {args: {filterBy: 'id_shop_group', filterValue: 10}},
       {args: {filterBy: 'a!name', filterValue: 'todelete10'}},
@@ -151,7 +152,7 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
-  // 5 : pagination
+  // 5 : Pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
@@ -182,7 +183,57 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
-  // 6 : Delete shop groups created
+  // 6 : Sort table
+  describe('Sort shop groups table', async () => {
+    [
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdDesc', sortBy: 'id_shop_group', sortDirection: 'down', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopNameAsc', sortBy: 'a!name', sortDirection: 'up',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopNameDesc', sortBy: 'a!name', sortDirection: 'down',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdAsc', sortBy: 'id_shop_group', sortDirection: 'up', isFloat: true,
+          },
+      },
+    ].forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await multiStorePage.getAllRowsColumnContent(page, test.args.sortBy);
+        await multiStorePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await multiStorePage.getAllRowsColumnContent(page, test.args.sortBy);
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await multiStorePage.sortArray(nonSortedTable, test.args.isFloat);
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
+  // 7 : Delete shop groups created
   describe('delete all shop groups created', async () => {
     new Array(20).fill(0, 0, 20).forEach((test, index) => {
       it(`should delete the shop group 'todelete${index}'`, async function () {
@@ -199,7 +250,7 @@ describe('Filter, sort and pagination shop group', async () => {
     });
   });
 
-  // 7 : Disable multi store
+  // 8 : Disable multi store
   describe('Disable multistore', async () => {
     it('should go to "Shop parameters > General" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
