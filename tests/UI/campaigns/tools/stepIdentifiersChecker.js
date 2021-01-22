@@ -23,7 +23,7 @@ const count = contexts => contexts.reduce(
  */
 const duplicates = dict => Object.keys(dict)
   .filter(
-    key => dict[key] > 1 && key !== 'loginBO' && key !== 'logoutBO',
+    key => dict[key] > 1 && key !== 'loginBO' && key !== 'logoutBO' && key !== 'logoutFO' && key !== 'logoutFO',
   );
 
 /**

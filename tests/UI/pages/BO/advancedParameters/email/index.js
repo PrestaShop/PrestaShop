@@ -41,7 +41,7 @@ class Email extends BOBasePage {
     this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
     this.saveEmailFormButton = '#form-log-email-save-button';
     // Email form Radio buttons
-    this.sendMailParametersRadioButton = '#form_mail_method_0 + i'
+    this.sendMailParametersRadioButton = '#form_mail_method_0 + i';
     this.smtpParametersRadioButton = '#form_mail_method_1 + i';
     // Email form input fields
     this.smtpServerFormField = '#form_smtp_config_server';
@@ -245,6 +245,7 @@ class Email extends BOBasePage {
   async sendTestEmail(page, email) {
     await this.setValue(page, this.sendTestEmailInput, email);
     await page.click(this.sendTestEmailButton);
+    await page.screenshot({ path: '../screenshot.png', fullPage: true })
     return this.getTextContent(page, this.sendTestEmailAlertParagraph);
   }
 

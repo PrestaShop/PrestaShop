@@ -35,7 +35,12 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+### Maildev parameters
 
+| Parameter           | Description                                          |
+|---------------------|----------------------------------------------------- |
+| SMTP_SERVER             | The smtp server address for maildev (default to **`127.0.0.1`**)(This option is usefull if you use a specific test environnement)|
+| SMTP_PORT            | The smtp port for maildev (default to **`1025`**)|
 ### Playwright parameters
 
 | Parameter           | Description                                          |

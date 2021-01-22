@@ -43,3 +43,8 @@ global.BROWSER = {
 global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;
 
 global.TAKE_SCREENSHOT_AFTER_FAIL = process.env.TAKE_SCREENSHOT_AFTER_FAIL || false;
+
+global.maildevConfig = {
+  smtpPort: process.env.SMTP_PORT || '1025',
+  smtpServer: process.env.SMTP_SERVER || '127.0.0.1',
+};

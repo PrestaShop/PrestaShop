@@ -46,7 +46,7 @@ class Login extends FOBasePage {
    * @param page
    * @returns {Promise<void>}
    */
-  async goToPasswordReminderPage(page){
+  async goToPasswordReminderPage(page) {
     await this.clickAndWaitForNavigation(page, this.passwordReminderLink);
   }
 }
