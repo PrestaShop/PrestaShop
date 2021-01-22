@@ -230,7 +230,7 @@ class Email extends BOBasePage {
   async resetDefaultParameters(page) {
     // Click on smtp radio button
     await page.click(this.sendMailParametersRadioButton);
-    await this.elementNotVisible(page, this.smtpServerFormField);
+    await page.waitForSelector(this.smtpServerFormField, {state: 'hidden'});
     // Click on Save button
     await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
