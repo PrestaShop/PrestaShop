@@ -107,16 +107,18 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
     {
         $dir = _PS_PROD_IMG_DIR_;
         $displayMove = false;
+        
+        if (!is_dir($dir)) {
+            return false;
+        }
 
-        if (is_dir($dir)) {
-            if ($dh = opendir($dir)) {
-                while (($file = readdir($dh)) !== false && $displayMove === false) {
-                    if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
-                        $displayMove = true;
-                    }
+        if ($dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false && $displayMove === false) {
+                if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
+                    $displayMove = true;
                 }
-                closedir($dh);
             }
+            closedir($dh);
         }
 
         return $displayMove;
