@@ -258,6 +258,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'use_inline_display' => true,
                     ])
             );
+
         return $collection;
     }
 
@@ -277,6 +278,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'clickable_row' => true,
                     ])
             );
+
         return $collection;
     }
 }
