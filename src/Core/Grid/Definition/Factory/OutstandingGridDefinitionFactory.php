@@ -161,7 +161,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ])
             );
 
-        if ($this->configuration->getBoolean('PS_INVOICE')) {
+        if ($this->configuration->get('PS_INVOICE')) {
             $columns->addBefore(
                 'actions',
                 (new ActionColumn('invoice'))
