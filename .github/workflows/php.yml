@@ -83,7 +83,7 @@ jobs:
                 fetch-depth: 0
 
         -   name: PrestaShop Configuration
-            run: cp tests-legacy/parameters.yml.travis app/config/parameters.yml
+            run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
 
         -   name: Get Composer Cache Directory
             id: composer-cache
