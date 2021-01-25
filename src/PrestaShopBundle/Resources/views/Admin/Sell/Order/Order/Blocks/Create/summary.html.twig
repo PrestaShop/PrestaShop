@@ -124,6 +124,8 @@
                   <a class="dropdown-item" id="js-process-order-link">
                     {{ 'Proceed to checkout in the front office'|trans({}, 'Admin.Orderscustomers.Feature') }}
                   </a>
+
+                  {{ renderhook('displayAdminOrderCreateExtraButtons') }}
                 </div>
               </div>
             
