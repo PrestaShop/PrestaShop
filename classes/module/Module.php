@@ -221,6 +221,14 @@ abstract class ModuleCore implements ModuleInterface
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
+    public static function setContextInstanceForTesting(Context $context)
+    {
+        /** @var Module $module */
+        foreach (self::$_INSTANCE as $module) {
+            $module->context = $context;
+        }
+    }
+
     /**
      * Set the flag to indicate we are doing an import.
      *
@@ -1197,6 +1205,7 @@ abstract class ModuleCore implements ModuleInterface
     public static function clearStaticCache()
     {
         self::$cachedModuleNames = null;
+        self::$_INSTANCE = [];
     }
 
     public static function configXmlStringFormat($string)
