@@ -152,7 +152,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity products :productName to the cart :cartReference
+     * @When /^I add (\d+) product(?:s)? "(.+)" to the cart "(.+)"$/
      *
      * @param int $quantity
      * @param string $productName
