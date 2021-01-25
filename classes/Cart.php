@@ -1068,7 +1068,7 @@ class CartCore extends ObjectModel
      * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
-     * @return float
+     * @return float|null
      */
     private function getCartPriceFromCatalog(
         int $productId,
@@ -1081,7 +1081,7 @@ class CartCore extends ObjectModel
         ?int $addressId,
         Context $shopContext,
         &$specificPriceOutput
-    ): float {
+    ): ?float {
         return Product::getPriceStatic(
             $productId,
             $withTaxes,
