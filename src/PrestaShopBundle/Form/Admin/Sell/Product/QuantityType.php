@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -35,9 +36,29 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class QuantityType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $outOfStockTypeChoiceProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $outOfStockTypeChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -53,10 +74,7 @@ class QuantityType extends TranslatorAwareType
                 ],
             ])
             ->add('out_of_stock_type', ChoiceType::class, [
-                'choices' => [
-                    'test' => 1,
-                    'test2' => 2,
-                ],
+                'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
             ])
             ->add('available_now_label', TranslatableType::class, [
                 'type' => TextType::class,
