@@ -33,7 +33,7 @@
     {if isset($subtitle)}
       <p>{block name="searchSubtitle"}{$subtitle}{/block}</p>
     {else}
-      <p>{block name="searchSubtitle"}{l s='Please try other keywords to describe what you are searching for.' d='Shop.Theme.Global'}{/block}</p>
+      <p>{block name="searchSubtitle"}{l s='Please try other keywords to describe what you are looking for.' d='Shop.Theme.Catalog'}{/block}</p>
     {/if}
 
     {block name='search'}
