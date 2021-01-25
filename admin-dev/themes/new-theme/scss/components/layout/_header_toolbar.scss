@@ -69,8 +69,7 @@
   // toolbar buttons
   .toolbar-icons {
     @include media-breakpoint-down(sm) {
-      float: none;
-      overflow-x: auto;
+      display: none;
     }
 
     > .wrapper {
@@ -99,6 +98,18 @@
   .title-row {
     @include clearfix();
     margin-bottom: $grid-gutter-width / 2;
+  }
+
+  .btn-floating {
+    display: none;
+
+    &-menu {
+      max-width: calc(100vw - 2rem);
+    }
+
+    @include media-breakpoint-down(sm) {
+      display: block;
+    }
   }
 }
 
