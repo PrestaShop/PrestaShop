@@ -45,8 +45,10 @@ class EmailThemes extends BOBasePage {
   async previewEmailTheme(page, name) {
     const tableRows = await page.$$(this.tableRows);
     let found = false;
+
     for (let i = 0; i < tableRows.length; i++) {
       const textColumnName = await tableRows[i].$eval(this.columnName, columnName => columnName.textContent);
+
       if (textColumnName.includes(name)) {
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, el => el.click()),

@@ -202,10 +202,12 @@ class Categories extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCategories(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -380,6 +382,7 @@ class Categories extends BOBasePage {
       page.click(this.gridActionExportLink),
       page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
+
     return download.path();
   }
 
@@ -391,6 +394,7 @@ class Categories extends BOBasePage {
    */
   async getCategoryInCsvFormat(page, row) {
     const category = await this.getCategoryFromTable(page, row);
+
     return `${category.id};`
       + `${category.name};`
       + `"${category.description}";`

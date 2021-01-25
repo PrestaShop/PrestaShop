@@ -115,6 +115,7 @@ class CreditSlips extends BOBasePage {
       page.waitForEvent('download'), // wait for download to start
       page.click(this.creditSlipDownloadButton(lineNumber)),
     ]);
+
     return download.path();
   }
 
@@ -132,6 +133,7 @@ class CreditSlips extends BOBasePage {
       page.waitForEvent('download'), // wait for download to start
       page.click(this.generatePdfByDateButton),
     ]);
+
     return download.path();
   }
 

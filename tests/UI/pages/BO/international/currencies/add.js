@@ -38,6 +38,7 @@ class AddCurrency extends BOBasePage {
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist
     let displayed = false;
+
     for (let i = 0; i < 50 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
@@ -50,6 +51,7 @@ class AddCurrency extends BOBasePage {
 
     // Wait for input to have value
     let inputHasValue = false;
+
     for (let i = 0; i < 50 && !inputHasValue; i++) {
       /* eslint-env browser */
       inputHasValue = await page.evaluate(

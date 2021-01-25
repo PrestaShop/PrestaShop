@@ -95,10 +95,12 @@ class ModuleManager extends BOBasePage {
   async getAllModulesStatus(page) {
     const modulesStatus = [];
     const allModulesNames = await this.getAllModulesNames(page);
+
     for (let i = 0; i < allModulesNames.length; i++) {
       const moduleStatus = await this.isModuleEnabled(page);
       await modulesStatus.push({name: allModulesNames[i], status: moduleStatus});
     }
+
     return modulesStatus;
   }
 
@@ -139,6 +141,7 @@ class ModuleManager extends BOBasePage {
    */
   async getBlockModuleTitle(page, position) {
     const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, all => all.map(el => el.textContent));
+
     return modulesBlocks[position - 1];
   }
 }

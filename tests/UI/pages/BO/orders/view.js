@@ -106,6 +106,7 @@ class Order extends BOBasePage {
    */
   async modifyOrderStatus(page, status) {
     const actualStatus = await this.getOrderStatus(page);
+
     if (status !== actualStatus) {
       await this.selectByVisibleText(page, this.orderStatusesSelect, status);
       await this.clickAndWaitForNavigation(page, this.updateStatusButton);
@@ -186,6 +187,7 @@ class Order extends BOBasePage {
     await this.goToDocumentsTab(page);
 
     const fileName = await this.getTextContent(page, this.documentNumberLink(rowChild));
+
     return fileName.replace('#', '').trim();
   }
 

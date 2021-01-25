@@ -66,6 +66,7 @@ class ViewCustomer extends BOBasePage {
    */
   getNumberOfElementFromTitle(page, cardTitle) {
     let selector;
+
     switch (cardTitle) {
       case 'Orders':
         selector = this.ordersDiv;
@@ -97,6 +98,7 @@ class ViewCustomer extends BOBasePage {
       default:
         throw new Error(`${cardTitle} was not found`);
     }
+
     return this.getTextContent(page, `${selector} .card-header span`);
   }
 
@@ -117,6 +119,7 @@ class ViewCustomer extends BOBasePage {
    */
   getTextFromElement(page, element) {
     let selector;
+
     switch (element) {
       case 'Personal information':
         selector = this.personnalInformationDiv;
@@ -154,6 +157,7 @@ class ViewCustomer extends BOBasePage {
       default:
         throw new Error(`${element} was not found`);
     }
+
     return this.getTextContent(page, `${selector} .card-body`);
   }
 
@@ -187,6 +191,7 @@ class ViewCustomer extends BOBasePage {
    */
   async goToPage(page, cardTitle, row = 1) {
     let selector;
+
     switch (cardTitle) {
       case 'Orders':
         selector = this.ordersViewButton;
@@ -200,6 +205,7 @@ class ViewCustomer extends BOBasePage {
       default:
         throw new Error(`${cardTitle} was not found`);
     }
+
     return this.clickAndWaitForNavigation(page, selector(row));
   }
 }

@@ -49,6 +49,7 @@ class AddLinkWidget extends BOBasePage {
     /* eslint-disable no-restricted-syntax */
     for (const contentPage of contentPages) {
       let selector;
+
       switch (contentPage) {
         case 'Delivery':
           selector = this.cmsPagesCheckbox(0);
@@ -83,6 +84,7 @@ class AddLinkWidget extends BOBasePage {
     /* eslint-disable no-restricted-syntax */
     for (const productPage of productPages) {
       let selector;
+
       switch (productPage) {
         case 'Prices drop':
           selector = this.productsPagesCheckbox(0);
@@ -111,6 +113,7 @@ class AddLinkWidget extends BOBasePage {
     /* eslint-disable no-restricted-syntax */
     for (const staticPage of staticPages) {
       let selector;
+
       switch (staticPage) {
         case 'Contact us':
           selector = this.staticContentCheckbox(0);

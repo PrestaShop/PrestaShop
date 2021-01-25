@@ -38,6 +38,7 @@ class Import extends BOBasePage {
       page.waitForEvent('download'),
       await page.click(this.downloadSampleFileLink(type)),
     ]);
+
     return download.path();
   }
 

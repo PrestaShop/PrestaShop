@@ -84,6 +84,7 @@ class Pages extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page, table) {
     const resetButton = this.filterResetButton(table);
+
     if (await this.elementVisible(page, resetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, resetButton);
     }
@@ -283,6 +284,7 @@ class Pages extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid(page, table);
     const allRowsContentTable = [];
     let rowContent;
+
     for (let i = 1; i <= rowsNumber; i++) {
       if (table === 'cms_page_category') {
         rowContent = await this.getTextColumnFromTableCmsPageCategory(page, i, column);
@@ -291,6 +293,7 @@ class Pages extends BOBasePage {
       }
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

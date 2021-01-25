@@ -55,6 +55,7 @@ class Invoice extends BOBasePage {
       page.waitForEvent('download'),
       page.click(this.generatePdfByDateButton),
     ]);
+
     return download.path();
   }
 
@@ -94,6 +95,7 @@ class Invoice extends BOBasePage {
    */
   async chooseStatus(page, statusName) {
     const statusElements = await page.$$(this.statusOrderStateSpan);
+
     for (let i = 0; i < statusElements.length; i++) {
       if (await page.evaluate(element => element.textContent, statusElements[i]) === statusName) {
         await statusElements[i].click();
@@ -112,6 +114,7 @@ class Invoice extends BOBasePage {
       page.waitForEvent('download'), // wait for download to start
       page.click(this.generatePdfByStatusButton),
     ]);
+
     return download.path();
   }
 
