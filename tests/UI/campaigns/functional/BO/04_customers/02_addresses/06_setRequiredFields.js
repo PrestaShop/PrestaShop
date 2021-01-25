@@ -29,7 +29,13 @@ let page;
 const addressDataWithVatNumber = new FakerAddress({country: 'France', vatNumber: '0102030405'});
 const addressDataWithoutVatNumber = new FakerAddress({country: 'France'});
 
-describe('Set required fields for customers', async () => {
+/*
+Check 'Vat number' to be a required fields
+Go to FO, new address page and verify that 'Vat number' is required
+Uncheck 'Vat number'
+Go to FO, new address page and verify that 'Vat number' is not required
+ */
+describe('Set required fields for addresses', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
