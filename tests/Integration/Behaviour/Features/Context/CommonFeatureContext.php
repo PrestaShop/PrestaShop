@@ -203,31 +203,35 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @BeforeScenario @reset-context-after-scenario
+     * @BeforeScenario @mock-context-on-scenario
      */
     public static function mockContextBeforeScenario()
     {
-        /** @var LegacyContext $localeRepository */
-        $legacyContext = self::getContainer()->get('prestashop.adapter.legacy.context');
-        /*
-         * We need to call this before initializing the ContextMocker because this method forcefully init
-         * the shop context thus overriding the expected value
-         */
-        $legacyContext->getContext();
-
-        self::$contextMocker = new ContextMocker();
-        self::$contextMocker->mockContext();
+        self::mockContext();
     }
 
     /**
-     * @AfterScenario @reset-context-after-scenario
+     * @AfterScenario @mock-context-on-scenario
      */
     public static function resetContextAfterScenario()
     {
-        if (empty(self::$contextMocker)) {
-            throw new \Exception('Context was not mocked');
-        }
-        self::$contextMocker->resetContext();
+        self::resetContext();
+    }
+
+    /**
+     * @BeforeFeature @mock-context-on-feature
+     */
+    public static function mockContextBeforeFeature()
+    {
+        self::mockContext();
+    }
+
+    /**
+     * @AfterFeature @mock-context-on-feature
+     */
+    public static function resetContextAfterFeature()
+    {
+        self::resetContext();
     }
 
     /**
@@ -283,6 +287,32 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function rebootKernelOnDemand()
     {
+        self::rebootKernel();
+    }
+
+    private static function mockContext()
+    {
+        /** @var LegacyContext $localeRepository */
+        $legacyContext = self::getContainer()->get('prestashop.adapter.legacy.context');
+        /*
+         * We need to call this before initializing the ContextMocker because this method forcefully init
+         * the shop context thus overriding the expected value
+         */
+        $legacyContext->getContext();
+
+        self::$contextMocker = new ContextMocker();
+        self::$contextMocker->mockContext();
+    }
+
+    private static function resetContext()
+    {
+        if (empty(self::$contextMocker)) {
+            throw new \Exception('Context was not mocked');
+        }
+        self::$contextMocker->resetContext();
+
+        // If we messed with the context it is safer to reboot the kernel because some services
+        // (like ContextStateManager) may now have invalid references to former context
         self::rebootKernel();
     }
 
