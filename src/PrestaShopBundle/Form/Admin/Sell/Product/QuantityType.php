@@ -46,17 +46,25 @@ class QuantityType extends TranslatorAwareType
     private $outOfStockTypeChoiceProvider;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $packStockTypeChoiceProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
+     * @param FormChoiceProviderInterface $packStockTypeChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $outOfStockTypeChoiceProvider
+        FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
+        FormChoiceProviderInterface $packStockTypeChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
+        $this->packStockTypeChoiceProvider = $packStockTypeChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -68,10 +76,7 @@ class QuantityType extends TranslatorAwareType
             ->add('low_stock_threshold', NumberType::class)
             ->add('low_stock_alert', SwitchType::class)
             ->add('pack_stock_type', ChoiceType::class, [
-                'choices' => [
-                    'test' => 1,
-                    'test2' => 2,
-                ],
+                'choices' => $this->packStockTypeChoiceProvider->getChoices(),
             ])
             ->add('out_of_stock_type', ChoiceType::class, [
                 'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
