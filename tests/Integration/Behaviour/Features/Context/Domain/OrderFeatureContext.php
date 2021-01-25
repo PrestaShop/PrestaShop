@@ -58,6 +58,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
@@ -1405,6 +1406,40 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         );
         Assert::assertEquals('amount', $specificPrice->reduction_type);
         Assert::assertTrue((bool) $specificPrice->reduction_tax);
+    }
+
+    /**
+     * @Then order :orderReference preview shipping address should have the following details:
+     */
+    public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table)
+    {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+        $shippingAddress = $orderPreview->getShippingDetails();
+
+        $address = [
+            'firstName' => $shippingAddress->getFirstName(),
+            'lastName' => $shippingAddress->getLastName(),
+            'company' => $shippingAddress->getCompany(),
+            'vatNumber' => $shippingAddress->getVatNumber(),
+            'address1' => $shippingAddress->getAddress1(),
+            'address2' => $shippingAddress->getAddress2(),
+            'city' => $shippingAddress->getCity(),
+            'postalCode' => $shippingAddress->getPostalCode(),
+            'stateName' => $shippingAddress->getStateName(),
+            'country' => $shippingAddress->getCountry(),
+            'phone' => $shippingAddress->getPhone(),
+            'carrierName' => $shippingAddress->getCarrierName(),
+            'trackingNumber' => $shippingAddress->getTrackingNumber(),
+        ];
+
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $key => $value) {
+            Assert::assertEquals(
+                $value,
+                $address[$key]
+            );
+        }
     }
 
     /**
