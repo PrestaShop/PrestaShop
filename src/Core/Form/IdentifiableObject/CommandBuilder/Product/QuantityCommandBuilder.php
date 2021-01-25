@@ -41,11 +41,11 @@ final class QuantityCommandBuilder implements ProductCommandBuilderInterface
      */
     public function buildCommand(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['quantity'])) {
+        if (!isset($formData['quantities'])) {
             return [];
         }
 
-        $quantityData = $formData['quantity'];
+        $quantityData = $formData['quantities'];
         $command = new UpdateProductStockInformationCommand($productId->getValue());
 
         if (isset($quantityData['quantity'])) {
