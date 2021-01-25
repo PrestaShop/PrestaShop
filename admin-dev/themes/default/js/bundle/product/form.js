@@ -1469,6 +1469,9 @@ var formImagesProduct = (function() {
   var dropZoneElem = $('#product-images-dropzone');
   var formZoneElem = $('#product-images-form-container');
 
+  // default state
+  formZoneElem.hide();
+
   formZoneElem.magnificPopup({
     delegate: 'a.open-image',
     type: 'image'
@@ -1500,6 +1503,7 @@ var formImagesProduct = (function() {
         complete: function() {
           toggleColDropzone(false);
           formZoneElem.show();
+          dropZoneElem.addClass('d-none d-md-block');
         }
       });
     },
@@ -1559,6 +1563,7 @@ var formImagesProduct = (function() {
     },
     'close': function() {
       toggleColDropzone(true);
+      dropZoneElem.removeClass('d-none d-md-block');
       dropZoneElem.css('height','');
       formZoneElem.find('#product-images-form').html('');
       formZoneElem.hide();
