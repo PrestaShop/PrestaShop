@@ -123,7 +123,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
         $localizedNotes = [
             '1' => 'test1',
-            '2', 'test2',
+            '2' => 'test2',
         ];
         $command->setLocalizedDeliveryTimeInStockNotes($localizedNotes);
         yield [
@@ -138,7 +138,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
         $localizedNotes = [
             '1' => 'test4',
-            '3', 'test5',
+            '3' => 'test5',
         ];
         $command->setLocalizedDeliveryTimeOutOfStockNotes($localizedNotes);
         yield [
