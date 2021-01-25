@@ -62,9 +62,9 @@ final class ContextStateManager
     private $context;
 
     /**
-     * @var array
+     * @var array|null
      */
-    private $contextFieldsStack = [[]];
+    private $contextFieldsStack = null;
 
     /**
      * @param Context $context
@@ -182,7 +182,7 @@ final class ContextStateManager
      */
     public function restorePreviousContext(): self
     {
-        $currentStashIndex = array_key_last($this->contextFieldsStack);
+        $currentStashIndex = $this->getCurrentStashIndex();
         foreach (array_keys($this->contextFieldsStack[$currentStashIndex]) as $fieldName) {
             $this->restoreContextField($fieldName);
         }
@@ -204,6 +204,11 @@ final class ContextStateManager
      */
     public function saveCurrentContext(): self
     {
+        // No context field has been overridden yet so no need to save/stack it
+        if (null === $this->contextFieldsStack) {
+            return $this;
+        }
+
         // Saves all the fields that have not been overridden
         foreach (self::MANAGED_FIELDS as $contextField) {
             $this->saveContextField($contextField);
@@ -216,13 +221,21 @@ final class ContextStateManager
     }
 
     /**
+     * @return array|null
+     */
+    public function getContextFieldsStack(): ?array
+    {
+        return $this->contextFieldsStack;
+    }
+
+    /**
      * Save context field into local array
      *
      * @param string $fieldName
      */
     private function saveContextField(string $fieldName)
     {
-        $currentStashIndex = array_key_last($this->contextFieldsStack);
+        $currentStashIndex = $this->getCurrentStashIndex();
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             if ('shop' === $fieldName) {
@@ -241,7 +254,7 @@ final class ContextStateManager
      */
     private function restoreContextField(string $fieldName): void
     {
-        $currentStashIndex = array_key_last($this->contextFieldsStack);
+        $currentStashIndex = $this->getCurrentStashIndex();
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             if ('shop' === $fieldName) {
@@ -250,6 +263,19 @@ final class ContextStateManager
             $this->context->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
+    }
+
+    /**
+     * @return int
+     */
+    private function getCurrentStashIndex(): int
+    {
+        // If this is the first time the index is needed we need to init the stack
+        if (null === $this->contextFieldsStack) {
+            $this->contextFieldsStack = [[]];
+        }
+
+        return array_key_last($this->contextFieldsStack);
     }
 
     /**
@@ -277,9 +303,9 @@ final class ContextStateManager
     {
         array_pop($this->contextFieldsStack);
 
-        // Always keep at least one layer (in case we remove too many)
+        // When all layers have been popped we restore the initial null value
         if (empty($this->contextFieldsStack)) {
-            $this->contextFieldsStack[] = [];
+            $this->contextFieldsStack = null;
         }
     }
 }
