@@ -30,6 +30,7 @@ export default function () {
     const showMessagesButton = domainActions.find('.btn-show-messages');
     const hideMessagesButton = domainActions.find('.btn-hide-messages');
     const expandedMessages = visibilityOffIcon.hasClass('hide');
+
     if (expandedMessages) {
       visibilityOffIcon.removeClass('hide');
       visibilityOnIcon.addClass('hide');
@@ -108,6 +109,7 @@ export default function () {
 
   $('.domain-actions').click((event) => {
     let domainActions = $(event.target);
+
     if (!$(event.target).hasClass('domain-actions')) {
       domainActions = $(event.target).parent();
     }
@@ -120,6 +122,7 @@ export default function () {
     $('.domain-first-part').each((index, domainToggler) => {
       const domainTitle = $(domainToggler);
       const isDomainExpanded = domainTitle.find('i').hasClass('expanded');
+
       if (!isDomainExpanded) {
         $(domainTitle.find('i')).click();
       }
@@ -130,6 +133,7 @@ export default function () {
     $('.domain-first-part').each((index, domainToggler) => {
       const domainTitle = $(domainToggler);
       const isDomainExpanded = domainTitle.find('i').hasClass('expanded');
+
       if (isDomainExpanded) {
         $(domainTitle.find('i')).click();
       }

@@ -70,6 +70,7 @@ export default class BulkOpenTabsExtension {
       routeParams[routeParamName] = $checkbox.val();
 
       const handle = window.open(this.router.generate(route, routeParams));
+
       if (handle) {
         handle.blur();
         window.focus();

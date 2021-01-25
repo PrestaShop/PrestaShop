@@ -145,6 +145,7 @@
           this.tags.push(itemLabel);
         } else {
           const index = this.tags.indexOf(itemLabel);
+
           if (this.splice) {
             this.tags.splice(index, 1);
           }
@@ -161,6 +162,7 @@
       },
       onTagChanged(tag) {
         let checkedTag = tag;
+
         if (this.tags.indexOf(this.currentVal) !== -1) {
           this.tags.pop();
         }
@@ -178,6 +180,7 @@
 
         list.map((data) => {
           const isInIdList = idList.indexOf(Number(data[this.itemId])) === -1;
+
           if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
             idList.push(Number(data[this.itemId]));
           }

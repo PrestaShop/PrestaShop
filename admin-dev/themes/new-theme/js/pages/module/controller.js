@@ -190,6 +190,7 @@ class AdminModuleController {
 
     body.on('click', self.getBulkCheckboxesSelector(), () => {
       const selector = $(self.bulkActionDropDownSelector);
+
       if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
         selector.closest('.module-top-menu-item').removeClass('disabled');
       } else {
@@ -247,6 +248,7 @@ class AdminModuleController {
 
   initPlaceholderMechanism() {
     const self = this;
+
     if ($(self.placeholderGlobalSelector).length) {
       self.ajaxLoadPage();
     }
@@ -367,6 +369,7 @@ class AdminModuleController {
     let order = 'asc';
     let key = self.currentSorting;
     const splittedKey = key.split('-');
+
     if (splittedKey.length > 1) {
       key = splittedKey[0];
       if (splittedKey[1] === 'desc') {
@@ -377,6 +380,7 @@ class AdminModuleController {
     const currentCompare = (a, b) => {
       let aData = a[key];
       let bData = b[key];
+
       if (key === 'access') {
         aData = new Date(aData).getTime();
         bData = new Date(bData).getTime();
@@ -405,6 +409,7 @@ class AdminModuleController {
     $('.module-short-list').each(function setShortListVisibility() {
       const container = $(this);
       const nbModulesInContainer = container.find('.module-item').length;
+
       if (
         (self.currentRefCategory && self.currentRefCategory !== String(container.find('.modules-list').data('name')))
         || (self.currentRefStatus !== null && nbModulesInContainer === 0)
@@ -717,6 +722,7 @@ class AdminModuleController {
       complete: (file) => {
         if (file.status !== 'error') {
           const responseObject = $.parseJSON(file.xhr.response);
+
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
@@ -873,6 +879,7 @@ class AdminModuleController {
     const self = this;
     $('body').on('click', `${self.addonItemGridSelector}, ${self.addonItemListSelector}`, () => {
       let searchQuery = '';
+
       if (self.currentTagsList.length) {
         searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
       }
@@ -987,18 +994,21 @@ class AdminModuleController {
 
   performModulesAction(modulesActions, bulkModuleAction, forceDeletion) {
     const self = this;
+
     if (typeof self.moduleCardController === 'undefined') {
       return;
     }
 
     // First let's filter modules that can't perform this action
     const actionMenuLinks = filterAllowedActions(modulesActions);
+
     if (!actionMenuLinks.length) {
       return;
     }
 
     let modulesRequestedCountdown = actionMenuLinks.length - 1;
     let spinnerObj = $('<button class="btn-primary-reverse onclick unbind spinner "></button>');
+
     if (actionMenuLinks.length > 1) {
       // Loop through all the modules except the last one which waits for other
       // requests and then call its request with cache clear enabled
@@ -1196,6 +1206,7 @@ class AdminModuleController {
     $('body').on('click', '.module-sort-switch', function switchSort() {
       const switchTo = $(this).data('switch');
       const isAlreadyDisplayed = $(this).hasClass('active-display');
+
       if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
         self.switchSortingDisplayTo(switchTo);
         self.currentDisplay = switchTo;
@@ -1249,6 +1260,7 @@ class AdminModuleController {
 
     // If there are some shortlist: each shortlist count the modules on the next container.
     const $shortLists = $('.module-short-list');
+
     if ($shortLists.length > 0) {
       $shortLists.each(function shortLists() {
         const $this = $(this);

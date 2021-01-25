@@ -124,6 +124,7 @@ export default class CurrencyForm {
 
   onCurrencySelectorChange() {
     const selectedISOCode = this.$currencySelector.val();
+
     if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
@@ -197,6 +198,7 @@ export default class CurrencyForm {
 
   async fetchCurrency(currencyIsoCode) {
     let currencyData = null;
+
     if (currencyIsoCode) {
       await this.referenceCurrencyResource.get({id: currencyIsoCode}).then((response) => {
         currencyData = response.body;

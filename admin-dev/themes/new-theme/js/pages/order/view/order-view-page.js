@@ -78,6 +78,7 @@ export default class OrderViewPage {
     EventEmitter.on(OrderViewEventMap.productEditionCanceled, (event) => {
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       const editRowsLeft = $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).length;
+
       if (editRowsLeft > 0) {
         return;
       }
@@ -86,6 +87,7 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
       const $productRow = $(OrderViewPageMap.productsTableRow(event.orderDetailId));
+
       if (event.newRow === '') {
         $productRow.remove();
       } else {
@@ -107,6 +109,7 @@ export default class OrderViewPage {
       this.resetToolTips();
 
       const editRowsLeft = $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).length;
+
       if (editRowsLeft > 0) {
         return;
       }
@@ -215,6 +218,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productsTablePaginationNext).on('click', (event) => {
       event.preventDefault();
       const $btn = $(event.currentTarget);
+
       if ($btn.hasClass('disabled')) {
         return;
       }
@@ -226,6 +230,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productsTablePaginationPrev).on('click', (event) => {
       event.preventDefault();
       const $btn = $(event.currentTarget);
+
       if ($btn.hasClass('disabled')) {
         return;
       }
@@ -326,6 +331,7 @@ export default class OrderViewPage {
 
         let numPage = 1;
         let message = '';
+
         // Display alert
         if (initialNumProducts > newNumProducts) { // product deleted
           message = (initialNumProducts - newNumProducts === 1)

@@ -92,6 +92,7 @@
       },
       stockExportUrl() {
         const params = $.param(this.filters);
+
         return `${window.data.stockExportUrl}&${params}`;
       },
     },

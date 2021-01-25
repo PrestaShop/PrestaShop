@@ -151,6 +151,7 @@ class SerpApp {
 
   checkUrl() {
     let {watchedMetaUrl} = this;
+
     if (this.useMultiLang) {
       watchedMetaUrl = watchedMetaUrl.closest(this.multiLangInputSelector).find('input');
     }

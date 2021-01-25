@@ -266,6 +266,7 @@ export default class ProductManager {
     const selectedProduct = Object.values(this.products).find(
       (product) => product.productId === productId,
     );
+
     if (selectedProduct) {
       this.selectedProduct = selectedProduct;
     }

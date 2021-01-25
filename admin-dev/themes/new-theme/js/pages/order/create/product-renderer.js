@@ -198,6 +198,7 @@ export default class ProductRenderer {
   renderFoundProducts(foundProducts) {
     Object.values(foundProducts).forEach((product) => {
       let {name} = product;
+
       if (product.combinations.length === 0) {
         name += ` - ${product.formattedPrice}`;
       }
