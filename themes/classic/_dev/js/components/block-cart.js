@@ -33,6 +33,7 @@ prestashop.blockcart.showModal = (html) => {
   }
 
   let $blockCartModal = getBlockCartModal();
+
   if ($blockCartModal.length) {
     $blockCartModal.remove();
   }

@@ -91,11 +91,13 @@ $(document).ready(() => {
     }
 
     const $input = findCartLineProductQuantityInput($target);
+
     if (!$input) {
       return false;
     }
 
     let cartAction = {};
+
     if (shouldIncreaseProductQuantity(namespace)) {
       cartAction = {
         url: $input.data('up-url'),
@@ -188,6 +190,7 @@ $(document).ready(() => {
         $target.val(resp.quantity);
 
         let dataset;
+
         if ($target && $target.dataset) {
           // eslint-disable-next-line
           dataset = $target.dataset;
@@ -237,6 +240,7 @@ $(document).ready(() => {
     /* eslint-enable */
     // There should be a new product quantity in cart
     const qty = targetValue - baseValue;
+
     if (qty === 0) {
       return;
     }
@@ -296,6 +300,7 @@ const CheckUpdateQuantityOperations = {
      * if hasError is true, quantity was not updated : we don't disable checkout button
      */
     const $checkoutBtn = $('.checkout a');
+
     if ($('#notifications article.alert-danger').length || (errorMsg !== '' && !hasError)) {
       $checkoutBtn.addClass('disabled');
     }
@@ -325,6 +330,7 @@ const CheckUpdateQuantityOperations = {
     // eslint-disable-next-line
     hasError = resp.hasOwnProperty('hasError');
     const errors = resp.errors || '';
+
     // 1.7.2.x returns errors as string, 1.7.3.x returns array
     if (errors instanceof Array) {
       errorMsg = errors.join(' ');
