@@ -356,8 +356,6 @@
   }
 
   #order-view-page {
-    padding: 0 10px;
-
     .right-column .tab-content,
     #orderProductsPanel {
       table {
@@ -407,34 +405,21 @@
     }
 
     .order-actions {
-      #update_order_status_action_form {
-        .select-status {
-          margin-bottom: 0.9375rem;
-        }
-      }
+      justify-content: center;
 
       .select-status {
-        width: 100%;
-        max-width: inherit;
+        max-width: 206px;
 
         .select-status-colored {
           max-width: inherit;
-          /* stylelint-disable-next-line */
-          margin-right: 0 !important;
+          padding-right: 2.5rem;
+          text-overflow: ellipsis;
         }
       }
 
       > * {
         &:not(:last-child) {
           margin-right: 0;
-        }
-
-        a,
-        button,
-        & {
-          width: 100%;
-          /* stylelint-disable-next-line */
-          margin-left: 0 !important;
         }
       }
 
@@ -444,6 +429,21 @@
 
         i {
           margin-right: 20px;
+        }
+      }
+
+      &-print {
+        width: 100%;
+        max-width: 242px;
+
+        > .input-group,
+        button {
+          width: 100%;
+          text-align: center;
+
+          i {
+            margin-right: 0.5rem;
+          }
         }
       }
     }
@@ -566,5 +566,19 @@ input#partial_refund_shipping {
 .discountList {
   &-name {
     max-width: 400px;
+  }
+}
+
+@media (max-width: 374px) {
+  #order-view-page {
+    .order-actions {
+      &-print {
+        max-width: 186px;
+      }
+
+      .select-status {
+        max-width: 150px;
+      }
+    }
   }
 }
