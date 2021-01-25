@@ -107,7 +107,7 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
     {
         $dir = _PS_PROD_IMG_DIR_;
         $displayMove = false;
-        
+
         if (!is_dir($dir)) {
             return false;
         }
