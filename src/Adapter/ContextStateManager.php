@@ -57,9 +57,9 @@ final class ContextStateManager
     ];
 
     /**
-     * @var Context
+     * @var LegacyContext
      */
-    private $context;
+    private $legacyContext;
 
     /**
      * @var array|null
@@ -67,11 +67,11 @@ final class ContextStateManager
     private $contextFieldsStack = null;
 
     /**
-     * @param Context $context
+     * @param LegacyContext $legacyContext
      */
-    public function __construct(Context $context)
+    public function __construct(LegacyContext $legacyContext)
     {
-        $this->context = $context;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -79,7 +79,7 @@ final class ContextStateManager
      */
     public function getContext(): Context
     {
-        return $this->context;
+        return $this->legacyContext->getContext();
     }
 
     /**
@@ -92,7 +92,7 @@ final class ContextStateManager
     public function setCart(?Cart $cart): self
     {
         $this->saveContextField('cart');
-        $this->context->cart = $cart;
+        $this->getContext()->cart = $cart;
 
         return $this;
     }
@@ -107,7 +107,7 @@ final class ContextStateManager
     public function setCountry(?Country $country): self
     {
         $this->saveContextField('country');
-        $this->context->country = $country;
+        $this->getContext()->country = $country;
 
         return $this;
     }
@@ -122,7 +122,7 @@ final class ContextStateManager
     public function setCurrency(?Currency $currency): self
     {
         $this->saveContextField('currency');
-        $this->context->currency = $currency;
+        $this->getContext()->currency = $currency;
 
         return $this;
     }
@@ -137,7 +137,7 @@ final class ContextStateManager
     public function setLanguage(?Language $language): self
     {
         $this->saveContextField('language');
-        $this->context->language = $language;
+        $this->getContext()->language = $language;
 
         return $this;
     }
@@ -152,7 +152,7 @@ final class ContextStateManager
     public function setCustomer(?Customer $customer): self
     {
         $this->saveContextField('customer');
-        $this->context->customer = $customer;
+        $this->getContext()->customer = $customer;
 
         return $this;
     }
@@ -169,7 +169,7 @@ final class ContextStateManager
     public function setShop(Shop $shop): self
     {
         $this->saveContextField('shop');
-        $this->context->shop = $shop;
+        $this->getContext()->shop = $shop;
         Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
 
         return $this;
@@ -239,10 +239,10 @@ final class ContextStateManager
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             if ('shop' === $fieldName) {
-                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->context->$fieldName;
+                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
                 $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
             } else {
-                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->context->$fieldName;
+                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
             }
         }
     }
@@ -260,7 +260,7 @@ final class ContextStateManager
             if ('shop' === $fieldName) {
                 $this->restoreShopContext($currentStashIndex);
             }
-            $this->context->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
     }
