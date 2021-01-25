@@ -260,3 +260,15 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductConditionChoiceProvider'
       arguments:
           - '@translator'
+
+  prestashop.core.form.choice_provider.out_of_stock_type_choice_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider'
+      arguments:
+          - '@translator'
+          - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ORDER_OUT_OF_STOCK")'
+
+  prestashop.core.form.choice_provider.pack_stock_type_choice_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider'
+      arguments:
+          - '@translator'
+          - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
