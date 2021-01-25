@@ -37,6 +37,8 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class QuantityType extends TranslatorAwareType
 {
@@ -70,11 +72,37 @@ class QuantityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('quantity', NumberType::class)
-            ->add('minimal_quantity', NumberType::class)
-            ->add('stock_location', TextType::class)
-            ->add('low_stock_threshold', NumberType::class)
-            ->add('low_stock_alert', SwitchType::class)
+            ->add('quantity', NumberType::class, [
+                'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'numeric']),
+                ],
+            ])
+            ->add('minimal_quantity', NumberType::class, [
+                'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'numeric']),
+                ],
+            ])
+            ->add('stock_location', TextType::class, [
+                'label' => $this->trans('Stock location', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
+            ->add('low_stock_threshold', NumberType::class, [
+                'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Type(['type' => 'numeric']),
+                ],
+                'required' => false,
+            ])
+            ->add('low_stock_alert', SwitchType::class, [
+                'label' => $this->trans(
+                    'Send me an email when the quantity is below or equals this level',
+                    'Admin.Catalog.Feature'
+                ),
+            ])
             ->add('pack_stock_type', ChoiceType::class, [
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
             ])
@@ -83,13 +111,21 @@ class QuantityType extends TranslatorAwareType
             ])
             ->add('available_now_label', TranslatableType::class, [
                 'type' => TextType::class,
+                'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
+                'label' => $this->trans(
+                    'Label when out of stock (and back order allowed)',
+                    'Admin.Catalog.Feature'
+                ),
                 'required' => false,
             ])
-            ->add('available_date', DatePickerType::class)
+            ->add('available_date', DatePickerType::class, [
+                'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
         ;
     }
 }
