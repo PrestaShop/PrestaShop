@@ -64,7 +64,7 @@ describe('Set required fields for customers', async () => {
     {args: {action: 'unselect', exist: false, addressData: addressDataWithoutVatNumber}},
   ].forEach((test, index) => {
     it(`should ${test.args.action} 'Vat number' as required fields`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}PartnersOffers`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}VatNumber`, baseContext);
 
       const textResult = await addressesPage.setRequiredFields(page, 6, test.args.exist);
       await expect(textResult).to.equal(addressesPage.successfulUpdateMessage);
@@ -97,7 +97,7 @@ describe('Set required fields for customers', async () => {
     });
 
     it('should go to create address page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAddressPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goToNewAddressPage${index}`, baseContext);
 
       await foAddressesPage.openNewAddressForm(page);
 
@@ -106,14 +106,14 @@ describe('Set required fields for customers', async () => {
     });
 
     it('should check if \'Vat number\' is required', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOptionalLabel', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `checkOptionalLabel${index}`, baseContext);
 
       const result = await foAddAddressesPage.isVatNumberRequired(page);
       await expect(result).to.equal(test.args.exist);
     });
 
     it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `signOutFO${index}`, baseContext);
 
       await foAddAddressesPage.logout(page);
 
