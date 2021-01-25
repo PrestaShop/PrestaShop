@@ -92,6 +92,7 @@ describe('Filter in Products Page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
 
       let numberOfProductsAfterReset;
+
       if (test.args.filterBy === 'category') {
         await productsPage.resetFilterCategory(page);
         numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList(page);

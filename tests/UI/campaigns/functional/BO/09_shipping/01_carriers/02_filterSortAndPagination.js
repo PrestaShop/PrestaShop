@@ -142,6 +142,7 @@ describe('Filter, sort and pagination carriers', async () => {
 
         for (let row = 1; row <= numberOfCarriersAfterFilter; row++) {
           const textColumn = await carriersPage.getTextColumn(page, row, test.args.filterBy);
+
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);
           } else {
