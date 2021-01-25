@@ -148,6 +148,16 @@ class ShopSettings extends BOBasePage {
   async gotoEditShopPage(page, row) {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
   }
+
+  /**
+   * Go to set shop url
+   * @param page
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToSetURL(page, row) {
+    await this.clickAndWaitForNavigation(page, `${this.tableColumn(row, 5)} a`);
+  }
 }
 
 module.exports = new ShopSettings();
