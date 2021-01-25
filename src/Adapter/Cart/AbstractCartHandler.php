@@ -77,6 +77,7 @@ abstract class AbstractCartHandler
     protected function setCartContext(ContextStateManager $contextStateManager, Cart $cart): void
     {
         $contextStateManager
+            ->saveCurrentContext()
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
@@ -84,7 +85,6 @@ abstract class AbstractCartHandler
             ->setCountry($this->getCartTaxCountry($cart))
             ->setShop(new Shop($cart->id_shop))
         ;
-        $contextStateManager->saveCurrentContext();
     }
 
     /**
