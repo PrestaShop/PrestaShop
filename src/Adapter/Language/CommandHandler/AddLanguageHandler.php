@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
 use Language;
+use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\AddLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
@@ -42,19 +43,37 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 final class AddLanguageHandler extends AbstractLanguageHandler implements AddLanguageHandlerInterface
 {
     /**
+     * @var ImageValidator
+     */
+    private $imageValidator;
+
+    public function __construct(ImageValidator $imageValidator)
+    {
+        $this->imageValidator = $imageValidator;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddLanguageCommand $command)
     {
         $this->assertLanguageWithIsoCodeDoesNotExist($command->getIsoCode());
+        if ($command->getNoPictureImagePath()) {
+            $this->imageValidator->assertFileUploadLimits($command->getNoPictureImagePath());
+            $this->imageValidator->assertIsValidImageType($command->getNoPictureImagePath());
+        }
+
+        if ($command->getFlagImagePath()) {
+            $this->imageValidator->assertFileUploadLimits($command->getFlagImagePath());
+            $this->imageValidator->assertIsValidImageType($command->getFlagImagePath());
+        }
+
+        $language = $this->createLegacyLanguageObjectFromCommand($command);
 
         $this->copyNoPictureImage(
             $command->getIsoCode(),
             $command->getNoPictureImagePath()
         );
-
-        $language = $this->createLegacyLanguageObjectFromCommand($command);
-
         $this->uploadFlagImage($language, $command);
         $this->addShopAssociation($language, $command);
 
