@@ -27,7 +27,7 @@
     {if isset($title)}
       <h4>{block name="searchTitle"}{$title}{/block}</h4>
     {else}
-      <h4>{block name="searchTitle"}{l s='No matches were found for your search' d='Shop.Theme.Global'}{/block}</h4>
+      <h4>{block name="searchTitle"}{l s='No matches were found for your search' d='Shop.Theme.Catalog'}{/block}</h4>
     {/if}
 
     {if isset($subtitle)}
