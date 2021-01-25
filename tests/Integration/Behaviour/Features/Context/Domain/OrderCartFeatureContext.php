@@ -39,13 +39,15 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class OrderCartFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given order :orderId has customer :customerId
+     * @Given order :orderReference has customer :customerReference
      *
-     * @param int $orderId
-     * @param int $customerId
+     * @param string $orderId
+     * @param string $customerId
      */
-    public function orderHasCustomer(int $orderId, int $customerId)
+    public function orderHasCustomer(string $orderReference, string $customerReference)
     {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $customerId = SharedStorage::getStorage()->get($customerReference);
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderCustomerForViewing $orderCustomerForViewing */
