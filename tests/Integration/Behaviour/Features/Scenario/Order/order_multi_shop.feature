@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-multi-shop
 @reset-database-before-feature
-@reset-context-after-scenario
+@mock-context-on-scenario
 @clear-cache-before-feature
 @order-multi-shop
 Feature: Order from Back Office (BO)
@@ -296,7 +296,7 @@ Feature: Order from Back Office (BO)
     And I should have 1 shop in group "Default"
     And I should have 1 shop in group "Shop Group 1"
     # Create Products
-    When shop context "Default" is loaded
+    When shop context "test_shop" is loaded
     And there is a product in the catalog named "Product A" with a price of 12.3 and 0 items in stock
     And product "Product A" cannot be ordered out of stock
     Then the available stock for product "Product A" should be 0
@@ -333,7 +333,7 @@ Feature: Order from Back Office (BO)
     # Check Stock
     When shop context "Shop 2" is loaded
     Then the available stock for product "Product B in Shop 2" should be 98
-    When shop context "Default" is loaded
+    When shop context "test_shop" is loaded
     Then the available stock for product "Product A" should be 0
     # Change Context
     When multiple shop context is loaded
