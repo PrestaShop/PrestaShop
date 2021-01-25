@@ -6,8 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v1
@@ -20,8 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-            fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v1
@@ -44,8 +40,6 @@ jobs:
               php-version: '7.4'
               extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
       -   uses: actions/checkout@v2
-          with:
-              fetch-depth: 0
 
       -   name: Get Composer Cache Directory
           id: composer-cache
@@ -85,8 +79,6 @@ jobs:
               php-version: '7.4'
               extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
       -   uses: actions/checkout@v2
-          with:
-              fetch-depth: 0
 
       -   name: Get Composer Cache Directory
           id: composer-cache

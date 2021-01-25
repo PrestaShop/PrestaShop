@@ -11,8 +11,6 @@ jobs:
           php-version: '7.4'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -43,8 +41,6 @@ jobs:
                 php-version: '7.4'
                 extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
         -   uses: actions/checkout@v2
-            with:
-                fetch-depth: 0
 
         -   name: Get Composer Cache Directory
             id: composer-cache
@@ -79,8 +75,6 @@ jobs:
                 php-version: ${{ matrix.php }}
                 extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
         -   uses: actions/checkout@v2
-            with:
-                fetch-depth: 0
 
         -   name: PrestaShop Configuration
             run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
@@ -127,8 +121,6 @@ jobs:
                 mysql root password: 'password'
 
         -   uses: actions/checkout@v2
-            with:
-                fetch-depth: 0
 
         -   name: PrestaShop Configuration
             run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml

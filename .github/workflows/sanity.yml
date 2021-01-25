@@ -16,8 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Setup Apache
         run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}

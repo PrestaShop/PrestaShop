@@ -27,8 +27,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
