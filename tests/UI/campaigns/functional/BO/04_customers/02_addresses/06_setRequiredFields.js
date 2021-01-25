@@ -18,7 +18,7 @@ const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customers_customers_setRequiredFields';
+const baseContext = 'functional_BO_customers_addresses_setRequiredFields';
 
 // Import data
 const {DefaultAccount} = require('@data/demo/customer');
