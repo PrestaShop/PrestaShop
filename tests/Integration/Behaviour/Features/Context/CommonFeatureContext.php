@@ -310,10 +310,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
             throw new \Exception('Context was not mocked');
         }
         self::$contextMocker->resetContext();
-
-        // If we messed with the context it is safer to reboot the kernel because some services
-        // (like ContextStateManager) may now have invalid references to former context
-        self::rebootKernel();
     }
 
     /**
