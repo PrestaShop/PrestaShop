@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true
+
+    test.integration.core.form.identifiable_object.data_handler.product_form_data_handler_checker:
+        decorates: prestashop.core.form.identifiable_object.data_handler.product_form_data_handler
+        class: 'Tests\Integration\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandlerChecker'
+        arguments:
+            - '@test.integration.core.form.identifiable_object.data_handler.product_form_data_handler_checker.inner'
