@@ -24,22 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Sessions;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BulkDeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -73,6 +80,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         $redirectionUrl
     ) {
         parent::__construct($hookDispatcher);
+
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
     }
@@ -80,7 +88,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getId()
+    protected function getId(): string
     {
         return 'security_sessions_employees';
     }
@@ -88,7 +96,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getName()
+    protected function getName(): string
     {
         return $this->trans('Employees sessions', [], 'Admin.Navigation.Menu');
     }
@@ -96,7 +104,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getColumns()
+    protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
             ->add(
@@ -160,7 +168,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getGridActions()
+    protected function getGridActions(): GridActionCollectionInterface
     {
         return (new GridActionCollection())
             ->add(
@@ -183,7 +191,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getFilters()
+    protected function getFilters(): FilterCollectionInterface
     {
         return (new FilterCollection())
             ->add(
@@ -253,7 +261,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getBulkActions()
+    protected function getBulkActions(): BulkActionCollectionInterface
     {
         return (new BulkActionCollection())
             ->add(
