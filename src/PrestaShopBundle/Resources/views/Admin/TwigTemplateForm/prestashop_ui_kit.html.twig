@@ -54,7 +54,7 @@
 {% block form_row -%}
   {% spaceless %}
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-    {% set multistoreCheckboxName = multistore_checkbox_prefix ~ form.vars.name %}
+    {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
     {% set disabledField = false %}
     {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
       {% set disabledField = true %}

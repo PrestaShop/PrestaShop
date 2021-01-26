@@ -79,7 +79,7 @@ twig:
         '%mail_themes_dir%': MailThemes
     globals:
         webpack_server: false
-        multistore_checkbox_prefix: multistore_
+        multistore_field_prefix: !php/const:PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
 
 # Swiftmailer Configuration
 swiftmailer:
