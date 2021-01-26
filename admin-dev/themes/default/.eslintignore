@@ -1,0 +1,7 @@
+/node_modules/
+/public/
+/js/vendor/
+/bundle.js
+/tests/
+!.eslintrc.js
+!.webpack
