@@ -41,7 +41,7 @@ final class BulkDeleteCustomersSessionsHandler implements BulkDeleteCustomersSes
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkDeleteCustomersSessionsCommand $command)
+    public function handle(BulkDeleteCustomersSessionsCommand $command): void
     {
         foreach ($command->getCustomerSessionIds() as $sessionId) {
             $session = new CustomerSession($sessionId->getValue());
