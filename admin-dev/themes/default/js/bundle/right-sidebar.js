@@ -9,7 +9,7 @@
   // SIDEBAR PUBLIC CLASS DEFINITION
   // ================================
 
-  var Sidebar = function (element, options) {
+  const Sidebar = function (element, options) {
     this.$element = $(element);
     this.options = $.extend({}, Sidebar.DEFAULTS, options);
     this.transitioning = null;
@@ -48,6 +48,7 @@
     };
 
     if (!$.support.transition) {
+      // eslint-disable-next-line
       return complete.call(this);
     }
 
@@ -79,6 +80,7 @@
     };
 
     if (!$.support.transition) {
+      // eslint-disable-next-line
       return complete.call(this);
     }
 
@@ -97,9 +99,10 @@
     return this.each(function () {
       const $this = $(this);
       let data = $this.data('bs.sidebar');
-      var options = $.extend({}, Sidebar.DEFAULTS, $this.data(), typeof options === 'object' && option);
+      const options = $.extend({}, Sidebar.DEFAULTS, $this.data(), typeof options === 'object' && option);
 
       if (!data && options.toggle && option === 'show') {
+        // eslint-disable-next-line
         option = !option;
       }
       if (!data) {
@@ -121,6 +124,7 @@
   $(document).on('click.bs.sidebar.data-api', '[data-toggle="sidebar"]', function (e) {
     const $this = $(this); let
       href;
+    // eslint-disable-next-line
     const target = $this.attr('data-target') || e.preventDefault() || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '');
     const $target = $(target);
     const data = $target.data('bs.sidebar');
@@ -131,11 +135,10 @@
 
   $('html').on('click.bs.sidebar.autohide', (event) => {
     const $this = $(event.target);
+    /* eslint-disable */
     const isButtonOrSidebar = $this.is('.sidebar, [data-toggle="sidebar"]') || $this.parents('.sidebar, [data-toggle="sidebar"]').length;
 
-    if (isButtonOrSidebar) {
-
-    } else {
+    if (!isButtonOrSidebar) {
       const $target = $('.sidebar');
       $target.each((i, trgt) => {
         const $trgt = $(trgt);

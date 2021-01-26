@@ -22,6 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/* eslint-disable */
 Date.prototype.addDays = function (value) {
   this.setDate(this.getDate() + value);
 
@@ -174,6 +176,7 @@ Date.prototype.format = function (format) {
   return result.slice(0, -1);
 };
 
+
 function updatePickerFromInput() {
   datepickerStart.setStart($('#date-start').val());
   datepickerStart.setEnd($('#date-end').val());
@@ -197,6 +200,8 @@ function updatePickerFromInput() {
     datepickerEnd.setCompare(true);
   }
 }
+
+/* eslint-enable */
 
 function setDayPeriod() {
   const date = new Date();
@@ -305,7 +310,7 @@ function setPreviousYear() {
 $(document).ready(() => {
   // Instanciate datepickers
   const datepickerStart = $('.datepicker1').daterangepicker({
-    dates: translated_dates,
+    dates: window.translated_dates,
     weekStart: 1,
     start: $('#date-start').val(),
     end: $('#date-end').val(),
@@ -316,7 +321,7 @@ $(document).ready(() => {
   }).data('daterangepicker');
 
   const datepickerEnd = $('.datepicker2').daterangepicker({
-    dates: translated_dates,
+    dates: window.translated_dates,
     weekStart: 1,
     start: $('#date-start').val(),
     end: $('#date-end').val(),
@@ -330,7 +335,12 @@ $(document).ready(() => {
   const startDate = Date.parseDate($('#date-start').val(), $('#date-start').data('date-format'));
   const endDate = Date.parseDate($('#date-end').val(), $('#date-end').data('date-format'));
 
-  if (startDate.getFullYear() == endDate.getFullYear() && startDate.getMonth() == endDate.getMonth()) datepickerStart.setValue(startDate.subMonths(1));
+  if (
+    startDate.getFullYear() === endDate.getFullYear()
+    && startDate.getMonth() === endDate.getMonth()
+  ) {
+    datepickerStart.setValue(startDate.subMonths(1));
+  }
 
   // Events binding
   $('#date-start').focus(function () {
@@ -389,9 +399,9 @@ $(document).ready(() => {
   });
 
   $('#compare-options').change(function () {
-    if (this.value == 1) setPreviousPeriod();
+    if (this.value === 1) setPreviousPeriod();
 
-    if (this.value == 2) setPreviousYear();
+    if (this.value === 2) setPreviousYear();
 
     datepickerStart.setStartCompare($('#date-start-compare').val());
     datepickerStart.setEndCompare($('#date-end-compare').val());
@@ -400,11 +410,11 @@ $(document).ready(() => {
     datepickerStart.setCompare(true);
     datepickerEnd.setCompare(true);
 
-    if (this.value == 3) $('#date-start-compare').focus();
+    if (this.value === 3) $('#date-start-compare').focus();
   });
 
   if ($('#datepicker-compare').attr('checked')) {
-    if ($('#date-start-compare').val().replace(/^\s+|\s+$/g, '').length == 0) $('#compare-options').trigger('change');
+    if ($('#date-start-compare').val().replace(/^\s+|\s+$/g, '').length === 0) $('#compare-options').trigger('change');
 
     datepickerStart.setStartCompare($('#date-start-compare').val());
     datepickerStart.setEndCompare($('#date-end-compare').val());
