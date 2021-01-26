@@ -41,7 +41,7 @@ final class BulkDeleteEmployeesSessionsHandler implements BulkDeleteEmployeesSes
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkDeleteEmployeesSessionsCommand $command)
+    public function handle(BulkDeleteEmployeesSessionsCommand $command): void
     {
         foreach ($command->getEmployeeSessionIds() as $sessionId) {
             $session = new EmployeeSession($sessionId->getValue());
