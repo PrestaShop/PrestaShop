@@ -149,7 +149,6 @@
         {/foreach}
 
         {if isset($toolbar_btn['modules-list'])}
-          {* TODO: REFACTOR ALL THIS THINGS *}
           <a
             class="btn btn-floating-item {if isset($toolbar_btn['modules-list'].target) && $toolbar_btn['modules-list'].target} _blank{/if}"
             id="page-header-desc-{$table}-{if isset($toolbar_btn['modules-list'].imgclass)}{$toolbar_btn['modules-list'].imgclass}{else}modules-list{/if}"
