@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
@@ -44,7 +46,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class SecurityController is responsible for displaying the
- * "Configure > Advanced parameters > Team > Sessions" page.
+ * "Configure > Advanced parameters > Security" page.
  */
 class SecurityController extends FrameworkBundleAdminController
 {
@@ -55,15 +57,18 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         $generalForm = $this->getGeneralFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Security/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Security', 'Admin.Navigation.Menu'),
-            'generalForm' => $generalForm->createView(),
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/index.html.twig',
+            [
+                'layoutHeaderToolbarBtn' => [],
+                'layoutTitle' => $this->trans('Security', 'Admin.Navigation.Menu'),
+                'generalForm' => $generalForm->createView(),
+            ]
+        );
     }
 
     /**
@@ -75,7 +80,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processGeneralFormAction(Request $request)
+    public function processGeneralFormAction(Request $request): RedirectResponse
     {
         return $this->processForm(
             $request,
@@ -93,7 +98,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
     {
         $this->dispatchHook(
             'actionAdminSecurityControllerPostProcess' . $hookName . 'Before',
@@ -128,7 +133,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function employeesSessionsAction(EmployeeFilters $filters)
+    public function employeesSessionsAction(EmployeeFilters $filters): Response
     {
         $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.sessions.employees');
 
@@ -151,7 +156,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function customersSessionsAction(CustomerFilters $filters)
+    public function customersSessionsAction(CustomerFilters $filters): Response
     {
         $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.sessions.customers');
 
@@ -177,7 +182,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteEmployeeSessionAction(int $sessionId)
+    public function deleteEmployeeSessionAction(int $sessionId): RedirectResponse
     {
         try {
             $deleteSessionCommand = new DeleteEmployeeSessionCommand($sessionId);
@@ -204,7 +209,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteCustomerSessionAction(int $sessionId)
+    public function deleteCustomerSessionAction(int $sessionId): RedirectResponse
     {
         try {
             $deleteSessionCommand = new DeleteCustomerSessionCommand($sessionId);
@@ -231,7 +236,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteCustomersSessionsAction(Request $request)
+    public function bulkDeleteCustomersSessionsAction(Request $request): RedirectResponse
     {
         $sessionIds = $request->request->get('security_sessions_customers_bulk');
 
@@ -260,7 +265,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteEmployeesSessionsAction(Request $request)
+    public function bulkDeleteEmployeesSessionsAction(Request $request): RedirectResponse
     {
         $sessionIds = $request->request->get('security_sessions_employees_bulk');
 
@@ -282,7 +287,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    protected function getErrorMessages()
+    protected function getErrorMessages(): array
     {
         return [
             SessionNotFoundException::class => $this->trans(
