@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters\BackupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,8 +58,33 @@ class BackupController extends FrameworkBundleAdminController
     public function indexAction(Request $request, BackupFilters $filters)
     {
         $backupForm = $this->getBackupFormHandler()->getForm();
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
-        return $this->renderPage($request, $filters, $backupForm);
+        $hasDownloadFile = false;
+        $downloadFile = null;
+
+        if ($request->query->has('download_filename')) {
+            $hasDownloadFile = true;
+            $backup = new Backup($request->query->get('download_filename'));
+            $downloadFile = [
+                'url' => $backup->getUrl(),
+                'size' => number_format($backup->getSize() * 0.000001, 2, '.', ''),
+            ];
+        }
+
+        $backupsGridFactory = $this->get('prestashop.core.grid.factory.backup');
+        $backupGrid = $backupsGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', [
+            'backupGrid' => $this->presentGrid($backupGrid),
+            'backupForm' => $backupForm->createView(),
+            'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
+            'dbPrefix' => $configuration->get('_DB_PREFIX_'),
+            'hasDownloadFile' => $hasDownloadFile,
+            'downloadFile' => $downloadFile,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -111,19 +136,18 @@ class BackupController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
-     * @param BackupFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function saveOptionsAction(BackupFilters $filters, Request $request)
+    public function saveOptionsAction(Request $request)
     {
         $backupFormHandler = $this->getBackupFormHandler();
 
         $backupForm = $backupFormHandler->getForm();
         $backupForm->handleRequest($request);
 
-        if ($backupForm->isSubmitted() && $backupForm->isValid()) {
+        if ($backupForm->isSubmitted()) {
             $errors = $backupFormHandler->save($backupForm->getData());
 
             if (!empty($errors)) {
@@ -133,7 +157,7 @@ class BackupController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->renderPage($request, $filters, $backupForm);
+        return $this->redirectToRoute('admin_backups_index');
     }
 
     /**
@@ -263,44 +287,6 @@ class BackupController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_backups_index');
-    }
-
-    /**
-     * @param Request $request
-     * @param BackupFilters $filters
-     * @param FormInterface $backupForm
-     *
-     * @return Response
-     */
-    protected function renderPage(Request $request, BackupFilters $filters, FormInterface $backupForm): Response
-    {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-
-        $hasDownloadFile = false;
-        $downloadFile = null;
-
-        if ($request->query->has('download_filename')) {
-            $hasDownloadFile = true;
-            $backup = new Backup($request->query->get('download_filename'));
-            $downloadFile = [
-                'url' => $backup->getUrl(),
-                'size' => number_format($backup->getSize() * 0.000001, 2, '.', ''),
-            ];
-        }
-
-        $backupsGridFactory = $this->get('prestashop.core.grid.factory.backup');
-        $backupGrid = $backupsGridFactory->getGrid($filters);
-
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', [
-            'backupGrid' => $this->presentGrid($backupGrid),
-            'backupForm' => $backupForm->createView(),
-            'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
-            'dbPrefix' => $configuration->get('_DB_PREFIX_'),
-            'hasDownloadFile' => $hasDownloadFile,
-            'downloadFile' => $downloadFile,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-        ]);
     }
 
     /**
