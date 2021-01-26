@@ -118,6 +118,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function extractQuantityData(ProductForEditing $productForEditing): array
     {
         $stockInformation = $productForEditing->getStockInformation();
+        $availableDate = $stockInformation->getAvailableDate();
 
         return [
             'quantity' => $stockInformation->getQuantity(),
@@ -129,7 +130,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'out_of_stock_type' => $stockInformation->getOutOfStockType(),
             'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),
             'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
-            'available_date' => $stockInformation->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT),
+            'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
         ];
     }
 
