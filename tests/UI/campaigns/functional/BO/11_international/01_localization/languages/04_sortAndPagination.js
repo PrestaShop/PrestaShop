@@ -17,13 +17,11 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_international_localization_languages_sortAndPagination';
 
 // Import data
-const LanguageFaker = require('@data/faker/language');
+const {Languages} = require('@data/demo/languages');
 
 let browserContext;
 let page;
 let numberOfLanguages = 0;
-
-let createLanguageData = new LanguageFaker();
 
 describe('Sort and pagination Languages table', async () => {
   // before and after functions
@@ -33,8 +31,8 @@ describe('Sort and pagination Languages table', async () => {
 
     // Create images
     await Promise.all([
-      files.generateImage(createLanguageData.flag),
-      files.generateImage(createLanguageData.noPicture),
+      files.generateImage(Languages.croatian.flag),
+      files.generateImage(Languages.croatian.noPicture),
     ]);
   });
 
@@ -42,8 +40,8 @@ describe('Sort and pagination Languages table', async () => {
     await helper.closeBrowserContext(browserContext);
 
     await Promise.all([
-      files.deleteFile(createLanguageData.flag),
-      files.deleteFile(createLanguageData.noPicture),
+      files.deleteFile(Languages.croatian.flag),
+      files.deleteFile(Languages.croatian.noPicture),
     ]);
   });
 
@@ -133,9 +131,17 @@ describe('Sort and pagination Languages table', async () => {
 
   describe('Pagination of Languages table', async () => {
     describe('Create 9 Languages', async () => {
-      const creationTests = new Array(9).fill(0, 0, 9);
-      creationTests.forEach((test, index) => {
-        createLanguageData = new LanguageFaker({name: `toDelete${index}`, isoCode: `t${index}`});
+      [
+        {args: {languageData: Languages.spanish}},
+        {args: {languageData: Languages.deutsch}},
+        {args: {languageData: Languages.turkish}},
+        {args: {languageData: Languages.spanishAR}},
+        {args: {languageData: Languages.dutch}},
+        {args: {languageData: Languages.portuguese}},
+        {args: {languageData: Languages.croatian}},
+        {args: {languageData: Languages.simplifiedChinese}},
+        {args: {languageData: Languages.traditionalChinese}},
+      ].forEach((test, index) => {
         it('should go to add new language page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguages${index}`, baseContext);
 
@@ -147,7 +153,7 @@ describe('Sort and pagination Languages table', async () => {
         it(`Create language n°${index + 1} in BO`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createNewLanguages${index}`, baseContext);
 
-          const textResult = await addLanguagePage.createEditLanguage(page, createLanguageData);
+          const textResult = await addLanguagePage.createEditLanguage(page, test.args.languageData);
           await expect(textResult).to.to.contains(languagesPage.successfulCreationMessage);
 
           const numberOfLanguagesAfterCreation = await languagesPage.getNumberOfElementInGrid(page);

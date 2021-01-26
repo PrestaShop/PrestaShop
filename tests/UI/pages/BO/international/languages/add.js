@@ -43,7 +43,7 @@ class AddLanguage extends BOBasePage {
 
     // Set rtl and status
     await page.click(this.isRtlSwitch(languageData.isRtl ? 1 : 0));
-    await page.click(this.statusSwitch(languageData.status ? 1 : 0));
+    await page.click(this.statusSwitch(languageData.enabled ? 1 : 0));
 
     // Save and return result
     await this.clickAndWaitForNavigation(page, this.saveButton);
