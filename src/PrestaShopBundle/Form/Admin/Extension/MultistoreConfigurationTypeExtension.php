@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
-use PrestaShopBundle\Service\Form\MultistoreCheckboxAttacher;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -38,26 +38,26 @@ use Symfony\Component\Form\FormEvents;
 class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
 {
     /**
-     * @var MultistoreCheckboxAttacher
+     * @var MultistoreCheckboxEnabler
      */
-    private $multistoreCheckboxAttacher;
+    private $multistoreCheckboxEnabler;
 
-    public function __construct(MultistoreCheckboxAttacher $multistoreCheckboxAttacher)
+    public function __construct(MultistoreCheckboxEnabler $multistoreCheckboxEnabler)
     {
-        $this->multistoreCheckboxAttacher = $multistoreCheckboxAttacher;
+        $this->multistoreCheckboxEnabler = $multistoreCheckboxEnabler;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if (!$this->multistoreCheckboxAttacher->shouldAddCheckboxes()) {
+        if (!$this->multistoreCheckboxEnabler->shouldAddCheckboxes()) {
             return;
         }
 
-        $checkboxAttacher = $this->multistoreCheckboxAttacher;
+        $checkboxEnabler = $this->multistoreCheckboxEnabler;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($checkboxAttacher) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($checkboxEnabler) {
             $form = $event->getForm();
-            $checkboxAttacher->addCheckboxes($form);
+            $checkboxEnabler->addCheckboxes($form);
         });
     }
 
