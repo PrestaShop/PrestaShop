@@ -27,10 +27,11 @@ $(() => {
   let storage = false;
 
   if (typeof (getStorageAvailable) !== 'undefined') {
+    // eslint-disable-next-line
     storage = getStorageAvailable();
   }
 
-  initHelp = function () {
+  window.initHelp = function () {
     $('#main').addClass('helpOpen');
     // first time only
     if ($('#help-container').length === 0) {
@@ -40,12 +41,18 @@ $(() => {
       $('#main').after('<div id="help-container"></div>');
     }
     // init help (it use a global javascript variable to get actual controller)
+    // eslint-disable-next-line
     pushContent(help_class_name);
     $('#help-container').on('click', '.popup', (e) => {
       e.preventDefault();
       if (storage) storage.setItem('helpOpen', false);
       $('.toolbarBox a.btn-help').trigger('click');
-      const helpWindow = window.open(`index.php?controller=${help_class_name}?token=${token}&ajax=1&action=OpenHelp`, 'helpWindow', 'width=450, height=650, scrollbars=yes');
+      window.open(
+        // eslint-disable-next-line
+        `index.php?controller=${help_class_name}?token=${token}&ajax=1&action=OpenHelp`,
+        'helpWindow',
+        'width=450, height=650, scrollbars=yes',
+      );
     });
   };
 
@@ -55,9 +62,14 @@ $(() => {
     if (!$('#main').hasClass('helpOpen') && document.body.clientWidth > 1200) {
       if (storage) storage.setItem('helpOpen', true);
       $('.toolbarBox a.btn-help i').removeClass('process-icon-help').addClass('process-icon-loading');
-      initHelp();
+      window.initHelp();
     } else if (!$('#main').hasClass('helpOpen') && document.body.clientWidth < 1200) {
-      const helpWindow = window.open(`index.php?controller=${help_class_name}?token=${token}&ajax=1&action=OpenHelp`, 'helpWindow', 'width=450, height=650, scrollbars=yes');
+      window.open(
+        // eslint-disable-next-line
+        `index.php?controller=${help_class_name}?token=${token}&ajax=1&action=OpenHelp`,
+        'helpWindow',
+        'width=450, height=650, scrollbars=yes',
+      );
     } else {
       $('#main').removeClass('helpOpen');
       $('#help-container').html('');
@@ -67,12 +79,12 @@ $(() => {
   });
 
   // Help persistency
-  if (storage && storage.getItem('helpOpen') == 'true') {
-		 	$('a.btn-help').trigger('click');
+  if (storage && storage.getItem('helpOpen') === 'true') {
+    $('a.btn-help').trigger('click');
   }
 
   // switch home
-  let language = iso_user;
+  let language = window.iso_user;
   let home;
 
   switch (language) {
@@ -88,9 +100,9 @@ $(() => {
   }
 
   // feedback
-  const arr_feedback = {};
-  arr_feedback.page = 'page';
-  arr_feedback.helpful = 'helpful';
+  const arrFeedback = {};
+  arrFeedback.page = 'page';
+  arrFeedback.helpful = 'helpful';
 
   // toc
   const toc = [];
@@ -106,6 +118,7 @@ $(() => {
 
   // get content
   function getHelp(pageController) {
+    // eslint-disable-next-line
     const request = encodeURIComponent(`getHelp=${pageController}&version=${_PS_VERSION_}&language=${iso_user}`);
     const d = new $.Deferred();
     $.ajax({
@@ -113,7 +126,7 @@ $(() => {
       jsonp: 'callback',
       dataType: 'jsonp',
       success(data) {
-        if (isCleanHtml(data)) {
+        if (window.isCleanHtml(data)) {
           $('#help-container').html(data);
           d.resolve();
         }
@@ -144,8 +157,9 @@ $(() => {
       jsonp: 'callback',
       dataType: 'jsonp',
       success(data) {
-        for (let i = 0; i < data.page.results.length; i++) {
-          if (isCleanHtml(data.page.results[i].id + data.page.results[i].title)) $('#help-container #main-nav').append(`<a href="//help.prestashop.com/${data.page.results[i].id}?version=${_PS_VERSION_}" data-target="${data.page.results[i].id}">${data.page.results[i].title}</a>`);
+        for (let i = 0; i < data.page.results.length; i += 1) {
+          // eslint-disable-next-line
+          if (window.isCleanHtml(data.page.results[i].id + data.page.results[i].title)) $('#help-container #main-nav').append(`<a href="//help.prestashop.com/${data.page.results[i].id}?version=${_PS_VERSION_}" data-target="${data.page.results[i].id}">${data.page.results[i].title}</a>`);
         }
         $('#help-container #main-nav a').on('click', function (e) {
           e.preventDefault();
@@ -181,24 +195,29 @@ $(() => {
             id: item[1],
             children: [],
           };
-          data.results.map((page, j) => {
+          data.results.forEach((page, j) => {
             const children = [];
-            page.children.page.results.map((child, i) => {
+
+            page.children.page.results.forEach((child, i) => {
               children[i] = {
                 title: child.title,
+                // eslint-disable-next-line
                 link: child._links.webui,
                 id: child.id,
                 lang: item[0],
               };
             });
+
             toc[item[0]].children[j] = {
               title: page.title,
+              // eslint-disable-next-line
               link: page._links.webui,
               id: page.id,
               children,
               lang: item[0],
             };
           });
+
           d.resolve();
         },
       });
@@ -211,8 +230,8 @@ $(() => {
       $.each(toc[language].children, (i, section) => {
         mapping[section.link] = [section.id, section.title, section.lang];
         if (typeof section.children !== 'undefined') {
-          $.each(section.children, (i, section) => {
-            mapping[section.link] = [section.id, section.title, section.lang];
+          $.each(section.children, (counter, lowerSection) => {
+            mapping[lowerSection.link] = [lowerSection.id, lowerSection.title, lowerSection.lang];
           });
         }
       });
@@ -232,10 +251,12 @@ $(() => {
         }
       });
 
-      // rewrite url ? -> "//help.prestashop.com/" + mapping[href][0] + '?version='+ _PS_VERSION_ +'&language=' + mapping[href][2];
-
       // home link
-      $('#help-container a.home').attr('href', `//help.prestashop.com/${toc[language].id}?version=${_PS_VERSION_}`).on('click', (e) => {
+      $('#help-container a.home').attr(
+        'href',
+        // eslint-disable-next-line
+        `//help.prestashop.com/${toc[language].id}?version=${window._PS_VERSION_}`,
+      ).on('click', (e) => {
         e.preventDefault();
         pushContent(toc[language].id);
       });
@@ -267,14 +288,15 @@ $(() => {
           if (data.results.length === 0) {
             $('#search-results').addClass('hide');
           }
-          for (let i = 0; i < data.results.length; i++) {
-            if (isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights)) {
+          for (let i = 0; i < data.results.length; i += 1) {
+            if (window.isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights)) {
               $('#search-results').removeClass('hide')
-                .append(`<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/${data.results[i].id}?version=${_PS_VERSION_}" data-target="${data.results[i].id}">${strongify(data.results[i].title)}</a><p>${strongify(data.results[i].bodyTextHighlights)}</p></div>`);
+                // eslint-disable-next-line
+                .append(`<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/${data.results[i].id}?version=${window._PS_VERSION_}" data-target="${data.results[i].id}">${strongify(data.results[i].title)}</a><p>${strongify(data.results[i].bodyTextHighlights)}</p></div>`);
             }
           }
-          $('#search-results a').on('click', function (e) {
-            e.preventDefault();
+          $('#search-results a').on('click', function (event) {
+            event.preventDefault();
             pushContent($(this).data('target'));
           });
         },
@@ -294,20 +316,22 @@ $(() => {
 
   // feedback
   function initFeedback() {
-    const arr_feedback = {
+    const defaultFeedback = {
+      /* eslint-disable */
       version: _PS_VERSION_,
       controller: help_class_name,
       language: iso_user,
       helpful: null,
       reason: null,
       comment: null,
+      /* eslint-enable */
     };
     $('#help-container .helpful-labels li').on('click', function () {
       const percentageMap = {
         0: 'Not at all', 25: 'Not very', 50: 'Somewhat', 75: 'Very', 100: 'Extremely',
       };
-      const percentage = parseInt($(this).data('percentage'));
-      arr_feedback.helpful = percentageMap[percentage];
+      const percentage = parseInt($(this).data('percentage'), 10);
+      defaultFeedback.helpful = percentageMap[percentage];
       $('#help-container .slider-cursor').removeClass('hide');
       $('#help-container .helpful-labels li').removeClass('active');
       $('#help-container .slider-cursor').css('left', `${percentage}%`);
@@ -316,31 +340,31 @@ $(() => {
       if (percentage <= 25) {
         $('#help-container .feedback-reason').show();
       } else if (percentage > 25) {
-        submitFeedback(arr_feedback);
+        submitFeedback(defaultFeedback);
       }
     });
     $('#help-container .feedback-reason .radio label').on('click', () => {
       const reasonMap = {
         1: 'Not related', 2: 'Too complicated', 3: 'Too much', 4: 'Incorrect', 5: 'Unclear', 6: 'Incomplete',
       };
-      arr_feedback.reason = reasonMap[$('input[name=lowrating-reason]:checked').val()];
+      defaultFeedback.reason = reasonMap[$('input[name=lowrating-reason]:checked').val()];
     });
     $('#help-container .feedback-submit').on('click', (e) => {
       e.preventDefault();
-      arr_feedback.comment = $('textarea[name=feedback-detail]').val();
-      submitFeedback(arr_feedback);
+      defaultFeedback.comment = $('textarea[name=feedback-detail]').val();
+      submitFeedback(defaultFeedback);
     });
   }
 
-  function submitFeedback(arr_feedback) {
+  function submitFeedback(currentFeedback) {
     let feedback = '?';
-    const keys = Object.keys(arr_feedback);
+    const keys = Object.keys(currentFeedback);
 
-    for (let i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i += 1) {
       if (i > 0) {
         feedback += '&';
       }
-      feedback += `${keys[i]}=${arr_feedback[keys[i]]}`;
+      feedback += `${keys[i]}=${currentFeedback[keys[i]]}`;
     }
     $.ajax({
       url: `//help.prestashop.com/api/feedback/${feedback}`,

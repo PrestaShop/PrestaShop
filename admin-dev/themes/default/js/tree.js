@@ -30,7 +30,7 @@ const Tree = function (element, options) {
 
 function getCategoryById(param) {
   let elem = null;
-  $('input[name=id_parent]').each(function (index) {
+  $('input[name=id_parent]').each(function () {
     if ($(this).val() === `${param}`) {
       elem = $(this);
     }
@@ -42,7 +42,7 @@ function disableTreeItem(item) {
   item.find('input[name=id_parent]').attr('disabled', 'disabled');
   if (item.hasClass('tree-folder')) {
     item.find('span.tree-folder-name').addClass('tree-folder-name-disable');
-    item.find('ul li').each(function (index) {
+    item.find('ul li').each(function () {
       disableTreeItem($(this));
     });
   } else if (item.hasClass('tree-item')) {
@@ -51,7 +51,7 @@ function disableTreeItem(item) {
 }
 
 function organizeTree() {
-  if ($('#id_category').length != 0) {
+  if ($('#id_category').length !== 0) {
     const id = $('#id_category').val();
     const item = getCategoryById(id).parent().parent();
     disableTreeItem(item);
@@ -82,19 +82,19 @@ Tree.prototype = {
             .removeClass('icon-folder-close')
             .addClass('icon-folder-open');
 
-          const load_tree = (typeof (idTree) !== 'undefined'
-									 && $(this).parent().closest('.tree-folder').find('ul.tree .tree-toggler')
-									   .first()
-									   .html() == '');
+          const loadTree = (typeof (idTree) !== 'undefined' && $(this).parent().closest('.tree-folder')
+            .find('ul.tree .tree-toggler')
+            .first()
+            .html() === '');
 
-          if (load_tree) {
+          if (loadTree) {
             const category = $(this).parent().children('ul.tree input').first()
               .val();
             const inputType = $(this).parent().children('ul.tree input').first()
               .attr('type');
             let useCheckBox = 0;
 
-            if (inputType == 'checkbox') {
+            if (inputType === 'checkbox') {
               useCheckBox = 1;
             }
 
@@ -102,6 +102,7 @@ Tree.prototype = {
             $.get(
               'ajax-tab.php',
               {
+                // eslint-disable-next-line
                 controller: 'AdminProducts', token: currentToken, action: 'getCategoryTree', type: idTree, category, inputName: name, useCheckBox,
               },
               (content) => {
@@ -132,10 +133,11 @@ Tree.prototype = {
       if ($('select#id_category_default').length) {
         this.$element.find(':input[type=checkbox]').unbind('click');
         this.$element.find(':input[type=checkbox]').click(function () {
+          // eslint-disable-next-line
           if ($(this).prop('checked')) addDefaultCategory($(this));
           else {
             $(`select#id_category_default option[value=${$(this).val()}]`).remove();
-            if ($('select#id_category_default option').length == 0) {
+            if ($('select#id_category_default option').length === 0) {
               $('select#id_category_default').closest('.form-group').hide();
               $('#no_default_category').show();
             }
@@ -144,6 +146,8 @@ Tree.prototype = {
       }
       if (typeof (treeClickFunc) !== 'undefined') {
         this.$element.find(':input[type=radio]').unbind('click');
+
+        // eslint-disable-next-line
         this.$element.find(':input[type=radio]').click(treeClickFunc);
       }
     }
@@ -184,7 +188,7 @@ Tree.prototype = {
 
     if (typeof (idTree) !== 'undefined' && !$(`#${idTree}`).hasClass('full_loaded')) {
       const selected = [];
-      that = this;
+      const that = this;
       $(`#${idTree}`).find('.tree-selected input').each(
         function () {
           selected.push($(this).val());
@@ -194,13 +198,14 @@ Tree.prototype = {
       const inputType = $(`#${idTree}`).find('ul.tree input').first().attr('type');
       let useCheckBox = 0;
 
-      if (inputType == 'checkbox') {
+      if (inputType === 'checkbox') {
         useCheckBox = 1;
       }
 
       $.get(
         'ajax-tab.php',
         {
+          // eslint-disable-next-line
           controller: 'AdminProducts', token: currentToken, action: 'getCategoryTree', type: idTree, fullTree: 1, selected, inputName: name, useCheckBox,
         },
         (content) => {
