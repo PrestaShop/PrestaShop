@@ -76,8 +76,8 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl
+        string $resetActionUrl,
+        string $redirectionUrl
     ) {
         parent::__construct($hookDispatcher);
 
