@@ -31,12 +31,12 @@ use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Service\Form\MultistoreCheckboxAttacher;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Test\TypeTestCase;
 
-class MultistoreCheckboxAttacherTest extends TypeTestCase
+class MultistoreCheckboxEnablerTest extends TypeTestCase
 {
     public $mockedShopConfiguration;
 
@@ -54,13 +54,13 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
      */
     public function testShouldAddCheckboxes(bool $isMultistoreUsed, bool $isAllShopContext, bool $expectedValue): void
     {
-        $checkboxAttacher = new MultistoreCheckboxAttacher(
+        $checkboxEnabler = new MultistoreCheckboxEnabler(
             $this->createMultistoreFeatureMock($isMultistoreUsed),
             $this->mockedShopConfiguration,
             $this->createMultistoreContextMock($isAllShopContext)
         );
 
-        $this->assertEquals($expectedValue, $checkboxAttacher->shouldAddCheckboxes());
+        $this->assertEquals($expectedValue, $checkboxEnabler->shouldAddCheckboxes());
     }
 
     /**
@@ -82,17 +82,17 @@ class MultistoreCheckboxAttacherTest extends TypeTestCase
     public function testAddCheckboxes(): void
     {
         $form = $this->getFormToTest();
-        $checkboxAttacher = new MultistoreCheckboxAttacher(
+        $checkboxEnabler = new MultistoreCheckboxEnabler(
             $this->createMultistoreFeatureMock(),
             $this->mockedShopConfiguration,
             $this->createMultistoreContextMock()
         );
 
-        $checkboxAttacher->addCheckboxes($form);
-        $this->assertTrue($form->has(MultistoreCheckboxAttacher::MULTISTORE_FIELD_PREFIX . 'first_field'));
+        $checkboxEnabler->addCheckboxes($form);
+        $this->assertTrue($form->has(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'first_field'));
         $this->assertTrue($form->has('first_field'));
         $this->assertTrue($form->has('second_field'));
-        $this->assertFalse($form->has(MultistoreCheckboxAttacher::MULTISTORE_FIELD_PREFIX . 'multistore_second_field'));
+        $this->assertFalse($form->has(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'multistore_second_field'));
 
         // the added multistore checkbox must have the correct `multistore_configuration_key` attribute
         $multistoreFirstFieldCheckboxOptions = $form->get('multistore_first_field')->getConfig()->getOptions();

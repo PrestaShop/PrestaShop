@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormInterface;
 
-class MultistoreCheckboxAttacher
+class MultistoreCheckboxEnabler
 {
     private $multistoreFeature;
     private $configuration;
@@ -44,7 +44,7 @@ class MultistoreCheckboxAttacher
     public const MULTISTORE_FIELD_PREFIX = 'multistore_';
 
     /**
-     * MultistoreCheckboxAttacher constructor.
+     * MultistoreCheckboxEnabler constructor.
      *
      * @param FeatureInterface $multistoreFeature
      * @param ShopConfigurationInterface $configuration
