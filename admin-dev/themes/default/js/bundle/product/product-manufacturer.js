@@ -17,6 +17,7 @@ const manufacturer = (function () {
       });
       resetButton.on('click', (e) => {
         e.preventDefault();
+        // eslint-disable-next-line
         modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue() {
             manufacturerContent.addClass('hide');
@@ -29,6 +30,7 @@ const manufacturer = (function () {
   };
 }());
 
+// eslint-disable-next-line
 BOEvent.on('Product Manufacturer Management started', () => {
   manufacturer.init();
 }, 'Back office');
