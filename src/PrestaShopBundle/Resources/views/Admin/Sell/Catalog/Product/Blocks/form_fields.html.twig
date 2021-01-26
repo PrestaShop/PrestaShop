@@ -24,36 +24,15 @@
  * #}
 
 {%- block supplier_references_row -%}
-<div class="row supplier_references_row" id="supplier_reference_row_{% if form.vars.value is not null %}{{ form.vars.value.supplier_id }}{% else %}__SUPPLIER_ID__{% endif %}">
-  <div class="col">
-    {{ form_row(form.supplier_id) }}
-    {{ form_row(form.is_default) }}
-    {{ form_row(form.supplier_name) }}
-    {# We need to check if value is not null because in prototype it is null else we display a placeholder #}
-    <div>{% if form.vars.value is not null %}{{ form.vars.value.supplier_name }}{% else %}__SUPPLIER_NAME__{% endif %}</div>
-    <table class="table">
-      <thead class="thead-default">
-      <tr>
-        <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
-        <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
-        <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
-      </tr>
-      </thead>
-      {{ form_row(form.product_supplier) }}
-    </table>
-  </div>
-</div>
-{%- endblock supplier_references_row -%}
-
-{%- block product_supplier_row -%}
-  <tr>
-    {{ form_widget(form.product_supplier_id) }}
-    {{ form_widget(form.combination_id) }}
-    <td>{{ form_widget(form.supplier_reference) }}</td>
-    <td>{{ form_widget(form.supplier_price_tax_excluded) }}</td>
-    <td>{{ form_widget(form.currency_id) }}</td>
+  <tr class="product_supplier_row" id="product_supplier_row_{% if form.vars.value is not null %}{{ form.vars.value.supplier_id }}{% else %}__SUPPLIER_ID__{% endif %}">
+    {{ form_widget(form.supplier_id) }}
+    {{ form_widget(form.product_supplier.product_supplier_id) }}
+    <td>{% if form.supplier_name.vars.value %}{{ form.supplier_name.vars.value }}{% else %}__SUPPLIER_NAME__{% endif %}</td>
+    <td>{{ form_widget(form.product_supplier.supplier_reference) }}</td>
+    <td>{{ form_widget(form.product_supplier.supplier_price_tax_excluded) }}</td>
+    <td>{{ form_widget(form.product_supplier.currency_id) }}</td>
   </tr>
-{%- endblock product_supplier_row -%}
+{%- endblock supplier_references_row -%}
 
 {# Override suppliers reference collection template to remove the label column #}
 {%- block _product_suppliers_supplier_references_row -%}
