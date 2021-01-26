@@ -562,7 +562,6 @@ class SqlManagerController extends FrameworkBundleAdminController
         return $this->getFallbackErrorMessage(get_class($e), $code);
     }
 
-
     /**
      * @param SqlRequestException $e
      *
