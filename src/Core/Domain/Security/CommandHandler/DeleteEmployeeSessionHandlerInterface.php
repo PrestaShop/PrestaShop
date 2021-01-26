@@ -38,5 +38,5 @@ interface DeleteEmployeeSessionHandlerInterface
      *
      * @param DeleteEmployeeSessionCommand $command
      */
-    public function handle(DeleteEmployeeSessionCommand $command);
+    public function handle(DeleteEmployeeSessionCommand $command): void;
 }
