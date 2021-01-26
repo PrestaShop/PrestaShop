@@ -72,7 +72,13 @@ abstract class MultistoreConfigurator implements DataConfigurationInterface
         $prefix = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX;
 
         foreach ($configuration as $key => $value) {
-            if (substr($key, 0, strlen($prefix)) !== $prefix && isset($configuration[$prefix . $key]) && $configuration[$prefix . $key] !== true) {
+            // This is a multistore checkbox we ignore it
+            if (substr($key, 0, strlen($prefix)) === $prefix) {
+                continue;
+            }
+
+            // Check for this configuration key if the associated multistore checbox is enabled
+            if (isset($configuration[$prefix . $key]) && $configuration[$prefix . $key] !== true) {
                 unset($configuration[$key]);
             }
         }
