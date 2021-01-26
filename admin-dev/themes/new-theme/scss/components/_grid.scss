@@ -113,14 +113,6 @@ table .column-filters td:last-child .grid-reset-button {
             }
           }
         }
-
-        &.column-filters {
-          @include media-breakpoint-down(xs) {
-            input {
-              min-width: 6rem;
-            }
-          }
-        }
       }
     }
     tbody {
@@ -270,6 +262,19 @@ table .column-filters td:last-child .grid-reset-button {
   .preview-toggle {
     i:hover {
       cursor: pointer;
+    }
+  }
+}
+
+table {
+  tr {
+    &.column-filters {
+      @include media-breakpoint-down(xs) {
+        input,
+        select {
+          min-width: 6rem;
+        }
+      }
     }
   }
 }
