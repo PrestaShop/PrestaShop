@@ -27,48 +27,21 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\ChoiceProvider;
 
-use Generator;
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class OutOfStockTypeChoiceProviderTest extends ChoiceProviderTestCase
+abstract class ChoiceProviderTestCase extends TestCase
 {
     /**
-     * @dataProvider getExpectedChoices
-     *
-     * @param bool $outOfStockAvailable
-     * @param array $expectedChoices
+     * @return TranslatorInterface
      */
-    public function testItProvidesChoicesAsExpected(bool $outOfStockAvailable, array $expectedChoices): void
+    protected function mockTranslator(): TranslatorInterface
     {
-        $choiceProvider = new OutOfStockTypeChoiceProvider(
-            $this->mockTranslator(),
-            $outOfStockAvailable
-        );
+        $mock = $this->createMock(TranslatorInterface::class);
 
-        $this->assertEquals($expectedChoices, $choiceProvider->getChoices());
-    }
+        $mock->method('trans')
+            ->willReturnArgument(0);
 
-    /**
-     * @return Generator
-     */
-    public function getExpectedChoices(): Generator
-    {
-        yield [
-            false,
-            [
-                'Deny orders' => 0,
-                'Allow orders' => 1,
-                'Use default behavior (Deny orders)' => 2,
-            ],
-        ];
-
-        yield [
-            true,
-            [
-                'Deny orders' => 0,
-                'Allow orders' => 1,
-                'Use default behavior (Allow orders)' => 2,
-            ],
-        ];
+        return $mock;
     }
 }

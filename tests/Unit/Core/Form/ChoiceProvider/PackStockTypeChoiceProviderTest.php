@@ -28,11 +28,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\ChoiceProvider;
 
 use Generator;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider;
-use Symfony\Component\Translation\TranslatorInterface;
 
-class PackStockTypeChoiceProviderTest extends TestCase
+class PackStockTypeChoiceProviderTest extends ChoiceProviderTestCase
 {
     /**
      * @dataProvider getExpectedChoices
@@ -82,18 +80,5 @@ class PackStockTypeChoiceProviderTest extends TestCase
                 'Default (Decrement both.)' => 3,
             ],
         ];
-    }
-
-    /**
-     * @return TranslatorInterface
-     */
-    private function mockTranslator(): TranslatorInterface
-    {
-        $mock = $this->createMock(TranslatorInterface::class);
-
-        $mock->method('trans')
-            ->willReturnArgument(0);
-
-        return $mock;
     }
 }
