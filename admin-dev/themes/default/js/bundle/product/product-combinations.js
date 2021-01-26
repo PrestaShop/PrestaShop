@@ -1,38 +1,37 @@
 /**
  * Combination management
  */
-var combinations = (function() {
-  var id_product = $('#form_id_product').val();
+const combinations = (function () {
+  const id_product = $('#form_id_product').val();
 
   /**
    * Remove a combination
    * @param {object} elem - The clicked link
    */
   function remove(elem) {
-    var combinationElem = $('#attribute_' + elem.attr('data'));
+    const combinationElem = $(`#attribute_${elem.attr('data')}`);
 
     modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
-      onContinue: function() {
-
-        var attributeId = elem.attr('data');
+      onContinue() {
+        const attributeId = elem.attr('data');
         $.ajax({
           type: 'DELETE',
           data: {'attribute-ids': [attributeId]},
           url: elem.attr('href'),
-          beforeSend: function() {
+          beforeSend() {
             elem.attr('disabled', 'disabled');
             $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
           },
-          success: function(response) {
+          success(response) {
             refreshTotalCombinations(-1, 1);
             combinationElem.remove();
             showSuccessMessage(response.message);
             displayFieldsManager.refresh();
           },
-          error: function(response) {
+          error(response) {
             showErrorMessage(jQuery.parseJSON(response.responseText).message);
           },
-          complete: function() {
+          complete() {
             elem.removeAttr('disabled');
             $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             supplierCombinations.refresh();
@@ -40,9 +39,9 @@ var combinations = (function() {
             if ($('.js-combinations-list .combination').length <= 0) {
               $('#combinations_thead').fadeOut();
             }
-          }
+          },
         });
-      }
+      },
     }).show();
   }
 
@@ -51,19 +50,19 @@ var combinations = (function() {
    * @param {jQuery} tableRow - Table row that contains the combination
    */
   function updateFinalPrice(tableRow) {
-      if (!tableRow.is('tr')) {
-          throw new Error('Structure of table has changed, this function needs to be updated.');
-      }
-      var priceImpactInput = tableRow.find('.attribute_priceTE').first();
-      var finalPriceLabel = tableRow.find('.attribute-finalprice span');
+    if (!tableRow.is('tr')) {
+      throw new Error('Structure of table has changed, this function needs to be updated.');
+    }
+    const priceImpactInput = tableRow.find('.attribute_priceTE').first();
+    const finalPriceLabel = tableRow.find('.attribute-finalprice span');
 
-      var impactOnPrice = Tools.parseFloatFromString(priceImpactInput.val());
-      var previousImpactOnPrice = Tools.parseFloatFromString(priceImpactInput.attr('value'));
+    const impactOnPrice = Tools.parseFloatFromString(priceImpactInput.val());
+    const previousImpactOnPrice = Tools.parseFloatFromString(priceImpactInput.attr('value'));
 
-      var currentFinalPrice = Tools.parseFloatFromString(finalPriceLabel.data('price'), true);
-      var finalPrice = currentFinalPrice - previousImpactOnPrice + impactOnPrice;
+    const currentFinalPrice = Tools.parseFloatFromString(finalPriceLabel.data('price'), true);
+    const finalPrice = currentFinalPrice - previousImpactOnPrice + impactOnPrice;
 
-      finalPriceLabel.html(Number(ps_round(finalPrice, 6)).toFixed(6));
+    finalPriceLabel.html(Number(ps_round(finalPrice, 6)).toFixed(6));
   }
 
   /**
@@ -72,7 +71,7 @@ var combinations = (function() {
    * @return {jQuery}
    */
   function getCombinationForm(attributeId) {
-    return $('#combination_form_' + attributeId);
+    return $(`#combination_form_${attributeId}`);
   }
 
   /**
@@ -81,15 +80,15 @@ var combinations = (function() {
    * @return {jQuery}
    */
   function getCombinationRow(attributeId) {
-    return $('#accordion_combinations #attribute_' + attributeId);
+    return $(`#accordion_combinations #attribute_${attributeId}`);
   }
 
   return {
-    'init': function() {
-      var showVariationsSelector = '#show_variations_selector input';
-      var productTypeSelector = $('#form_step1_type_product');
-      var combinationsListSelector = '#accordion_combinations .combination';
-      var combinationsList = $(combinationsListSelector);
+    init() {
+      const showVariationsSelector = '#show_variations_selector input';
+      const productTypeSelector = $('#form_step1_type_product');
+      const combinationsListSelector = '#accordion_combinations .combination';
+      let combinationsList = $(combinationsListSelector);
 
       if (combinationsList.length > 0) {
         productTypeSelector.prop('disabled', true);
@@ -97,50 +96,50 @@ var combinations = (function() {
 
       $(document)
         // delete combination
-        .on('click', '#accordion_combinations .delete', function(e) {
+        .on('click', '#accordion_combinations .delete', function (e) {
           e.preventDefault();
           remove($(this));
         })
 
         // when typing a new quantity on the form, update it on the row
-        .on('keyup', 'input[id^="combination"][id$="_attribute_quantity"]', function() {
-          var attributeId = $(this).closest('.combination-form').attr('data');
-          var input = getCombinationRow(attributeId).find('.attribute-quantity input');
+        .on('keyup', 'input[id^="combination"][id$="_attribute_quantity"]', function () {
+          const attributeId = $(this).closest('.combination-form').attr('data');
+          const input = getCombinationRow(attributeId).find('.attribute-quantity input');
 
           input.val($(this).val());
         })
 
         // when typing a new quantity on the row, update it on the form
-        .on('keyup', '.attribute-quantity input', function() {
-          var attributeId = $(this).closest('.combination').attr('data');
-          var input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_quantity"]');
+        .on('keyup', '.attribute-quantity input', function () {
+          const attributeId = $(this).closest('.combination').attr('data');
+          const input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_quantity"]');
 
           input.val($(this).val());
         })
 
         .on({
           // when typing a new impact on price on the form, update it on the row
-          'keyup': function () {
-            var attributeId = $(this).closest('.combination-form').attr('data');
-            var input = getCombinationRow(attributeId).find('.attribute-price input');
+          keyup() {
+            const attributeId = $(this).closest('.combination-form').attr('data');
+            const input = getCombinationRow(attributeId).find('.attribute-price input');
 
             input.val($(this).val());
           },
           // when impact on price on the form is changed, update final price
-          'change': function () {
-            var attributeId = $(this).closest('.combination-form').attr('data');
-            var input = getCombinationRow(attributeId).find('.attribute-price input');
+          change() {
+            const attributeId = $(this).closest('.combination-form').attr('data');
+            const input = getCombinationRow(attributeId).find('.attribute-price input');
 
             input.val($(this).val());
 
             updateFinalPrice($(input.parents('tr')[0]));
-          }
+          },
         }, 'input[id^="combination"][id$="_attribute_price"]')
 
         // when price impact is changed on the row, update it on the form
-        .on('change', '.attribute-price input', function() {
-          var attributeId = $(this).closest('.combination').attr('data');
-          var input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_price"]');
+        .on('change', '.attribute-price input', function () {
+          const attributeId = $(this).closest('.combination').attr('data');
+          const input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_price"]');
 
           input.val($(this).val());
 
@@ -148,53 +147,53 @@ var combinations = (function() {
         })
 
         // on change default attribute, update which combination is the new default
-        .on('click', 'input.attribute-default', function() {
-          var selectedCombination = $(this);
-          var combinationRadioButtons = $('input.attribute-default');
-          var attributeId = $(this).closest('.combination').attr('data');
+        .on('click', 'input.attribute-default', function () {
+          const selectedCombination = $(this);
+          const combinationRadioButtons = $('input.attribute-default');
+          const attributeId = $(this).closest('.combination').attr('data');
 
           combinationRadioButtons.each(function unselect(index) {
-            var combination = $(this);
+            const combination = $(this);
             if (combination.data('id') !== selectedCombination.data('id')) {
-              combination.prop("checked", false);
+              combination.prop('checked', false);
             }
           });
 
           $('.attribute_default_checkbox').prop('checked', false);
           getCombinationForm(attributeId)
             .find('input[id^="combination"][id$="_attribute_default"]')
-            .prop("checked", true);
+            .prop('checked', true);
         })
 
         // Combinations fields display management
-        .on('change', showVariationsSelector, function() {
+        .on('change', showVariationsSelector, function () {
           displayFieldsManager.refresh();
           combinationsList = $(combinationsListSelector);
 
           if ($(this).val() === '0') {
-            //if combination(s) exists, alert user for deleting it
+            // if combination(s) exists, alert user for deleting it
             if (combinationsList.length > 0) {
               modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
-                onCancel: function() {
+                onCancel() {
                   $('#show_variations_selector input[value="1"]').prop('checked', true);
                   displayFieldsManager.refresh();
                 },
-                onContinue: function() {
+                onContinue() {
                   $.ajax({
                     type: 'GET',
-                    url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)?/, '/' + $('#form_id_product').val()),
-                    success: function(response) {
+                    url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)?/, `/${$('#form_id_product').val()}`),
+                    success(response) {
                       combinationsList.remove();
                       displayFieldsManager.refresh();
                     },
-                    error: function(response) {
+                    error(response) {
                       showErrorMessage(jQuery.parseJSON(response.responseText).message);
-                    }
+                    },
                   });
                   // enable the top header selector
                   // we want to use a "Simple product" without any combinations
                   productTypeSelector.prop('disabled', false);
-                }
+                },
               }).show();
             } else {
               // enable the top header selector if no combination(s) exists
@@ -208,15 +207,15 @@ var combinations = (function() {
         })
 
         // open combination form
-        .on('click', '#accordion_combinations .btn-open', function(e) {
+        .on('click', '#accordion_combinations .btn-open', function (e) {
           e.preventDefault();
-          var contentElem = $($(this).attr('href'));
+          const contentElem = $($(this).attr('href'));
 
           /** create combinations navigation */
-          var navElem = contentElem.find('.nav');
-          var id_attribute = contentElem.attr('data');
-          var prevCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').prev().attr('data');
-          var nextCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').next().attr('data');
+          const navElem = contentElem.find('.nav');
+          const id_attribute = contentElem.attr('data');
+          const prevCombinationId = $(`#accordion_combinations tr[data="${id_attribute}"]`).prev().attr('data');
+          const nextCombinationId = $(`#accordion_combinations tr[data="${id_attribute}"]`).next().attr('data');
           navElem.find('.prev, .next').hide();
           if (prevCombinationId) {
             navElem.find('.prev').attr('data', prevCombinationId).show();
@@ -232,54 +231,53 @@ var combinations = (function() {
 
           contentElem.find('.datepicker input[type="text"]').datetimepicker({
             locale: iso_user,
-            format: 'YYYY-MM-DD'
+            format: 'YYYY-MM-DD',
           });
 
           function countSelectedProducts() {
-            return $('#combination_form_' + contentElem.attr('data') + ' .img-highlight').length;
+            return $(`#combination_form_${contentElem.attr('data')} .img-highlight`).length;
           }
 
-          var number = $('#combination_form_' + contentElem.attr('data') + ' .number-of-images'),
-              allProductCombination = $('#combination_form_' + contentElem.attr('data') + ' .product-combination-image').length;
+          const number = $(`#combination_form_${contentElem.attr('data')} .number-of-images`);
+          const allProductCombination = $(`#combination_form_${contentElem.attr('data')} .product-combination-image`).length;
 
-          number.text(countSelectedProducts() + '/' + allProductCombination);
+          number.text(`${countSelectedProducts()}/${allProductCombination}`);
 
-          $(document).on('click','.tabs .product-combination-image', function () {
-            number.text(countSelectedProducts() + '/' + allProductCombination);
+          $(document).on('click', '.tabs .product-combination-image', () => {
+            number.text(`${countSelectedProducts()}/${allProductCombination}`);
           });
 
           /** Add title on product's combination image */
-          $(function() {
-              $('#combination_form_' + contentElem.attr('data')).find("img").each(function() {
-                  title = $(this).attr('src').split('/').pop();
-                  $(this).attr('title',title);
-              });
+          $(() => {
+            $(`#combination_form_${contentElem.attr('data')}`).find('img').each(function () {
+              title = $(this).attr('src').split('/').pop();
+              $(this).attr('title', title);
+            });
           });
 
           $('#form-nav, #form_content').hide();
         })
 
         // close combination form
-        .on('click', '#form .combination-form .btn-back', function(e) {
+        .on('click', '#form .combination-form .btn-back', function (e) {
           e.preventDefault();
           $(this).closest('.combination-form').hide();
           $('#form-nav, #form_content').show();
         })
 
         // switch combination form
-        .on('click', '#form .combination-form .nav a', function(e) {
+        .on('click', '#form .combination-form .nav a', function (e) {
           e.preventDefault();
           $('.combination-form').hide();
-          $('#accordion_combinations .combination[data="' + $(this).attr('data') + '"] .btn-open').click();
-        })
-      ;
-    }
+          $(`#accordion_combinations .combination[data="${$(this).attr('data')}"] .btn-open`).click();
+        });
+    },
   };
-})();
+}());
 
-BOEvent.on("Product Combinations Management started", function initCombinationsManagement() {
+BOEvent.on('Product Combinations Management started', () => {
   combinations.init();
-}, "Back office");
+}, 'Back office');
 
 /**
  * Refresh bulk actions combination number after creating or deleting combinations
@@ -288,7 +286,7 @@ BOEvent.on("Product Combinations Management started", function initCombinationsM
  * @param {number} number
  */
 var refreshTotalCombinations = function (sign, number) {
-  var $bulkCombinationsTotal = $('#js-bulk-combinations-total');
-  var currentnumber = parseInt($bulkCombinationsTotal.text()) + (sign * number);
+  const $bulkCombinationsTotal = $('#js-bulk-combinations-total');
+  const currentnumber = parseInt($bulkCombinationsTotal.text()) + (sign * number);
   $bulkCombinationsTotal.text(currentnumber);
-}
+};
