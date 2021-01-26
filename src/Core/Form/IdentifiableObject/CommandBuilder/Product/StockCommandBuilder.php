@@ -32,20 +32,20 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformat
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Builds commands from product quantity form type
+ * Builds commands from product stock form type
  */
-final class QuantityCommandBuilder implements ProductCommandBuilderInterface
+final class StockCommandBuilder implements ProductCommandBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
     public function buildCommand(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['quantities'])) {
+        if (!isset($formData['stock'])) {
             return [];
         }
 
-        $quantityData = $formData['quantities'];
+        $quantityData = $formData['stock'];
         $command = new UpdateProductStockInformationCommand($productId->getValue());
 
         if (isset($quantityData['quantity'])) {

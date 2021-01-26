@@ -32,9 +32,9 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\QuantityCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandBuilder;
 
-class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
+class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -44,7 +44,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new QuantityCommandBuilder();
+        $builder = new StockCommandBuilder();
         $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -64,7 +64,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'not_handled' => 0,
                 ],
             ],
@@ -76,7 +76,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setMinimalQuantity(1);
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'quantity' => '100',
                     'minimal_quantity' => 1,
                 ],
@@ -88,7 +88,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setLocation('Im in miami...');
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'stock_location' => 'Im in miami...',
                 ],
             ],
@@ -99,7 +99,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setLowStockThreshold(5);
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'low_stock_threshold' => '5',
                 ],
             ],
@@ -110,7 +110,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setLowStockAlert(false);
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'low_stock_alert' => '0',
                 ],
             ],
@@ -121,7 +121,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setPackStockType(PackStockType::STOCK_TYPE_BOTH);
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'pack_stock_type' => '2',
                 ],
             ],
@@ -132,7 +132,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT);
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'out_of_stock_type' => '2',
                 ],
             ],
@@ -147,7 +147,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setLocalizedAvailableNowLabels($localizedNotes);
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'available_now_label' => $localizedNotes,
                 ],
             ],
@@ -162,7 +162,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setLocalizedAvailableLaterLabels($localizedNotes);
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'available_later_label' => $localizedNotes,
                 ],
             ],
@@ -173,7 +173,7 @@ class QuantityCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setAvailableDate(new DateTime('2022-10-10'));
         yield [
             [
-                'quantities' => [
+                'stock' => [
                     'available_date' => '2022-10-10',
                 ],
             ],

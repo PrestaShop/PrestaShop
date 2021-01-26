@@ -64,7 +64,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
-            'quantities' => $this->extractQuantityData($productForEditing),
+            'stock' => $this->extractStockData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
@@ -115,7 +115,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    private function extractQuantityData(ProductForEditing $productForEditing): array
+    private function extractStockData(ProductForEditing $productForEditing): array
     {
         $stockInformation = $productForEditing->getStockInformation();
         $availableDate = $stockInformation->getAvailableDate();

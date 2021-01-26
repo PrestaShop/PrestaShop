@@ -49,7 +49,7 @@ class ProductType extends TranslatorAwareType
         $editing = !empty($options['product_id']);
         $builder
             ->add('basic', BasicInformationType::class)
-            ->add('quantities', QuantityType::class)
+            ->add('stock', StockType::class)
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)

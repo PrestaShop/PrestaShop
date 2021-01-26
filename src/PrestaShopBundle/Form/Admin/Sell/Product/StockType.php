@@ -40,7 +40,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class QuantityType extends TranslatorAwareType
+class StockType extends TranslatorAwareType
 {
     /**
      * @var FormChoiceProviderInterface
