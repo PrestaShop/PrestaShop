@@ -65,9 +65,3 @@ services:
 
   prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\SupplierNameByIdChoiceProvider'
-
-  prestashop.adapter.form.choice_provider.combination_name_by_id_choice_provider:
-      class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CombinationNameByIdChoiceProvider'
-      arguments:
-          - '@prestashop.adapter.product.combination.repository.combination_repository'
-          - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

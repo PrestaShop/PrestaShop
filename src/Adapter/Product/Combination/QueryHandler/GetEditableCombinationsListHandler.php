@@ -132,15 +132,13 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             $combinationId = (int) $combination['id_product_attribute'];
             $combinationAttributesInformation = [];
 
-            foreach ($attributesInformationByCombinationId[$combinationId] as $attributesInfo) {
-                foreach ($attributesInfo as $attributeInfo) {
-                    $combinationAttributesInformation[] = new CombinationAttributeInformation(
-                        (int) $attributeInfo['id_attribute_group'],
-                        $attributeInfo['attribute_group_name'],
-                        (int) $attributeInfo['id_attribute'],
-                        $attributeInfo['attribute_name']
-                    );
-                }
+            foreach ($attributesInformationByCombinationId[$combinationId] as $attributeInfo) {
+                $combinationAttributesInformation[] = new CombinationAttributeInformation(
+                    (int) $attributeInfo['id_attribute_group'],
+                    $attributeInfo['attribute_group_name'],
+                    (int) $attributeInfo['id_attribute'],
+                    $attributeInfo['attribute_name']
+                );
             }
 
             $impactOnPrice = new DecimalNumber($combination['price']);

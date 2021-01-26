@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -49,28 +48,19 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var ConfigurableFormChoiceProviderInterface
-     */
-    private $combinationNameByIdChoiceProvider;
-
-    /**
      * @var int
      */
     private $defaultCurrencyId;
 
     /**
      * @param CommandBusInterface $queryBus
-     * @param ConfigurableFormChoiceProviderInterface $combinationNameByIdChoiceProvider
      * @param int $defaultCurrencyId
      */
     public function __construct(
         CommandBusInterface $queryBus,
-        //@todo: to mege already existing productSuppliers with combinations (if its number was updated)
-        ConfigurableFormChoiceProviderInterface $combinationNameByIdChoiceProvider,
         int $defaultCurrencyId
     ) {
         $this->queryBus = $queryBus;
-        $this->combinationNameByIdChoiceProvider = $combinationNameByIdChoiceProvider;
         $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
