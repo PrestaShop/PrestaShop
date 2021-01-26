@@ -36,5 +36,5 @@ interface BulkDeleteEmployeesSessionsHandlerInterface
     /**
      * @param BulkDeleteEmployeesSessionsCommand $command
      */
-    public function handle(BulkDeleteEmployeesSessionsCommand $command);
+    public function handle(BulkDeleteEmployeesSessionsCommand $command): void;
 }
