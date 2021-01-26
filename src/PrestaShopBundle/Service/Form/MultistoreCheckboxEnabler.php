@@ -93,7 +93,7 @@ class MultistoreCheckboxEnabler
      *
      * @param FormInterface $form (passed by reference)
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     * @throws ShopException
      */
     public function addCheckboxes(FormInterface &$form): void
     {
