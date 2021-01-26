@@ -79,6 +79,7 @@ describe('Sort and pagination Languages table', async () => {
     await expect(numberOfLanguages).to.be.above(0);
   });
 
+  // 1 - Sort table
   describe('Sort Languages table', async () => {
     [
       {
@@ -129,19 +130,21 @@ describe('Sort and pagination Languages table', async () => {
     });
   });
 
+  // 2 - Pagination
   describe('Pagination of Languages table', async () => {
+    const tests = [
+      {args: {languageData: Languages.spanish}},
+      {args: {languageData: Languages.deutsch}},
+      {args: {languageData: Languages.turkish}},
+      {args: {languageData: Languages.spanishAR}},
+      {args: {languageData: Languages.dutch}},
+      {args: {languageData: Languages.portuguese}},
+      {args: {languageData: Languages.croatian}},
+      {args: {languageData: Languages.simplifiedChinese}},
+      {args: {languageData: Languages.traditionalChinese}},
+    ];
     describe('Create 9 Languages', async () => {
-      [
-        {args: {languageData: Languages.spanish}},
-        {args: {languageData: Languages.deutsch}},
-        {args: {languageData: Languages.turkish}},
-        {args: {languageData: Languages.spanishAR}},
-        {args: {languageData: Languages.dutch}},
-        {args: {languageData: Languages.portuguese}},
-        {args: {languageData: Languages.croatian}},
-        {args: {languageData: Languages.simplifiedChinese}},
-        {args: {languageData: Languages.traditionalChinese}},
-      ].forEach((test, index) => {
+      tests.forEach((test, index) => {
         it('should go to add new language page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguagePage${index}`, baseContext);
 
@@ -189,6 +192,38 @@ describe('Sort and pagination Languages table', async () => {
 
         const paginationNumber = await languagesPage.selectPaginationLimit(page, '50');
         expect(paginationNumber).to.contains('(page 1 / 1)');
+      });
+    });
+
+    describe('Delete created Languages', async () => {
+      tests.forEach((test, index) => {
+        it(`should filter language by name '${test.args.languageData.name}'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
+
+          // Filter
+          await languagesPage.filterTable(page, 'input', 'name', test.args.languageData.name);
+
+          // Check number of languages
+          const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
+          await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+
+          const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
+          await expect(textColumn).to.contains(test.args.languageData.name);
+        });
+
+        it('should delete language', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `deleteLanguage${index}`, baseContext);
+
+          const textResult = await languagesPage.deleteLanguage(page, 1);
+          await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+        });
+
+        it('should reset all filters', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `resetAfterDelete${index}`, baseContext);
+
+          const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
+          await expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages + 8 - index);
+        });
       });
     });
   });
