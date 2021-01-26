@@ -1275,6 +1275,16 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.stock_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+            - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+        public: true
+        tags:
+            - { name: form.type }
+
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
       parent: 'form.type.translatable.aware'

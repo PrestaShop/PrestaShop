@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -63,6 +64,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
+            'stock' => $this->extractStockData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
@@ -105,6 +107,30 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'type' => $productForEditing->getBasicInformation()->getType()->getValue(),
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractStockData(ProductForEditing $productForEditing): array
+    {
+        $stockInformation = $productForEditing->getStockInformation();
+        $availableDate = $stockInformation->getAvailableDate();
+
+        return [
+            'quantity' => $stockInformation->getQuantity(),
+            'minimal_quantity' => $stockInformation->getMinimalQuantity(),
+            'stock_location' => $stockInformation->getLocation(),
+            'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
+            'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            'pack_stock_type' => $stockInformation->getPackStockType(),
+            'out_of_stock_type' => $stockInformation->getOutOfStockType(),
+            'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),
+            'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
+            'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
         ];
     }
 

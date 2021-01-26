@@ -58,6 +58,12 @@
         </div>
       {% endblock %}
 
+      {% block product_tab_stock %}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="stock-tab">
+          {{ form_widget(productForm.stock) }}
+        </div>
+      {% endblock %}
+
       {% block product_tab_pricing %}
         <div role="tabpanel" class="form-contenttab tab-pane" id="pricing-tab">
           {{ form_widget(productForm.price) }}

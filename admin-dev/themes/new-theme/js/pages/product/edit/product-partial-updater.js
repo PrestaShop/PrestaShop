@@ -57,7 +57,8 @@ export default class ProductPartialUpdater {
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit(() => this.updatePartialForm());
-    this.$productForm.on('change', ':input', () => this.updateSubmitButtonState());
+    // 'dp.change' event allows tracking datepicker input changes
+    this.$productForm.on('change dp.change', ':input', () => this.updateSubmitButtonState());
     this.initFormattedTextarea();
   }
 
