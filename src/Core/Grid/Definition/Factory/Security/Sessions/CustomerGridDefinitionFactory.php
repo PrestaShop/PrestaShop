@@ -45,7 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class CustomerGridDefinitionFactory responsible for creating Profiles grid definition.
+ * Class CustomerGridDefinitionFactory responsible for creating Customer sessions grid definition.
  */
 final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
