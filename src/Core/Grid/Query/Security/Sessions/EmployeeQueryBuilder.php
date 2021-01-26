@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterf
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class EmployeeQueryBuilder is responsible for building queries for profiles grid data.
+ * Class EmployeeQueryBuilder is responsible for building queries for employees grid data.
  */
 final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
 {
