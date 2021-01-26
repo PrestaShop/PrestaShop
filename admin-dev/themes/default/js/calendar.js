@@ -380,7 +380,7 @@ $( document ).ready(function() {
 	});
 
 	$('#datepicker-compare').click(function() {
-    if ($(this).is(":checked")) {
+    if ($(this).prop("checked")) {
 			$('#compare-options').trigger('change');
 			$('#form-date-body-compare').show();
 			$('#compare-options').prop('disabled', false);
