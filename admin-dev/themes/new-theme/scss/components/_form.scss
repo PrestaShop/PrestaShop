@@ -45,7 +45,12 @@
       @extend .col-sm-4;
       @extend .col-form-label;
 
+      .text-danger {
+        margin-right: 0.5rem;
+      }
+
       @include media-breakpoint-up("sm") {
+        justify-content: flex-end;
         padding-right: 25px;
         text-align: right;
       }
