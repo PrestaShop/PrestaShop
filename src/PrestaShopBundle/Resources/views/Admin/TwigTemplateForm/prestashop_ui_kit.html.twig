@@ -56,10 +56,8 @@
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% set multistoreCheckboxName = 'multistore_' ~ form.vars.name %}
     {% set disabledField = false %}
-    {% set labelClass = '' %}
     {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
       {% set disabledField = true %}
-      {% set labelClass = 'disabled' %}
     {% endif %}
 
     <div class="{{ block('form_row_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}"{% if (attr.visible is defined and not attr.visible) %} style="display: none;"{% endif %}>
