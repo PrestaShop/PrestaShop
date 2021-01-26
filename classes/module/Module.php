@@ -1205,7 +1205,6 @@ abstract class ModuleCore implements ModuleInterface
     public static function clearStaticCache()
     {
         self::$cachedModuleNames = null;
-        self::$_INSTANCE = [];
     }
 
     public static function configXmlStringFormat($string)
