@@ -27,7 +27,7 @@
 {% form_theme suppliersForm '@PrestaShop/Admin/Sell/Catalog/Product/Blocks/form_fields.html.twig' %}
 
 {% block form_product_suppliers %}
-  <div id="product_suppliers">
+  <div id="productSuppliers">
     <div class="row">
       <div class="col">
         {{ form_row(suppliersForm.supplier_ids) }}
@@ -37,6 +37,18 @@
       </div>
     </div>
 
-    {{ form_row(suppliersForm.supplier_references) }}
+    <table class="table d-none">
+      <thead class="thead-default">
+        <tr>
+          <th>{{ 'Supplier'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ form_row(suppliersForm.supplier_references) }}
+      </tbody>
+    </table>
   </div>
 {% endblock %}

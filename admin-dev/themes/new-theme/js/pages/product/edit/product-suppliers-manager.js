@@ -31,38 +31,50 @@ export default class ProductSuppliersManager {
   constructor() {
     this.$supplierSelectionBlock = $(ProductMap.supplierSelectionBlock);
     this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
-    this.$supplierReferencesContainer = $(ProductMap.supplierReferencesContainer);
-    this.eventemitter = window.prestashop.instance.eventEmitter;
+    this.$productSuppliersTable = $(ProductMap.productSuppliersTable);
+    this.$productSuppliersTBody = this.$productSuppliersTable.find('tbody');
 
     this.init();
   }
 
   init() {
+    this.toggleTableVisibility();
+
     this.$supplierSelectionBlock.on('change', 'input', (e) => {
       const input = e.currentTarget;
       if (input.checked) {
-        this.appendSupplier({
+        this.appendRow({
           id: input.value,
           name: input.dataset.label,
         });
       } else {
-        this.removeSupplier(input.value);
+        this.removeRow(input.value);
       }
+
+      this.toggleTableVisibility();
     });
   }
 
-  appendSupplier(supplier) {
-    const supplierReferencesPrototype = this.$supplierReferencesBlock.data('prototype');
+  toggleTableVisibility() {
+    if (this.getSelectedSuppliers().length === 0) {
+      this.hideTable();
+
+      return;
+    }
+
+    this.showTable();
+  }
+
+  appendRow(supplier) {
+    const productSupplierRowPrototype = this.$supplierReferencesBlock.data('prototype');
     const index = this.getSelectedSuppliers().length - 1;
 
-    const supplierReferencesContent = supplierReferencesPrototype
+    const productSupplierRow = productSupplierRowPrototype
       .replace(/__SUPPLIER_ID__/g, supplier.id)
       .replace(/__SUPPLIER_REFERENCE_INDEX__/g, index)
       .replace(/__SUPPLIER_NAME__/g, supplier.name);
 
-    this.$supplierReferencesContainer.append(supplierReferencesContent);
-    const appendedSupplier = this.$supplierReferencesContainer
-      .find(ProductMap.supplierReferenceProductCollection(index));
+    this.$productSuppliersTBody.append(productSupplierRow);
     // Fill hidden inputs
     $(ProductMap.supplierReferenceSupplierIdInput(index)).val(supplier.id);
     $(ProductMap.supplierReferenceSupplierNameInput(index)).val(supplier.name);
@@ -70,17 +82,10 @@ export default class ProductSuppliersManager {
     const selectedDefaultSupplierInput = $(ProductMap.selectedDefaultSupplierInput);
     const selectedDefaultSupplierId = selectedDefaultSupplierInput.val();
     $(ProductMap.supplierReferenceIsDefaultInput(index)).val(selectedDefaultSupplierId === supplier.id);
-
-    const productSupplierPrototype = appendedSupplier.data('prototype');
-    const $productSuppliersTbody = this.$supplierReferencesBlock
-      .find(`#supplier_reference_row_${supplier.id} table tbody`);
-    const productSupplierContent = productSupplierPrototype
-      .replace(/__PRODUCT_SUPPLIER_INDEX__/g, supplier.id);
-    $productSuppliersTbody.append(productSupplierContent);
   }
 
-  removeSupplier(supplierId) {
-    const supplierRow = this.$supplierReferencesContainer.find(`#supplier_reference_row_${supplierId}`);
+  removeRow(supplierId) {
+    const supplierRow = $(ProductMap.supplierReferenceProductSupplierRow(supplierId));
     supplierRow.remove();
   }
 
@@ -94,5 +99,13 @@ export default class ProductSuppliersManager {
     });
 
     return selectedSuppliers;
+  }
+
+  showTable() {
+    this.$productSuppliersTable.removeClass('d-none');
+  }
+
+  hideTable() {
+    this.$productSuppliersTable.addClass('d-none');
   }
 }
