@@ -79,7 +79,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             'thumbnailRegenerationForm' => $thumbnailRegenerationForm->createView(),
             'showMoveForm' => $helper->showMovingForm(),
             'showDuplicatesAlert' => $helper->showDuplicatesAlert,
-            'duplicatesFolder' => $helper->productImagesDir . 'duplicates/',
+            'duplicatesFolder' => $helper->productImagesDir . 'duplicates' . DIRECTORY_SEPARATOR,
         ]);
     }
 
