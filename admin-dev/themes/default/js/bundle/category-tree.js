@@ -27,6 +27,7 @@
   $.fn.categorytree = function (settings) {
     const isMethodCall = (typeof settings === 'string'); // is this a method call like $().categorytree("unselect")
     const returnValue = this;
+
     // if a method call execute the method on all selected instances
     if (isMethodCall) {
       switch (settings) {
@@ -50,6 +51,7 @@
     else {
       const clickHandler = function (event) {
         let $ui = $(event.target);
+
         if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
           return;
         }

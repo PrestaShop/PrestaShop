@@ -254,6 +254,7 @@
 
     _blobSlice: $.support.blobSlice && function () {
       const slice = this.slice || this.webkitSlice || this.mozSlice;
+
       return slice.apply(this, arguments);
     },
 
@@ -263,6 +264,7 @@
       this.bitrate = 0;
       this.getBitrate = function (now, loaded, interval) {
         const timeDiff = now - this.timestamp;
+
         if (!this.bitrate || !interval || timeDiff > interval) {
           this.bitrate = (loaded - this.loaded) * (1000 / timeDiff) * 8;
           this.loaded = loaded;
@@ -280,6 +282,7 @@
 
     _getFormData(options) {
       let formData;
+
       if (typeof options.formData === 'function') {
         return options.formData(options.form);
       }
@@ -310,6 +313,7 @@
         total: 0,
         bitrate: 0,
       };
+
       if (obj._progress) {
         $.extend(obj._progress, progress);
       } else {
@@ -319,6 +323,7 @@
 
     _initResponseObject(obj) {
       let prop;
+
       if (obj._response) {
         for (prop in obj._response) {
           if (obj._response.hasOwnProperty(prop)) {
@@ -334,6 +339,7 @@
       if (e.lengthComputable) {
         const now = ((Date.now) ? Date.now() : (new Date()).getTime());
         let loaded;
+
         if (data._time && data.progressInterval
                         && (now - data._time < data.progressInterval)
                         && e.loaded !== e.total) {
@@ -378,6 +384,7 @@
     _initProgressListener(options) {
       const that = this;
       const xhr = options.xhr ? options.xhr() : $.ajaxSettings.xhr();
+
       // Accesss to the native XHR object is required to add event listeners
       // for the upload progress event:
       if (xhr.upload) {
@@ -506,6 +513,7 @@
     _getParamName(options) {
       const fileInput = $(options.fileInput);
       let {paramName} = options;
+
       if (!paramName) {
         paramName = [];
         fileInput.each(function () {
@@ -654,6 +662,7 @@
       const parts = range && range.split('-');
       const upperBytesPos = parts && parts.length > 1
                     && parseInt(parts[1], 10);
+
       return upperBytesPos && upperBytesPos + 1;
     },
 
@@ -674,6 +683,7 @@
       const promise = dfd.promise();
       let jqXHR;
       let upload;
+
       if (!(this._isXHRUpload(options) && slice && (ub || mcs < fs))
                     || options.data) {
         return false;
@@ -791,6 +801,7 @@
     _onDone(result, textStatus, jqXHR, options) {
       const {total} = options._progress;
       const response = options._response;
+
       if (options._progress.loaded < total) {
         // Create a progress event if no final progress event
         // with loaded equaling total has been triggered:
@@ -808,6 +819,7 @@
 
     _onFail(jqXHR, textStatus, errorThrown, options) {
       const response = options._response;
+
       if (options.recalculateProgress) {
         // Remove the failed (error or abort) file upload from
         // the global progress calculation:
@@ -922,6 +934,7 @@
       let paramNameSlice;
       let fileSet;
       let i;
+
       if (!(options.singleFileUploads || limit)
                     || !this._isXHRUpload(options)) {
         fileSet = [data.files];
@@ -1028,6 +1041,7 @@
 
     _handleFileTreeEntries(entries, path) {
       const that = this;
+
       return $.when.apply(
         $,
         $.map(entries, (entry) => that._handleFileTreeEntry(entry, path)),
@@ -1042,11 +1056,13 @@
     _getDroppedFiles(dataTransfer) {
       dataTransfer = dataTransfer || {};
       const {items} = dataTransfer;
+
       if (items && items.length && (items[0].webkitGetAsEntry
                     || items[0].getAsEntry)) {
         return this._handleFileTreeEntries(
           $.map(items, (item) => {
             let entry;
+
             if (item.webkitGetAsEntry) {
               entry = item.webkitGetAsEntry();
               if (entry) {
@@ -1070,6 +1086,7 @@
                     || fileInput.prop('entries');
       let files;
       let value;
+
       if (entries && entries.length) {
         return this._handleFileTreeEntries(entries);
       }
@@ -1133,9 +1150,11 @@
       const items = e.originalEvent && e.originalEvent.clipboardData
                     && e.originalEvent.clipboardData.items;
       const data = {files: []};
+
       if (items && items.length) {
         $.each(items, (index, item) => {
           const file = item.getAsFile && item.getAsFile();
+
           if (file) {
             data.files.push(file);
           }
@@ -1155,6 +1174,7 @@
       const that = this;
       const {dataTransfer} = e;
       const data = {};
+
       if (dataTransfer && dataTransfer.files && dataTransfer.files.length) {
         e.preventDefault();
         this._getDroppedFiles(dataTransfer).always((files) => {
@@ -1173,6 +1193,7 @@
     _onDragOver(e) {
       e.dataTransfer = e.originalEvent && e.originalEvent.dataTransfer;
       const {dataTransfer} = e;
+
       if (dataTransfer && $.inArray('Files', dataTransfer.types) !== -1
                     && this._trigger(
                       'dragover',
@@ -1208,6 +1229,7 @@
 
     _setOption(key, value) {
       const reinit = $.inArray(key, this._specialOptions) !== -1;
+
       if (reinit) {
         this._destroyEventHandlers();
       }
@@ -1220,6 +1242,7 @@
 
     _initSpecialOptions() {
       const {options} = this;
+
       if (options.fileInput === undefined) {
         options.fileInput = this.element.is('input[type="file"]')
           ? this.element : this.element.find('input[type="file"]');
@@ -1291,6 +1314,7 @@
     // .fileupload('add', {files: filesList});
     add(data) {
       const that = this;
+
       if (!data || this.options.disabled) {
         return;
       }

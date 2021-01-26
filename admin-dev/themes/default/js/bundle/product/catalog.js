@@ -180,6 +180,7 @@ function productColumnFilterReset(tr) {
 function bulkModalAction(allItems, postUrl, redirectUrl, action) {
   const itemsCount = allItems.length;
   let currentItemIdx = 0;
+
   if (itemsCount < 1) {
     return;
   }
@@ -246,6 +247,7 @@ function bulkProductAction(element, action) {
   let urlHandler = null;
 
   const items = $('input:checked[name="bulk_action_selected_products[]"]', form);
+
   if (items.length === 0) {
     return false;
   }
@@ -300,6 +302,7 @@ function bulkProductAction(element, action) {
     case 'edition':
       var editionAction;
       var bulkEditionSelector = '#bulk_edition_toolbar input:submit';
+
       if ($(bulkEditionSelector).length > 0) {
         editionAction = $(bulkEditionSelector).attr('editionaction');
       } else {

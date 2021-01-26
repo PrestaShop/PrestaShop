@@ -81,6 +81,7 @@
         const dfd = $.Deferred();
         const settings = this.options;
         const file = data.files[data.index];
+
         if ($.type(options.maxNumberOfFiles) === 'number'
                         && (settings.getNumberOfFiles() || 0) + data.files.length
                             > options.maxNumberOfFiles) {

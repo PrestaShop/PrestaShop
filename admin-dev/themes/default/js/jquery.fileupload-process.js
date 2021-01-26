@@ -122,6 +122,7 @@
     process(data) {
       const that = this;
       const options = $.extend({}, this.options, data);
+
       if (options.processQueue && options.processQueue.length) {
         this._transformProcessQueue(options);
         if (this._processing === 0) {

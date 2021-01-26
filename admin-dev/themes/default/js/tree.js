@@ -86,12 +86,14 @@ Tree.prototype = {
 									 && $(this).parent().closest('.tree-folder').find('ul.tree .tree-toggler')
 									   .first()
 									   .html() == '');
+
           if (load_tree) {
             const category = $(this).parent().children('ul.tree input').first()
               .val();
             const inputType = $(this).parent().children('ul.tree input').first()
               .attr('type');
             let useCheckBox = 0;
+
             if (inputType == 'checkbox') {
               useCheckBox = 1;
             }
@@ -179,6 +181,7 @@ Tree.prototype = {
 
   expandAll($speed) {
     const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
+
     if (typeof (idTree) !== 'undefined' && !$(`#${idTree}`).hasClass('full_loaded')) {
       const selected = [];
       that = this;
@@ -190,6 +193,7 @@ Tree.prototype = {
       const name = $(`#${idTree}`).find('ul.tree input').first().attr('name');
       const inputType = $(`#${idTree}`).find('ul.tree input').first().attr('type');
       let useCheckBox = 0;
+
       if (inputType == 'checkbox') {
         useCheckBox = 1;
       }

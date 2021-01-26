@@ -3,6 +3,7 @@
  */
 const defaultCategory = (function () {
   const defaultCategoryForm = $('#form_step1_id_category_default');
+
   return {
     init() {
       /** Populate category tree with the default category * */

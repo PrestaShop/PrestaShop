@@ -81,6 +81,7 @@ function resetEditor() {
   $(languageEditorsSelector).each((index, textarea) => {
     if (window.tinyMCE) {
       const editor = window.tinyMCE.get(textarea.id);
+
       if (editor) {
         // Reset content to force refresh of editor
         editor.setContent(editor.getContent());
@@ -117,6 +118,7 @@ var displayFieldsManager = (function () {
       $('a#tax_rule_shortcut_opener').on('click', () => {
         // lazy instantiated
         let duplicate = $('#form_step2_id_tax_rules_group_shortcut');
+
         if (duplicate.length == 0) {
           const origin = $('select#form_step2_id_tax_rules_group');
           duplicate = origin.clone(false).attr('id', 'form_step2_id_tax_rules_group_shortcut');
@@ -145,6 +147,7 @@ var displayFieldsManager = (function () {
         const $availableForOrder = $(`${availableForOrderSelector} input`);
         const $showPrice = $(`${showPriceSelector} input`);
         const $showPriceColumn = $(showPriceSelector);
+
         if ($availableForOrder.prop('checked')) {
           $showPrice.prop('checked', true);
           $showPriceColumn.addClass('hide');
@@ -186,6 +189,7 @@ var displayFieldsManager = (function () {
       // Switching from a product type to another which is not "Virtual product",
       // triggers the destruction of pre-existing virtual product
       const shouldDestroyVirtualProduct = typeProduct.val() !== '2';
+
       if (shouldDestroyVirtualProduct && managedVirtualProduct !== undefined) {
         managedVirtualProduct.destroy();
       }
@@ -262,6 +266,7 @@ var displayFieldsManager = (function () {
  */
 var displayFormCategory = (function () {
   const parentElem = $('#add-categories');
+
   return {
     init() {
       /** Click event on the add button */
@@ -309,6 +314,7 @@ var formCategory = (function () {
           + '</li>';
 
         const parentElement = $(`#form_step1_categories input[value=${response.category.id_parent}]`).parent().parent();
+
         if (parentElement.next('ul').length === 0) {
           html = `<ul>${html}</ul>`;
           parentElement.append(html);
@@ -455,6 +461,7 @@ var featuresCollection = (function () {
 var supplier = (function () {
   const supplierInputManage = function (input) {
     const supplierDefaultInput = $(`#form_step6_suppliers input[name="form[step6][default_supplier]"][value=${$(input).val()}]`);
+
     if ($(input).is(':checked')) {
       supplierDefaultInput.prop('disabled', false).show();
     } else {
@@ -551,6 +558,7 @@ var nav = (function () {
       const {hash} = document.location;
       const formNav = $('#form-nav');
       const prefix = 'tab-';
+
       if (hash) {
         formNav.find(`a[href='${hash.replace(prefix, '')}']`).tab('show');
       }
@@ -598,6 +606,7 @@ var warehouseCombinations = (function () {
     },
     refresh() {
       const show = $('input#form_step3_advanced_stock_management:checked').length > 0;
+
       if (show) {
         const url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, `/${id_product}`);
         $.ajax({
@@ -761,6 +770,7 @@ var form = (function () {
     let defaultLanguageValue = null;
     $("input[id^='form_step1_name_']", namesDiv).each(function (index) {
       const value = $(this).val();
+
       // The first language is ALWAYS the employee language
       if (index === 0) {
         defaultLanguageValue = value;
@@ -925,6 +935,7 @@ var form = (function () {
             }
 
             const orgLabel = e.attrs.label;
+
             if (e.attrs.label === e.attrs.value) {
               engine.search(e.attrs.label, (result) => {
                 if (result.length >= 1) {
@@ -1362,6 +1373,7 @@ var imagesProduct = (function () {
         },
         error(file, response) {
           let message = '';
+
           if ($.type(response) === 'undefined') {
             return;
           } if ($.type(response) === 'string') {
@@ -1466,6 +1478,7 @@ var formImagesProduct = (function () {
   function toggleColDropzone(enlarge) {
     const smallCol = 'col-md-8';
     const largeCol = 'col-md-12';
+
     if (enlarge === true) {
       dropZoneElem.removeClass(smallCol).addClass(largeCol);
     } else {
@@ -1582,6 +1595,7 @@ var priceCalculation = (function () {
     let price_with_taxes = price;
 
     let i = 0;
+
     if (computationMethod === '0') {
       for (i in rates) {
         price_with_taxes *= (1.00 + parseFloat(rates[i]) / 100.00);
@@ -1589,6 +1603,7 @@ var priceCalculation = (function () {
       }
     } else if (computationMethod === '1') {
       let rate = 0;
+
       for (i in rates) {
         rate += rates[i];
       }
@@ -1610,6 +1625,7 @@ var priceCalculation = (function () {
    */
   function removeTaxes(price, rates, computationMethod) {
     let i = 0;
+
     if (computationMethod === '0') {
       for (i in rates) {
         price /= (1 + rates[i] / 100);
@@ -1617,6 +1633,7 @@ var priceCalculation = (function () {
       }
     } else if (computationMethod === '1') {
       let rate = 0;
+
       for (i in rates) {
         rate += rates[i];
       }
@@ -1929,6 +1946,7 @@ var seo = (function () {
       // check all friendly URLs have been filled. If not, fill them.
       $('input[id^="form_step5_link_rewrite_"]', '#form_step5_link_rewrite').each(function () {
         const elem = $(this);
+
         if (elem.val().length === 0) {
           const id_lang = elem.attr('name').match(/\d+/g)[1];
           updateFriendlyUrl($(`#form_step1_name_${id_lang}`));

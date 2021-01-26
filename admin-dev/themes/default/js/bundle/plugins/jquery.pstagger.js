@@ -96,6 +96,7 @@
       // Loop over each tags we got this round
       for (var key in tagsListRaw) {
         const tagRaw = tagsListRaw[key];
+
         // No empty values
         if (tagRaw === '') {
           continue;
@@ -103,7 +104,9 @@
         // Add tag into persistent list
         tagsList.push(tagRaw);
       }
+
       let spanTagsHtml = '';
+
       // Create HTML dom from list of tags we have
       for (key in tagsList) {
         const tag = tagsList[key];
@@ -129,6 +132,7 @@
                             + `<span>${
                               $('<div/>').text(tag).html()
                             }</span>`;
+
     // Add closingCross if set to true
     if (config.closingCross === true) {
       spanTag += `<a class="${immutableConfig.closingCrossClass} ${config.closingCrossClassAdditionnal}" href="#">x</a>`;
@@ -141,6 +145,7 @@
     // First hide native input
     config.originalInput.css('display', 'none');
     let addClearBtnHtml = '';
+
     // If reset button required add it following user decription
     if (config.clearAllBtn === true) {
       addClearBtnHtml += `<span class="${immutableConfig.clearAllSpanClass} ${config.clearAllSpanClassAdditional}">`
@@ -173,6 +178,7 @@
       // Regexp to check if not clicked on closingCross to avoid focusing input if so
       const checkClosingCrossRegex = new RegExp(immutableConfig.closingCrossClass, 'g');
       const closingCrossClicked = clickedElementClasses.match(checkClosingCrossRegex);
+
       if ($(`.${immutableConfig.tagInputWrapperClass}`).is(':hidden') && closingCrossClicked === null) {
         $(`.${immutableConfig.tagsWrapperClass}`).css('display', 'none');
         $(`.${immutableConfig.tagInputWrapperClass}`).css('display', 'block');
@@ -234,14 +240,17 @@
 
   const getTagsListOccurencesCount = function () {
     const obj = {};
+
     for (let i = 0, j = tagsList.length; i < j; i++) {
       obj[tagsList[i]] = (obj[tagsList[i]] || 0) + 1;
     }
+
     return obj;
   };
 
   const setConfig = function (givenConfig, originalObject) {
     const finalConfig = {};
+
     // Loop on each default values, check if one given by user, if so -> override default
     for (const property in defaultConfig) {
       if (givenConfig.hasOwnProperty(property)) {
