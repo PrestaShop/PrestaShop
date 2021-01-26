@@ -65,7 +65,7 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
     {
         $this->translator = $translator;
         $this->productImagesDir = $productImagesDir;
-        $this->showDuplicatesAlert = file_exists($productImagesDir . 'duplicates/');
+        $this->showDuplicatesAlert = file_exists($productImagesDir . 'duplicates' . DIRECTORY_SEPARATOR);
     }
 
     /**
