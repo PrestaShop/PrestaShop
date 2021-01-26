@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * This class is responsible of managing the data manipulated using forms
- * in "Configure > Advanced Parameters > Administration" page.
+ * in "Configure > Advanced Parameters > Security" page.
  */
 final class FormDataProvider implements FormDataProviderInterface
 {
