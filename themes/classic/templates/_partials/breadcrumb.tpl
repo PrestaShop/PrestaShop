@@ -33,8 +33,9 @@
               <meta itemprop="position" content="{$smarty.foreach.breadcrumb.iteration}">
             </li>
           {elseif isset($path.title)}
-            <li>
-              <span>{$path.title}</span>
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+              <span itemprop="name">{$path.title}</span>
+              <meta itemprop="position" content="{{$smarty.foreach.breadcrumb.iteration}}">
             </li>
           {/if}
         {/block}
