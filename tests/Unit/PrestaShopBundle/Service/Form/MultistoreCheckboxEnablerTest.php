@@ -95,7 +95,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
         $this->assertFalse($form->has(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'multistore_second_field'));
 
         // the added multistore checkbox must have the correct `multistore_configuration_key` attribute
-        $multistoreFirstFieldCheckboxOptions = $form->get('multistore_first_field')->getConfig()->getOptions();
+        $multistoreFirstFieldCheckboxOptions = $form->get(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'first_field')->getConfig()->getOptions();
         $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['attr']['multistore_configuration_key']);
     }
 
