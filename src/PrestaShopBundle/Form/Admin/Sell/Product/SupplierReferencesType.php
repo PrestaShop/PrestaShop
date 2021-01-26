@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -40,12 +39,7 @@ class SupplierReferencesType extends AbstractType
             ->add('supplier_id', HiddenType::class)
             ->add('is_default', HiddenType::class)
             ->add('supplier_name', HiddenType::class)
-            ->add('product_suppliers_collection', CollectionType::class, [
-                'label' => false,
-                'entry_type' => ProductSupplierType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__PRODUCT_SUPPLIER_INDEX__',
-            ]);
+            ->add('product_supplier', ProductSupplierType::class)
+        ;
     }
 }

@@ -34,13 +34,12 @@
     <table class="table">
       <thead class="thead-default">
       <tr>
-        <th>{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>
         <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
         <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
         <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
       </tr>
       </thead>
-      {{ form_row(form.product_suppliers_collection) }}
+      {{ form_row(form.product_supplier) }}
     </table>
   </div>
 </div>
@@ -50,8 +49,6 @@
   <tr>
     {{ form_widget(form.product_supplier_id) }}
     {{ form_widget(form.combination_id) }}
-    {# We need to check if value is not null because in prototype it is null else we display a placeholder #}
-    <td>{% if form.vars.value is not null %}{{ form.vars.value.product_name }}{% else %}__PRODUCT_NAME__{% endif %}</td>
     <td>{{ form_widget(form.supplier_reference) }}</td>
     <td>{{ form_widget(form.supplier_price_tax_excluded) }}</td>
     <td>{{ form_widget(form.currency_id) }}</td>
@@ -68,13 +65,4 @@
       {{- block('form_rows') -}}
     </div>
   </div>
-{%- endblock -%}
-
-{%- block _product_suppliers_supplier_references_entry_product_suppliers_collection_row -%}
-  {% if prototype is defined %}
-    {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
-  {% endif %}
-  <tbody class="product_suppliers_collection" {{ block('widget_attributes') }}>
-    {{- block('form_rows') -}}
-  </tbody>
 {%- endblock -%}

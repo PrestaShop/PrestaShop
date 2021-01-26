@@ -29,7 +29,6 @@ const {$} = window;
 
 export default class ProductSuppliersManager {
   constructor() {
-    this.combinations = $(ProductMap.suppliersBlock).data('combinations');
     this.$supplierSelectionBlock = $(ProductMap.supplierSelectionBlock);
     this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
     this.$supplierReferencesContainer = $(ProductMap.supplierReferencesContainer);
@@ -75,13 +74,9 @@ export default class ProductSuppliersManager {
     const productSupplierPrototype = appendedSupplier.data('prototype');
     const $productSuppliersTbody = this.$supplierReferencesBlock
       .find(`#supplier_reference_row_${supplier.id} table tbody`);
-
-    Object.entries(this.combinations).forEach(([name, id]) => {
-      const productSupplierContent = productSupplierPrototype
-        .replace(/__PRODUCT_SUPPLIER_INDEX__/g, id)
-        .replace(/__PRODUCT_NAME__/g, name);
-      $productSuppliersTbody.append(productSupplierContent);
-    });
+    const productSupplierContent = productSupplierPrototype
+      .replace(/__PRODUCT_SUPPLIER_INDEX__/g, supplier.id);
+    $productSuppliersTbody.append(productSupplierContent);
   }
 
   removeSupplier(supplierId) {

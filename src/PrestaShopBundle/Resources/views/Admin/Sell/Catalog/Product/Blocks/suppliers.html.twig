@@ -27,7 +27,7 @@
 {% form_theme suppliersForm '@PrestaShop/Admin/Sell/Catalog/Product/Blocks/form_fields.html.twig' %}
 
 {% block form_product_suppliers %}
-  <div id="product_suppliers" data-combinations="{{ suppliersForm.vars.attr['data-combinations'] }}">
+  <div id="product_suppliers">
     <div class="row">
       <div class="col">
         {{ form_row(suppliersForm.supplier_ids) }}
