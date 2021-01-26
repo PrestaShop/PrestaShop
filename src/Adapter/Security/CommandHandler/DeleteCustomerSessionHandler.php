@@ -44,7 +44,7 @@ final class DeleteCustomerSessionHandler implements DeleteCustomerSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteCustomerSessionCommand $command)
+    public function handle(DeleteCustomerSessionCommand $command): void
     {
         $sessionId = $command->getCustomerSessionId()->getValue();
 
