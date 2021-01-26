@@ -46,7 +46,7 @@ class AddressControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $router = $client->getKernel()->getContainer()->get('router');
-        $this->createTestAddress($client);
+        $crawler = $this->createTestAddress($client);
         $addressUrl = $router->generate('admin_addresses_index');
         $crawler = $client->request('GET', $addressUrl);
         $this->validateStartingList($crawler);
@@ -63,11 +63,9 @@ class AddressControllerTest extends WebTestCase
         $addressUrl = $router->generate('admin_addresses_index');
         $crawler = $client->request('GET', $addressUrl);
         $addresses = $this->getAddressList($crawler);
-
         /** Make sure we have 3 addresses before we filter by firstname */
         self::assertEquals(3, count($addresses));
         $filterForm = $this->fillFiltersForm($crawler, ['address[firstname]' => $this->getTestAddress()->getFirstName()]);
-
         $crawler = $client->submit($filterForm);
         $addresses = $this->getAddressList($crawler);
         self::assertEquals(1, count($addresses));
@@ -93,7 +91,7 @@ class AddressControllerTest extends WebTestCase
         $crawler = $client->request('GET', $createAddressUrl);
         $submitButton = $crawler->selectButton('save-button');
         $addressForm = $submitButton->form();
-        $this->fillForm($addressForm, $this->getAddressModifications());
+        $addressForm = $this->fillForm($addressForm, $this->getAddressModifications());
         return $client->submit($addressForm);
     }
 
@@ -101,22 +99,14 @@ class AddressControllerTest extends WebTestCase
     {
         $testAddress = $this->getTestAddress();
         return [
-                'customer_address[customer_email]' => $testAddress->getCustomerEmail(),
-                'customer_address[dni]' => $testAddress->getDni(),
-                'customer_address[alias]' => $testAddress->getAddressAlias(),
+                'customer_address[customer_email]' => 'pub@prestashop.com',
+                'customer_address[alias]' => 'test_alias',
                 'customer_address[first_name]' => $testAddress->getFirstName(),
                 'customer_address[last_name]' => $testAddress->getLastName(),
-                'customer_address[company]' => $testAddress->getCompany(),
-                'customer_address[vat_number]' => $testAddress->getVatNumber(),
                 'customer_address[address1]' => $testAddress->getAddress(),
-                'customer_address[address2]' => $testAddress->getAddress2(),
                 'customer_address[postcode]' => $testAddress->getPostCode(),
                 'customer_address[city]' => $testAddress->getCity(),
-                'customer_address[id_country]' => $testAddress->getCountryId()->getValue(),
-                'customer_address[id_state]' => $testAddress->getStateId()->getValue(),
-                'customer_address[phone]' => $testAddress->getHomePhone(),
-                'customer_address[phone_mobile]' => $testAddress->getMobilePhone(),
-                'customer_address[other]' => $testAddress->getOther()
+                'customer_address[id_country]' => 21,
         ];
     }
 
@@ -198,36 +188,25 @@ class AddressControllerTest extends WebTestCase
     /**
      * Default addresses are not fit for filtering very well because most of the information is identical. So I need
      * new address with unique values to test various filters
-     * @return EditableCustomerAddress
+     * @return Address
      */
-    private function getTestAddress(): EditableCustomerAddress
+    private function getTestAddress(): Address
     {
-        return new EditableCustomerAddress(
-                new AddressId(3),
-                new CustomerId(1),
-                'pub@prestashop.com',
-                'test_alias',
+        return new Address(
+                3,
                 'testfirstname',
                 'testlastname',
                 'testaddress1',
-                'test_city',
-                 new CountryId(21),
                 '11111',
-                'test2',
-                'test_company',
-                'test_vat_number',
-                'testaddress2',
-                 new StateId(1),
-                '1111111111',
-                '1111111111',
-                '',
-                []
+                'testcity',
+                'lithuania'
         );
     }
 
     /**
      *
-     * @todo I think it makes sense to return an DTO here instead of array. It doesn't make sense to reuse EditableCustomerAddress
+     *
+     * I think it makes sense to return an DTO here instead of array. It doesn't make sense to reuse EditableCustomerAddress
      * because it has more values that are needed. So new DTO it is, but where should I put architecture wise?
      * Call it AddressForListTest and put it somewhere next to the EditableCustomerAddress? Keep it here?
      * @param $tr
