@@ -283,6 +283,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'default_supplier_id' => $defaultSupplierId,
         ];
 
+        //@todo: one layer of array is not needed anymore if product has no combinations. Handle it in separate pr
         foreach ($productSupplierOptions->getOptionsBySupplier() as $index => $supplierOption) {
             $supplierId = $supplierOption->getSupplierId();
             $suppliersData['supplier_ids'][$index] = $supplierId;
@@ -290,25 +291,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $suppliersData['supplier_references'][$index]['supplier_id'] = $supplierId;
             $suppliersData['supplier_references'][$index]['supplier_name'] = $supplierOption->getSupplierName();
 
-            $combinationNamesById = $this->combinationNameByIdChoiceProvider->getChoices([
-                'product_id' => $productForEditing->getProductId(),
-            ]);
-            $emptyDatasetForCombinations = [];
-            foreach ($combinationNamesById as $name => $id) {
-                $emptyDatasetForCombinations[] = [
-                    'product_supplier_id' => null,
-                    'product_name' => $name,
-                    'supplier_price_tax_excluded' => '0',
-                    'supplier_reference' => '',
-                    'currency_id' => $this->defaultCurrencyId,
-                    'combination_id' => $id,
-                ];
-            }
-
-            $productSuppliersCollection = [];
-            $i = 0;
             foreach ($supplierOption->getProductSuppliersForEditing() as $supplierForEditing) {
-                $supplierForEditing = [
+                $suppliersData['supplier_references'][$index]['product_supplier'] = [
                     'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
                     'product_name' => $supplierForEditing->getProductName(),
                     'supplier_price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
@@ -316,13 +300,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'currency_id' => $supplierForEditing->getCurrencyId(),
                     'combination_id' => $supplierForEditing->getCombinationId(),
                 ];
-                $productSuppliersCollection[$i] = $supplierForEditing;
-
-                ++$i;
             }
-
-            $suppliersData['supplier_references'][$index]['product_suppliers_collection'] =
-                array_merge($emptyDatasetForCombinations, $productSuppliersCollection);
         }
 
         return $suppliersData;
