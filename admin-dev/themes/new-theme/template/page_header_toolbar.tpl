@@ -131,7 +131,6 @@
         {hook h='displayDashboardToolbarTopMenu'}
         {foreach from=$toolbar_btn item=btn key=k}
           {if $k != 'back' && $k != 'modules-list'}
-            {* TODO: REFACTOR ALL THIS THINGS *}
             <a
               class="btn btn-floating-item {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)}
               id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}"
