@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Query\Security\Sessions;
 
 use Doctrine\DBAL\Connection;
@@ -49,7 +51,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function __construct(
         Connection $connection,
-        $dbPrefix,
+        string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
     ) {
         parent::__construct($connection, $dbPrefix);
@@ -60,7 +62,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('es.id_employee_session, e.id_employee, e.firstname, e.lastname, e.email')
@@ -76,13 +78,11 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+        return $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('COUNT(es.id_employee_session)')
         ;
-
-        return $qb;
     }
 
     /**
@@ -92,7 +92,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filters)
+    private function getQueryBuilder(array $filters): QueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
