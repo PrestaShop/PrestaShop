@@ -78,6 +78,11 @@ class MultistoreConfiguratorTest extends TestCase
                 false,
                 ['multistore_test_field' => false],
             ],
+            [
+                ['test_field' => 'test_value', 'multistore_test_field' => false],
+                true,
+                ['multistore_test_field' => false, 'test_field' => 'test_value'],
+            ],
         ];
     }
 
