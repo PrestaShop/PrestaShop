@@ -123,7 +123,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('id_customer'))
-                    ->setName($this->trans('Customer ID', [], 'Admin.Global'))
+                    ->setName($this->trans('Customer ID', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'id_customer',
                     ])
@@ -222,7 +222,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Firstname', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Firstname', [], 'Admin.Global'),
                         ],
                     ])
                     ->setAssociatedColumn('firstname')
@@ -232,7 +232,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Lastname', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Lastname', [], 'Admin.Global'),
                         ],
                     ])
                     ->setAssociatedColumn('lastname')
@@ -242,7 +242,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Email', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Email', [], 'Admin.Global'),
                         ],
                     ])
                     ->setAssociatedColumn('email')
