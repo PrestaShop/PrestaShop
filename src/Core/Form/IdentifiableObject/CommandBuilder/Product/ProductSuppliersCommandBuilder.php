@@ -54,13 +54,15 @@ final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInter
         foreach ($suppliers['supplier_references'] as $supplierReferenceForm) {
             $supplierId = (int) $supplierReferenceForm['supplier_id'];
 
-            if (null === $defaultSupplierId || $supplierReferenceForm['is_default']) {
+            if (!$defaultSupplierId || $supplierReferenceForm['is_default']) {
                 $defaultSupplierId = $supplierId;
             }
 
-            foreach ($supplierReferenceForm['product_suppliers_collection'] as $productSupplierData) {
-                $productSuppliers[] = $this->formatProductSupplier($productId->getValue(), $supplierId, $productSupplierData);
-            }
+            $productSuppliers[] = $this->formatProductSupplier(
+                $productId->getValue(),
+                $supplierId,
+                $supplierReferenceForm['product_supplier']
+            );
         }
 
         return [

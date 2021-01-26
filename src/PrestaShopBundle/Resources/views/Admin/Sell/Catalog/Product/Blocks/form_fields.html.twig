@@ -26,6 +26,7 @@
 {%- block supplier_references_row -%}
   <tr class="product_supplier_row" id="product_supplier_row_{% if form.vars.value is not null %}{{ form.vars.value.supplier_id }}{% else %}__SUPPLIER_ID__{% endif %}">
     {{ form_widget(form.supplier_id) }}
+    {{ form_widget(form.supplier_name) }}
     {{ form_widget(form.product_supplier.product_supplier_id) }}
     <td>{% if form.supplier_name.vars.value %}{{ form.supplier_name.vars.value }}{% else %}__SUPPLIER_NAME__{% endif %}</td>
     <td>{{ form_widget(form.product_supplier.supplier_reference) }}</td>
