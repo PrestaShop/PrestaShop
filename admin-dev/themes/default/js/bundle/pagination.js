@@ -39,6 +39,7 @@ $(document).ready(() => {
   function checkInputPage(eventOrigin) {
     const e = eventOrigin || event;
     const char = e.type === 'keypress' ? String.fromCharCode(e.keyCode || e.which) : (e.clipboardData || window.clipboardData).getData('Text');
+
     if (/[^\d]/gi.test(char)) {
       return false;
     }
@@ -49,6 +50,7 @@ $(document).ready(() => {
 
     $(this).on('keyup', function (e) {
       const val = parseInt($(e.target).val());
+
       if (e.which === 13) { // ENTER
         e.preventDefault();
         if (parseInt(val) > 0) {
@@ -59,6 +61,7 @@ $(document).ready(() => {
         }
       }
       const max = parseInt($(e.target).attr('psmax'));
+
       if (val > max) {
         $(this).val(max);
         return false;
@@ -66,6 +69,7 @@ $(document).ready(() => {
     });
     $(this).on('blur', function (e) {
       const val = parseInt($(e.target).val());
+
       if (parseInt(val) > 0) {
         const limit = $(e.target).attr('pslimit');
         const url = $(this).attr('psurl').replace(/999999/, (val - 1) * limit);

@@ -101,6 +101,7 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
 
   this.addClass = function (className) {
     const serverFormInputs = document.querySelectorAll('#server-form input[type=text]');
+
     for (let i = 0; i < serverFormInputs.length; i++) {
       serverFormInputs[i].className = `form-control ${className}`;
     }

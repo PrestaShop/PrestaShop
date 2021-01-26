@@ -27,6 +27,7 @@ const PerformancePageUI = {
     const CACHE_ENABLED = '1';
     const smartyCacheSelected = document.querySelector('input[name="smarty[cache]"]:checked');
     const smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
+
     if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
       for (var i = 0; i < smartyCacheOptions.length; i++) {
         smartyCacheOptions[i].classList.remove('d-none');
@@ -48,6 +49,7 @@ const PerformancePageUI = {
       for (var i = 0; i < cachingElements.length; i++) {
         cachingElements[i].style.display = '';
       }
+
       return;
     }
 
@@ -90,6 +92,7 @@ let {length} = cacheSystemInputs;
 while (length--) {
   cacheSystemInputs[length].addEventListener('change', (e) => {
     const name = e.target.getAttribute('name');
+
     if (name === 'caching[use_cache]') {
       return PerformancePageUI.displayCacheSystems();
     }

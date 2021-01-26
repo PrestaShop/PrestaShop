@@ -88,11 +88,13 @@ function updateProductRuleShortDescription(item) {
   const id1 = $(item).attr('id').replace('_add', '').replace('_remove', '');
   const id2 = id1.replace('_select', '');
   const {length} = $(`#${id1}_2 option`);
+
   if (length == 1) $(`#${id2}_match`).val($(`#${id1}_2 option`).first().text().trim());
   else $(`#${id2}_match`).val(length);
 }
 
 const restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'shop');
+
 for (i in restrictions) {
   toggleCartRuleFilter($(`#${restrictions[i]}_restriction`));
   $(`#${restrictions[i]}_restriction`).change(function () { toggleCartRuleFilter(this); });
@@ -270,7 +272,9 @@ $('#reductionProductFilter')
       },
       parse(data) {
         const mytab = new Array();
+
         for (let i = 0; i < data.length; i++) mytab[mytab.length] = {data: data[i], value: (`${data[i].reference} ${data[i].name}`).trim()};
+
         return mytab;
       },
       extraParams: {
@@ -299,7 +303,9 @@ $('#customerFilter')
       },
       parse(data) {
         const mytab = new Array();
+
         for (let i = 0; i < data.length; i++) mytab[mytab.length] = {data: data[i], value: `${data[i].cname} (${data[i].email})`};
+
         return mytab;
       },
       extraParams: {
@@ -329,10 +335,13 @@ $(`#cart_rule_link_${currentFormTab}`).parent().addClass('active');
 
 const date = new Date();
 let hours = date.getHours();
+
 if (hours < 10) hours = `0${hours}`;
 let mins = date.getMinutes();
+
 if (mins < 10) mins = `0${mins}`;
 let secs = date.getSeconds();
+
 if (secs < 10) secs = `0${secs}`;
 
 $('.datepicker').datetimepicker({

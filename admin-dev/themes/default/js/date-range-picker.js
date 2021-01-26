@@ -265,6 +265,7 @@
         .end()
         .find('span')
         .removeClass('active');
+
       if (currentYear === year) {
         months.eq(this.date.getMonth()).addClass('active');
       }
@@ -290,6 +291,7 @@
       e.stopPropagation();
       e.preventDefault();
       const target = $(e.target).closest('span, td, th');
+
       if (target.length === 1) {
         switch (target[0].nodeName.toLowerCase()) {
           case 'th':
@@ -464,6 +466,7 @@
       // range
       $('#datepicker .day').each(function () {
         const date_val = parseInt($(this).data('val'), 10);
+
         if (compare) {
           if (!endCompare && date_val > startCompare && date_val < over) {
             $(this).not('.old').not('.new').addClass('range-compare');
@@ -584,6 +587,7 @@
       const $this = $(this);
       let data = $this.data('daterangepicker');
       const options = typeof option === 'object' && option;
+
       if (!data) {
         $this.data('daterangepicker', (data = new DateRangePicker(this, $.extend({}, $.fn.daterangepicker.defaults, options))));
       }
@@ -631,6 +635,7 @@
     parseFormat(format) {
       const separator = format.match(/[.\/\-\s].*?/);
       const parts = format.split(/\W+/);
+
       if (!separator || !parts || parts.length === 0) {
         throw new Error('Invalid date format.');
       }
@@ -647,6 +652,7 @@
       if (parts.length === format.parts.length) {
         let year = date.getFullYear(); let day = date.getDate(); let
           month = date.getMonth();
+
         for (let i = 0, cnt = format.parts.length; i < cnt; i++) {
           val = parseInt(parts[i], 10) || 1;
           switch (format.parts[i]) {
@@ -688,9 +694,11 @@
       val.d = (val.d < 10 ? '0' : '') + val.d;
       val.m = (val.m < 10 ? '0' : '') + val.m;
       var date = [];
+
       for (let i = 0, cnt = format.parts.length; i < cnt; i++) {
         date.push(val[format.parts[i]]);
       }
+
       return date.join(format.separator);
     },
     headTemplate: '<thead>'

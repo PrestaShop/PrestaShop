@@ -74,6 +74,7 @@ $(() => {
   // switch home
   let language = iso_user;
   let home;
+
   switch (language) {
     case 'en':
       home = '19726802';
@@ -225,6 +226,7 @@ $(() => {
       $("#help-container a[href^='/pages/viewpage.action?pageId=']").on('click', function (e) {
         e.preventDefault();
         const pageId = $(this).attr('href').match(/\d+$/);
+
         if (pageId) {
           pushContent(pageId[0]);
         }
@@ -333,6 +335,7 @@ $(() => {
   function submitFeedback(arr_feedback) {
     let feedback = '?';
     const keys = Object.keys(arr_feedback);
+
     for (let i = 0; i < keys.length; i++) {
       if (i > 0) {
         feedback += '&';

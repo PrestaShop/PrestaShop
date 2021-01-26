@@ -42,6 +42,7 @@
       let form;
       let iframe;
       let addParamChar;
+
       return {
         send(_, completeCallback) {
           form = $('<form style="display:none;"></form>');
@@ -190,6 +191,7 @@
       },
       'iframe xml': function (iframe) {
         const xmlDoc = iframe && iframe[0];
+
         return xmlDoc && $.isXMLDoc(xmlDoc) ? xmlDoc
           : $.parseXML((xmlDoc.XMLDocument && xmlDoc.XMLDocument.xml)
                             || $(xmlDoc.body).html());

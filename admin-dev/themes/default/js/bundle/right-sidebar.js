@@ -132,12 +132,14 @@
   $('html').on('click.bs.sidebar.autohide', (event) => {
     const $this = $(event.target);
     const isButtonOrSidebar = $this.is('.sidebar, [data-toggle="sidebar"]') || $this.parents('.sidebar, [data-toggle="sidebar"]').length;
+
     if (isButtonOrSidebar) {
 
     } else {
       const $target = $('.sidebar');
       $target.each((i, trgt) => {
         const $trgt = $(trgt);
+
         if ($trgt.data('bs.sidebar') && $trgt.hasClass('sidebar-open')) {
           $trgt.sidebar('hide');
         }

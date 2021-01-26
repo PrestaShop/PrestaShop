@@ -267,6 +267,7 @@ var AdminModuleController = function () {
       // Modules sorting
       let order = 'asc';
       let key = self.currentSorting;
+
       if (key.split('-').length > 1) {
         key = key.split('-')[0];
       }
@@ -291,8 +292,10 @@ var AdminModuleController = function () {
     // Modules visibility management
     for (let i = 0; i < this.modulesList.length; i++) {
       var currentModule = this.modulesList[i];
+
       if (currentModule.display == this.currentDisplay) {
         let isVisible = true;
+
         if (this.currentRefCategory !== null) {
           isVisible &= currentModule.categories === this.currentRefCategory;
         }
@@ -528,6 +531,7 @@ var AdminModuleController = function () {
       complete(file) {
         if (file.status !== 'error') {
           const responseObject = jQuery.parseJSON(file.xhr.response);
+
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
@@ -676,6 +680,7 @@ var AdminModuleController = function () {
     const self = this;
     $('body').on('click', `${this.addonItemGridSelector}, ${this.addonItemListSelector}`, () => {
       let searchQuery = '';
+
       if (self.currentTagsList.length) {
         searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
       }
@@ -849,6 +854,7 @@ var AdminModuleController = function () {
   this.updateTotalResults = function () {
     // If there are some shortlist: each shortlist count the modules on the next container.
     const $shortLists = $('.module-short-list');
+
     if ($shortLists.length > 0) {
       $shortLists.each(function () {
         const $this = $(this);
@@ -918,6 +924,7 @@ var AdminModuleController = function () {
     $('body').on('click', '.module-sort-switch', function () {
       const switchTo = $(this).attr('data-switch');
       const isAlreadyDisplayed = $(this).hasClass('active-display');
+
       if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
         self.switchSortingDisplayTo(switchTo);
         self.currentDisplay = switchTo;

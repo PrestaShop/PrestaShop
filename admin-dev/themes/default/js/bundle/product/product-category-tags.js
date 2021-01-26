@@ -54,6 +54,7 @@ const productCategoriesTags = (function () {
       const that = this;
       categoriesForm.on('change', 'input[type=checkbox]', function (event) {
         const input = $(this);
+
         if (input.prop('checked') === false) {
           that.removeTag($(this).val());
         } else {
@@ -110,6 +111,7 @@ const productCategoriesTags = (function () {
           + `<a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>`
           + '</span>');
         const optionId = `#form_step1_id_category_default_${category.id}`;
+
         if ($(optionId).length == 0) {
           defaultCategoryForm.append(`${'<div class="radio">'
             + '<label class="required">'
@@ -180,6 +182,7 @@ const productCategoriesTags = (function () {
 
       searchBox.parent().find('[role=status]').on('DOMSubtreeModified', function () {
         const $this = $(this);
+
         if ($.isNumeric($this.text()) && searchResultMsg !== '' && searchBox.val() !== '') {
           $this.text(searchResultMsg);
         }
@@ -187,6 +190,7 @@ const productCategoriesTags = (function () {
 
       $('body').on('focusout', searchCategorySelector, (event) => {
         const $searchInput = $(event.currentTarget);
+
         if ($searchInput.val().length === 0) {
           $searchInput.parent().find('[role=status]').text('');
           searchResultMsg = '';

@@ -154,6 +154,7 @@ const combinations = (function () {
 
           combinationRadioButtons.each(function unselect(index) {
             const combination = $(this);
+
             if (combination.data('id') !== selectedCombination.data('id')) {
               combination.prop('checked', false);
             }

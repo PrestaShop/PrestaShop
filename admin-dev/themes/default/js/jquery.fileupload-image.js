@@ -142,6 +142,7 @@
         const that = this;
         const file = data.files[data.index];
         const dfd = $.Deferred();
+
         if (($.type(options.maxFileSize) === 'number'
                             && file.size > options.maxFileSize)
                         || (options.fileTypes
@@ -183,6 +184,7 @@
           dfd.resolveWith(that, [data]);
         };
         let thumbnail;
+
         if (data.exif) {
           if (options.orientation === true) {
             options.orientation = data.exif.get('Orientation');
@@ -228,6 +230,7 @@
           data.files[data.index] = blob;
           dfd.resolveWith(that, [data]);
         };
+
         // Use canvas.mozGetAsFile directly, to retain the filename, as
         // Gecko doesn't support the filename option for FormData.append:
         if (data.canvas.mozGetAsFile) {

@@ -48,6 +48,7 @@ var AdminModuleCard = function () {
 
   this.confirmAction = function (action, element) {
     const modal = $(`#${$(element).data('confirm_modal')}`);
+
     if (modal.length != 1) {
       return true;
     }
@@ -82,6 +83,7 @@ var AdminModuleCard = function () {
   this.replacePrestaTrustPlaceholders = function replacePrestaTrustPlaceholders(result) {
     const modal = $('#modal-prestatrust');
     const module = result.module.attributes;
+
     if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
       return;
     }
@@ -121,6 +123,7 @@ var AdminModuleCard = function () {
 
     $(document).on('click', this.forceDeletionOption, function () {
       const btn = $(_this.moduleActionModalUninstallLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`));
+
       if ($(this).prop('checked') === true) {
         btn.attr('data-deletion', 'true');
       } else {
@@ -200,6 +203,7 @@ var AdminModuleCard = function () {
         $.growl.error({message: 'No answer received from server'});
       } else {
         const moduleTechName = Object.keys(result)[0];
+
         if (result[moduleTechName].status === false) {
           if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
             _this.confirmPrestaTrust(result[moduleTechName]);
@@ -209,6 +213,7 @@ var AdminModuleCard = function () {
           $.growl.notice({message: result[moduleTechName].msg});
           let alteredSelector = null;
           let mainElement = null;
+
           if (action == 'uninstall') {
             jqElementObj.fadeOut(() => {
               alteredSelector = _this.getModuleItemSelector().replace('.', '');

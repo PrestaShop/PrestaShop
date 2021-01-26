@@ -93,8 +93,10 @@ function error_modal(heading, msg) {
 function scroll_if_anchor(href) {
   href = typeof href === 'string' ? href : $(this).attr('href');
   const fromTop = 120;
+
   if (href.indexOf('#') === 0) {
     const $target = $(href);
+
     if ($target.length) {
       $('html, body').animate({scrollTop: $target.offset().top - fromTop});
       if (history && 'pushState' in history) {
@@ -269,6 +271,7 @@ $(document).ready(() => {
         .parent()
         .find('.collapse')
         .attr('id');
+
       if (id) {
         $(el)
           .attr('href', `#${id}`)
