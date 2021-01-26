@@ -17,7 +17,6 @@
     "@babel/core": "^7.0.0-rc.1",
     "@babel/preset-env": "^7.0.0-rc.1",
     "babel-eslint": "^10.0.3",
-    "@openfonts/ubuntu-condensed_latin": "^1.44.2",
     "babel-loader": "^8.0.2",
     "bourbon": "^4.3.4",
     "clean-webpack-plugin": "^2.0.2",
@@ -32,7 +31,6 @@
     "material-design-icons": "^2",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.1",
-    "open-sans-fonts": "^1.5.1",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "path": "^0.12.7",
     "postcss-cssnext": "^3.1.0",
@@ -47,6 +45,8 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "perfect-scrollbar": "^1.4.0"
+    "perfect-scrollbar": "^1.4.0",
+    "@openfonts/ubuntu-condensed_latin": "^1.44.2",
+    "open-sans-fonts": "^1.5.1"
   }
 }
