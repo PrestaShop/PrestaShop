@@ -79,7 +79,7 @@ describe('Sort and pagination Languages table', async () => {
     await expect(numberOfLanguages).to.be.above(0);
   });
 
-  /*describe('Sort Languages table', async () => {
+  describe('Sort Languages table', async () => {
     [
       {
         args: {
@@ -127,7 +127,7 @@ describe('Sort and pagination Languages table', async () => {
         }
       });
     });
-  });*/
+  });
 
   describe('Pagination of Languages table', async () => {
     describe('Create 9 Languages', async () => {
@@ -159,6 +159,36 @@ describe('Sort and pagination Languages table', async () => {
           const numberOfLanguagesAfterCreation = await languagesPage.getNumberOfElementInGrid(page);
           await expect(numberOfLanguagesAfterCreation).to.be.equal(numberOfLanguages + 1 + index);
         });
+      });
+    });
+
+    describe('Pagination next and previous', async () => {
+      it('should change the item number to 10 per page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+        const paginationNumber = await languagesPage.selectPaginationLimit(page, '10');
+        expect(paginationNumber).to.contains('(page 1 / 2)');
+      });
+
+      it('should click on next', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+        const paginationNumber = await languagesPage.paginationNext(page);
+        expect(paginationNumber).to.contains('(page 2 / 2)');
+      });
+
+      it('should click on previous', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+        const paginationNumber = await languagesPage.paginationPrevious(page);
+        expect(paginationNumber).to.contains('(page 1 / 2)');
+      });
+
+      it('should change the item number to 50 per page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+        const paginationNumber = await languagesPage.selectPaginationLimit(page, '50');
+        expect(paginationNumber).to.contains('(page 1 / 1)');
       });
     });
   });
