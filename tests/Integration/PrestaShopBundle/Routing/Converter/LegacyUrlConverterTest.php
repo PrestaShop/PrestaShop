@@ -131,7 +131,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_preferences' => ['/configure/shop/preferences/preferences', 'AdminPreferences'],
             'admin_preferences_save' => ['/configure/shop/preferences/preferences', 'AdminPreferences', 'update'],
 
-            'admin_shipping_preferences' => ['/improve/shipping/preferences', 'AdminShipping'],
+            'admin_shipping_preferences' => ['/improve/shipping/preferences/', 'AdminShipping'],
             'admin_shipping_preferences_handling_save' => ['/improve/shipping/preferences/handling', 'AdminShipping', 'update'],
 
             'admin_stock_overview' => ['/sell/stocks/', 'AdminStockManagement'],
