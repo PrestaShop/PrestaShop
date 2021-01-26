@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -36,7 +38,7 @@ final class CustomerFilters extends Filters
     /**
      * {@inheritdoc}
      */
-    public static function getDefaults()
+    public static function getDefaults(): array
     {
         return [
             'limit' => 10,
