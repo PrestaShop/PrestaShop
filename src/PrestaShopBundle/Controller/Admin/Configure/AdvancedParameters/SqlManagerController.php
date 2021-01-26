@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Stream;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -138,16 +139,16 @@ class SqlManagerController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
+     * @param RequestSqlFilters $filters
      *
-     * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function processFormAction(Request $request, RequestSqlFilters $filters)
     {
         $handler = $this->getSettingsFormHandler();
         $settingForm = $handler->getForm();
         $settingForm->handleRequest($request);
 
-        if ($settingForm->isSubmitted()) {
+        if ($settingForm->isSubmitted() && $settingForm->isValid()) {
             if (!$errors = $handler->save($settingForm->getData())) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } else {
@@ -155,7 +156,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_sql_requests_index');
+        return $this->renderPage($request, $filters, $settingForm);
     }
 
     /**
@@ -405,6 +406,44 @@ class SqlManagerController extends FrameworkBundleAdminController
         $databaseFields = $this->getQueryBus()->handle($query);
 
         return $this->json(['columns' => $databaseFields->getFields()]);
+    }
+
+    /**
+     * @param Request $request
+     * @param RequestSqlFilters $filters
+     * @param FormInterface $settingsForm
+     *
+     * @return Response
+     */
+    protected function renderPage(Request $request, RequestSqlFilters $filters, FormInterface $settingsForm): Response
+    {
+        // handle "Export to SQL manager" action from legacy pages
+        if ($request->query->has('addrequest_sql')) {
+            return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:create');
+        }
+
+        $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
+        $grid = $gridLogFactory->getGrid($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_sql_requests_create'),
+                    'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
+            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'requestSqlSettingsForm' => $settingsForm->createView(),
+            'requestSqlGrid' => $presentedGrid,
+        ]);
     }
 
     /**
