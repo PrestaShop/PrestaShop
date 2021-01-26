@@ -134,7 +134,7 @@
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="Tabs" name="Menu" />
-    <tab id="Security_1" name="Configuration" />
+    <tab id="Security_1" name="Security" />
     <tab id="EmployeesSessions" name="Employees Sessions" />
     <tab id="CustomersSessions" name="Customers Sessions" />
 </entity_tab>
