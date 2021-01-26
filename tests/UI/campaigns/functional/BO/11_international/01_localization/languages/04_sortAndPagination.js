@@ -143,7 +143,7 @@ describe('Sort and pagination Languages table', async () => {
         {args: {languageData: Languages.traditionalChinese}},
       ].forEach((test, index) => {
         it('should go to add new language page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguages${index}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguagePage${index}`, baseContext);
 
           await languagesPage.goToAddNewLanguage(page);
           const pageTitle = await addLanguagePage.getPageTitle(page);
@@ -151,7 +151,7 @@ describe('Sort and pagination Languages table', async () => {
         });
 
         it(`Create language n°${index + 1} in BO`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `createNewLanguages${index}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `createNewLanguage${index}`, baseContext);
 
           const textResult = await addLanguagePage.createEditLanguage(page, test.args.languageData);
           await expect(textResult).to.to.contains(languagesPage.successfulCreationMessage);
