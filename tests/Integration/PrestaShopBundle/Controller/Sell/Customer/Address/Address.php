@@ -44,7 +44,7 @@ class Address
     private $address;
 
     /** @var string */
-    private $zipCode;
+    private $postCode;
 
     /** @var string */
     private $city;
@@ -59,7 +59,7 @@ class Address
      * @param string $firstName
      * @param string $lastName
      * @param string $address
-     * @param string $zipCode
+     * @param string $postCode
      * @param string $city
      * @param string $country
      */
@@ -68,7 +68,7 @@ class Address
         string $firstName,
         string $lastName,
         string $address,
-        string $zipCode,
+        string $postCode,
         string $city,
         string $country
     ) {
@@ -76,7 +76,7 @@ class Address
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->address = $address;
-        $this->zipCode = $zipCode;
+        $this->postCode = $postCode;
         $this->city = $city;
         $this->country = $country;
     }
@@ -116,9 +116,9 @@ class Address
     /**
      * @return string
      */
-    public function getZipCode(): string
+    public function getPostCode(): string
     {
-        return $this->zipCode;
+        return $this->postCode;
     }
 
     /**
