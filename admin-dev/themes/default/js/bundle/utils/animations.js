@@ -42,7 +42,7 @@ function getAnimationEvent(type, lifecycle) {
     WebkitTransition: `webkit${typeUpper}${lifecycleUpper}`,
   };
 
-  const key = Object.keys(properties).find(propKey => el.style[propKey] !== undefined);
+  const key = Object.keys(properties).find((propKey) => el.style[propKey] !== undefined);
 
   return key !== undefined ? properties[key] : false;
 }

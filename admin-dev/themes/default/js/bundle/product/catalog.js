@@ -23,22 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-var $ = window.$;
+const {$} = window;
 
-$(document).ready(function() {
-  var form = $('form#product_catalog_list');
+$(document).ready(() => {
+  const form = $('form#product_catalog_list');
 
   /*
    * Tree behavior: collapse/expand system and radio button change event.
    */
   $('div#product_catalog_category_tree_filter').categorytree();
-  $('div#product_catalog_category_tree_filter div.radio > label > input:radio').change(function() {
+  $('div#product_catalog_category_tree_filter div.radio > label > input:radio').change(function () {
     if ($(this).is(':checked')) {
       $('form#product_catalog_list input[name="filter_category"]').val($(this).val());
       $('form#product_catalog_list').submit();
     }
   });
-  $('div#product_catalog_category_tree_filter ~ div button, div#product_catalog_category_tree_filter ul').on('click', function() {
+  $('div#product_catalog_category_tree_filter ~ div button, div#product_catalog_category_tree_filter ul').on('click', () => {
     categoryFilterButtons();
   });
   categoryFilterButtons();
@@ -46,23 +46,23 @@ $(document).ready(function() {
   /*
    * Click on a column header ordering icon to change orderBy / orderWay (location.href redirection)
    */
-  $('[psorderby][psorderway]', form).click(function() {
-    var orderBy = $(this).attr('psorderby');
-    var orderWay = $(this).attr('psorderway');
+  $('[psorderby][psorderway]', form).click(function () {
+    const orderBy = $(this).attr('psorderby');
+    const orderWay = $(this).attr('psorderway');
     productOrderTable(orderBy, orderWay);
   });
 
   /*
    * Checkboxes behavior with bulk actions
    */
-  $('input:checkbox[name="bulk_action_selected_products[]"]', form).change(function() {
+  $('input:checkbox[name="bulk_action_selected_products[]"]', form).change(() => {
     updateBulkMenu();
   });
 
   /*
    * Filter columns inputs behavior
    */
-  $('tr.column-filters input:text, tr.column-filters select', form).on('change input', function() {
+  $('tr.column-filters input:text, tr.column-filters select', form).on('change input', () => {
     productCatalogFilterChanged = true;
     updateFilterMenu();
   });
@@ -71,24 +71,24 @@ $(document).ready(function() {
    * Sortable case when ordered by position ASC
    */
 
-  $("body").on("mousedown", "tbody.sortable [data-uniturl] td.placeholder", function () {
-    var trParent = $(this).closest('tr');
-    trParent.find('input:checkbox[name="bulk_action_selected_products[]"]').attr("checked", true);
+  $('body').on('mousedown', 'tbody.sortable [data-uniturl] td.placeholder', function () {
+    const trParent = $(this).closest('tr');
+    trParent.find('input:checkbox[name="bulk_action_selected_products[]"]').attr('checked', true);
   });
 
   $('tbody.sortable', form).sortable({
     placeholder: 'placeholder',
-    update: function(event, ui) {
-      var positionSpan = $('span.position', ui.item)[0];
+    update(event, ui) {
+      const positionSpan = $('span.position', ui.item)[0];
       $(positionSpan).css('color', 'red');
       bulkProductEdition(event, 'sort');
-    }
+    },
   });
 
   /*
    * Form submit pre action
    */
-  form.submit(function(e) {
+  form.submit(function (e) {
     e.preventDefault();
     $('#filter_column_id_product', form).val($('#filter_column_id_product', form).attr('sql'));
     $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
@@ -101,7 +101,7 @@ $(document).ready(function() {
   /*
    * Send to SQL manager button on modal
    */
-  $('#catalog_sql_query_modal button[value="sql_manager"]').on('click', function() {
+  $('#catalog_sql_query_modal button[value="sql_manager"]').on('click', () => {
     sendLastSqlQuery(createSqlQueryName());
   });
 
@@ -109,16 +109,16 @@ $(document).ready(function() {
   updateFilterMenu();
 
   /** create keyboard event for save & new */
-  jwerty.key('ctrl+P', function(e) {
+  jwerty.key('ctrl+P', (e) => {
     e.preventDefault();
-    var url = $('form#product_catalog_list').attr('newproducturl');
+    const url = $('form#product_catalog_list').attr('newproducturl');
     window.location.href = url;
   });
 });
 
 function productOrderTable(orderBy, orderWay) {
-  var form = $('form#product_catalog_list');
-  var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/asc/, orderWay);
+  const form = $('form#product_catalog_list');
+  const url = form.attr('orderingurl').replace(/name/, orderBy).replace(/asc/, orderWay);
   window.location.href = url;
 }
 
@@ -127,20 +127,20 @@ function productOrderPrioritiesTable() {
 }
 
 function updateBulkMenu() {
-  var selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').length;
+  const selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').length;
   $('#product_bulk_menu').prop('disabled', (selectedCount === 0));
 }
 
 var productCatalogFilterChanged = false;
 function updateFilterMenu() {
-  var columnFilters = $('#product_catalog_list').find('tr.column-filters');
-  var count = columnFilters.find('option:selected[value!=""]').length;
-  columnFilters.find('input[type="text"][sql!=""][sql], input[type="text"]:visible').each(function() {
+  const columnFilters = $('#product_catalog_list').find('tr.column-filters');
+  let count = columnFilters.find('option:selected[value!=""]').length;
+  columnFilters.find('input[type="text"][sql!=""][sql], input[type="text"]:visible').each(function () {
     if ($(this).val() !== '') {
       count++;
     }
   });
-  var filtersNotUpdatedYet = (count === 0 && productCatalogFilterChanged === false);
+  const filtersNotUpdatedYet = (count === 0 && productCatalogFilterChanged === false);
   $('button[name="products_filter_submit"]').prop('disabled', filtersNotUpdatedYet);
   $('button[name="products_filter_reset"]').toggle(!filtersNotUpdatedYet);
 }
@@ -160,9 +160,9 @@ function productCategoryFilterCollapse(div, btn) {
 }
 
 function categoryFilterButtons() {
-  var catTree = $('#product_catalog_category_tree_filter');
-  var catTreeSiblingDivs = $('#product_catalog_category_tree_filter ~ div');
-  var catTreeList = catTree.find('ul ul');
+  const catTree = $('#product_catalog_category_tree_filter');
+  const catTreeSiblingDivs = $('#product_catalog_category_tree_filter ~ div');
+  const catTreeList = catTree.find('ul ul');
   catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_collapse"]').toggle(!catTreeList.filter(':visible').length);
   catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_expand"]').toggle(!catTreeList.filter(':hidden').length);
   catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_reset"]').toggle(!catTree.find('ul input:checked').length);
@@ -178,18 +178,18 @@ function productColumnFilterReset(tr) {
 }
 
 function bulkModalAction(allItems, postUrl, redirectUrl, action) {
-  var itemsCount = allItems.length;
-  var currentItemIdx = 0;
+  const itemsCount = allItems.length;
+  let currentItemIdx = 0;
   if (itemsCount < 1) {
     return;
   }
 
-  var targetModal = $('#catalog_' + action + '_modal');
+  const targetModal = $(`#catalog_${action}_modal`);
   targetModal.modal('show');
 
-  var details = targetModal.find('#catalog_' + action + '_progression .progress-details-text');
-  var progressBar = targetModal.find('#catalog_' + action + '_progression .progress-bar');
-  var failure = targetModal.find('#catalog_' + action + '_failure');
+  const details = targetModal.find(`#catalog_${action}_progression .progress-details-text`);
+  const progressBar = targetModal.find(`#catalog_${action}_progression .progress-bar`);
+  const failure = targetModal.find(`#catalog_${action}_failure`);
 
   // re-init popup
   details.html(details.attr('default-value'));
@@ -206,17 +206,17 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
     if (items.length === 0) {
       return;
     }
-    var item0 = $(items.shift()).val();
+    const item0 = $(items.shift()).val();
     currentItemIdx++;
 
-    details.html(details.attr('default-value').replace(/\.\.\./, '') + ' (#' + item0 + ')');
+    details.html(`${details.attr('default-value').replace(/\.\.\./, '')} (#${item0})`);
     $.ajax({
       type: 'POST',
       url: postUrl,
       data: {bulk_action_selected_products: [item0]},
-      success: function (data, status) {
-        progressBar.css('width', (currentItemIdx * 100 / itemsCount) + '%');
-        progressBar.find('span').html(currentItemIdx + ' / ' + itemsCount);
+      success(data, status) {
+        progressBar.css('width', `${currentItemIdx * 100 / itemsCount}%`);
+        progressBar.find('span').html(`${currentItemIdx} / ${itemsCount}`);
 
         if (items.length > 0) {
           bulkCall(items, successCallback, errorCallback);
@@ -225,13 +225,13 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
         }
       },
       error: errorCallback,
-      dataType: 'json'
+      dataType: 'json',
     });
   };
 
-  bulkCall(allItems.toArray(), function () {
+  bulkCall(allItems.toArray(), () => {
     window.location.href = redirectUrl;
-  }, function () {
+  }, () => {
     progressBar.removeClass('progress-bar-success');
     progressBar.addClass('progress-bar-danger');
     failure.show();
@@ -240,17 +240,16 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
 }
 
 function bulkProductAction(element, action) {
-  var form = $('#product_catalog_list');
-  var postUrl = '';
-  var redirectUrl = '';
-  var urlHandler = null;
+  const form = $('#product_catalog_list');
+  let postUrl = '';
+  let redirectUrl = '';
+  let urlHandler = null;
 
-  var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
+  const items = $('input:checked[name="bulk_action_selected_products[]"]', form);
   if (items.length === 0) {
     return false;
-  } else {
-    urlHandler = $(element).closest('[bulkurl]');
   }
+  urlHandler = $(element).closest('[bulkurl]');
 
   switch (action) {
     case 'delete_all':
@@ -260,8 +259,7 @@ function bulkProductAction(element, action) {
       // Confirmation popup and callback...
       $('#catalog_deletion_modal').modal('show');
       $('#catalog_deletion_modal button[value="confirm"]').off('click');
-      $('#catalog_deletion_modal button[value="confirm"]').on('click', function () {
-
+      $('#catalog_deletion_modal button[value="confirm"]').on('click', () => {
         $('#catalog_deletion_modal').modal('hide');
 
         return bulkModalAction(items, postUrl, redirectUrl, action);
@@ -296,7 +294,7 @@ function bulkProductAction(element, action) {
     // this case will brings to the next page
     case 'edition_next':
       redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
-    // no break !
+      // no break !
 
     // this case will post inline edition command
     case 'edition':
@@ -323,7 +321,7 @@ function bulkProductAction(element, action) {
   if (postUrl !== '' && redirectUrl !== '') {
     // save action URL for redirection and update to post to bulk action instead
     // using form action URL allow to get route attributes and stay on the same page & ordering.
-    var redirectionInput = $('<input>')
+    const redirectionInput = $('<input>')
       .attr('type', 'hidden')
       .attr('name', 'redirect_url').val(redirectUrl);
     form.append($(redirectionInput));
@@ -334,13 +332,13 @@ function bulkProductAction(element, action) {
 }
 
 function unitProductAction(element, action) {
-  var form = $('form#product_catalog_list');
+  const form = $('form#product_catalog_list');
 
   // save action URL for redirection and update to post to bulk action instead
   // using form action URL allow to get route attributes and stay on the same page & ordering.
-  var urlHandler = $(element).closest('[data-uniturl]');
-  var redirectUrlHandler = $(element).closest('[redirecturl]');
-  var redirectionInput = $('<input>')
+  const urlHandler = $(element).closest('[data-uniturl]');
+  const redirectUrlHandler = $(element).closest('[redirecturl]');
+  const redirectionInput = $('<input>')
     .attr('type', 'hidden')
     .attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
 
@@ -349,9 +347,9 @@ function unitProductAction(element, action) {
       // Confirmation popup and callback...
       $('#catalog_deletion_modal').modal('show');
       $('#catalog_deletion_modal button[value="confirm"]').off('click');
-      $('#catalog_deletion_modal button[value="confirm"]').on('click', function () {
+      $('#catalog_deletion_modal button[value="confirm"]').on('click', () => {
         form.append($(redirectionInput));
-        var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
+        const url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
         form.attr('action', url);
         form.submit();
 
@@ -359,11 +357,11 @@ function unitProductAction(element, action) {
       });
       return;
     // Other cases, nothing to do, continue.
-    //default:
+    // default:
   }
 
   form.append($(redirectionInput));
-  var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
+  const url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
   form.attr('action', url);
   form.submit();
 }
@@ -382,7 +380,7 @@ function showBulkProductEdition(show) {
 }
 
 function bulkProductEdition(element, action) {
-  var form = $('form#product_catalog_list');
+  const form = $('form#product_catalog_list');
 
   switch (action) {
     /*
@@ -415,7 +413,7 @@ function bulkProductEdition(element, action) {
       break;
     case 'cancel':
       // quantity inputs
-      $('td.product-sav-quantity', form).each(function() {
+      $('td.product-sav-quantity', form).each(function () {
         $(this).html($(this).attr('productquantityvalue'));
       });
 
