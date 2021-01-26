@@ -35,6 +35,22 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormInterface;
 
+/**
+ * Class MultistoreCheckboxEnabler
+ *
+ * This class is responsible for enabling multistore checkboxes on BO configuration forms,
+ * it is usually called from the MultistoreConfigurationTypeExtension.
+ *
+ * Checkboxes are added or not, and checked or not depending on the current multistore context,
+ * and if the field has the required attribute `multistore_configuration_key`.
+ *
+ * @todo add a link to the documentation related to this part, when it's online
+ *
+ * @see MaintenanceType for an example of a form that is configured to enable multistore checkboxes on its fields
+ * @see MaintenanceConfiguration for an example of how to extend and use the MultistoreConfigurator to store multistore configuration values
+ * @see MultistoreConfigurationTypeExtension this is the form extension that calls this class
+ * @see MultistoreConfigurator this is the abstract used by the class responsible for storing multistore configuration values
+ */
 class MultistoreCheckboxEnabler
 {
     private $multistoreFeature;
