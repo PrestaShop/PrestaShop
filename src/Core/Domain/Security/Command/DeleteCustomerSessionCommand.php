@@ -49,7 +49,7 @@ class DeleteCustomerSessionCommand
     /**
      * @return CustomerSessionId
      */
-    public function getCustomerSessionId()
+    public function getCustomerSessionId(): CustomerSessionId
     {
         return $this->sessionId;
     }
