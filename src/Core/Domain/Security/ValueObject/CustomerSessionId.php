@@ -45,13 +45,17 @@ class CustomerSessionId
      */
     public function __construct(int $sessionId)
     {
-        $this->sessionId = (int) $sessionId;
+        if (0 > $sessionId) {
+            throw new SessionException('Session id must be greater than zero.');
+        }
+
+        $this->sessionId = $sessionId;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->sessionId;
     }
