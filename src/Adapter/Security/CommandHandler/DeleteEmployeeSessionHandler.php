@@ -44,7 +44,7 @@ final class DeleteEmployeeSessionHandler implements DeleteEmployeeSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteEmployeeSessionCommand $command)
+    public function handle(DeleteEmployeeSessionCommand $command): void
     {
         $sessionId = $command->getEmployeeSessionId()->getValue();
 
