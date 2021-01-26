@@ -58,6 +58,7 @@ class BackupController extends FrameworkBundleAdminController
     public function indexAction(Request $request, BackupFilters $filters)
     {
         $backupForm = $this->getBackupFormHandler()->getForm();
+
         return $this->renderPage($request, $filters, $backupForm);
     }
 
@@ -133,6 +134,7 @@ class BackupController extends FrameworkBundleAdminController
         }
 
         $backupForm = $this->getBackupFormHandler()->getForm();
+
         return $this->renderPage($request, $filters, $backupForm);
     }
 

@@ -140,7 +140,6 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param RequestSqlFilters $filters
-     *
      */
     public function processFormAction(Request $request, RequestSqlFilters $filters)
     {
@@ -427,7 +426,6 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
-
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
             'layoutHeaderToolbarBtn' => [
