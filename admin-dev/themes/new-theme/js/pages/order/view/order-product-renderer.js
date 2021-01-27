@@ -97,6 +97,7 @@ export default class OrderProductRenderer {
     const $modificationPosition = $(
       OrderViewPageMap.productModificationPosition,
     );
+
     if ($modificationPosition.find(OrderViewPageMap.productsPanel).length > 0) {
       return;
     }
@@ -260,6 +261,7 @@ export default class OrderProductRenderer {
 
   toggleColumn(target, forceDisplay = null) {
     let isColumnDisplayed = false;
+
     if (forceDisplay === null) {
       $(target)
         .filter('td')

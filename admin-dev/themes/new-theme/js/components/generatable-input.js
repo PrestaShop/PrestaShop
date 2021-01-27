@@ -65,6 +65,7 @@ export default class GeneratableInput {
    */
   attachOn(generatorBtnSelector) {
     const generatorBtn = document.querySelector(generatorBtnSelector);
+
     if (generatorBtn !== null) {
       generatorBtn.addEventListener('click', (event) => {
         const {attributes} = event.currentTarget;

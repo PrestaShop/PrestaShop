@@ -93,6 +93,7 @@ class DbBackup extends BOBasePage {
       page.waitForEvent('download'),
       await page.click(this.downloadBackupButton),
     ]);
+
     return download.path();
   }
 

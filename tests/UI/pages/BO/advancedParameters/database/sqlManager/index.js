@@ -216,6 +216,7 @@ class SqlManager extends BOBasePage {
       page.waitForEvent('download'),
       await page.click(this.sqlQueryListTableExportLink(row)),
     ]);
+
     return download.path();
   }
 

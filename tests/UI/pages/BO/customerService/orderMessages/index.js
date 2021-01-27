@@ -237,10 +237,12 @@ class OrderMessages extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

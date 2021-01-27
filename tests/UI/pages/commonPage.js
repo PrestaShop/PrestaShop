@@ -50,6 +50,7 @@ module.exports = class CommonPage {
       await this.waitForVisibleSelector(page, selector);
     }
     const textContent = await page.$eval(selector, el => el.textContent);
+
     return textContent.replace(/\s+/g, ' ').trim();
   }
 
@@ -85,6 +86,7 @@ module.exports = class CommonPage {
    */
   async updateCheckboxValue(page, selector, expectedValue) {
     const actualValue = await this.elementChecked(page, selector);
+
     if (actualValue !== expectedValue) {
       await page.click(selector);
     }
@@ -202,6 +204,7 @@ module.exports = class CommonPage {
   async closePage(browserContext, page, tabId = -1) {
     await page.close();
     let focusedPage;
+
     if (tabId !== -1) {
       focusedPage = (await browserContext.pages())[tabId];
     }
@@ -256,6 +259,7 @@ module.exports = class CommonPage {
     await page.waitForTimeout(timeout);
     const text = await this.getTextContent(page, selector);
     const number = /\d+/g.exec(text).toString();
+
     return parseInt(number, 10);
   }
 

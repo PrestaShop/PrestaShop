@@ -124,6 +124,7 @@ class States extends BOBasePage {
    */
   async filterStates(page, filterType, filterBy, value) {
     let filterValue = value;
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), filterValue.toString());

@@ -94,6 +94,7 @@ class AddSupplier extends BOBasePage {
    */
   async deleteKeywords(page, lang = 'en') {
     const closeButtons = await page.$$(this.deleteKeywordLink(lang));
+
     /* eslint-disable no-restricted-syntax */
     for (const closeButton of closeButtons) {
       await closeButton.click();

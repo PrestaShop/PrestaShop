@@ -277,10 +277,12 @@ class Customers extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCustomers(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -441,6 +443,7 @@ class Customers extends BOBasePage {
 
     // Click on checkbox if not selected
     const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
     }
@@ -467,6 +470,7 @@ class Customers extends BOBasePage {
       page.click(this.gridActionExportLink),
       page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
+
     return download.path();
   }
 
@@ -479,6 +483,7 @@ class Customers extends BOBasePage {
    */
   async getCustomerInCsvFormat(page, row) {
     const customer = await this.getCustomerFromTable(page, row);
+
     return `${customer.id};`
       + `${customer.socialTitle};`
       + `${customer.firstName};`

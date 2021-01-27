@@ -81,6 +81,7 @@ class Order extends BOBasePage {
       page.click(this.gridActionExportLink),
       page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
+
     return download.path();
   }
 
@@ -190,10 +191,12 @@ class Order extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -205,6 +208,7 @@ class Order extends BOBasePage {
    */
   async getOrderInCsvFormat(page, row) {
     const order = await this.getOrderFromTable(page, row);
+
     return `${order.id};`
       + `${order.reference};`
       + `${order.newClient === 'Yes' ? 1 : 0};`
@@ -245,6 +249,7 @@ class Order extends BOBasePage {
       page.waitForEvent('download'),
       page.click(this.viewInvoiceRowLink(row)),
     ]);
+
     return download.path();
   }
 
@@ -259,6 +264,7 @@ class Order extends BOBasePage {
       page.waitForEvent('download'),
       page.click(this.viewDeliverySlipsRowLink(row)),
     ]);
+
     return download.path();
   }
 

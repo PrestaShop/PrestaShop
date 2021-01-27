@@ -28,6 +28,7 @@ const {$} = window;
 
 const replaceDatePicker = () => {
   const datepickerWidget = $('body').find('.bootstrap-datetimepicker-widget:last');
+
   if (datepickerWidget.length <= 0) {
     return;
   }

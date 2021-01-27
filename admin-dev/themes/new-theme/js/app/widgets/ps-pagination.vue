@@ -127,6 +127,7 @@
         const indexToDisplay = startPaginationIndex && lastPaginationIndex;
         const lastIndex = index === this.pagesCount;
         const firstIndex = index === 1;
+
         if (!this.isMultiPagination) {
           return !this.isMultiPagination;
         }
@@ -137,6 +138,7 @@
       },
       showFirstDots(index) {
         const pagesToDisplay = this.pagesCount - this.multiPagesToDisplay;
+
         if (!this.isMultiPagination) {
           return this.isMultiPagination;
         }

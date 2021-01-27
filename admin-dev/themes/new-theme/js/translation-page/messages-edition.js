@@ -43,6 +43,7 @@ export default function (search) {
 
       $.post(url, $editTranslationForm.serialize(), (response) => {
         let flashMessage;
+
         if (response.successful_update) {
           flashMessage = $editTranslationForm.find('.alert-info');
 

@@ -239,6 +239,7 @@ export default class ModuleCard {
 
   confirmAction(action, element) {
     const modal = $(`#${$(element).data('confirm_modal')}`);
+
     if (modal.length !== 1) {
       return true;
     }

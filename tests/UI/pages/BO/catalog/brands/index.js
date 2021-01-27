@@ -431,6 +431,7 @@ class Brands extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid(page, table);
     const allRowsContentTable = [];
     let rowContent;
+
     for (let i = 1; i <= rowsNumber; i++) {
       switch (table) {
         case 'manufacturer':
@@ -444,6 +445,7 @@ class Brands extends BOBasePage {
       }
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -549,6 +551,7 @@ class Brands extends BOBasePage {
    */
   async getBrandInCsvFormat(page, row) {
     const brand = await this.getBrandFromTable(page, row);
+
     return `${brand.id};`
       + `${brand.logo};`
       + `"${brand.name}";`

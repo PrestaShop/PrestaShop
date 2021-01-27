@@ -75,6 +75,7 @@ class Install extends CommonPage {
   async checkStepTitle(page, selector, pageTitle) {
     await this.waitForVisibleSelector(page, selector);
     const title = await this.getTextContent(page, selector);
+
     if (Array.isArray(pageTitle)) {
       return pageTitle.some(arrVal => title.includes(arrVal));
     }
@@ -107,6 +108,7 @@ class Install extends CommonPage {
    */
   async agreeToTermsAndConditions(page) {
     const isChecked = await this.elementChecked(page, this.termsConditionsCheckbox);
+
     if (!isChecked) {
       await page.click(this.termsConditionsCheckbox);
     }

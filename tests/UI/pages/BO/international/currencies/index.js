@@ -323,6 +323,7 @@ class Currencies extends LocalizationBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCurrency(page, i, column);
       await allRowsContentTable.push(rowContent);

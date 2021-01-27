@@ -212,6 +212,7 @@ class Combination {
     values.forEach((valueObject) => {
       const valueId = valueObject.id.substr(this.inputBulkPattern.length);
       const $field = $(`#${this.convertInput(valueId)}`);
+
       if ($field.is(':checkbox')) {
         $field.prop('checked', !!valueObject.value);
       } else {
@@ -230,6 +231,7 @@ class Combination {
    */
   convertInput(bulkInput) {
     let convertedInput = '';
+
     switch (bulkInput) {
       case 'quantity':
       case 'reference':

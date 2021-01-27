@@ -51,6 +51,7 @@ export default class BulkActionCheckboxExtension {
       const $checkbox = $(e.currentTarget);
 
       const isChecked = $checkbox.is(':checked');
+
       if (isChecked) {
         this.enableBulkActionsBtn(grid);
       } else {

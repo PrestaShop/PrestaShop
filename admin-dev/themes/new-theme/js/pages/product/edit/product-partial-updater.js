@@ -80,8 +80,10 @@ export default class ProductPartialUpdater {
    */
   updatePartialForm() {
     const updatedData = this.getUpdatedFormData();
+
     if (updatedData !== null) {
       let formMethod = this.$productForm.prop('method');
+
       if (Object.prototype.hasOwnProperty.call(updatedData, '_method')) {
         // eslint-disable-next-line dot-notation
         formMethod = updatedData['_method'];
@@ -159,6 +161,7 @@ export default class ProductPartialUpdater {
     // This way only updated AND new values remain
     Object.keys(this.initialData).forEach((fieldName) => {
       const fieldValue = this.initialData[fieldName];
+
       // Field is absent in the new data (it was not in the initial) we force it to empty string (not null
       // or it will be ignored)
       if (!Object.prototype.hasOwnProperty.call(currentData, fieldName)) {
@@ -201,6 +204,7 @@ export default class ProductPartialUpdater {
 
     formArray.forEach((formField) => {
       let {value} = formField;
+
       // Input names can be identical when expressing array of values for same field (like multiselect checkboxes)
       // so we need to put these input values into single array indexed by that field name
       if (formField.name.endsWith('[]')) {

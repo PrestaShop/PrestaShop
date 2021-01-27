@@ -183,6 +183,7 @@ describe('Sort, pagination and bulk actionsweb service keys', async () => {
         // await expect(textResult).to.be.equal(webservicePage.successfulUpdateStatusMessage);
 
         const numberOfWebserviceKeys = await webservicePage.getNumberOfElementInGrid(page);
+
         for (let i = 1; i <= numberOfWebserviceKeys; i++) {
           const webserviceStatus = await webservicePage.getStatus(page, i);
           await expect(webserviceStatus).to.equal(test.args.enabledValue);

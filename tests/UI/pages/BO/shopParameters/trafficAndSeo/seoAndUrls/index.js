@@ -133,10 +133,12 @@ class SeoAndUrls extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let row = 1; row <= rowsNumber; row++) {
       const rowContent = await this.getTextColumnFromTable(page, row, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

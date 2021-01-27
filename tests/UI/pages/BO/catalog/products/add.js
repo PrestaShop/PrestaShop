@@ -112,6 +112,7 @@ class AddProduct extends BOBasePage {
    */
   async setProductStatus(page, wantedStatus) {
     const isProductOnline = await this.getOnlineButtonStatus(page);
+
     if (isProductOnline !== wantedStatus) {
       await page.click(this.productOnlineSwitch);
       await this.closeGrowlMessage(page);
@@ -254,6 +255,7 @@ class AddProduct extends BOBasePage {
     await this.waitForVisibleSelector(page, this.previewProductLink);
     const newPage = await this.openLinkWithTargetBlank(page, this.previewProductLink, 'body a');
     const textBody = await this.getTextContent(newPage, 'body');
+
     if (await textBody.includes('[Debug] This page has moved')) {
       await this.clickAndWaitForNavigation(newPage, 'a');
     }
@@ -459,6 +461,7 @@ class AddProduct extends BOBasePage {
    */
   async addPackOfProducts(page, pack) {
     const keys = Object.keys(pack);
+
     for (let i = 0; i < keys.length; i += 1) {
       await this.addProductToPack(page, keys[i], pack[keys[i]]);
     }
