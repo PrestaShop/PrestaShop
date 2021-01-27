@@ -67,6 +67,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'stock' => $this->extractStockData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
+            'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
         ];
@@ -168,10 +169,20 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'meta_title' => $seoOptions->getLocalizedMetaTitles(),
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
-            'redirect' => [
-                'type' => $seoOptions->getRedirectType(),
-                'target' => $seoOptions->getRedirectTargetId(),
-            ],
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @return array
+     */
+    private function extractRedirectOptionData(ProductForEditing $productForEditing): array
+    {
+        $seoOptions = $productForEditing->getProductSeoOptions();
+
+        return [
+            'type' => $seoOptions->getRedirectType(),
+            'target' => $seoOptions->getRedirectTargetId(),
         ];
     }
 
