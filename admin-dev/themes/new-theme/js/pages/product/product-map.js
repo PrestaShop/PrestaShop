@@ -26,4 +26,5 @@
 export default {
   productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
+  redirectTargetInput: '#product_redirect_option_target',
 };
