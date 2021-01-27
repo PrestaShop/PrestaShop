@@ -241,7 +241,7 @@ final class EmployeeType extends TranslatorAwareType
                     [
                         'choices' => $this->profilesChoices,
                         'label' => $this->trans('Permission profile', 'Admin.Advparameters.Feature'),
-                        'row_attr' => [
+                        'attr' => [
                             'data-admin-profile' => $this->superAdminProfileId,
                             'data-get-tabs-url' => $this->router->generate('admin_employees_get_tabs'),
                         ],
