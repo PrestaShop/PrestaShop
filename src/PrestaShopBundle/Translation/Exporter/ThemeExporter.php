@@ -31,6 +31,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopBundle\Utils\ZipManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -214,8 +215,11 @@ class ThemeExporter
             ->extract($theme, $locale, $rootDir);
 
         Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
+        var_dump($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
 
-        return $this->themeProvider->getCatalogueFromPaths([$folderPath], $locale, '*');
+        var_dump($folderPath);
+
+        return (new TranslationFinder())->getCatalogueFromPaths([$folderPath], $locale, '*');
     }
 
     /**

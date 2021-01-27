@@ -129,6 +129,8 @@ class ThemeExtractor
                     $options['path'] = $this->outputPath;
                 }
 
+                var_dump($options);
+
                 return $dumper->dump($this->catalog, $options);
             }
         }

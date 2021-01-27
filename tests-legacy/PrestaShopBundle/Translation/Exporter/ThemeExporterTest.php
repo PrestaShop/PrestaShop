@@ -93,8 +93,8 @@ class ThemeExporterTest extends TestCase
 
         $this->themeExporter->finder = $this->finderMock;
         $cacheDir = dirname(__FILE__) . '/' .
-            str_repeat('../', 5) .
-            'app/cache/test';
+            str_repeat('../', 4) .
+            'var/cache/test';
         $this->themeExporter->exportDir = $cacheDir . '/export';
         $this->themeExporter->cacheDir = $cacheDir;
     }
@@ -190,7 +190,7 @@ class ThemeExporterTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->providerMock->method('getCatalogueFromPaths')
+        $this->providerMock->method('getDefaultCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
@@ -202,7 +202,7 @@ class ThemeExporterTest extends TestCase
                 )
             ));
 
-        $this->providerMock->method('getThemeCatalogue')
+        $this->providerMock->method('getXliffCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
