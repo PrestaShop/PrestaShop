@@ -24,13 +24,14 @@
  */
 
 // build confirmation modal
+// eslint-disable-next-line
 function confirm_modal(
   heading,
   question,
-  left_button_txt,
-  right_button_txt,
-  left_button_callback,
-  right_button_callback,
+  leftButtonText,
+  rightButtonText,
+  leftButtonCallback,
+  rightButtonCallback,
 ) {
   const confirmModal = $(
     `${'<div class="bootstrap modal hide fade">'
@@ -44,26 +45,27 @@ function confirm_modal(
       + `<p>${question}</p>`
       + '</div>'
       + '<div class="modal-footer">'
-      + `<a href="#" id="confirm-modal-left-button" class="btn btn-primary">${left_button_txt}</a>`
-      + `<a href="#" id="confirm-modal-right-button" class="btn btn-primary">${right_button_txt}</a>`
+      + `<a href="#" id="confirm-modal-left-button" class="btn btn-primary">${leftButtonText}</a>`
+      + `<a href="#" id="confirm-modal-right-button" class="btn btn-primary">${rightButtonText}</a>`
       + '</div>'
       + '</div>'
       + '</div>'
       + '</div>',
   );
   confirmModal.find('#confirm-modal-left-button').click(() => {
-    left_button_callback();
+    leftButtonCallback();
     confirmModal.modal('hide');
   });
   confirmModal.find('#confirm-modal-right-button').click(() => {
-    right_button_callback();
+    rightButtonCallback();
     confirmModal.modal('hide');
   });
   confirmModal.modal('show');
 }
 
 // build error modal
-/* global error_continue_msg */
+/* global errorContinueMsg */
+// eslint-disable-next-line
 function error_modal(heading, msg) {
   const errorModal = $(
     `${'<div class="bootstrap modal hide fade">'
@@ -77,7 +79,7 @@ function error_modal(heading, msg) {
       + `<p>${msg}</p>`
       + '</div>'
       + '<div class="modal-footer">'
-      + `<a href="#" id="error_modal_right_button" class="btn btn-default">${error_continue_msg}</a>`
+      + `<a href="#" id="error_modal_right_button" class="btn btn-default">${errorContinueMsg}</a>`
       + '</div>'
       + '</div>'
       + '</div>'
@@ -90,7 +92,9 @@ function error_modal(heading, msg) {
 }
 
 // move to hash after clicking on anchored links
+// eslint-disable-next-line
 function scroll_if_anchor(href) {
+  // eslint-disable-next-line
   href = typeof href === 'string' ? href : $(this).attr('href');
   const fromTop = 120;
 
@@ -291,7 +295,7 @@ $(document).ready(() => {
       height: window.innerHeight,
     });
 
-    function expand(e) {
+    function expand() {
       if ($('div.notification-center.dropdown').hasClass('open')) {
         return;
       }
@@ -425,6 +429,7 @@ $(document).ready(() => {
     $('#header_search .form-group').removeClass('focus-search');
   });
 
+  // eslint-disable-next-line
   $('#header_search #bo_query').on('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -480,7 +485,7 @@ $(document).ready(() => {
       .parent();
     parentZone.find('.status').addClass('hide');
 
-    if ($(this).attr('checked') == 'checked') {
+    if ($(this).attr('checked') === 'checked') {
       parentZone.find('.enabled').removeClass('hide');
       $('#currency_form #active').val(1);
     } else {
@@ -498,7 +503,7 @@ $(document).ready(() => {
       .parent();
     parentZone.find('.status').addClass('hide');
 
-    if ($(this).attr('checked') == 'checked') {
+    if ($(this).attr('checked') === 'checked') {
       enable = 1;
       parentZone.find('.enabled').removeClass('hide');
     } else {

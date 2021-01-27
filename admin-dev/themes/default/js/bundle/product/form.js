@@ -93,7 +93,7 @@ function resetEditor() {
 /**
  * Manage show or hide fields
  */
-var displayFieldsManager = (function () {
+const displayFieldsManager = (function () {
   const typeProduct = $('#form_step1_type_product');
   const showVariationsSelector = $('#show_variations_selector');
   const combinationsBlock = $('#combinations');
@@ -119,7 +119,7 @@ var displayFieldsManager = (function () {
         // lazy instantiated
         let duplicate = $('#form_step2_id_tax_rules_group_shortcut');
 
-        if (duplicate.length == 0) {
+        if (duplicate.length === 0) {
           const origin = $('select#form_step2_id_tax_rules_group');
           duplicate = origin.clone(false).attr('id', 'form_step2_id_tax_rules_group_shortcut');
           origin.on('change', () => {
@@ -195,7 +195,10 @@ var displayFieldsManager = (function () {
       }
 
       /** check quantity / combinations display */
-      if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) {
+      if (
+        showVariationsSelector.find('input:checked').val() === '1'
+        || $('#accordion_combinations tr:not(#loading-attribute)').length > 0
+      ) {
         combinationsBlock.show();
 
         $('#form-nav a[href="#step3"]').text(translate_javascripts.Combinations);
@@ -213,6 +216,7 @@ var displayFieldsManager = (function () {
       }
     },
     getProductType() {
+      /* eslint-disable */
       switch (typeProduct.val()) {
         case '0':
           return 'standard';
@@ -226,6 +230,7 @@ var displayFieldsManager = (function () {
         default:
           return 'standard';
       }
+      /* eslint-enable */
     },
     /**
      * Product pack or virtual can't have variations
@@ -233,8 +238,14 @@ var displayFieldsManager = (function () {
      * @param errorMessage
      */
     checkAccessVariations() {
-      if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
+      if (
+        (showVariationsSelector.find('input:checked').val() === '1'
+        || $('#accordion_combinations tr:not(#loading-attribute)').length > 0)
+        && (typeProduct.val() === '1'
+        || typeProduct.val() === '2')
+      ) {
         const typeOfProduct = this.getProductType();
+        // eslint-disable-next-line
         const errorMessage = `You can't create ${typeOfProduct} product with variations. Are you sure to disable variations ? they will all be deleted.`;
         modalConfirmation.create(translate_javascripts[errorMessage], null, {
           onCancel() {
@@ -245,6 +256,7 @@ var displayFieldsManager = (function () {
           onContinue() {
             $.ajax({
               type: 'GET',
+              // eslint-disable-next-line
               url: $('#accordion_combinations').attr('data-action-delete-all').replace(/delete-all\/\d+/, `delete-all/${$('#form_id_product').val()}`),
               success() {
                 $('#accordion_combinations .combination').remove();
@@ -264,7 +276,7 @@ var displayFieldsManager = (function () {
 /**
  * Display category form management
  */
-var displayFormCategory = (function () {
+const displayFormCategory = (function () {
   const parentElem = $('#add-categories');
 
   return {
@@ -282,7 +294,7 @@ var displayFormCategory = (function () {
 /**
  * Form category management
  */
-var formCategory = (function () {
+const formCategory = (function () {
   const elem = $('#form_step1_new_category');
 
   /** Send category form and it to nested categories */
@@ -306,6 +318,7 @@ var formCategory = (function () {
         let html = `${'<li>'
           + '<div class="checkbox js-checkbox">'
             + '<label>'
+            // eslint-disable-next-line
               + '<input type="checkbox" name="form[step1][categories][tree][]" checked value="'}${response.category.id}"> ${
           response.category.name[1]
         }<input type="radio" value="${response.category.id}" name="ignore" class="default-category">`
@@ -323,6 +336,7 @@ var formCategory = (function () {
         }
 
         // inject new category in parent category selector
+        // eslint-disable-next-line
         $('#form_step1_new_category_id_parent').append(`<option value="${response.category.id}">${response.category.name[1]}</option>`);
 
         // create label
@@ -339,7 +353,7 @@ var formCategory = (function () {
       error(response) {
         $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
           let html = '<ul class="list-unstyled text-danger">';
-          $.each(errors, (key, error) => {
+          $.each(errors, (errorsKey, error) => {
             html += `<li>${error}</li>`;
           });
           html += '</ul>';
@@ -376,7 +390,7 @@ var formCategory = (function () {
 /**
  * Feature collection management
  */
-var featuresCollection = (function () {
+const featuresCollection = (function () {
   const collectionHolder = $('.feature-collection');
   let maxCollectionChildren = collectionHolder.children('.row').length;
 
@@ -400,11 +414,11 @@ var featuresCollection = (function () {
       /** Click event on the remove button */
       $(document).on('click', '.feature-collection .delete', function (e) {
         e.preventDefault();
-        const _this = $(this);
+        const that = $(this);
 
         modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue() {
-            _this.closest('.product-feature').remove();
+            that.closest('.product-feature').remove();
           },
         }).show();
       });
@@ -427,7 +441,7 @@ var featuresCollection = (function () {
               $selector.empty();
               $.each(response, (index, elt) => {
                 // the placeholder shouldn't be posted.
-                if (elt.id == '0') {
+                if (elt.id === '0') {
                   elt.id = '';
                 }
                 $selector.append($('<option></option>').attr('value', elt.id).text(elt.value));
@@ -458,8 +472,9 @@ var featuresCollection = (function () {
 /**
  * Suppliers management
  */
-var supplier = (function () {
+const supplier = (function () {
   const supplierInputManage = function (input) {
+    // eslint-disable-next-line
     const supplierDefaultInput = $(`#form_step6_suppliers input[name="form[step6][default_supplier]"][value=${$(input).val()}]`);
 
     if ($(input).is(':checked')) {
@@ -479,7 +494,7 @@ var supplier = (function () {
       });
 
       // default display
-      $('#form_step6_suppliers input[name="form[step6][suppliers][]"]').map(function () {
+      $('#form_step6_suppliers input[name="form[step6][suppliers][]"]').forEach(function () {
         supplierInputManage($(this));
       });
     },
@@ -489,8 +504,8 @@ var supplier = (function () {
 /**
  * Supplier combination collection management
  */
-var supplierCombinations = (function () {
-  const id_product = $('#form_id_product').val();
+const supplierCombinations = (function () {
+  const idProduct = $('#form_id_product').val();
   const collectionHolder = $('#supplier_combination_collection');
 
   return {
@@ -501,7 +516,8 @@ var supplierCombinations = (function () {
       const url = collectionHolder.attr('data-url')
         .replace(
           /refresh-product-supplier-combination-form\/\d+\/\d+/,
-          `refresh-product-supplier-combination-form/${id_product}${suppliers.length > 0 ? `/${suppliers.join('-')}` : ''}`,
+          // eslint-disable-next-line
+          `refresh-product-supplier-combination-form/${idProduct}${suppliers.length > 0 ? `/${suppliers.join('-')}` : ''}`,
         );
       $.ajax({
         url,
@@ -516,7 +532,7 @@ var supplierCombinations = (function () {
 /**
  * Quantities management
  */
-var stock = (function () {
+const stock = (function () {
   return {
     init() {
       /** Update qty_0 and shortcut qty_0 field on change */
@@ -539,6 +555,7 @@ var stock = (function () {
       });
 
       /** if GSA activation change on 'depend on stock', update quantities fields */
+      // eslint-disable-next-line
       $('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1, #form_step3_advanced_stock_management').on('change', (e) => {
         displayFieldsManager.refresh();
         warehouseCombinations.refresh();
@@ -551,7 +568,7 @@ var stock = (function () {
 /**
  * Navigation management
  */
-var nav = (function () {
+const nav = (function () {
   return {
     init() {
       /** Manage tabls hash routes */
@@ -575,21 +592,24 @@ var nav = (function () {
 /**
  * Warehouse combination collection management (ASM only)
  */
-var warehouseCombinations = (function () {
-  const id_product = $('#form_id_product').val();
+const warehouseCombinations = (function () {
+  const idProduct = $('#form_id_product').val();
   const collectionHolder = $('#warehouse_combination_collection');
 
   return {
     init() {
       // toggle all button action
       $(document).on('click', 'div[id^="warehouse_combination_"] button.check_all_warehouse', function () {
-        const checkboxes = $(this).closest('div[id^="warehouse_combination_"]').find('input[type="checkbox"][id$="_activated"]');
+        const checkboxes = $(this).closest('div[id^="warehouse_combination_"]')
+          .find('input[type="checkbox"][id$="_activated"]');
         checkboxes.prop('checked', checkboxes.filter(':checked').length === 0);
       });
       // location disablation depending on 'stored' checkbox
+      // eslint-disable-next-line
       $(document).on('change', 'div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', function () {
         const checked = $(this).prop('checked');
-        const location = $(this).closest('div.form-group').find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
+        const location = $(this).closest('div.form-group')
+          .find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
         location.prop('disabled', !checked);
         if (!checked) {
           location.val('');
@@ -598,9 +618,11 @@ var warehouseCombinations = (function () {
       this.locationDisabler();
     },
     locationDisabler() {
+      // eslint-disable-next-line
       $('div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', collectionHolder).each(function () {
         const checked = $(this).prop('checked');
-        const location = $(this).closest('div.form-group').find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
+        const location = $(this).closest('div.form-group')
+          .find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
         location.prop('disabled', !checked);
       });
     },
@@ -608,7 +630,7 @@ var warehouseCombinations = (function () {
       const show = $('input#form_step3_advanced_stock_management:checked').length > 0;
 
       if (show) {
-        const url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, `/${id_product}`);
+        const url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, `/${idProduct}`);
         $.ajax({
           url,
           success(response) {
@@ -627,21 +649,24 @@ var warehouseCombinations = (function () {
 /**
  * Form management
  */
-var form = (function () {
+const form = (function () {
   const elem = $('#form');
 
   function send(redirect, target, callBack) {
     // target value by default
     if (typeof (target) === 'undefined') {
+      // eslint-disable-next-line
       target = false;
     }
     seo.onSave();
     updateMissingTranslatedNames();
 
-    const data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
+    const data = $('input, textarea, select', elem)
+      .not(':input[type=button], :input[type=submit], :input[type=reset]')
+      .serialize();
 
-    if (target == '_blank' && redirect) {
-      var openBlank = window.open('about:blank', target, '');
+    if (target === '_blank' && redirect) {
+      const openBlank = window.open('about:blank', target, '');
       openBlank.document.write(
         `${'<p style="text-align: center;">'
         + '<img src="'}${document.location.origin}${baseAdminDir}/themes/default/img/spinner.gif">`
@@ -695,7 +720,7 @@ var form = (function () {
       error(response) {
         showErrorMessage(translate_javascripts['Form update errors']);
 
-        if (target == '_blank' && redirect) {
+        if (target === '_blank' && redirect) {
           openBlank.close();
         }
 
@@ -732,7 +757,14 @@ var form = (function () {
         if ($('div[class*="translation-label-"].has-danger').length > 0) {
           const regexLabel = 'translation-label-';
 
-          const translationLabelClass = $.grep($('div[class*="translation-label-"].has-danger').first().attr('class').split(' '), (v, i) => v.indexOf(regexLabel) === 0).join();
+          const translationLabelClass = $.grep(
+            $('div[class*="translation-label-"].has-danger')
+              .first()
+              .attr('class')
+              .split(' '),
+            (v) => v.indexOf(regexLabel) === 0,
+          )
+            .join();
 
           if (translationLabelClass) {
             const selectValue = translationLabelClass.replace(regexLabel, '');
@@ -879,10 +911,10 @@ var form = (function () {
       /** on delete product */
       $('.product-footer .delete', elem).click(function (e) {
         e.preventDefault();
-        const _this = $(this);
+        const that = $(this);
         modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue() {
-            window.location = _this.attr('href');
+            window.location = that.attr('href');
           },
         }).show();
       });
@@ -917,16 +949,18 @@ var form = (function () {
         });
 
         /** Filter suggestion with selected tokens */
-        var filter = function (suggestions) {
+        const filter = function (suggestions) {
           const selected = [];
           $('#attributes-generator input.attribute-generator').each(function () {
             selected.push($(this).val());
           });
 
+          // eslint-disable-next-line
           return $.grep(suggestions, (suggestion) => $.inArray(suggestion.value, selected) === -1 && $.inArray(`group-${suggestion.data.id_group}`, selected) === -1);
         };
 
         /** On event "tokenfield:createtoken" : check values are valid if its not a typehead result */
+        // eslint-disable-next-line
         $('#form_step3_attributes').on('tokenfield:createtoken', (e) => {
           if (!e.attrs.data) {
             if (e.handleObj.origType !== 'tokenfield:createtoken') {
@@ -965,6 +999,7 @@ var form = (function () {
         /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
         $('#form_step3_attributes').on('tokenfield:createdtoken', (e) => {
           if (e.attrs.data) {
+            // eslint-disable-next-line
             $('#attributes-generator').append(`<input type="hidden" id="attribute-generator-${e.attrs.value}" class="attribute-generator" value="${e.attrs.value}" name="options[${e.attrs.data.id_group}][${e.attrs.value}]" />`);
           } else {
             $(e.relatedTarget).addClass('invalid');
@@ -982,8 +1017,8 @@ var form = (function () {
     send(redirect, target, callBack) {
       send(redirect, target, callBack);
     },
-    switchLanguage(iso_code) {
-      switchLanguage(iso_code);
+    switchLanguage(isoCode) {
+      switchLanguage(isoCode);
     },
   };
 }());
@@ -991,7 +1026,7 @@ var form = (function () {
 /**
  * Custom field collection management
  */
-var customFieldCollection = (function () {
+const customFieldCollection = (function () {
   const collectionHolder = $('ul.customFieldCollection');
   let maxCollectionChildren = collectionHolder.children().length;
 
@@ -1015,11 +1050,11 @@ var customFieldCollection = (function () {
       /** Click event on the remove button */
       $(document).on('click', 'ul.customFieldCollection .delete', function (e) {
         e.preventDefault();
-        const _this = $(this);
+        const that = $(this);
 
         modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue() {
-            _this.parent().parent().parent().remove();
+            that.parent().parent().parent().remove();
           },
         }).show();
       });
@@ -1030,13 +1065,13 @@ var customFieldCollection = (function () {
 /**
  * virtual product management
  */
-var virtualProduct = (function () {
-  const id_product = $('#form_id_product').val();
+const virtualProduct = (function () {
+  const idProduct = $('#form_id_product').val();
 
   const getOnDeleteVirtualProductFileHandler = function ($deleteButton) {
     return $.ajax({
       type: 'GET',
-      url: $deleteButton.attr('href').replace(/\/\d+(?=\?.*)/, `/${id_product}`),
+      url: $deleteButton.attr('href').replace(/\/\d+(?=\?.*)/, `/${idProduct}`),
       success() {
         $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
         $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
@@ -1052,7 +1087,7 @@ var virtualProduct = (function () {
         } else {
           $('#virtual_product_content').hide();
 
-          const url = $('#virtual_product').attr('data-action-remove').replace(/remove\/\d+/, `remove/${id_product}`);
+          const url = $('#virtual_product').attr('data-action-remove').replace(/remove\/\d+/, `remove/${idProduct}`);
           // delete virtual product
           $.ajax({
             type: 'GET',
@@ -1070,10 +1105,10 @@ var virtualProduct = (function () {
         }
       });
 
-      $('#form_step3_virtual_product_file').change(function (e) {
+      $('#form_step3_virtual_product_file').change(function () {
         if ($(this)[0].files !== undefined) {
           const {files} = $(this)[0];
-          var name = '';
+          let name = '';
 
           $.each(files, (index, value) => {
             name += `${value.name}, `;
@@ -1081,7 +1116,7 @@ var virtualProduct = (function () {
           $('#form_step3_virtual_product_name').val(name.slice(0, -2));
         } else {
           // Internet Explorer 9 Compatibility
-          var name = $(this).val().split(/[\\/]/);
+          const name = $(this).val().split(/[\\/]/);
           $('#form_step3_virtual_product_name').val(name[name.length - 1]);
         }
       });
@@ -1106,13 +1141,15 @@ var virtualProduct = (function () {
 
       /** save virtual product */
       $('#form_step3_virtual_product_save').click(function () {
-        const _this = $(this);
+        const that = $(this);
         const data = new FormData();
 
         if ($('#form_step3_virtual_product_file')[0].files[0]) {
           data.append('product_virtual[file]', $('#form_step3_virtual_product_file')[0].files[0]);
         }
-        data.append('product_virtual[is_virtual_file]', $('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val());
+        data.append('product_virtual[is_virtual_file]',
+          $('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val(),
+        );
         data.append('product_virtual[name]', $('#form_step3_virtual_product_name').val());
         data.append('product_virtual[nb_downloadable]', $('#form_step3_virtual_product_nb_downloadable').val());
         data.append('product_virtual[expiration_date]', $('#form_step3_virtual_product_expiration_date').val());
@@ -1120,12 +1157,12 @@ var virtualProduct = (function () {
 
         $.ajax({
           type: 'POST',
-          url: $('#virtual_product').attr('data-action').replace(/save\/\d+/, `save/${id_product}`),
+          url: $('#virtual_product').attr('data-action').replace(/save\/\d+/, `save/${idProduct}`),
           data,
           contentType: false,
           processData: false,
           beforeSend() {
-            _this.prop('disabled', 'disabled');
+            that.prop('disabled', 'disabled');
             $('ul.text-danger').remove();
             $('*.has-danger').removeClass('has-danger');
           },
@@ -1140,7 +1177,7 @@ var virtualProduct = (function () {
           error(response) {
             $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
               let html = '<ul class="list-unstyled text-danger">';
-              $.each(errors, (key, error) => {
+              $.each(errors, (errorsKey, error) => {
                 html += `<li>${error}</li>`;
               });
               html += '</ul>';
@@ -1150,7 +1187,7 @@ var virtualProduct = (function () {
             });
           },
           complete() {
-            _this.removeAttr('disabled');
+            that.removeAttr('disabled');
           },
         });
       });
@@ -1176,8 +1213,8 @@ var virtualProduct = (function () {
 /**
  * attachment product management
  */
-var attachmentProduct = (function () {
-  const id_product = $('#form_id_product').val();
+const attachmentProduct = (function () {
+  const idProduct = $('#form_id_product').val();
 
   return {
     init() {
@@ -1199,8 +1236,8 @@ var attachmentProduct = (function () {
       }
 
       /** add attachment */
+      // eslint-disable-next-line
       $('#form_step6_attachment_product_add').click(function () {
-        const _this = $(this);
         const data = new FormData();
 
         if ($('#form_step6_attachment_product_file')[0].files[0]) {
@@ -1211,7 +1248,7 @@ var attachmentProduct = (function () {
 
         $.ajax({
           type: 'POST',
-          url: replaceEndingIdFromUrl($('#form_step6_attachment_product').attr('data-action'), id_product),
+          url: replaceEndingIdFromUrl($('#form_step6_attachment_product').attr('data-action'), idProduct),
           data,
           contentType: false,
           processData: false,
@@ -1225,11 +1262,13 @@ var attachmentProduct = (function () {
 
             // inject new attachment in attachment list
             if (response.id) {
+              /* eslint-disable */
               const row = `<tr>\
                 <td class="col-md-3"><input type="checkbox" name="form[step6][attachments][]" value="${response.id}" checked="checked"> ${response.real_name}</td>\
                 <td class="col-md-6">${response.file_name}</td>\
                 <td class="col-md-2">${response.mime}</td>\
               </tr>`;
+              /* eslint-enable */
 
               $('#product-attachment-file tbody').append(row);
               $('.js-options-no-attachments').addClass('hide');
@@ -1239,7 +1278,7 @@ var attachmentProduct = (function () {
           error(response) {
             $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
               let html = '<ul class="list-unstyled text-danger">';
-              $.each(errors, (key, error) => {
+              $.each(errors, (errorsKey, error) => {
                 html += `<li>${error}</li>`;
               });
               html += '</ul>';
@@ -1260,7 +1299,7 @@ var attachmentProduct = (function () {
 /**
  * images product management
  */
-var imagesProduct = (function () {
+const imagesProduct = (function () {
   const dropZoneElem = $('#product-images-dropzone');
   const expanderElem = $('#product-images-container .dropzone-expander');
 
@@ -1340,7 +1379,7 @@ var imagesProduct = (function () {
         dictRemoveFile: translate_javascripts.Delete,
         dictFileTooBig: translate_javascripts.ToLargeFile,
         dictCancelUpload: translate_javascripts.Delete,
-        sending(file, response) {
+        sending() {
           checkDropzoneMode();
           expanderElem.addClass('expand').click();
           errorElem.html('');
@@ -1378,6 +1417,7 @@ var imagesProduct = (function () {
           } if ($.type(response) === 'string') {
             message = response;
           } else if (response.message) {
+            // eslint-disable-next-line
             message = response.message;
           }
 
@@ -1411,7 +1451,7 @@ var imagesProduct = (function () {
               top: 64,
             },
             cancel: '.disabled',
-            stop(event, ui) {
+            stop() {
               let sort = {};
               $.each(dropZoneElem.find('.dz-preview:not(.disabled)'), (index, value) => {
                 if (!$(value).attr('data-id')) {
@@ -1446,15 +1486,16 @@ var imagesProduct = (function () {
 
       dropZoneElem.dropzone(jQuery.extend(dropzoneOptions));
     },
-    updateDisplayCover(id_image) {
+    updateDisplayCover(idImage) {
       $('#product-images-dropzone .dz-preview .iscover').remove();
-      $(`#product-images-dropzone .dz-preview[data-id="${id_image}"]`)
+      $(`#product-images-dropzone .dz-preview[data-id="${idImage}"]`)
         .append(`<div class="iscover">${translate_javascripts.Cover}</div>`);
     },
     checkDropzoneMode() {
       checkDropzoneMode();
     },
     getOlderImageId() {
+      // eslint-disable-next-line
       return Math.min.apply(Math, $('.dz-preview').map(function () {
         return $(this).data('id');
       }));
@@ -1462,7 +1503,7 @@ var imagesProduct = (function () {
   };
 }());
 
-var formImagesProduct = (function () {
+const formImagesProduct = (function () {
   const dropZoneElem = $('#product-images-dropzone');
   const formZoneElem = $('#product-images-form-container');
 
@@ -1489,7 +1530,7 @@ var formImagesProduct = (function () {
     form(id) {
       dropZoneElem.find('.dz-preview.active').removeClass('active');
       dropZoneElem.find(`.dz-preview[data-id='${id}']`).addClass('active');
-      if (imagesProduct.shouldDisplayExpander() == false) {
+      if (!imagesProduct.shouldDisplayExpander()) {
         dropZoneElem.css('height', 'auto');
       }
       $.ajax({
@@ -1524,7 +1565,7 @@ var formImagesProduct = (function () {
           if (response && response.responseText) {
             $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
               let html = '<ul class="list-unstyled text-danger">';
-              $.each(errors, (key, error) => {
+              $.each(errors, (errorsKey, error) => {
                 html += `<li>${error}</li>`;
               });
               html += '</ul>';
@@ -1573,7 +1614,7 @@ var formImagesProduct = (function () {
 /**
  * Price calculation
  */
-var priceCalculation = (function () {
+const priceCalculation = (function () {
   const priceHTElem = $('#form_step2_price');
   const priceHTShortcutElem = $('#form_step1_price_shortcut');
   const priceTTCElem = $('#form_step2_price_ttc');
@@ -1591,29 +1632,32 @@ var priceCalculation = (function () {
    * @param {Number} computationMethod The computation calculate method
    */
   function addTaxes(price, rates, computationMethod) {
-    let price_with_taxes = price;
+    let priceWithTaxes = price;
 
     let i = 0;
 
     if (computationMethod === '0') {
+      // eslint-disable-next-line
       for (i in rates) {
-        price_with_taxes *= (1.00 + parseFloat(rates[i]) / 100.00);
+        priceWithTaxes *= (1.00 + parseFloat(rates[i]) / 100.00);
         break;
       }
     } else if (computationMethod === '1') {
       let rate = 0;
 
+      // eslint-disable-next-line
       for (i in rates) {
         rate += rates[i];
       }
-      price_with_taxes *= (1.00 + parseFloat(rate) / 100.00);
+      priceWithTaxes *= (1.00 + parseFloat(rate) / 100.00);
     } else if (computationMethod === '2') {
+      // eslint-disable-next-line
       for (i in rates) {
-        price_with_taxes *= (1.00 + parseFloat(rates[i]) / 100.00);
+        priceWithTaxes *= (1.00 + parseFloat(rates[i]) / 100.00);
       }
     }
 
-    return price_with_taxes;
+    return priceWithTaxes;
   }
 
   /**
@@ -1625,6 +1669,7 @@ var priceCalculation = (function () {
   function removeTaxes(price, rates, computationMethod) {
     let i = 0;
 
+    /* eslint-disable */
     if (computationMethod === '0') {
       for (i in rates) {
         price /= (1 + rates[i] / 100);
@@ -1642,6 +1687,7 @@ var priceCalculation = (function () {
         price /= (1 + rates[i] / 100);
       }
     }
+    /* eslint-enable */
 
     return price;
   }
@@ -1664,10 +1710,6 @@ var priceCalculation = (function () {
     const ecotaxTaxExcl = ecoTax / (1 + ecoTaxRate);
 
     return ps_round(ecotaxTaxExcl * (1 + ecoTaxRate), displayPrecision);
-  }
-
-  function getEcotaxTaxExcluded() {
-    return Tools.parseFloatFromString(ecoTaxElem.val()) / (1 + ecoTaxRate);
   }
 
   return {
@@ -1741,6 +1783,7 @@ var priceCalculation = (function () {
         priceCalculation.impactTaxExclude($(this));
       });
       /** combinations : update wholesale price, unity and price TE field on blur */
+      // eslint-disable-next-line
       $(document).on('blur', '.combination-form .attribute_wholesale_price,.combination-form .attribute_unity,.combination-form .attribute_priceTE', function () {
         $(this).val(priceCalculation.normalizePrice($(this).val()));
       });
@@ -1766,8 +1809,8 @@ var priceCalculation = (function () {
      */
     addCurrentTax(price) {
       const rates = this.getRates();
-      const computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      const priceWithTaxes = Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision));
+      const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
+      const priceWithTaxes = Number(ps_round(addTaxes(price, rates, computationMethod), displayPricePrecision));
       const ecotaxIncluded = Number(getEcotaxTaxIncluded());
 
       return priceWithTaxes + ecotaxIncluded;
@@ -1790,9 +1833,16 @@ var priceCalculation = (function () {
      */
     removeCurrentTax(price) {
       const rates = this.getRates();
-      const computation_method = taxElem.find('option:selected').attr('data-computation-method');
+      const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
 
-      return ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
+      return ps_round(
+        removeTaxes(
+          ps_round(price - getEcotaxTaxIncluded(),
+            displayPricePrecision,
+          ),
+          rates, computationMethod),
+        displayPricePrecision,
+      );
     },
 
     /**
@@ -1816,8 +1866,8 @@ var priceCalculation = (function () {
 
       if (!isNaN(price)) {
         const rates = this.getRates();
-        const computation_method = taxElem.find('option:selected').attr('data-computation-method');
-        newPrice = ps_round(addTaxes(price, rates, computation_method), 6);
+        const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
+        newPrice = ps_round(addTaxes(price, rates, computationMethod), 6);
         newPrice = truncateDecimals(newPrice, 6);
       }
 
@@ -1851,8 +1901,8 @@ var priceCalculation = (function () {
 
       if (!isNaN(price)) {
         const rates = this.getRates();
-        const computation_method = taxElem.find('option:selected').attr('data-computation-method');
-        newPrice = removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method);
+        const computationMethod = taxElem.find('option:selected').attr('data-computation-method');
+        newPrice = removeTaxes(ps_round(price, displayPricePrecision), rates, computationMethod);
         newPrice = truncateDecimals(newPrice, 6);
       }
 
@@ -1878,7 +1928,7 @@ var priceCalculation = (function () {
 /**
  * Manage seo
  */
-var seo = (function () {
+const seo = (function () {
   const redirectTypeElem = $('#form_step5_redirect_type');
   const productRedirect = $('#id-product-redirected');
 
@@ -1906,7 +1956,10 @@ var seo = (function () {
         productRedirect.find('.typeahead-hint').text('');
     }
 
-    productRedirect.find('.autocomplete-search').attr('data-remoteurl', redirectTypeElem.find('option:selected').data('remoteurl'));
+    productRedirect.find('.autocomplete-search').attr(
+      'data-remoteurl',
+      redirectTypeElem.find('option:selected').data('remoteurl'),
+    );
     productRedirect.find('.autocomplete-search').trigger('buildTypeahead');
   }
 
@@ -1914,8 +1967,8 @@ var seo = (function () {
   const updateFriendlyUrl = function (elem) {
     /** Attr name equals "form[step1][name][1]".
        * We need in this string the second integer */
-    const id_lang = elem.attr('name').match(/\d+/g)[1];
-    $(`#form_step5_link_rewrite_${id_lang}`).val(str2url(elem.val(), 'UTF-8'));
+    const idLang = elem.attr('name').match(/\d+/g)[1];
+    $(`#form_step5_link_rewrite_${idLang}`).val(str2url(elem.val(), 'UTF-8'));
   };
 
   return {
@@ -1947,8 +2000,8 @@ var seo = (function () {
         const elem = $(this);
 
         if (elem.val().length === 0) {
-          const id_lang = elem.attr('name').match(/\d+/g)[1];
-          updateFriendlyUrl($(`#form_step1_name_${id_lang}`));
+          const idLang = elem.attr('name').match(/\d+/g)[1];
+          updateFriendlyUrl($(`#form_step1_name_${idLang}`));
         }
       });
     },
@@ -1958,7 +2011,7 @@ var seo = (function () {
 /**
  * Tags management
  */
-var tags = (function () {
+const tags = (function () {
   return {
     init() {
       $('#form_step6_tags .tokenfield').tokenfield({
@@ -1968,14 +2021,15 @@ var tags = (function () {
   };
 }());
 
-var recommendedModules = (function () {
+const recommendedModules = (function () {
   return {
     init() {
       this.moduleActionMenuLinkSelectors = 'button.module_action_menu_install, button.module_action_menu_enable, '
+        // eslint-disable-next-line
         + 'button.module_action_menu_uninstall, button.module_action_menu_disable, button.module_action_menu_reset, button.module_action_menu_update';
       $(this.moduleActionMenuLinkSelectors).on('module_card_action_event', this.saveProduct);
     },
-    saveProduct(event, action) {
+    saveProduct() {
       form.send();
     },
   };

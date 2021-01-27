@@ -18,7 +18,7 @@ $(document).ready(function () {
   });
 });
 
-var rightSidebar = (function () {
+const rightSidebar = (function () {
   return {
     init() {
       $('.btn-sidebar').on('click', function initLoadQuickNav() {
@@ -32,7 +32,7 @@ var rightSidebar = (function () {
           rightSidebar.loadQuickNav(url, target);
         }
       });
-      $(document).on('hide.bs.sidebar', (e) => {
+      $(document).on('hide.bs.sidebar', () => {
         $('div.right-sidebar-flex').removeClass('col-lg-9').addClass('col-lg-12');
       });
     },
@@ -47,10 +47,10 @@ var rightSidebar = (function () {
         $('ul.pagination > li > input[name="paginator_jump_page"]', this).on('keyup', function (e) {
           if (e.which === 13) { // ENTER
             e.preventDefault();
-            const val = parseInt($(e.target).val());
+            const val = parseInt($(e.target).val(), 10);
             const limit = $(e.target).attr('pslimit');
-            const url = $(this).attr('psurl').replace(/999999/, (val - 1) * limit);
-            rightSidebar.navigationChange(url, $(target));
+            const newUrl = $(this).attr('psurl').replace(/999999/, (val - 1) * limit);
+            rightSidebar.navigationChange(newUrl, $(target));
           }
         });
       });
@@ -64,8 +64,8 @@ var rightSidebar = (function () {
 /**
  *  BO Events Handler
  */
+// eslint-disable-next-line
 const BOEvent = {
-
   on(eventName, callback, context) {
     document.addEventListener(eventName, (event) => {
       if (typeof context !== 'undefined') {
@@ -77,9 +77,9 @@ const BOEvent = {
   },
 
   emitEvent(eventName, eventType) {
-    const _event = document.createEvent(eventType);
+    const event = document.createEvent(eventType);
     // true values stand for: can bubble, and is cancellable
     _event.initEvent(eventName, true, true);
-    document.dispatchEvent(_event);
+    document.dispatchEvent(event);
   },
 };

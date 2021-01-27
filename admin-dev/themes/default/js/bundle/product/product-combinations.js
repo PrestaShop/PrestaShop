@@ -2,8 +2,6 @@
  * Combination management
  */
 const combinations = (function () {
-  const id_product = $('#form_id_product').val();
-
   /**
    * Remove a combination
    * @param {object} elem - The clicked link
@@ -11,6 +9,7 @@ const combinations = (function () {
   function remove(elem) {
     const combinationElem = $(`#attribute_${elem.attr('data')}`);
 
+    // eslint-disable-next-line
     modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
       onContinue() {
         const attributeId = elem.attr('data');
@@ -152,7 +151,7 @@ const combinations = (function () {
           const combinationRadioButtons = $('input.attribute-default');
           const attributeId = $(this).closest('.combination').attr('data');
 
-          combinationRadioButtons.each(function unselect(index) {
+          combinationRadioButtons.each(function unselect() {
             const combination = $(this);
 
             if (combination.data('id') !== selectedCombination.data('id')) {
@@ -174,28 +173,30 @@ const combinations = (function () {
           if ($(this).val() === '0') {
             // if combination(s) exists, alert user for deleting it
             if (combinationsList.length > 0) {
-              modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
-                onCancel() {
-                  $('#show_variations_selector input[value="1"]').prop('checked', true);
-                  displayFieldsManager.refresh();
-                },
-                onContinue() {
-                  $.ajax({
-                    type: 'GET',
-                    url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)?/, `/${$('#form_id_product').val()}`),
-                    success(response) {
-                      combinationsList.remove();
-                      displayFieldsManager.refresh();
-                    },
-                    error(response) {
-                      showErrorMessage(jQuery.parseJSON(response.responseText).message);
-                    },
-                  });
-                  // enable the top header selector
-                  // we want to use a "Simple product" without any combinations
-                  productTypeSelector.prop('disabled', false);
-                },
-              }).show();
+              modalConfirmation.create(
+                translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
+                  onCancel() {
+                    $('#show_variations_selector input[value="1"]').prop('checked', true);
+                    displayFieldsManager.refresh();
+                  },
+                  onContinue() {
+                    $.ajax({
+                      type: 'GET',
+                      // eslint-disable-next-line
+                      url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)?/, `/${$('#form_id_product').val()}`),
+                      success() {
+                        combinationsList.remove();
+                        displayFieldsManager.refresh();
+                      },
+                      error(response) {
+                        showErrorMessage(jQuery.parseJSON(response.responseText).message);
+                      },
+                    });
+                    // enable the top header selector
+                    // we want to use a "Simple product" without any combinations
+                    productTypeSelector.prop('disabled', false);
+                  },
+                }).show();
             } else {
               // enable the top header selector if no combination(s) exists
               productTypeSelector.prop('disabled', false);
@@ -214,9 +215,9 @@ const combinations = (function () {
 
           /** create combinations navigation */
           const navElem = contentElem.find('.nav');
-          const id_attribute = contentElem.attr('data');
-          const prevCombinationId = $(`#accordion_combinations tr[data="${id_attribute}"]`).prev().attr('data');
-          const nextCombinationId = $(`#accordion_combinations tr[data="${id_attribute}"]`).next().attr('data');
+          const idAttribute = contentElem.attr('data');
+          const prevCombinationId = $(`#accordion_combinations tr[data="${idAttribute}"]`).prev().attr('data');
+          const nextCombinationId = $(`#accordion_combinations tr[data="${idAttribute}"]`).next().attr('data');
           navElem.find('.prev, .next').hide();
           if (prevCombinationId) {
             navElem.find('.prev').attr('data', prevCombinationId).show();
@@ -240,6 +241,7 @@ const combinations = (function () {
           }
 
           const number = $(`#combination_form_${contentElem.attr('data')} .number-of-images`);
+          // eslint-disable-next-line
           const allProductCombination = $(`#combination_form_${contentElem.attr('data')} .product-combination-image`).length;
 
           number.text(`${countSelectedProducts()}/${allProductCombination}`);
@@ -286,8 +288,8 @@ BOEvent.on('Product Combinations Management started', () => {
  * @param {number} sign
  * @param {number} number
  */
-var refreshTotalCombinations = function (sign, number) {
+const refreshTotalCombinations = function (sign, number) {
   const $bulkCombinationsTotal = $('#js-bulk-combinations-total');
-  const currentnumber = parseInt($bulkCombinationsTotal.text()) + (sign * number);
+  const currentnumber = parseInt($bulkCombinationsTotal.text(), 10) + (sign * number);
   $bulkCombinationsTotal.text(currentnumber);
 };

@@ -29,14 +29,14 @@ const PerformancePageUI = {
     const smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
 
     if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
-      for (var i = 0; i < smartyCacheOptions.length; i++) {
+      for (let i = 0; i < smartyCacheOptions.length; i += 1) {
         smartyCacheOptions[i].classList.remove('d-none');
       }
 
       return;
     }
 
-    for (var i = 0; i < smartyCacheOptions.length; i++) {
+    for (let i = 0; i < smartyCacheOptions.length; i += 1) {
       smartyCacheOptions[i].classList.add('d-none');
     }
   },
@@ -46,14 +46,14 @@ const PerformancePageUI = {
     const cachingElements = document.getElementsByClassName('memcache');
 
     if (cacheEnabledInput.value === CACHE_ENABLED) {
-      for (var i = 0; i < cachingElements.length; i++) {
+      for (let i = 0; i < cachingElements.length; i += 1) {
         cachingElements[i].style.display = '';
       }
 
       return;
     }
 
-    for (var i = 0; i < cachingElements.length; i++) {
+    for (let i = 0; i < cachingElements.length; i += 1) {
       cachingElements[i].style.display = 'none';
     }
   },
@@ -63,7 +63,8 @@ const PerformancePageUI = {
     const cacheSelected = document.querySelector('input[name="caching[caching_system]"]:checked');
     const memcacheServersListBlock = document.getElementById('servers-list');
     const newServerBtn = document.getElementById('new-server-btn');
-    const isMemcache = cacheSelected && (cacheSelected.value === 'CacheMemcache' || cacheSelected.value === 'CacheMemcached');
+    const isMemcache = cacheSelected
+      && (cacheSelected.value === 'CacheMemcache' || cacheSelected.value === 'CacheMemcached');
 
     if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
       memcacheServersListBlock.style.display = 'block';
@@ -89,7 +90,9 @@ window.addEventListener('load', () => {
 const cacheSystemInputs = document.querySelectorAll('input[type=radio]');
 let {length} = cacheSystemInputs;
 
+// eslint-disable-next-line
 while (length--) {
+  // eslint-disable-next-line
   cacheSystemInputs[length].addEventListener('change', (e) => {
     const name = e.target.getAttribute('name');
 

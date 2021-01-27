@@ -1,15 +1,16 @@
-let module_card_controller = {};
+/* eslint-disable max-len */
+let moduleCardController = {};
 
 $(document).ready(() => {
-  module_card_controller = new AdminModuleCard();
-  module_card_controller.init();
+  moduleCardController = new AdminModuleCard();
+  moduleCardController.init();
 });
 
 /**
  * AdminModule card Controller.
  * @constructor
  */
-var AdminModuleCard = function () {
+const AdminModuleCard = function () {
   /* Selectors for module action links (uninstall, reset, etc...) to add a confirm popin */
   this.moduleActionMenuLinkSelector = 'button.module_action_menu_';
   this.moduleActionMenuInstallLinkSelector = 'button.module_action_menu_install';
@@ -49,7 +50,7 @@ var AdminModuleCard = function () {
   this.confirmAction = function (action, element) {
     const modal = $(`#${$(element).data('confirm_modal')}`);
 
-    if (modal.length != 1) {
+    if (modal.length !== 1) {
       return true;
     }
     modal.first().modal('show');
@@ -67,14 +68,17 @@ var AdminModuleCard = function () {
     const modal = this.replacePrestaTrustPlaceholders(result);
     modal.find('.pstrust-install').off('click').on('click', () => {
       // Find related form, update it and submit it
-      const install_button = $(that.moduleActionMenuInstallLinkSelector, `.module-item[data-tech-name="${result.module.attributes.name}"]`);
-      const form = install_button.parent('form');
+      const installButton = $(
+        that.moduleActionMenuInstallLinkSelector,
+        `.module-item[data-tech-name="${result.module.attributes.name}"]`,
+      );
+      const form = installButton.parent('form');
       $('<input>').attr({
         type: 'hidden',
         value: '1',
         name: 'actionParams[confirmPrestaTrust]',
       }).appendTo(form);
-      install_button.click();
+      installButton.click();
       modal.modal('hide');
     });
     modal.modal();
@@ -106,6 +110,7 @@ var AdminModuleCard = function () {
     modal.find('#pstrust-message').attr('class', `alert alert-${alertClass}`);
     modal.find('#pstrust-message > p').text(module.prestatrust.message);
 
+    // eslint-disable-next-line
     return modal;
   };
 
@@ -119,10 +124,13 @@ var AdminModuleCard = function () {
   };
 
   this.initActionButtons = function () {
-    const _this = this;
+    const that = this;
 
     $(document).on('click', this.forceDeletionOption, function () {
-      const btn = $(_this.moduleActionModalUninstallLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`));
+      const btn = $(
+        that.moduleActionModalUninstallLinkSelector,
+        $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`),
+      );
 
       if ($(this).prop('checked') === true) {
         btn.attr('data-deletion', 'true');
@@ -135,41 +143,41 @@ var AdminModuleCard = function () {
       if ($('#modal-prestatrust').length) {
         $('#modal-prestatrust').modal('hide');
       }
-      return _this.dispatchPreEvent('install', this) && _this.confirmAction('install', this) && _this.requestToController('install', $(this));
+      return that.dispatchPreEvent('install', this) && _this.confirmAction('install', this) && _this.requestToController('install', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
-      return _this.dispatchPreEvent('enable', this) && _this.confirmAction('enable', this) && _this.requestToController('enable', $(this));
+      return that.dispatchPreEvent('enable', this) && _this.confirmAction('enable', this) && _this.requestToController('enable', $(this));
     });
     $(document).on('click', this.moduleActionMenuUninstallLinkSelector, function () {
-      return _this.dispatchPreEvent('uninstall', this) && _this.confirmAction('uninstall', this) && _this.requestToController('uninstall', $(this));
+      return that.dispatchPreEvent('uninstall', this) && _this.confirmAction('uninstall', this) && _this.requestToController('uninstall', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableLinkSelector, function () {
-      return _this.dispatchPreEvent('disable', this) && _this.confirmAction('disable', this) && _this.requestToController('disable', $(this));
+      return that.dispatchPreEvent('disable', this) && _this.confirmAction('disable', this) && _this.requestToController('disable', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
-      return _this.dispatchPreEvent('enable_mobile', this) && _this.confirmAction('enable_mobile', this) && _this.requestToController('enable_mobile', $(this));
+      return that.dispatchPreEvent('enable_mobile', this) && _this.confirmAction('enable_mobile', this) && _this.requestToController('enable_mobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
-      return _this.dispatchPreEvent('disable_mobile', this) && _this.confirmAction('disable_mobile', this) && _this.requestToController('disable_mobile', $(this));
+      return that.dispatchPreEvent('disable_mobile', this) && _this.confirmAction('disable_mobile', this) && _this.requestToController('disable_mobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
-      return _this.dispatchPreEvent('reset', this) && _this.confirmAction('reset', this) && _this.requestToController('reset', $(this));
+      return that.dispatchPreEvent('reset', this) && _this.confirmAction('reset', this) && _this.requestToController('reset', $(this));
     });
     $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function () {
-      return _this.dispatchPreEvent('update', this) && _this.confirmAction('update', this) && _this.requestToController('update', $(this));
+      return that.dispatchPreEvent('update', this) && _this.confirmAction('update', this) && _this.requestToController('update', $(this));
     });
 
     $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {
-      return _this.requestToController('disable', $(_this.moduleActionMenuDisableLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
+      return that.requestToController('disable', $(_this.moduleActionMenuDisableLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
     $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
-      return _this.requestToController('reset', $(_this.moduleActionMenuResetLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
+      return that.requestToController('reset', $(_this.moduleActionMenuResetLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
     $(document).on('click', this.moduleActionModalUninstallLinkSelector, (e) => {
-      $(e.target).parents('.modal').on('hidden.bs.modal', ((event) => _this.requestToController(
+      $(e.target).parents('.modal').on('hidden.bs.modal', (() => that.requestToController(
         'uninstall',
         $(
-          _this.moduleActionMenuUninstallLinkSelector,
+          that.moduleActionMenuUninstallLinkSelector,
           $(`div.module-item-list[data-tech-name='${$(e.target).attr('data-tech-name')}']`),
         ),
         $(e.target).attr('data-deletion'),
@@ -178,7 +186,7 @@ var AdminModuleCard = function () {
   };
 
   this.requestToController = function (action, element, forceDeletion) {
-    const _this = this;
+    const that = this;
     const jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
     const spinnerObj = $('<button class="btn-primary-reverse onclick unbind spinner "></button>');
@@ -199,14 +207,14 @@ var AdminModuleCard = function () {
         jqElementObj.after(spinnerObj);
       },
     }).done((result) => {
-      if (typeof result === undefined) {
+      if (typeof result === 'undefined') {
         $.growl.error({message: 'No answer received from server'});
       } else {
         const moduleTechName = Object.keys(result)[0];
 
         if (result[moduleTechName].status === false) {
           if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
-            _this.confirmPrestaTrust(result[moduleTechName]);
+            that.confirmPrestaTrust(result[moduleTechName]);
           }
           $.growl.error({message: result[moduleTechName].msg});
         } else {
@@ -214,21 +222,21 @@ var AdminModuleCard = function () {
           let alteredSelector = null;
           let mainElement = null;
 
-          if (action == 'uninstall') {
+          if (action === 'uninstall') {
             jqElementObj.fadeOut(() => {
-              alteredSelector = _this.getModuleItemSelector().replace('.', '');
+              alteredSelector = that.getModuleItemSelector().replace('.', '');
               mainElement = jqElementObj.parents(`.${alteredSelector}`).first();
               mainElement.remove();
             });
             BOEvent.emitEvent('Module Uninstalled', 'CustomEvent');
-          } else if (action == 'disable') {
-            alteredSelector = _this.getModuleItemSelector().replace('.', '');
+          } else if (action === 'disable') {
+            alteredSelector = that.getModuleItemSelector().replace('.', '');
             mainElement = jqElementObj.parents(`.${alteredSelector}`).first();
             mainElement.addClass(`${alteredSelector}-isNotActive`);
             mainElement.attr('data-active', '0');
             BOEvent.emitEvent('Module Disabled', 'CustomEvent');
-          } else if (action == 'enable') {
-            alteredSelector = _this.getModuleItemSelector().replace('.', '');
+          } else if (action === 'enable') {
+            alteredSelector = that.getModuleItemSelector().replace('.', '');
             mainElement = jqElementObj.parents(`.${alteredSelector}`).first();
             mainElement.removeClass(`${alteredSelector}-isNotActive`);
             mainElement.attr('data-active', '1');

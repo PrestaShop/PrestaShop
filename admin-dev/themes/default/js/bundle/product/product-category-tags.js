@@ -27,8 +27,8 @@ const productCategoriesTags = (function () {
       return true;
     },
     getTags() {
-      const categoriesForm = $('#form_step1_categories');
-      const inputs = categoriesForm.find('label > input[type=checkbox]:checked').toArray();
+      const firstStepCategoriesForm = $('#form_step1_categories');
+      const inputs = firstStepCategoriesForm.find('label > input[type=checkbox]:checked').toArray();
 
       const tags = [];
       const that = this;
@@ -39,7 +39,7 @@ const productCategoriesTags = (function () {
           id: input.value,
         };
         tree.forEach((_category) => {
-          if (_category.id == tag.id) {
+          if (_category.id === tag.id) {
             tag.breadcrumb = _category.breadcrumb;
           }
         });
@@ -50,9 +50,9 @@ const productCategoriesTags = (function () {
       return tags;
     },
     manageTagsOnInput() {
-      const categoriesForm = $('#form_step1_categories');
+      const firstStepCategoriesForm = $('#form_step1_categories');
       const that = this;
-      categoriesForm.on('change', 'input[type=checkbox]', function (event) {
+      firstStepCategoriesForm.on('change', 'input[type=checkbox]', function () {
         const input = $(this);
 
         if (input.prop('checked') === false) {
@@ -84,9 +84,9 @@ const productCategoriesTags = (function () {
       return true;
     },
     checkDefaultCategory(categoryId) {
-      const categoriesForm = $('#form_step1_categories');
+      const firstStepCategoriesForm = $('#form_step1_categories');
       const selector = `input[value="${categoryId}"].default-category`;
-      categoriesForm.find(selector).prop('checked', true);
+      firstStepCategoriesForm.find(selector).prop('checked', true);
     },
     getTree() {
       const tree = JSON.parse($('#ps_categoryTree').html());
@@ -94,10 +94,10 @@ const productCategoriesTags = (function () {
       return tree;
     },
     createTag(category) {
-      if (category.breadcrumb == '') {
+      if (category.breadcrumb === '') {
         const tree = this.getTree();
         tree.forEach((_category) => {
-          if (_category.id == category.id) {
+          if (_category.id === category.id) {
             category.breadcrumb = _category.breadcrumb;
           }
         });
@@ -105,16 +105,17 @@ const productCategoriesTags = (function () {
 
       const isTagExist = tagsContainer.find(`span[data-id=${category.id}]`);
 
-      if (isTagExist.length == 0) {
+      if (isTagExist.length === 0) {
         tagsContainer.append(`${'<span class="pstaggerTag">'
           + '<span data-id="'}${category.id}" title="${category.breadcrumb}">${category.name}</span>`
           + `<a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>`
           + '</span>');
         const optionId = `#form_step1_id_category_default_${category.id}`;
 
-        if ($(optionId).length == 0) {
+        if ($(optionId).length === 0) {
           defaultCategoryForm.append(`${'<div class="radio">'
             + '<label class="required">'
+            // eslint-disable-next-line
             + '<input type="radio"' + 'id="form_step1_id_category_default_'}${category.id}" name="form[step1][id_category_default]" required="required" value="${category.id}">${
             category.name}</label>`
             + '</div>');
@@ -144,6 +145,7 @@ const productCategoriesTags = (function () {
         });
       });
 
+      // eslint-disable-next-line
       searchBox.autocomplete({
         source: tags,
         minChars: 2,
@@ -169,8 +171,8 @@ const productCategoriesTags = (function () {
             id: categoryId,
             breadcrumb: label,
           });
-          const categoriesForm = $('#form_step1_categories');
-          categoriesForm.find(`input[value="${categoryId}"].category`).prop('checked', true);
+          const firstStepCategoriesForm = $('#form_step1_categories');
+          firstStepCategoriesForm.find(`input[value="${categoryId}"].category`).prop('checked', true);
           $(this).val('');
         },
       }).data('ui-autocomplete')._renderItem = function (ul, item) {

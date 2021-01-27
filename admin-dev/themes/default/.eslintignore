@@ -11,3 +11,4 @@ postcss.config.js
 js/modernizr-loads.js
 js/jquery.*
 js/date-range-picker.js
+js/bundle/plugins/
