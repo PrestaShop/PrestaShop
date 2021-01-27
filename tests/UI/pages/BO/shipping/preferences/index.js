@@ -54,7 +54,7 @@ class Preferences extends BOBasePage {
   }
 
   /**
-   * Set carriers sort By 'Price' or 'Position' in carrier option form
+   * Set carriers sort By 'Price' or 'Position' / order by 'Ascending' or 'descending' in carrier options form
    * @param page
    * @param sortBy
    * @param orderBy
