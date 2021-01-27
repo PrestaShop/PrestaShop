@@ -248,27 +248,27 @@ final class EmployeeType extends TranslatorAwareType
                     ]
                 )
             ;
-
-            if ($this->isMultistoreFeatureActive) {
-                $builder->add('shop_association', ShopChoiceTreeType::class, [
-                    'label' => $this->trans('Shop association', 'Admin.Global'),
-                    'help' => $this->trans('Select the shops the employee is allowed to access.', 'Admin.Advparameters.Help'),
-                    'required' => false,
-                ]);
-            }
-
-            $builder
-                ->add('default_page', ChoiceType::class, [
-                    'choices' => $this->tabChoices,
-                    'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
-                    'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
-                    'row_attr' => [
-                        'data-minimumResultsForSearch' => '7',
-                        'data-toggle' => '2',
-                    ],
-                ])
-            ;
         }
+
+        if ($this->isMultistoreFeatureActive) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'help' => $this->trans('Select the shops the employee is allowed to access.', 'Admin.Advparameters.Help'),
+                'required' => false,
+            ]);
+        }
+
+        $builder
+            ->add('default_page', ChoiceType::class, [
+                'choices' => $this->tabChoices,
+                'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
+                'row_attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => '2',
+                ],
+            ])
+        ;
     }
 
     /**
