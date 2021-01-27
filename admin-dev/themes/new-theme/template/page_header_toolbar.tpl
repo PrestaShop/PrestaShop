@@ -82,6 +82,7 @@
             {/if}
           </div>
         </div>
+
       {/block}
     </div>
   </div>
@@ -120,5 +121,64 @@
       </ul>
     </div>
   {/if}
+
+  <div class="btn-floating">
+    <button class="btn btn-primary collapsed" data-toggle="collapse" data-target=".btn-floating-container" aria-expanded="false">
+      <i class="material-icons">add</i>
+    </button>
+    <div class="btn-floating-container collapse">
+      <div class="btn-floating-menu">
+        {hook h='displayDashboardToolbarTopMenu'}
+        {foreach from=$toolbar_btn item=btn key=k}
+          {if $k != 'back' && $k != 'modules-list'}
+            <a
+              class="btn btn-floating-item {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)}
+              id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}"
+              href="{$btn.href|escape}"{/if}
+              title="{if isset($btn.help)}{$btn.help}{else}{$btn.desc|escape}{/if}"{if isset($btn.js) && $btn.js}
+              onclick="{$btn.js}"{/if}{if isset($btn.modal_target) && $btn.modal_target}
+              data-target="{$btn.modal_target}"
+              data-toggle="modal"{/if}{if isset($btn.help)}
+              data-toggle="pstooltip"
+              data-placement="bottom"{/if}
+            >
+              {$btn.desc|escape}
+              {if !empty($btn.icon)}<i class="material-icons">{$btn.icon}</i>{/if}
+            </a>
+          {/if}
+        {/foreach}
+
+        {if isset($toolbar_btn['modules-list'])}
+          <a
+            class="btn btn-floating-item {if isset($toolbar_btn['modules-list'].target) && $toolbar_btn['modules-list'].target} _blank{/if}"
+            id="page-header-desc-{$table}-{if isset($toolbar_btn['modules-list'].imgclass)}{$toolbar_btn['modules-list'].imgclass}{else}modules-list{/if}"
+            {if isset($toolbar_btn['modules-list'].href)}href="{$toolbar_btn['modules-list'].href}"{/if}
+            title="{$toolbar_btn['modules-list'].desc}"
+            {if isset($toolbar_btn['modules-list'].js) && $toolbar_btn['modules-list'].js}onclick="{$toolbar_btn['modules-list'].js}"{/if}
+          >
+            {$toolbar_btn['modules-list'].desc}
+          </a>
+        {/if}
+
+        {if isset($help_link) and $help_link != false}
+          {if $enableSidebar}
+            <a class="btn btn-floating-item btn-help btn-sidebar" href="#"
+               title="{l s='Help' d='Admin.Global'}"
+               data-toggle="sidebar"
+               data-target="#right-sidebar"
+               data-url="{$help_link|escape}"
+               id="product_form_open_help"
+            >
+              {l s='Help' d='Admin.Global'}
+            </a>
+          {else}
+            <a class="btn btn-floating-item btn-help" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
+              {l s='Help' d='Admin.Global'}
+            </a>
+          {/if}
+        {/if}
+      </div>
+    </div>
+  </div> 
   {hook h='displayDashboardTop'}
 </div>
