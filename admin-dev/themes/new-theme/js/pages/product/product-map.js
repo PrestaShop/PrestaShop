@@ -33,10 +33,17 @@ export default {
   defaultSupplierSelectionBlock: '#defaultSupplierIdBlock',
   selectedDefaultSupplierInput: 'input[name="product[suppliers][default_supplier_id]"]:checked',
   productFormSubmitButton: 'button[name="product[save]"]',
-  supplierReferenceProductSupplierRow: (supplierId) => `#product_supplier_row_${supplierId}`,
-  supplierReferenceSupplierIdInput: (index) => `#product_suppliers_supplier_references_${index}_supplier_id`,
-  supplierReferenceSupplierNameInput: (index) => `#product_suppliers_supplier_references_${index}_supplier_name`,
-  supplierReferenceIsDefaultInput: (index) => `#product_suppliers_supplier_references_${index}_is_default`,
+  suppliersProductSupplierRow: (supplierId) => `#product_supplier_row_${supplierId}`,
+  suppliersSupplierIdInput: (index) => `#product_suppliers_supplier_references_${index}_supplier_id`,
+  suppliersSupplierNameInput: (index) => `#product_suppliers_supplier_references_${index}_supplier_name`,
+  suppliersProductSupplierIdInput:
+    (index) => `#product_suppliers_supplier_references_${index}_product_supplier_product_supplier_id`,
+  suppliersProductSupplierReferenceInput:
+    (index) => `#product_suppliers_supplier_references_${index}_product_supplier_supplier_reference`,
+  suppliersProductSupplierPriceInput:
+    (index) => `#product_suppliers_supplier_references_${index}_product_supplier_supplier_price_tax_excluded`,
+  suppliersProductSupplierCurrencyIdInput:
+    (index) => `#product_suppliers_supplier_references_${index}_product_supplier_currency_id`,
   redirectOption: {
     typeInput: '#product_redirect_option_type',
     targetInput: '#product_redirect_option_target',

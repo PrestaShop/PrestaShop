@@ -276,13 +276,13 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         //@todo: one layer of array is not needed anymore if product has no combinations. Handle it in separate pr
         foreach ($productSupplierOptions->getOptionsBySupplier() as $index => $supplierOption) {
             $supplierId = $supplierOption->getSupplierId();
-            $suppliersData['supplier_ids'][$index] = $supplierId;
-            $suppliersData['supplier_references'][$index]['is_default'] = $supplierId === $defaultSupplierId;
-            $suppliersData['supplier_references'][$index]['supplier_id'] = $supplierId;
-            $suppliersData['supplier_references'][$index]['supplier_name'] = $supplierOption->getSupplierName();
+            $suppliersData['supplier_ids'][$supplierId] = $supplierId;
+            $suppliersData['supplier_references'][$supplierId]['is_default'] = $supplierId === $defaultSupplierId;
+            $suppliersData['supplier_references'][$supplierId]['supplier_id'] = $supplierId;
+            $suppliersData['supplier_references'][$supplierId]['supplier_name'] = $supplierOption->getSupplierName();
 
             foreach ($supplierOption->getProductSuppliersForEditing() as $supplierForEditing) {
-                $suppliersData['supplier_references'][$index]['product_supplier'] = [
+                $suppliersData['supplier_references'][$supplierId]['product_supplier'] = [
                     'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
                     'product_name' => $supplierForEditing->getProductName(),
                     'supplier_price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
