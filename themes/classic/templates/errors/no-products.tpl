@@ -26,7 +26,7 @@
   {block name='page_content'}
 
     <h4>{l s='No products available yet' d='Shop.Theme.Global'}</h4>
-    <p>{l s='Stay tuned! More products will be shown here as they are added. Try to search our catalog.' d='Shop.Theme.Global'}</p>
+    <p>{l s='Stay tuned! More products will be shown here as they are added.' d='Shop.Theme.Global'}</p>
 
     {block name='search'}
       {hook h='displaySearch'}
