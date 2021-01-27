@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint-disable no-unused-vars, no-unreachable */
+
 const {$} = window;
 
 $(document).ready(() => {
@@ -38,9 +40,10 @@ $(document).ready(() => {
       $('form#product_catalog_list').submit();
     }
   });
-  $('div#product_catalog_category_tree_filter ~ div button, div#product_catalog_category_tree_filter ul').on('click', () => {
-    categoryFilterButtons();
-  });
+  $('div#product_catalog_category_tree_filter ~ div button, div#product_catalog_category_tree_filter ul')
+    .on('click', () => {
+      categoryFilterButtons();
+    });
   categoryFilterButtons();
 
   /*
@@ -122,22 +125,24 @@ function productOrderTable(orderBy, orderWay) {
   window.location.href = url;
 }
 
+// eslint-disable-next-line
 function productOrderPrioritiesTable() {
   window.location.href = $('form#product_catalog_list').attr('orderingurl');
 }
 
 function updateBulkMenu() {
+  // eslint-disable-next-line
   const selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').length;
   $('#product_bulk_menu').prop('disabled', (selectedCount === 0));
 }
 
-var productCatalogFilterChanged = false;
+let productCatalogFilterChanged = false;
 function updateFilterMenu() {
   const columnFilters = $('#product_catalog_list').find('tr.column-filters');
   let count = columnFilters.find('option:selected[value!=""]').length;
   columnFilters.find('input[type="text"][sql!=""][sql], input[type="text"]:visible').each(function () {
     if ($(this).val() !== '') {
-      count++;
+      count += 1;
     }
   });
   const filtersNotUpdatedYet = (count === 0 && productCatalogFilterChanged === false);
@@ -163,9 +168,12 @@ function categoryFilterButtons() {
   const catTree = $('#product_catalog_category_tree_filter');
   const catTreeSiblingDivs = $('#product_catalog_category_tree_filter ~ div');
   const catTreeList = catTree.find('ul ul');
-  catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_collapse"]').toggle(!catTreeList.filter(':visible').length);
-  catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_expand"]').toggle(!catTreeList.filter(':hidden').length);
-  catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_reset"]').toggle(!catTree.find('ul input:checked').length);
+  catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_collapse"]')
+    .toggle(!catTreeList.filter(':visible').length);
+  catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_expand"]')
+    .toggle(!catTreeList.filter(':hidden').length);
+  catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_reset"]')
+    .toggle(!catTree.find('ul input:checked').length);
 }
 
 function productColumnFilterReset(tr) {
@@ -203,12 +211,12 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
   failure.hide();
 
   // call in ajax. Recursive with inner function
-  var bulkCall = function (items, successCallback, errorCallback) {
+  const bulkCall = function (items, successCallback, errorCallback) {
     if (items.length === 0) {
       return;
     }
     const item0 = $(items.shift()).val();
-    currentItemIdx++;
+    currentItemIdx += 1;
 
     details.html(`${details.attr('default-value').replace(/\.\.\./, '')} (#${item0})`);
     $.ajax({
@@ -216,6 +224,7 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
       url: postUrl,
       data: {bulk_action_selected_products: [item0]},
       success(data, status) {
+        // eslint-disable-next-line
         progressBar.css('width', `${currentItemIdx * 100 / itemsCount}%`);
         progressBar.find('span').html(`${currentItemIdx} / ${itemsCount}`);
 
@@ -267,7 +276,7 @@ function bulkProductAction(element, action) {
         return bulkModalAction(items, postUrl, redirectUrl, action);
       });
 
-      return; // No break, but RETURN, to avoid code after switch block :)
+      return true; // No break, but RETURN, to avoid code after switch block :)
 
     case 'activate_all':
       postUrl = urlHandler.attr('bulkurl');
@@ -299,9 +308,12 @@ function bulkProductAction(element, action) {
       // no break !
 
     // this case will post inline edition command
+    // eslint-disable-next-line
     case 'edition':
-      var editionAction;
-      var bulkEditionSelector = '#bulk_edition_toolbar input:submit';
+      // eslint-disable-next-line
+      let editionAction;
+      // eslint-disable-next-line
+      const bulkEditionSelector = '#bulk_edition_toolbar input:submit';
 
       if ($(bulkEditionSelector).length > 0) {
         editionAction = $(bulkEditionSelector).attr('editionaction');
@@ -345,6 +357,7 @@ function unitProductAction(element, action) {
     .attr('type', 'hidden')
     .attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
 
+  // eslint-disable-next-line
   switch (action) {
     case 'delete':
       // Confirmation popup and callback...
@@ -385,33 +398,12 @@ function showBulkProductEdition(show) {
 function bulkProductEdition(element, action) {
   const form = $('form#product_catalog_list');
 
+  // eslint-disable-next-line
   switch (action) {
-    /*
-    case 'quantity_edition':
-        showBulkProductEdition(true);
-        $('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
-
-        i = 1;
-        $('td.product-sav-quantity', form).each(function() {
-            $quantity = $(this).attr('productquantityvalue');
-            $product_id = $(this).closest('tr[productid]').attr('productid');
-            $input = $('<input>').attr('type', 'text').attr('name', 'bulk_action_edit_quantity['+$product_id+']')
-                .attr('tabindex', i++)
-                .attr('onkeydown', 'if (event.keyCode == 13) return bulkProductAction(this, "edition_next"); if (event.keyCode == 27) return bulkProductEdition(this, "cancel");')
-                .val($quantity);
-            $(this).html($input);
-
-        });
-        $('#bulk_edition_toolbar input:submit').attr('tabindex', i++);
-        $('#bulk_edition_toolbar input:button').attr('tabindex', i++);
-        $('#bulk_edition_toolbar input:submit').attr('editionaction', action);
-
-        $('td.product-sav-quantity input', form).first().focus();
-        break;
-    */
     case 'sort':
       showBulkProductEdition(true);
-      $('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
+      $('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form)
+        .prop('disabled', true);
       $('#bulk_edition_toolbar input:submit').attr('editionaction', action);
       break;
     case 'cancel':
@@ -422,7 +414,8 @@ function bulkProductEdition(element, action) {
 
       $('#bulk_edition_toolbar input:submit').removeAttr('editionaction');
       showBulkProductEdition(false);
-      $('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', false);
+      $('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form)
+        .prop('disabled', false);
       break;
   }
 }

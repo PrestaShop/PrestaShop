@@ -7,7 +7,7 @@ $(document).ready(() => {
  * Module Admin Page Controller.
  * @constructor
  */
-var AdminModuleController = function () {
+const AdminModuleController = function () {
   this.currentDisplay = '';
   this.isCategoryGridDisplayed = false;
   this.currentTagsList = [];
@@ -123,7 +123,7 @@ var AdminModuleController = function () {
     const body = $('body');
     body.on('click', this.statusItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefStatus = parseInt($(this).attr('data-status-ref'));
+      self.currentRefStatus = parseInt($(this).attr('data-status-ref'), 10);
       const statusSelectedDisplayName = $(this).find('a:first').text();
       // Change dropdown label to set it to the current status' displayname
       $(self.statusSelectorLabelSelector).text(statusSelectedDisplayName);
@@ -246,7 +246,7 @@ var AdminModuleController = function () {
           categories: $this.attr('data-categories').toLowerCase(),
           type: $this.attr('data-type'),
           price: parseFloat($this.attr('data-price')),
-          active: parseInt($this.attr('data-active')),
+          active: parseInt($this.attr('data-active'), 10),
           access: $this.attr('data-last-access'),
           display: $this.hasClass('module-item-list') ? 'list' : 'grid',
           container,
@@ -271,10 +271,11 @@ var AdminModuleController = function () {
       if (key.split('-').length > 1) {
         key = key.split('-')[0];
       }
-      if (self.currentSorting.indexOf('-desc') != -1) {
+      if (self.currentSorting.indexOf('-desc') !== -1) {
         order = 'desc';
       }
 
+      // eslint-disable-next-line
       function currentCompare(a, b) {
         if (a[key] < b[key]) return -1;
         if (a[key] > b[key]) return 1;
@@ -282,7 +283,7 @@ var AdminModuleController = function () {
       }
 
       self.modulesList.sort(currentCompare);
-      if (order == 'desc') {
+      if (order === 'desc') {
         self.modulesList.reverse();
       }
     }
@@ -290,10 +291,10 @@ var AdminModuleController = function () {
     $('.modules-list').html('');
 
     // Modules visibility management
-    for (let i = 0; i < this.modulesList.length; i++) {
-      var currentModule = this.modulesList[i];
+    for (let i = 0; i < this.modulesList.length; i += 1) {
+      const currentModule = this.modulesList[i];
 
-      if (currentModule.display == this.currentDisplay) {
+      if (currentModule.display === this.currentDisplay) {
         let isVisible = true;
 
         if (this.currentRefCategory !== null) {
@@ -303,14 +304,15 @@ var AdminModuleController = function () {
           isVisible &= currentModule.active === this.currentRefStatus;
         }
         if (self.currentTagsList.length) {
-          var tagExists = false;
+          let tagExists = false;
           $.each(self.currentTagsList, (index, value) => {
+            // eslint-disable-next-line
             value = value.toLowerCase();
             tagExists |= (
-              currentModule.name.indexOf(value) != -1
-              || currentModule.description.indexOf(value) != -1
-              || currentModule.author.indexOf(value) != -1
-              || currentModule.techName.indexOf(value) != -1
+              currentModule.name.indexOf(value) !== -1
+              || currentModule.description.indexOf(value) !== -1
+              || currentModule.author.indexOf(value) !== -1
+              || currentModule.techName.indexOf(value) !== -1
             );
           });
           isVisible &= tagExists;
@@ -334,8 +336,10 @@ var AdminModuleController = function () {
   this.initPageChangeProtection = function () {
     const self = this;
 
+    // eslint-disable-next-line
     $(window).on('beforeunload', () => {
       if (self.isUploadStarted === true) {
+        // eslint-disable-next-line
         return 'It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.';
       }
     });
@@ -376,8 +380,9 @@ var AdminModuleController = function () {
     let alreadyDoneFlag = 0;
     let htmlGenerated = '';
 
+    // eslint-disable-next-line
     $(checkBoxesSelector).each(function () {
-      if (alreadyDoneFlag != 10) {
+      if (alreadyDoneFlag !== 10) {
         const currentElement = $(this).parents(moduleItemSelector);
         htmlGenerated += `- ${currentElement.attr('data-name')}<br/>`;
         alreadyDoneFlag += 1;
@@ -395,11 +400,11 @@ var AdminModuleController = function () {
     const self = this;
 
     // Make addons connect modal ready to be clicked
-    if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
+    if ($(this.addonsConnectModalBtnSelector).attr('href') === '#') {
       $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
       $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
     }
-    if ($(this.addonsLogoutModalBtnSelector).attr('href') == '#') {
+    if ($(this.addonsLogoutModalBtnSelector).attr('href') === '#') {
       $(this.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
       $(this.addonsLogoutModalBtnSelector).attr('data-target', this.addonsLogoutModalSelector);
     }
@@ -444,6 +449,7 @@ var AdminModuleController = function () {
 
     // Reset modal when click on Retry in case of failure
     body.on('click', this.moduleImportFailureRetrySelector, () => {
+      // eslint-disable-next-line
       $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}, ${self.moduleImportProcessingSelector}`).fadeOut(() => {
         // Added timeout for a better render of animation and avoid to have displayed at the same time
         setTimeout(() => {
@@ -469,10 +475,11 @@ var AdminModuleController = function () {
 
     // Change the way Dropzone.js lib handle file input trigger
     body.on(
-      'click', `.dropzone:not(${this.moduleImportSelectFileManualSelector}, ${this.moduleImportSuccessConfigureBtnSelector})`,
-      (event, manual_select) => {
+      'click',
+      `.dropzone:not(${this.moduleImportSelectFileManualSelector}, ${this.moduleImportSuccessConfigureBtnSelector})`,
+      (event, manualSelect) => {
         // if click comes from .module-import-start-select-manual, stop everything
-        if (typeof manual_select === 'undefined') {
+        if (typeof manualSelect === 'undefined') {
           event.stopPropagation();
           event.preventDefault();
         }
@@ -482,7 +489,8 @@ var AdminModuleController = function () {
     body.on('click', this.moduleImportSelectFileManualSelector, (event) => {
       event.stopPropagation();
       event.preventDefault();
-      // Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
+      // Trigger click on hidden file input, and pass extra data
+      // to .dropzone click handler fro it to notice it comes from here
       $('.dz-hidden-input').trigger('click', ['manual_select']);
     });
 
@@ -518,7 +526,9 @@ var AdminModuleController = function () {
       addRemoveLinks: true,
       dictDefaultMessage: '',
       hiddenInputContainer: self.dropZoneImportZoneSelector,
-      timeout: 0, // add unlimited timeout. Otherwise dropzone timeout is 30 seconds and if a module is long to install, it is not possible to install the module.
+      // add unlimited timeout. Otherwise dropzone timeout is 30 seconds and if a module is long to install,
+      // it is not possible to install the module.
+      timeout: 0,
       addedfile() {
         self.animateStartUpload();
       },
@@ -561,20 +571,20 @@ var AdminModuleController = function () {
      * @param object result containing the server response
      */
     this.displayOnUploadDone = function (result) {
-      const self = this;
-      self.animateEndUpload(() => {
+      const that = this;
+      that.animateEndUpload(() => {
         if (result.status === true) {
           if (result.is_configurable === true) {
             const configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
-            $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-            $(self.moduleImportSuccessConfigureBtnSelector).show();
+            $(that.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+            $(that.moduleImportSuccessConfigureBtnSelector).show();
           }
-          $(self.moduleImportSuccessSelector).fadeIn();
+          $(that.moduleImportSuccessSelector).fadeIn();
         } else if (typeof result.confirmation_subject !== 'undefined') {
-          self.displayPrestaTrustStep(result);
+          that.displayPrestaTrustStep(result);
         } else {
-          $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
-          $(self.moduleImportFailureSelector).fadeIn();
+          $(that.moduleImportFailureMsgDetailsSelector).html(result.msg);
+          $(that.moduleImportFailureSelector).fadeIn();
         }
       });
     };
@@ -600,39 +610,39 @@ var AdminModuleController = function () {
      * @param Previous server response result
      */
     this.displayPrestaTrustStep = function (result) {
-      const self = this;
+      const that = this;
       const modal = module_card_controller.replacePrestaTrustPlaceholders(result);
       const moduleName = result.module.attributes.name;
       $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
       $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
       $(this.dropZoneModalFooterSelector).find('.pstrust-install').off('click').on('click', () => {
-        $(self.moduleImportConfirmSelector).hide();
-        $(self.dropZoneModalFooterSelector).html('');
-        self.animateStartUpload();
+        $(that.moduleImportConfirmSelector).hide();
+        $(that.dropZoneModalFooterSelector).html('');
+        that.animateStartUpload();
 
         // Install ajax call
         $.post(result.module.attributes.urls.install, {'actionParams[confirmPrestaTrust]': '1'})
           .done((data) => {
-            self.displayOnUploadDone(data[moduleName]);
+            that.displayOnUploadDone(data[moduleName]);
           })
           .fail((data) => {
-            self.displayOnUploadError(data[moduleName]);
+            that.displayOnUploadError(data[moduleName]);
           })
           .always(() => {
-            self.isUploadStarted = false;
+            that.isUploadStarted = false;
           });
       });
     };
   };
 
   this.getBulkCheckboxesSelector = function () {
-    return this.currentDisplay == 'grid'
+    return this.currentDisplay === 'grid'
       ? this.bulkActionCheckboxGridSelector
       : this.bulkActionCheckboxListSelector;
   };
 
   this.getBulkCheckboxesCheckedSelector = function () {
-    return this.currentDisplay == 'grid'
+    return this.currentDisplay === 'grid'
       ? this.checkedBulkActionGridSelector
       : this.checkedBulkActionListSelector;
   };
@@ -642,7 +652,7 @@ var AdminModuleController = function () {
   };
 
   this.getModuleItemSelector = function () {
-    return this.currentDisplay == 'grid'
+    return this.currentDisplay === 'grid'
       ? this.moduleItemGridSelector
       : this.moduleItemListSelector;
   };
@@ -668,8 +678,10 @@ var AdminModuleController = function () {
       to_update: $('#subtab-AdminModulesUpdates'),
     };
 
+    // eslint-disable-next-line
     for (const key in destinationTabs) {
       if (destinationTabs[key].length === 0) {
+        // eslint-disable-next-line
         continue;
       }
       destinationTabs[key].find('.notification-counter').text(badge[key]);
@@ -690,9 +702,11 @@ var AdminModuleController = function () {
   };
 
   this.initCategoriesGrid = function () {
+    // eslint-disable-next-line
     if (typeof refMenu === 'undefined') var refMenu = null;
     const self = this;
 
+    // eslint-disable-next-line
     $('body').on('click', this.categoryGridItemSelector, function (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -740,6 +754,7 @@ var AdminModuleController = function () {
     });
   };
 
+  // eslint-disable-next-line
   this.doBulkAction = function (requestedBulkAction) {
     // This object is used to check if requested bulkAction is available and give proper
     // url segment to be called for it
@@ -758,7 +773,10 @@ var AdminModuleController = function () {
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
     if (typeof bulkActionToUrl[requestedBulkAction] === 'undefined') {
-      $.growl.error({message: translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction)});
+      $.growl.error({
+        message: translate_javascripts['Bulk Action - Request not found']
+          .replace('[1]', requestedBulkAction),
+      });
       return false;
     }
 
@@ -781,6 +799,7 @@ var AdminModuleController = function () {
 
         const urlActionSegment = bulkActionToUrl[requestedBulkAction];
 
+        // eslint-disable-next-line
         if (typeof module_card_controller !== 'undefined') {
           // We use jQuery to get the specific link for this action. If found, we send it.
           const urlElement = $(module_card_controller.moduleActionMenuLinkSelector + urlActionSegment, actionMenuObj);
@@ -933,7 +952,7 @@ var AdminModuleController = function () {
   };
 
   this.switchSortingDisplayTo = function (switchTo) {
-    if (switchTo == 'grid' || switchTo == 'list') {
+    if (switchTo === 'grid' || switchTo === 'list') {
       $('.module-sort-switch').removeClass('module-sort-active');
       $(`#module-sort-${switchTo}`).addClass('module-sort-active');
       this.currentDisplay = switchTo;

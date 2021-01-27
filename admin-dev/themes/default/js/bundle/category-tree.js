@@ -44,9 +44,13 @@
           this.find('li').has('ul').removeClass('less').addClass('more');
           break;
         default:
+          // eslint-disable-next-line
           throw 'Unknown method';
       }
+
+    // eslint-disable-next-line
     }
+
     // initialize tree
     else {
       const clickHandler = function (event) {
@@ -68,6 +72,7 @@
           $ui.parent('li').removeClass('less').addClass('more');
         }
 
+        // eslint-disable-next-line
         return false;
       };
       this.find('li > ul').each((i, item) => {
