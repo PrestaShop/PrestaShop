@@ -45,7 +45,7 @@ class SEOType extends TranslatorAwareType
     {
         $builder
             ->add('meta_title', TranslatableType::class, [
-                'label' => $this->trans('Meta title', 'Admin.Global'),
+                'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'type' => TextWithLengthCounterType::class,
                 'help' => $this->trans(
@@ -63,7 +63,7 @@ class SEOType extends TranslatorAwareType
                         new Length([
                             'max' => ProductSettings::MAX_META_TITLE_LENGTH,
                             'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
+                                'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 ['%limit%' => ProductSettings::MAX_META_TITLE_LENGTH]
                             ),
@@ -72,11 +72,11 @@ class SEOType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
-                'label' => $this->trans('Meta description', 'Admin.Global'),
+                'label' => $this->trans('Meta description', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'type' => TextWithLengthCounterType::class,
                 'help' => $this->trans(
-                    'This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)',
+                    'This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).',
                     'Admin.Catalog.Help'
                 ),
                 'options' => [
@@ -90,7 +90,7 @@ class SEOType extends TranslatorAwareType
                         new Length([
                             'max' => ProductSettings::MAX_META_DESCRIPTION_LENGTH,
                             'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
+                                'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 ['%limit%' => ProductSettings::MAX_META_DESCRIPTION_LENGTH]
                             ),

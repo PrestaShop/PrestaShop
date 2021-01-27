@@ -44,8 +44,8 @@ class ProductSettings
     /**
      * Bellow constants define maximum allowed length of product properties
      */
-    const MAX_NAME_LENGTH = 128;
-    const MAX_MPN_LENGTH = 40;
-    const MAX_META_TITLE_LENGTH = 70;
-    const MAX_META_DESCRIPTION_LENGTH = 160;
+    public const MAX_NAME_LENGTH = 128;
+    public const MAX_MPN_LENGTH = 40;
+    public const MAX_META_TITLE_LENGTH = 70;
+    public const MAX_META_DESCRIPTION_LENGTH = 160;
 }

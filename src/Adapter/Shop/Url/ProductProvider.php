@@ -52,12 +52,12 @@ class ProductProvider implements UrlProviderInterface
     /**
      * Create a link to a product.
      *
-     * @param int $productId
-     * @param string $rewrite
+     * @param int|null $productId
+     * @param string|null $rewrite
      *
      * @return string
      */
-    public function getUrl($productId = null, $rewrite = null)
+    public function getUrl(?int $productId = null, ?string $rewrite = null): string
     {
         return $this->link->getProductLink((int) $productId, $rewrite);
     }
