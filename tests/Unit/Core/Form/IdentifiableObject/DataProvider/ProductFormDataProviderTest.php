@@ -185,7 +185,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['virtual_product_file']['display_filename'] ?? 'display_filename',
             $product['virtual_product_file']['nb_days_accessible'] ?? 0,
             $product['virtual_product_file']['nb_downloadable'] ?? 0,
-            $product['virtual_product_file']['date_expiration'] ?? null,
+            $product['virtual_product_file']['date_expiration'] ?? null
         );
     }
 
@@ -298,7 +298,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['wholesale_price'] ?? new DecimalNumber('19.86'),
             $product['unit_price'] ?? new DecimalNumber('19.86'),
             $product['unity'] ?? '',
-            $product['unit_price_ratio'] ?? new DecimalNumber('1'),
+            $product['unit_price_ratio'] ?? new DecimalNumber('1')
         );
     }
 
