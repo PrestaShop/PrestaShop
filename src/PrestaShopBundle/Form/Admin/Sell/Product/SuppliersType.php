@@ -78,6 +78,9 @@ class SuppliersType extends TranslatorAwareType
                 'choices' => $suppliers,
                 'expanded' => true,
                 'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
+                'choice_attr' => [
+                    'disabled' => true,
+                ],
             ])
             ->add('supplier_references', CollectionType::class, [
                 'label' => false,

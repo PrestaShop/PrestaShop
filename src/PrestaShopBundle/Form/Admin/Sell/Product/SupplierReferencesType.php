@@ -37,7 +37,6 @@ class SupplierReferencesType extends AbstractType
     {
         $builder
             ->add('supplier_id', HiddenType::class)
-            ->add('is_default', HiddenType::class)
             ->add('supplier_name', HiddenType::class)
             ->add('product_supplier', ProductSupplierType::class)
         ;
