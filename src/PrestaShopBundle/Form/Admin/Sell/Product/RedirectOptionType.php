@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -50,20 +51,28 @@ class RedirectOptionType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var DataTransformerInterface
+     */
+    private $targetTransformer;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param LegacyContext $context
      * @param RouterInterface $router
+     * @param DataTransformerInterface $targetTransformer
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         LegacyContext $context,
-        RouterInterface $router
+        RouterInterface $router,
+        DataTransformerInterface $targetTransformer
     ) {
         parent::__construct($translator, $locales);
         $this->context = $context;
         $this->router = $router;
+        $this->targetTransformer = $targetTransformer;
     }
 
     /**
@@ -77,6 +86,7 @@ class RedirectOptionType extends TranslatorAwareType
             ->add('type', ChoiceType::class, [
                 'label' => $this->trans('Redirection when offline', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => [
                     $this->trans('No redirection (404)', 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
                     $this->trans('Permanent redirection to a category (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_PERMANENT,
@@ -89,7 +99,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'remote_url' => $productSearchUrl,
-                'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
+                'template_collection' => '<span class="label">%s</span>',
                 'limit' => 1,
                 'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
@@ -103,5 +113,6 @@ class RedirectOptionType extends TranslatorAwareType
                 ],
             ])
         ;
+        $builder->get('target')->addModelTransformer($this->targetTransformer);
     }
 }
