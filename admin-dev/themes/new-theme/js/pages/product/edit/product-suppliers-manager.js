@@ -34,25 +34,31 @@ export default class ProductSuppliersManager {
     this.$productSuppliersTable = $(ProductMap.productSuppliersTable);
     this.$productSuppliersTBody = this.$productSuppliersTable.find('tbody');
     this.$defaultSuppliersSelectionBlock = $(ProductMap.defaultSupplierSelectionBlock);
+    this.suppliers = [];
 
     this.init();
   }
 
   init() {
+    this.collectCurrentSuppliers();
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
+
+    this.$productSuppliersTable.on('change', 'input', () => {
+      this.collectCurrentSuppliers();
+    });
 
     this.$supplierSelectionBlock.on('change', 'input', (e) => {
       const input = e.currentTarget;
       if (input.checked) {
-        this.appendRow({
+        this.append({
           id: input.value,
           name: input.dataset.label,
         });
       } else {
-        this.removeRow(input.value);
+        this.remove(input.value);
       }
-
+      this.renderSuppliers();
       this.toggleTableVisibility();
       this.refreshDefaultSupplierBlock();
     });
@@ -68,28 +74,58 @@ export default class ProductSuppliersManager {
     this.showTable();
   }
 
-  appendRow(supplier) {
-    const productSupplierRowPrototype = this.$supplierReferencesBlock.data('prototype');
-    const index = this.getSelectedSuppliers().length - 1;
+  append(supplier) {
+    if (typeof this.suppliers[supplier.id] === 'undefined') {
+      const rowPrototype = new DOMParser().parseFromString(
+        this.$supplierReferencesBlock.data('prototype'),
+        'text/html',
+      );
 
-    const productSupplierRow = productSupplierRowPrototype
-      .replace(/__SUPPLIER_ID__/g, supplier.id)
-      .replace(/__SUPPLIER_REFERENCE_INDEX__/g, index)
-      .replace(/__SUPPLIER_NAME__/g, supplier.name);
-
-    this.$productSuppliersTBody.append(productSupplierRow);
-    // Fill hidden inputs
-    $(ProductMap.supplierReferenceSupplierIdInput(index)).val(supplier.id);
-    $(ProductMap.supplierReferenceSupplierNameInput(index)).val(supplier.name);
-
-    const selectedDefaultSupplierInput = $(ProductMap.selectedDefaultSupplierInput);
-    const selectedDefaultSupplierId = selectedDefaultSupplierInput.val();
-    $(ProductMap.supplierReferenceIsDefaultInput(index)).val(selectedDefaultSupplierId === supplier.id);
+      this.suppliers[supplier.id] = {
+        deleted: false,
+        supplierId: supplier.id,
+        supplierName: supplier.name,
+        productSupplierId: rowPrototype.getElementById(
+          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_product_supplier_id').value,
+        reference: rowPrototype.getElementById(
+          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_supplier_reference').value,
+        price: rowPrototype.getElementById(
+          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_supplier_price_tax_excluded').value,
+        currencyId: rowPrototype.getElementById(
+          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_currency_id').value,
+      };
+    } else {
+      this.suppliers[supplier.id].deleted = false;
+    }
   }
 
-  removeRow(supplierId) {
-    const supplierRow = $(ProductMap.supplierReferenceProductSupplierRow(supplierId));
-    supplierRow.remove();
+  remove(supplierId) {
+    this.suppliers[supplierId].deleted = true;
+  }
+
+  renderSuppliers() {
+    this.$productSuppliersTBody.empty();
+    const productSupplierRowPrototype = this.$supplierReferencesBlock.data('prototype');
+
+    this.suppliers.forEach((supplier) => {
+      if (supplier.deleted) {
+        return;
+      }
+
+      const productSupplierRow = productSupplierRowPrototype
+        .replace(/__SUPPLIER_ID__/g, supplier.supplierId)
+        // .replace(/__SUPPLIER_REFERENCE_INDEX__/g, index)
+        .replace(/__SUPPLIER_NAME__/g, supplier.supplierName);
+
+      this.$productSuppliersTBody.append(productSupplierRow);
+      // Fill inputs
+      $(ProductMap.suppliersSupplierIdInput(supplier.supplierId)).val(supplier.supplierId);
+      $(ProductMap.suppliersProductSupplierIdInput(supplier.supplierId)).val(supplier.productSupplierId);
+      $(ProductMap.suppliersSupplierNameInput(supplier.supplierId)).val(supplier.supplierName);
+      $(ProductMap.suppliersProductSupplierReferenceInput(supplier.supplierId)).val(supplier.reference);
+      $(ProductMap.suppliersProductSupplierPriceInput(supplier.supplierId)).val(supplier.price);
+      $(ProductMap.suppliersProductSupplierCurrencyIdInput(supplier.supplierId)).val(supplier.currencyId);
+    });
   }
 
   getSelectedSuppliers() {
@@ -145,5 +181,19 @@ export default class ProductSuppliersManager {
 
   hideTable() {
     this.$productSuppliersTable.addClass('d-none');
+  }
+
+  collectCurrentSuppliers() {
+    this.getSelectedSuppliers().forEach((supplier) => {
+      this.suppliers[supplier.id] = {
+        supplierId: $(ProductMap.suppliersSupplierIdInput(supplier.id)).val(),
+        productSupplierId: $(ProductMap.suppliersProductSupplierIdInput(supplier.id)).val(),
+        supplierName: $(ProductMap.suppliersSupplierNameInput(supplier.id)).val(),
+        reference: $(ProductMap.suppliersProductSupplierReferenceInput(supplier.id)).val(),
+        price: $(ProductMap.suppliersProductSupplierPriceInput(supplier.id)).val(),
+        currencyId: $(ProductMap.suppliersProductSupplierCurrencyIdInput(supplier.id)).val(),
+        deleted: false,
+      };
+    });
   }
 }
