@@ -31,6 +31,9 @@ jobs:
         with:
             node-version: '10.x'
 
+      - name: BackOffice Theme `default`
+        run: cd ./admin-dev/themes/default && npm install && npm run lint
+
       - name: BackOffice Theme `new-theme`
         run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
 
