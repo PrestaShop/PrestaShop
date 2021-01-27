@@ -36,6 +36,17 @@ Feature: Update product suppliers from Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,2              |
       | shops                   | [shop1]            |
+    And I add new supplier supplier3 with following properties:
+      | name                    | my supplier 3    |
+      | address                 | Donelaicio st. 3 |
+      | city                    | Kaunas           |
+      | country                 | Lithuania        |
+      | enabled                 | true             |
+      | description[en-US]      | just a 3         |
+      | meta title[en-US]       | my third supp    |
+      | meta description[en-US] |                  |
+      | meta keywords[en-US]    | sup,3            |
+      | shops                   | [shop1]          |
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |
       | is_virtual  | false       |
@@ -49,6 +60,29 @@ Feature: Update product suppliers from Back Office (BO)
       | my first supplier for product1 | USD      | 10                 |
     And product product1 should have following supplier values:
       | default supplier | supplier1 |
+    When I set product product1 default supplier to supplier2 and following suppliers:
+      | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
+      | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
+      | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
+      | product1supplier3 | supplier3          | my third supplier for product1  | EUR      | 20                 |
+    Then product product1 should have following suppliers:
+      | product supplier reference      | currency | price tax excluded |
+      | my first supplier for product1  | USD      | 10                 |
+      | my second supplier for product1 | EUR      | 11                 |
+      | my third supplier for product1  | EUR      | 20                 |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
+
+  Scenario: Remove one of product suppliers
+    Given product product1 should have following suppliers:
+      | product supplier reference      | currency | price tax excluded |
+      | my first supplier for product1  | USD      | 10                 |
+      | my second supplier for product1 | EUR      | 11                 |
+      | my third supplier for product1  | EUR      | 20                 |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
     When I set product product1 default supplier to supplier2 and following suppliers:
       | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
