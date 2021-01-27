@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandBuilder;
 
 class SEOCommandBuilderTest extends AbstractProductCommandBuilderTest
@@ -120,6 +121,41 @@ class SEOCommandBuilderTest extends AbstractProductCommandBuilderTest
                     'link_rewrite' => $localizedLinkRewrites,
                     'meta_description' => $localizedMetaDescriptions,
                     'meta_title' => $localizedMetaTitles,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
+        $command->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0);
+        yield [
+            [
+                'redirect_option' => [
+                    'type' => RedirectType::TYPE_NOT_FOUND,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
+        $command->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42);
+        yield [
+            [
+                'redirect_option' => [
+                    'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                    'target' => 42,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
+        $command->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51);
+        yield [
+            [
+                'redirect_option' => [
+                    'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
+                    'target' => 51,
                 ],
             ],
             [$command],

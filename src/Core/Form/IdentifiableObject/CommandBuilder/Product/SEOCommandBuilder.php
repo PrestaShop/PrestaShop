@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
 
 /**
  * Builder used to build UpdateSEO
@@ -38,11 +39,12 @@ class SEOCommandBuilder implements ProductCommandBuilderInterface
 {
     public function buildCommand(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['seo'])) {
+        if (!isset($formData['seo']) && !isset($formData['redirect_option'])) {
             return [];
         }
 
-        $seoData = $formData['seo'];
+        $seoData = $formData['seo'] ?? [];
+        $redirectionData = $formData['redirect_option'] ?? [];
         $command = new UpdateProductSeoCommand($productId->getValue());
 
         if (isset($seoData['meta_title'])) {
@@ -53,6 +55,11 @@ class SEOCommandBuilder implements ProductCommandBuilderInterface
         }
         if (isset($seoData['link_rewrite'])) {
             $command->setLocalizedLinkRewrites($seoData['link_rewrite']);
+        }
+
+        if (isset($redirectionData['type'])) {
+            $targetId = (int) ($redirectionData['target'] ?? 0);
+            $command->setRedirectOption($redirectionData['type'], $targetId);
         }
 
         return [$command];
