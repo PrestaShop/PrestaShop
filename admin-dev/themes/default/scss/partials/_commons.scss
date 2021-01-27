@@ -132,16 +132,21 @@
   @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
 }
 .alert.alert-addons {
-  $alert-addons-border: lighten($brand-addons,10%);
-  $alert-addons-text: $brand-addons;
-  @include alert-variant(#F3F3F2, $alert-addons-border, $alert-addons-text);
-  @include alert-panel(icon-puzzle-piece, $brand-addons);
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  background-color: $alert-info-bg;
+
+  a, p {
+    color: #363a41;
+  }
 }
 .alert.alert-onboarding {
-  $alert-addons-border: lighten($brand-info,10%);
-  $alert-addons-text: $brand-info;
-  @include alert-variant(white, $alert-addons-border, $alert-addons-text);
-  @include alert-panel(icon-rocket, white);
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  background-color: $alert-info-bg;
+
+  a, p {
+    color: #363a41;
+  }
+
   &:before {
     left: 25px;
     top: 40px;
