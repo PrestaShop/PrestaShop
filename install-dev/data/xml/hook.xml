@@ -2855,9 +2855,9 @@
       <title>Add variables in JavaScript object and Smarty templates</title>
       <description>Add variables to javascript object that is available in Front Office. These are also available in smarty templates in modules.your_module_name.</description>
     </hook>
-    <hook id="actionFrontControllerSetVariables">
+    <hook id="displayAdminOrderCreateExtraButtons">
       <name>displayAdminOrderCreateExtraButtons</name>
-      <title>Add buttons to create order page inside the dropdown</title>
+      <title>Add buttons on the create order page dropdown</title>
       <description>Add buttons on the create order page dropdown</description>
     </hook>
   </entities>
