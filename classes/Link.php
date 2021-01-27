@@ -135,7 +135,7 @@ class LinkCore
         $ipa = null,
         $force_routes = false,
         $relativeProtocol = false,
-        $addAnchor = false,
+        $anchor_with_ids = false,
         $extraParams = []
     ) {
         $dispatcher = Dispatcher::getInstance();
@@ -230,7 +230,7 @@ class LinkCore
         if ($ipa) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
-        $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $addAnchor) : '';
+        $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $anchor_with_ids) : '';
 
         return $url . $dispatcher->createUrl('product_rule', $idLang, array_merge($params, $extraParams), $force_routes, $anchor, $idShop);
     }
