@@ -133,6 +133,11 @@ class StockManager implements StockInterface
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
+        $invalidStates = array(
+            (int) $errorState,
+            (int) $cancellationState,
+            (int) (new ConfigurationAdapter())->get('PS_OS_REFUND')
+        );
         $updateReservedQuantityQuery = '
             UPDATE {table_prefix}stock_available sa
             SET sa.reserved_quantity = (
@@ -143,8 +148,7 @@ class StockManager implements StockInterface
                 WHERE o.id_shop = :shop_id AND
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
-                        os.id_order_state != :error_state AND
-                        os.id_order_state != :cancellation_state
+                        os.id_order_state NOT IN (:invalidStates)
                     )
                 ) AND sa.id_product = od.product_id AND
                 sa.id_product_attribute = od.product_attribute_id
@@ -156,8 +160,7 @@ class StockManager implements StockInterface
         $strParams = [
             '{table_prefix}' => _DB_PREFIX_,
             ':shop_id' => (int) $shopId,
-            ':error_state' => (int) $errorState,
-            ':cancellation_state' => (int) $cancellationState,
+            ':invalidStates' => implode(',', $invalidStates)
         ];
 
         if ($idProduct) {
