@@ -346,6 +346,10 @@ $header-text-color: #4e6167 !default;
     color: $header-text-color;
     white-space: nowrap;
 
+    @media (max-width: breakpoint-max("sm")) {
+      font-size: 0;
+    }
+
     &:hover {
       color: $primary;
       text-decoration: none;
