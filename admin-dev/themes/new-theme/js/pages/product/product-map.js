@@ -30,7 +30,7 @@ export default {
   supplierReferencesContainer: '#product_suppliers_supplier_references > .col-sm',
   productSuppliersTable: '#productSuppliers table',
   supplierSelectionBlock: '#product_suppliers_supplier_ids',
-  defaultSupplierSelectionBlock: '#product_suppliers_default_supplier_id',
+  defaultSupplierSelectionBlock: '#defaultSupplierIdBlock',
   selectedDefaultSupplierInput: 'input[name="product[suppliers][default_supplier_id]"]:checked',
   productFormSubmitButton: 'button[name="product[save]"]',
   supplierReferenceProductSupplierRow: (supplierId) => `#product_supplier_row_${supplierId}`,

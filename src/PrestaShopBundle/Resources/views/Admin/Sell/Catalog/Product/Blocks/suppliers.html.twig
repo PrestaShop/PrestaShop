@@ -33,7 +33,9 @@
         {{ form_row(suppliersForm.supplier_ids) }}
       </div>
       <div class="col">
-        {{ form_row(suppliersForm.default_supplier_id) }}
+        <div id="defaultSupplierIdBlock">
+          {{ form_row(suppliersForm.default_supplier_id) }}
+        </div>
       </div>
     </div>
 

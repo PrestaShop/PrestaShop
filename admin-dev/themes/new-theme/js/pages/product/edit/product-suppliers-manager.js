@@ -33,12 +33,14 @@ export default class ProductSuppliersManager {
     this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
     this.$productSuppliersTable = $(ProductMap.productSuppliersTable);
     this.$productSuppliersTBody = this.$productSuppliersTable.find('tbody');
+    this.$defaultSuppliersSelectionBlock = $(ProductMap.defaultSupplierSelectionBlock);
 
     this.init();
   }
 
   init() {
     this.toggleTableVisibility();
+    this.refreshDefaultSupplierBlock();
 
     this.$supplierSelectionBlock.on('change', 'input', (e) => {
       const input = e.currentTarget;
@@ -52,6 +54,7 @@ export default class ProductSuppliersManager {
       }
 
       this.toggleTableVisibility();
+      this.refreshDefaultSupplierBlock();
     });
   }
 
@@ -99,6 +102,41 @@ export default class ProductSuppliersManager {
     });
 
     return selectedSuppliers;
+  }
+
+  refreshDefaultSupplierBlock() {
+    const suppliers = this.getSelectedSuppliers();
+    if (suppliers.length === 0) {
+      this.$defaultSuppliersSelectionBlock.find('input').prop('checked', false);
+      this.hideDefaultSuppliers();
+
+      return;
+    }
+
+    this.showDefaultSuppliers();
+    const selectedSupplierIds = suppliers.map((supplier) => supplier.id);
+
+    this.$defaultSuppliersSelectionBlock.find('input').each((key, input) => {
+      const isValid = selectedSupplierIds.includes(input.value);
+      if (!isValid && input.checked) {
+        input.checked = false;
+        this.checkFirstAvailableDefaultSupplier(selectedSupplierIds);
+      }
+      input.disabled = !isValid;
+    });
+  }
+
+  hideDefaultSuppliers() {
+    this.$defaultSuppliersSelectionBlock.addClass('d-none');
+  }
+
+  showDefaultSuppliers() {
+    this.$defaultSuppliersSelectionBlock.removeClass('d-none');
+  }
+
+  checkFirstAvailableDefaultSupplier(selectedSupplierIds) {
+    const firstSupplierId = selectedSupplierIds[0];
+    this.$defaultSuppliersSelectionBlock.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
   }
 
   showTable() {
