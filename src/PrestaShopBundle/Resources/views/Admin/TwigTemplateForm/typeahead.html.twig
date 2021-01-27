@@ -35,7 +35,8 @@
         {{ form_errors(form) }}
 
         <div class="search search-with-icon">
-            <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
+            {%- set attr = attr|merge({'class': 'form-control search typeahead ' ~ form.vars.id }) -%}
+            <input type="text" id="{{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
         </div>
         <small class="form-text text-muted text-right typeahead-hint">
         </small>
