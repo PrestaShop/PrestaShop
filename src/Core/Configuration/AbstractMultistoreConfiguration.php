@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 
-abstract class MultistoreConfigurator implements DataConfigurationInterface
+abstract class AbstractMultistoreConfiguration implements DataConfigurationInterface
 {
     /**
      * @var Configuration
@@ -45,7 +45,7 @@ abstract class MultistoreConfigurator implements DataConfigurationInterface
     protected $shopContext;
 
     /**
-     * MultistoreConfigurator constructor.
+     * AbstractMultistoreConfiguration constructor.
      *
      * @param Configuration $configuration
      * @param Context $shopContext

@@ -47,9 +47,9 @@ use Symfony\Component\Form\FormInterface;
  * @todo add a link to the documentation related to this part, when it's online
  *
  * @see MaintenanceType for an example of a form that is configured to enable multistore checkboxes on its fields
- * @see MaintenanceConfiguration for an example of how to extend and use the MultistoreConfigurator to store multistore configuration values
+ * @see MaintenanceConfiguration for an example of how to extend and use the AbstractMultistoreConfiguration to store multistore configuration values
  * @see MultistoreConfigurationTypeExtension this is the form extension that calls this class
- * @see MultistoreConfigurator this is the abstract used by the class responsible for storing multistore configuration values
+ * @see AbstractMultistoreConfiguration this is the abstraction used by the class responsible for storing multistore configuration values
  */
 class MultistoreCheckboxEnabler
 {
