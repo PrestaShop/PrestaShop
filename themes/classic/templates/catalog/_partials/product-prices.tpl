@@ -35,16 +35,12 @@
 
     {block name='product_price'}
       <div
-        class="product-price h5 {if $product.has_discount}has-discount{/if}"
-        itemprop="offers"
-        itemscope
-        itemtype="https://schema.org/Offer"
-      >
-        <link itemprop="availability" href="{$product.seo_availability}"/>
-        <meta itemprop="priceCurrency" content="{$currency.iso_code}">
+        class="product-price h5 {if $product.has_discount}has-discount{/if}">
+        <link href="{$product.seo_availability}"/>
+        <meta content="{$currency.iso_code}">
 
         <div class="current-price">
-          <span itemprop="price" content="{$product.rounded_display_price}">
+          <span content="{$product.rounded_display_price}">
             {capture name='custom_price'}{hook h='displayProductPriceBlock' product=$product type='custom_price' hook_origin='product_sheet'}{/capture}
             {if '' !== $smarty.capture.custom_price}
               {$smarty.capture.custom_price nofilter}

@@ -82,7 +82,7 @@ describe('Create, read, update and delete Standard product with combinations in 
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
 
     page = await addProductPage.previewProduct(page);
-    const result = await foProductPage.getProductInformation(page, productWithCombinations);
+    const result = await foProductPage.getProductInformation(page);
 
     page = await foProductPage.closePage(browserContext, page, 0);
 
@@ -109,7 +109,7 @@ describe('Create, read, update and delete Standard product with combinations in 
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
     page = await addProductPage.previewProduct(page);
-    const result = await foProductPage.getProductInformation(page, editedProductWithCombinations);
+    const result = await foProductPage.getProductInformation(page);
 
     page = await foProductPage.closePage(browserContext, page, 0);
 

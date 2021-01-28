@@ -22,24 +22,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<nav data-depth="{$breadcrumb.count}" class="breadcrumb hidden-sm-down">
-  <ol>
-    {block name='breadcrumb'}
-      {foreach from=$breadcrumb.links item=path name=breadcrumb}
-        {block name='breadcrumb_item'}
-          {if not $smarty.foreach.breadcrumb.last}
-            <li>
-              <a href="{$path.url}"><span>{$path.title}</span></a>
-              <meta content="{$smarty.foreach.breadcrumb.iteration}">
-            </li>
-          {elseif isset($path.title)}
-            <li>
-              <span>{$path.title}</span>
-              <meta content="{$smarty.foreach.breadcrumb.iteration}">
-            </li>
-          {/if}
-        {/block}
-      {/foreach}
-    {/block}
-  </ol>
-</nav>
+
+{* not big fan of this code but it's is the only way to do it without module *}
+{if isset($listing.pagination) && $listing.pagination.should_be_displayed}
+    {assign page_nb 1}
+    {if isset($smarty.get.page)}
+        {assign page_nb $smarty.get.page|intval}
+    {/if}
+    {$queryPage = '?page='|cat:$page_nb}
+    {$page.canonical = $page.canonical|replace:$queryPage:''}
+
+    {assign var="prev" value=false}
+        {assign var="next" value=false}
+    {if ($page_nb - 1) == 1}
+        {assign prev $page.canonical}
+    {elseif $page_nb > 2}
+        {assign var="prev"  value=($page['canonical']|cat:'?page='|cat:($page_nb - 1))}
+    {/if}
+    {if $listing.pagination.total_items > $listing.pagination.items_shown_to}
+        {assign var="next"  value=($page['canonical']|cat:'?page='|cat:($page_nb + 1))}
+    {/if}
+
+    {if $prev}<link rel="prev" href="{$prev}">{/if}
+    {if $next}<link rel="next" href="{$next}">{/if}
+{/if}
