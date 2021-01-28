@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
@@ -52,27 +51,12 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     public function updateConfiguration(array $configuration)
     {
         $shopConstraint = null;
-        if (!$this->shopContext->isAllShopContext()) {
-            $configuration = $this->removeDisabledFields($configuration);
-            $contextShopGroup = $this->shopContext->getContextShopGroup();
-            $contextShopId = $this->shopContext->getContextShopID();
-            $contextShopId = (int) $contextShopId > 0 ? $contextShopId : null;
+        $configurationInputValues = $this->getConfigurationInputValues($configuration);
+        $shopConstraint = $this->getShopConstraint();
 
-            $shopConstraint = new ShopConstraint(
-                $contextShopId,
-                $contextShopGroup->id
-            );
-        }
-
-        if (isset($configuration['enable_shop'])) {
-            $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop'], $shopConstraint);
-        }
-        if (isset($configuration['maintenance_ip'])) {
-            $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip'], $shopConstraint);
-        }
-        if (isset($configuration['maintenance_text'])) {
-            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], $shopConstraint, ['html' => true]);
-        }
+        $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
+        $this->updateConfigurationValue('PS_MAINTENANCE_IP', 'maintenance_ip', $configurationInputValues, $shopConstraint);
+        $this->updateConfigurationValue('PS_MAINTENANCE_TEXT', 'maintenance_text', $configurationInputValues, $shopConstraint, ['html' => true]);
 
         return [];
     }
