@@ -185,7 +185,7 @@ $search-border-color: #bbcdd2;
       color: $medium-gray;
     }
     @media (max-width: 768px) {
-      font-size: 0!important;
+      font-size: 0 !important;
     }
     @media (max-width: 320px) {
       max-width: 140px;

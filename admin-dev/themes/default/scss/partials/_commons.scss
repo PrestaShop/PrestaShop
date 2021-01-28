@@ -133,24 +133,31 @@
   @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
 }
 .alert.alert-addons {
-  $alert-addons-border: lighten($brand-addons, 10%);
-  $alert-addons-text: $brand-addons;
-  @include alert-variant(#F3F3F2, $alert-addons-border, $alert-addons-text);
-  @include alert-panel(icon-puzzle-piece, $brand-addons);
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  background-color: $alert-info-bg;
+
+  a,
+  p {
+    color: #363a41;
+  }
 }
 .alert.alert-onboarding {
-  $alert-addons-border: lighten($brand-info, 10%);
-  $alert-addons-text: $brand-info;
-  @include alert-variant(#ffffff, $alert-addons-border, $alert-addons-text);
-  @include alert-panel(icon-rocket, #ffffff);
+  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  padding: 20px 20px 20px 160px;
+  background-color: $alert-info-bg;
+  border: solid 2px $brand-info;
+  box-shadow: inset 140px 0 0 $brand-info;
+
+  a,
+  p {
+    color: #363a41;
+  }
+
   &::before {
     top: 40px;
     left: 25px;
     font-size: 98px;
   }
-  padding: 20px 20px 20px 160px;
-  border: solid 2px $brand-info;
-  box-shadow: inset 140px 0 0 $brand-info;
   .onboarding-step {
     width: 100%;
     height: 2em;
