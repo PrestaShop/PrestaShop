@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Extension\Core\EventListener\TransformationFailureListener;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -104,6 +105,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'limit' => 1,
                 'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
+                'error_bubbling' => false,
                 'attr' => [
                     'data-product-label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
                     'data-product-placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
@@ -115,6 +117,10 @@ class RedirectOptionType extends TranslatorAwareType
                 ],
             ])
         ;
+
+        // This will transform the target ID from model data into an array adapted for TypeaheadProductCollectionType
         $builder->get('target')->addModelTransformer($this->targetTransformer);
+        // In case a transformation occurs it will be displayed as an inline error
+        $builder->addEventSubscriber(new TransformationFailureListener($this->translator));
     }
 }

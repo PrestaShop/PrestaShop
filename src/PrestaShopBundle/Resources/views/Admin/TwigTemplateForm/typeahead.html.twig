@@ -32,11 +32,12 @@
       data-remoteurl="{{ remote_url|raw }}"
       data-limit="{{ limit }}"
     >
-        {{ form_errors(form) }}
-
         <div class="search search-with-icon">
-            {%- set attr = attr|merge({'class': 'form-control search typeahead ' ~ form.vars.id }) -%}
-            <input type="text" id="{{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
+          {# We want the attributes from the form type to be added to the input so we merge class form attribute to required ones #}
+          {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control search typeahead ' ~ form.vars.id)|trim }) -%}
+          {# We do not want the initial input name because the data is handled via a collection input with name="full_name[data][]" #}
+          {%- set full_name = '' -%}
+          <input type="text" id="{{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
         </div>
         <small class="form-text text-muted text-right typeahead-hint">
         </small>
