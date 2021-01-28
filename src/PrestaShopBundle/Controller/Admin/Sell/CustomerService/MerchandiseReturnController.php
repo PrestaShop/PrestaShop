@@ -35,10 +35,13 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseRetu
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnProductsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -97,12 +100,14 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param int $merchandiseReturnId
      * @param Request $request
      *
+     * @param MerchandiseReturnProductsFilters $filters
      * @return Response
      */
-    public function editAction(int $merchandiseReturnId, Request $request): Response
+    public function editAction(int $merchandiseReturnId, Request $request, MerchandiseReturnProductsFilters $filters): Response
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.merchandise_return_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.merchandise_return_form_handler');
+        $gridFactory = $this->get('prestashop.core.grid.factory.merchandise_return_products');
 
         try {
             /** @var EditableMerchandiseReturn $editableMerchandiseReturn */
@@ -143,31 +148,43 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'merchandiseReturnForm' => $form->createView(),
             'editableMerchandiseReturn' => $editableMerchandiseReturn,
             'merchandiseReturnProductsForViewing' => $productsForViewing,
+            'merchandiseReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters))
         ]);
     }
 
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_returns_index")
      *
+     * @param Request $request
      * @param int $merchandiseReturnId
      * @param int $merchandiseReturnDetailId
      *
-     * @return JsonResponse
+     * @return RedirectResponse
      */
-    public function deleteProductAction(int $merchandiseReturnId, int $merchandiseReturnDetailId): JsonResponse
+    public function deleteProductAction(Request $request, int $merchandiseReturnId, int $merchandiseReturnDetailId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(
                 new DeleteProductFromMerchandiseReturnCommand($merchandiseReturnId, $merchandiseReturnDetailId)
             );
 
-            return $this->json(null, Response::HTTP_NO_CONTENT);
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_BAD_REQUEST
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
+
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
+
+        return $request->query->has('redirectUrl') ?
+            $this->redirect($request->query->get('redirectUrl')) :
+            $this->redirectToRoute(
+                'admin_merchandise_returns_edit',
+                [
+                    'merchandiseReturnId' => $merchandiseReturnId
+                ]
+            );
     }
 
     /**
