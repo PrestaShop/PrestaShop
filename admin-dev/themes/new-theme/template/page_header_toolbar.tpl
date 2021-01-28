@@ -133,7 +133,7 @@
           {if $k != 'back' && $k != 'modules-list'}
             <a
               class="btn btn-floating-item {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)}
-              id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}"
+              id="page-header-desc-floating-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}"
               href="{$btn.href|escape}"{/if}
               title="{if isset($btn.help)}{$btn.help}{else}{$btn.desc|escape}{/if}"{if isset($btn.js) && $btn.js}
               onclick="{$btn.js}"{/if}{if isset($btn.modal_target) && $btn.modal_target}
@@ -148,18 +148,6 @@
           {/if}
         {/foreach}
 
-        {if isset($toolbar_btn['modules-list'])}
-          <a
-            class="btn btn-floating-item {if isset($toolbar_btn['modules-list'].target) && $toolbar_btn['modules-list'].target} _blank{/if}"
-            id="page-header-desc-{$table}-{if isset($toolbar_btn['modules-list'].imgclass)}{$toolbar_btn['modules-list'].imgclass}{else}modules-list{/if}"
-            {if isset($toolbar_btn['modules-list'].href)}href="{$toolbar_btn['modules-list'].href}"{/if}
-            title="{$toolbar_btn['modules-list'].desc}"
-            {if isset($toolbar_btn['modules-list'].js) && $toolbar_btn['modules-list'].js}onclick="{$toolbar_btn['modules-list'].js}"{/if}
-          >
-            {$toolbar_btn['modules-list'].desc}
-          </a>
-        {/if}
-
         {if isset($help_link) and $help_link != false}
           {if $enableSidebar}
             <a class="btn btn-floating-item btn-help btn-sidebar" href="#"
@@ -167,7 +155,6 @@
                data-toggle="sidebar"
                data-target="#right-sidebar"
                data-url="{$help_link|escape}"
-               id="product_form_open_help"
             >
               {l s='Help' d='Admin.Global'}
             </a>
