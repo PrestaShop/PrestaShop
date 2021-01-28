@@ -49,7 +49,7 @@ class DeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler imp
                 $command->getOrderReturnDetailId()
             );
         } catch (OrderReturnException $e) {
-            throw new DeleteOrderReturnProductException($e->getMessage());
+            throw new DeleteOrderReturnProductException($e->getMessage(), $e->getCode());
         }
     }
 }
