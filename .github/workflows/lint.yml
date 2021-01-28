@@ -19,7 +19,7 @@ jobs:
         run: cd ./admin-dev/themes/default && npm install && npm run scss-lint
 
       - name: FrontOffice Theme `classic`
-        run: cd themes/classic/_dev && npm install && npm run scss-lint
+        run: cd ./themes/classic/_dev && npm install && npm run scss-lint
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
