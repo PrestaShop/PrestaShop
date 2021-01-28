@@ -34,7 +34,6 @@ export default class AutoCompleteSearch {
     this.searchInputId = this.$searchInput.prop('id');
     this.searchInputFullName = this.$autoCompleteSearchContainer.data('fullname');
     this.$selectionContainer = $(`#${this.searchInputId}-data`);
-    this.$templateContainer = $(`#tplcollection-${this.searchInputId}`);
 
     // Merge default and input config
     config = config || {};
@@ -53,34 +52,30 @@ export default class AutoCompleteSearch {
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
-      templates: { // Default rendering functions which can be overridden
-        suggestion(item) {
-          return `<div><img src="${item.image}" style="width:50px" /> ${item.name}</div>`;
-        },
-        pending(query) {
-          return `<div class="px-2">Searching for "${query.query}"</div>`;
-        },
-        notFound(query) {
-          return `<div class="px-2">No results found for "${query.query}"</div>`;
-        },
-        renderSelected: (selectedItem, inputFullName) => {
-          let value;
-          if (typeof this.dataSetConfig.value === 'function') {
-            value = this.dataSetConfig.value(selectedItem);
-          } else {
-            value = selectedItem[this.dataSetConfig.value];
-          }
+    };
+    this.dataSetConfig = {...defaultDataSetConfig, ...dataSetConfig};
 
-          return `<li>
+    // Merging object works fine on one level, but on two it erases sub elements even if not present, so
+    // we handle templates separately
+    const defaultTemplates = { // Default rendering functions which can be overridden
+      suggestion(item) {
+        return `<div><img src="${item.image}" style="width:50px" /> ${item.name}</div>`;
+      },
+      pending(query) {
+        return `<div class="px-2">Searching for "${query.query}"</div>`;
+      },
+      notFound(query) {
+        return `<div class="px-2">No results found for "${query.query}"</div>`;
+      },
+      renderSelected: (selectedItem) => {
+        return `<li>
             <div>
               <img src="${selectedItem.image}" style="width:50px" /> ${selectedItem.name}
             </div>
-            <input type="hidden" name="${inputFullName}[data][]" value="${value}" />
           </li>`;
-        }
       }
-    };
-    this.dataSetConfig = {...defaultDataSetConfig, ...dataSetConfig};
+    }
+    this.dataSetConfig.templates = {...defaultTemplates, ...dataSetConfig.templates};
 
     this.buildTypeahead();
   }
@@ -88,6 +83,8 @@ export default class AutoCompleteSearch {
   buildTypeahead() {
     this.$searchInput.typeahead(this.config, this.dataSetConfig)
       .bind('typeahead:select', (e, selectedItem) => {
+        // When limit is one we cannot select additional elements so we replace them instead
+        // @todo: maybe this behaviour should be defined by an option
         if (this.dataSetConfig.dataLimit === 1) {
           this.replaceSelectedItem(selectedItem);
         } else {
@@ -102,8 +99,7 @@ export default class AutoCompleteSearch {
     const formIdItem = $('li', this.$selectionContainer);
     formIdItem.remove();
 
-    const selectedHtml = this.dataSetConfig.templates.renderSelected(selectedItem, this.searchInputFullName);
-    this.$selectionContainer.append(selectedHtml);
+    this.addSelectedContentToContainer(selectedItem);
 
     return true;
   }
@@ -115,9 +111,27 @@ export default class AutoCompleteSearch {
       return false;
     }
 
-    const selectedHtml = this.dataSetConfig.templates.renderSelected(selectedItem, this.searchInputFullName);
-    this.$selectionContainer.append(selectedHtml);
+    this.addSelectedContentToContainer(selectedItem);
 
     return true;
+  }
+
+  addSelectedContentToContainer(selectedItem)
+  {
+    let value;
+    if (typeof this.dataSetConfig.value === 'function') {
+      value = this.dataSetConfig.value(selectedItem);
+    } else {
+      value = selectedItem[this.dataSetConfig.value];
+    }
+
+    const selectedHtml = this.dataSetConfig.templates.renderSelected(selectedItem);
+    // Hidden input is added into the selected li
+    const $selectedNode = $(selectedHtml);
+    const hiddenInput = `<input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />`;
+    $selectedNode.append(hiddenInput);
+
+    // Then the li is added to the list
+    this.$selectionContainer.append($selectedNode);
   }
 }
