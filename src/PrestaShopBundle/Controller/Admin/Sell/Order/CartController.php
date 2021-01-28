@@ -86,13 +86,15 @@ class CartController extends FrameworkBundleAdminController
         $kpiRowFactory->setOptions([
             'cart_id' => $cartId,
         ]);
+        $kpiRow = $kpiRowFactory->build();
+        $kpiRow->setAllowRefresh(false);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Cart/view.html.twig', [
             'cartView' => $cartView,
             'layoutTitle' => $this->trans('View', 'Admin.Actions'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'cartKpi' => $kpiRowFactory->build(),
+            'cartKpi' => $kpiRow,
             'createOrderFromCartLink' => $this->generateUrl('admin_orders_create', [
                 'cartId' => $cartId,
             ]),

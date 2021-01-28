@@ -266,7 +266,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $country->name[$order->id_lang],
             $address->postcode,
             $address->phone,
-            $address->phone_mobile
+            $address->phone_mobile,
+            $address->vat_number
         );
     }
 
@@ -299,7 +300,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $country->name[$order->id_lang],
             $address->postcode,
             $address->phone,
-            $address->phone_mobile
+            $address->phone_mobile,
+            $address->vat_number
         );
     }
 

@@ -70,6 +70,22 @@ class AddGroup extends BOBasePage {
     // Return successful message
     return this.getAlertSuccessBlockParagraphContent(page);
   }
+
+  /**
+   * Set price display method and save the form
+   * @param page
+   * @param priceDisplayMethod
+   * @returns {Promise<void>}
+   */
+  async setPriceDisplayMethod(page, priceDisplayMethod) {
+    await this.selectByVisibleText(page, this.priceDisplayMethodSelect, priceDisplayMethod);
+
+    // Save customer group
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+
+    // Return successful message
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
 }
 
 module.exports = new AddGroup();
