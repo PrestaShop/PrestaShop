@@ -388,7 +388,7 @@ class XmlLoader
      */
     public function populateEntityCountry()
     {
-        $xml = $this->loadEntity('country');
+        $xml = $this->fileLoader->load('country');
 
         // Read list of fields
         if (empty($xml->fields)) {
