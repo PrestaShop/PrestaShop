@@ -107,7 +107,7 @@ class MultistoreCheckboxEnabler
             $shopConstraint = new ShopConstraint(
                 $this->context->getContextShopId(),
                 $this->context->getContextShopGroup()->id,
-                true
+                true // important: will return a value only if it's present, skipping the hierarchical fallback system
             );
             $isOveriddenInCurrentContext = $this->configuration->has($options['attr']['multistore_configuration_key'], $shopConstraint);
 
