@@ -222,15 +222,6 @@ final class EmployeeType extends TranslatorAwareType
                 'label' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->languagesChoices,
             ])
-            ->add('default_page', ChoiceType::class, [
-                'choices' => $this->tabChoices,
-                'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
-                'row_attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => '2',
-                ],
-            ])
         ;
 
         if (!$options['is_restricted_access']) {
@@ -257,7 +248,6 @@ final class EmployeeType extends TranslatorAwareType
                     ]
                 )
             ;
-
             if ($this->isMultistoreFeatureActive) {
                 $builder->add('shop_association', ShopChoiceTreeType::class, [
                     'label' => $this->trans('Shop association', 'Admin.Global'),
@@ -267,6 +257,18 @@ final class EmployeeType extends TranslatorAwareType
             }
 
         }
+
+        $builder
+            ->add('default_page', ChoiceType::class, [
+                'choices' => $this->tabChoices,
+                'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
+                'row_attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => '2',
+                ],
+            ])
+        ;
     }
 
     /**
