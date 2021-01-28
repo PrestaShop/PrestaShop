@@ -25,7 +25,7 @@
 {% set isBasicTabValid = productForm.basic.description.vars.valid and productForm.basic.description_short.vars.valid %}
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
-{% set isSEOTabValid = productForm.seo.vars.valid %}
+{% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid %}
 {% set isStockTabValid = productForm.stock.vars.valid %}
 
