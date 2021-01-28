@@ -66,6 +66,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'basic' => $this->extractBasicData($productForEditing),
             'stock' => $this->extractStockData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
+            'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
         ];
@@ -151,6 +152,26 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),
             'unit_price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
             'unity' => $productForEditing->getPricesInformation()->getUnity(),
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractSEOData(ProductForEditing $productForEditing): array
+    {
+        $seoOptions = $productForEditing->getProductSeoOptions();
+
+        return [
+            'meta_title' => $seoOptions->getLocalizedMetaTitles(),
+            'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
+            'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
+            'redirect' => [
+                'type' => $seoOptions->getRedirectType(),
+                'target' => $seoOptions->getRedirectTargetId(),
+            ],
         ];
     }
 

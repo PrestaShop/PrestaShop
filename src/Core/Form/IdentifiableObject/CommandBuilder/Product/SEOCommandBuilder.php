@@ -26,26 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Defines settings for product.
- * If related Value Object does not exist, then various settings (e.g. regex, length constraints) are saved here
+ * Builder used to build UpdateSEO
  */
-class ProductSettings
+class SEOCommandBuilder implements ProductCommandBuilderInterface
 {
-    /**
-     * Class not supposed to be initialized, it only serves as static storage
-     */
-    private function __construct()
+    public function buildCommand(ProductId $productId, array $formData): array
     {
-    }
+        if (!isset($formData['seo'])) {
+            return [];
+        }
 
-    /**
-     * Bellow constants define maximum allowed length of product properties
-     */
-    public const MAX_NAME_LENGTH = 128;
-    public const MAX_MPN_LENGTH = 40;
-    public const MAX_META_TITLE_LENGTH = 70;
-    public const MAX_META_DESCRIPTION_LENGTH = 160;
+        $seoData = $formData['seo'];
+        $command = new UpdateProductSeoCommand($productId->getValue());
+
+        if (isset($seoData['meta_title'])) {
+            $command->setLocalizedMetaTitles($seoData['meta_title']);
+        }
+        if (isset($seoData['meta_description'])) {
+            $command->setLocalizedMetaDescriptions($seoData['meta_description']);
+        }
+        if (isset($seoData['link_rewrite'])) {
+            $command->setLocalizedLinkRewrites($seoData['link_rewrite']);
+        }
+
+        return [$command];
+    }
 }

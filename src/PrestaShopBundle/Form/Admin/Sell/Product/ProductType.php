@@ -28,12 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This is the parent product form type
@@ -41,27 +44,59 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductType extends TranslatorAwareType
 {
     /**
+     * @var ProductProvider
+     */
+    private $productUrlProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ProductProvider $productUrlProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ProductProvider $productUrlProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->productUrlProvider = $productUrlProvider;
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $editing = !empty($options['product_id']);
+        $formIsUsedToEditAProduct = !empty($options['product_id']);
         $builder
             ->add('basic', BasicInformationType::class)
             ->add('stock', StockType::class)
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)
+            ->add('seo', SEOType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
-                    'disabled' => $editing,
+                    'disabled' => $formIsUsedToEditAProduct,
                     'data-toggle' => 'pstooltip',
                     'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
                 ],
             ])
         ;
+
+        if ($formIsUsedToEditAProduct) {
+            $builder
+                ->add('preview', ButtonType::class, [
+                    'label' => $this->trans('Preview', 'Admin.Actions'),
+                    'attr' => [
+                        'class' => 'btn-secondary',
+                        'data-seo-url' => $this->productUrlProvider->getUrl((int) $options['product_id'], '{friendly-url}'),
+                    ],
+                ])
+            ;
+        }
     }
 
     /**

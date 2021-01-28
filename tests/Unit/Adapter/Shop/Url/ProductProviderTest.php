@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,27 +22,30 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% block product_footer %}
-  <div class="product-footer justify-content-md-center">
-    <div class="col-lg-4">
-      {% if null != productId %}
-      <a
-        href="{{ path('admin_product_unit_action', {action: 'delete', id: productId}) }}"
-        class="tooltip-link btn btn-lg delete"
-        data-toggle="pstooltip"
-        id="product_form_delete_btn"
-        title="{{ 'Permanently delete this product.'|trans({}, 'Admin.Catalog.Help') }}"
-        data-placement="left"
-        data-original-title="Delete"
-      >
-        <i class="material-icons">delete</i>
-      </a>
-      {{ form_widget(productForm.preview) }}
-      {% endif %}
-    </div>
-    <div class="col-sm-5 col-lg-8 text-right">
-      {{ form_widget(productForm.save) }}
-    </div>
-  </div>
-{% endblock %}
+ */
+
+declare(strict_types=1);
+
+namespace Tests\Unit\Adapter\Shop\Url;
+
+use Link;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
+
+class ProductProviderTest extends TestCase
+{
+    public function testGetUrl()
+    {
+        $productId = 42;
+        $alias = 'super-product';
+        $expectedUrl = 'http://superurl';
+        $linkMock = $this->createMock(Link::class);
+        $linkMock->method('getProductLink')
+            ->with($productId, $alias)
+            ->willReturn($expectedUrl)
+        ;
+        $provider = new ProductProvider($linkMock);
+        $generatedUrl = $provider->getUrl($productId, $alias);
+        $this->assertEquals($expectedUrl, $generatedUrl);
+    }
+}

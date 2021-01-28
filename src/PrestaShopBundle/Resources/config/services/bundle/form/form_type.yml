@@ -1232,6 +1232,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.adapter.shop.url.product_provider'
         tags:
             - { name: form.type }
 
@@ -1260,6 +1262,13 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
             - '@prestashop.core.form.choice_provider.carrier_by_reference_id'
             - '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.seo_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEOType'
+        parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }

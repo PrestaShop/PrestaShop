@@ -8,6 +8,7 @@ services:
             -
                 - '@prestashop.core.form.command_builder.product.basic_information'
                 - '@prestashop.core.form.command_builder.product.prices'
+                - '@prestashop.core.form.command_builder.product.seo'
                 - '@prestashop.core.form.command_builder.product.shipping'
                 - '@prestashop.core.form.command_builder.product.options_command_builder'
                 - '@prestashop.core.form.command_builder.product.stock_command_builder'
@@ -17,6 +18,9 @@ services:
 
     prestashop.core.form.command_builder.product.prices:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandBuilder
+
+    prestashop.core.form.command_builder.product.seo:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandBuilder
 
     prestashop.core.form.command_builder.product.shipping:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandBuilder

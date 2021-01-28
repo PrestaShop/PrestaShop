@@ -69,10 +69,20 @@ class BasicInformationType extends TranslatorAwareType
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
+                'options' => [
+                    'attr' => [
+                        'class' => 'serp-default-title',
+                    ],
+                ],
             ])
             ->add('description_short', TranslatableType::class, [
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
+                'options' => [
+                    'attr' => [
+                        'class' => 'serp-default-description',
+                    ],
+                ],
             ])
             ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
