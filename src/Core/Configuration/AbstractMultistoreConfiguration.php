@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Configuration;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 
 abstract class AbstractMultistoreConfiguration implements DataConfigurationInterface
@@ -54,6 +55,39 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
     {
         $this->configuration = $configuration;
         $this->shopContext = $shopContext;
+    }
+
+    /**
+     * @return ShopConstraint|null
+     */
+    protected function getShopConstraint(): ?ShopConstraint
+    {
+        if (!$this->shopContext->isAllShopContext()) {
+            $contextShopGroup = $this->shopContext->getContextShopGroup();
+            $contextShopId = $this->shopContext->getContextShopID();
+            $contextShopId = (int) $contextShopId > 0 ? $contextShopId : null;
+
+            return new ShopConstraint(
+                $contextShopId,
+                $contextShopGroup->id
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $configurationInput
+     *
+     * @return array
+     */
+    protected function getConfigurationInputValues(array $configurationInput): array
+    {
+        if (!$this->shopContext->isAllShopContext()) {
+            return $this->removeDisabledFields($configurationInput);
+        }
+
+        return $configurationInput;
     }
 
     /**
@@ -84,5 +118,12 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
         }
 
         return $configuration;
+    }
+
+    protected function updateConfigurationValue(string $configurationKey, string $formKey, array $input, ?ShopConstraint $shopConstraint, array $options = []): void
+    {
+        if (isset($input[$formKey])) {
+            $this->configuration->set($configurationKey, $input[$formKey], $shopConstraint, $options);
+        }
     }
 }
