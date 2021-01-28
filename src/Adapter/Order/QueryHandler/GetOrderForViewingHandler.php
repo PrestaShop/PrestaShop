@@ -271,6 +271,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $stateName = $state->name;
         }
 
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : '';
+
         return new OrderShippingAddressForViewing(
             $address->id,
             $address->firstname,
@@ -284,7 +286,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->postcode,
             $address->phone,
             $address->phone_mobile,
-            $address->vat_number
+            $address->vat_number,
+            $dni
         );
     }
 
@@ -305,6 +308,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $stateName = $state->name;
         }
 
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : '';
+
         return new OrderInvoiceAddressForViewing(
             $address->id,
             $address->firstname,
@@ -318,7 +323,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->postcode,
             $address->phone,
             $address->phone_mobile,
-            $address->vat_number
+            $address->vat_number,
+            $dni
         );
     }
 
