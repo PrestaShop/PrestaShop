@@ -36,7 +36,6 @@
             alt="{$product.name}"
           {/if}
           style="width:100%;"
-          itemprop="image"
           loading="lazy"
         >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
@@ -65,7 +64,6 @@
                 alt="{$product.name}"
               {/if}
               width="100"
-              itemprop="image"
               loading="lazy"
             >
           </li>

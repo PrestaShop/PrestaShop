@@ -43,10 +43,14 @@
     <link rel="canonical" href="{$page.canonical}">
   {/if}
   {block name='head_hreflang'}
+    {if isset($urls.alternative_langs) && $urls.alternative_langs|count > 1}
       {foreach from=$urls.alternative_langs item=pageUrl key=code}
-            <link rel="alternate" href="{$pageUrl}" hreflang="{$code}">
+        <link rel="alternate" href="{$pageUrl}" hreflang="{$code}">
       {/foreach}
+    {/if}
   {/block}
+  {include file="_partials/microdata-jsonld.tpl"}
+  {include file="_partials/pagination-seo.tpl"}
 {/block}
 
 {block name='head_viewport'}
