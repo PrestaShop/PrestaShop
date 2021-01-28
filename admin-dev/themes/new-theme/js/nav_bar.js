@@ -39,9 +39,15 @@ export default class NavBar {
 
       if ($navBar.length > 0) {
         const $navBarOverflow = $('.nav-bar-overflow');
+        const NavBarTransitions = new NavbarTransitionHandler(
+          $navBar,
+          $mainMenu,
+          getAnimationEvent('transition', 'end'),
+          $body,
+        );
+
         if ($navBarOverflow.length > 0) {
           new PerfectScrollbar('.nav-bar-overflow');
-
           $navBarOverflow.on('scroll', () => {
             const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
 
