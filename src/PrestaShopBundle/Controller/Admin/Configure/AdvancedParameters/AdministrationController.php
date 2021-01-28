@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -54,87 +54,6 @@ class AdministrationController extends FrameworkBundleAdminController
         $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
         $notificationsForm = $this->getNotificationsFormHandler()->getForm();
 
-        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
-    }
-
-    /**
-     * Process the Administration general configuration form.
-     *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function processGeneralFormAction(Request $request)
-    {
-        $generalForm = $this->processForm(
-            $request,
-            $this->getGeneralFormHandler(),
-            'General'
-        );
-        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
-        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
-
-        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
-    }
-
-    /**
-     * Process the Administration upload quota configuration form.
-     *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function processUploadQuotaFormAction(Request $request)
-    {
-        $generalForm = $this->getGeneralFormHandler()->getForm();
-        $uploadQuotaForm = $this->processForm(
-            $request,
-            $this->getUploadQuotaFormHandler(),
-            'UploadQuota'
-        );
-        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
-
-        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
-    }
-
-    /**
-     * Process the Administration notifications configuration form.
-     *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function processNotificationsFormAction(Request $request)
-    {
-        $generalForm = $this->getGeneralFormHandler()->getForm();
-        $notificationsForm = $this->processForm(
-            $request,
-            $this->getNotificationsFormHandler(),
-            'Notifications'
-        );
-        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
-
-        return $this->renderForm($generalForm, $uploadQuotaForm, $notificationsForm);
-    }
-
-    /**
-     * @param FormInterface $generalForm
-     * @param FormInterface $uploadQuotaForm
-     * @param FormInterface $notificationsForm
-     *
-     * @return Response
-     */
-    protected function renderForm(FormInterface $generalForm, FormInterface $uploadQuotaForm, FormInterface $notificationsForm): Response
-    {
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
@@ -151,13 +70,70 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
+     * Process the Administration general configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processGeneralFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getGeneralFormHandler(),
+            'General'
+        );
+    }
+
+    /**
+     * Process the Administration upload quota configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processUploadQuotaFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getUploadQuotaFormHandler(),
+            'UploadQuota'
+        );
+    }
+
+    /**
+     * Process the Administration notifications configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processNotificationsFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getNotificationsFormHandler(),
+            'Notifications'
+        );
+    }
+
+    /**
      * Process the Administration configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
      * @param string $hookName
      *
-     * @return FormInterface
+     * @return RedirectResponse
      */
     protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
@@ -171,7 +147,7 @@ class AdministrationController extends FrameworkBundleAdminController
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $data = $form->getData();
             $saveErrors = $formHandler->save($data);
 
@@ -182,7 +158,7 @@ class AdministrationController extends FrameworkBundleAdminController
             }
         }
 
-        return $form;
+        return $this->redirectToRoute('admin_administration');
     }
 
     /**
