@@ -111,7 +111,7 @@ services:
             - '@prestashop.adapter.general.configuration'
 
     prestashop.adapter.administration.upload_quota.form_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider'
         arguments:
             - '@prestashop.adapter.upload_quota.configuration'
 
