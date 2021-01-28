@@ -6,6 +6,7 @@
   background-color: rgba(#4d576e, 0.3);
   border: solid 1px #ccc;
   @include border-radius(3px);
+
   .theme-title {
     height: 40px;
     padding: 0;
@@ -17,17 +18,20 @@
     background-color: #4d576e;
     border-bottom: solid 1px #fff;
   }
+
   .thumbnail-wrapper {
     .action-wrapper {
       position: absolute;
       top: 40px;
       left: 0;
       display: none;
+
       .action-overlay {
         width: 100%;
         height: 260px;
         @include background-image(linear-gradient(rgba(#4D576E,0.5),#4D576E));
       }
+
       .action-buttons {
         position: absolute;
         top: 130px;
@@ -37,12 +41,15 @@
     }
   }
 }
+
 .addons-see-all-themes {
   padding-top: 21px;
+
   a {
     margin-left: 10px;
   }
 }
+
 .addons-style-search-bar {
   padding-top: 0;
 }

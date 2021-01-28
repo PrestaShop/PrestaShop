@@ -8,12 +8,14 @@
   @include margin-right(10px);
   @include border-radius(4px);
   @include float(left);
+
   .media-product-pack-img {
     width: 100%;
     padding-bottom: 5px;
     margin-bottom: 5px;
     border-bottom: 1px solid #ccc;
   }
+
   .media-product-pack-title {
     display: inline-block;
     width: 100%;
@@ -22,6 +24,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
   .media-product-pack-ref {
     display: inline-block;
     width: 100%;
@@ -31,6 +34,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
   .media-product-pack-action {
     position: absolute;
     top: 7px;
@@ -39,6 +43,7 @@
     @include right(7px);
     @include border-radius(4px);
   }
+
   .media-product-pack-quantity {
     position: absolute;
     top: 7px;

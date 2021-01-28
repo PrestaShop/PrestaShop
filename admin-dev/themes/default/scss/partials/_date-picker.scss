@@ -20,6 +20,7 @@
   padding: 4px;
   margin-top: 1px;
   @include border-radius(4px);
+
   &::before {
     position: absolute;
     top: -7px;
@@ -31,6 +32,7 @@
     border-bottom-color: rgba(#000, 0.2);
     border-left: 7px solid transparent;
   }
+
   &::after {
     position: absolute;
     top: -6px;
@@ -41,18 +43,22 @@
     border-bottom: 6px solid #fff;
     border-left: 6px solid transparent;
   }
+
   .ui-datepicker-header {
     font-weight: 500;
     color: #808080;
     background: transparent !important;
   }
+
   .ui-state-default {
     background: transparent !important;
   }
+
   .ui-state-highlight {
     background: #fefbe2 !important;
     border: solid 1px darken(#fefbe2, 50%) !important;
   }
+
   .ui-state-active {
     color: #fff !important;
     background: $primary-color !important;

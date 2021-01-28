@@ -23,9 +23,11 @@
   &.with-tabs {
     height: 140px;
   }
+
   > .wrapper {
     padding-left: 15px;
   }
+
   .page-title {
     position: relative;
     float: left;
@@ -39,16 +41,19 @@
 
     a {
       border-bottom: dotted 1px #fff;
+
       &:hover {
         color: #000;
         border-color: #000;
       }
     }
   }
+
   a {
     color: #fff;
     text-decoration: none;
   }
+
   h4.page-subtitle {
     @include float(left);
     position: absolute;
@@ -59,6 +64,7 @@
       @include left(70px);
     }
   }
+
   .toolbarBox {
     position: absolute;
     background-color: transparent;
@@ -78,6 +84,7 @@
         background: #fff;
       }
     }
+
     .btn-toolbar {
       justify-content: flex-end;
       margin: 0;
@@ -99,16 +106,20 @@
           width: 46px;
           font-size: 11px;
         }
+
         i {
           color: $toolbar-buttons-color;
+
           &:hover {
             color: $toolbar-buttons-hover-color;
           }
         }
+
         div {
           padding-top: 10px;
         }
       }
+
       .dropdown-toolbar {
         display: none;
         @include float(right);
@@ -119,6 +130,7 @@
       }
     }
   }
+
   ul.page-breadcrumb {
     float: left;
     padding: 0.3125rem 0;
@@ -134,10 +146,12 @@
     border: none !important;
     /* stylelint-enable */
     @include border-radius(0);
+
     li {
       i {
         font-size: 10px;
       }
+
       &.breadcrumb-container i,
       &.breadcrumb-current i {
         position: absolute;
@@ -148,17 +162,21 @@
         @include border-right(solid 1px darken($secondary-color,15%));
         @include left(-60px);
       }
+
       &::before {
         color: darken($secondary-color, 15%);
       }
+
       a {
         color: #363a41;
+
         &:hover {
           color: #363a41;
         }
       }
     }
   }
+
   .page-head-tabs {
     clear: left;
     background-color: #fff;
@@ -168,6 +186,7 @@
       border-top: 1px solid #dfdfdf;
       border-bottom: 1px solid #dfdfdf;
     }
+
     li {
       display: inline-block;
 

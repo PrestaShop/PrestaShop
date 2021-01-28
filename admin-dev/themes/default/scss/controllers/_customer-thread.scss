@@ -9,6 +9,7 @@
     border: none;
   }
 }
+
 .employee_avatar {
   @extend .avatar-lg;
   display: block !important;
@@ -47,6 +48,7 @@
   border: solid 1px #ccc;
   @include border-radius(4px);
   @include box-shadow(white 0 0 0 4px inset);
+
   &::before {
     @extend .icon;
     @extend .icon-spin;
@@ -60,6 +62,7 @@
     text-align: center;
     @include left(10px);
   }
+
   a {
     position: absolute;
     top: 1px;
@@ -75,51 +78,62 @@
     @include box-shadow(white 0 0 0 3px inset);
   }
 }
+
 .message-item-initial {
   h2 {
     font-size: 1.5em;
     @include margin(0, 0, 5px, 0);
   }
+
   .message-item-initial-body {
     @extend .panel;
     position: relative;
     margin-top: 10px;
   }
+
   .message-date {
     margin-bottom: 10px;
     color: #bbb;
   }
   //Messages
 }
+
 .message-item {
   @extend .media;
   position: relative;
   padding: 10px 0;
   border-bottom: solid 1px #eee;
   @include margin(0, 0, 0, 30px);
+
   &:last-child {
     border: none;
   }
+
   .message-item-heading {
     display: inline-block;
   }
+
   .message-body {
     @include margin(0, 0, 0, 80px);
+
     .message-item-text {
       @include padding(0, 0, 0, 10px);
       @include border-left(2px solid #ccc);
     }
   }
+
   .message-avatar {
     position: absolute;
     top: 10px;
     @include left(10px);
   }
+
   .message-date {
     color: #bbb;
   }
   //Arrows
 }
+
 .arrow::before,
 .arrow::after {
   position: absolute;
@@ -128,6 +142,7 @@
   border-color: transparent;
   border-style: solid;
 }
+
 .arrow-left::before {
   top: 6px;
   @include ltr () {
@@ -141,6 +156,7 @@
   @include margin-left(-7px);
   @include left(0);
 }
+
 .arrow-left::after {
   top: 7px;
   @include ltr () {
@@ -154,6 +170,7 @@
   @include left(0);
   @include margin-left(-6px);
 }
+
 .arrow-right::before {
   top: 6px;
   @include ltr () {
@@ -167,6 +184,7 @@
   @include right(0);
   @include margin-right(-7px);
 }
+
 .arrow-right::after {
   top: 7px;
   @include ltr () {
@@ -182,6 +200,7 @@
 }
 //Timeline
 $time-icon-size: 40px;
+
 .timeline {
   position: relative;
   display: table;
@@ -189,6 +208,7 @@ $time-icon-size: 40px;
   table-layout: fixed;
   border-spacing: 0;
   border-collapse: collapse;
+
   &::before {
     position: absolute;
     top: 0;
@@ -200,12 +220,15 @@ $time-icon-size: 40px;
     @include margin-left(-4px);
     @include left(50%);
   }
+
   .timeline-item {
     display: table-row;
+
     .timeline-caption {
       display: table-cell;
       width: 50%;
       vertical-align: top;
+
       .timeline-panel {
         @extend .panel;
         position: relative;
@@ -214,8 +237,10 @@ $time-icon-size: 40px;
         @include margin-left($time-icon-size + 2px);
         @include box-shadow(0);
       }
+
       h5 {
         margin: 0;
+
         span {
           display: block;
           margin-bottom: 4px;
@@ -223,12 +248,14 @@ $time-icon-size: 40px;
           color: #999;
         }
       }
+
       p {
         margin-top: 10px;
         margin-bottom: 0;
         font-size: 12px;
       }
     }
+
     .timeline-date {
       position: absolute;
       top: 10px;
@@ -236,6 +263,7 @@ $time-icon-size: 40px;
       @include text-align(right);
       @include left(-220px);
     }
+
     .timeline-icon {
       position: absolute;
       top: -2px;
@@ -254,44 +282,55 @@ $time-icon-size: 40px;
         color: #fff;
       }
     }
+
     &::before,
     &.alt::after {
       display: block;
       width: 50%;
       content: "";
     }
+
     &.alt {
       @include text-align(right);
+
       &::before {
         display: none;
       }
+
       .timeline-panel {
         @include margin-right($time-icon-size);
         @include margin-left(0);
       }
+
       .timeline-date {
         @include right(-220px);
         @include text-align(left);
         @include left(auto);
       }
+
       .timeline-icon {
         @include left(auto);
         @include right(-($time-icon-size + $time-icon-size / 2));
       }
     }
+
     &.active {
       display: table-caption;
       text-align: center;
+
       &::before {
         width: 1%;
       }
+
       .timeline-panel {
         @include margin-left(0);
       }
+
       .timeline-caption {
         display: inline-block;
         width: auto;
       }
+
       .timeline-date,
       .timeline-icon {
         position: static;
@@ -302,9 +341,11 @@ $time-icon-size: 40px;
     }
   }
 }
+
 .command-danger {
   background-color: $brand-danger !important;
 }
+
 .command-success {
   background-color: $brand-success !important;
 }

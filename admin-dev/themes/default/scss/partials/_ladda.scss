@@ -38,6 +38,7 @@ $spinnerSize: 32px;
 @mixin buttonColor( $name, $color ) {
   &[data-color=#{$name}] {
     background: $color;
+
     &:hover {
       background-color: lighten($color, 5%);
     }

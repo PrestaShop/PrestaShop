@@ -257,6 +257,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
   filter: none;
   border-left: none;
 }
+
 .select2-dropdown-open .select2-choice .select2-arrow b {
   background-position: -18px 1px;
 }
@@ -289,11 +290,17 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 }
 
 .select2-results ul.select2-result-sub > li .select2-result-label { padding-left: 20px; }
+
 .select2-results ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 40px; }
+
 .select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 60px; }
+
 .select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 80px; }
+
 .select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 100px; }
+
 .select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 110px; }
+
 .select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 120px; }
 
 .select2-results li {
@@ -357,6 +364,7 @@ disabled look for disabled choices in the results dropdown
   cursor: default;
   background: #f4f4f4;
 }
+
 .select2-results .select2-disabled {
   display: list-item;
   cursor: default;
@@ -420,14 +428,17 @@ disabled look for disabled choices in the results dropdown
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
+
 .select2-container-multi .select2-choices li {
   float: left;
   list-style: none;
 }
+
 html[dir="rtl"] .select2-container-multi .select2-choices li
 {
   float: right;
 }
+
 .select2-container-multi .select2-choices .select2-search-field {
   padding: 0;
   margin: 0;
@@ -485,14 +496,17 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
 
   -webkit-touch-callout: none;
 }
+
 html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
 {
   margin-right: 5px;
   margin-left: 0;
 }
+
 .select2-container-multi .select2-choices .select2-search-choice .select2-chosen {
   cursor: default;
 }
+
 .select2-container-multi .select2-choices .select2-search-choice-focus {
   background: #d4d4d4;
 }
@@ -509,6 +523,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
   background: url("../img/select2.png") right top no-repeat;
   outline: none;
 }
+
 html[dir="rtl"] .select2-search-choice-close {
   right: auto;
   left: 3px;
@@ -521,6 +536,7 @@ html[dir="rtl"] .select2-search-choice-close {
 .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover {
   background-position: right -11px;
 }
+
 .select2-container-multi .select2-choices .select2-search-choice-focus .select2-search-choice-close {
   background-position: right -11px;
 }

@@ -4,6 +4,7 @@ label.control-label {
   font-weight: 500;
   color: #666;
 }
+
 label.control-label span.label-tooltip {
   padding: 0 5px;
   font-size: 13px;
@@ -14,6 +15,7 @@ label.control-label span.label-tooltip {
   border-bottom: solid 1px #d8edf7;
   @include border-radius(3px);
 }
+
 label.required::before {
   position: relative;
   font-size: 14px;
@@ -21,20 +23,24 @@ label.required::before {
   color: #f00;
   content: "*";
 }
+
 .tooltip {
   font-family: $font-family-sans-serif;
   font-size: 12px;
   white-space: normal;
 }
+
 select.input-tiny,
 input[type="text"].input-tiny,
 input[type="password"].input-tiny {
   width: 80px;
   @include float(left);
 }
+
 textarea {
   resize: none;
 }
+
 textarea:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -55,6 +61,7 @@ input[type="color"]:focus,
   border-color: $input-focus-border;
   @include box-shadow(none);
 }
+
 textarea:hover,
 input[type="text"]:hover,
 input[type="password"]:focus,
@@ -78,25 +85,30 @@ input[type="color"]:hover,
   .caret {
     border-top-color: $gray-dark !important;
   }
+
   &:hover {
     .caret {
       border-top-color: #fff !important;
     }
   }
+
   &.btn-default {
     i {
       color: $gray;
     }
+
     &:hover {
       color: #fff;
       background-color: $brand-primary;
       border-color: darken($brand-primary, 10%);
       @include box-shadow(none);
+
       i {
         color: #fff;
       }
     }
   }
+
   &.btn-primary {
     i {
       color: #fff;
@@ -104,21 +116,26 @@ input[type="color"]:hover,
     color: #fff;
     text-transform: uppercase;
     background-color: $brand-primary;
+
     &:hover {
       background-color: darken($brand-primary, 10%);
       @include box-shadow(none);
     }
   }
+
   &.btn-default[disabled] {
     color: $gray-light;
     background-color: lighten($gray-light, 35%);
     border-color: $gray-light;
   }
 }
+
 .dropdown-menu {
   @include text-align(left);
+
   > li a {
     padding: 5px 10px;
+
     &:hover {
       i {
         color: #fff;
@@ -126,29 +143,37 @@ input[type="color"]:hover,
     }
   }
 }
+
 .btn-group-action {
   line-height: 0;
+
   .btn {
     font-family: $font-family-sans-serif;
   }
+
   .btn-group {
     white-space: nowrap;
+
     > a,
     button {
       display: inline-block;
       float: none;
       text-decoration: none;
     }
+
     > a:first-child {
       @include margin-right(-3px);
     }
+
     i {
       font-size: 14px;
     }//form file upload
   }
 }
+
 .dummyfile {
   position: relative;
+
   .hide-file-upload {
     position: absolute;
     top: 0;
@@ -159,24 +184,29 @@ input[type="color"]:hover,
   }
   //typeahead
 }
+
 .tt-query {
   @include border-right-radius(3px!important);
 }
+
 .tt-dropdown-menu {
   font-size: 0.9em;
   text-transform: none;
   background-color: #fff;
   border: solid 1px #ccc;
 }
+
 .tt-suggestions {
   padding: 0 6px;
   @include box-shadow(rgba(black,0.25) 0 1px 4px);
 }
+
 .tt-suggestion p {
   padding: 0 !important;
   margin: 0 !important;
   border-bottom: solid 1px #ccc;
 }
+
 .tt-suggestion:last-child p {
   border-bottom: none;
 }
@@ -189,9 +219,11 @@ input[type="color"]:hover,
   border: solid 1px #ccc;
   @include border-radius(3px);
   @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset);
+
   span {
     @include float(left);
   }
+
   > span {
     display: inline-block;
     padding: 2px 5px;
@@ -200,6 +232,7 @@ input[type="color"]:hover,
     background-color: lighten($brand-primary, 15%);
     border: 1px solid $brand-primary;
     border-radius: 2px;
+
     > a {
       font-weight: 700;
       color: $brand-primary;
@@ -207,6 +240,7 @@ input[type="color"]:hover,
       @include padding-left(5px);
     }
   }
+
   > input {
     width: 140px;
     height: auto;
@@ -214,11 +248,13 @@ input[type="color"]:hover,
     border: 0 none;
     @include box-shadow(none);
   }
+
   > input:focus {
     outline: 0;
     @include box-shadow(none);
   }
 }
+
 .form-group {
   @media (max-width: $screen-lg) {
     input[type="text"],
@@ -228,6 +264,7 @@ input[type="color"]:hover,
     select {
       margin: 4px 0;
     }
+
     .input-group {
       margin: 4px 0;
 
@@ -241,6 +278,7 @@ input[type="color"]:hover,
     }
   }
 }
+
 input[type="text"],
 input[type="search"],
 input[type="password"],

@@ -25,14 +25,17 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
 .chosen-select {
   width: 100%;
 }
+
 .chosen-select-deselect {
   width: 100%;
 }
+
 .chosen-container {
   position: relative;
   display: inline-block;
   font-size: $font-size-base;
   vertical-align: middle;
+
   .chosen-drop {
     position: absolute;
     top: 100%;
@@ -45,10 +48,12 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     @include border-bottom-radius($chosen-border-radius);
     @include box-shadow($chosen-drop-box-shadow);
   }
+
   &.chosen-with-drop .chosen-drop {
     @include left(0);
     @include right(0);
   }
+
   .chosen-results {
     position: relative;
     max-height: 240px;
@@ -58,46 +63,56 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     -webkit-overflow-scrolling: touch;
     @include padding(0, 0, 0, 4px);
     @include margin(0, 4px, 4px, 0);
+
     li {
       display: none;
       padding: 5px 6px;
       margin: 0;
       line-height: $line-height-base;
       list-style: none;
+
       em {
         font-style: normal;
         background: #feffde;
       }
+
       &.group-result {
         display: list-item;
         font-weight: 700;
         color: #999;
         cursor: default;
       }
+
       &.group-option {
         @include padding-left(15px);
       }
+
       &.active-result {
         display: list-item;
         cursor: pointer;
       }
+
       &.highlighted {
         color: #fff;
         background-color: $link-color;
+
         em {
           background: transparent;
         }
       }
+
       &.disabled-result {
         display: list-item;
         color: $gray-light;
       }
     }
+
     .no-results {
       display: list-item;
       background: $gray-lighter;
     }
   }
+
   .chosen-results-scroll {
     position: absolute;
     z-index: 1;
@@ -105,6 +120,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     margin: 0 4px;
     text-align: center;
     background: #fff;
+
     span {
       display: inline-block;
       width: 9px;
@@ -112,18 +128,22 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       text-indent: -5000px;
     }
   }
+
   .chosen-results-scroll-down {
     bottom: 0;
+
     span {
       background: url($chosen-sprite-path) no-repeat -4px -3px;
     }
   }
+
   .chosen-results-scroll-up {
     span {
       background: url($chosen-sprite-path) no-repeat -22px -3px;
     }
   }
 }
+
 .chosen-container-single {
   .chosen-single {
     position: relative;
@@ -139,6 +159,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     @include padding(0, 0, 0, 8px);
     @include box-shadow($chosen-box-shadow);
     @include border-radius($input-border-radius);
+
     &:hover {
       text-decoration: none;
       cursor: pointer;
@@ -159,13 +180,16 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       font-size: 1px;
       background: url($chosen-sprite-path) right top no-repeat;
       @include right(26px);
+
       &:hover {
         background-position: right -11px;
       }
     }
+
     &.chosen-disabled .chosen-single abbr:hover {
       background-position: right 2px;
     }
+
     div {
       position: absolute;
       top: 0;
@@ -173,6 +197,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       width: 18px;
       height: 100%;
       @include right(0);
+
       b {
         @extend .icon;
         @extend .icon-caret-down;
@@ -185,9 +210,11 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       }
     }
   }
+
   .chosen-default {
     color: $gray-light;
   }
+
   .chosen-search {
     position: relative;
     z-index: $zindex-dropdown;
@@ -195,6 +222,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
+
     input {
       width: 100%;
       margin: 1px 0;
@@ -205,6 +233,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       @include box-shadow($chosen-box-shadow);
     }
   }
+
   .chosen-search::before {
     @extend .icon;
     @extend .icon-search;
@@ -219,6 +248,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     text-align: center;
     @include right(7px);
   }
+
   .chosen-drop {
     margin-top: -1px;
     -webkit-background-clip: padding-box;
@@ -227,6 +257,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     @include border-bottom-radius($chosen-border-radius);
   }
 }
+
 .chosen-container-single-nosearch {
   .chosen-search {
     input {
@@ -235,6 +266,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     }
   }
 }
+
 .chosen-container-multi {
   .chosen-choices {
     position: relative;
@@ -249,14 +281,17 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
     @include border-top-radius($chosen-multi-border-radius);
     @include border-bottom-radius($chosen-multi-border-radius);
     @include box-shadow($chosen-box-shadow);
+
     li {
       list-style: none;
       @include float(left);
     }
+
     .search-field {
       padding: 0;
       margin: 0;
       white-space: nowrap;
+
       input {
         height: $chosen-multi-height - 8px;
         padding: 4px;
@@ -267,10 +302,12 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
         outline: 0;
         @include box-shadow(none);
       }
+
       .default {
         color: #999;
       }
     }
+
     .search-choice {
       position: relative;
       line-height: 13px;
@@ -287,6 +324,7 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       @include border-bottom-radius($chosen-border-radius);
       @include gradient-vertical(#ffffff, $gray-lighter);
       @include box-shadow($chosen-box-shadow);
+
       .search-choice-close {
         position: absolute;
         top: 5px;
@@ -296,96 +334,119 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
         font-size: 1px;
         background: url($chosen-sprite-path) right top no-repeat;
         @include right(4px);
+
         &:hover {
           background-position: right -11px;
         }
       }
     }
+
     .search-choice-focus {
       background: #d4d4d4;
+
       .search-choice-close {
         background-position: right -11px;
       }
     }
   }
+
   .chosen-results {
     padding: 0;
     margin: 0;
   }
+
   .chosen-drop {
     .result-selected {
       display: none;
     }
   }
 }
+
 .chosen-container-active {
   .chosen-single {
     border: 1px solid $chosen-focus-border;
     @include box-shadow($chosen-focus-box-shadow);
     @include transition($chosen-focus-transition);
   }
+
   &.chosen-with-drop .chosen-single {
     background-color: $gray-lighter;
     border: 1px solid $chosen-focus-border;
     @include box-shadow($chosen-focus-box-shadow);
     @include transition($chosen-focus-transition);
+
     div {
       background: transparent;
       @include border-left(none);
+
       b {
         background-position: -18px 7px;
       }
     }
   }
+
   .chosen-choices {
     border: 1px solid $chosen-focus-border;
     @include border-bottom-radius(0);
     @include box-shadow($chosen-focus-box-shadow);
     @include transition($chosen-focus-transition);
+
     .search-field input {
       color: #111 !important;
     }
   }
 }
+
 .chosen-disabled {
   cursor: default;
   opacity: 0.5 !important;
+
   .chosen-single {
     cursor: default;
   }
+
   .chosen-choices .search-choice .search-choice-close {
     cursor: default;
   }
 }
+
 .chosen-rtl {
   text-align: right;
+
   .chosen-single {
     padding: 0 8px 0 0;
     overflow: visible;
+
     span {
       margin-right: 0;
       margin-left: 26px;
       direction: rtl;
     }
+
     div {
       right: auto;
       left: 7px;
     }
+
     abbr {
       right: auto;
       left: 26px;
     }
   }
+
   .chosen-choices {
     .search-field input {
       direction: rtl;
     }
+
     li {
       float: right;
     }
+
     .search-choice {
       padding: 3px 5px 3px 19px;
       margin: 6px 5px 3px 0;
+
       .search-choice-close {
         right: auto;
         left: 4px;
@@ -393,17 +454,21 @@ $chosen-sprite-path: "../img/chosen-sprite.png";
       }
     }
   }
+
   &.chosen-container-single .chosen-results {
     padding: 0 4px 0 0;
     margin: 0 0 4px 4px;
   }
+
   .chosen-results .group-option {
     padding-right: 15px;
     padding-left: 0;
   }
+
   &.chosen-container-active.chosen-with-drop .chosen-single div {
     border-right: none;
   }
+
   .chosen-search input {
     padding: 4px 5px 4px 20px;
     direction: rtl;
