@@ -32,6 +32,7 @@ $ps-stars: (
       display: inline-block;
       color: $gray-medium;
       text-align: right;
+
       &::before {
         position: absolute;
         top: 0;

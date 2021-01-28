@@ -10,6 +10,7 @@
   .module-item-heading-grid {
     position: relative;
     text-align: center;
+
     .module-logo-thumb-grid {
       width: 100%;
       width: $module-logo-size;
@@ -17,6 +18,7 @@
       margin: 0 auto;
       text-align: center;
       @include border-radius(0);
+
       > img {
         max-width: $module-logo-size;
         max-height: $module-logo-size;
@@ -41,6 +43,7 @@
       text-align: center;
       text-overflow: ellipsis;
       white-space: nowrap;
+
       b {
         font-weight: lighter;
       }
@@ -58,12 +61,14 @@
   .module-quick-action-grid {
     display: inline;
     color: $gray-dark;
+
     .module-actions {
       position: absolute;
       bottom: 10px;
       left: 0;
       width: 100%;
     }
+
     .light-button {
       float: none;
       width: 92%;
@@ -72,6 +77,7 @@
       margin: 0 auto;
       font-size: 0.625rem;
     }
+
     .onclick {
       margin-bottom: -7px;
     }
@@ -81,8 +87,10 @@
     min-height: 100px;
     margin: 15px 0;
     text-align: center;
+
     .module-read-more-grid {
       display: inline-block;
+
       .module-read-more-grid-btn {
         font-weight: 700;
       }
@@ -101,6 +109,7 @@
   margin-bottom: 0.75rem;
   cursor: pointer;
   user-select: none;
+
   .module-addons-item-wrapper-grid {
     @extend .module-item-wrapper-grid;
     display: flex;
@@ -109,6 +118,7 @@
     height: 100%;
     text-align: center;
     vertical-align: middle;
+
     .module-icon-addons-exit-grid {
       display: block;
       padding-bottom: 20px;
@@ -124,6 +134,7 @@
   0% {
     background-position: -468px 0;
   }
+
   100% {
     background-position: 468px 0;
   }
@@ -150,6 +161,7 @@
       animation-timing-function: linear;
       animation-iteration-count: infinite;
       animation-fill-mode: forwards;
+
       .background-masker {
         position: absolute;
         box-sizing: border-box;
@@ -162,13 +174,16 @@
 .outlined .background-masker {
   border: 1px solid #ddd;
 }
+
 .outlined:hover .background-masker {
   border: none;
 }
+
 .outlined:hover .background-masker:hover {
   z-index: 1;
   border: 1px solid #ccc;
 }
+
 .background-masker.header-top,
 .background-masker.header-bottom,
 .background-masker.subheader-bottom {
@@ -177,6 +192,7 @@
   left: 40px;
   height: 10px;
 }
+
 .background-masker.header-left,
 .background-masker.subheader-left,
 .background-masker.header-right,
@@ -186,28 +202,34 @@
   width: 10px;
   height: 8px;
 }
+
 .background-masker.header-bottom {
   top: 18px;
   height: 6px;
 }
+
 .background-masker.subheader-left,
 .background-masker.subheader-right {
   top: 24px;
   height: 6px;
 }
+
 .background-masker.header-right,
 .background-masker.subheader-right {
   right: 0;
   left: 300px;
   width: auto;
 }
+
 .background-masker.subheader-right {
   left: 230px;
 }
+
 .background-masker.subheader-bottom {
   top: 30px;
   height: 10px;
 }
+
 .background-masker.content-top,
 .background-masker.content-second-line,
 .background-masker.content-third-line,
@@ -219,9 +241,11 @@
   left: 0;
   height: 6px;
 }
+
 .background-masker.content-top {
   height: 20px;
 }
+
 .background-masker.content-first-end,
 .background-masker.content-second-end,
 .background-masker.content-third-end {
@@ -231,16 +255,20 @@
   width: auto;
   height: 8px;
 }
+
 .background-masker.content-second-line {
   top: 68px;
 }
+
 .background-masker.content-second-end {
   top: 74px;
   left: 420px;
 }
+
 .background-masker.content-third-line {
   top: 82px;
 }
+
 .background-masker.content-third-end {
   top: 88px;
   left: 300px;

@@ -38,10 +38,12 @@
       z-index: 1000; // above header toolbar
       padding-top: 28px;
     }
+
     .fade-enter-active,
     .fade-leave-active {
       @include transition(opacity 0.5s);
     }
+
     .fade-enter,
     .fade-leave-to {
       opacity: 0;
@@ -52,6 +54,7 @@
     .collapse-button {
       width: 100%;
       text-align: left;
+
       .material-icons {
         font-size: 20px;
         color: $gray-medium;
@@ -139,6 +142,7 @@
         color: #fff;
         vertical-align: middle;
       }
+
       &:hover {
         background: $primary-hover;
       }
@@ -191,10 +195,12 @@
           &.product-title {
             padding-left: 6rem;
           }
+
           &:last-child {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+
             .material-icons {
               margin-right: 5px;
             }
@@ -204,21 +210,27 @@
 
       .qty-update {
         color: $brand-primary;
+
         .material-icons {
           vertical-align: middle;
         }
       }
+
       .enable {
         color: $success;
       }
+
       .disable {
         color: $danger;
       }
+
       .low-stock {
         background: $danger-hover;
+
         .stock-warning {
           font-weight: 700;
           color: $danger;
+
           &.ico {
             padding: 0 5px;
             cursor: pointer;
@@ -233,6 +245,7 @@
       small {
         display: block;
       }
+
       .bulk-qty {
         max-width: 100px;
 
@@ -240,10 +253,12 @@
           max-width: 60px;
         }
       }
+
       .update-qty {
         color: #fff;
         @include transition(background-color 0.2s ease);
       }
+
       .qty {
         padding-left: 20px;
       }
