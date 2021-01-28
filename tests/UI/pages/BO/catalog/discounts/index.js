@@ -121,7 +121,7 @@ class CartRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
@@ -283,7 +283,7 @@ class CartRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
@@ -360,10 +360,12 @@ class CartRules extends BOBasePage {
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -405,6 +407,7 @@ class CartRules extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }

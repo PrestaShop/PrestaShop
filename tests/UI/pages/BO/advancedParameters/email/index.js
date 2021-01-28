@@ -165,7 +165,7 @@ class Email extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -191,7 +191,7 @@ class Email extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -216,7 +216,7 @@ class Email extends BOBasePage {
     await page.check(this.logEmailsToggleInput(toEnable ? 1 : 0));
     await page.$eval(this.saveEmailFormButton, el => el.click());
     await page.waitForNavigation();
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -326,7 +326,7 @@ class Email extends BOBasePage {
     await page.click(this.gridActionButton);
     await this.waitForSelectorAndClick(page, this.eraseAllButton);
 
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

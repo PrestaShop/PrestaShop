@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
+use PrestaShopBundle\Controller\Admin\CommonController;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -118,6 +119,8 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Process Grid search.
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
@@ -185,7 +188,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'categoryForm' => $categoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl(0, '{friendy-url}'),
+                    ->getUrl(0, '{friendly-url}'),
             ]
         );
     }
@@ -234,7 +237,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'rootCategoryForm' => $rootCategoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl(0, '{friendy-url}'),
+                    ->getUrl(0, '{friendly-url}'),
             ]
         );
     }
@@ -311,7 +314,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'editableCategory' => $editableCategory,
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl($categoryId, '{friendy-url}'),
+                    ->getUrl($categoryId, '{friendly-url}'),
             ]
         );
     }
@@ -383,7 +386,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'editableCategory' => $editableCategory,
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl($categoryId, '{friendy-url}'),
+                    ->getUrl($categoryId, '{friendly-url}'),
             ]
         );
     }

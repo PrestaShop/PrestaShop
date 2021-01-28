@@ -27,25 +27,26 @@ Feature: Duplicate product from Back Office (BO).
       | name[fr-FR] | lunettes        |
       | is_virtual  | false           |
     And I update product "product1" basic information with following values:
-      | description[en-US]              | nice sunglasses            |
-      | description[fr-FR]              | belles lunettes            |
+      | description[en-US]       | nice sunglasses            |
+      | description[fr-FR]       | belles lunettes            |
       | description_short[en-US] | Simple & nice sunglasses   |
       | description_short[fr-FR] | lunettes simples et belles |
     And I assign product product1 to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
-    And I update product "product1" options with following information:
-      | visibility          | catalog           |
-      | available_for_order | false             |
-      | online_only         | true              |
-      | show_price          | false             |
-      | condition           | used              |
-      | isbn                | 978-3-16-148410-0 |
-      | upc                 | 72527273070       |
-      | ean13               | 978020137962      |
-      | mpn                 | mpn1              |
-      | reference           | ref1              |
-      | manufacturer        | studioDesign      |
+    And I update product "product1" options with following values:
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | manufacturer        | studioDesign |
+    And I update product "product1" details with following values:
+      | isbn      | 978-3-16-148410-0 |
+      | upc       | 72527273070       |
+      | ean13     | 978020137962      |
+      | mpn       | mpn1              |
+      | reference | ref1              |
     And I update product "product1" tags with following values:
       | tags[en-US] | smart,glasses,sunglasses,men |
       | tags[fr-FR] | lunettes,bien,soleil         |
@@ -98,10 +99,10 @@ Feature: Duplicate product from Back Office (BO).
       | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
     And I add new attachment "att1" with following properties:
       | description[en-US] | puffin photo nr1 |
-      | description[fr-FR] | macareux                              |
-      | name[en-US]        | puffin                                |
-      | name[fr-FR]        | macareux                              |
-      | file_name          | app_icon.png                          |
+      | description[fr-FR] | macareux         |
+      | name[en-US]        | puffin           |
+      | name[fr-FR]        | macareux         |
+      | file_name          | app_icon.png     |
     And I associate attachment "att1" with product product1
     And I enable product "product1"
     When I update product product1 SEO information with following values:
@@ -131,18 +132,23 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should be assigned to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
-    And product "copy_of_product1" should have following options information:
-      | visibility          | catalog           |
-      | available_for_order | false             |
-      | online_only         | true              |
-      | show_price          | false             |
-      | condition           | used              |
-      | isbn                | 978-3-16-148410-0 |
-      | upc                 | 72527273070       |
-      | ean13               | 978020137962      |
-      | mpn                 | mpn1              |
-      | reference           | ref1              |
-    And manufacturer "studioDesign" should be assigned to product copy_of_product1
+    And product "copy_of_product1" should have following options:
+      | product option      | value        |
+      | active              | false        |
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | false        |
+      | manufacturer        | studioDesign |
+    And product "copy_of_product1" should have following details:
+      | product detail | value             |
+      | isbn           | 978-3-16-148410-0 |
+      | upc            | 72527273070       |
+      | ean13          | 978020137962      |
+      | mpn            | mpn1              |
+      | reference      | ref1              |
     And product "copy_of_product1" localized "tags" should be:
       | locale | value                        |
       | en-US  | smart,glasses,sunglasses,men |
@@ -164,9 +170,9 @@ Feature: Duplicate product from Back Office (BO).
       | locale | value                 |
       | en-US  | SUNGLASSES meta title |
     And product "copy_of_product1" localized "meta_description" should be:
-      | locale | value                        |
+      | locale | value        |
       | en-US  | Its so smart |
-      | fr-FR  | lel joke                     |
+      | fr-FR  | lel joke     |
     And product "copy_of_product1" localized "link_rewrite" should be:
       | locale | value              |
       | en-US  | smart-sunglasses   |

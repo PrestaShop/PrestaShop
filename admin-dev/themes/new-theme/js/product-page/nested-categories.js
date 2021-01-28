@@ -3,6 +3,7 @@
  */
 export default function () {
   const nestedCategoriesForm = $('#form_step1_categories');
+
   return {
     init() {
       if (nestedCategoriesForm.length === 0) {

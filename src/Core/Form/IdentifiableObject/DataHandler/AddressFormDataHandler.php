@@ -61,7 +61,7 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * {@inheritdoc]
+     * {@inheritdoc}
      *
      * @throws CountryConstraintException
      * @throws StateConstraintException

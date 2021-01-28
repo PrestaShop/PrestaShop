@@ -45,7 +45,7 @@ class EntityMapper
      * @param int $id
      * @param int $id_lang
      * @param ObjectModel $entity
-     * @param array<string> $entity_defs
+     * @param array<string,string|array> $entity_defs
      * @param int $id_shop
      * @param bool $should_cache_objects
      *

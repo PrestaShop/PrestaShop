@@ -195,6 +195,7 @@
       },
       searchInfo() {
         const transKey = (this.$store.state.totalTranslations <= 1) ? 'search_info_singular' : 'search_info';
+
         return this.trans(transKey)
           .replace('%s', this.$store.getters.searchTags.join(' - '))
           .replace('%d', this.$store.state.totalTranslations);

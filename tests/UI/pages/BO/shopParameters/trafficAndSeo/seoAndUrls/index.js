@@ -109,7 +109,7 @@ class SeoAndUrls extends BOBasePage {
     ]);
 
     await this.confirmDeleteSeoUrlPage(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Column methods */
@@ -133,10 +133,12 @@ class SeoAndUrls extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let row = 1; row <= rowsNumber; row++) {
       const rowContent = await this.getTextColumnFromTable(page, row, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -170,7 +172,7 @@ class SeoAndUrls extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSeoUrlPage(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -299,7 +301,7 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableFriendlyURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -311,7 +313,7 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableAccentedURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -323,7 +325,7 @@ class SeoAndUrls extends BOBasePage {
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
     await page.check(this.switchDisplayAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

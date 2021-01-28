@@ -51,7 +51,7 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
     }
 
     /**
-     * {@inheritdoc]
+     * {@inheritdoc}
      */
     public function create(array $data)
     {

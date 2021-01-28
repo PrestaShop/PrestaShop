@@ -371,6 +371,11 @@ class ProductController extends FrameworkBundleAdminController
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
         ];
+        $toolbarButtons['add_v2'] = [
+            'href' => $this->generateUrl('admin_products_v2_create'),
+            'desc' => $this->trans('New product v2', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+        ];
 
         return $toolbarButtons;
     }
@@ -705,7 +710,8 @@ class ProductController extends FrameworkBundleAdminController
             foreach ($combinations as $combination) {
                 $formBuilder->add(
                     'combination_' . $combination['id_product_attribute'],
-                    ProductCombination::class
+                    ProductCombination::class,
+                    ['allow_extra_fields' => true]
                 );
             }
         }

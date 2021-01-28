@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Adds specific price
+ *
+ * @deprecated since 1.7.8.0 Use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand
  */
 class AddSpecificPriceCommand
 {
@@ -392,7 +394,7 @@ class AddSpecificPriceCommand
         try {
             return new DateTime($dateTime);
         } catch (Exception $e) {
-            throw new SpecificPriceConstraintException('An error occured when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
+            throw new SpecificPriceConstraintException('An error occurred when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
         }
     }
 }

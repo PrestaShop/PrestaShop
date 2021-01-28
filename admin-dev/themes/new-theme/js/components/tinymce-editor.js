@@ -141,6 +141,9 @@ class TinyMCEEditor {
     editor.on('blur', () => {
       window.tinyMCE.triggerSave();
     });
+    EventEmitter.emit('tinymceEditorSetup', {
+      editor,
+    });
   }
 
   /**
@@ -162,6 +165,7 @@ class TinyMCEEditor {
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
           const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
+
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());

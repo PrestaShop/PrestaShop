@@ -206,6 +206,7 @@ describe('Filter, pagination and sort files', async () => {
           await filesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
           let sortedTable = await filesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
           if (test.args.isFloat) {
             nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
             sortedTable = await sortedTable.map(text => parseFloat(text));

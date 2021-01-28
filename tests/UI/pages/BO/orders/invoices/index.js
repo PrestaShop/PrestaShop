@@ -35,7 +35,7 @@ class Invoice extends BOBasePage {
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} #save-invoices-options-button`;
     this.invoicePrefixInput = '#form_invoice_prefix_1';
     this.invoiceAddCurrentYearToggleInput = toggle => `#form_add_current_year_${toggle}`;
-    this.optionYearPositionRadioButton = id => `#form_year_position_${id}`;
+    this.optionYearPositionRadioButton = id => `#form_year_position_${id} + i`;
   }
 
   /*
@@ -55,6 +55,7 @@ class Invoice extends BOBasePage {
       page.waitForEvent('download'),
       page.click(this.generatePdfByDateButton),
     ]);
+
     return download.path();
   }
 
@@ -69,7 +70,7 @@ class Invoice extends BOBasePage {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
     await page.click(this.generatePdfByDateButton);
 
-    return this.getTextContent(page, this.alertTextBlock);
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
@@ -94,6 +95,7 @@ class Invoice extends BOBasePage {
    */
   async chooseStatus(page, statusName) {
     const statusElements = await page.$$(this.statusOrderStateSpan);
+
     for (let i = 0; i < statusElements.length; i++) {
       if (await page.evaluate(element => element.textContent, statusElements[i]) === statusName) {
         await statusElements[i].click();
@@ -112,6 +114,7 @@ class Invoice extends BOBasePage {
       page.waitForEvent('download'), // wait for download to start
       page.click(this.generatePdfByStatusButton),
     ]);
+
     return download.path();
   }
 
@@ -122,7 +125,7 @@ class Invoice extends BOBasePage {
    */
   async generatePDFByStatusAndFail(page) {
     await page.click(this.generatePdfByStatusButton);
-    return this.getTextContent(page, this.alertTextBlock);
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
@@ -141,7 +144,7 @@ class Invoice extends BOBasePage {
    */
   async saveInvoiceOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveInvoiceOptionsButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

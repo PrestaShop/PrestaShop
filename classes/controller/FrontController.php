@@ -191,6 +191,9 @@ class FrontControllerCore extends Controller
      */
     protected $automaticallyAllocateDeliveryAddress = true;
 
+    /** @var string Page name */
+    public $page_name;
+
     /**
      * Controller constructor.
      *

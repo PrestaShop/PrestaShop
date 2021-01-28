@@ -40,11 +40,12 @@ class Preferences extends BOBasePage {
       page,
       this.euroCurrencyRestrictionsCheckbox(paymentModule),
     );
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.euroCurrencyRestrictionsCheckbox(paymentModule)} + i`, el => el.click());
     }
     await page.click(this.currencyRestrictionsSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -59,11 +60,12 @@ class Preferences extends BOBasePage {
     const selector = this.paymentModuleCheckbox(paymentModule, group);
     await page.waitForSelector(`${selector} + i`, {state: 'attached'});
     const isCheckboxSelected = await this.isCheckboxSelected(page, selector);
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${selector} + i`, el => el.click());
     }
     await page.click(this.groupRestrictionsSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -83,11 +85,12 @@ class Preferences extends BOBasePage {
       page,
       this.countryRestrictionsCheckbox(paymentModule, countryID),
     );
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`, el => el.click());
     }
     await page.click(this.currencyRestrictionsSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -107,11 +110,12 @@ class Preferences extends BOBasePage {
       page,
       this.carrierRestrictionsCheckbox(paymentModule, carrierID),
     );
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.carrierRestrictionsCheckbox(paymentModule, carrierID)} + i`, el => el.click());
     }
     await page.click(this.carrierRestrictionSaveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

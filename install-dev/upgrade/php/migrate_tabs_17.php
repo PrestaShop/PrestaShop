@@ -24,8 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShopBundle\Install\Install;
+use PrestaShop\PrestaShop\Adapter\Entity\Language;
 use PrestaShopBundle\Install\LanguageList;
+use PrestaShopBundle\Install\XmlLoader;
 
 /**
  * Migrate BO tabs for 1.7 (new reorganization of BO)
@@ -59,12 +60,48 @@ function migrate_tabs_17()
     /* insert the new structure */
     ProfileCore::resetCacheAccesses();
     LanguageCore::resetCache();
-    $install = new Install();
-    $install->populateDatabase('tab');
+    if (!populateTab()) {
+        return false;
+    }
 
     /* update remaining idParent */
     foreach($moduleParents as $idParent => $className) {
         $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name='.pSQL($className));
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int)$idTab.' WHERE id_parent='.(int)$idParent);
+    }
+
+    return true;
+}
+
+function populateTab()
+{
+    $languages = [];
+    foreach (Language::getLanguages() as $lang) {
+        $languages[$lang['id_lang']] = $lang['iso_code'];
+    }
+
+    // Because we use 1.7.7+ files but with a not-yet migrated Tab entity, we need to use
+    // a custom XmlLoader to remove the `enabled` key before inserting to the DB
+    $xml_loader = new \XmlLoader1700();
+    $xml_loader->setTranslator(Context::getContext()->getTranslator());
+    $xml_loader->setLanguages($languages);
+
+    try {
+        $xml_loader->populateEntity('tab');
+    } catch (PrestashopInstallerException $e) {
+        return false;
+    }
+
+    return true;
+}
+
+class XmlLoader1700 extends XmlLoader
+{
+    public function createEntityTab($identifier, array $data, array $data_lang): void
+    {
+        if (isset($data['enabled'])) {
+            unset($data['enabled']);
+        }
+        parent::createEntityTab($identifier, $data, $data_lang);
     }
 }

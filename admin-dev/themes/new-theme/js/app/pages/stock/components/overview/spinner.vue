@@ -98,6 +98,7 @@
       },
       onKeyup(event) {
         const val = event.target.value;
+
         if (val === 0) {
           this.deActivate();
         } else {
@@ -111,6 +112,7 @@
       },
       focusOut(event) {
         const value = parseInt(this.value, 10);
+
         if (
           !$(event.target).hasClass('ps-number')
           && (Number.isNaN(value) || value === 0)
@@ -121,6 +123,7 @@
       },
       sendQty() {
         const postUrl = this.product.edit_url;
+
         if (
           parseInt(this.product.qty, 10) !== 0
           && !Number.isNaN(parseInt(this.value, 10))

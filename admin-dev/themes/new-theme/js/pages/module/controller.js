@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ConfirmModal from '@components/modal';
+
 const {$} = window;
 
 /**
@@ -90,7 +92,7 @@ class AdminModuleController {
     // Upgrade All selectors
     this.upgradeAllSource = '.module_action_menu_upgrade_all';
     this.upgradeContainer = '#modules-list-container-update';
-    this.upgradeAllTargets = `${this.upgradeContainer}' .module_action_menu_upgrade:visible`;
+    this.upgradeAllTargets = `${this.upgradeContainer} .module_action_menu_upgrade:visible`;
 
     // Notification selectors
     this.notificationContainer = '#modules-list-container-notification';
@@ -188,6 +190,7 @@ class AdminModuleController {
 
     body.on('click', self.getBulkCheckboxesSelector(), () => {
       const selector = $(self.bulkActionDropDownSelector);
+
       if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
         selector.closest('.module-top-menu-item').removeClass('disabled');
       } else {
@@ -245,6 +248,7 @@ class AdminModuleController {
 
   initPlaceholderMechanism() {
     const self = this;
+
     if ($(self.placeholderGlobalSelector).length) {
       self.ajaxLoadPage();
     }
@@ -365,6 +369,7 @@ class AdminModuleController {
     let order = 'asc';
     let key = self.currentSorting;
     const splittedKey = key.split('-');
+
     if (splittedKey.length > 1) {
       key = splittedKey[0];
       if (splittedKey[1] === 'desc') {
@@ -375,6 +380,7 @@ class AdminModuleController {
     const currentCompare = (a, b) => {
       let aData = a[key];
       let bData = b[key];
+
       if (key === 'access') {
         aData = new Date(aData).getTime();
         bData = new Date(bData).getTime();
@@ -403,6 +409,7 @@ class AdminModuleController {
     $('.module-short-list').each(function setShortListVisibility() {
       const container = $(this);
       const nbModulesInContainer = container.find('.module-item').length;
+
       if (
         (self.currentRefCategory && self.currentRefCategory !== String(container.find('.modules-list').data('name')))
         || (self.currentRefStatus !== null && nbModulesInContainer === 0)
@@ -715,6 +722,7 @@ class AdminModuleController {
       complete: (file) => {
         if (file.status !== 'error') {
           const responseObject = $.parseJSON(file.xhr.response);
+
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
@@ -871,6 +879,7 @@ class AdminModuleController {
     const self = this;
     $('body').on('click', `${self.addonItemGridSelector}, ${self.addonItemListSelector}`, () => {
       let searchQuery = '';
+
       if (self.currentTagsList.length) {
         searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
       }
@@ -985,18 +994,21 @@ class AdminModuleController {
 
   performModulesAction(modulesActions, bulkModuleAction, forceDeletion) {
     const self = this;
+
     if (typeof self.moduleCardController === 'undefined') {
       return;
     }
 
     // First let's filter modules that can't perform this action
     const actionMenuLinks = filterAllowedActions(modulesActions);
+
     if (!actionMenuLinks.length) {
       return;
     }
 
     let modulesRequestedCountdown = actionMenuLinks.length - 1;
     let spinnerObj = $('<button class="btn-primary-reverse onclick unbind spinner "></button>');
+
     if (actionMenuLinks.length > 1) {
       // Loop through all the modules except the last one which waits for other
       // requests and then call its request with cache clear enabled
@@ -1086,24 +1098,51 @@ class AdminModuleController {
     // "Upgrade All" button handler
     $('body').on('click', self.upgradeAllSource, (event) => {
       event.preventDefault();
+      const isMaintenanceMode = window.isShopMaintenance;
 
-      if ($(self.upgradeAllTargets).length <= 0) {
-        console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
-        return false;
-      }
+      // Modal body element
+      const maintenanceLink = document.createElement('a');
+      maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
+      maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
+      maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
 
-      const modulesActions = [];
-      let moduleTechName;
-      $(self.upgradeAllTargets).each(function bulkActionSelector() {
-        const moduleItemList = $(this).closest('.module-item-list');
-        moduleTechName = moduleItemList.data('tech-name');
-        modulesActions.push({
-          techName: moduleTechName,
-          actionMenuObj: $('.module-actions', moduleItemList),
-        });
-      });
+      const updateAllConfirmModal = new ConfirmModal(
+        {
+          id: 'confirm-module-update-modal',
+          confirmTitle: window.moduleTranslations.singleModuleModalUpdateTitle,
+          closeButtonLabel: window.moduleTranslations.moduleModalUpdateCancel,
+          confirmButtonLabel: isMaintenanceMode
+            ? window.moduleTranslations.moduleModalUpdateUpgrade
+            : window.moduleTranslations.upgradeAnywayButtonText,
+          confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
+          confirmMessage: isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+          closable: true,
+          customButtons: isMaintenanceMode ? [] : [maintenanceLink],
+        },
+        () => {
+          if ($(self.upgradeAllTargets).length <= 0) {
+            console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
+            return false;
+          }
 
-      this.performModulesAction(modulesActions, 'upgrade');
+          const modulesActions = [];
+          let moduleTechName;
+          $(self.upgradeAllTargets).each(function bulkActionSelector() {
+            const moduleItemList = $(this).closest('.module-item-list');
+            moduleTechName = moduleItemList.data('tech-name');
+            modulesActions.push({
+              techName: moduleTechName,
+              actionMenuObj: $('.module-actions', moduleItemList),
+            });
+          });
+
+          this.performModulesAction(modulesActions, 'upgrade');
+
+          return true;
+        },
+      );
+
+      updateAllConfirmModal.show();
 
       return true;
     });
@@ -1167,6 +1206,7 @@ class AdminModuleController {
     $('body').on('click', '.module-sort-switch', function switchSort() {
       const switchTo = $(this).data('switch');
       const isAlreadyDisplayed = $(this).hasClass('active-display');
+
       if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
         self.switchSortingDisplayTo(switchTo);
         self.currentDisplay = switchTo;
@@ -1192,14 +1232,20 @@ class AdminModuleController {
     $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = true;
       $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeLessSelector).removeClass('d-none');
+      $(this)
+        .closest(self.moduleShortList)
+        .find(self.seeLessSelector)
+        .removeClass('d-none');
       self.updateModuleVisibility();
     });
 
     $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = false;
       $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeMoreSelector).removeClass('d-none');
+      $(this)
+        .closest(self.moduleShortList)
+        .find(self.seeMoreSelector)
+        .removeClass('d-none');
       self.updateModuleVisibility();
     });
   }
@@ -1214,6 +1260,7 @@ class AdminModuleController {
 
     // If there are some shortlist: each shortlist count the modules on the next container.
     const $shortLists = $('.module-short-list');
+
     if ($shortLists.length > 0) {
       $shortLists.each(function shortLists() {
         const $this = $(this);
@@ -1228,10 +1275,10 @@ class AdminModuleController {
       const modulesCount = $('.modules-list').find('.module-item').length;
       replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
-      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST)
-        ? this.addonItemListSelector
-        : this.addonItemGridSelector;
-      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
+      // eslint-disable-next-line
+      const selectorToToggle =
+        self.currentDisplay === self.DISPLAY_LIST ? this.addonItemListSelector : this.addonItemGridSelector;
+      $(selectorToToggle).toggle(modulesCount !== this.modulesList.length / 2);
 
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
@@ -1243,8 +1290,7 @@ class AdminModuleController {
   }
 
   isModulesPage() {
-    return $(this.upgradeContainer).length === 0
-      && $(this.notificationContainer).length === 0;
+    return $(this.upgradeContainer).length === 0 && $(this.notificationContainer).length === 0;
   }
 }
 

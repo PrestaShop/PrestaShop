@@ -79,7 +79,8 @@ class DbBackup extends BOBasePage {
       page.waitForSelector(this.tableRow(1), {state: 'visible'}),
       page.waitForSelector(this.downloadBackupButton, {state: 'visible'}),
     ]);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -92,6 +93,7 @@ class DbBackup extends BOBasePage {
       page.waitForEvent('download'),
       await page.click(this.downloadBackupButton),
     ]);
+
     return download.path();
   }
 
@@ -112,7 +114,7 @@ class DbBackup extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteDbBackups(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -148,7 +150,7 @@ class DbBackup extends BOBasePage {
     ]);
 
     await this.confirmDeleteDbBackups(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */

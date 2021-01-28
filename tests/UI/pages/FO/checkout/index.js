@@ -12,6 +12,8 @@ class Checkout extends FOBasePage {
       + `[data-module-name='${name}']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
+    this.termsOfServiceLink = '#cta-terms-and-conditions-0';
+    this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -47,6 +49,8 @@ class Checkout extends FOBasePage {
     this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
     this.deliveryOptionLabel = id => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
     this.deliveryOptionNameSpan = id => `${this.deliveryOptionLabel(id)} span.carrier-name`;
+    this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
+    this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
@@ -139,6 +143,24 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Get all carriers prices
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersPrices(page) {
+    return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
+  }
+
+  /**
+   * Get all carriers names
+   * @param page
+   * @returns {Promise<[]>}
+   */
+  async getAllCarriersNames(page) {
+    return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
+  }
+
+  /**
    * Go to Payment Step and check that delivery step is complete
    * @param page
    * @return {Promise<boolean>}
@@ -221,6 +243,16 @@ class Checkout extends FOBasePage {
    */
   isConditionToApproveCheckboxVisible(page) {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
+  }
+
+  /**
+   * Get terms of service page title
+   * @param page
+   * @returns {Promise<text>}
+   */
+  async getTermsOfServicePageTitle(page) {
+    await page.click(this.termsOfServiceLink);
+    return this.getTextContent(page, this.termsOfServiceModalDiv);
   }
 
   /**

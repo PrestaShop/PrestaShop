@@ -205,6 +205,7 @@ export default class NavBar {
         .parent()
         .find('.collapse')
         .attr('id');
+
       if (id) {
         $(el)
           .attr('href', `#${id}`)

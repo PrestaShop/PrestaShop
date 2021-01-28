@@ -34,18 +34,19 @@ export default class OrderPricesRefresher {
   }
 
   refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_prices', {orderId})).then((response) => {
+    $.getJSON(this.router.generate('admin_orders_get_prices', {orderId})).then((response) => {
       $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
       $(OrderViewPageMap.orderDiscountsTotal).text(`-${response.discountsAmountFormatted}`);
       $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
       $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
       $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
+      $(OrderViewPageMap.orderShippingTotalContainer).toggleClass('d-none', !response.shippingTotalDisplayed);
       $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
     });
   }
 
   refreshProductPrices(orderId) {
-    $.ajax(this.router.generate('admin_orders_product_prices', {orderId})).then((productPricesList) => {
+    $.getJSON(this.router.generate('admin_orders_product_prices', {orderId})).then((productPricesList) => {
       productPricesList.forEach((productPrices) => {
         const orderProductTrId = OrderViewPageMap.productsTableRow(productPrices.orderDetailId);
 

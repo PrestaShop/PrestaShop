@@ -932,8 +932,8 @@ class CategoryCore extends ObjectModel
      * Returns category products.
      *
      * @param int $idLang Language ID
-     * @param int $p Page number
-     * @param int $n Number of products per page
+     * @param int $pageNumber Page number
+     * @param int $productPerPage Number of products per page
      * @param string|null $orderBy ORDER BY column
      * @param string|null $orderWay Order way
      * @param bool $getTotal If set to true, returns the total number of results only
@@ -950,8 +950,8 @@ class CategoryCore extends ObjectModel
      */
     public function getProducts(
         $idLang,
-        $p,
-        $n,
+        $pageNumber,
+        $productPerPage,
         $orderBy = null,
         $orderWay = null,
         $getTotal = false,
@@ -986,8 +986,8 @@ class CategoryCore extends ObjectModel
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
 
-        if ($p < 1) {
-            $p = 1;
+        if ($pageNumber < 1) {
+            $pageNumber = 1;
         }
 
         /** Tools::strtolower is a fix for all modules which are now using lowercase values for 'orderBy' parameter */
@@ -1051,7 +1051,7 @@ class CategoryCore extends ObjectModel
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
         } elseif ($orderBy !== 'orderprice') {
             $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
-			LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
+			LIMIT ' . (((int) $pageNumber - 1) * (int) $productPerPage) . ',' . (int) $productPerPage;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
@@ -1062,7 +1062,7 @@ class CategoryCore extends ObjectModel
 
         if ($orderBy === 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
-            $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
+            $result = array_slice($result, (int) (($pageNumber - 1) * $productPerPage), (int) $productPerPage);
         }
 
         // Modify SQL result

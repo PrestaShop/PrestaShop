@@ -1,15 +1,19 @@
+$white: #fff;
 $gray-dark: #363a42;
 $gray-darker: #232323;
 $gray: #7a7a7a;
-$gray-light: #f1f1f1;
+$gray-second: #9b9b9b;
+$gray-light: #f6f6f6;
 $gray-light-second: #dbdbdb;
 $gray-lighter: #f6f6f6;
 $gray-lighter-second: #f7f7f7;
-$brand-primary: #2fb5d2;
+$border-gray: #ddd;
+$brand-primary: #24b9d7;
 $brand-secondary: #f39d72;
 $brand-success: #4cbb6c;
 $brand-warning: #ff9a52;
 $brand-danger: #ff4c4c;
+$current-step-color: #00c062;
 $label-color: $gray-darker;
 $btn-primary-color: #fff;
 $btn-primary-bg: $brand-primary;
@@ -18,6 +22,8 @@ $btn-secondary-color: $gray-darker;
 $btn-secondary-bg: $gray-lighter;
 $btn-secondary-border: transparent;
 $btn-border-radius: 0;
+$btn-disabled-background: #f6f6f6;
+$btn-disabled-color: #ddd;
 $input-border-color: rgba(0, 0, 0, 0.25);
 $headings-font-weight: 700;
 $tooltip-bg: $brand-danger;
@@ -42,7 +48,7 @@ $font-size-lg: 0.9375rem;
 $font-size-sm: 0.875rem;
 $font-size-xs: 0.8125rem;
 $font-size-h1: 1.375rem;
-$font-size-h2: 1.25rem;
+$font-size-h2: 1.3125rem;
 $font-size-h3: 1.125rem;
 $font-size-h4: 1.125rem;
 $font-size-h5: 1rem;
@@ -56,9 +62,4 @@ $display3-weight: 400;
 $display4-size: 1.25rem;
 $display4-weight: 400;
 $text-muted: $gray;
-
-// Forced to do this to avoid a breaking change
-/* stylelint-disable */
-$NotoSansPath: "~notosans-fontface/fonts";
-$NotoSansVersion: "1.0.1";
-/* stylelint-enable */
+$radio-border-color: #979797;

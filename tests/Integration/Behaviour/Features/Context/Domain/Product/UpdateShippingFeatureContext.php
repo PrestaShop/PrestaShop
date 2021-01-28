@@ -35,7 +35,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -155,14 +155,14 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
     private function assertDeliveryTimeNotes(array &$data, ProductShippingInformation $productShippingInformation): void
     {
         $notesTypeNamedValues = [
-            'none' => DeliveryTimeNotesType::TYPE_NONE,
-            'default' => DeliveryTimeNotesType::TYPE_DEFAULT,
-            'specific' => DeliveryTimeNotesType::TYPE_SPECIFIC,
+            'none' => DeliveryTimeNoteType::TYPE_NONE,
+            'default' => DeliveryTimeNoteType::TYPE_DEFAULT,
+            'specific' => DeliveryTimeNoteType::TYPE_SPECIFIC,
         ];
 
         if (isset($data['delivery time notes type'])) {
             $expectedType = $notesTypeNamedValues[$data['delivery time notes type']];
-            $actualType = $productShippingInformation->getDeliveryTimeNotesType();
+            $actualType = $productShippingInformation->getDeliveryTimeNoteType();
             Assert::assertEquals($expectedType, $actualType, 'Unexpected delivery time notes type value');
 
             unset($data['delivery time notes type']);
@@ -227,7 +227,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['delivery time notes type'])) {
-            $command->setDeliveryTimeNotesType(DeliveryTimeNotesType::ALLOWED_TYPES[$data['delivery time notes type']]);
+            $command->setDeliveryTimeNoteType(DeliveryTimeNoteType::ALLOWED_TYPES[$data['delivery time notes type']]);
             unset($unhandledValues['delivery time notes type']);
         }
 

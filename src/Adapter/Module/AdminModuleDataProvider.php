@@ -103,12 +103,12 @@ class AdminModuleDataProvider implements ModuleInterface
     private $moduleProvider;
 
     /**
-     * @var CacheProvider
+     * @var CacheProvider|null
      */
     private $cacheProvider;
 
     /**
-     * @var Employee
+     * @var Employee|null
      */
     private $employee;
 
@@ -492,7 +492,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
-                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', ['exception' => $e->getMessage()]);
+                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
                 }
             }
         }

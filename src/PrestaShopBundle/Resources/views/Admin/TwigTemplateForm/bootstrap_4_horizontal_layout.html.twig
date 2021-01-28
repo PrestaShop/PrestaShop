@@ -54,6 +54,7 @@
             <div class="{{ block('form_group_class') }}">
                 {{ form_widget(form) }}
                 {{ form_errors(form) }}
+                {{ block('form_help') }}
             </div>
         </div>
     {% endspaceless %}
@@ -135,6 +136,7 @@
     {% endif %}
 
     {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length, 'class': 'js-countable-input'}) -%}
+    {% set attr = attr|merge(input_attr) -%}
 
     {% if form.vars.input == 'textarea' %}
       {{- block('textarea_widget') -}}

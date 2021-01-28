@@ -202,10 +202,7 @@ class ToolsCore
             }
 
             $explode = explode('?', $url);
-            // don't use ssl if url is home page
-            // used when logout for example
-            $use_ssl = !empty($url);
-            $url = $link->getPageLink($explode[0], $use_ssl);
+            $url = $link->getPageLink($explode[0]);
             if (isset($explode[1])) {
                 $url .= '?' . $explode[1];
             }
@@ -858,12 +855,12 @@ class ToolsCore
      *
      * @deprecated since 1.7.4 use convertPriceToCurrency()
      *
-     * @param float $price Product price
+     * @param float|null $price Product price
      * @param object|array $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
      * @param Context $context
      *
-     * @return float Price
+     * @return float|null Price
      */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {
@@ -2670,8 +2667,8 @@ class ToolsCore
                         fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]' . PHP_EOL);
                     }
 
-                    // Rewrite product images < 100 millions
-                    for ($i = 1; $i <= 8; ++$i) {
+                    // Rewrite product images < 10 millions
+                    for ($i = 1; $i <= 7; ++$i) {
                         $img_path = $img_name = '';
                         for ($j = 1; $j <= $i; ++$j) {
                             $img_path .= '$' . $j . '/';

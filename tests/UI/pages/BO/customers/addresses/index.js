@@ -120,10 +120,12 @@ class Addresses extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableAddresses(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -167,7 +169,7 @@ class Addresses extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
     await page.click(this.deleteAddressModalDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -192,7 +194,7 @@ class Addresses extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
     await page.click(this.deleteAddressModalDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */

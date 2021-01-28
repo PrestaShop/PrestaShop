@@ -2,16 +2,30 @@
   display: inline-block;
   @include search-box();
 }
+
 .header-top {
   .search-widget {
     form {
       input[type="text"] {
         width: 100%;
         min-width: inherit;
+        color: $gray-second;
+        background: $gray-lighter;
+
+        &:focus {
+          background: $white;
+        }
+      }
+
+      button[type="submit"] {
+        top: 50%;
+        bottom: inherit;
+        transform: translateY(-50%);
       }
     }
   }
 }
+
 #checkout {
   #search_widget {
     display: none; /* Not ideal solution by allows to reuse same hooks/templates */
@@ -39,8 +53,10 @@
   .header-top {
     .search-widget {
       float: none;
+
       form {
         margin: 0 auto;
+
         input[type="text"] {
           min-width: inherit;
           background: #fff;
@@ -49,6 +65,7 @@
     }
   }
 }
+
 @include media-breakpoint-up(md) {
   .search-widget {
     min-width: 15.63rem;

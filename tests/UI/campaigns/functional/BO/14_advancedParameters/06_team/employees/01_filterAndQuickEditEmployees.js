@@ -206,10 +206,7 @@ describe('Filter And Quick Edit Employees', async () => {
           );
 
           if (isActionPerformed) {
-            const resultMessage = await employeesPage.getTextContent(
-              page,
-              employeesPage.alertSuccessBlockParagraph,
-            );
+            const resultMessage = await employeesPage.getAlertSuccessBlockParagraphContent(page);
             await expect(resultMessage).to.contains(employeesPage.successfulUpdateStatusMessage);
           }
 

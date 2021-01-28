@@ -54,7 +54,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     public function indexAction(Request $request, MerchandiseReturnFilters $filters): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.merchandise_return');
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         $optionsFormHandler = $this->getOptionsFormHandler();
         $optionsForm = $optionsFormHandler->getForm();
@@ -71,7 +70,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/index.html.twig', [
-            'merchandiseReturnsGrid' => $gridPresenter->present($gridFactory->getGrid($filters)),
+            'merchandiseReturnsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'merchandiseReturnsOptionsForm' => $optionsForm->createView(),
         ]);
     }

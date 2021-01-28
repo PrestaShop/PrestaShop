@@ -63,6 +63,7 @@ class TranslatableField {
     $(this.localeNavigationSelector).each((index, navigation) => {
       const selectedLink = $('.nav-item a.active', navigation);
       const selectedLocale = selectedLink.data('locale');
+
       if (event.selectedLocale !== selectedLocale) {
         $(`.nav-item a[data-locale="${event.selectedLocale}"]`, navigation).tab('show');
       }

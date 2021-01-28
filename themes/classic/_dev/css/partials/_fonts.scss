@@ -1,42 +1,5 @@
 /* stylelint-disable */
-
-@font-face {
-  font-family: "Noto Sans";
-  font-style: normal;
-  font-weight: 400;
-  src: url(~notosans-fontface/fonts/NotoSans-Regular.eot);
-  src:
-    local("Noto Sans Regular"), local("NotoSans-Regular"), url(~notosans-fontface/fonts/NotoSans-Regular.eot)
-    format("embedded-opentype"), url(~notosans-fontface/fonts/NotoSans-Regular.woff2) format("woff2"), url(~notosans-fontface/fonts/NotoSans-Regular.woff) format("woff"), url(~notosans-fontface/fonts/NotoSans-Regular.ttf) format("truetype"), url(~notosans-fontface/fonts/NotoSans-Regular.svg) format("svg");
-}
-
-@font-face {
-  font-family: "Noto Sans";
-  font-style: normal;
-  font-weight: 700;
-  src: url(~notosans-fontface/fonts/NotoSans-Bold.eot);
-  src: local("Noto Sans Bold"), local("NotoSans-Bold"), url(~notosans-fontface/fonts/NotoSans-Bold.eot) format("embedded-opentype"), url(~notosans-fontface/fonts/NotoSans-Bold.woff2) format("woff2"), url(~notosans-fontface/fonts/NotoSans-Bold.woff) format("woff"), url(~notosans-fontface/fonts/NotoSans-Bold.ttf) format("truetype"), url(~notosans-fontface/fonts/NotoSans-Bold.svg) format("svg");
-}
-
-@font-face {
-  font-family: "Noto Sans";
-  font-style: italic;
-  font-weight: 400;
-  src: url(~notosans-fontface/fonts/NotoSans-Italic.eot);
-  src:
-    local("Noto Sans Italic"), local("NotoSans-Italic"), url(~notosans-fontface/fonts/NotoSans-Italic.eot)
-    format("embedded-opentype"), url(~notosans-fontface/fonts/NotoSans-Italic.woff2) format("woff2"), url(~notosans-fontface/fonts/NotoSans-Italic.woff) format("woff"), url(~notosans-fontface/fonts/NotoSans-Italic.ttf) format("truetype"), url(~notosans-fontface/fonts/NotoSans-Italic.svg) format("svg");
-}
-
-@font-face {
-  font-family: "Noto Sans";
-  font-style: italic;
-  font-weight: 700;
-  src: url(~notosans-fontface/fonts/NotoSans-BoldItalic.eot);
-  src:
-    local("Noto Sans BoldItalic"), local("NotoSans-BoldItalic"), url(~notosans-fontface/fonts/NotoSans-BoldItalic.eot)
-    format("embedded-opentype"), url(~notosans-fontface/fonts/NotoSans-BoldItalic.woff2) format("woff2"), url(~notosans-fontface/fonts/NotoSans-BoldItalic.woff) format("woff"), url(~notosans-fontface/fonts/NotoSans-BoldItalic.ttf) format("truetype"), url(~notosans-fontface/fonts/NotoSans-BoldItalic.svg) format("svg");
-}
+@import "~manrope/complete/font.css";
 
 @font-face {
   font-family: "Material Icons";

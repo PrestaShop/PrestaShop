@@ -32,7 +32,8 @@ use Customization;
 use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
@@ -49,6 +51,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
@@ -70,15 +75,23 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $stockAvailableRepository;
 
     /**
+     * @var VirtualProductFileRepository
+     */
+    private $virtualProductFileRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param VirtualProductFileRepository $virtualProductFileRepository
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        VirtualProductFileRepository $virtualProductFileRepository
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->virtualProductFileRepository = $virtualProductFileRepository;
     }
 
     /**
@@ -90,16 +103,17 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
         return new ProductForEditing(
             (int) $product->id,
-            (bool) $product->active,
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
             $this->getOptions($product),
+            $this->getDetails($product),
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
             $product->getAssociatedAttachmentIds(),
-            $this->getProductStockInformation($product)
+            $this->getProductStockInformation($product),
+            $this->getVirtualProductFile($product)
         );
     }
 
@@ -114,7 +128,8 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getProductType($product),
             $product->name,
             $product->description,
-            $product->description_short
+            $product->description_short,
+            $this->getLocalizedTagsList((int) $product->id)
         );
     }
 
@@ -180,18 +195,30 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private function getOptions(Product $product): ProductOptions
     {
         return new ProductOptions(
+            (bool) $product->active,
             $product->visibility,
             (bool) $product->available_for_order,
             (bool) $product->online_only,
             (bool) $product->show_price,
-            $this->getLocalizedTagsList((int) $product->id),
             $product->condition,
+            (bool) $product->show_condition,
+            (int) $product->id_manufacturer
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductDetails
+     */
+    private function getDetails(Product $product): ProductDetails
+    {
+        return new ProductDetails(
             $product->isbn,
             $product->upc,
             $product->ean13,
             $product->mpn,
-            $product->reference,
-            (int) $product->id_manufacturer
+            $product->reference
         );
     }
 
@@ -259,14 +286,16 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
         switch ((int) $product->customizable) {
             case ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION:
-                return ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             case ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION:
-                return ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             default:
-                return ProductCustomizationOptions::createNotCustomizable();
+                $options = ProductCustomizationOptions::createNotCustomizable();
         }
+
+        return $options;
     }
 
     /**
@@ -306,12 +335,40 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (int) $stockAvailable->out_of_stock,
             (int) $stockAvailable->quantity,
             (int) $product->minimal_quantity,
-            $stockAvailable->location,
             (int) $product->low_stock_threshold,
             (bool) $product->low_stock_alert,
             $product->available_now,
             $product->available_later,
-            new DateTime($product->available_date)
+            $stockAvailable->location,
+            DateTimeUtil::NULL_DATE === $product->available_date ? null : new DateTime($product->available_date)
+        );
+    }
+
+    /**
+     * Get virtual product file
+     * Legacy object ProductDownload is referred as VirtualProductFile in Core
+     *
+     * @param Product $product
+     *
+     * @return VirtualProductFileForEditing|null
+     *
+     * @throws VirtualProductFileNotFoundException
+     */
+    private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
+    {
+        $virtualProductFile = $this->virtualProductFileRepository->findByProductId(new ProductId($product->id));
+
+        if (!$virtualProductFile) {
+            return null;
+        }
+
+        return new VirtualProductFileForEditing(
+            (int) $virtualProductFile->id,
+            $virtualProductFile->filename,
+            $virtualProductFile->display_filename,
+            (int) $virtualProductFile->nb_days_accessible,
+            (int) $virtualProductFile->nb_downloadable,
+            $virtualProductFile->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($virtualProductFile->date_expiration)
         );
     }
 }

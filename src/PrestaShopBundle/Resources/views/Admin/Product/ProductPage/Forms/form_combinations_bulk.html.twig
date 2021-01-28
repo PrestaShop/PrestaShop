@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div class="row" id="bulk-combinations-container-fields">
-  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+  {% if configuration('PS_STOCK_MANAGEMENT') %}
     <div class="col-lg-4 col-md-3 col-sm-6">
       <label class="form-control-label">{{ form.quantity.vars.label }}</label>
       {{ form_errors(form.quantity) }}

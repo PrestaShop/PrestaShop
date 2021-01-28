@@ -34,7 +34,7 @@
         </span>
 
         <span class="value">
-          {$subtotal.value}
+          {if 'discount' == $subtotal.type}-&nbsp;{/if}{$subtotal.value}
         </span>
       </div>
     {/if}

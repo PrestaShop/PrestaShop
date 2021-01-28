@@ -226,7 +226,7 @@ class Attributes extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -243,7 +243,7 @@ class Attributes extends BOBasePage {
       this.tableColumnPosition(newPosition),
     );
 
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 
   /* Bulk actions methods */
@@ -276,7 +276,7 @@ class Attributes extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */

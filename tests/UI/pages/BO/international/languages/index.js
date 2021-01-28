@@ -30,7 +30,8 @@ class Languages extends LocalizationBasePage {
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
-    this.enabledColumnValidIcon = row => `${this.tableColumn(row, 'active')} i.grid-toggler-icon-valid`;
+    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
@@ -131,10 +132,12 @@ class Languages extends LocalizationBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -169,7 +172,7 @@ class Languages extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteLanguages(page, this.bulkActionsDeleteButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 
@@ -179,8 +182,16 @@ class Languages extends LocalizationBasePage {
    * @param row
    * @return {Promise<boolean>}
    */
-  getStatus(page, row) {
-    return this.elementVisible(page, this.enabledColumnValidIcon(row), 100);
+  async getStatus(page, row) {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.statusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -191,11 +202,12 @@ class Languages extends LocalizationBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.tableColumn(row, 'active'), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, this.tableColumn(row, 'active'));
+      await this.clickAndWaitForNavigation(page, this.statusColumn(row));
+
       return true;
     }
+
     return false;
   }
 
@@ -219,7 +231,7 @@ class Languages extends LocalizationBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -244,7 +256,7 @@ class Languages extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteLanguages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

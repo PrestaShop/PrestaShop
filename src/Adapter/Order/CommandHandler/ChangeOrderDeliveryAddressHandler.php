@@ -30,6 +30,7 @@ use Address;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderDeliveryAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -46,11 +47,20 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
     private $orderAmountUpdater;
 
     /**
-     * @param OrderAmountUpdater $orderAmountUpdater
+     * @var OrderDetailUpdater
      */
-    public function __construct(OrderAmountUpdater $orderAmountUpdater)
-    {
+    private $orderDetailTaxUpdater;
+
+    /**
+     * @param OrderAmountUpdater $orderAmountUpdater
+     * @param OrderDetailUpdater $orderDetailTaxUpdater
+     */
+    public function __construct(
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderDetailUpdater $orderDetailTaxUpdater
+    ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderDetailTaxUpdater = $orderDetailTaxUpdater;
     }
 
     /**
@@ -74,6 +84,7 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
         $cart->update();
 
         $order->id_address_delivery = $address->id;
+        $this->orderDetailTaxUpdater->updateOrderDetailsTaxes($order);
         $this->orderAmountUpdater->update($order, $cart);
     }
 }

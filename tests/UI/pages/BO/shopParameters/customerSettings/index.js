@@ -53,6 +53,7 @@ class CustomerSettings extends BOBasePage {
    */
   async setOptionStatus(page, option, toEnable = true) {
     let selector;
+
     switch (option) {
       case options.OPTION_B2B:
         selector = this.enableB2BModeToggle;
@@ -74,7 +75,7 @@ class CustomerSettings extends BOBasePage {
     }
     await page.check(selector(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

@@ -132,8 +132,9 @@ class LinkCore
      * @param int|null $idProductAttribute ID product attribute
      * @param bool $force_routes
      * @param bool $relativeProtocol
-     * @param bool $addAnchor
+     * @param bool $withIdInAnchor
      * @param array $extraParams
+     * @param bool $addAnchor
      *
      * @return string
      *
@@ -149,8 +150,9 @@ class LinkCore
         $idProductAttribute = null,
         $force_routes = false,
         $relativeProtocol = false,
-        $addAnchor = false,
-        $extraParams = []
+        $withIdInAnchor = false,
+        $extraParams = [],
+        bool $addAnchor = true
     ) {
         $dispatcher = Dispatcher::getInstance();
 
@@ -244,7 +246,8 @@ class LinkCore
         if ($idProductAttribute) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
-        $anchor = $idProductAttribute ? $product->getAnchor((int) $idProductAttribute, (bool) $addAnchor) : '';
+
+        $anchor = $addAnchor && $idProductAttribute ? $product->getAnchor((int) $idProductAttribute, (bool) $withIdInAnchor) : '';
 
         return $url . $dispatcher->createUrl('product_rule', $idLang, array_merge($params, $extraParams), $force_routes, $anchor, $idShop);
     }
@@ -1482,6 +1485,9 @@ class LinkCore
             'alias' => null,
             'ssl' => null,
             'relative_protocol' => true,
+            'with_id_in_anchor' => false,
+            'extra_params' => [],
+            'add_anchor' => true,
         ];
         $params = array_merge($default, $params);
 
@@ -1502,7 +1508,10 @@ class LinkCore
                     $params['id_shop'],
                     (isset($params['ipa']) ? (int) $params['ipa'] : 0),
                     false,
-                    $params['relative_protocol']
+                    $params['relative_protocol'],
+                    $params['with_id_in_anchor'],
+                    $params['extra_params'],
+                    $params['add_anchor']
                 );
 
                 break;

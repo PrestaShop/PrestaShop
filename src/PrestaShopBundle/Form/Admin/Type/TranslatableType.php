@@ -122,6 +122,7 @@ class TranslatableType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $view->vars['formatted_text_area'] = ($options['type'] === FormattedTextareaType::class);
         $errors = iterator_to_array($view->vars['errors']);
 
         $errorsByLocale = $this->getErrorsByLocale($view, $form, $options['locales']);

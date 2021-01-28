@@ -45,6 +45,7 @@ export default class SubmitRowActionExtension {
       const confirmTitle = $button.data('title');
 
       const method = $button.data('method');
+
       if (confirmTitle) {
         this.showConfirmModal($button, grid, confirmMessage, confirmTitle, method);
       } else {

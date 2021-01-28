@@ -34,6 +34,7 @@ const {$} = window;
  * @param {String} closeButtonLabel
  * @param {String} confirmButtonLabel
  * @param {String} confirmButtonClass
+ * @param {Array} customButtons
  * @param {Boolean} closable
  * @param {Function} confirmCallback
  *
@@ -53,7 +54,7 @@ export default function ConfirmModal(params, confirmCallback) {
   this.modal.confirmButton.addEventListener('click', confirmCallback);
 
   this.$modal.modal({
-    backdrop: (closable ? true : 'static'),
+    backdrop: closable ? true : 'static',
     keyboard: closable !== undefined ? closable : true,
     closable: closable !== undefined ? closable : true,
     show: false,
@@ -79,6 +80,7 @@ function Modal({
   closeButtonLabel = 'Close',
   confirmButtonLabel = 'Accept',
   confirmButtonClass = 'btn-primary',
+  customButtons = [],
 }) {
   const modal = {};
 
@@ -133,7 +135,7 @@ function Modal({
   modal.closeButton.dataset.dismiss = 'modal';
   modal.closeButton.innerHTML = closeButtonLabel;
 
-  // Modal close button element
+  // Modal confirm button element
   modal.confirmButton = document.createElement('button');
   modal.confirmButton.setAttribute('type', 'button');
   modal.confirmButton.classList.add('btn', confirmButtonClass, 'btn-lg', 'btn-confirm-submit');
@@ -148,7 +150,7 @@ function Modal({
   }
 
   modal.body.appendChild(modal.message);
-  modal.footer.append(modal.closeButton, modal.confirmButton);
+  modal.footer.append(modal.closeButton, ...customButtons, modal.confirmButton);
   modal.content.append(modal.header, modal.body, modal.footer);
   modal.dialog.appendChild(modal.content);
   modal.container.appendChild(modal.dialog);

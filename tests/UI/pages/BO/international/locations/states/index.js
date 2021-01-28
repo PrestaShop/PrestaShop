@@ -124,6 +124,7 @@ class States extends BOBasePage {
    */
   async filterStates(page, filterType, filterBy, value) {
     let filterValue = value;
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), filterValue.toString());
@@ -238,7 +239,7 @@ class States extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
@@ -292,7 +293,7 @@ class States extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**

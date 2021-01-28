@@ -134,17 +134,14 @@ describe('Quick edit and bulk actions carriers', async () => {
       it(`should ${test.args.action} first carrier`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Carrier`, baseContext);
 
-        const isActionPerformed = await carriersPage.updateEnabledValue(page, 1, test.args.enabledValue);
+        const isActionPerformed = await carriersPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await carriersPage.getTextContent(
-            page,
-            carriersPage.alertSuccessBlock,
-          );
+          const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
           await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 
-        const carrierStatus = await carriersPage.getToggleColumnValue(page, 1);
+        const carrierStatus = await carriersPage.getStatus(page, 1);
         await expect(carrierStatus).to.be.equal(test.args.enabledValue);
       });
     });
@@ -193,7 +190,7 @@ describe('Quick edit and bulk actions carriers', async () => {
 
         // not working, skipping it
         // https://github.com/PrestaShop/PrestaShop/issues/21571
-        await carriersPage.bulkEnableDisableCarriers(page, test.args.action);
+        await carriersPage.bulkSetStatus(page, test.args.action);
 
         // const deleteTextResult = await carriersPage.bulkEnableDisableCarriers(page, test.args.action);
         // await expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);

@@ -51,6 +51,7 @@ class AddSeoUrl extends BOBasePage {
    */
   async deleteKeywords(page, lang = 'en') {
     const closeButtons = await page.$$(this.deleteKeywordLink(lang));
+
     for (let i = 0; i < closeButtons.length; i++) {
       await closeButtons[i].click();
     }
@@ -95,7 +96,7 @@ class AddSeoUrl extends BOBasePage {
 
     // Save seo page
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

@@ -4,7 +4,7 @@ html {
 }
 
 body {
-  font-family: "Noto Sans", sans-serif;
+  font-family: Manrope, sans-serif;
   font-size: $base-font-size;
   line-height: 1.25em;
   color: $gray-darker;
@@ -37,13 +37,13 @@ p {
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
   display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
   margin: 0.3125rem;
+  margin-right: 0.5rem;
   cursor: pointer;
   background-size: contain;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  @include box-shadow-light();
+  border: 1px solid $radio-border-color;
 
   &.active,
   &:hover {
@@ -55,7 +55,7 @@ p {
   &.active,
   &:hover {
     .custom-checkbox span.color {
-      border: 2px solid $gray-darker;
+      border: 1px solid $radio-border-color;
     }
   }
 }
@@ -74,7 +74,6 @@ p {
 
 .btn-primary,
 .btn-secondary {
-  @include box-shadow-light();
   padding: 0.5rem 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -93,7 +92,6 @@ p {
   color: $gray;
   text-transform: lowercase;
   background-color: #f7f7f7;
-  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
 
   .material-icons {
     font-size: $base-font-size;
@@ -101,7 +99,6 @@ p {
 
   &:hover {
     border: $input-btn-border-width solid rgba(35, 35, 35, 0.2);
-    box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -121,7 +118,7 @@ p {
 }
 
 .card {
-  @include box-shadow();
+  border: none;
 }
 
 label,
@@ -174,6 +171,7 @@ small.value {
       text-transform: uppercase;
       border: 0;
       box-shadow: none;
+
       &[data-action="show-password"] {
         padding: 0.78rem 1rem;
         background: $gray;
@@ -220,6 +218,7 @@ textarea {
   }
   /* stylelint-enable */
 }
+
 .form-control-select {
   height: 2.625rem;
   padding: 0 0.5rem;
@@ -281,7 +280,6 @@ textarea {
   display: inline-block;
   float: left;
   width: auto;
-  @include box-shadow-light();
 
   input {
     &:focus {
@@ -344,16 +342,51 @@ textarea {
   }
 }
 
+.radio-inline {
+  .custom-radio {
+    margin-right: 0.5rem;
+  }
+
+  &:first-of-type {
+    margin-right: 1rem;
+  }
+}
+
+form {
+  section {
+    .form-informations {
+      display: inline-block;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+      color: $gray-darker;
+
+      &-title,
+      &-option {
+        display: inline-block;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .form-control-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: $gray-darker;
+  }
+}
+
 .custom-radio {
   position: relative;
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 1.25rem;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.1rem;
+  margin-right: 0.5rem;
   vertical-align: middle;
   cursor: pointer;
   background: #fff;
-  border: $gray 2px solid;
+  border: $radio-border-color 1px solid;
   border-radius: 50%;
 
   input[type="radio"] {
@@ -382,23 +415,26 @@ textarea {
 
   input[type="checkbox"] {
     position: absolute;
+    width: 18px;
+    height: 18px;
     margin-top: 0.25rem;
     cursor: pointer;
     opacity: 0;
 
     + span {
       display: inline-block;
-      width: 0.9375rem;
-      height: 0.9375rem;
-      margin-right: 3px;
+      width: 1.125rem;
+      height: 1.125rem;
+      margin-right: 0.5rem;
       vertical-align: middle;
+      pointer-events: none;
       cursor: pointer;
-      border: 2px $gray-darker solid;
+      border: 1px $radio-border-color solid;
 
       .checkbox-checked {
         display: none;
-        margin: -0.25rem -0.125rem;
-        font-size: 1.1rem;
+        margin: -0.125rem;
+        font-size: 1.25rem;
         color: $gray-darker;
       }
     }
@@ -475,7 +511,9 @@ textarea {
 
 .btn.disabled,
 .btn.disabled:hover {
-  background: $gray;
+  color: $btn-disabled-color;
+  background: $btn-disabled-background;
+  opacity: 1;
 }
 
 .alert-warning {
@@ -555,4 +593,19 @@ textarea {
   align-items: center;
   // 30px corresponds to the default margin size from bootstrap 4.0.0-alpha.5 for modal-dialog class
   min-height: calc(100% - (30px * 2));
+}
+
+.popover {
+  font-family: inherit;
+}
+
+input[type="number"] {
+  /* stylelint-disable */
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+  /* stylelint-enable */
 }

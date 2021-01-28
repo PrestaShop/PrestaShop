@@ -926,7 +926,14 @@ i.mce-i-checkbox {
   margin: 2px 0 2px 2px;
   *zoom: 1;
   &.mce-last {
+    max-width: 100%;
     margin-right: 2px;
+
+    > div {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
   }
 }
 

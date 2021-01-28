@@ -31,9 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 use Doctrine\DBAL\Connection;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
@@ -83,24 +86,32 @@ class ProductRepository extends AbstractObjectModelRepository
     private $taxRulesGroupRepository;
 
     /**
+     * @var ManufacturerRepository
+     */
+    private $manufacturerRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
      * @param int $defaultCategoryId
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     * @param ManufacturerRepository $manufacturerRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
         int $defaultCategoryId,
-        TaxRulesGroupRepository $taxRulesGroupRepository
+        TaxRulesGroupRepository $taxRulesGroupRepository,
+        ManufacturerRepository $manufacturerRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
         $this->defaultCategoryId = $defaultCategoryId;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+        $this->manufacturerRepository = $manufacturerRepository;
     }
 
     /**
@@ -286,9 +297,16 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {
+        $taxRulesGroupIdIsBeingUpdated = in_array('id_tax_rules_group', $propertiesToUpdate, true);
         $taxRulesGroupId = (int) $product->id_tax_rules_group;
-        if ($taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
+        $manufacturerIdIsBeingUpdated = in_array('id_manufacturer', $propertiesToUpdate, true);
+        $manufacturerId = (int) $product->id_manufacturer;
+
+        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
             $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
+        }
+        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
+            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
         }
 
         $this->productValidator->validate($product);

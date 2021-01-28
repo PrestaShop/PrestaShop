@@ -6,6 +6,7 @@ class Statuses extends BOBasePage {
     super();
 
     this.pageTitle = 'Statuses •';
+    this.successfulUpdateStatusMessage = 'The status has been updated successfully.';
 
     // Header selectors
     this.newOrderStatusLink = '#page-header-desc-order_return_state-new_order_state';
@@ -46,9 +47,16 @@ class Statuses extends BOBasePage {
     .dropdown-menu`;
     this.tableColumnActionsDeleteLink = (tableName, row) => `${this.tableColumnActionsDropdownMenu(tableName, row)}
     a.delete`;
+    this.tableColumnValidIcon = (row, column) => `${this.tableColumn('order', row, column)
+    } a.action-enabled`;
+    this.tableColumnNotValidIcon = (row, column) => `${this.tableColumn('order', row, column)
+    } a.action-disabled`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
+
+    // Growl message
+    this.growlMessageDiv = '.growl-message';
 
     // Pagination selectors
     this.paginationActiveLabel = tableName => `${this.gridForm(tableName)} ul.pagination.pull-right li.active a`;
@@ -207,7 +215,7 @@ class Statuses extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /* Pagination methods */
@@ -326,7 +334,48 @@ class Statuses extends BOBasePage {
 
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Get Value of column Displayed
+   * @param page
+   * @param row, row in table
+   * @returns {Promise<boolean>}
+   */
+  async getStatus(page, row, column) {
+    return this.elementVisible(page, this.tableColumnValidIcon(row, column), 100);
+  }
+
+  /**
+   * Quick edit toggle column value
+   * @param page
+   * @param row, row in table
+   * @param column, column number in table
+   * @param valueWanted, Value wanted in column
+   * @returns {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async setStatus(page, row, column, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumn('order', row, column), 2000);
+
+    if (await this.getStatus(page, row, column) !== valueWanted) {
+      page.click(this.tableColumn('order', row, column));
+      await this.waitForVisibleSelector(
+        page,
+        (valueWanted ? this.tableColumnValidIcon(row, column) : this.tableColumnNotValidIcon(row, column)),
+      );
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get growl message content
+   * @param page
+   * @return {Promise<string>}
+   */
+  getGrowlMessageContent(page) {
+    return this.getTextContent(page, this.growlMessageDiv);
   }
 }
 

@@ -64,7 +64,7 @@ class AddBrand extends BOBasePage {
     await page.check(this.statusToggleInput(brandData.enabled ? 1 : 0));
     // Save Created brand
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -75,6 +75,7 @@ class AddBrand extends BOBasePage {
    */
   async deleteKeywords(page, lang = 'en') {
     const closeButtons = await page.$$(this.deleteKeywordLink(lang));
+
     /* eslint-disable no-await-in-loop, no-restricted-syntax */
     for (const closeButton of closeButtons) {
       await closeButton.click();

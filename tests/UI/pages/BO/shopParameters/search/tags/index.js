@@ -190,7 +190,7 @@ class Tags extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   // Sort methods
@@ -243,6 +243,7 @@ class Tags extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -322,7 +323,7 @@ class Tags extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

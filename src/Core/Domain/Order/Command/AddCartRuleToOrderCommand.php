@@ -67,7 +67,7 @@ class AddCartRuleToOrderCommand
      * @param string $cartRuleName
      * @param string $cartRuleType
      * @param string|null $value
-     * @param null $orderInvoiceId
+     * @param int|null $orderInvoiceId
      */
     public function __construct(
         int $orderId,

@@ -109,7 +109,7 @@ table .column-filters td:last-child .grid-reset-button {
             & ~ .form-control {
               display: inline-block;
               /* stylelint-disable-next-line */
-              width: calc(100% - 29px);
+              width: calc(100% - 32px);
             }
           }
         }
@@ -227,7 +227,7 @@ table .column-filters td:last-child .grid-reset-button {
           &.action-type {
             .inline-dropdown-item {
               &:only-child {
-                margin-left: auto;
+                flex: 0 0 auto;
               }
 
               width: inherit;

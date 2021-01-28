@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-suppliers
 @reset-database-before-feature
+@clear-cache-before-feature
 @update-suppliers
 Feature: Update product suppliers from Back Office (BO)
   As a BO user
@@ -60,7 +61,7 @@ Feature: Update product suppliers from Back Office (BO)
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
 
-  Scenario: Remove product suppliers
+  Scenario: Remove all associated product suppliers
     Given product product1 type should be standard
     And product product1 should have following suppliers:
       | product supplier reference      | currency | price tax excluded |
@@ -69,7 +70,7 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
-    When I delete all product product1 suppliers
+    When I remove all associated product product1 suppliers
     Then product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty
@@ -105,3 +106,122 @@ Feature: Update product suppliers from Back Office (BO)
       | sup white shirt M 1        | USD      | 5                  | whiteM      |
       | sup white shirt L 2        | USD      | 3                  | whiteL      |
     Then product product2 default supplier reference should be empty
+
+  Scenario: Standard product wholesale price should depend on default supplier price
+    Given I add product "product3" with following information:
+      | name[en-US] | magic staff |
+      | is_virtual  | false       |
+    And product product3 type should be standard
+    And product product3 should not have any suppliers assigned
+    And product product3 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 0     |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+    When I set product product3 default supplier to supplier1 and following suppliers:
+      | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
+      | product3supplier1 | supplier1          | my first supplier for product3 | USD      | 10                 |
+    Then product product3 should have following suppliers:
+      | product supplier reference     | currency | price tax excluded |
+      | my first supplier for product3 | USD      | 10                 |
+    And product product3 should have following supplier values:
+      | default supplier | supplier1 |
+    And product product3 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 10    |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+    When I remove all associated product "product3" suppliers
+    Then product product3 should not have any suppliers assigned
+    And product product3 should not have a default supplier
+    And product product3 default supplier reference should be empty
+    And product product3 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 0     |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+
+  Scenario: Combination product wholesale price should be reset when default supplier is assigned
+    Given I add product "product4" with following information:
+      | name[en-US] | regular T-shirt |
+      | is_virtual  | false           |
+    And product product4 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 0     |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+    And I update product product4 prices with following information:
+      | wholesale_price | 15 |
+    And product "product4" has following combinations:
+      | reference | quantity | attributes         |
+      | whiteM    | 15       | Size:M;Color:White |
+      | whiteL    | 13       | Size:L;Color:White |
+    And product product4 type should be combination
+    And product product4 should not have any suppliers assigned
+    And product product4 default supplier reference should be empty
+    And product product4 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 15    |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+    When I set product product4 default supplier to supplier1 and following suppliers:
+      | reference      | supplier reference | product supplier reference | currency | price tax excluded | combination |
+      | product4whiteM | supplier1          | sup white shirt M 1        | USD      | 5                  | whiteM      |
+      | product4whiteL | supplier1          | sup white shirt L 2        | USD      | 3                  | whiteL      |
+    Then product product4 should have following suppliers:
+      | product supplier reference | currency | price tax excluded | combination |
+      | sup white shirt M 1        | USD      | 5                  | whiteM      |
+      | sup white shirt L 2        | USD      | 3                  | whiteL      |
+    Then product product4 default supplier reference should be empty
+    And product product4 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 0     |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+    And I update product product4 prices with following information:
+      | wholesale_price | 11 |
+    And product product4 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 11    |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |
+    When I remove all associated product product4 suppliers
+    Then product product4 should not have any suppliers assigned
+    And product product4 default supplier reference should be empty
+    And product product4 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 0     |
+      | unit_price       | 0     |
+      | unity            |       |
+      | unit_price_ratio | 0     |

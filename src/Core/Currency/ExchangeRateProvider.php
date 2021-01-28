@@ -227,8 +227,8 @@ class ExchangeRateProvider
      *
      * @return bool
      */
-    private function isValidXMLFeed(SimpleXMLElement $xmlFeed)
+    private function isValidXMLFeed(SimpleXMLElement $xmlFeed): bool
     {
-        return $xmlFeed && $xmlFeed->list && count($xmlFeed->list->currency) && $xmlFeed->source;
+        return (bool) count($xmlFeed->list->currency);
     }
 }

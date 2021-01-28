@@ -31,23 +31,20 @@
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">filter_none</i> {{ 'Handling'|trans }}
+
+        <span
+          class="help-box"
+          data-container="body"
+          data-toggle="popover"
+          data-trigger="hover"
+          data-placement="right"
+          data-content="{{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }} {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}"
+          title=""
+        >
+        </span>
       </h3>
       <div class="card-block row">
         <div class="card-text">
-          <div class="row">
-            <div class="col">
-              <div class="alert alert-info" role="alert">
-                <ul>
-                  <li>
-                    {{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }}
-                  </li>
-                  <li>
-                    {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
           {{ form_widget(handlingForm) }}
         </div>
       </div>

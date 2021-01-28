@@ -1,8 +1,8 @@
 .ps-alert {
   .close {
     position: absolute;
-    top: .9375rem;
-    right: .625rem;
+    top: 0.9375rem;
+    right: 0.625rem;
     opacity: 1;
     .material-icons {
       font-size: 1.5rem;
@@ -20,7 +20,7 @@
   .alert {
     padding: 0;
     margin: 0;
-    border-width: .125rem;
+    border-width: 0.125rem;
     @include border-radius(0);
     &.alert-info {
       background: $notice;
@@ -32,7 +32,7 @@
       background: $danger-hover;
     }
     .alert-text {
-      padding: .9375rem 0 .9375rem .9375rem;
+      padding: 0.9375rem 0 0.9375rem 0.9375rem;
       margin-left: 3.438rem;
       background: #fff;
     }

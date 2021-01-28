@@ -4,13 +4,13 @@
     .page-header {
       margin: 2rem 0 3rem;
     }
+
     .page-content {
       margin-bottom: 10rem;
     }
   }
 
   .page-not-found {
-    @include box-shadow();
     max-width: 570px;
     padding: 1rem;
     margin: 0 auto;

@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+
 /**
  * Product information for editing
  */
@@ -37,11 +39,6 @@ class ProductForEditing
      * @var int
      */
     private $productId;
-
-    /**
-     * @var bool
-     */
-    private $active;
 
     /**
      * @var ProductBasicInformation
@@ -62,6 +59,11 @@ class ProductForEditing
      * @var ProductOptions
      */
     private $options;
+
+    /**
+     * @var ProductDetails
+     */
+    private $details;
 
     /**
      * @var ProductCustomizationOptions
@@ -89,42 +91,50 @@ class ProductForEditing
     private $stockInformation;
 
     /**
+     * @var VirtualProductFileForEditing|null
+     */
+    private $virtualProductFile;
+
+    /**
      * @param int $productId
-     * @param bool $active
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
      * @param ProductCategoriesInformation $categoriesInformation
      * @param ProductPricesInformation $pricesInformation
      * @param ProductOptions $options
+     * @param ProductDetails $details
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
      * @param ProductStockInformation $stockInformation
+     * @param VirtualProductFileForEditing|null $virtualProductFile
      */
     public function __construct(
         int $productId,
-        bool $active,
         ProductCustomizationOptions $customizationOptions,
         ProductBasicInformation $basicInformation,
         ProductCategoriesInformation $categoriesInformation,
         ProductPricesInformation $pricesInformation,
         ProductOptions $options,
+        ProductDetails $details,
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
         array $associatedAttachmentIds,
-        ProductStockInformation $stockInformation
+        ProductStockInformation $stockInformation,
+        ?VirtualProductFileForEditing $virtualProductFile
     ) {
         $this->productId = $productId;
-        $this->active = $active;
         $this->customizationOptions = $customizationOptions;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
         $this->pricesInformation = $pricesInformation;
         $this->options = $options;
+        $this->details = $details;
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
         $this->stockInformation = $stockInformation;
+        $this->virtualProductFile = $virtualProductFile;
     }
 
     /**
@@ -133,14 +143,6 @@ class ProductForEditing
     public function getProductId(): int
     {
         return $this->productId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
     }
 
     /**
@@ -184,6 +186,14 @@ class ProductForEditing
     }
 
     /**
+     * @return ProductDetails
+     */
+    public function getDetails(): ProductDetails
+    {
+        return $this->details;
+    }
+
+    /**
      * @return ProductShippingInformation
      */
     public function getShippingInformation(): ProductShippingInformation
@@ -213,5 +223,13 @@ class ProductForEditing
     public function getStockInformation(): ProductStockInformation
     {
         return $this->stockInformation;
+    }
+
+    /**
+     * @return VirtualProductFileForEditing|null
+     */
+    public function getVirtualProductFile(): ?VirtualProductFileForEditing
+    {
+        return $this->virtualProductFile;
     }
 }

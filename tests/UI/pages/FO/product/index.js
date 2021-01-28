@@ -139,6 +139,7 @@ class Product extends FOBasePage {
   async isUnavailableProductSizeDisplayed(page, size) {
     await page.waitForTimeout(2000);
     const exist = await page.$(this.productSizeOption(size)) !== null;
+
     return exist;
   }
 
