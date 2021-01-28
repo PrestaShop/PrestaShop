@@ -35,6 +35,11 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class UploadQuotaType extends TranslatorAwareType
 {
+    public const FIELD_MAX_SIZE_ATTACHED_FILES = 'max_size_attached_files';
+    public const FIELD_MAX_SIZE_DOWNLOADABLE_FILE = 'max_size_downloadable_product';
+    public const FIELD_MAX_SIZE_PRODUCT_IMAGE = 'max_size_product_image';
+
+
     /**
      * {@inheritdoc}
      */
@@ -43,7 +48,7 @@ class UploadQuotaType extends TranslatorAwareType
         $configuration = $this->getConfiguration();
         $builder
             ->add(
-                'max_size_attached_files',
+                self::FIELD_MAX_SIZE_ATTACHED_FILES,
                 TextWithUnitType::class,
                 [
                     'label' => $this->trans(
@@ -75,7 +80,7 @@ class UploadQuotaType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'max_size_downloadable_product',
+                self::FIELD_MAX_SIZE_DOWNLOADABLE_FILE,
                 TextWithUnitType::class,
                 [
                     'label' => $this->trans(
@@ -107,7 +112,7 @@ class UploadQuotaType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'max_size_product_image',
+                self::FIELD_MAX_SIZE_PRODUCT_IMAGE,
                 TextWithUnitType::class,
                 [
                     'label' => $this->trans(
