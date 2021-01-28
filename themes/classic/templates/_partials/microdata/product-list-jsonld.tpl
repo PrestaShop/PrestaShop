@@ -22,21 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<nav data-depth="{$breadcrumb.count}" class="breadcrumb hidden-sm-down">
-  <ol>
-    {block name='breadcrumb'}
-      {foreach from=$breadcrumb.links item=path name=breadcrumb}
-        {block name='breadcrumb_item'}
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            {if not $smarty.foreach.breadcrumb.last}
-              <a itemprop="item" href="{$path.url}"><span itemprop="name">{$path.title}</span></a>
-            {else}
-              <span itemprop="name">{$path.title}</span>
-            {/if}
-            <meta itemprop="position" content="{$smarty.foreach.breadcrumb.iteration}">
-          </li>
-        {/block}
-      {/foreach}
-    {/block}
-  </ol>
-</nav>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+        {foreach from=$listing.products item=item key="position" name=producttmp}
+          {
+            "@type": "ListItem",
+            "position": {$position},
+            "name": "{$item.name}",
+            "url": "{$item.url}"
+            }{if !$smarty.foreach.producttmp.last},{/if}
+          {/foreach}]
+        }
+</script>

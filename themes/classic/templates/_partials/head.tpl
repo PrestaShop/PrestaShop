@@ -43,10 +43,22 @@
     <link rel="canonical" href="{$page.canonical}">
   {/if}
   {block name='head_hreflang'}
-      {foreach from=$urls.alternative_langs item=pageUrl key=code}
-            <link rel="alternate" href="{$pageUrl}" hreflang="{$code}">
-      {/foreach}
+    {foreach from=$urls.alternative_langs item=pageUrl key=code}
+      <link rel="alternate" href="{$pageUrl}" hreflang="{$code}">
+    {/foreach}
   {/block}
+  
+  {include file="_partials/microdata/head-jsonld.tpl"}
+  
+  {block name='head_microdata_special'}{/block}
+  
+  {include file="_partials/pagination-seo.tpl"}
+
+  <meta property="og:title" content="{$page.meta.title}" />
+  <meta property="og:description" content="{$page.meta.description}" />
+  <meta property="og:url" content="{$urls.current_url}" />
+  <meta property="og:site_name" content="{$shop.name}" />
+  {if !isset($product) && $page.page_name != 'product'}<meta property="og:type" content="website" />{/if}
 {/block}
 
 {block name='head_viewport'}
