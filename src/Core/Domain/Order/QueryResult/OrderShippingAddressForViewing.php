@@ -94,6 +94,11 @@ class OrderShippingAddressForViewing
     private $mobilePhoneNumber;
 
     /**
+     * @var string
+     */
+    private $dni;
+
+    /**
      * @param int $addressId
      * @param string $firstName
      * @param string $lastName
@@ -107,6 +112,7 @@ class OrderShippingAddressForViewing
      * @param string $phone
      * @param string $phoneMobile
      * @param string|null $vatNumber
+     * @param string $dni
      */
     public function __construct(
         int $addressId,
@@ -121,7 +127,8 @@ class OrderShippingAddressForViewing
         string $postCode,
         string $phone,
         string $phoneMobile,
-        ?string $vatNumber = null
+        ?string $vatNumber = null,
+        string $dni = ''
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
@@ -136,6 +143,7 @@ class OrderShippingAddressForViewing
         $this->postCode = $postCode;
         $this->phoneNumber = $phone;
         $this->mobilePhoneNumber = $phoneMobile;
+        $this->dni = $dni;
     }
 
     /**
@@ -192,6 +200,14 @@ class OrderShippingAddressForViewing
     public function getCityName(): string
     {
         return $this->cityName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDni(): string
+    {
+        return $this->dni;
     }
 
     /**

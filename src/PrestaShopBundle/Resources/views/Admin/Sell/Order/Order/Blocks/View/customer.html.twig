@@ -168,6 +168,9 @@
             {{ orderForViewing.shippingAddress.postCode }}
           </p>
           <p class="mb-0">{{ orderForViewing.shippingAddress.countryName }}</p>
+          {% if orderForViewing.shippingAddress.dni is not empty %}
+            <p class="mb-0">{{ orderForViewing.shippingAddress.dni }}</p>
+          {% endif %}
           <p>
             {{ orderForViewing.shippingAddress.phoneNumber }}
             {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
@@ -221,6 +224,9 @@
             {{ orderForViewing.invoiceAddress.postCode }}
           </p>
           <p class="mb-0">{{ orderForViewing.invoiceAddress.countryName }}</p>
+          {% if orderForViewing.invoiceAddress.dni is not empty %}
+            <p class="mb-0">{{ orderForViewing.invoiceAddress.dni }}</p>
+          {% endif %}
           <p>
             {{ orderForViewing.invoiceAddress.phoneNumber }}
             {{ orderForViewing.invoiceAddress.mobilePhoneNumber }}

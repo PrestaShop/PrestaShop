@@ -138,7 +138,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $testCaseData['City'],
             $countryId,
             $testCaseData['Postal code'],
-            null,
+            $testCaseData['DNI'] ?? null,
             null,
             null,
             null,
