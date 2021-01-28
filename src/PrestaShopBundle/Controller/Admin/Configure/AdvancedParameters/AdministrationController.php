@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormError;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -154,7 +157,7 @@ class AdministrationController extends FrameworkBundleAdminController
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             } else {
-                $this->flashErrors($saveErrors);
+                $this->flashErrors($this->getErrorMessages($saveErrors));
             }
         }
 
@@ -183,5 +186,72 @@ class AdministrationController extends FrameworkBundleAdminController
     protected function getNotificationsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.administration.notifications.form_handler');
+    }
+
+    /**
+     * @var FormError[] $errors
+     */
+    private function getErrorMessages(array $errors): array
+    {
+        $messages = [];
+
+        foreach ($errors as $error) {
+            $messages[] = $this->getErrorMessage($error);
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param FormError $error
+     *
+     * @return string
+     */
+    private function getErrorMessage(FormError $error): string
+    {
+        switch ($error->getErrorCode()) {
+            case UploadQuotaDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0:
+                return $this->trans(
+                    '"%s is invalid. Please enter an integer greater or equal to 0."',
+                    'Admin.Notifications.Error',
+                    [$this->getFieldLabel($error->getFieldName())]
+                );
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    private function getFieldLabel(string $fieldName): string
+    {
+        /** Reusing same translated string as in UploadQuotaType, ideally I would take strings from there instead
+         * Because if somebody changes name in UploadQuotaType it won't be changed here. Not sure how to do that,
+         * building the whole form just to retrieve labels sound like an overhead.
+         * Maybe move labels to some other service and then retrieve them in both UploadQuotaType and here.
+         */
+        switch ($fieldName) {
+            case UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES:
+                return $this->trans(
+                    'Maximum size for attached files',
+                    'Admin.Advparameters.Feature'
+                );
+            case UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE:
+                return $this->trans(
+                    'Maximum size for a downloadable product',
+                    'Admin.Advparameters.Feature'
+                );
+            case UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE:
+                return $this->trans(
+                    'Maximum size for a product\'s image',
+                    'Admin.Advparameters.Feature'
+                );
+        }
+
+        /** @todo maybe throw an exception here? */
+        return '';
     }
 }
