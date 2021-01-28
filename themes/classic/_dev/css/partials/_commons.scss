@@ -255,6 +255,7 @@ textarea {
     select {
       outline: 0.1875rem solid $brand-danger;
     }
+
     .help-block {
       color: $brand-danger;
     }
@@ -602,6 +603,7 @@ form {
 input[type="number"] {
   /* stylelint-disable */
   -moz-appearance: textfield;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     margin: 0;
