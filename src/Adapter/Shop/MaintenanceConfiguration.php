@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
-use PrestaShop\PrestaShop\Core\Configuration\MultistoreConfigurator;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
  */
-class MaintenanceConfiguration extends MultistoreConfigurator
+class MaintenanceConfiguration extends AbstractMultistoreConfiguration
 {
     /**
      * {@inheritdoc}

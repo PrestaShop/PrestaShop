@@ -30,9 +30,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShop\PrestaShop\Core\Configuration\MultistoreConfigurator;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
-class MultistoreConfiguratorTest extends TestCase
+class AbstractMultistoreConfigurationTest extends TestCase
 {
     protected function setUp()
     {
@@ -49,8 +49,8 @@ class MultistoreConfiguratorTest extends TestCase
      */
     public function testRemoveDisabledFields(array $fields, bool $isAllShopContext, array $expectedResult): void
     {
-        $multistoreConfigurator = $this->getTestableClass($isAllShopContext);
-        $result = $multistoreConfigurator->removeDisabledFields($fields);
+        $abstractMultistoreConfiguration = $this->getTestableClass($isAllShopContext);
+        $result = $abstractMultistoreConfiguration->removeDisabledFields($fields);
 
         $this->assertEquals($expectedResult, $result);
     }
@@ -89,11 +89,11 @@ class MultistoreConfiguratorTest extends TestCase
     /**
      * @param bool $isAllShopContext
      *
-     * @return MultistoreConfigurator
+     * @return AbstractMultistoreConfiguration
      */
-    private function getTestableClass(bool $isAllShopContext): MultistoreConfigurator
+    private function getTestableClass(bool $isAllShopContext): AbstractMultistoreConfiguration
     {
-        return new class($this->mockedShopConfiguration, $this->createMultistoreContextMock($isAllShopContext)) extends MultistoreConfigurator {
+        return new class($this->mockedShopConfiguration, $this->createMultistoreContextMock($isAllShopContext)) extends AbstractMultistoreConfiguration {
             public function getConfiguration()
             {
                 return [];
