@@ -248,15 +248,16 @@ final class EmployeeType extends TranslatorAwareType
                     ]
                 )
             ;
+            if ($this->isMultistoreFeatureActive) {
+                $builder->add('shop_association', ShopChoiceTreeType::class, [
+                    'label' => $this->trans('Shop association', 'Admin.Global'),
+                    'help' => $this->trans('Select the shops the employee is allowed to access.', 'Admin.Advparameters.Help'),
+                    'required' => false,
+                ]);
+            }
+
         }
 
-        if ($this->isMultistoreFeatureActive) {
-            $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global'),
-                'help' => $this->trans('Select the shops the employee is allowed to access.', 'Admin.Advparameters.Help'),
-                'required' => false,
-            ]);
-        }
 
         $builder
             ->add('default_page', ChoiceType::class, [
