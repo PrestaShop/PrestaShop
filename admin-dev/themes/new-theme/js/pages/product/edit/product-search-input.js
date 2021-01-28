@@ -28,6 +28,7 @@ import AutoCompleteSearch from "@components/auto-complete-search";
 export default class ProductSearchInput {
   constructor($productSearchInput, productRemoteSource) {
     this.$productSearchInput = $productSearchInput;
+    this.productSearchInputId = this.$productSearchInput.prop('id');
     this.productRemoteSource = productRemoteSource;
 
     this.buildAutoCompleteSearch();
@@ -44,17 +45,16 @@ export default class ProductSearchInput {
         }
 
         return value;
+      },
+      templates: {
+        renderSelected: (product) => this.renderSelected(product),
       }
     });
   }
 
   renderSelected(product) {
-    let value = product.id;
-    if (Object.prototype.hasOwnProperty.call(product, 'id_product_attribute') && product.id_product_attribute) {
-      value = `${value},${product.id_product_attribute}`;
-    }
-
-    const innerTemplateHtml = this.$templateContainer
+    const $templateContainer = $(`#tplcollection-${this.productSearchInputId}`);
+    const innerTemplateHtml = $templateContainer
       .html()
       .replace('%s', product.name);
 
@@ -65,7 +65,6 @@ export default class ProductSearchInput {
         <div class="media-body media-middle">
           ${innerTemplateHtml}
         </div>
-        <input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />
       </li>`;
   }
 }
