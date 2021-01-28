@@ -187,7 +187,10 @@ class OrderProductRemover
         $removedOrderCartRules = [];
         foreach ($orderCartRules as $orderCartRule) {
             $cartRule = new CartRule($orderCartRule['id_cart_rule']);
-            $discountedProducts = $cartRule->checkProductRestrictionsFromCart($cart, true, true, true);
+            $discountedProducts = $cartRule->checkProductRestrictionsFromCart($cart, true, false, true);
+            if (!is_array($discountedProducts)) {
+                continue;
+            }
             foreach ($discountedProducts as $discountedProduct) {
                 // The return value is the concatenation of productId and attributeId, but the attributeId is always replaced by 0
                 if ($discountedProduct === $orderDetail->product_id . '-0') {

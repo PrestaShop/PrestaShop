@@ -1070,3 +1070,102 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  Scenario: I have a cart rule that is associated to a product which adds a discount,
+      and an another cart rule which adds a free gift which is the same product,
+      I add this product,
+      I order,
+      I remove all cart rules,
+      I remove the product
+    Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
+    # Create a cart rule : No cade + Product restriction with min quanity + Discount 50%
+    And there is a cart rule named "cartRulePercentDiscountOnSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "cartRulePercentDiscountOnSpecificProduct" has no discount code
+    And cart rule "cartRulePercentDiscountOnSpecificProduct" is restricted to product "Product 12345" with a quantity of 2
+    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    And there is a cart rule named "cartRuleFreeGift" that applies no discount with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "cartRuleFreeGift" has no discount code
+    And cart rule "cartRuleFreeGift" offers a gift product "Product 12345"
+    # Make an order
+    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And I add 1 products "Product 12345" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 2 cart rules
+    And order "bo_order1" should have following details:
+      | total_products           | 24.00 |
+      | total_products_wt        | 25.44 |
+      | total_discounts_tax_excl | 18.00 |
+      | total_discounts_tax_incl | 19.08 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 13.00 |
+      | total_paid_tax_incl      | 13.78 |
+      | total_paid               | 13.78 |
+      | total_paid_real          | 0.0   |
+    # total_products : 12 +12 = 24 (+ 6% (1.44) = 25.44)
+    # total_discounts : 12 (cartRuleFreeGift) + 6 (cartRulePercentDiscountOnSpecificProduct) = 18 (+ 6% (1.08) = 19.08)
+    # total_paid_tax_excl : 24 - 18 + 7 = 19
+
+    # Remove cart rule "cartRulePercentDiscountOnSpecificProduct"
+    Then I remove cart rule "cartRulePercentDiscountOnSpecificProduct" from order "bo_order1"
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rules
+    And order "bo_order1" should have following details:
+      | total_products           | 24.00 |
+      | total_products_wt        | 25.44 |
+      | total_discounts_tax_excl | 12.00 |
+      | total_discounts_tax_incl | 12.72 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 20.14 |
+      | total_paid               | 20.14 |
+      | total_paid_real          | 0.0   |
+    # total_products : 12 +12 = 24 (+ 6% (1.44) = 25.44)
+    # total_discounts : 12 (cartRuleFreeGift) = 12 (+ 6% (0.72) = 12.72)
+    # total_paid_tax_excl : 24 - 12 + 7 = 19
+
+    # Remove cart rule "cartRuleFreeGift"
+    Then I remove cart rule "cartRuleFreeGift" from order "bo_order1"
+    And order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rules
+    And order "bo_order1" should have following details:
+      | total_products           | 12.00 |
+      | total_products_wt        | 12.72 |
+      | total_discounts_tax_excl | 0.00  |
+      | total_discounts_tax_incl | 0.00  |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 20.14 |
+      | total_paid               | 20.14 |
+      | total_paid_real          | 0.0   |
+    # total_products : 12 = 12 (+ 6% (0.72) = 12.72)
+    # total_discounts : 0
+    # total_paid_tax_excl : 12 - 0 + 7 = 19
+
+    # Delete the product
+    Then I remove product "Product 12345" from order "bo_order1"
+    And I should get no order error
+    And order "bo_order1" should have 0 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rules
+    And order "bo_order1" should have following details:
+      | total_products           | 0.00  |
+      | total_products_wt        | 0.00  |
+      | total_discounts_tax_excl | 0.00  |
+      | total_discounts_tax_incl | 0.00  |
+      | total_shipping_tax_excl  | 0.00  |
+      | total_shipping_tax_incl  | 0.00  |
+      | total_paid_tax_excl      | 0.00  |
+      | total_paid_tax_incl      | 0.00  |
+      | total_paid               | 0.00  |
+      | total_paid_real          | 0.00  |
