@@ -81,6 +81,7 @@ class RedirectOptionType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productSearchUrl = $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY';
+        $categorySearchUrl = $this->router->generate('admin_get_ajax_categories', ['query' => '%QUERY']);
 
         $builder
             ->add('type', ChoiceType::class, [
@@ -104,12 +105,13 @@ class RedirectOptionType extends TranslatorAwareType
                 'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
                 'attr' => [
-                    'data-label-product' => $this->trans('Target product', 'Admin.Catalog.Feature'),
-                    'data-placeholder-product' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
-                    'data-label-category' => $this->trans('Target category', 'Admin.Catalog.Feature'),
-                    'data-placeholder-category' => $this->trans('To which category the page should redirect?', 'Admin.Catalog.Help'),
-                    'data-hint-category' => $this->trans('If no category is selected the Main Category is used', 'Admin.Catalog.Help'),
+                    'data-product-label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
+                    'data-product-placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                     'data-product-search-url' => $productSearchUrl,
+                    'data-category-label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
+                    'data-category-placeholder' => $this->trans('To which category the page should redirect?', 'Admin.Catalog.Help'),
+                    'data-category-hint' => $this->trans('If no category is selected the Main Category is used', 'Admin.Catalog.Help'),
+                    'data-category-search-url' => $categorySearchUrl,
                 ],
             ])
         ;
