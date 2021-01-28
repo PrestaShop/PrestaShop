@@ -10,7 +10,7 @@ class AddSQLQuery extends BOBasePage {
     // Selectors
     this.sqlQueryNameInput = '#sql_request_name';
     this.sqlQueryTextArea = '#sql_request_sql';
-    this.saveButton = '#ql-query-save-btn';
+    this.saveButton = '#sql-query-save-btn';
   }
 
   /*
