@@ -82,7 +82,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     {
         return 'application/json';
     }
-    
+
     public function getContent()
     {
         return $this->content;
