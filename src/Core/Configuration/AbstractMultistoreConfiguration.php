@@ -60,7 +60,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
     /**
      * @return ShopConstraint|null
      */
-    protected function getShopConstraint(): ?ShopConstraint
+    public function getShopConstraint(): ?ShopConstraint
     {
         if (!$this->shopContext->isAllShopContext()) {
             $contextShopGroup = $this->shopContext->getContextShopGroup();
@@ -77,53 +77,24 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
     }
 
     /**
-     * @param array $configurationInput
-     *
-     * @return array
+     * @param string $configurationKey BO configuration key, ex: PS_SHOP_ENABLE (as stored in the configuration db table)
+     * @param string $fieldName
+     * @param array $input an associative array where keys are field names and values are field values
+     * @param ShopConstraint|null $shopConstraint
+     * @param array $options Options @deprecated Will be removed in next major
      */
-    protected function getConfigurationInputValues(array $configurationInput): array
+    protected function updateConfigurationValue(string $configurationKey, string $fieldName, array $input, ?ShopConstraint $shopConstraint, array $options = []): void
     {
-        if (!$this->shopContext->isAllShopContext()) {
-            return $this->removeDisabledFields($configurationInput);
-        }
-
-        return $configurationInput;
-    }
-
-    /**
-     * Remove fields that are disabled (multistore checkbox unchecked)
-     *
-     * @param array $configuration
-     *
-     * @return array
-     */
-    public function removeDisabledFields(array $configuration): array
-    {
-        if ($this->shopContext->isAllShopContext()) {
-            return $configuration;
+        if (!array_key_exists($fieldName, $input)) {
+            return;
         }
 
         $prefix = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX;
 
-        foreach ($configuration as $key => $value) {
-            // This is a multistore checkbox we ignore it
-            if (substr($key, 0, strlen($prefix)) === $prefix) {
-                continue;
-            }
-
-            // Check for this configuration key if the associated multistore checbox is enabled
-            if (isset($configuration[$prefix . $key]) && $configuration[$prefix . $key] !== true) {
-                unset($configuration[$key]);
-            }
-        }
-
-        return $configuration;
-    }
-
-    protected function updateConfigurationValue(string $configurationKey, string $formKey, array $input, ?ShopConstraint $shopConstraint, array $options = []): void
-    {
-        if (isset($input[$formKey])) {
-            $this->configuration->set($configurationKey, $input[$formKey], $shopConstraint, $options);
+        if (isset($input[$prefix . $fieldName]) && $input[$prefix . $fieldName] !== true) {
+            $this->configuration->deleteFromContext($configurationKey);
+        } else {
+            $this->configuration->set($configurationKey, $input[$fieldName], $shopConstraint, $options);
         }
     }
 }
