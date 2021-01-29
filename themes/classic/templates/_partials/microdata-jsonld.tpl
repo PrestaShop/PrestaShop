@@ -87,8 +87,8 @@
       "description": "{$page.meta.description|regex_replace:"/[\r\n]/" : " "}",
       "category": "{$product.category_name}",
       {if isset($product.cover)}"image" :"{$product.cover.bySize.home_default.url}",{/if}
-      {if $product.reference}"sku": "{$product.reference}",{else}"sku": "{$product.id}",{/if}
-      "mpn": {if $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
+      "sku": {if $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
+      "mpn": {if $product.mpn}"{$product.mpn}"{elseif $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
       {if $product_manufacturer->name OR $shop.name}"brand": {
         "@type": "Thing",
         "name": "{if $product_manufacturer->name}{$product_manufacturer->name|escape:'html':'UTF-8'}{else}{$shop.name}{/if}"
@@ -121,8 +121,8 @@
                   {/foreach}
                 ]{/strip},
               {/if}
-              "mpn": {if $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
               "sku": {if $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
+              "mpn": {if $product.mpn}"{$product.mpn}"{elseif $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
               {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
               {if $product.show_condition > 0}
                 {if $product.condition == 'used'}"itemCondition": "https://schema.org/UsedCondition",{/if}
