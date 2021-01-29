@@ -10,13 +10,13 @@ class Preferences extends BOBasePage {
 
     // Handling form selectors
     this.handlingForm = '#handling';
-    this.handlingChargesInput = '#form_handling_shipping_handling_charges';
+    this.handlingChargesInput = '#handling_shipping_handling_charges';
     this.saveHandlingButton = `${this.handlingForm} button`;
 
     // Carrier options selectors
     this.carrierOptionForm = '#carrier-options';
-    this.defaultCarrierSelect = '#form_carrier_options_default_carrier';
-    this.sortBySelect = '#form_carrier_options_carrier_default_order_by';
+    this.defaultCarrierSelect = '#carrier-options_default_carrier';
+    this.sortBySelect = '#carrier-options_carrier_default_order_by';
     this.saveCarrierOptionsButton = `${this.carrierOptionForm} button`;
   }
 
