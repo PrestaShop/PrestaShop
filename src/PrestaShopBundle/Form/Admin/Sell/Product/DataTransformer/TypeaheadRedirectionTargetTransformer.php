@@ -33,7 +33,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 class TypeaheadRedirectionTargetTransformer implements DataTransformerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function transform($targetId)
     {
@@ -49,7 +49,7 @@ class TypeaheadRedirectionTargetTransformer implements DataTransformerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function reverseTransform($targetData)
     {
