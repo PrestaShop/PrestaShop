@@ -31,6 +31,10 @@ use PrestaShopBundle\Translation\Exception\UnexpectedTranslationTypeException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\TranslationCatalogueBuilder;
 
+/**
+ * This factory will return the provider matching the given 'type'.
+ * If the type given doesn't match one of the known types, an exception will be thrown.
+ */
 class CatalogueProviderFactory
 {
     /**
@@ -68,6 +72,6 @@ class CatalogueProviderFactory
         }
 
         // This should never be thrown if every Type has his Provider defined in constructor
-        throw new UnexpectedTranslationTypeException('Unexpected type');
+        throw new UnexpectedTranslationTypeException(sprintf('Unexpected type %s', $type));
     }
 }

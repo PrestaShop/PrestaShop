@@ -32,7 +32,10 @@ use Doctrine\Common\Inflector\Inflector;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
- * Builds a domain tree for the translation API
+ * Builds a domain tree for the translation API.
+ *
+ * The tree will have any necessary information to display it in the interface :
+ * domain names, counter, missing translations and link to access catalogue.
  */
 class TranslationsTreeBuilder
 {
@@ -92,9 +95,13 @@ class TranslationsTreeBuilder
         $this->search = $search;
         $this->module = $module;
 
+        // First we build metadata tree.
+        // This will split domain in subDomains (max 3)
+        // And add counters to have number of translations and missing translations for each domain
         $metadata = $this->buildDomainMetadataTree($translationArray);
 
         return [
+            // Then we add 'extra data' like subdomain name and fullName, link to access the domain catalogue.
             'tree' => $this->recursivelyBuildApiTree($metadata, null),
         ];
     }
@@ -301,6 +308,10 @@ class TranslationsTreeBuilder
 
     /**
      * @TODO This method will be added to TreeBuilder
+     *
+     * Converts a domainName into Subdomains.
+     * First, we split the camelcased name and add underscore between each part. For example DomainNameNumberOne will be Domain_Name_Number_One
+     * Then, we explode the name in 3 parts based on _ separator. So Domain_Name_Number_One will be ['Domain', 'Name', 'Number_One']
      *
      * @param string $domain
      *

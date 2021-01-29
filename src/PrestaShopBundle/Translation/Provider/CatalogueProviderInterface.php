@@ -29,11 +29,24 @@ namespace PrestaShopBundle\Translation\Provider;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * This interface is the contract for Catalogue providers.
+ * A provider must furnish translations for the 3 layers we have :
+ *   - Default catalogue : It the base wording, in english, and stored in filesystem or extracted from templates.
+ *   - File translated : It's the translation in a specific language. It's stored in filesystem and given by language pack or a module developer.
+ *   - Database or User translated : It's the translation made by the user himself. It's done from the Admin and stored in DB.
+ */
 interface CatalogueProviderInterface
 {
     /**
-     * @param string $locale
-     * @param bool $empty
+     * Gets the default catalogue : It the base wording, in english, and stored in filesystem or extracted from templates.
+     * This 'locale' parameter won't determinate the content of the catalogue returned
+     * but it will be the identifier for the MessageCatalogue object so can easily merge other translations.
+     * As the default language in templates is english, the default catalogue will have the same values for translationKey and translationValue
+     * The 'empty' parameter defines if you want to only keep the translation keys in the returned Catalogue.
+     *
+     * @param string $locale the language for which you need translations
+     * @param bool $empty says whether the translation values will be set empty string or kept as they are
      *
      * @throws FileNotFoundException
      *
@@ -42,6 +55,9 @@ interface CatalogueProviderInterface
     public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogue;
 
     /**
+     * Gets the file translated catalogue : t's the translations in a specific language.
+     * It's stored in filesystem and given by language pack or a module developer.
+     *
      * @param string $locale
      *
      * @throws FileNotFoundException
@@ -51,6 +67,9 @@ interface CatalogueProviderInterface
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue;
 
     /**
+     * Gets the User modified catalogue : It's the translations made by the user himself.
+     * It's done from the Admin and stored in DB.
+     *
      * @param string $locale
      *
      * @throws FileNotFoundException
