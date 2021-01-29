@@ -10,7 +10,7 @@ class Preferences extends BOBasePage {
 
     // Handling form selectors
     this.handlingForm = '#handling';
-    this.handlingChargesInput = '#form_handling_shipping_handling_charges';
+    this.handlingChargesInput = '#handling_shipping_handling_charges';
     this.saveHandlingButton = `${this.handlingForm} button`;
 
     // Carrier options selectors
