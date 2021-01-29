@@ -52,9 +52,9 @@
     <div class="js-qv-mask mask">
       <ul class="product-images js-qv-product-images">
         {foreach from=$product.images item=image}
-          <li class="thumb-container">
+          <li class="thumb-container js-thumb-container">
             <img
-              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected {/if}"
+              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected js-thumb-selected {/if}"
               data-image-medium-src="{$image.bySize.medium_default.url}"
               data-image-large-src="{$image.bySize.large_default.url}"
               src="{$image.bySize.home_default.url}"

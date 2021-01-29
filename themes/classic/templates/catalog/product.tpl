@@ -144,7 +144,7 @@
                   {if $product.description}
                     <li class="nav-item">
                        <a
-                         class="nav-link{if $product.description} active{/if}"
+                         class="nav-link{if $product.description} active js-product-nav-active{/if}"
                          data-toggle="tab"
                          href="#description"
                          role="tab"
@@ -154,7 +154,7 @@
                   {/if}
                   <li class="nav-item">
                     <a
-                      class="nav-link{if !$product.description} active{/if}"
+                      class="nav-link{if !$product.description} active js-product-nav-active{/if}"
                       data-toggle="tab"
                       href="#product-details"
                       role="tab"
@@ -184,7 +184,7 @@
                 </ul>
 
                 <div class="tab-content" id="tab-content">
-                 <div class="tab-pane fade in{if $product.description} active{/if}" id="description" role="tabpanel">
+                 <div class="tab-pane fade in{if $product.description} active js-product-tab-active{/if}" id="description" role="tabpanel">
                    {block name='product_description'}
                      <div class="product-description">{$product.description nofilter}</div>
                    {/block}

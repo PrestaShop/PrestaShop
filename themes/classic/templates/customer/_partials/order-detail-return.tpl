@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {block name='order_products_table'}
-  <form id="order-return-form" action="{$urls.pages.order_follow}" method="post">
+  <form id="order-return-form" class="js-order-return-form" action="{$urls.pages.order_follow}" method="post">
 
     <div class="box hidden-sm-down">
       <table id="order-products" class="table table-bordered return">
