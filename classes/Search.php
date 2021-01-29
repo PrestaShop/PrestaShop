@@ -189,10 +189,10 @@ class SearchCore
             ';
 
             // check if we can we use '\b' (faster)
-            $useICU = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
             );
-            $aliases = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            $aliases = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS(
                 sprintf(
                     $query,
                     $useICU
