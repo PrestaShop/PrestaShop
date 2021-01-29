@@ -66,7 +66,7 @@
     {/block}
 
     {block name='product_availability'}
-      <span id="product-availability">
+      <span id="product-availability" class="js-product-availability">
         {if $product.show_availability && $product.availability_message}
           {if $product.availability == 'available'}
             <i class="material-icons rtl-no-flip product-available">&#xE5CA;</i>
@@ -81,7 +81,7 @@
     {/block}
 
     {block name='product_minimal_quantity'}
-      <p class="product-minimal-quantity">
+      <p class="product-minimal-quantity js-product-minimal-quantity">
         {if $product.minimal_quantity > 1}
           {l
           s='The minimum purchase order quantity for the product is %quantity%.'

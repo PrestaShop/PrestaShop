@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<div class="images-container">
+<div class="images-container js-images-container">
   {block name='product_cover'}
     <div class="product-cover">
       {if $product.default_image}

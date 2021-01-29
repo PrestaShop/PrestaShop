@@ -23,6 +23,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 
-<div class="cart-summary-top">
+<div class="cart-summary-top js-cart-summary-top">
   {hook h='displayCheckoutSummaryTop'}
 </div>
