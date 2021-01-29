@@ -40,7 +40,7 @@
         <meta content="{$currency.iso_code}">
 
         <div class="current-price">
-          <span content="{$product.rounded_display_price}">
+          <span itemprop="price" content="{$product.rounded_display_price}">
             {capture name='custom_price'}{hook h='displayProductPriceBlock' product=$product type='custom_price' hook_origin='product_sheet'}{/capture}
             {if '' !== $smarty.capture.custom_price}
               {$smarty.capture.custom_price nofilter}
