@@ -342,4 +342,12 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     {
         return null !== $shopConstraint ? $shopConstraint->isStrict() : false;
     }
+
+    /**
+     * @param string $key
+     */
+    public function deleteFromContext(string $key): void
+    {
+        ConfigurationLegacy::deleteFromContext($key);
+    }
 }
