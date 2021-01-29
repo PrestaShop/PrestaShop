@@ -32,10 +32,13 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\EventListener\TransformationFailureListener;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -81,8 +84,21 @@ class RedirectOptionType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $productSearchUrl = $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY';
-        $categorySearchUrl = $this->router->generate('admin_get_ajax_categories', ['query' => '%QUERY']);
+        $entityAttributes = [
+            'product' => [
+                'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
+                'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
+                'help' => '',
+                'searchUrl' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=__QUERY__',
+            ],
+            'category' => [
+                'label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
+                'placeholder' => $this->trans('To which category the page should redirect?', 'Admin.Catalog.Help'),
+                'help' => $this->trans('If no category is selected the Main Category is used', 'Admin.Catalog.Help'),
+                'searchUrl' => $this->router->generate('admin_get_ajax_categories', ['query' => '__QUERY__']),
+            ],
+        ];
+        $defaultEntity = 'product';
 
         $builder
             ->add('type', ChoiceType::class, [
@@ -98,22 +114,22 @@ class RedirectOptionType extends TranslatorAwareType
                 ],
             ])
             ->add('target', TypeaheadProductCollectionType::class, [
-                'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'remote_url' => $productSearchUrl,
+                'error_bubbling' => false,
                 'template_collection' => '<span class="label">%s</span>',
                 'limit' => 1,
-                'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
-                'help' => '',
-                'error_bubbling' => false,
+                'label' => $entityAttributes[$defaultEntity]['label'],
+                'remote_url' => $entityAttributes[$defaultEntity]['searchUrl'],
+                'placeholder' => $entityAttributes[$defaultEntity]['placeholder'],
+                'help' => $entityAttributes[$defaultEntity]['help'],
                 'attr' => [
-                    'data-product-label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
-                    'data-product-placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
-                    'data-product-search-url' => $productSearchUrl,
-                    'data-category-label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
-                    'data-category-placeholder' => $this->trans('To which category the page should redirect?', 'Admin.Catalog.Help'),
-                    'data-category-hint' => $this->trans('If no category is selected the Main Category is used', 'Admin.Catalog.Help'),
-                    'data-category-search-url' => $categorySearchUrl,
+                    'data-product-label' => $entityAttributes['product']['label'],
+                    'data-product-placeholder' => $entityAttributes['product']['placeholder'],
+                    'data-product-search-url' => $entityAttributes['product']['searchUrl'],
+                    'data-category-label' => $entityAttributes['category']['label'],
+                    'data-category-placeholder' => $entityAttributes['category']['placeholder'],
+                    'data-category-hint' => $entityAttributes['category']['help'],
+                    'data-category-search-url' => $entityAttributes['category']['searchUrl'],
                 ],
             ])
         ;
@@ -122,5 +138,36 @@ class RedirectOptionType extends TranslatorAwareType
         $builder->get('target')->addModelTransformer($this->targetTransformer);
         // In case a transformation occurs it will be displayed as an inline error
         $builder->addEventSubscriber(new TransformationFailureListener($this->translator));
+
+        // Preset the input attributes correctly depending on the data
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($entityAttributes) {
+            $data = $event->getData();
+            $form = $event->getForm();
+            $targetField = $form->get('target');
+            $targetOptions = $targetField->getConfig()->getOptions();
+            switch ($data['type']) {
+                case RedirectType::TYPE_CATEGORY_PERMANENT:
+                case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                    $dataEntity = 'category';
+                    break;
+                case RedirectType::TYPE_PRODUCT_PERMANENT:
+                case RedirectType::TYPE_PRODUCT_TEMPORARY:
+                default:
+                    $dataEntity = 'product';
+                    break;
+            }
+
+            // Adapt target options
+            $targetOptions['mapping_type'] = $dataEntity;
+            $targetOptions['label'] = $entityAttributes[$dataEntity]['label'];
+            $targetOptions['placeholder'] = $entityAttributes[$dataEntity]['placeholder'];
+            $targetOptions['help'] = $entityAttributes[$dataEntity]['help'];
+            $targetOptions['remote_url'] = $entityAttributes[$dataEntity]['searchUrl'];
+
+            // Replace existing field with new one with adapted options
+            $cloner = new FormCloner();
+            $clonedForm = $cloner->cloneForm($targetField, $targetOptions);
+            $form->add($clonedForm);
+        });
     }
 }
