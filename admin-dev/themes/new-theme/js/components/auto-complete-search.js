@@ -128,10 +128,13 @@ export default class AutoCompleteSearch {
     const selectedHtml = this.dataSetConfig.templates.renderSelected(selectedItem);
     // Hidden input is added into the selected li
     const $selectedNode = $(selectedHtml);
-    const hiddenInput = `<input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />`;
-    $selectedNode.append(hiddenInput);
+    const $hiddenInput = $(`<input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />`);
+    $selectedNode.append($hiddenInput);
 
     // Then the li is added to the list
     this.$selectionContainer.append($selectedNode);
+
+    // Trigger the change so that listeners detect the form data has been modified
+    $hiddenInput.trigger('change');
   }
 }
