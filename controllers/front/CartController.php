@@ -637,7 +637,7 @@ class CartControllerCore extends FrontController
         if ($product['active']) {
             return $this->trans(
                 'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
-                ['%product%' => $product['name']],
+                ['%product%' => $product['name'] . (isset($product['attributes']) ? ' ' . $product['attributes'] : '')],
                 'Shop.Notifications.Error'
             );
         }
