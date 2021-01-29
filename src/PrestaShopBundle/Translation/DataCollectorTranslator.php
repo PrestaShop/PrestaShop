@@ -46,6 +46,6 @@ class DataCollectorTranslator extends BaseTranslator implements TranslatorInterf
      */
     public function clearLanguage($locale)
     {
-        return  $this->__call('clearLanguage', [$locale]);
+        return $this->__call('clearLanguage', [$locale]);
     }
 }
