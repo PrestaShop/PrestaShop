@@ -174,6 +174,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     *
      * @return array
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
