@@ -65,10 +65,10 @@ class TranslationService
     {
         $doctrine = $this->container->get('doctrine');
 
-        /** @var Lang $lang */
+        /** @var Lang|null $lang */
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
-        if (!$lang) {
+        if (!$lang instanceof Lang) {
             throw InvalidLanguageException::localeNotFound($locale);
         }
 
