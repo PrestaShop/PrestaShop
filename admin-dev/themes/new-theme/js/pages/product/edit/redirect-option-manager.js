@@ -23,45 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Bloodhound from "typeahead.js";
-import ProductSearchInput from "@pages/product/edit/product-search-input";
+import EntitySearchInput from "@components/entity-search-input";
 
 const {$} = window;
 
 export default class RedirectOptionManager {
   constructor($productSearchInput) {
     this.$productSearchInput = $productSearchInput;
-    this.$autoCompleteSearchContainer = this.$productSearchInput.closest('.autocomplete-search');
     this.buildAutoCompleteSearchInput();
   }
 
   buildAutoCompleteSearchInput() {
-    const sourceConfig = {
-      mappingValue: this.$autoCompleteSearchContainer.data('mappingvalue'),
-      remoteUrl: this.$productSearchInput.data('productSearchUrl'),
-    };
-    const productRemoteSource = this.buildRemoteSource(sourceConfig);
-    this.productSearchInput = new ProductSearchInput(this.$productSearchInput, productRemoteSource);
+    this.entitySearchInput = new EntitySearchInput(this.$productSearchInput);
   }
 
-  buildRemoteSource(config) {
-    return new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.whitespace,
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      identify(obj) {
-        return obj[config.mappingValue];
-      },
-      remote: {
-        url: config.remoteUrl,
-        cache: false,
-        wildcard: '%QUERY',
-        transform(response) {
-          if (!response) {
-            return [];
-          }
-          return response;
-        },
-      },
-    });
+  selectedValue(entity) {
+    let value = entity.id;
+    if (Object.prototype.hasOwnProperty.call(entity, 'id_product_attribute') && entity.id_product_attribute) {
+      value = `${value},${entity.id_product_attribute}`;
+    }
+
+    return value;
   }
 }
