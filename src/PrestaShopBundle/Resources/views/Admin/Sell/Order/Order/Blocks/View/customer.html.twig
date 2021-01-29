@@ -62,7 +62,7 @@
     </div>
     {% if orderForViewing.customer is not null %}
     <div class="row mt-3">
-      <div id="customerEmail" class="col-md-6">
+      <div id="customerEmail" class="col-xxl-6">
         <p class="mb-1">
           <strong>{{ 'Email:'|trans({}, 'Admin.Global') }}</strong>
         </p>
@@ -79,7 +79,7 @@
           <p>{{ orderForViewing.customer.accountRegistrationDate|date_format_full }}</p>
         {% endif %}
       </div>
-      <div id="validatedOrders" class="col-md-6">
+      <div id="validatedOrders" class="col-xxl-6">
         <p class="mb-1">
           <strong>{{ 'Validated orders placed:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
@@ -153,7 +153,7 @@
           </p>
         </div>
         {% endif %}
-        <div id="addressInvoice" class="info-block-col {% if orderForViewing.virtual %}col-md-12{% else %}col-md-6{% endif %}">
+        <div id="addressInvoice" class="info-block-col {% if orderForViewing.virtual %}col-md-12{% else %}col-xl-6{% endif %}">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
