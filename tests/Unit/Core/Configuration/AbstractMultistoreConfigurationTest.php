@@ -41,48 +41,35 @@ class AbstractMultistoreConfigurationTest extends TestCase
     }
 
     /**
-     * @dataProvider provideForTestRemoveDisabledFields
+     * @dataProvider provideForGetShopConstraint
      *
-     * @param array $fields
      * @param bool $isAllShopContext
-     * @param array $expectedResult
+     * @param int $shopGroupId
+     * @param bool $isExpectedResultNull
      */
-    public function testRemoveDisabledFields(array $fields, bool $isAllShopContext, array $expectedResult): void
+    public function testGetShopConstraint(bool $isAllShopContext, int $shopGroupId, int $shopId, bool $isExpectedResultNull): void
     {
-        $abstractMultistoreConfiguration = $this->getTestableClass($isAllShopContext);
-        $result = $abstractMultistoreConfiguration->removeDisabledFields($fields);
+        $abstractMultistoreConfiguration = $this->getTestableClass($isAllShopContext, $shopGroupId, $shopId);
+        $resultShopConstraint = $abstractMultistoreConfiguration->getShopConstraint();
 
-        $this->assertEquals($expectedResult, $result);
+        if ($isExpectedResultNull) {
+            $this->assertEquals(null, $resultShopConstraint);
+
+            return;
+        }
+
+        // check that result is of the right type
+        $this->assertInstanceOf('PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint', $resultShopConstraint);
+        $this->assertEquals($shopGroupId, $resultShopConstraint->getShopGroupId()->getValue());
+        $this->assertEquals($shopId, $resultShopConstraint->getShopId()->getValue());
     }
 
-    public function provideForTestRemoveDisabledFields()
+    public function provideForGetShopConstraint()
     {
         return [
-            [
-                ['test_field' => 'test_value'],
-                true,
-                ['test_field' => 'test_value'],
-            ],
-            [
-                ['test_field' => 'test_value'],
-                false,
-                ['test_field' => 'test_value'],
-            ],
-            [
-                ['test_field' => 'test_value', 'multistore_test_field' => true],
-                false,
-                ['test_field' => 'test_value', 'multistore_test_field' => true],
-            ],
-            [
-                ['test_field' => 'test_value', 'multistore_test_field' => false],
-                false,
-                ['multistore_test_field' => false],
-            ],
-            [
-                ['test_field' => 'test_value', 'multistore_test_field' => false],
-                true,
-                ['multistore_test_field' => false, 'test_field' => 'test_value'],
-            ],
+            [true, 1, 1, true],
+            [false, 1, 2, false],
+            [false, 5, 7, false],
         ];
     }
 
@@ -91,9 +78,9 @@ class AbstractMultistoreConfigurationTest extends TestCase
      *
      * @return AbstractMultistoreConfiguration
      */
-    private function getTestableClass(bool $isAllShopContext): AbstractMultistoreConfiguration
+    private function getTestableClass(bool $isAllShopContext, int $shopGroupId, int $shopId): AbstractMultistoreConfiguration
     {
-        return new class($this->mockedShopConfiguration, $this->createMultistoreContextMock($isAllShopContext)) extends AbstractMultistoreConfiguration {
+        return new class($this->mockedShopConfiguration, $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId)) extends AbstractMultistoreConfiguration {
             public function getConfiguration()
             {
                 return [];
@@ -116,10 +103,12 @@ class AbstractMultistoreConfigurationTest extends TestCase
      *
      * @return MockObject
      */
-    private function createMultistoreContextMock(bool $isAllShopContext): MockObject
+    private function createMultistoreContextMock(bool $isAllShopContext, int $shopGroupId, int $shopId): MockObject
     {
         $stub = $this->createMock(ShopContext::class);
         $stub->method('isAllShopContext')->willReturn($isAllShopContext);
+        $stub->method('getContextShopGroup')->willReturn($this->getShopGroupMock($shopGroupId));
+        $stub->method('getContextShopID')->willReturn($shopId);
 
         return $stub;
     }
@@ -131,6 +120,19 @@ class AbstractMultistoreConfigurationTest extends TestCase
     {
         $stub = $this->createMock(ShopConfiguration::class);
         $stub->method('get')->willReturn(true);
+
+        return $stub;
+    }
+
+    /**
+     * @param int $shopGroupId
+     *
+     * @return MockObject
+     */
+    private function getShopGroupMock(int $shopGroupId): MockObject
+    {
+        $stub = $this->createMock(stdClass::class);
+        $stub->id = $shopGroupId;
 
         return $stub;
     }
