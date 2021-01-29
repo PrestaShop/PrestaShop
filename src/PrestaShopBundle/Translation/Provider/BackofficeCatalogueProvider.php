@@ -38,6 +38,11 @@ class BackofficeCatalogueProvider implements CatalogueProviderInterface
     private $databaseTranslationLoader;
 
     /**
+     * This is the directory where Default and FileTranslated translations are stored.
+     * For the Backoffice catalogue,
+     *   - Default catalogue is within resourceDirectory/default
+     *   - FileTranslated catalogue is in resourceDirectory/locale
+     *
      * @var string
      */
     private $resourceDirectory;
@@ -94,6 +99,9 @@ class BackofficeCatalogueProvider implements CatalogueProviderInterface
     }
 
     /**
+     * This is for Default and FileTranslated catalogue.
+     * In the translations directory, we will take any file starting with 'Admin' and followed by alphabetical characters.
+     *
      * @return string[]
      */
     protected function getFilenameFilters(): array
@@ -104,6 +112,9 @@ class BackofficeCatalogueProvider implements CatalogueProviderInterface
     }
 
     /**
+     * This is for UserTranslated catalogue.
+     * In the translations table, we will take any translation having domain starting with 'Admin' and followed by alphabetical characters.
+     *
      * @return string[]
      */
     protected function getTranslationDomains(): array
