@@ -35,7 +35,7 @@
           {elseif isset($path.title)}
             <li>
               <span>{$path.title}</span>
-              <meta content="{{$smarty.foreach.breadcrumb.iteration}}">
+              <meta content="{$smarty.foreach.breadcrumb.iteration}">
             </li>
           {/if}
         {/block}
