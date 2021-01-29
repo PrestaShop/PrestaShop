@@ -30,7 +30,7 @@ function delete_hook($hook)
     if (is_array($modules)) {
         foreach ($modules as $module) {
             $moduleInstance = Module::getInstanceByName($module['module']);
-            if ($moduleInstance instanceof  Module) {
+            if ($moduleInstance instanceof Module) {
                 Hook::unregisterHook($moduleInstance, $hook);
             }
         }
