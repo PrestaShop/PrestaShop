@@ -48,10 +48,9 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $configurationInputValues)
     {
         $shopConstraint = null;
-        $configurationInputValues = $this->getConfigurationInputValues($configuration);
         $shopConstraint = $this->getShopConstraint();
 
         $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
