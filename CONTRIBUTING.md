@@ -8,7 +8,7 @@ PrestaShop 1.7 is written mostly in PHP. Other languages used throughout are Jav
 To contribute to the project, you should ideally be familiar with Git, the source code management system that PrestaShop uses, with the official repository being hosted on Github: 
 * You can learn more about Git here: https://try.github.io/ (there are many tutorials available on the Web).
 * You can get help on Github here: https://help.github.com/.
-* Windows users can get a nice interface for Git by installing TortoiseGit: https://tortoisegit.org/.
+* Windows users can get a nice interface for Git by installing [TortoiseGit](https://tortoisegit.org/).
 
 Contributors should follow the following process:
 
@@ -50,4 +50,3 @@ Thank you for your help in making PrestaShop even better!
 [8]: https://opensource.org/licenses/AFL-3.0
 [9]: https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
 [10]: https://build.prestashop.com/news/a-definition-of-the-good-first-issue-label
-
