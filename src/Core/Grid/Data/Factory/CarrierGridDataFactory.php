@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -49,15 +50,23 @@ class CarrierGridDataFactory implements GridDataFactoryInterface
     private $carrierLogoProvider;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param GridDataFactoryInterface $carrierDataFactory
      * @param ImageProviderInterface $carrierLogoProvider
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         GridDataFactoryInterface $carrierDataFactory,
-        ImageProviderInterface $carrierLogoProvider
+        ImageProviderInterface $carrierLogoProvider,
+        ConfigurationInterface $configuration
     ) {
         $this->carrierDataFactory = $carrierDataFactory;
         $this->carrierLogoProvider = $carrierLogoProvider;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -86,6 +95,14 @@ class CarrierGridDataFactory implements GridDataFactoryInterface
     {
         foreach ($carriers as $i => $carrier) {
             $carriers[$i]['logo'] = $this->carrierLogoProvider->getPath($carrier['id_carrier']);
+
+            if ($carrier['name'] === '0') {
+                $carriers[$i]['name'] = str_replace(
+                    ['#', ';'],
+                    '',
+                    $this->configuration->get('PS_SHOP_NAME')
+                );
+            }
         }
 
         return $carriers;
