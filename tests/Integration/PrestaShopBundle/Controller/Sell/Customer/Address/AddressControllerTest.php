@@ -28,19 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
-use FormField;
-use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Form;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
-use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
 class AddressControllerTest extends WebTestCase
 {
@@ -72,7 +64,9 @@ class AddressControllerTest extends WebTestCase
         $router = $client->getKernel()->getContainer()->get('router');
         $addressUrl = $router->generate('admin_addresses_index');
         $crawler = $client->request('GET', $addressUrl);
-        $this->validateStartingList($crawler);
+        $addresses = $this->getAddressList($crawler);
+        self::assertEquals(3, count($addresses));
+        $this->validateTestAddressExists($addresses);
     }
 
     /**
@@ -106,6 +100,7 @@ class AddressControllerTest extends WebTestCase
         $crawler = $client->submit($filterForm);
         $addresses = $this->getAddressList($crawler);
         self::assertEquals(1, count($addresses));
+        $this->validateTestAddressExists($addresses);
     }
 
     /**
@@ -125,26 +120,22 @@ class AddressControllerTest extends WebTestCase
         $crawler = $client->submit($filterForm);
         $addresses = $this->getAddressList($crawler);
         self::assertEquals(1, count($addresses));
+        $this->validateTestAddressExists($addresses);
     }
 
+
     /**
-     * Checks if exactly 3 addresses exist and if test address exists
+     * Validates that test address exists in provided list
      *
-     * @param Crawler $crawler
+     * @param Address[]
      */
-    private function validateStartingList(Crawler $crawler): void
+    private function validateTestAddressExists(array $addresses): void
     {
-        $addresses = $this->getAddressList($crawler);
-        self::assertEquals(3, count($addresses));
         $addressIds = [];
 
-        /**
-         * @var $address Address
-         */
         foreach ($addresses as $address) {
             $addressIds[] = $address->getId();
         }
-
         self::assertTrue(in_array($this->getTestAddress()->getId(), $addressIds));
     }
 
@@ -204,7 +195,7 @@ class AddressControllerTest extends WebTestCase
     /**
      * @param Crawler $crawler
      *
-     * @return array
+     * @return Address[]
      */
     private function getAddressList(Crawler $crawler): array
     {
