@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Query\Filter;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Filter\FilterException;
 use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidFilterDataException;
 
 final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterface
