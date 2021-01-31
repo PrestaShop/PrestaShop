@@ -31,7 +31,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
 class Address
 {
-    /** @var int */
+    /** @var ?int */
     private $id;
 
     /** @var string */
@@ -55,7 +55,7 @@ class Address
     /**
      * Address constructor.
      *
-     * @param int $id
+     * @param int|null $id
      * @param string $firstName
      * @param string $lastName
      * @param string $address
@@ -64,7 +64,7 @@ class Address
      * @param string $country
      */
     public function __construct(
-        int $id,
+        ?int $id,
         string $firstName,
         string $lastName,
         string $address,
@@ -82,9 +82,9 @@ class Address
     }
 
     /**
-     * @return int
+     * @return ?int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

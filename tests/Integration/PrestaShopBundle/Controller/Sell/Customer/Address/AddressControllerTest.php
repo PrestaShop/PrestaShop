@@ -37,9 +37,11 @@ use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
 class AddressControllerTest extends WebTestCase
 {
     /**
+     * This will be modified during the setUp
+     *
      * @var int
      */
-    private $testAddressId = 0;
+    private $testAddressId;
 
     /**
      * @var FormFiller
@@ -122,7 +124,6 @@ class AddressControllerTest extends WebTestCase
         self::assertEquals(1, count($addresses));
         $this->validateTestAddressExists($addresses);
     }
-
 
     /**
      * Validates that test address exists in provided list
