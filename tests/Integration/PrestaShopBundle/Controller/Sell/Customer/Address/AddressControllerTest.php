@@ -39,17 +39,54 @@ use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Form;
+use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
+use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
 class AddressControllerTest extends WebTestCase
 {
+    /**
+     * @var int
+     */
+    private $testAddressId = 0;
+
+    /**
+     * @var FormFiller
+     */
+    private $formFiller;
+
+
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->formFiller = new FormFiller();
+    }
+
+    /**
+     * Creates a test address and ensures that there are 3 addresses so filtered values can be counted correctly.
+     */
     public function setUp()
     {
         $client = static::createClient();
+        $this->createTestAddress($client);
         $router = $client->getKernel()->getContainer()->get('router');
-        $crawler = $this->createTestAddress($client);
         $addressUrl = $router->generate('admin_addresses_index');
         $crawler = $client->request('GET', $addressUrl);
         $this->validateStartingList($crawler);
+    }
+
+    /**
+     * Removes the created test address and ensures that it's successfully removed from the list.
+     */
+    public function tearDown()
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+        $router = $client->getKernel()->getContainer()->get('router');
+        $addressDeleteUrl = $router->generate('admin_addresses_delete', ['addressId' => $this->testAddressId]);
+        $crawler = $client->request('POST', $addressDeleteUrl);
+        $addresses = $this->getAddressList($crawler);
+        self::assertEquals(2, count($addresses));
     }
 
     /**
@@ -72,30 +109,69 @@ class AddressControllerTest extends WebTestCase
     }
 
     /**
-     * Checks if exactly 3 addresses exist and if test address exist
+     * Tests filter for first name
+     */
+    public function testIdFilter(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+        $router = $client->getKernel()->getContainer()->get('router');
+        $addressUrl = $router->generate('admin_addresses_index');
+        $crawler = $client->request('GET', $addressUrl);
+        $addresses = $this->getAddressList($crawler);
+        /** Make sure we have 3 addresses before we filter by firstname */
+        self::assertEquals(3, count($addresses));
+        $filterForm = $this->fillFiltersForm($crawler, ['address[id_address]' => $this->getTestAddress()->getId()]);
+        $crawler = $client->submit($filterForm);
+        $addresses = $this->getAddressList($crawler);
+        self::assertEquals(1, count($addresses));
+    }
+
+    /**
+     * Checks if exactly 3 addresses exist and if test address exists
      *
      * @param Crawler $crawler
      */
-    private function validateStartingList(Crawler $crawler)
+    private function validateStartingList(Crawler $crawler): void
     {
         $addresses = $this->getAddressList($crawler);
         self::assertEquals(3, count($addresses));
-        $addressArray = $this->getAddressModifications();
-        self::assertEquals($addresses[2]->getFirstName(), $addressArray['customer_address[first_name]']);
+        $addressIds = [];
+
+        /**
+         * @var $address Address
+         */
+        foreach ($addresses as $address) {
+            $addressIds[] = $address->getId();
+        }
+
+        self::assertTrue(in_array($this->getTestAddress()->getId(), $addressIds));
     }
 
-    private function createTestAddress(Client $client): Crawler
+    /**
+     * Creates test address that can be used for testing filters
+     *
+     * @param Client $client
+     */
+    private function createTestAddress(Client $client): void
     {
         $router = $client->getKernel()->getContainer()->get('router');
         $createAddressUrl = $router->generate('admin_addresses_create');
         $crawler = $client->request('GET', $createAddressUrl);
         $submitButton = $crawler->selectButton('save-button');
         $addressForm = $submitButton->form();
-        $addressForm = $this->fillForm($addressForm, $this->getAddressModifications());
-        return $client->submit($addressForm);
+        $addressForm = $this->formFiller->fillForm($addressForm, $this->getAddressModifications());
+        $client->submit($addressForm);
+        $dataChecker = $client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.address_form_data_handler_checker');
+        $this->testAddressId = $dataChecker->getLastCreatedId();
     }
 
-    public function getAddressModifications()
+    /**
+     * Gets modifications that are needed to fill address form
+     *
+     * @return array
+     */
+    public function getAddressModifications(): array
     {
         $testAddress = $this->getTestAddress();
         return [
@@ -111,51 +187,6 @@ class AddressControllerTest extends WebTestCase
     }
 
     /**
-     *
-     * @todo This needs to be moved somewhere else because it can be reused by multiple controller tests
-     *
-     * @param Form $form
-     *
-     * @param array $formModifications
-     *
-     * @return Form
-     */
-    private function fillForm(Form $form, array $formModifications): Form
-    {
-        foreach ($formModifications as $fieldName => $formValue) {
-            if (is_array($formValue)) {
-                // For multi select checkboxes or select inputs
-                /** @var ChoiceFormField[]|ChoiceFormField $formFields */
-                $formFields = $form->get($fieldName);
-                // Multiple checkboxes are returned as array
-                if (is_array($formFields)) {
-                    foreach ($formFields as $formField) {
-                        if ('checkbox' === $formField->getType()) {
-                            $optionValue = $formField->availableOptionValues()[0];
-                            if (in_array($optionValue, $formValue)) {
-                                $formField->tick();
-                            } else {
-                                $formField->untick();
-                            }
-                        } else {
-                            $formField->select($formValue);
-                        }
-                    }
-                } else {
-                    $formFields->select($formValue);
-                }
-            } else {
-                /** @var FormField $formField */
-                $formField = $form->get($fieldName);
-                $formField->setValue($formValue);
-            }
-        }
-
-        return $form;
-    }
-
-    /**
-     * @todo This needs to be moved somewhere else because it can be reused by multiple controller tests
      * @param Crawler $crawler
      * @param array $formModifications
      *
@@ -165,10 +196,7 @@ class AddressControllerTest extends WebTestCase
     {
         $button = $crawler->selectButton('address[actions][search]');
         $filtersForm = $button->form();
-        foreach ($formModifications as $fieldName => $formValue) {
-            $formField = $filtersForm->get($fieldName);
-            $formField->setValue($formValue);
-        }
+        $this->formFiller->fillForm($filtersForm, $formModifications);
 
         return $filtersForm;
     }
@@ -193,7 +221,7 @@ class AddressControllerTest extends WebTestCase
     private function getTestAddress(): Address
     {
         return new Address(
-                3,
+                $this->testAddressId,
                 'testfirstname',
                 'testlastname',
                 'testaddress1',

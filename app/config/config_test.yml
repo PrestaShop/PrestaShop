@@ -4,6 +4,7 @@ parameters:
 
 imports:
     - { resource: config_dev.yml }
+    - { resource: ../../tests/Integration/PrestaShopBundle/Resources/config/services.yml }
 
 framework:
     test: ~
