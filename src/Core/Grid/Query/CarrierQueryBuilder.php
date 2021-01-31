@@ -130,13 +130,30 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ($filterName === 'name') {
                 $qb->andWhere('c.name LIKE :name');
-                $qb->setParameter($filterName, $filterValue);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
 
             if ($filterName === 'delay') {
                 $qb->andWhere('cl.delay LIKE :delay');
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if ($filterName === 'position') {
+                // When filtering by position,
+                // value must be decreased by 1,
+                // since position value in database starts at 0,
+                // but for user display positions are increased by 1.
+                if (is_numeric($filterValue)) {
+                    --$filterValue;
+                } else {
+                    $filterValue = null;
+                }
+
+                $qb->andWhere('c.position = :position');
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
