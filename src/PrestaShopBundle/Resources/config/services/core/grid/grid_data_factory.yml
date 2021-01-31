@@ -436,3 +436,4 @@ services:
         arguments:
             - '@prestashop.core.grid.data.factory.carrier'
             - '@prestashop.adapter.carrier.carrier_thumbnail_logo_provider'
+            - '@prestashop.adapter.legacy.configuration'
