@@ -122,9 +122,9 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
     /**
      * @param array<string, int> $value
      *
-     * @return int|null
+     * @return int
      */
-    private function computeMinMaxCase(array $value): ?int
+    private function computeMinMaxCase(array $value): int
     {
         $minFieldExists = isset($value['min_field']);
         $maxFieldExists = isset($value['max_field']);
