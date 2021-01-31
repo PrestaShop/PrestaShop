@@ -255,7 +255,6 @@ final class EmployeeType extends TranslatorAwareType
                     'required' => false,
                 ]);
             }
-
         }
 
         $builder
