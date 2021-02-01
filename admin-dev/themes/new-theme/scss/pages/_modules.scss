@@ -974,3 +974,44 @@ form#importDropzone {
   }
 }
 /* stylelint-enable declaration-no-important */
+
+@include media-breakpoint-down(xs) {
+  .module-catalog-page {
+    #search-input-group {
+      margin-bottom: 0.75rem;
+    }
+
+    .module-sorting-search-wording {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 0.75rem;
+
+      .help-box {
+        margin-top: 0.15rem;
+      }
+
+      .module-search-result-title {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+    }
+
+    .module-sorting {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .module-stars,
+    .module-price {
+      bottom: 60px;
+    }
+
+    .module-actions {
+      padding: 0 1rem;
+    }
+
+    .module-item-wrapper-grid {
+      padding: 1rem;
+    }
+  }
+}

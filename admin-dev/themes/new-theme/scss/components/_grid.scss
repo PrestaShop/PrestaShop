@@ -277,3 +277,16 @@ table .column-filters td:last-child .grid-reset-button {
     }
   }
 }
+
+table {
+  tr {
+    &.column-filters {
+      @include media-breakpoint-down(md) {
+        input,
+        select {
+          min-width: 6rem;
+        }
+      }
+    }
+  }
+}

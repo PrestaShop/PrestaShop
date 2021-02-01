@@ -93,3 +93,11 @@
     color: $gray-light;
   }
 }
+
+@include media-breakpoint-down(xs) {
+  .products-catalog {
+    #product_catalog_category_tree_filter {
+      margin-bottom: 0.75rem;
+    }
+  }
+}
