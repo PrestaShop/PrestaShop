@@ -32,8 +32,6 @@ use PrestaShopBundle\Translation\Exception\UnexpectedTranslationTypeException;
 use PrestaShopBundle\Translation\Provider\CatalogueProviderFactory;
 use PrestaShopBundle\Translation\Provider\CatalogueProviderInterface;
 use PrestaShopBundle\Translation\TranslationCatalogueBuilder;
-use PrestaShopBundle\Translation\View\TranslationsTreeBuilder;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class TranslationCatalogueBuilderTest extends TestCase
@@ -100,10 +98,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         $providerFactory = $this->createMock(CatalogueProviderFactory::class);
         $providerFactory->method('getProvider')->willReturn($provider);
 
-        $router = $this->createMock(Router::class);
-        $router->method('generate')->willReturn('route');
-
-        $this->translationCatalogueBuilder = new TranslationCatalogueBuilder($providerFactory, new TranslationsTreeBuilder($router));
+        $this->translationCatalogueBuilder = new TranslationCatalogueBuilder($providerFactory);
     }
 
     public function testGetDomainCatalogueWrongType()
@@ -170,7 +165,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][0]);
+        ], $catalogue['data']['Second Domain Second Wording']);
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
@@ -181,7 +176,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][1]);
+        ], $catalogue['data']['Second Domain First Wording']);
 
         $this->assertArrayHasKey('locale', $catalogue['info']);
         $this->assertArrayHasKey('domain', $catalogue['info']);
@@ -215,7 +210,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][0]);
+        ], $catalogue['data']['Second Domain First Wording']);
 
         $this->assertSame(1, $catalogue['info']['total_translations']);
         $this->assertSame(0, $catalogue['info']['total_missing_translations']);
@@ -241,7 +236,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][0]);
+        ], $catalogue['data']['Second Domain First Wording']);
 
         $this->assertSame(1, $catalogue['info']['total_translations']);
         $this->assertSame(0, $catalogue['info']['total_missing_translations']);
@@ -267,7 +262,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][0]);
+        ], $catalogue['data']['Second Domain Second Wording']);
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
@@ -278,7 +273,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][1]);
+        ], $catalogue['data']['Second Domain First Wording']);
 
         $this->assertSame(2, $catalogue['info']['total_translations']);
         $this->assertSame(1, $catalogue['info']['total_missing_translations']);
@@ -307,7 +302,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][0]);
+        ], $catalogue['data']['Second Domain Second Wording']);
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
@@ -318,7 +313,7 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'Second',
                 'Domain',
             ],
-        ], $catalogue['data'][1]);
+        ], $catalogue['data']['Second Domain First Wording']);
 
         $this->assertSame(2, $catalogue['info']['total_translations']);
         $this->assertSame(1, $catalogue['info']['total_missing_translations']);
@@ -390,6 +385,11 @@ class TranslationCatalogueBuilderTest extends TestCase
             'default' => 'First Domain First Wording',
             'xliff' => 'First Domain First Wording File Translation',
             'database' => 'First Domain First Wording User Translation',
+            'tree_domain' => [
+                'Admin',
+                'First',
+                'Domain',
+            ],
         ], $messages['AdminFirstDomain']['First Domain First Wording']);
 
         $this->assertSame([
@@ -401,82 +401,22 @@ class TranslationCatalogueBuilderTest extends TestCase
             'default' => 'Second Domain First Wording',
             'xliff' => 'Second Domain First Wording File Translation',
             'database' => null,
+            'tree_domain' => [
+                'Admin',
+                'Second',
+                'Domain',
+            ],
         ], $messages['AdminSecondDomain']['Second Domain First Wording']);
 
         $this->assertSame([
             'default' => 'Second Domain Second Wording',
             'xliff' => null,
             'database' => null,
+            'tree_domain' => [
+                'Admin',
+                'Second',
+                'Domain',
+            ],
         ], $messages['AdminSecondDomain']['Second Domain Second Wording']);
-    }
-
-    public function testGetTreeStructure()
-    {
-        $tree = $this->translationCatalogueBuilder->getTree(
-            TranslationCatalogueBuilder::TYPE_BACK,
-            self::LOCALE,
-            [],
-            'theme',
-            'module'
-        );
-
-        $this->assertArrayHasKey('tree', $tree);
-        $this->assertArrayHasKey('total_translations', $tree['tree']);
-        $this->assertArrayHasKey('total_missing_translations', $tree['tree']);
-        $this->assertArrayHasKey('children', $tree['tree']);
-        $this->assertCount(1, $tree['tree']['children']);
-        $this->assertSame([
-            'name',
-            'full_name',
-            'domain_catalog_link',
-            'total_translations',
-            'total_missing_translations',
-            'children',
-        ], array_keys($tree['tree']['children'][0]));
-
-        $this->assertCount(2, $tree['tree']['children'][0]['children']);
-        $this->assertSame([
-            'name',
-            'full_name',
-            'domain_catalog_link',
-            'total_translations',
-            'total_missing_translations',
-            'children',
-        ], array_keys($tree['tree']['children'][0]['children'][0]));
-    }
-
-    public function testGetTreeContent()
-    {
-        $tree = $this->translationCatalogueBuilder->getTree(
-            TranslationCatalogueBuilder::TYPE_BACK,
-            self::LOCALE,
-            [],
-            'theme',
-            'module'
-        );
-
-        $this->assertArrayHasKey('tree', $tree);
-        $this->assertSame(4, $tree['tree']['total_translations']);
-        $this->assertSame(1, $tree['tree']['total_missing_translations']);
-
-        $this->assertSame('Admin', $tree['tree']['children'][0]['name']);
-        $this->assertSame('Admin', $tree['tree']['children'][0]['full_name']);
-        $this->assertSame('route', $tree['tree']['children'][0]['domain_catalog_link']);
-        $this->assertSame(4, $tree['tree']['children'][0]['total_translations']);
-        $this->assertSame(1, $tree['tree']['children'][0]['total_missing_translations']);
-
-        $this->assertCount(2, $tree['tree']['children'][0]['children']);
-
-        $this->assertSame('First', $tree['tree']['children'][0]['children'][0]['name']);
-        $this->assertSame('AdminFirst', $tree['tree']['children'][0]['children'][0]['full_name']);
-        $this->assertSame('route', $tree['tree']['children'][0]['children'][0]['domain_catalog_link']);
-        $this->assertSame(2, $tree['tree']['children'][0]['children'][0]['total_translations']);
-        $this->assertSame(0, $tree['tree']['children'][0]['children'][0]['total_missing_translations']);
-
-        $this->assertSame('Second', $tree['tree']['children'][0]['children'][1]['name']);
-        $this->assertSame('AdminSecond', $tree['tree']['children'][0]['children'][1]['full_name']);
-        $this->assertSame('route', $tree['tree']['children'][0]['children'][1]['domain_catalog_link']);
-        $this->assertSame(2, $tree['tree']['children'][0]['children'][1]['total_translations']);
-        $this->assertSame(1, $tree['tree']['children'][0]['children'][1]['total_missing_translations']);
     }
 }

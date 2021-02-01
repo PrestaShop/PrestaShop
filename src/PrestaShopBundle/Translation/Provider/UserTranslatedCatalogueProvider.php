@@ -44,12 +44,16 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
      * @var array
      */
     private $translationDomains;
+
     /**
      * @var string|null
      */
     private $themeName;
 
     /**
+     * You will need to give theme if you want only the translations linked to a specific theme.
+     * If not given, the translations returns will be the ones with 'theme IS NULL'
+     *
      * @param DatabaseTranslationLoader $databaseTranslationReader
      * @param array $translationDomains
      * @param string|null $themeName
@@ -59,6 +63,10 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
         array $translationDomains,
         ?string $themeName = null
     ) {
+        if (!$this->assertIsArrayOfString($translationDomains)) {
+            throw new \InvalidArgumentException('Given translation domains are invalid. An array of strings was expected.');
+        }
+
         $this->databaseTranslationReader = $databaseTranslationReader;
         $this->translationDomains = $translationDomains;
         $this->themeName = $themeName;
@@ -81,11 +89,21 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
                 $this->themeName
             );
 
-            if ($domainCatalogue instanceof MessageCatalogue) {
-                $catalogue->addCatalogue($domainCatalogue);
-            }
+            $catalogue->addCatalogue($domainCatalogue);
         }
 
         return $catalogue;
+    }
+
+    /**
+     * Validate if an array only have strings in it.
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function assertIsArrayOfString(array $array): bool
+    {
+        return count($array) === count(array_filter($array, function ($element) { return is_string($element); }));
     }
 }

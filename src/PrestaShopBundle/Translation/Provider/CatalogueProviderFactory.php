@@ -67,7 +67,7 @@ class CatalogueProviderFactory
             throw new UnexpectedTranslationTypeException('Unexpected type');
         }
 
-        if (array_key_exists($type, $this->providers)) {
+        if (isset($this->providers[$type])) {
             return $this->providers[$type];
         }
 
