@@ -139,7 +139,12 @@ class ProductCore extends ObjectModel
      */
     public $supplier_reference;
 
-    /** @var string Location */
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$location instead
+     *
+     * @var string Location
+     */
     public $location = '';
 
     /** @var string|float Width in default width unit */
