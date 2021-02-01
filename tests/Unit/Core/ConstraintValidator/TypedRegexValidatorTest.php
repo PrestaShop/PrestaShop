@@ -266,6 +266,16 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      *
      * @param string $invalidChar
      */
+    public function testItFailsForIsbnTypeWhenInvalidCharacterGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex('isbn'), $invalidChar);
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForReference
+     *
+     * @param string $invalidChar
+     */
     public function testItFailsForReferenceTypeWhenInvalidCharacterGiven(string $invalidChar): void
     {
         $this->assertViolationIsRaised(new TypedRegex('reference'), $invalidChar);
@@ -276,16 +286,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate('product1', new TypedRegex('reference'));
 
         $this->assertNoViolation();
-    }
-
-    /**
-     * @dataProvider getInvalidCharactersForReference
-     *
-     * @param string $invalidChar
-     */
-    public function testItFailsForIsbnTypeWhenInvalidCharacterGiven(string $invalidChar): void
-    {
-        $this->assertViolationIsRaised(new TypedRegex('isbn'), $invalidChar);
     }
 
     /**
