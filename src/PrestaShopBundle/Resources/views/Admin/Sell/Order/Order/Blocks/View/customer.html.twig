@@ -78,6 +78,13 @@
           </p>
           <p>{{ orderForViewing.customer.accountRegistrationDate|date_format_full }}</p>
         {% endif %}
+
+        {%  if orderForViewing.customer.ape is not empty %}
+          <p class="mb-1">
+            <strong>{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p>{{ orderForViewing.customer.ape }}</p>
+        {% endif %}
       </div>
       <div id="validatedOrders" class="col-md-6">
         <p class="mb-1">
@@ -94,6 +101,13 @@
           <p>
             <span class="badge rounded badge-dark">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
           </p>
+        {% endif %}
+
+        {%  if orderForViewing.customer.siret is not empty %}
+          <p class="mb-1">
+            <strong>{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p>{{ orderForViewing.customer.siret }}</p>
         {% endif %}
       </div>
     </div>
