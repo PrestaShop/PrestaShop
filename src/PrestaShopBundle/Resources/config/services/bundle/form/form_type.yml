@@ -1299,6 +1299,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.customizations_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.stock_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
         parent: 'form.type.translatable.aware'
@@ -1327,6 +1334,7 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
         tags:
             - { name: form.type }
+
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
