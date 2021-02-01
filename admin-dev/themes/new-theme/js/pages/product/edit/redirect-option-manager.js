@@ -28,13 +28,53 @@ import EntitySearchInput from "@components/entity-search-input";
 const {$} = window;
 
 export default class RedirectOptionManager {
-  constructor($productSearchInput) {
-    this.$productSearchInput = $productSearchInput;
+  constructor($redirectTypeInput, $redirectTargetInput) {
+    this.$redirectTypeInput = $redirectTypeInput;
+    this.$redirectTargetInput = $redirectTargetInput;
+    this.$redirectTargetRow = this.$redirectTargetInput.closest('.form-group');
+    this.$redirectTargetLabel = $('.form-control-label', this.$redirectTargetRow).first();
     this.buildAutoCompleteSearchInput();
+    this.watchRedirectType();
+  }
+
+  watchRedirectType() {
+    this.lastSelectedType = this.$redirectTypeInput.val();
+    this.$redirectTypeInput.change(() => {
+      const redirectType = this.$redirectTypeInput.val();
+      switch (redirectType) {
+        case '301-category':
+        case '302-category':
+          this.entitySearchInput.setRemoteUrl(this.$redirectTargetInput.data('categorySearchUrl'));
+          this.$redirectTargetInput.prop('placeholder', this.$redirectTargetInput.data('categoryPlaceholder'));
+          this.$redirectTargetLabel.html(this.$redirectTargetInput.data('categoryLabel'));
+          // If previous type was not a category we reset the selected value
+          if (this.lastSelectedType !== '301-category' && this.lastSelectedType !== '302-category') {
+            this.entitySearchInput.setValue(null);
+          }
+          this.$redirectTargetRow.show();
+          break;
+        case '301-product':
+        case '302-product':
+          this.entitySearchInput.setRemoteUrl(this.$redirectTargetInput.data('productSearchUrl'));
+          this.$redirectTargetInput.prop('placeholder', this.$redirectTargetInput.data('productPlaceholder'));
+          this.$redirectTargetLabel.html(this.$redirectTargetInput.data('productLabel'));
+          // If previous type was not a category we reset the selected value
+          if (this.lastSelectedType !== '301-product' && this.lastSelectedType !== '302-product') {
+            this.entitySearchInput.setValue(null);
+          }
+          this.$redirectTargetRow.show();
+          break;
+        case '404':
+          this.entitySearchInput.setValue(null);
+          this.$redirectTargetRow.hide();
+          break;
+      }
+      this.lastSelectedType = this.$redirectTypeInput.val();
+    });
   }
 
   buildAutoCompleteSearchInput() {
-    this.entitySearchInput = new EntitySearchInput(this.$productSearchInput);
+    this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput);
   }
 
   selectedValue(entity) {

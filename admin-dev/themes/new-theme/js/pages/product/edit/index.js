@@ -61,7 +61,8 @@ $(() => {
 
   // Init the product/category search field for redirection target
   const $redirectTargetInput = $(ProductMap.redirectTargetInput);
-  new RedirectOptionManager($redirectTargetInput);
+  const $redirectTypeInput = $(ProductMap.redirectTypeInput);
+  new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
 
   // Form has no productId data means that we are in creation mode
   if (!$productForm.data('productId')) {

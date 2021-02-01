@@ -37,6 +37,14 @@ export default class EntitySearchInput {
     this.buildAutoCompleteSearch(options);
   }
 
+  setRemoteUrl(remoteUrl) {
+    this.entityRemoteSource.remote.url = remoteUrl;
+  }
+
+  setValue(entityIds) {
+    this.autoSearch.setValue(entityIds);
+  }
+
   buildAutoCompleteSearch(options) {
     const dataSetConfig = {
       source: this.entityRemoteSource,
