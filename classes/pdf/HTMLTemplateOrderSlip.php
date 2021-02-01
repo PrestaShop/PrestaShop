@@ -67,7 +67,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         // header informations
         $this->date = Tools::displayDate($this->order_slip->date_add);
         $prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id);
-        $this->title = sprintf(HTMLTemplateOrderSlip::l('%1$s%2$06d'), $prefix, (int) $this->devolverNumeroFactura($order_slip->id));
+        $this->title = sprintf(HTMLTemplateOrderSlip::l('%1$s%2$06d'), $prefix, (int) $this->getNumberOrderSlip($order_slip->id));
 
         $this->shop = new Shop((int) $this->order->id_shop);
     }
@@ -77,20 +77,20 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      * @param int $id order_slip.
      * @return int number for year.
      */
-    public function devolverNumeroFactura($id){
+    public function getNumberOrderSlip($id_order_slip){
 
 
-        $hoy = date("Y");
-        $h = $hoy."-01-01 00:00:00";
+        $current_day    = date("Y");
+        $current_year   = $current_day."-01-01 00:00:00";
 
 
-        $n1 = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip='.$id);
+        $temporary_order_slip = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip='.$id_order_slip);
 
-        $numeracion = Db::getInstance()->executeS(
-            'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "'.$h.'" AND date_add < "'.$n1[0]['date_add'].'"'
+        $number_order_slip = Db::getInstance()->executeS(
+            'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "'.$current_year.'" AND date_add < "'.$temporary_order_slip[0]['date_add'].'"'
         );
 
-        return intval($numeracion[0]['n']) + 1;
+        return intval($number_order_slip[0]['n']) + 1;
 
     }
 
