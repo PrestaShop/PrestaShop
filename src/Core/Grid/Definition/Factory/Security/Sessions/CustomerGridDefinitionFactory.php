@@ -72,7 +72,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetActionUrl
      * @param string $redirectionUrl
-     * @param AccessibilityCheckerInterface $deleteProfileAccessibilityChecker
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
