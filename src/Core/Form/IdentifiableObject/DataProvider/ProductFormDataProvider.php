@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -74,6 +76,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
 
@@ -233,6 +236,29 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'isbn' => $details->getIsbn(),
             'reference' => $details->getReference(),
         ];
+    }
+
+    /**
+     * * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractCustomizationsData(ProductForEditing $productForEditing): array
+    {
+        /** @var CustomizationField[] $customizationFields */
+        $customizationFields = $this->queryBus->handle(
+            new GetProductCustomizationFields($productForEditing->getProductId())
+        );
+
+        $data = [];
+        foreach ($customizationFields as $customizationField) {
+            $data[$customizationField->getCustomizationFieldId()] = [
+                'name' => $customizationField->getLocalizedNames(),
+                'type' => $customizationField->getType(),
+            ];
+        }
+
+        return $data;
     }
 
     /**

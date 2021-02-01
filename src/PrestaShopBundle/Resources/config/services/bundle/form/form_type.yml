@@ -1306,6 +1306,15 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.customization_field_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationFieldType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.customization_field_type_choice_provider'
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.stock_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
         parent: 'form.type.translatable.aware'
