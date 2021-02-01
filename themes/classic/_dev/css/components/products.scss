@@ -35,6 +35,10 @@
       padding-left: 0.75rem;
       list-style: inherit;
       list-style-position: inside;
+
+      li {
+        color: $gray;
+      }
     }
   }
 }
