@@ -72,14 +72,16 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     /**
      * @param LocaleRepository $localeRepository
      * @param string $locale
+     * @param int|null $contextLanguageId
      */
     public function __construct(
         LocaleRepository $localeRepository,
-        string $locale
+        string $locale,
+        ?int $contextLanguageId
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;
-        $this->contextLanguageId = Language::getIdByLocale($this->locale);
+        $this->contextLanguageId = $contextLanguageId ?? Language::getIdByLocale($this->locale);
     }
 
     /**
