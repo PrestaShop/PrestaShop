@@ -39,7 +39,12 @@ class CombinationCore extends ObjectModel
     /** @var string */
     public $supplier_reference;
 
-    /** @var string */
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$location instead
+     *
+     * @var string
+     */
     public $location = '';
 
     public $ean13;
