@@ -24,9 +24,9 @@
  */
 
 import Serp from '@app/utils/serp';
+import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductMap from '../product-map';
 import ProductPartialUpdater from './product-partial-updater';
-import RedirectOptionManager from "@pages/product/edit/redirect-option-manager";
 
 const {$} = window;
 

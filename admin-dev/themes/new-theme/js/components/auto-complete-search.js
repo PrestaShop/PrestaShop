@@ -36,24 +36,24 @@ export default class AutoCompleteSearch {
     this.$selectionContainer = $(`#${this.searchInputId}-data`);
 
     // Merge default and input config
-    config = config || {};
+    const inputConfig = config || {};
     const defaultConfig = {
       minLength: 2,
       highlight: true,
       cache: false,
       hint: false,
     };
-    this.config = {...defaultConfig, ...config};
+    this.config = {...defaultConfig, ...inputConfig};
 
     // Merge default and input dataSetConfig
-    dataSetConfig = dataSetConfig || {};
+    const inputDataSetConfig = dataSetConfig || {};
     const defaultDataSetConfig = {
       display: 'name', // Which field of the object from the list is used for display (can be a string or a callback)
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
     };
-    this.dataSetConfig = {...defaultDataSetConfig, ...dataSetConfig};
+    this.dataSetConfig = {...defaultDataSetConfig, ...inputDataSetConfig};
 
     // Merging object works fine on one level, but on two it erases sub elements even if not present, so
     // we handle templates separately
@@ -67,15 +67,13 @@ export default class AutoCompleteSearch {
       notFound(query) {
         return `<div class="px-2">No results found for "${query.query}"</div>`;
       },
-      renderSelected: (selectedItem) => {
-        return `<li>
+      renderSelected: (selectedItem) => `<li>
             <div>
               <img src="${selectedItem.image}" style="width:50px" /> ${selectedItem.name}
             </div>
-          </li>`;
-      }
-    }
-    this.dataSetConfig.templates = {...defaultTemplates, ...dataSetConfig.templates};
+          </li>`,
+    };
+    this.dataSetConfig.templates = {...defaultTemplates, ...inputDataSetConfig.templates};
 
     this.buildTypeahead();
   }
@@ -118,9 +116,9 @@ export default class AutoCompleteSearch {
         } else {
           this.appendSelectedItem(selectedItem);
         }
-    }).bind('typeahead:close', (e) => {
-      $(e.target).val('');
-    });
+      }).bind('typeahead:close', (e) => {
+        $(e.target).val('');
+      });
   }
 
   /**
@@ -147,6 +145,7 @@ export default class AutoCompleteSearch {
   appendSelectedItem(selectedItem) {
     // If collection length is up to limit, return
     const formIdItem = $('li', this.$selectionContainer);
+
     if (this.dataSetConfig.dataLimit !== 0 && formIdItem.length >= this.dataSetConfig.dataLimit) {
       return false;
     }
@@ -162,9 +161,9 @@ export default class AutoCompleteSearch {
    *
    * @param selectedItem {Object}
    */
-  addSelectedContentToContainer(selectedItem)
-  {
+  addSelectedContentToContainer(selectedItem) {
     let value;
+
     if (typeof this.dataSetConfig.value === 'function') {
       value = this.dataSetConfig.value(selectedItem);
     } else {

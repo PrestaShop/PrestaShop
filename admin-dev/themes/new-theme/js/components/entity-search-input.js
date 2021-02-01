@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import AutoCompleteSearch from "@components/auto-complete-search";
-import Bloodhound from "typeahead.js";
+import AutoCompleteSearch from '@components/auto-complete-search';
+import Bloodhound from 'typeahead.js';
 
 /**
  * This component is used to search and select an entity, it is based on the AutoSearchComplete
@@ -38,9 +38,9 @@ export default class EntitySearchInput {
     this.entitySearchInputId = this.$entitySearchInput.prop('id');
     this.$autoCompleteSearchContainer = this.$entitySearchInput.closest('.autocomplete-search');
 
-    options = options || {};
+    const inputOptions = options || {};
     this.buildRemoteSource();
-    this.buildAutoCompleteSearch(options);
+    this.buildAutoCompleteSearch(inputOptions);
   }
 
   /**
@@ -73,8 +73,9 @@ export default class EntitySearchInput {
       dataLimit: 1,
       templates: {
         renderSelected: (entity) => this.renderSelected(entity),
-      }
+      },
     };
+
     if (options.value !== undefined) {
       dataSetConfig.value = options;
     }
