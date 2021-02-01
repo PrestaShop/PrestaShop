@@ -25,20 +25,36 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomizationsType extends TranslatorAwareType
+final class CustomizationFieldTypeChoiceProvider implements FormChoiceProviderInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        TranslatorInterface $translator
+    ) {
+        $this->translator = $translator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
     {
-        $builder
-            ->add('customizations', CollectionType::class, [
-                'entry_type' => CustomizationFieldType::class,
-            ])
-        ;
+        return [
+            $this->translator->trans('Text', [], 'Admin.Global') => CustomizationFieldType::TYPE_FILE,
+            $this->translator->trans('File', [], 'Admin.Global') => CustomizationFieldType::TYPE_FILE,
+        ];
     }
 }

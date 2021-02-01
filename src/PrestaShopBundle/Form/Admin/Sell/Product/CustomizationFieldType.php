@@ -27,19 +27,35 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomizationType extends TranslatorAwareType
+class CustomizationFieldType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $customizationFieldTypeChoiceProvider;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $customizationFieldTypeChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->customizationFieldTypeChoiceProvider = $customizationFieldTypeChoiceProvider;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('label', TextType::class)
+            ->add('name', TextType::class)
             ->add('type', ChoiceType::class)
             ->add('required', SwitchType::class)
             ->add('remove', ButtonType::class, [
