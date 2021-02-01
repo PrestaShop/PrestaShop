@@ -51,6 +51,7 @@ export default class ProductSuppliersManager {
 
     this.$supplierSelectionBlock.on('change', 'input', (e) => {
       const input = e.currentTarget;
+
       if (input.checked) {
         this.add({
           id: input.value,
@@ -59,6 +60,7 @@ export default class ProductSuppliersManager {
       } else {
         this.remove(input.value);
       }
+
       this.renderSuppliers();
       this.toggleTableVisibility();
       this.refreshDefaultSupplierBlock();
@@ -129,6 +131,7 @@ export default class ProductSuppliersManager {
 
   refreshDefaultSupplierBlock() {
     const suppliers = this.getSelectedSuppliers();
+
     if (suppliers.length === 0) {
       this.$defaultSuppliersSelectionBlock.find('input').prop('checked', false);
       this.hideDefaultSuppliers();
@@ -141,6 +144,7 @@ export default class ProductSuppliersManager {
 
     this.$defaultSuppliersSelectionBlock.find('input').each((key, input) => {
       const isValid = selectedSupplierIds.includes(input.value);
+
       if (!isValid && input.checked) {
         input.checked = false;
       }
