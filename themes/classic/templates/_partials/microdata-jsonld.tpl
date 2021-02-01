@@ -164,24 +164,6 @@
   </script>
 {/if}
 
-{if $page.page_name == 'category' || $page.page_name == 'prices-drop' || $page.page_name == 'new-products' || $page.page_name == 'best-sales'}
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "itemListElement": [
-          {foreach from=$listing.products item=item key="position" name=producttmp}
-            {
-              "@type": "ListItem",
-              "position": {$position},
-              "name": "{$item.name}",
-              "url": "{$item.url}"
-              }{if !$smarty.foreach.producttmp.last},{/if}
-            {/foreach}]
-          }
-  </script>
-{/if}
-
 {if isset($breadcrumb.links[1])}
   <script type="application/ld+json">
     {
