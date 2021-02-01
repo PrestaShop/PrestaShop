@@ -77,6 +77,28 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->shop = new Shop((int) $this->order->id_shop);
     }
+    
+    /**
+     * Returns the numbering of the subscription invoice with respect to the year.
+     * @param int $id order_slip.
+     * @return int number for year.
+     */
+    public function devolverNumeroFactura($id){
+
+
+        $hoy = date("Y");
+        $h = $hoy."-01-01 00:00:00";
+
+
+        $n1 = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip='.$id);
+
+        $numeracion = Db::getInstance()->executeS(
+            'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "'.$h.'" AND date_add < "'.$n1[0]['date_add'].'"'
+        );
+
+        return intval($numeracion[0]['n']) + 1;
+
+    }
 
     /**
      * Returns the numbering of the subscription invoice with respect to the year.
