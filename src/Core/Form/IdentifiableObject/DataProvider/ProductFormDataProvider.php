@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
  * Provides the data that is used to prefill the Product form
