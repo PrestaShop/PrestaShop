@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BulkDeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
