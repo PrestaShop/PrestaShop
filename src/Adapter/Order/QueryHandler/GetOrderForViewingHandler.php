@@ -224,6 +224,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $customerStats = $customer->getStats();
         $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
 
+        $isB2BEnabled = (bool) Configuration::get('PS_B2B_ENABLE');
+
         return new OrderCustomerForViewing(
             $customer->id,
             $customer->firstname,
@@ -234,7 +236,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
             $customer->note,
-            (bool) $customer->is_guest
+            (bool) $customer->is_guest,
+            $isB2BEnabled ? $customer->ape : null,
+            $isB2BEnabled ? $customer->siret : null
         );
     }
 
