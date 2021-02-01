@@ -26,7 +26,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
 class Address

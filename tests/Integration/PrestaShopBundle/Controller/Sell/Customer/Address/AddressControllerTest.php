@@ -48,7 +48,6 @@ class AddressControllerTest extends WebTestCase
      */
     private $formFiller;
 
-
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -96,7 +95,7 @@ class AddressControllerTest extends WebTestCase
         $addressUrl = $router->generate('admin_addresses_index');
         $crawler = $client->request('GET', $addressUrl);
         $addresses = $this->getAddressList($crawler);
-        /** Make sure we have 3 addresses before we filter by firstname */
+        /* Make sure we have 3 addresses before we filter by firstname */
         self::assertEquals(3, count($addresses));
         $filterForm = $this->fillFiltersForm($crawler, ['address[firstname]' => $this->getTestAddress()->getFirstName()]);
         $crawler = $client->submit($filterForm);
@@ -116,7 +115,7 @@ class AddressControllerTest extends WebTestCase
         $addressUrl = $router->generate('admin_addresses_index');
         $crawler = $client->request('GET', $addressUrl);
         $addresses = $this->getAddressList($crawler);
-        /** Make sure we have 3 addresses before we filter by firstname */
+        /* Make sure we have 3 addresses before we filter by firstname */
         self::assertEquals(3, count($addresses));
         $filterForm = $this->fillFiltersForm($crawler, ['address[id_address]' => $this->getTestAddress()->getId()]);
         $crawler = $client->submit($filterForm);
@@ -166,15 +165,16 @@ class AddressControllerTest extends WebTestCase
     public function getAddressModifications(): array
     {
         $testAddress = $this->getTestAddress();
+
         return [
-                'customer_address[customer_email]' => 'pub@prestashop.com',
-                'customer_address[alias]' => 'test_alias',
-                'customer_address[first_name]' => $testAddress->getFirstName(),
-                'customer_address[last_name]' => $testAddress->getLastName(),
-                'customer_address[address1]' => $testAddress->getAddress(),
-                'customer_address[postcode]' => $testAddress->getPostCode(),
-                'customer_address[city]' => $testAddress->getCity(),
-                'customer_address[id_country]' => 21,
+            'customer_address[customer_email]' => 'pub@prestashop.com',
+            'customer_address[alias]' => 'test_alias',
+            'customer_address[first_name]' => $testAddress->getFirstName(),
+            'customer_address[last_name]' => $testAddress->getLastName(),
+            'customer_address[address1]' => $testAddress->getAddress(),
+            'customer_address[postcode]' => $testAddress->getPostCode(),
+            'customer_address[city]' => $testAddress->getCity(),
+            'customer_address[id_country]' => 21,
         ];
     }
 
@@ -208,6 +208,7 @@ class AddressControllerTest extends WebTestCase
     /**
      * Default addresses are not fit for filtering very well because most of the information is identical. So I need
      * new address with unique values to test various filters
+     *
      * @return Address
      */
     private function getTestAddress(): Address
@@ -224,11 +225,10 @@ class AddressControllerTest extends WebTestCase
     }
 
     /**
-     *
-     *
      * I think it makes sense to return an DTO here instead of array. It doesn't make sense to reuse EditableCustomerAddress
      * because it has more values that are needed. So new DTO it is, but where should I put architecture wise?
      * Call it AddressForListTest and put it somewhere next to the EditableCustomerAddress? Keep it here?
+     *
      * @param $tr
      * @param $i
      *

@@ -42,7 +42,7 @@ class AddressFormDataHandlerChecker implements FormDataHandlerInterface
 
     /**
      * AddressFormDataHandlerChecker constructor.
-
+     *
      * @param FormDataHandlerInterface $addressFormDataHandler
      */
     public function __construct(FormDataHandlerInterface $addressFormDataHandler)
@@ -53,6 +53,7 @@ class AddressFormDataHandlerChecker implements FormDataHandlerInterface
     public function create(array $data)
     {
         $this->lastCreatedId = $this->addressFormDataHandler->create($data);
+
         return $this->lastCreatedId;
     }
 
