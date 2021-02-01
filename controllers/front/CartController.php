@@ -398,7 +398,7 @@ class CartControllerCore extends FrontController
             foreach ($attributes as $attribute) {
                 $productAttributes .= $attribute['group'] . ' : ' . $attribute['name'] . ' ' . $separator . ' ';
             }
-            $productAttributes = rtrim($productAttributes,$separator . ' ');
+            $productAttributes = rtrim($productAttributes, $separator . ' ');
         }
 
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
