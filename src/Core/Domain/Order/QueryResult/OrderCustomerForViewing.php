@@ -71,14 +71,24 @@ class OrderCustomerForViewing
     private $validOrdersPlaced;
 
     /**
-     * @var string
-     */
+     * @var string|null
+     */But
     private $privateNote;
 
     /**
      * @var bool
      */
     private $isGuest;
+
+    /**
+     * @var string|null
+     */
+    private $ape;
+
+    /**
+     * @var string|null
+     */
+    private $siret;
 
     /**
      * @param int $id
@@ -91,6 +101,8 @@ class OrderCustomerForViewing
      * @param int $validOrdersPlaced
      * @param string|null $privateNote
      * @param bool $isGuest
+     * @param string|null $ape
+     * @param string|null $siret
      */
     public function __construct(
         int $id,
@@ -102,7 +114,9 @@ class OrderCustomerForViewing
         string $totalSpentSinceRegistration,
         int $validOrdersPlaced,
         ?string $privateNote,
-        bool $isGuest
+        bool $isGuest,
+        ?string $ape = null,
+        ?string $siret = null
     ) {
         $this->id = $id;
         $this->firstName = $firstName;
@@ -114,6 +128,8 @@ class OrderCustomerForViewing
         $this->validOrdersPlaced = $validOrdersPlaced;
         $this->privateNote = $privateNote;
         $this->isGuest = $isGuest;
+        $this->ape = $ape;
+        $this->siret = $siret;
     }
 
     /**
@@ -194,5 +210,21 @@ class OrderCustomerForViewing
     public function isGuest(): bool
     {
         return $this->isGuest;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getApe(): ?string
+    {
+        return $this->ape;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSiret(): ?string
+    {
+        return $this->siret;
     }
 }
