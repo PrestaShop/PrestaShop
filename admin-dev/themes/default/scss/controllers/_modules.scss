@@ -36,9 +36,10 @@
 }
 
 .hook_panel_header {
-  @include margin(0, -10px, 0, -10px)
-    @include padding(0, 10px, 10px, 10px)
-    .hook_name {
+  @include margin(0, -10px, 0, -10px);
+  @include padding(0, 10px, 10px, 10px);
+
+  .hook_name {
     padding: 0 4px;
     font-size: 1.4em;
     color: $brand-primary;
