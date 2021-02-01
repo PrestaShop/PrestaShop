@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -36,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -78,9 +81,14 @@ class ProductSupplierType extends TranslatorAwareType
             ->add('combination_id', HiddenType::class)
             ->add('supplier_reference', TextType::class, [
                 'empty_data' => '',
+                'constraints' => [
+                    new TypedRegex(TypedRegex::TYPE_REFERENCE),
+                    new Length([
+                        'max' => Reference::MAX_LENGTH,
+                    ]),
+                ],
             ])
             ->add('supplier_price_tax_excluded', MoneyType::class, [
-                //@todo: should currency change depending on currency_id selection or always context value?
                 'currency' => $this->currencyIsoCode,
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'constraints' => [

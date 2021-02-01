@@ -28,6 +28,7 @@
 {% set isSEOTabValid = productForm.seo.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid %}
 {% set isStockTabValid = productForm.stock.vars.valid %}
+{% set isSuppliersTypeValid = productForm.suppliers.vars.valid %}
 
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">
@@ -63,7 +64,7 @@
       </a>
     </li>
 
-    <li id="options-tab-nav" class="nav-item{% if not isOptionsTabValid %} has-error{% endif %}">
+    <li id="options-tab-nav" class="nav-item{% if not isOptionsTabValid or not isSuppliersTypeValid%} has-error{% endif %}">
       <a href="#options-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Options'|trans({}, 'Admin.Global') }}
       </a>
