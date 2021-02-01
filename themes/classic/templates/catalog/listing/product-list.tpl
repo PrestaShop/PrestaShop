@@ -24,7 +24,7 @@
  *}
 {extends file=$layout}
 
-{block name='hook_extra'}
+{block name='head_microdata_special'}
   {include file='_partials/microdata/product-list-jsonld.tpl' listing=$listing}
 {/block}
 

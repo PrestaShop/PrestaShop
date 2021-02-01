@@ -47,7 +47,11 @@
       <link rel="alternate" href="{$pageUrl}" hreflang="{$code}">
     {/foreach}
   {/block}
+  
   {include file="_partials/microdata/head-jsonld.tpl"}
+  
+  {block name='head_microdata_special'}{/block}
+  
   {include file="_partials/pagination-seo.tpl"}
 {/block}
 
