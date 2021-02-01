@@ -64,7 +64,7 @@ class AbstractMultistoreConfigurationTest extends TestCase
         $this->assertEquals($shopId, $resultShopConstraint->getShopId()->getValue());
     }
 
-    public function provideForGetShopConstraint()
+    public function provideForGetShopConstraint(): array
     {
         return [
             [true, 1, 1, true],
