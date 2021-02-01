@@ -166,6 +166,7 @@
     &-actions {
       display: flex;
       flex-wrap: wrap;
+
       > * {
         margin-bottom: 0.9375rem;
 
@@ -204,6 +205,7 @@
     .card-details {
       border: none;
       box-shadow: none;
+
       .card-body {
         padding: 0;
       }
@@ -242,6 +244,7 @@
     .tab-content {
       padding: 0;
       background-color: inherit;
+
       .tab-pane {
         opacity: 1;
       }
@@ -384,6 +387,7 @@
           order: 2;
         }
       }
+
       .nav-tabs {
         display: flex;
         flex-wrap: nowrap;
@@ -517,9 +521,11 @@
           max-width: 76px;
           height: 35px;
         }
+
         .input-group-append {
           height: 35px;
         }
+
         .max-refund {
           flex-basis: 100%;
           padding-left: 10px;

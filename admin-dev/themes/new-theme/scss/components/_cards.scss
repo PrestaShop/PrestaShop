@@ -120,15 +120,19 @@
 .card-primary {
   @include card-variant($brand-primary, $brand-primary);
 }
+
 .card-success {
   @include card-variant($brand-success, $brand-success);
 }
+
 .card-info {
   @include card-variant($brand-info, $brand-info);
 }
+
 .card-warning {
   @include card-variant($brand-warning, $brand-warning);
 }
+
 .card-danger {
   @include card-variant($brand-danger, $brand-danger);
 }
@@ -137,18 +141,23 @@
 .card-primary-outline {
   @include card-outline-variant($btn-primary-bg);
 }
+
 .card-secondary-outline {
   @include card-outline-variant($btn-secondary-border);
 }
+
 .card-info-outline {
   @include card-outline-variant($btn-info-bg);
 }
+
 .card-success-outline {
   @include card-outline-variant($btn-success-bg);
 }
+
 .card-warning-outline {
   @include card-outline-variant($btn-warning-bg);
 }
+
 .card-danger-outline {
   @include card-outline-variant($btn-danger-bg);
 }
@@ -176,6 +185,7 @@
   // margin: -1.325rem;
   @include border-radius(0.25rem);
 }
+
 .card-img-overlay {
   position: absolute;
   top: 0;
@@ -190,6 +200,7 @@
 .card-img-top {
   @include border-radius($card-border-radius-inner $card-border-radius-inner 0 0);
 }
+
 .card-img-bottom {
   @include border-radius(0 0 $card-border-radius-inner $card-border-radius-inner);
 }
@@ -240,16 +251,19 @@
           .card-img-top {
             border-top-right-radius: 0;
           }
+
           .card-img-bottom {
             border-bottom-right-radius: 0;
           }
         }
+
         &:last-child {
           @include border-left-radius(0);
 
           .card-img-top {
             border-top-left-radius: 0;
           }
+
           .card-img-bottom {
             border-bottom-left-radius: 0;
           }

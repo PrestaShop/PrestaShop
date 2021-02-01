@@ -6,10 +6,12 @@
   input[type="number"]::-webkit-outer-spin-button {
     appearance: none;
   }
+
   .danger {
     color: $gray-dark;
     background-color: #fff;
     border: 1px solid $danger;
+
     &:focus {
       outline: none;
     }

@@ -20,6 +20,7 @@
   border: 0;
   outline: 0;
   -webkit-tap-highlight-color: transparent;
+
   * {
     position: static;
     box-sizing: content-box;
@@ -67,6 +68,7 @@
   border: 0;
   outline: 0;
   -webkit-tap-highlight-color: transparent;
+
   * {
     position: static;
     box-sizing: content-box;
@@ -90,6 +92,7 @@
     outline: 0;
     -webkit-tap-highlight-color: transparent;
   }
+
   button {
     box-sizing: border-box;
   }
@@ -152,6 +155,7 @@ div.mce-edit-area {
 
 .mce-statusbar {
   position: relative;
+
   .mce-container-body {
     position: relative;
   }
@@ -163,6 +167,7 @@ div.mce-edit-area {
 
 .mce-charmap {
   border-collapse: collapse;
+
   td {
     width: 20px;
     height: 20px;
@@ -172,9 +177,11 @@ div.mce-edit-area {
     vertical-align: middle;
     cursor: default;
     border: 1px solid #9e9e9e;
+
     div {
       text-align: center;
     }
+
     &:hover {
       background: #d9d9d9;
     }
@@ -191,9 +198,11 @@ div.mce-edit-area {
     border-collapse: separate;
     border: 1px solid #d6d6d6;
   }
+
   a {
     display: block;
     border: 1px solid transparent;
+
     &:hover {
       border-color: #a1a1a1;
     }
@@ -202,10 +211,12 @@ div.mce-edit-area {
 
 .mce-grid-border {
   margin: 0 4px;
+
   a {
     width: 13px;
     height: 13px;
     border-color: #d6d6d6;
+
     &:hover,
     &.mce-active {
       background: #dff5f9;
@@ -292,14 +303,17 @@ div.mce-tinymce-inline {
 .mce-floatpanel {
   position: absolute;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
   &.mce-fixed {
     position: fixed;
   }
+
   .mce-arrow {
     position: absolute;
     display: block;
     width: 0;
     height: 0;
+
     &::after {
       position: absolute;
       display: block;
@@ -310,6 +324,7 @@ div.mce-tinymce-inline {
     }
     border-width: 11px;
   }
+
   &.mce-popover {
     top: 0;
 
@@ -321,6 +336,7 @@ div.mce-tinymce-inline {
     &.mce-bottom {
       margin-top: 10px;
       *margin-top: 0;
+
       > .mce-arrow {
         top: -11px;
         left: 50%;
@@ -328,6 +344,7 @@ div.mce-tinymce-inline {
         border-top-width: 0;
         border-bottom-color: #9e9e9e;
         border-bottom-color: rgba(0, 0, 0, 0.25);
+
         &::after {
           top: 1px;
           margin-left: -10px;
@@ -335,14 +352,18 @@ div.mce-tinymce-inline {
           border-bottom-color: #fff;
         }
       }
+
       &.mce-start {
         margin-left: -22px;
+
         > .mce-arrow {
           left: 20px;
         }
       }
+
       &.mce-end {
         margin-left: 22px;
+
         > .mce-arrow {
           right: 10px;
           left: auto;
@@ -362,6 +383,7 @@ div.mce-tinymce-inline {
   background: #000;
   filter: alpha(opacity = 0);
   opacity: 0;
+
   &.mce-in {
     zoom: 1;
     filter: alpha(opacity = 30);
@@ -383,8 +405,10 @@ div.mce-tinymce-inline {
     width: 100%;
     height: 100%;
   }
+
   &.mce-fullscreen {
     @include border-radius(0);
+
     .mce-foot {
       @include border-radius(0);
     }
@@ -403,6 +427,7 @@ div.mce-tinymce-inline {
   position: relative;
   padding: 9px 15px;
   border-bottom: 1px solid #c5c5c5;
+
   .mce-close {
     position: absolute;
     top: 9px;
@@ -593,11 +618,13 @@ body .mce-abs-layout-item {
   *display: inline;
   *zoom: 1;
   background-color: #fff;
+
   &:hover,
   &:focus {
     color: #eee;
     background-color: #eee;
   }
+
   &.mce-disabled {
     button,
     &:hover button {
@@ -608,15 +635,19 @@ body .mce-abs-layout-item {
       opacity: 0.4;
     }
   }
+
   &.mce-active {
     background-color: #d6d6d6;
+
     &:hover {
       background-color: #d6d6d6;
     }
   }
+
   &:not(.mce-disabled):active {
     background-color: #d6d6d6;
   }
+
   button {
     padding: 2px 6px;
     overflow: visible;
@@ -640,10 +671,12 @@ body .mce-abs-layout-item {
   border-color:
     rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25)
     rgba(0, 0, 0, 0.25);
+
   &:hover,
   &:focus {
     background-color: #005fb3;
   }
+
   &.mce-disabled {
     button,
     &:hover button {
@@ -653,17 +686,22 @@ body .mce-abs-layout-item {
       opacity: 0.4;
     }
   }
+
   &.mce-active {
     background-color: #005299;
+
     &:hover {
       background-color: #005299;
     }
   }
+
   &:not(.mce-disabled):active {
     background-color: #005299;
   }
+
   button {
     color: #fff;
+
     i {
       color: #fff;
     }
@@ -677,6 +715,7 @@ body .mce-abs-layout-item {
     line-height: normal;
     @include border-radius(5px);
   }
+
   i {
     margin-top: 2px;
   }
@@ -688,6 +727,7 @@ body .mce-abs-layout-item {
     *padding-bottom: 2px;
     font-size: 12px;
   }
+
   i {
     line-height: 20px;
     *line-height: 18px;
@@ -729,16 +769,20 @@ body .mce-abs-layout-item {
     border-right: none;
     @include border-radius(0);
   }
+
   .mce-first {
     @include border-radius(3px 0 0 3px);
   }
+
   .mce-last {
     border-right: solid 1px #ccc;
     @include border-radius(0 3px 3px 0);
   }
+
   .mce-first.mce-last {
     @include border-radius(3px);
   }
+
   .mce-btn.mce-flow-layout-item {
     margin: 0;
   }
@@ -774,6 +818,7 @@ i.mce-i-checkbox {
   &.mce-focus i.mce-i-checkbox {
     border: 1px solid rgba(82, 168, 236, 0.8);
   }
+
   &.mce-disabled {
     .mce-label,
     i.mce-i-checkbox {
@@ -794,6 +839,7 @@ i.mce-i-checkbox {
   button {
     padding-right: 4px;
   }
+
   .mce-preview {
     position: absolute;
     top: 50%;
@@ -807,20 +853,24 @@ i.mce-i-checkbox {
     overflow: hidden;
     background: #808080;
   }
+
   &.mce-btn-small .mce-preview {
     width: 16px;
     padding-right: 0;
     margin-left: -16px;
   }
+
   .mce-open {
     padding-left: 4px;
     border-right: 1px solid transparent;
     border-left: 1px solid transparent;
   }
+
   &:hover .mce-open {
     border-right-color: #bdbdbd;
     border-left-color: #bdbdbd;
   }
+
   &.mce-btn-small .mce-open {
     padding: 0 3px;
   }
@@ -831,16 +881,20 @@ i.mce-i-checkbox {
   *display: inline;
   *height: 32px;
   *zoom: 1;
+
   input {
     height: 28px;
     border: 1px solid #c5c5c5;
   }
+
   &.mce-disabled input {
     color: #adadad;
   }
+
   &.mce-has-open input {
     @include border-radius(4px 0 0 4px);
   }
+
   .mce-btn {
     background-color: #c5c5c5;
     border-left: 0;
@@ -850,6 +904,7 @@ i.mce-i-checkbox {
   button {
     height: 26px;
   }
+
   &.mce-disabled .mce-btn button {
     cursor: default;
     zoom: 1;
@@ -865,10 +920,12 @@ i.mce-i-checkbox {
   padding: 8px;
   white-space: normal;
   *zoom: 1;
+
   .mce-txt {
     display: inline-block;
     padding-right: 3px;
   }
+
   .mce-path-body {
     display: inline-block;
   }
@@ -880,9 +937,11 @@ i.mce-i-checkbox {
   color: #333;
   cursor: pointer;
   *zoom: 1;
+
   &:hover {
     text-decoration: underline;
   }
+
   &:focus {
     color: #fff;
     background: #666;
@@ -900,6 +959,7 @@ i.mce-i-checkbox {
 .mce-fieldset {
   border: 0 solid #9e9e9e;
   @include border-radius(3px);
+
   > .mce-container-body {
     margin-top: -15px;
   }
@@ -925,6 +985,7 @@ i.mce-i-checkbox {
   *display: inline;
   margin: 2px 0 2px 2px;
   *zoom: 1;
+
   &.mce-last {
     max-width: 100%;
     margin-right: 2px;
@@ -957,12 +1018,15 @@ i.mce-i-checkbox {
   overflow: hidden;
   *zoom: 1;
   border: 0;
+
   &.mce-autoscroll {
     overflow: auto;
   }
+
   &.mce-disabled {
     color: #aaa;
   }
+
   &.mce-multiline {
     white-space: pre-wrap;
   }
@@ -970,12 +1034,14 @@ i.mce-i-checkbox {
 
 .mce-menubar {
   border: 1px solid #eee;
+
   .mce-menubtn {
     background: transparent;
     filter: none;
     border-color: transparent;
     @include border-radius(0);
     box-shadow: none;
+
     button span {
       color: #333;
     }
@@ -999,25 +1065,30 @@ i.mce-i-checkbox {
   &.mce-disabled span {
     color: #aaa;
   }
+
   span {
     margin-right: 2px;
     line-height: 20px;
     *line-height: 16px;
     color: #333;
   }
+
   &.mce-btn-small span {
     font-size: 12px;
   }
+
   &.mce-fixed-width {
     span {
       display: inline-block;
       overflow-x: hidden;
       text-overflow: ellipsis;
     }
+
     &.mce-btn-small span {
       width: 70px;
     }
   }
+
   .mce-caret {
     *margin-top: 6px;
   }
@@ -1029,6 +1100,7 @@ i.mce-i-checkbox {
     padding-right: 20px;
     text-align: left;
   }
+
   .mce-caret {
     position: absolute;
     top: 50%;
@@ -1062,6 +1134,7 @@ i.mce-i-checkbox {
   &:focus .mce-menu-shortcut {
     color: #fff;
   }
+
   .mce-caret {
     margin-top: 4px;
     *margin-top: 3px;
@@ -1070,6 +1143,7 @@ i.mce-i-checkbox {
     border-bottom: 4px solid transparent;
     border-left: 4px solid #333;
   }
+
   &.mce-selected .mce-caret,
   &:focus .mce-caret,
   &:hover .mce-caret {
@@ -1080,12 +1154,14 @@ i.mce-i-checkbox {
   .mce-text {
     color: #333;
   }
+
   &.mce-disabled {
     .mce-text,
     .mce-ico {
       color: #adadad;
     }
   }
+
   &:hover .mce-text,
   &.mce-selected
   .mce-text
@@ -1097,6 +1173,7 @@ i.mce-i-checkbox {
   .mce-ico {
     color: #fff;
   }
+
   &.mce-disabled:hover {
     background: #ccc;
   }
@@ -1114,6 +1191,7 @@ i.mce-i-checkbox {
     right: 0;
     *margin-top: -2px;
   }
+
   .mce-caret {
     position: absolute;
     right: 0;
@@ -1130,6 +1208,7 @@ i.mce-i-checkbox {
   .mce-text {
     color: #333;
   }
+
   &:hover {
     .mce-text,
     .mce-ico {
@@ -1208,6 +1287,7 @@ div.mce-menu .mce-menu-item-sep,
     cursor: s-resize;
     visibility: visible;
   }
+
   .mce-resizehandle-both {
     cursor: se-resize;
   }
@@ -1261,9 +1341,11 @@ i.mce-i-resize {
   *zoom: 1;
   background: #e3e3e3;
   border: 1px solid #c5c5c5;
+
   &:hover {
     background: #fdfdfd;
   }
+
   &.mce-active {
     height: 14px;
     margin-bottom: -1px;
@@ -1329,78 +1411,103 @@ i.mce-i-resize {
 .mce-i-save::before {
   content: "\f0c7";
 }
+
 .mce-i-newdocument::before {
   content: "\f016";
 }
+
 .mce-i-fullpage::before {
   content: "\f065";
 }
+
 .mce-i-alignleft::before {
   content: "\f036";
 }
+
 .mce-i-aligncenter::before {
   content: "\f037";
 }
+
 .mce-i-alignright::before {
   content: "\f038";
 }
+
 .mce-i-alignjustify::before {
   content: "\f039";
 }
+
 .mce-i-cut::before {
   content: "\f0c4";
 }
+
 .mce-i-paste::before {
   content: "\f0ea";
 }
+
 .mce-i-searchreplace::before {
   content: "\e009";
 }
+
 .mce-i-bullist::before {
   content: "\f0ca";
 }
+
 .mce-i-numlist::before {
   content: "\f0cb";
 }
+
 .mce-i-indent::before {
   content: "\f03c";
 }
+
 .mce-i-outdent::before {
   content: "\f03b";
 }
+
 .mce-i-blockquote::before {
   content: "\f10e";
 }
+
 .mce-i-undo::before {
   content: "\f112";
 }
+
 .mce-i-redo::before {
   content: "\f064";
 }
+
 .mce-i-link::before {
   content: "\f0c1";
 }
+
 .mce-i-unlink::before {
   content: "\f127";
 }
+
 .mce-i-anchor::before {
   content: "\f13d";
 }
+
 .mce-i-image::before {
   content: "\f03e";
 }
+
 .mce-i-media::before {
   content: "\f008";
 }
+
 .mce-i-help::before {
   content: "\f059";
 }
+
 .mce-i-code::before {
   content: "\f121";
 }
+
 .mce-i-inserttime::before {
   content: "\f017";
 }
+
 .mce-i-preview::before {
   content: "\f06e";
 }
@@ -1417,6 +1524,7 @@ i.mce-i-resize {
 .mce-i-hr::before {
   content: "";
 }
+
 .mce-i-removeformat::before {
   content: "";
 }
@@ -1424,6 +1532,7 @@ i.mce-i-resize {
 .mce-i-subscript::before {
   content: "\f12c";
 }
+
 .mce-i-superscript::before {
   content: "\f12b";
 }
@@ -1435,9 +1544,11 @@ i.mce-i-resize {
 .mce-i-emoticons::before {
   content: "\f11a";
 }
+
 .mce-i-print::before {
   content: "\f02f";
 }
+
 .mce-i-fullscreen::before {
   content: "\f065";
 }
@@ -1445,18 +1556,23 @@ i.mce-i-resize {
 .mce-i-spellchecker::before {
   content: "";
 }
+
 .mce-i-nonbreaking::before {
   content: "";
 }
+
 .mce-i-template::before {
   content: "";
 }
+
 .mce-i-pagebreak::before {
   content: "";
 }
+
 .mce-i-restoredraft::before {
   content: "";
 }
+
 .mce-i-untitled::before {
   content: "";
 }
@@ -1464,12 +1580,15 @@ i.mce-i-resize {
 .mce-i-bold::before {
   content: "\f032";
 }
+
 .mce-i-italic::before {
   content: "\f033";
 }
+
 .mce-i-underline::before {
   content: "\f0cd";
 }
+
 .mce-i-strikethrough::before {
   content: "\f0cc";
 }
@@ -1478,6 +1597,7 @@ i.mce-i-resize {
 .mce-i-visualblocks::before {
   content: "";
 }
+
 .mce-i-ltr::before {
   content: "";
 }
@@ -1485,12 +1605,15 @@ i.mce-i-resize {
 .mce-i-rtl::before {
   content: "\e030";
 }
+
 .mce-i-copy::before {
   content: "\f0c5";
 }
+
 .mce-i-resize::before {
   content: "\f07d";
 }
+
 .mce-i-browse::before {
   content: "\f07c";
 }
@@ -1505,6 +1628,7 @@ i.mce-i-resize {
 
 .mce-i-selected {
   visibility: hidden;
+
   &::before {
     content: "\f00c";
   }
@@ -1525,11 +1649,13 @@ i.mce-i-backcolor {
 //
 .tab-content.translationsFields {
   padding: 0;
+
   .mce-tinymce {
     box-sizing: border-box;
     /* stylelint-disable-next-line declaration-no-important */
     border: 1px solid #dfdfdf !important;
   }
+
   .mce-container-body .mce-flow-layout {
     padding-top: 5px;
     padding-bottom: 5px;

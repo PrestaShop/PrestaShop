@@ -53,13 +53,16 @@
     .select2 {
       font-weight: 400;
     }
+
     .form-min-max {
       display: inline-block;
       width: 48%;
     }
+
     .action-enabled {
       color: $brand-success;
     }
+
     .action-disabled {
       color: $brand-danger;
     }
@@ -77,6 +80,7 @@
 
   .dropdown-toggle.product-edit {
     color: $gray-medium;
+
     &::after {
       content: "more_vert";
     }

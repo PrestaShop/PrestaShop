@@ -92,16 +92,19 @@ body {
   width: 100%;
   height: 100%;
 }
+
 .bordered {
   > .panel {
     border: 0;
   }
+
   > .nav-item > .nav-link {
     &.active {
       border-bottom: 1px solid #fff;
     }
   }
 }
+
 #product_filter_column_active .select2 {
   min-width: 4.375rem;
 }
