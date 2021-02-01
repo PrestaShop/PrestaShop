@@ -31,25 +31,20 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 
 class AbstractMultistoreConfigurationTest extends TestCase
 {
-    protected function setUp()
-    {
-        $this->mockedShopConfiguration = $this->createShopConfigurationMock();
-        parent::setUp();
-    }
-
     /**
-     * @dataProvider provideForGetShopConstraint
-     *
      * @param bool $isAllShopContext
      * @param int $shopGroupId
+     * @param int $shopId
      * @param bool $isExpectedResultNull
      */
     public function testGetShopConstraint(bool $isAllShopContext, int $shopGroupId, int $shopId, bool $isExpectedResultNull): void
     {
-        $abstractMultistoreConfiguration = $this->getTestableClass($isAllShopContext, $shopGroupId, $shopId);
+        $abstractMultistoreConfiguration = $this->getTestableClass($isAllShopContext, null, $shopGroupId, $shopId);
         $resultShopConstraint = $abstractMultistoreConfiguration->getShopConstraint();
 
         if ($isExpectedResultNull) {
@@ -77,13 +72,43 @@ class AbstractMultistoreConfigurationTest extends TestCase
     }
 
     /**
+     * @param string $fieldName
+     * @param array $inputValues
+     * @param string|null $expectedMethodToBeCalled
+     */
+    public function testUpdateConfigurationValue(string $fieldName, array $inputValues, ?string $expectedMethodToBeCalled): void
+    {
+        // this will test that inside the `UpdateConfigurationValue` method, the right update method will be called depending on situation
+        $abstractMultistoreConfiguration = $this->getTestableClass(false, $expectedMethodToBeCalled);
+        $abstractMultistoreConfiguration->updateConfigurationValue('PS_CONF_KEY', $fieldName, $inputValues, $this->getShopConstraintMock());
+    }
+
+    /**
+     * @return array[]
+     */
+    public function provideForUpdateConfigurationValue(): array
+    {
+        $multistorePrefix = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX;
+
+        return [
+            ['toto', ['toto' => 'value'], 'set'], // standard value update
+            ['toto', ['toto' => 'value', $multistorePrefix . 'toto' => true], 'set'], // multistore checkbox checked, method 'set' must be called
+            ['toto', ['toto' => 'value', $multistorePrefix . 'toto' => false], 'deleteFromContext'], // multistore checkbox unchecked, method 'deleteFromContext' must be called
+            ['toto', [], null], // do not make any update if the field is not in the input array
+        ];
+    }
+
+    /**
      * @param bool $isAllShopContext
+     * @param string|null $expectedCalledMethod
+     * @param int $shopGroupId
+     * @param int $shopId
      *
      * @return AbstractMultistoreConfiguration
      */
-    private function getTestableClass(bool $isAllShopContext, int $shopGroupId, int $shopId): AbstractMultistoreConfiguration
+    private function getTestableClass(bool $isAllShopContext, ?string $expectedCalledMethod, int $shopGroupId = 1, int $shopId = 1): AbstractMultistoreConfiguration
     {
-        return new class($this->mockedShopConfiguration, $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId)) extends AbstractMultistoreConfiguration {
+        return new class($this->createShopConfigurationMock($expectedCalledMethod), $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId)) extends AbstractMultistoreConfiguration {
             public function getConfiguration()
             {
                 return [];
@@ -103,6 +128,8 @@ class AbstractMultistoreConfigurationTest extends TestCase
 
     /**
      * @param bool $isAllShopContext
+     * @param int $shopGroupId
+     * @param int $shopId
      *
      * @return MockObject
      */
@@ -117,12 +144,21 @@ class AbstractMultistoreConfigurationTest extends TestCase
     }
 
     /**
+     * @param string|null $expectedMethodCalled
+     *
      * @return MockObject
      */
-    private function createShopConfigurationMock(): MockObject
+    private function createShopConfigurationMock(?string $expectedMethodCalled): MockObject
     {
         $stub = $this->createMock(ShopConfiguration::class);
         $stub->method('get')->willReturn(true);
+
+        // check expected method is called if needed
+        if (isset($expectedMethodCalled)) {
+            $stub->expects($this->once())->method($expectedMethodCalled);
+        } else {
+            $stub->expects($this->never())->method($this->anything());
+        }
 
         return $stub;
     }
@@ -138,5 +174,13 @@ class AbstractMultistoreConfigurationTest extends TestCase
         $stub->id = $shopGroupId;
 
         return $stub;
+    }
+
+    /**
+     * @return MockObject
+     */
+    private function getShopConstraintMock(): MockObject
+    {
+        return $this->createMock(ShopConstraint::class);
     }
 }
