@@ -75,21 +75,22 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     /**
      * Returns the numbering of the subscription invoice with respect to the year.
      *
-     * @param int $id_order_slip order_slip.
+     * @param int $id_order_slip order_slip
      *
-     * @return int number for year.
+     * @return int number for year
      */
-    public function getNumberOrderSlip($id_order_slip){
+    public function getNumberOrderSlip($id_order_slip)
+    {
 
 
-        $current_day    = date("Y");
-        $current_year   = $current_day."-01-01 00:00:00";
+        $current_day = date("Y");
+        $current_year = $current_day."-01-01 00:00:00";
 
 
-        $temporary_order_slip = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip='.$id_order_slip);
+        $temporary_order_slip = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
 
         $number_order_slip = Db::getInstance()->executeS(
-            'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "'.$current_year.'" AND date_add < "'.$temporary_order_slip[0]['date_add'].'"'
+            'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "' . $current_year . '" AND date_add < "' . $temporary_order_slip[0]['date_add'] . '"'
         );
 
         return intval($number_order_slip[0]['n']) + 1;
