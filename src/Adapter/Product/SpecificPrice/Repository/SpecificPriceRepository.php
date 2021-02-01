@@ -101,14 +101,14 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      */
     public function get(SpecificPriceId $specificPriceId): SpecificPrice
     {
-        /** @var SpecificPrice $combination */
-        $combination = $this->getObjectModel(
+        /** @var SpecificPrice $specificPrice */
+        $specificPrice = $this->getObjectModel(
             $specificPriceId->getValue(),
             SpecificPrice::class,
             SpecificPriceNotFoundException::class
         );
 
-        return $combination;
+        return $specificPrice;
     }
 
     /**
