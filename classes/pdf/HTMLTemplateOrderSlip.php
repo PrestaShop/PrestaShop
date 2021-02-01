@@ -83,8 +83,8 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
 
 
-        $current_day = date("Y");
-        $current_year = $current_day."-01-01 00:00:00";
+        $current_day = date('Y');
+        $current_year = $current_day . '-01-01 00:00:00';
 
 
         $temporary_order_slip = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
