@@ -80,6 +80,12 @@ export default class AutoCompleteSearch {
     this.buildTypeahead();
   }
 
+  /**
+   * Force set values, the selected items are removed Then the component loops through the inputs
+   * and render each object in the list as if it came from the API so the format must match.
+   *
+   * @param values {array}
+   */
   setValue(values) {
     this.clearValue();
     if (!values || values.length <= 0) {
@@ -91,11 +97,17 @@ export default class AutoCompleteSearch {
     });
   }
 
+  /**
+   * Removes selected items.
+   */
   clearValue() {
     const formIdItem = $('li', this.$selectionContainer);
     formIdItem.remove();
   }
 
+  /**
+   * Build the typeahead component based on provided configuration.
+   */
   buildTypeahead() {
     this.$searchInput.typeahead(this.config, this.dataSetConfig)
       .bind('typeahead:select', (e, selectedItem) => {
@@ -111,6 +123,13 @@ export default class AutoCompleteSearch {
     });
   }
 
+  /**
+   * When the component is configured to have only one selected element on each selection
+   * the previous selection is removed and then replaced.
+   *
+   * @param selectedItem {Object}
+   * @returns {boolean}
+   */
   replaceSelectedItem(selectedItem) {
     this.clearValue();
     this.addSelectedContentToContainer(selectedItem);
@@ -118,6 +137,13 @@ export default class AutoCompleteSearch {
     return true;
   }
 
+  /**
+   * When the component is configured to have more than one selected item on each selection
+   * the item is added to the list.
+   *
+   * @param selectedItem {Object}
+   * @returns {boolean}
+   */
   appendSelectedItem(selectedItem) {
     // If collection length is up to limit, return
     const formIdItem = $('li', this.$selectionContainer);
@@ -130,6 +156,12 @@ export default class AutoCompleteSearch {
     return true;
   }
 
+  /**
+   * Add the selected content to the selection container, the HTML is generated based on the render function
+   * then a hidden input is automatically added inside it, and finally the rendered selection is added to the list.
+   *
+   * @param selectedItem {Object}
+   */
   addSelectedContentToContainer(selectedItem)
   {
     let value;

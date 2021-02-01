@@ -26,6 +26,12 @@
 import AutoCompleteSearch from "@components/auto-complete-search";
 import Bloodhound from "typeahead.js";
 
+/**
+ * This component is used to search and select an entity, it is based on the AutoSearchComplete
+ * component which displays a list of suggestion based on an API returned response. Then when
+ * an element is selected it is added to the selection last and hidden inputs are created to
+ * send an array of entity IDs in the form request.
+ */
 export default class EntitySearchInput {
   constructor($entitySearchInput, options) {
     this.$entitySearchInput = $entitySearchInput;
@@ -37,14 +43,30 @@ export default class EntitySearchInput {
     this.buildAutoCompleteSearch(options);
   }
 
+  /**
+   * Change the remote url of the endpoint that returns suggestions.
+   *
+   * @param remoteUrl {string}
+   */
   setRemoteUrl(remoteUrl) {
     this.entityRemoteSource.remote.url = remoteUrl;
   }
 
+  /**
+   * Force selected values, the input is an array of object that must match the format from
+   * the API if you want the selected entities to be correctly displayed.
+   *
+   * @param entityIds {array}
+   */
   setValue(entityIds) {
     this.autoSearch.setValue(entityIds);
   }
 
+  /**
+   * Build the AutoCompleteSearch component
+   *
+   * @param options {Object}
+   */
   buildAutoCompleteSearch(options) {
     const dataSetConfig = {
       source: this.entityRemoteSource,
@@ -59,6 +81,12 @@ export default class EntitySearchInput {
     this.autoSearch = new AutoCompleteSearch(this.$entitySearchInput, {}, dataSetConfig);
   }
 
+  /**
+   * Build the Bloodhound remote source which will call the API. The placeholder to
+   * inject the query search parameter is __QUERY__ (@todo: could be configurable)
+   *
+   * @returns {Bloodhound}
+   */
   buildRemoteSource() {
     const sourceConfig = {
       mappingValue: this.$autoCompleteSearchContainer.data('mappingvalue'),
@@ -85,6 +113,14 @@ export default class EntitySearchInput {
     });
   }
 
+  /**
+   * Function called by the AutoCompleteSearch when an entity is selected, this returns
+   * the HTML content of the entity in the selection list. The hidden input will be added
+   * automatically by the AutoCompleteSearch component.
+   *
+   * @param entity {Object}
+   * @returns {string}
+   */
   renderSelected(entity) {
     const $templateContainer = $(`#tplcollection-${this.entitySearchInputId}`);
     const innerTemplateHtml = $templateContainer
