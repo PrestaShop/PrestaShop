@@ -1299,6 +1299,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.customizations_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.stock_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
         parent: 'form.type.translatable.aware'

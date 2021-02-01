@@ -76,6 +76,7 @@ class ProductType extends TranslatorAwareType
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)
+            ->add('customizations', CustomizationsType::class)
             ->add('seo', SEOType::class)
             ->add('redirect_option', RedirectOptionType::class)
             ->add('suppliers', SuppliersType::class)
