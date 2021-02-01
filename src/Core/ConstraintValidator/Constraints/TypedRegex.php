@@ -53,6 +53,7 @@ class TypedRegex extends Constraint
     const TYPE_UPC = 'upc';
     const TYPE_EAN_13 = 'ean_13';
     const TYPE_ISBN = 'isbn';
+    const TYPE_REFERENCE = 'reference';
 
     /**
      * @var string
