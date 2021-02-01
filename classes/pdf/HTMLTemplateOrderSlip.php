@@ -71,7 +71,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->shop = new Shop((int) $this->order->id_shop);
     }
-    
+
     /**
      * Returns the numbering of the subscription invoice with respect to the year.
      *
