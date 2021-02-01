@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
 use EmployeeSession;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteEmployeesSessionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 
 /**
  * Handles command that deletes employees sessions in bulk action.
