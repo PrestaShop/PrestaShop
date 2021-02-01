@@ -52,7 +52,7 @@ export default class ProductSuppliersManager {
     this.$supplierSelectionBlock.on('change', 'input', (e) => {
       const input = e.currentTarget;
       if (input.checked) {
-        this.append({
+        this.add({
           id: input.value,
           name: input.dataset.label,
         });
@@ -75,7 +75,7 @@ export default class ProductSuppliersManager {
     this.showTable();
   }
 
-  append(supplier) {
+  add(supplier) {
     if (typeof this.suppliers[supplier.id] === 'undefined') {
       const newSupplier = Object.create(this.newSupplierData);
       newSupplier.supplierId = supplier.id;
@@ -101,8 +101,8 @@ export default class ProductSuppliersManager {
       }
 
       const productSupplierRow = productSupplierRowPrototype
-        .replace(new RegExp(ProductMap.supplierIdPlaceholder), supplier.supplierId)
-        .replace(new RegExp(ProductMap.supplierNamePlaceholder), supplier.supplierName);
+        .replace(new RegExp(ProductMap.supplierIdPlaceholder, 'g'), supplier.supplierId)
+        .replace(new RegExp(ProductMap.supplierNamePlaceholder, 'g'), supplier.supplierName);
 
       this.$productSuppliersTBody.append(productSupplierRow);
       // Fill inputs
@@ -143,10 +143,13 @@ export default class ProductSuppliersManager {
       const isValid = selectedSupplierIds.includes(input.value);
       if (!isValid && input.checked) {
         input.checked = false;
-        this.checkFirstAvailableDefaultSupplier(selectedSupplierIds);
       }
       input.disabled = !isValid;
     });
+
+    if (this.$defaultSuppliersSelectionBlock.find('input:checked').length === 0) {
+      this.checkFirstAvailableDefaultSupplier(selectedSupplierIds);
+    }
   }
 
   hideDefaultSuppliers() {
