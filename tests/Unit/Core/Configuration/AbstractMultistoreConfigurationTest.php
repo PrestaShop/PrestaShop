@@ -37,6 +37,8 @@ use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 class AbstractMultistoreConfigurationTest extends TestCase
 {
     /**
+     * @dataProvider provideForGetShopConstraint
+     *
      * @param bool $isAllShopContext
      * @param int $shopGroupId
      * @param int $shopId
@@ -72,6 +74,8 @@ class AbstractMultistoreConfigurationTest extends TestCase
     }
 
     /**
+     * @dataProvider provideForUpdateConfigurationValue
+     *
      * @param string $fieldName
      * @param array $inputValues
      * @param string|null $expectedMethodToBeCalled
