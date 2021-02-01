@@ -74,7 +74,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     
     /**
      * Returns the numbering of the subscription invoice with respect to the year.
-     * @param int $id order_slip.
+     *
+     * @param int $id_order_slip order_slip.
+     *
      * @return int number for year.
      */
     public function getNumberOrderSlip($id_order_slip){
