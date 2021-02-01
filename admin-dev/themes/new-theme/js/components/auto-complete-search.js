@@ -26,6 +26,9 @@
 /**
  * This component is used with TypeaheadType forms, and is tightly linked to the content of this
  * twig file src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/typeahead.html.twig
+ *
+ * @todo: the component relies on this TypeaheadType because it was the historic type but it would be worth
+ * creating a new clean form type
  */
 export default class AutoCompleteSearch {
   constructor($searchInput, config, dataSetConfig) {
