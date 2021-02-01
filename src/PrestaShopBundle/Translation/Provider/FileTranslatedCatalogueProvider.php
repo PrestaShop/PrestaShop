@@ -33,6 +33,8 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * Gets catalogue within the files filtered by name in the directory given.
  * The translation files are searched in the subdirectory with the language name.
+ * For example, if the main directory is 'myTranslationsDir',
+ * if you call getCatalogue('fr_FR'), the translations files will be searched in 'myTranslationsDir/fr_FR'
  */
 class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
 {
@@ -49,9 +51,19 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     /**
      * @param string $directory
      * @param array $filenameFilters
+     *
+     * @throws FileNotFoundException
      */
     public function __construct(string $directory, array $filenameFilters)
     {
+        if (!is_dir($directory) || !is_readable($directory)) {
+            throw new FileNotFoundException(sprintf('Directory %s does not exist', $directory));
+        }
+
+        if (!$this->assertIsArrayOfString($filenameFilters)) {
+            throw new \InvalidArgumentException('Given filename filters are invalid. An array of strings was expected.');
+        }
+
         $this->directory = $directory;
         $this->filenameFilters = $filenameFilters;
     }
@@ -77,5 +89,17 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
         }
 
         return $catalogue;
+    }
+
+    /**
+     * Validate if an array only have strings in it.
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function assertIsArrayOfString(array $array): bool
+    {
+        return count($array) === count(array_filter($array, function ($element) { return is_string($element); }));
     }
 }

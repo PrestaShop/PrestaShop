@@ -48,9 +48,19 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
     /**
      * @param string $directory Directory where to look files
      * @param string[] $filenameFilters Array of globs to use to match files
+     *
+     * @throws FileNotFoundException
      */
     public function __construct(string $directory, array $filenameFilters)
     {
+        if (!is_dir($directory) || !is_readable($directory)) {
+            throw new FileNotFoundException(sprintf('Directory %s does not exist', $directory));
+        }
+
+        if (!$this->assertIsArrayOfString($filenameFilters)) {
+            throw new \InvalidArgumentException('Given filename filters are invalid. An array of strings was expected.');
+        }
+
         $this->directory = $directory;
         $this->filenameFilters = $filenameFilters;
     }
@@ -74,6 +84,11 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
             $defaultCatalogue->addCatalogue($filteredCatalogue);
         }
 
+        // Emptying the catalogue is only relevant if $locale given equals the DEFAULT LOCALE
+        // because, in that case, the translation key is equal to its value
+        // Otherwise, there is a problem in the locale given or in the default catalogue.
+        // Example: If DEFAULT_LOCALE = english $translation = ['This is the text' => 'This is the text'],
+        // In french it'll be ['This is the text' => 'Ceci est le texte']. Emptying this will make you loose the translation
         if ($empty && $locale !== self::DEFAULT_LOCALE) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
         }
@@ -97,5 +112,17 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
         }
 
         return $messageCatalogue;
+    }
+
+    /**
+     * Validate if an array only have strings in it.
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function assertIsArrayOfString(array $array): bool
+    {
+        return count($array) === count(array_filter($array, function ($element) { return is_string($element); }));
     }
 }

@@ -7,12 +7,12 @@ services:
         class: PrestaShopBundle\Translation\View\TranslationsTreeBuilder
         arguments:
             - '@router.default'
+            - '@prestashop.translation.translation_catalogue_builder'
 
     prestashop.translation.translation_catalogue_builder:
         class: PrestaShopBundle\Translation\TranslationCatalogueBuilder
         arguments:
             - '@prestashop.translation.provider.catalogue_provider_factory'
-            - '@prestashop.translation.view.translation_tree'
 
     #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:

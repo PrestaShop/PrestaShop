@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2020 PrestaShop SA and Contributors
  *
@@ -28,7 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\View;
 
-use Doctrine\Common\Inflector\Inflector;
+use Exception;
+use PrestaShopBundle\Translation\TranslationCatalogueBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
@@ -63,47 +63,48 @@ class TranslationsTreeBuilder
      * @var string
      */
     private $locale;
+    /**
+     * @var TranslationCatalogueBuilder
+     */
+    private $translationCatalogueBuilder;
 
     /**
      * @param Router $router
+     * @param TranslationCatalogueBuilder $translationCatalogueBuilder
      */
-    public function __construct(Router $router)
+    public function __construct(Router $router, TranslationCatalogueBuilder $translationCatalogueBuilder)
     {
         $this->router = $router;
+        $this->translationCatalogueBuilder = $translationCatalogueBuilder;
     }
 
     /**
-     * Builds a domain tree ready to be sent via API
-     *
-     * @param array[] $translationArray
+     * @param string $type
      * @param string $locale
+     * @param array $search
      * @param string|null $theme
-     * @param array|null $search
      * @param string|null $module
      *
      * @return array
+     *
+     * @throws Exception
      */
-    public function buildDomainTreeForApi(
-        array $translationArray,
+    public function getTree(
+        string $type,
         string $locale,
-        ?array $search = null,
-        ?string $theme = null,
-        ?string $module = null
+        array $search,
+        ?string $theme,
+        ?string $module
     ): array {
-        $this->locale = $locale;
-        $this->theme = $theme;
-        $this->search = $search;
-        $this->module = $module;
+        $tree = $this->translationCatalogueBuilder->getCatalogueObject(
+            $type,
+            $locale,
+            $search,
+            $theme,
+            $module
+        )->getTree();
 
-        // First we build metadata tree.
-        // This will split domain in subDomains (max 3)
-        // And add counters to have number of translations and missing translations for each domain
-        $metadata = $this->buildDomainMetadataTree($translationArray);
-
-        return [
-            // Then we add 'extra data' like subdomain name and fullName, link to access the domain catalogue.
-            'tree' => $this->recursivelyBuildApiTree($metadata, null),
-        ];
+        return ['tree' => $this->recursivelyBuildApiTree($tree, null)];
     }
 
     /**
@@ -166,160 +167,5 @@ class TranslationsTreeBuilder
         }
 
         return $this->router->generate('api_translation_domain_catalog', $routeParams);
-    }
-
-    /**
-     * @TODO This method will be added to TreeBuilder
-     *
-     * Builds a domain metadata tree.
-     *
-     * Returns a structure like this:
-     *
-     * ```
-     * [
-     *     '__metadata' => [
-     *         'count' => 11,
-     *         'missing_translations' => 5
-     *     ],
-     *     'Admin' => [
-     *         '__metadata' => [
-     *             'count' => 11,
-     *             'missing_translations' => 5
-     *         ],
-     *         'Foo' => [
-     *             '__metadata' => [
-     *                 'count' => 4,
-     *                 'missing_translations' => 3
-     *             ],
-     *             'Bar' => [
-     *                 '__metadata' => [
-     *                     'count' => 2,
-     *                     'missing_translations' => 1
-     *                 ],
-     *             ],
-     *             'Baz' => [
-     *                 '__metadata' => [
-     *                     'count' => 2,
-     *                     'missing_translations' => 2
-     *                 ],
-     *             ],
-     *         ],
-     *         'Plop' => [
-     *             '__metadata' => [
-     *                 'count' => 7,
-     *                 'missing_translations' => 2
-     *             ],
-     *             'Foo' => [
-     *                 '__metadata' => [
-     *                     'count' => 2,
-     *                     'missing_translations' => 0
-     *                 ],
-     *             ],
-     *             'Bar' => [
-     *                 '__metadata' => [
-     *                     'count' => 3,
-     *                     'missing_translations' => 1
-     *                 ],
-     *             ],
-     *         ],
-     *     ],
-     * ];
-     * ```
-     *
-     * @param array $catalogue
-     *
-     * @return array
-     */
-    private function buildDomainMetadataTree(array $catalogue): array
-    {
-        // template for initializing metadata
-        $emptyMeta = [
-            'count' => 0,
-            'missing_translations' => 0,
-        ];
-
-        $tree = [
-            '__metadata' => $emptyMeta,
-        ];
-
-        // initialize tree structure
-        foreach ($catalogue as $domain => $content) {
-            $parts = $this->splitDomain($domain);
-
-            // start at the root
-            $subtree = &$tree;
-            $currentSubdomainName = '';
-
-            foreach ($parts as $partNumber => $part) {
-                $subdomainPartName = ucfirst($part);
-                $currentSubdomainName .= $subdomainPartName;
-
-                // create domain part branch if it doesn't exist
-                if (!array_key_exists($subdomainPartName, $subtree)) {
-                    // only initialize tree leaves subtree with catalogue metadata
-                    // branches are initialized with empty metadata (which will be updated later)
-                    $isLastDomainPart = $partNumber === (count($parts) - 1);
-                    $subtree[$subdomainPartName]['__metadata'] = ($isLastDomainPart && isset($content['__metadata']))
-                        ? $content['__metadata']
-                        : $emptyMeta;
-                }
-
-                // move pointer to said branch
-                $subtree = &$subtree[$subdomainPartName];
-            }
-        }
-
-        // update tree by aggregating branch metadata
-        // eg. branch.meta = (child1.meta = (subchild1.meta + subchild2.meta + ... ) + child2.meta + ...)
-        $this->updateCounters($tree);
-
-        return $tree;
-    }
-
-    /**
-     * @TODO This method will be added to TreeBuilder
-     *
-     * Updates counters of this subtree by adding the sum of children's counters
-     *
-     * @param array $subtree
-     *
-     * @return array Array of [sum of count, sum of missing_translations]
-     */
-    private function updateCounters(array &$subtree): array
-    {
-        foreach ($subtree as $key => $values) {
-            if ($key === '__metadata') {
-                continue;
-            }
-
-            // update child and get its counters
-            list($count, $missing) = $this->updateCounters($subtree[$key]);
-
-            // update this tree's counters by adding the child's
-            $subtree['__metadata']['count'] += $count;
-            $subtree['__metadata']['missing_translations'] += $missing;
-        }
-
-        return [
-            $subtree['__metadata']['count'],
-            $subtree['__metadata']['missing_translations'],
-        ];
-    }
-
-    /**
-     * @TODO This method will be added to TreeBuilder
-     *
-     * Converts a domainName into Subdomains.
-     * First, we split the camelcased name and add underscore between each part. For example DomainNameNumberOne will be Domain_Name_Number_One
-     * Then, we explode the name in 3 parts based on _ separator. So Domain_Name_Number_One will be ['Domain', 'Name', 'Number_One']
-     *
-     * @param string $domain
-     *
-     * @return string[]
-     */
-    private function splitDomain(string $domain): array
-    {
-        // the third component of the domain may have underscores, so we need to limit pieces to 3
-        return explode('_', Inflector::tableize($domain), 3);
     }
 }
