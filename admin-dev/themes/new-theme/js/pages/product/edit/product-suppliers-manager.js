@@ -35,6 +35,7 @@ export default class ProductSuppliersManager {
     this.$productSuppliersTBody = this.$productSuppliersTable.find('tbody');
     this.$defaultSuppliersSelectionBlock = $(ProductMap.defaultSupplierSelectionBlock);
     this.suppliers = [];
+    this.newSupplierData = this.collectDataForNewSupplier();
 
     this.init();
   }
@@ -76,24 +77,11 @@ export default class ProductSuppliersManager {
 
   append(supplier) {
     if (typeof this.suppliers[supplier.id] === 'undefined') {
-      const rowPrototype = new DOMParser().parseFromString(
-        this.$supplierReferencesBlock.data('prototype'),
-        'text/html',
-      );
+      const newSupplier = Object.create(this.newSupplierData);
+      newSupplier.supplierId = supplier.id;
+      newSupplier.supplierName = supplier.name;
 
-      this.suppliers[supplier.id] = {
-        deleted: false,
-        supplierId: supplier.id,
-        supplierName: supplier.name,
-        productSupplierId: rowPrototype.getElementById(
-          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_product_supplier_id').value,
-        reference: rowPrototype.getElementById(
-          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_supplier_reference').value,
-        price: rowPrototype.getElementById(
-          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_supplier_price_tax_excluded').value,
-        currencyId: rowPrototype.getElementById(
-          'product_suppliers_supplier_references___SUPPLIER_ID___product_supplier_currency_id').value,
-      };
+      this.suppliers[supplier.id] = newSupplier;
     } else {
       this.suppliers[supplier.id].deleted = false;
     }
@@ -113,9 +101,8 @@ export default class ProductSuppliersManager {
       }
 
       const productSupplierRow = productSupplierRowPrototype
-        .replace(/__SUPPLIER_ID__/g, supplier.supplierId)
-        // .replace(/__SUPPLIER_REFERENCE_INDEX__/g, index)
-        .replace(/__SUPPLIER_NAME__/g, supplier.supplierName);
+        .replace(new RegExp(ProductMap.supplierIdPlaceholder), supplier.supplierId)
+        .replace(new RegExp(ProductMap.supplierNamePlaceholder), supplier.supplierName);
 
       this.$productSuppliersTBody.append(productSupplierRow);
       // Fill inputs
@@ -195,5 +182,25 @@ export default class ProductSuppliersManager {
         deleted: false,
       };
     });
+  }
+
+  collectDataForNewSupplier() {
+    const rowPrototype = new DOMParser().parseFromString(
+      this.$supplierReferencesBlock.data('prototype'),
+      'text/html',
+    );
+
+    const idPlaceholder = ProductMap.supplierIdPlaceholder;
+
+    return {
+      deleted: false,
+      productSupplierId:
+        rowPrototype.querySelector(ProductMap.suppliersProductSupplierIdInput(idPlaceholder)).value,
+      reference:
+        rowPrototype.querySelector(ProductMap.suppliersProductSupplierReferenceInput(idPlaceholder)).value,
+      price:
+        rowPrototype.querySelector(ProductMap.suppliersProductSupplierPriceInput(idPlaceholder)).value,
+      currencyId: rowPrototype.querySelector(ProductMap.suppliersProductSupplierCurrencyIdInput(idPlaceholder)).value,
+    };
   }
 }
