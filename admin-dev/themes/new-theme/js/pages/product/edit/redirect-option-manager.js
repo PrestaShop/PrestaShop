@@ -27,6 +27,15 @@ import EntitySearchInput from "@components/entity-search-input";
 
 const {$} = window;
 
+/**
+ * This component is used in product page to selected where the redirection points to when the
+ * product is out of stock. It is composed on two inputs:
+ * - a selection of the redirection type
+ * - a rich component to select a product or a category
+ *
+ * When the type is changed the component automatically updates the labels, remote search urls
+ * and values of the target.
+ */
 export default class RedirectOptionManager {
   constructor($redirectTypeInput, $redirectTargetInput) {
     this.$redirectTypeInput = $redirectTypeInput;
@@ -37,8 +46,12 @@ export default class RedirectOptionManager {
     this.watchRedirectType();
   }
 
+  /**
+   * Watch the selected redirection type and adapt the inputs accordingly.
+   */
   watchRedirectType() {
     this.lastSelectedType = this.$redirectTypeInput.val();
+
     this.$redirectTypeInput.change(() => {
       const redirectType = this.$redirectTypeInput.val();
       switch (redirectType) {
@@ -75,14 +88,5 @@ export default class RedirectOptionManager {
 
   buildAutoCompleteSearchInput() {
     this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput);
-  }
-
-  selectedValue(entity) {
-    let value = entity.id;
-    if (Object.prototype.hasOwnProperty.call(entity, 'id_product_attribute') && entity.id_product_attribute) {
-      value = `${value},${entity.id_product_attribute}`;
-    }
-
-    return value;
   }
 }
