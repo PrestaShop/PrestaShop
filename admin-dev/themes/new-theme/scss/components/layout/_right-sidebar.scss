@@ -1,0 +1,120 @@
+#right-sidebar {
+  position: fixed;
+  top: 136px;
+  right: -3em;
+  bottom: 0;
+  z-index: 1000;
+  display: block;
+  float: right;
+  padding: 0 3em 0 0;
+  overflow: auto;
+  background: #fff;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+}
+
+/* right sidebar is untested */
+.sidebar.sidebar-right.sidebar-xs-show {
+  right: 0;
+  transform: translate(0, 0);
+}
+
+
+@media (max-width: 992px) {
+  #right-sidebar {
+    top: 62px;
+    right: 0;
+    padding: 0;
+
+    .quicknav-header {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+
+      a {
+        font-size: 2rem;
+        color: #fff;
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  /* right sidebar is untested */
+  .sidebar.sidebar-right.sidebar-sm-show {
+    right: 0;
+    transform: translate(0, 0);
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar.sidebar-right.sidebar-md-show {
+    right: 0;
+    transform: translate(0, 0);
+  }
+}
+
+@media (min-width: 1170px) {
+  .sidebar.sidebar-right.sidebar-lg-show {
+    right: 0;
+    transform: translate(0, 0);
+  }
+}
+
+/* animation class - optional: without it the sidebar would just pop in and out */
+.sidebar-animate {
+  @include transition(transform 300ms ease);
+}
+
+.sidebar.sidebar-right {
+  transform: translate(100%, 0);
+}
+
+.sidebar.sidebar-right.sidebar-open {
+  transform: translate(0, 0);
+}
+
+#right-sidebar .quicknav-container {
+  height: 100%;
+}
+
+.sidebar.sidebar-right .quicknav-fixed-bottom {
+  position: fixed;
+  right: 3em;
+  bottom: 0;
+  left: 0;
+  height: 50px;
+  margin-bottom: 0;
+}
+
+.sidebar.sidebar-right .quicknav-fixed-bottom ul.pagination {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.sidebar.sidebar-right .quicknav-fixed-bottom input {
+  text-align: center;
+  outline-style: none;
+}
+
+.sidebar.sidebar-right .quicknav-header {
+  height: 50px;
+  padding: 1.2em;
+  color: #fff;
+  background: #363a41;
+}
+
+.sidebar.sidebar-right .quicknav-header h2{
+  margin-bottom: 0;
+  color: #fff;
+}
+
+.sidebar.sidebar-right .quicknav-scroller {
+  height: calc(100% - 50px - 50px);
+  overflow: auto;
+}
+
+.sidebar.sidebar-right .quicknav-scroller table {
+  margin-bottom: 0;
+}
+
