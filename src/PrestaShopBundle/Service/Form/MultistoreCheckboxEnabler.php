@@ -28,10 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Service\Form;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormInterface;
 
@@ -64,9 +64,9 @@ class MultistoreCheckboxEnabler
     private $configuration;
 
     /**
-     * @var MultistoreContextCheckerInterface
+     * @var Context
      */
-    private $context;
+    private $multiStoreContext;
 
     public const MULTISTORE_FIELD_PREFIX = 'multistore_';
 
@@ -75,16 +75,16 @@ class MultistoreCheckboxEnabler
      *
      * @param FeatureInterface $multistoreFeature
      * @param ShopConfigurationInterface $configuration
-     * @param MultistoreContextCheckerInterface $context
+     * @param Context $multiStoreContext
      */
     public function __construct(
         FeatureInterface $multistoreFeature,
         ShopConfigurationInterface $configuration,
-        MultistoreContextCheckerInterface $context
+        Context $multiStoreContext
     ) {
         $this->multistoreFeature = $multistoreFeature;
         $this->configuration = $configuration;
-        $this->context = $context;
+        $this->multiStoreContext = $multiStoreContext;
     }
 
     /**
@@ -92,7 +92,7 @@ class MultistoreCheckboxEnabler
      */
     public function shouldAddCheckboxes(): bool
     {
-        if (!$this->multistoreFeature->isUsed() || $this->context->isAllShopContext()) {
+        if (!$this->multistoreFeature->isUsed() || $this->multiStoreContext->isAllShopContext()) {
             return false;
         }
 
@@ -103,8 +103,6 @@ class MultistoreCheckboxEnabler
      * Adds multistore checkboxes to form fields if needed,
      *
      * @param FormInterface $form (passed by reference)
-     *
-     * @throws ShopException
      */
     public function addCheckboxes(FormInterface &$form): void
     {
@@ -116,14 +114,14 @@ class MultistoreCheckboxEnabler
 
             // Check if current configuration is overridden by current shop / group shop context
             $shopConstraint = new ShopConstraint(
-                $this->context->getContextShopId(),
-                $this->context->getContextShopGroup()->id,
+                $this->multiStoreContext->getContextShopId(),
+                $this->multiStoreContext->getContextShopGroup()->id,
                 true // important: will return a value only if it's present, skipping the hierarchical fallback system
             );
             $isOveriddenInCurrentContext = $this->configuration->has($options['attr']['multistore_configuration_key'], $shopConstraint);
 
             // update current field with disabled attribute
-            $options['attr']['disabled'] = !$this->context->isAllShopContext() && !$isOveriddenInCurrentContext;
+            $options['attr']['disabled'] = !$this->multiStoreContext->isAllShopContext() && !$isOveriddenInCurrentContext;
             $form->add(
                 $child->getName(),
                 get_class($child->getConfig()->getType()->getInnerType()),
