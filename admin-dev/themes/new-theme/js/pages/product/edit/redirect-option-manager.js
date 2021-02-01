@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import EntitySearchInput from "@components/entity-search-input";
+import EntitySearchInput from '@components/entity-search-input';
 
 const {$} = window;
 
@@ -54,6 +54,7 @@ export default class RedirectOptionManager {
 
     this.$redirectTypeInput.change(() => {
       const redirectType = this.$redirectTypeInput.val();
+
       switch (redirectType) {
         case '301-category':
         case '302-category':
@@ -78,6 +79,7 @@ export default class RedirectOptionManager {
           this.$redirectTargetRow.show();
           break;
         case '404':
+        default:
           this.entitySearchInput.setValue(null);
           this.$redirectTargetRow.hide();
           break;
