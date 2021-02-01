@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
 use CustomerSession;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteCustomersSessionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 
 /**
  * Handles command that deletes customers sessions in bulk action.
