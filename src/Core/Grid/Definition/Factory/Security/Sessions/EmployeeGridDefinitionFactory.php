@@ -128,14 +128,14 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('firstname'))
-                    ->setName($this->trans('Firstname', [], 'Admin.Global'))
+                    ->setName($this->trans('First name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'firstname',
                     ])
             )
             ->add(
                 (new DataColumn('lastname'))
-                    ->setName($this->trans('Lastname', [], 'Admin.Global'))
+                    ->setName($this->trans('Last name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'lastname',
                     ])
@@ -220,7 +220,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Firstname', [], 'Admin.Global'),
+                            'placeholder' => $this->trans('First name', [], 'Admin.Global'),
                         ],
                     ])
                     ->setAssociatedColumn('firstname')
@@ -230,7 +230,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Lastname', [], 'Admin.Global'),
+                            'placeholder' => $this->trans('Last name', [], 'Admin.Global'),
                         ],
                     ])
                     ->setAssociatedColumn('lastname')
