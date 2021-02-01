@@ -80,6 +80,22 @@ export default class AutoCompleteSearch {
     this.buildTypeahead();
   }
 
+  setValue(values) {
+    this.clearValue();
+    if (!values || values.length <= 0) {
+      return;
+    }
+
+    values.each((value) => {
+      this.appendSelectedItem(value);
+    });
+  }
+
+  clearValue() {
+    const formIdItem = $('li', this.$selectionContainer);
+    formIdItem.remove();
+  }
+
   buildTypeahead() {
     this.$searchInput.typeahead(this.config, this.dataSetConfig)
       .bind('typeahead:select', (e, selectedItem) => {
@@ -96,9 +112,7 @@ export default class AutoCompleteSearch {
   }
 
   replaceSelectedItem(selectedItem) {
-    const formIdItem = $('li', this.$selectionContainer);
-    formIdItem.remove();
-
+    this.clearValue();
     this.addSelectedContentToContainer(selectedItem);
 
     return true;
