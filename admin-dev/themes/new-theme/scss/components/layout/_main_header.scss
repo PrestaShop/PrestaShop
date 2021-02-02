@@ -38,7 +38,6 @@ $header-text-color: #4e6167 !default;
         @include media-breakpoint-down("sm") {
           /* stylelint-disable */
           min-width: 21rem;
-          height: 812px;
           /* stylelint-enable */
 
           .notifications {
@@ -826,6 +825,11 @@ $header-text-color: #4e6167 !default;
 
     .dropdown-menu {
       padding: 0.75rem 1.25rem;
+      overflow: inherit;
+
+      &::before {
+        content: none;
+      }
 
       .divider {
         width: 100%;
@@ -863,9 +867,23 @@ $header-text-color: #4e6167 !default;
       }
 
       a.dropdown-item {
-        padding: 0.75rem 0;
-        margin: 0;
+        width: calc(100% + 2.5rem);
+        padding: 0.75rem 1.25rem;
+        margin: 0 -1.25rem;
         color: $gray-dark;
+
+        &:active,
+        &:hover,
+        &:focus {
+          // stylelint-disable-next-line
+          background-color: #f4fcfd !important;
+
+          &,
+          i {
+            // stylelint-disable-next-line
+            color: $primary !important;
+          }
+        }
 
         i {
           color: $medium-gray;
