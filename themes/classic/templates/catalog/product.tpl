@@ -26,10 +26,6 @@
 
 {block name='head' append}
   <meta property="og:type" content="product">
-  <meta property="og:url" content="{$urls.current_url}">
-  <meta property="og:title" content="{$page.meta.title}">
-  <meta property="og:site_name" content="{$shop.name}">
-  <meta property="og:description" content="{$page.meta.description}">
   {if $product.cover}
     <meta property="og:image" content="{$product.cover.large.url}">
   {/if}
@@ -44,6 +40,10 @@
   <meta property="product:weight:value" content="{$product.weight}">
   <meta property="product:weight:units" content="{$product.weight_unit}">
   {/if}
+{/block}
+
+{block name='head_microdata_special'}
+  {include file='_partials/microdata/product-jsonld.tpl' listing=$listing}
 {/block}
 
 {block name='content'}
