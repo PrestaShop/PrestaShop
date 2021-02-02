@@ -81,11 +81,11 @@ final class GeneralDataProvider implements FormDataProviderInterface
         $backOfficeLifeTimeCookie = $data[GeneralType::FIELD_BACK_COOKIE_LIFETIME];
 
         if (!is_numeric($frontOfficeLifeTimeCookie) || $frontOfficeLifeTimeCookie < 0) {
-            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
         }
 
         if (!is_numeric($backOfficeLifeTimeCookie) || $backOfficeLifeTimeCookie < 0) {
-            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
         }
 
         if (!$errors->isEmpty()) {
