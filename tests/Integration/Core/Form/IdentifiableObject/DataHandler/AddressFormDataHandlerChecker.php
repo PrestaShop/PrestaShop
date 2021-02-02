@@ -60,7 +60,7 @@ class AddressFormDataHandlerChecker implements FormDataHandlerInterface
     }
 
     /**
-     * @return ?int
+     * @return int|null
      */
     public function getLastCreatedId(): ?int
     {
