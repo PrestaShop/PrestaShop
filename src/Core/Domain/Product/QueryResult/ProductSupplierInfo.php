@@ -31,9 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 
 /**
- * Transfers supplier option data for product relation
+ * Transfers supplier information for product-supplier relation
  */
-class ProductSupplierOption
+class ProductSupplierInfo
 {
     /**
      * @var string
@@ -46,23 +46,23 @@ class ProductSupplierOption
     private $supplierId;
 
     /**
-     * @var ProductSupplierForEditing[]
+     * @var ProductSupplierForEditing
      */
-    private $productSuppliersForEditing;
+    private $productSupplierForEditing;
 
     /**
      * @param string $supplierName
      * @param int $supplierId
-     * @param ProductSupplierForEditing[] $productSuppliersForEditing
+     * @param ProductSupplierForEditing $productSupplierForEditing
      */
     public function __construct(
         string $supplierName,
         int $supplierId,
-        array $productSuppliersForEditing
+        ProductSupplierForEditing $productSupplierForEditing
     ) {
         $this->supplierName = $supplierName;
         $this->supplierId = $supplierId;
-        $this->productSuppliersForEditing = $productSuppliersForEditing;
+        $this->productSupplierForEditing = $productSupplierForEditing;
     }
 
     /**
@@ -82,10 +82,10 @@ class ProductSupplierOption
     }
 
     /**
-     * @return ProductSupplierForEditing[]
+     * @return ProductSupplierForEditing
      */
-    public function getProductSuppliersForEditing(): array
+    public function getProductSupplierForEditing(): ProductSupplierForEditing
     {
-        return $this->productSuppliersForEditing;
+        return $this->productSupplierForEditing;
     }
 }

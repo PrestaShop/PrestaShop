@@ -273,24 +273,21 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'default_supplier_id' => $defaultSupplierId,
         ];
 
-        //@todo: one layer of array is not needed anymore if product has no combinations. Handle it in separate pr
-        foreach ($productSupplierOptions->getOptionsBySupplier() as $index => $supplierOption) {
+        foreach ($productSupplierOptions->getSuppliersInfo() as $supplierOption) {
+            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
             $supplierId = $supplierOption->getSupplierId();
+
             $suppliersData['supplier_ids'][$supplierId] = $supplierId;
-            $suppliersData['supplier_references'][$supplierId]['is_default'] = $supplierId === $defaultSupplierId;
             $suppliersData['supplier_references'][$supplierId]['supplier_id'] = $supplierId;
             $suppliersData['supplier_references'][$supplierId]['supplier_name'] = $supplierOption->getSupplierName();
 
-            foreach ($supplierOption->getProductSuppliersForEditing() as $supplierForEditing) {
-                $suppliersData['supplier_references'][$supplierId]['product_supplier'] = [
-                    'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
-                    'product_name' => $supplierForEditing->getProductName(),
-                    'supplier_price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
-                    'supplier_reference' => $supplierForEditing->getReference(),
-                    'currency_id' => $supplierForEditing->getCurrencyId(),
-                    'combination_id' => $supplierForEditing->getCombinationId(),
-                ];
-            }
+            $suppliersData['supplier_references'][$supplierId]['product_supplier'] = [
+                'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                'supplier_price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                'supplier_reference' => $supplierForEditing->getReference(),
+                'currency_id' => $supplierForEditing->getCurrencyId(),
+                'combination_id' => $supplierForEditing->getCombinationId(),
+            ];
         }
 
         return $suppliersData;
