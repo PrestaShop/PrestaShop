@@ -38,6 +38,9 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class GeneralType extends TranslatorAwareType
 {
+    public const FIELD_FRONT_COOKIE_LIFETIME = 'front_cookie_lifetime';
+    public const FIELD_BACK_COOKIE_LIFETIME= 'back_cookie_lifetime';
+
     /**
      * {@inheritdoc}
      */
@@ -55,38 +58,10 @@ class GeneralType extends TranslatorAwareType
             ->add('front_cookie_lifetime', TextType::class, [
                 'label' => $this->trans('Lifetime of front office cookies', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', 'Admin.Advparameters.Help'),
-                'constraints' => [
-                    new Type(
-                        [
-                            'value' => 'numeric',
-                            'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
-                        ]
-                    ),
-                    new GreaterThanOrEqual(
-                        [
-                            'value' => 0,
-                            'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
-                        ]
-                    ),
-                ],
             ])
             ->add('back_cookie_lifetime', TextType::class, [
                 'label' => $this->trans('Lifetime of back office cookies', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.', 'Admin.Advparameters.Help'),
-                'constraints' => [
-                    new Type(
-                        [
-                            'value' => 'numeric',
-                            'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
-                        ]
-                    ),
-                    new GreaterThanOrEqual(
-                        [
-                            'value' => 0,
-                            'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
-                        ]
-                    ),
-                ],
             ])
             ->add('cookie_samesite', ChoiceType::class, [
                 'label' => $this->trans('Cookie SameSite', 'Admin.Advparameters.Feature'),

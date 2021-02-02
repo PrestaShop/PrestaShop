@@ -24,43 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+namespace PrestaShopBundle\Controller\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * This class is responsible of managing the data manipulated using forms
- * in "Configure > Advanced Parameters > Administration" page.
+ * Class FieldNotFoundException
+ *
+ * Thrown when field for error message is not found
  */
-final class FormDataProvider implements FormDataProviderInterface
+class FieldNotFoundException extends DomainException
 {
-    public const ERROR_NOT_NUMERIC_OR_LOWER_THEN_0 = 1;
-
-    /**
-     * @var DataConfigurationInterface
-     */
-    private $dataConfiguration;
-
-    public function __construct(
-        DataConfigurationInterface $dataConfiguration
-    ) {
-        $this->dataConfiguration = $dataConfiguration;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData()
-    {
-        return $this->dataConfiguration->getConfiguration();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        return $this->dataConfiguration->updateConfiguration($data);
-    }
 }

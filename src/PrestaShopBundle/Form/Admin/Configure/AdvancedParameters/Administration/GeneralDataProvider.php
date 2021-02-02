@@ -24,19 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderError;
+use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
+use PrestaShopBundle\Form\Exception\DataProviderException;
 
 /**
- * This class is responsible of managing the data manipulated using forms
+ * This class is responsible of managing the data manipulated using general form
  * in "Configure > Advanced Parameters > Administration" page.
  */
-final class FormDataProvider implements FormDataProviderInterface
+final class GeneralDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_NOT_NUMERIC_OR_LOWER_THEN_0 = 1;
-
     /**
      * @var DataConfigurationInterface
      */
@@ -61,6 +64,32 @@ final class FormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
+        $this->validate($data);
+
         return $this->dataConfiguration->updateConfiguration($data);
+    }
+
+    /**
+     * Perform validations on form data.
+     *
+     * @param array $data
+     */
+    private function validate(array $data): void
+    {
+        $errors = new DataProviderErrorCollection();
+        $frontOfficeLifeTimeCookie = $data[GeneralType::FIELD_FRONT_COOKIE_LIFETIME];
+        $backOfficeLifeTimeCookie = $data[GeneralType::FIELD_BACK_COOKIE_LIFETIME];
+
+        if (!is_numeric($frontOfficeLifeTimeCookie) || $frontOfficeLifeTimeCookie < 0) {
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
+        }
+
+        if (!is_numeric($backOfficeLifeTimeCookie) || $backOfficeLifeTimeCookie < 0) {
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
+        }
+
+        if (!$errors->isEmpty()) {
+            throw new DataProviderException('Administration general data is invalid', 0, null, $errors);
+        }
     }
 }

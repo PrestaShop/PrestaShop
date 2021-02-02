@@ -106,7 +106,7 @@ services:
             - '@prestashop.adapter.maintenance.configuration'
 
     prestashop.adapter.administration.general.form_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider'
         arguments:
             - '@prestashop.adapter.general.configuration'
 
