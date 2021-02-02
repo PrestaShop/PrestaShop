@@ -501,7 +501,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function getInvalidCharactersForReference(): Generator
     {
-        yield ['^'];
         yield ['='];
         yield ['{'];
         yield ['}'];
