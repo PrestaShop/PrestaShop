@@ -44,24 +44,30 @@ class ProductFeatureValue
     private $featureValueId;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $value;
+    private $localizedValues;
 
     /**
      * @var bool
      */
     private $custom;
 
+    /**
+     * @param int $featureId
+     * @param int $featureValueId
+     * @param array $localizedValues
+     * @param bool $custom
+     */
     public function __construct(
         int $featureId,
         int $featureValueId,
-        string $value,
+        array $localizedValues,
         bool $custom
     ) {
         $this->featureId = $featureId;
         $this->featureValueId = $featureValueId;
-        $this->value = $value;
+        $this->localizedValues = $localizedValues;
         $this->custom = $custom;
     }
 
@@ -82,11 +88,11 @@ class ProductFeatureValue
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getValue(): string
+    public function getLocalizedValues(): array
     {
-        return $this->value;
+        return $this->localizedValues;
     }
 
     /**
