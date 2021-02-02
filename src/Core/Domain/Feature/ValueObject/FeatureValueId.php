@@ -68,7 +68,7 @@ class FeatureValueId
     private function assertIsGreaterThanZero(int $featureValueId)
     {
         if (0 >= $featureValueId) {
-            throw new InvalidFeatureValueIdException(sprintf('Invalid feature id %s supplied. Feature id must be positive integer.', var_export($featureValueId, true)));
+            throw new InvalidFeatureValueIdException(sprintf('Invalid feature id %d supplied. Feature id must be positive integer.', $featureValueId));
         }
     }
 }
