@@ -33,7 +33,6 @@
     "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
     "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
     {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "{$product.upc}",{/if}
-    {if $product.isbn}"isbn": "{$product.isbn}",{/if}   
     {if $product_manufacturer->name OR $shop.name}"brand": {
       "@type": "Thing",
       "name": "{if $product_manufacturer->name}{$product_manufacturer->name|escape:'html':'UTF-8'}{else}{$shop.name}{/if}"
@@ -68,8 +67,7 @@
             {/if}
             "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
             "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
-            {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "{$product.upc}",{/if}
-            {if $product.isbn}"isbn": "{$product.isbn}",{/if} 
+            {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "0{$product.upc}",{/if}
             {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
             {if $product.show_condition > 0}
               {if $product.condition == 'used'}"itemCondition": "https://schema.org/UsedCondition",{/if}
@@ -97,8 +95,7 @@
                   "image": "{if $combination.id_image > 0}{$link->getImageLink($product->link_rewrite, $combination.id_image, 'home_default')|escape:'html':'UTF-8'}{else}{$product.cover.bySize.home_default.url}{/if}",
                   "sku": "{$combination.reference}",
                   "mpn": "{if $combination.mpn}{$combination.mpn}{else}{$combination.reference}{/if}",
-                  {if $combination.ean13}"gtin13": "{$combination.ean13}",{else if $combination.upc}"gtin13": "{$combination.upc}",{/if}
-                  {if $combination.isbn}"isbn": "{$combination.isbn}",{/if} 
+                  {if $combination.ean13}"gtin13": "{$combination.ean13}",{else if $combination.upc}"gtin13": "0{$combination.upc}",{/if}
                   {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
                   {if $product.show_condition > 0}
                     {if $product.condition == 'used'}"itemCondition": "https://schema.org/UsedCondition",{/if}
