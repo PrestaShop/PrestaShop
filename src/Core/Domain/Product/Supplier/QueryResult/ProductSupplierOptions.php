@@ -26,66 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult;
 
 /**
- * Transfers supplier information for product-supplier relation
+ * Transfers product suppliers data
  */
-class ProductSupplierInfo
+class ProductSupplierOptions
 {
-    /**
-     * @var string
-     */
-    private $supplierName;
-
     /**
      * @var int
      */
-    private $supplierId;
+    private $defaultSupplierId;
 
     /**
-     * @var ProductSupplierForEditing
+     * @var ProductSupplierInfo[]
      */
-    private $productSupplierForEditing;
+    private $suppliersInfo;
 
     /**
-     * @param string $supplierName
-     * @param int $supplierId
-     * @param ProductSupplierForEditing $productSupplierForEditing
+     * @param int $defaultSupplierId
+     * @param ProductSupplierInfo[] $optionsBySupplier
      */
     public function __construct(
-        string $supplierName,
-        int $supplierId,
-        ProductSupplierForEditing $productSupplierForEditing
+        int $defaultSupplierId,
+        array $optionsBySupplier
     ) {
-        $this->supplierName = $supplierName;
-        $this->supplierId = $supplierId;
-        $this->productSupplierForEditing = $productSupplierForEditing;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSupplierName(): string
-    {
-        return $this->supplierName;
+        $this->defaultSupplierId = $defaultSupplierId;
+        $this->suppliersInfo = $optionsBySupplier;
     }
 
     /**
      * @return int
      */
-    public function getSupplierId(): int
+    public function getDefaultSupplierId(): int
     {
-        return $this->supplierId;
+        return $this->defaultSupplierId;
     }
 
     /**
-     * @return ProductSupplierForEditing
+     * @return ProductSupplierInfo[]
      */
-    public function getProductSupplierForEditing(): ProductSupplierForEditing
+    public function getSuppliersInfo(): array
     {
-        return $this->productSupplierForEditing;
+        return $this->suppliersInfo;
     }
 }
