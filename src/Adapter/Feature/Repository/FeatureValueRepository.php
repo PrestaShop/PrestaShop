@@ -107,4 +107,19 @@ class FeatureValueRepository extends AbstractObjectModelRepository
 
         return $featureValue;
     }
+
+    /**
+     * @param FeatureValueId $featureValueId
+     *
+     * @throws FeatureValueNotFoundException
+     * @throws CoreException
+     */
+    public function assertExists(FeatureValueId $featureValueId): void
+    {
+        $this->assertObjectModelExists(
+            $featureValueId->getValue(),
+            FeatureValue::class,
+            FeatureValueNotFoundException::class
+        );
+    }
 }

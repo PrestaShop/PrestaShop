@@ -47,20 +47,20 @@ class ProductFeatureValue
     private $featureValueId;
 
     /**
-     * @var string|null
+     * @var string[]|null
      */
-    private $customValue;
+    private $localizedCustomValues;
 
     /**
      * @param int $featureId
      * @param int|null $featureValueId
-     * @param string|null $customValue
+     * @param array|null $localizedCustomValues
      */
-    public function __construct(int $featureId, ?int $featureValueId = null, ?string $customValue = null)
+    public function __construct(int $featureId, ?int $featureValueId = null, ?array $localizedCustomValues = null)
     {
         $this->featureId = new FeatureId($featureId);
         $this->featureValueId = null !== $featureValueId ? new FeatureValueId($featureValueId) : null;
-        $this->customValue = $customValue;
+        $this->localizedCustomValues = $localizedCustomValues;
     }
 
     /**
@@ -80,10 +80,18 @@ class ProductFeatureValue
     }
 
     /**
-     * @return string|null
+     * @param FeatureValueId $featureValueId
      */
-    public function getCustomValue(): ?string
+    public function setFeatureValueId(FeatureValueId $featureValueId): void
     {
-        return $this->customValue;
+        $this->featureValueId = $featureValueId;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedCustomValues(): ?array
+    {
+        return $this->localizedCustomValues;
     }
 }
