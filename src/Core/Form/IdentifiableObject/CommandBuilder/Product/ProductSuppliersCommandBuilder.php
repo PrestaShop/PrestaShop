@@ -39,13 +39,13 @@ final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInter
      */
     public function buildCommand(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['suppliers'])) {
+        if (!isset($formData['suppliers']['supplier_references']) && !isset($formData['suppliers']['default_supplier_id'])) {
             return [];
         }
 
         $suppliers = $formData['suppliers'];
 
-        if (isset($suppliers['supplier_references']) && empty($suppliers['supplier_references'])) {
+        if (empty($suppliers['supplier_references'])) {
             return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue())];
         }
 
