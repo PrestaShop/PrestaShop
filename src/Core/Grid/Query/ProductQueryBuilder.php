@@ -79,10 +79,10 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $contextLanguageId,
-        $contextShopId,
-        $contextShopGroupId,
-        $isStockSharingBetweenShopGroupEnabled,
+        int $contextLanguageId,
+        int $contextShopId,
+        int $contextShopGroupId,
+        bool $isStockSharingBetweenShopGroupEnabled,
         DoctrineFilterApplicatorInterface $filterApplicator,
         Configuration $configuration
     ) {
