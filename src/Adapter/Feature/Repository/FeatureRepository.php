@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
-use Feature;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
@@ -49,7 +48,7 @@ class FeatureRepository extends AbstractObjectModelRepository
     {
         $this->assertObjectModelExists(
             (int) $featureId->getValue(),
-            Feature::class,
+            'feature',
             FeatureNotFoundException::class
         );
     }

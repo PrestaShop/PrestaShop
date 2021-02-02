@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator;
@@ -36,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValue
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
@@ -49,10 +52,27 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     private $featureValueValidator;
 
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
      * @param FeatureValueValidator $featureValueValidator
      */
-    public function __construct(FeatureValueValidator $featureValueValidator)
-    {
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix,
+        FeatureValueValidator $featureValueValidator
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
         $this->featureValueValidator = $featureValueValidator;
     }
 
@@ -118,8 +138,89 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     {
         $this->assertObjectModelExists(
             $featureValueId->getValue(),
-            FeatureValue::class,
+            'feature_value',
             FeatureValueNotFoundException::class
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param array|null $filters
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getProductFeatureValues(ProductId $productId, ?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    {
+        $qb = $this->getFeatureValuesQueryBuilder($productId, $filters)
+            ->select('fv.*')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
+
+        $featureValues = $qb->execute()->fetchAll();
+        foreach ($featureValues as $index => $featureValue) {
+            $featureValues[$index]['localized_values'] = $this->getFeatureValueLocalizedValues((int) $featureValue['id_feature_value']);
+        }
+
+        return $featureValues;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param array|null $filters
+     *
+     * @return int
+     */
+    public function getProductFeatureValuesCount(ProductId $productId, ?array $filters = []): int
+    {
+        $qb = $this->getFeatureValuesQueryBuilder($productId, $filters)
+            ->select('COUNT(fv.id_feature_value) AS total_feature_values')
+        ;
+
+        return (int) $qb->execute()->fetch()['total_feature_values'];
+    }
+
+    /**
+     * @param int $featureValueId
+     *
+     * @return array
+     */
+    private function getFeatureValueLocalizedValues(int $featureValueId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->from($this->dbPrefix . 'feature_value_lang', 'fvl')
+            ->select('fvl.*')
+            ->where('fvl.id_feature_value= :featureValueId')
+            ->setParameter('featureValueId', $featureValueId)
+        ;
+
+        $values = $qb->execute()->fetchAll();
+        $localizedValues = [];
+        foreach ($values as $value) {
+            $localizedValues[(int) $value['id_lang']] = $value['value'];
+        }
+
+        return $localizedValues;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param array|null $filters
+     *
+     * @return QueryBuilder
+     */
+    private function getFeatureValuesQueryBuilder(ProductId $productId, ?array $filters): QueryBuilder
+    {
+        //@todo: filters are not handled.
+        $qb = $this->connection->createQueryBuilder();
+        $qb->from($this->dbPrefix . 'feature_value', 'fv')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
+            ->where('fp.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        return $qb;
     }
 }
