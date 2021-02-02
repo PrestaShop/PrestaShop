@@ -16,6 +16,10 @@
 .product-page {
   padding-bottom: 80px;
 
+  > #field-disabled {
+    width: 100%;
+  }
+
   .widget-radio-inline {
     margin-bottom: 10px;
 
