@@ -62,16 +62,36 @@ Feature: Update product details from Back Office (BO)
     When I set to product "darkMagicBook" the following feature values:
       | feature | feature_value | custom_values                 | custom_reference |
       | emotion | anger         |                               |                  |
+      | emotion | sadness       |                               |                  |
       | element |               | en-US:Darkness;fr-FR:Ténèbres | darkness         |
     Then product "darkMagicBook" should have following feature values:
       | feature | feature_value | custom_values                 |
       | emotion | anger         |                               |
+      | emotion | sadness       |                               |
       | element | darkness      | en-US:Darkness;fr-FR:Ténèbres |
     When I set to product "darkMagicBook" the following feature values:
       | feature | feature_value | custom_values              |
       | emotion | anger         |                            |
+      | emotion | sadness       |                            |
       | element | darkness      | en-US:Shadows;fr-FR:Ombres |
     Then product "darkMagicBook" should have following feature values:
       | feature | feature_value | custom_values              |
       | emotion | anger         |                            |
+      | emotion | sadness       |                            |
       | element | darkness      | en-US:Shadows;fr-FR:Ombres |
+
+  Scenario: I can remove all feature values from a Product
+    Given I add product "lightMagicBook" with following information:
+      | name[en-US] | Light Magic Book |
+      | is_virtual  | false           |
+    Then product "lightMagicBook" should have no feature values
+    When I set to product "lightMagicBook" the following feature values:
+      | feature | feature_value | custom_values             | custom_reference |
+      | emotion | joy           |                           |                  |
+      | element |               | en-US:Light;fr-FR:Lumière | light            |
+    Then product "lightMagicBook" should have following feature values:
+      | feature | feature_value | custom_values             |
+      | emotion | joy           |                           |
+      | element | light         | en-US:Light;fr-FR:Lumière |
+    When I remove all feature values from product "lightMagicBook"
+    Then product "lightMagicBook" should have no feature values
