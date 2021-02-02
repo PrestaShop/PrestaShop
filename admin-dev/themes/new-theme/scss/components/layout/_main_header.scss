@@ -388,18 +388,18 @@ $header-text-color: #4e6167 !default;
         }
 
         .dropdown-menu {
-          top: 100% !important;
           /* stylelint-disable */
+          top: 100% !important;
           left: 0 !important;
           width: 100%;
           height: auto !important;
-          /* stylelint-enable */
           overflow: hidden;
           border: none;
           border-top: 1px solid #eaebec;
           box-shadow: 0 8px 16px 0 rgba(#000, 0.1);
-          transform: inherit !important;
           @include border-radius(5px);
+          transform: inherit !important;
+          /* stylelint-enable */
         }
       }
     }
