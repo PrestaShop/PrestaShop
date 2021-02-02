@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\AddFeatureValueHand
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 
 /**
- * Handles adding of feature value using legacy logic.
+ * Handles adding of feature value using legacy model.
  */
 class AddFeatureValueHandler implements AddFeatureValueHandlerInterface
 {

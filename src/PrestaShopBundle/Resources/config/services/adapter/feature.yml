@@ -25,6 +25,13 @@ services:
       tags:
           - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand }
 
+  prestashop.adapter.feature.command_handler.edit_feature_value_handler:
+      class: PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureValueHandler
+      arguments:
+          - '@prestashop.adapter.feature.repository.feature_value_repository'
+      tags:
+          - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand }
+
   prestashop.adapter.feature.query_handler.get_feature_value_for_editing:
       class: PrestaShop\PrestaShop\Adapter\Feature\QueryHandler\GetFeatureValueForEditingHandler
       arguments:
@@ -35,5 +42,10 @@ services:
   prestashop.adapter.feature.repository.feature_repository:
       class: PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository
 
+  prestashop.adapter.feature.validate.feature_value_validator:
+      class: PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator
+
   prestashop.adapter.feature.repository.feature_value_repository:
       class: PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository
+      arguments:
+          - '@prestashop.adapter.feature.validate.feature_value_validator'
