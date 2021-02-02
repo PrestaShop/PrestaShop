@@ -30,7 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureValueException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
@@ -41,6 +43,19 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class FeatureValueRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var FeatureValueValidator
+     */
+    private $featureValueValidator;
+
+    /**
+     * @param FeatureValueValidator $featureValueValidator
+     */
+    public function __construct(FeatureValueValidator $featureValueValidator)
+    {
+        $this->featureValueValidator = $featureValueValidator;
+    }
+
     /**
      * @param FeatureValue $featureValue
      * @param int $errorCode
@@ -53,23 +68,39 @@ class FeatureValueRepository extends AbstractObjectModelRepository
      */
     public function add(FeatureValue $featureValue, int $errorCode = 0): FeatureValueId
     {
+        $this->featureValueValidator->validate($featureValue);
         $id = $this->addObjectModel($featureValue, CannotAddFeatureValueException::class, $errorCode);
 
         return new FeatureValueId($id);
     }
 
     /**
-     * @param FeatureValueId $specificPriceId
+     * @param FeatureValue $featureValue
+     *
+     * @throws CannotUpdateFeatureValueException
+     * @throws CoreException
+     */
+    public function update(FeatureValue $featureValue): void
+    {
+        $this->featureValueValidator->validate($featureValue);
+        $this->updateObjectModel(
+            $featureValue,
+            CannotUpdateFeatureValueException::class
+        );
+    }
+
+    /**
+     * @param FeatureValueId $featureValueId
      *
      * @return FeatureValue
      *
      * @throws FeatureValueNotFoundException
      */
-    public function get(FeatureValueId $specificPriceId): FeatureValue
+    public function get(FeatureValueId $featureValueId): FeatureValue
     {
         /** @var FeatureValue $featureValue */
         $featureValue = $this->getObjectModel(
-            $specificPriceId->getValue(),
+            $featureValueId->getValue(),
             FeatureValue::class,
             FeatureValueNotFoundException::class
         );
