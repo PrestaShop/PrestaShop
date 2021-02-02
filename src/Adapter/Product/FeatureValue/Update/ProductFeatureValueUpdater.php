@@ -149,18 +149,17 @@ class ProductFeatureValueUpdater
         );
 
         // Then create all new ones
-        $insertedValues = [];
         $productFeatureValueIds = [];
         foreach ($productFeatureValues as $productFeatureValue) {
-            $insertedValues[] = [
+            $insertedValues = [
                 'id_product' => $productId->getValue(),
                 'id_feature' => $productFeatureValue->getFeatureId()->getValue(),
                 'id_feature_value' => $productFeatureValue->getFeatureValueId()->getValue(),
             ];
+            $this->connection->insert($this->dbPrefix . 'feature_product', $insertedValues);
+
             $productFeatureValueIds[] = $productFeatureValue->getFeatureValueId();
         }
-
-        $this->connection->insert($this->dbPrefix . 'feature_product', $insertedValues);
 
         return $productFeatureValueIds;
     }
