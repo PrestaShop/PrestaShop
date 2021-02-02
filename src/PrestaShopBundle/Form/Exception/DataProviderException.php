@@ -24,46 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
+declare(strict_types=1);
 
-/** @todo move somewhere more relevant */
-class FormError
+namespace PrestaShopBundle\Form\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use Throwable;
+
+class DataProviderException extends DomainException
 {
     /**
-     * @var int
+     * @var DataProviderErrorCollection
      */
-    private $errorCode;
+    private $dataProviderErrors;
 
-    /**
-     * @var string
-     */
-    private $fieldName;
-
-    /**
-     * FormError constructor.
-     *
-     * @param int $errorCode
-     * @param string $fieldName
-     */
-    public function __construct(int $errorCode, string $fieldName)
+    public function __construct($message = "", $code = 0, Throwable $previous = null, ?DataProviderErrorCollection $dataProviderErrors = null)
     {
-        $this->errorCode = $errorCode;
-        $this->fieldName = $fieldName;
+        parent::__construct($message, $code, $previous);
+        $this->dataProviderErrors = $dataProviderErrors ? : new DataProviderErrorCollection();
     }
 
     /**
-     * @return int
+     * @return DataProviderErrorCollection
      */
-    public function getErrorCode(): int
+    public function getDataProviderErrors(): DataProviderErrorCollection
     {
-        return $this->errorCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFieldName(): string
-    {
-        return $this->fieldName;
+        return $this->dataProviderErrors;
     }
 }
