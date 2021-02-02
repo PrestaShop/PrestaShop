@@ -50,8 +50,8 @@ class SetProductFeatureValuesCommand
      * Set product feature values, expected format is:
      * $featureValues = [
      *      ['feature_id' => 2, 'feature_value_id' => 3], // Associate predefined feature value
-     *      ['feature_id' => 2, 'custom_value' => 'Custom'], // Create new custom value
-     *      ['feature_id' => 2, 'feature_value_id' => 5, 'custom_value' => 'Custom'], // Updates existing custom value
+     *      ['feature_id' => 2, 'custom_values' => [1 => 'Custom']], // Create new custom value
+     *      ['feature_id' => 2, 'feature_value_id' => 5, 'custom_values' => [1 => 'Custom']], // Updates existing custom value
      * ];
      *
      * @param int $productId
@@ -89,7 +89,7 @@ class SetProductFeatureValuesCommand
             $this->featureValues[] = new ProductFeatureValue(
                 $featureValue['feature_id'],
                 !empty($featureValue['feature_value_id']) ? (int) $featureValue['feature_value_id'] : null,
-                !empty($featureValue['custom_value']) ? $featureValue['custom_value'] : null,
+                !empty($featureValue['custom_values']) ? $featureValue['custom_values'] : null
             );
         }
     }
