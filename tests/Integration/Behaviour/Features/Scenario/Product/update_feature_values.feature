@@ -31,12 +31,18 @@ Feature: Update product details from Back Office (BO)
     When I create feature value "joy" for feature "emotion" with following properties:
       | value[en-US] | Joy  |
       | value[fr-FR] | Joie |
+    When I create feature value "love" for feature "emotion" with following properties:
+      | value[en-US] | Love  |
+      | value[fr-FR] | Amour |
     When I create feature value "anger" for feature "emotion" with following properties:
       | value[en-US] | Anger  |
       | value[fr-FR] | Colère |
     When I create feature value "sadness" for feature "emotion" with following properties:
       | value[en-US] | Sadness   |
       | value[fr-FR] | Tristesse |
+    When I create feature value "disgust" for feature "emotion" with following properties:
+      | value[en-US] | Disgust |
+      | value[fr-FR] | Dégout  |
 
     Scenario: I can associate predefined feature values to a product
       Given I add product "fireMagicBook" with following information:
@@ -69,6 +75,7 @@ Feature: Update product details from Back Office (BO)
       | emotion | anger         |                               |
       | emotion | sadness       |                               |
       | element | darkness      | en-US:Darkness;fr-FR:Ténèbres |
+    And feature value "darkness" should be associated to feature "element"
     When I set to product "darkMagicBook" the following feature values:
       | feature | feature_value | custom_values              |
       | emotion | anger         |                            |
@@ -79,6 +86,37 @@ Feature: Update product details from Back Office (BO)
       | emotion | anger         |                            |
       | emotion | sadness       |                            |
       | element | darkness      | en-US:Shadows;fr-FR:Ombres |
+
+  Scenario: I remove a custom feature from a value it is cleaned in the DB
+    Given I add product "beginnerMagicBook" with following information:
+      | name[en-US] | Beginner Magic Book |
+      | is_virtual  | false               |
+    Then product "beginnerMagicBook" should have no feature values
+    # Expectations?
+    When I set to product "beginnerMagicBook" the following feature values:
+      | feature | feature_value | custom_values            | custom_reference |
+      | emotion | joy           |                          |                  |
+      | emotion | love          |                          |                  |
+      | element |               | en-US:Candy;fr-FR:Bonbon | candy            |
+    Then product "beginnerMagicBook" should have following feature values:
+      | feature | feature_value | custom_values            |
+      | emotion | joy           |                          |
+      | emotion | love          |                          |
+      | element | candy         | en-US:Candy;fr-FR:Bonbon |
+    And feature value "candy" should be associated to feature "element"
+    When I set to product "beginnerMagicBook" the following feature values:
+      | feature | feature_value | custom_values        | custom_reference |
+      | emotion | anger         |                      |                  |
+      | emotion | disgust       |                      |                  |
+      | element |               | en-US:Poo;fr-FR:Caca | poo              |
+    # Reality!!
+    Then product "beginnerMagicBook" should have following feature values:
+      | feature | feature_value | custom_values        |
+      | emotion | anger         |                      |
+      | emotion | disgust       |                      |
+      | element | poo           | en-US:Poo;fr-FR:Caca |
+    And feature value "candy" should not exist
+    And feature value "poo" should be associated to feature "element"
 
   Scenario: I can remove all feature values from a Product
     Given I add product "lightMagicBook" with following information:
@@ -95,3 +133,4 @@ Feature: Update product details from Back Office (BO)
       | element | light         | en-US:Light;fr-FR:Lumière |
     When I remove all feature values from product "lightMagicBook"
     Then product "lightMagicBook" should have no feature values
+    And feature value "light" should not exist

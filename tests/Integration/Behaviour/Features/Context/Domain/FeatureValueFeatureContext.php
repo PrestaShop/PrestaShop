@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
@@ -180,5 +181,28 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
             FeatureValueConstraintException::class,
             FeatureValueConstraintException::INVALID_VALUE
         );
+    }
+
+    /**
+     * @Then feature value :featureValueReference should not exist
+     *
+     * @param string $featureValueReference
+     */
+    public function assertFeatureValueDoesNotExist(string $featureValueReference): void
+    {
+        $featureValueId = $this->getSharedStorage()->get($featureValueReference);
+        $caughtException = null;
+        try {
+            $this->getQueryBus()->handle(new GetFeatureValueForEditing($featureValueId));
+        } catch (FeatureValueNotFoundException $e) {
+            $caughtException = $e;
+        }
+
+        if (null === $caughtException) {
+            throw new RuntimeException(sprintf(
+                'Feature value %s was expected not to be found',
+                $featureValueReference
+            ));
+        }
     }
 }
