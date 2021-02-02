@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Get FeatureValue associated to a Product
+ */
 class GetProductFeatureValues
 {
     /**

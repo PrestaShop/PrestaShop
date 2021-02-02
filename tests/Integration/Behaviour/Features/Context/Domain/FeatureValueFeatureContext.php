@@ -174,11 +174,11 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get an error that feature value is invalid
      */
-    public function iShouldGetAnErrorThatFeatureValueIsInvalid()
+    public function iShouldGetAnErrorThatFeatureValueIsInvalid(): void
     {
         $this->assertLastErrorIs(
             FeatureValueConstraintException::class,
-            FeatureValueConstraintException::INVALID_NAME
+            FeatureValueConstraintException::INVALID_VALUE
         );
     }
 }

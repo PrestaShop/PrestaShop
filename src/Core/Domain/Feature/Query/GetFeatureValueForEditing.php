@@ -54,7 +54,7 @@ class GetFeatureValueForEditing
     /**
      * @return FeatureValueId
      */
-    public function getFeatureValueId()
+    public function getFeatureValueId(): FeatureValueId
     {
         return $this->featureValueId;
     }
