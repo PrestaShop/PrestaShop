@@ -32,7 +32,7 @@
     {if isset($product.cover)}"image" :"{$product.cover.bySize.home_default.url}",{/if}
     "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
     "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
-    {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "0{$product.upc}",{/if}
+    {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "{$product.upc}",{/if}
     {if $product.isbn}"isbn": "{$product.isbn}",{/if}   
     {if $product_manufacturer->name OR $shop.name}"brand": {
       "@type": "Thing",
@@ -68,7 +68,7 @@
             {/if}
             "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
             "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
-            {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "0{$product.upc}",{/if}
+            {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "{$product.upc}",{/if}
             {if $product.isbn}"isbn": "{$product.isbn}",{/if} 
             {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
             {if $product.show_condition > 0}
@@ -95,10 +95,16 @@
                   "url": "{$product.url}",
                   "priceValidUntil": "{($smarty.now + (int) (60*60*24*15))|date_format:"%Y-%m-%d"}",
                   "image": "{if $combination.id_image > 0}{$link->getImageLink($product->link_rewrite, $combination.id_image, 'home_default')|escape:'html':'UTF-8'}{else}{$product.cover.bySize.home_default.url}{/if}",
-                  "mpn": "{$combination.reference}",
                   "sku": "{$combination.reference}",
-                  "itemCondition": "https://schema.org/NewCondition",
-                  "availability": "{if $combination.quantity > 0}https://schema.org/InStock{else}https://schema.org/OutOfStock{/if}",
+                  "mpn": "{if $combination.mpn}{$combination.mpn}{else}{$combination.reference}{/if}",
+                  {if $combination.ean13}"gtin13": "{$combination.ean13}",{else if $combination.upc}"gtin13": "{$combination.upc}",{/if}
+                  {if $combination.isbn}"isbn": "{$combination.isbn}",{/if} 
+                  {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
+                  {if $product.show_condition > 0}
+                    {if $product.condition == 'used'}"itemCondition": "https://schema.org/UsedCondition",{/if}
+                    {if $product.condition == 'refurbished'}"itemCondition": "https://schema.org/RefurbishedCondition",{/if}
+                  {/if}
+                  "availability": "{if $combination.quantity > 0 || $product.allow_oosp > 0}https://schema.org/InStock{else}https://schema.org/OutOfStock{/if}",
                   "seller": {
                     "@type": "Organization",
                     "name": "{$shop.name}"}
