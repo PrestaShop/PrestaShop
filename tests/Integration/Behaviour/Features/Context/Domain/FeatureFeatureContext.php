@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class FeatureFeatureContext extends AbstractDomainFeatureContext
 {
@@ -50,7 +49,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $properties = $node->getRowsHash();
         $featureId = $this->createProductFeature($properties['name']);
 
-        SharedStorage::getStorage()->set($reference, (int) $featureId->getValue());
+        $this->getSharedStorage()->set($reference, (int) $featureId->getValue());
     }
 
     /**
@@ -58,7 +57,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
      */
     public function productFeatureNameShouldBe($reference, $name)
     {
-        $productFeatureId = SharedStorage::getStorage()->get($reference);
+        $productFeatureId = $this->getSharedStorage()->get($reference);
         $this->productFeatureWithIdNameShouldBe($productFeatureId, $name);
     }
 
@@ -75,7 +74,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
      */
     public function productFeatureWithReferenceExists(string $featureReference): void
     {
-        $productFeatureId = SharedStorage::getStorage()->get($featureReference);
+        $productFeatureId = $this->getSharedStorage()->get($featureReference);
         $this->getQueryBus()->handle(new GetFeatureForEditing($productFeatureId));
     }
 
@@ -106,7 +105,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
      */
     public function iUpdateProductFeatureWithReferenceNameTo(string $featureReference, string $featureName): void
     {
-        $productFeatureId = SharedStorage::getStorage()->get($featureReference);
+        $productFeatureId = $this->getSharedStorage()->get($featureReference);
         $this->iUpdateProductFeatureWithIdNameTo($productFeatureId, $featureName);
     }
 
@@ -131,7 +130,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
      */
     public function productFeatureWithReferenceNameShouldBe(string $featureReference, string $featureName): void
     {
-        $productFeatureId = SharedStorage::getStorage()->get($featureReference);
+        $productFeatureId = $this->getSharedStorage()->get($featureReference);
         $this->productFeatureWithIdNameShouldBe($productFeatureId, $featureName);
     }
 
