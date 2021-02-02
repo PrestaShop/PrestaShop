@@ -45,14 +45,14 @@ class ProductSupplierOptions
 
     /**
      * @param int $defaultSupplierId
-     * @param ProductSupplierInfo[] $optionsBySupplier
+     * @param ProductSupplierInfo[] $suppliersInfo
      */
     public function __construct(
         int $defaultSupplierId,
-        array $optionsBySupplier
+        array $suppliersInfo
     ) {
         $this->defaultSupplierId = $defaultSupplierId;
-        $this->suppliersInfo = $optionsBySupplier;
+        $this->suppliersInfo = $suppliersInfo;
     }
 
     /**
