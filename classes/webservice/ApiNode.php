@@ -115,7 +115,7 @@ class ApiNode
      * @param mixed $value
      * @return ApiNode Created child node
      */
-    public function addNode($name, $value)
+    public function addNode($name, $value = null)
     {
         $newNode = self::value($name, $value);
         $this->nodes[] = $newNode;
