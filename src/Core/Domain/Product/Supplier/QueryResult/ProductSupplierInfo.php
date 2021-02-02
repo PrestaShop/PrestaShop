@@ -26,48 +26,64 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult;
 
 /**
- * Transfers product suppliers data
+ * Transfers supplier information for product-supplier relation
  */
-class ProductSupplierOptions
+class ProductSupplierInfo
 {
+    /**
+     * @var string
+     */
+    private $supplierName;
+
     /**
      * @var int
      */
-    private $defaultSupplierId;
+    private $supplierId;
 
     /**
-     * @var ProductSupplierInfo[]
+     * @var ProductSupplierForEditing
      */
-    private $suppliersInfo;
+    private $productSupplierForEditing;
 
     /**
-     * @param int $defaultSupplierId
-     * @param ProductSupplierInfo[] $optionsBySupplier
+     * @param string $supplierName
+     * @param int $supplierId
+     * @param ProductSupplierForEditing $productSupplierForEditing
      */
     public function __construct(
-        int $defaultSupplierId,
-        array $optionsBySupplier
+        string $supplierName,
+        int $supplierId,
+        ProductSupplierForEditing $productSupplierForEditing
     ) {
-        $this->defaultSupplierId = $defaultSupplierId;
-        $this->suppliersInfo = $optionsBySupplier;
+        $this->supplierName = $supplierName;
+        $this->supplierId = $supplierId;
+        $this->productSupplierForEditing = $productSupplierForEditing;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSupplierName(): string
+    {
+        return $this->supplierName;
     }
 
     /**
      * @return int
      */
-    public function getDefaultSupplierId(): int
+    public function getSupplierId(): int
     {
-        return $this->defaultSupplierId;
+        return $this->supplierId;
     }
 
     /**
-     * @return ProductSupplierInfo[]
+     * @return ProductSupplierForEditing
      */
-    public function getSuppliersInfo(): array
+    public function getProductSupplierForEditing(): ProductSupplierForEditing
     {
-        return $this->suppliersInfo;
+        return $this->productSupplierForEditing;
     }
 }
