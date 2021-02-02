@@ -30,8 +30,8 @@
     "description": "{$page.meta.description|regex_replace:"/[\r\n]/" : " "}",
     "category": "{$product.category_name}",
     {if isset($product.cover)}"image" :"{$product.cover.bySize.home_default.url}",{/if}
-    "sku": {if $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
-    "mpn": {if $product.mpn}"{$product.mpn}"{elseif $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
+    "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
+    "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
     {if $product_manufacturer->name OR $shop.name}"brand": {
       "@type": "Thing",
       "name": "{if $product_manufacturer->name}{$product_manufacturer->name|escape:'html':'UTF-8'}{else}{$shop.name}{/if}"
@@ -64,14 +64,14 @@
                 {/foreach}
               ]{/strip},
             {/if}
-            "sku": {if $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
-            "mpn": {if $product.mpn}"{$product.mpn}"{elseif $product.reference}"{$product.reference}"{else}"{$product.id}"{/if},
+            "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
+            "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
             {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
             {if $product.show_condition > 0}
               {if $product.condition == 'used'}"itemCondition": "https://schema.org/UsedCondition",{/if}
               {if $product.condition == 'refurbished'}"itemCondition": "https://schema.org/RefurbishedCondition",{/if}
             {/if}
-            "availability":{if $product.quantity > 0 || $product.allow_oosp > 0} "https://schema.org/InStock"{else} "https://schema.org/OutOfStock"{/if},
+            "availability": "{if $product.quantity > 0 || $product.allow_oosp > 0}https://schema.org/InStock{else}https://schema.org/OutOfStock{/if}",
             "seller": {
               "@type": "Organization",
               "name": "{$shop.name}"
@@ -94,7 +94,7 @@
                   "mpn": "{$combination.reference}",
                   "sku": "{$combination.reference}",
                   "itemCondition": "https://schema.org/NewCondition",
-                  "availability":{if $combination.quantity > 0} "https://schema.org/InStock"{else}"https://schema.org/OutOfStock"{/if},
+                  "availability": "{if $combination.quantity > 0}https://schema.org/InStock{else}https://schema.org/OutOfStock{/if}",
                   "seller": {
                     "@type": "Organization",
                     "name": "{$shop.name}"}

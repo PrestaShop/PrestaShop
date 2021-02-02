@@ -32,7 +32,6 @@
     {$queryPage = '?page='|cat:$page_nb}
     {$page.canonical = $page.canonical|replace:$queryPage:''}
 
-
     {assign var="prev" value=false}
         {assign var="next" value=false}
     {if ($page_nb - 1) == 1}
@@ -44,10 +43,6 @@
         {assign var="next"  value=($page['canonical']|cat:'?page='|cat:($page_nb + 1))}
     {/if}
 
-        {if $prev}
-            <link rel="prev" href="{$prev}">
-        {/if}
-        {if $next}
-            <link rel="next" href="{$next}">
-        {/if}
+    {if $prev}<link rel="prev" href="{$prev}">{/if}
+    {if $next}<link rel="next" href="{$next}">{/if}
 {/if}

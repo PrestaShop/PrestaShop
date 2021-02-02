@@ -49,7 +49,7 @@
   }
 </script>
 
-{if $page.page_name =='index'}
+{if $page.page_name == 'index'}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
