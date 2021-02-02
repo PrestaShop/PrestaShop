@@ -31,11 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSupplierOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 
 /**
  * Handles @see GetProductSupplierOptions query
@@ -67,12 +67,16 @@ final class GetProductSupplierOptionsHandler extends AbstractProductHandler impl
     /**
      * @param GetProductSupplierOptions $query
      *
-     * @return ProductSupplierOptions
+     * @return ProductSupplierOptions|null
      */
-    public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
+    public function handle(GetProductSupplierOptions $query): ?ProductSupplierOptions
     {
         $product = $this->productRepository->get($query->getProductId());
         $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($query->getProductId());
+
+        if (empty($productSuppliersInfo)) {
+            return null;
+        }
         $supplierOptions = [];
 
         foreach ($productSuppliersInfo as $productSupplierInfo) {

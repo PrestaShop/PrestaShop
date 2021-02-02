@@ -32,9 +32,9 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -48,20 +48,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var int
-     */
-    private $defaultCurrencyId;
-
-    /**
      * @param CommandBusInterface $queryBus
-     * @param int $defaultCurrencyId
      */
     public function __construct(
-        CommandBusInterface $queryBus,
-        int $defaultCurrencyId
+        CommandBusInterface $queryBus
     ) {
         $this->queryBus = $queryBus;
-        $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
     /**
@@ -267,8 +259,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     {
         /** @var ProductSupplierOptions $productSupplierOptions */
         $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
-        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
 
+        if (null === $productSupplierOptions) {
+            return [];
+        }
+
+        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
         $suppliersData = [
             'default_supplier_id' => $defaultSupplierId,
         ];
