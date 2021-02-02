@@ -26,49 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
+namespace Tests\Unit\Core\Domain\FeatureValue\ValueObject;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 
-/**
- * Defines FeatureValue ID with it's constraints.
- */
-class FeatureValueId
+class FeatureValueIdTest extends TestCase
 {
-    /**
-     * @var int
-     */
-    private $featureValueId;
-
-    /**
-     * @param int $featureValueId
-     *
-     * @throws InvalidFeatureValueIdException
-     */
-    public function __construct(int $featureValueId)
+    public function testValidInput()
     {
-        $this->assertIsGreaterThanZero($featureValueId);
-
-        $this->featureValueId = $featureValueId;
+        $vo = new FeatureValueId(42);
+        $this->assertNotNull($vo);
     }
 
     /**
-     * @return int
+     * @dataProvider getInvalidInput
      */
-    public function getValue(): int
+    public function testInvalidInput(int $featureValueId)
     {
-        return $this->featureValueId;
+        $this->expectException(InvalidFeatureValueIdException::class);
+        new FeatureValueId($featureValueId);
     }
 
-    /**
-     * @param int $featureValueId
-     *
-     * @throws InvalidFeatureValueIdException
-     */
-    private function assertIsGreaterThanZero(int $featureValueId)
+    public function getInvalidInput()
     {
-        if (0 >= $featureValueId) {
-            throw new InvalidFeatureValueIdException(sprintf('Invalid feature id %s supplied. Feature id must be positive integer.', var_export($featureValueId, true)));
-        }
+        yield [
+            0,
+        ];
+
+        yield [
+            -1,
+        ];
     }
 }
