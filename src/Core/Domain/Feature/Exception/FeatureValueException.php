@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
+/**
+ * Base exception for FeatureValue domain
+ */
 class FeatureValueException extends FeatureException
 {
 }

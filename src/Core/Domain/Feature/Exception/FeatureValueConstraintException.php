@@ -33,7 +33,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
  */
 class FeatureValueConstraintException extends FeatureValueException
 {
+    /**
+     * Used when feature ID is invalid
+     */
     public const INVALID_FEATURE_ID = 10;
 
-    public const INVALID_NAME = 20;
+    /**
+     * Used when value is invalid
+     */
+    public const INVALID_VALUE = 20;
 }
