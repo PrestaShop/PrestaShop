@@ -50,7 +50,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $properties = $node->getRowsHash();
         $featureId = $this->createProductFeature($properties['name']);
 
-        SharedStorage::getStorage()->set($reference, $featureId->getValue());
+        SharedStorage::getStorage()->set($reference, (int) $featureId->getValue());
     }
 
     /**

@@ -172,7 +172,10 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
         order_message:
             paths:
                 - %paths.base%/Features/Scenario/OrderMessage
