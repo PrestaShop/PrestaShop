@@ -37,8 +37,6 @@ interface WebserviceOutputInterface
 
     public function getSchemaToDisplay();
 
-    public function renderField($field);
-
     public function renderNodeHeader($obj, $params, $more_attr = null);
 
     public function renderNodeFooter($obj, $params);

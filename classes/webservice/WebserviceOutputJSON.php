@@ -89,31 +89,6 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         return '';
     }
 
-    public function renderField($field)
-    {
-        $is_association = (isset($field['is_association']) && $field['is_association'] == true);
-
-        if (is_array($field['value'])) {
-            $tmp = [];
-            foreach ($this->languages as $id_lang) {
-                $tmp[] = ['id' => $id_lang, 'value' => $field['value'][$id_lang]];
-            }
-            if (count($tmp) == 1) {
-                $field['value'] = $tmp[0]['value'];
-            } else {
-                $field['value'] = $tmp;
-            }
-        }
-        // Case 1 : fields of the current entity (not an association)
-        if (!$is_association) {
-            $this->currentEntity[$field['sqlId']] = $field['value'];
-        } else { // Case 2 : fields of an associated entity to the current one
-            $this->currentAssociatedEntity[] = ['name' => $field['entities_name'], 'key' => $field['sqlId'], 'value' => $field['value']];
-        }
-
-        return '';
-    }
-
     public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
     {
         // api ?
