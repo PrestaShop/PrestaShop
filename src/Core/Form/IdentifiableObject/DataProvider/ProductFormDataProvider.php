@@ -245,7 +245,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     private function extractSuppliersData(ProductForEditing $productForEditing): array
     {
-        /** @var ProductSupplierOptions $productSupplierOptions */
+        /** @var ProductSupplierOptions|null $productSupplierOptions */
         $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
 
         if (null === $productSupplierOptions) {
