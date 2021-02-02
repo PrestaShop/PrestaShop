@@ -32,6 +32,8 @@
     {if isset($product.cover)}"image" :"{$product.cover.bySize.home_default.url}",{/if}
     "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
     "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
+    {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "0{$product.upc}",{/if}
+    {if $product.isbn}"isbn": "{$product.isbn}",{/if}   
     {if $product_manufacturer->name OR $shop.name}"brand": {
       "@type": "Thing",
       "name": "{if $product_manufacturer->name}{$product_manufacturer->name|escape:'html':'UTF-8'}{else}{$shop.name}{/if}"
@@ -66,6 +68,8 @@
             {/if}
             "sku": "{if $product.reference}{$product.reference}{else}{$product.id}{/if}",
             "mpn": "{if $product.mpn}{$product.mpn}{elseif $product.reference}{$product.reference}{else}{$product.id}{/if}",
+            {if $product.ean13}"gtin13": "{$product.ean13}",{else if $product.upc}"gtin13": "0{$product.upc}",{/if}
+            {if $product.isbn}"isbn": "{$product.isbn}",{/if} 
             {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
             {if $product.show_condition > 0}
               {if $product.condition == 'used'}"itemCondition": "https://schema.org/UsedCondition",{/if}
