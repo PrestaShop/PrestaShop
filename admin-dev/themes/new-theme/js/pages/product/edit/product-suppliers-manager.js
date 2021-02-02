@@ -1,5 +1,3 @@
-import ProductMap from '@pages/product/product-map';
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,6 +23,8 @@ import ProductMap from '@pages/product/product-map';
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ProductMap from '@pages/product/product-map';
+
 const {$} = window;
 
 export default class ProductSuppliersManager {
@@ -35,30 +35,30 @@ export default class ProductSuppliersManager {
     this.$productSuppliersTBody = this.$productSuppliersTable.find('tbody');
     this.$defaultSuppliersSelectionBlock = $(ProductMap.defaultSupplierSelectionBlock);
     this.suppliers = [];
-    this.newSupplierData = this.collectDataForNewSupplier();
+    this.defaultDataForSupplier = this.collectDefaultDataForSupplier();
 
     this.init();
   }
 
   init() {
-    this.collectCurrentSuppliers();
+    this.memorizeCurrentSuppliers();
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
 
     this.$productSuppliersTable.on('change', 'input', () => {
-      this.collectCurrentSuppliers();
+      this.memorizeCurrentSuppliers();
     });
 
     this.$supplierSelectionBlock.on('change', 'input', (e) => {
       const input = e.currentTarget;
 
       if (input.checked) {
-        this.add({
+        this.addSupplier({
           id: input.value,
           name: input.dataset.label,
         });
       } else {
-        this.remove(input.value);
+        this.removeSupplier(input.value);
       }
 
       this.renderSuppliers();
@@ -77,20 +77,20 @@ export default class ProductSuppliersManager {
     this.showTable();
   }
 
-  add(supplier) {
+  addSupplier(supplier) {
     if (typeof this.suppliers[supplier.id] === 'undefined') {
-      const newSupplier = Object.create(this.newSupplierData);
+      const newSupplier = Object.create(this.defaultDataForSupplier);
       newSupplier.supplierId = supplier.id;
       newSupplier.supplierName = supplier.name;
 
       this.suppliers[supplier.id] = newSupplier;
     } else {
-      this.suppliers[supplier.id].deleted = false;
+      this.suppliers[supplier.id].removed = false;
     }
   }
 
-  remove(supplierId) {
-    this.suppliers[supplierId].deleted = true;
+  removeSupplier(supplierId) {
+    this.suppliers[supplierId].removed = true;
   }
 
   renderSuppliers() {
@@ -98,7 +98,7 @@ export default class ProductSuppliersManager {
     const productSupplierRowPrototype = this.$supplierReferencesBlock.data('prototype');
 
     this.suppliers.forEach((supplier) => {
-      if (supplier.deleted) {
+      if (supplier.removed) {
         return;
       }
 
@@ -177,21 +177,25 @@ export default class ProductSuppliersManager {
     this.$productSuppliersTable.addClass('d-none');
   }
 
-  collectCurrentSuppliers() {
+  /**
+   * Memorize suppliers to be able to re-render them later.
+   * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
+   */
+  memorizeCurrentSuppliers() {
     this.getSelectedSuppliers().forEach((supplier) => {
       this.suppliers[supplier.id] = {
-        supplierId: $(ProductMap.suppliersSupplierIdInput(supplier.id)).val(),
+        supplierId: supplier.id,
         productSupplierId: $(ProductMap.suppliersProductSupplierIdInput(supplier.id)).val(),
         supplierName: $(ProductMap.suppliersSupplierNameInput(supplier.id)).val(),
         reference: $(ProductMap.suppliersProductSupplierReferenceInput(supplier.id)).val(),
         price: $(ProductMap.suppliersProductSupplierPriceInput(supplier.id)).val(),
         currencyId: $(ProductMap.suppliersProductSupplierCurrencyIdInput(supplier.id)).val(),
-        deleted: false,
+        removed: false,
       };
     });
   }
 
-  collectDataForNewSupplier() {
+  collectDefaultDataForSupplier() {
     const rowPrototype = new DOMParser().parseFromString(
       this.$supplierReferencesBlock.data('prototype'),
       'text/html',
@@ -200,7 +204,7 @@ export default class ProductSuppliersManager {
     const idPlaceholder = ProductMap.supplierIdPlaceholder;
 
     return {
-      deleted: false,
+      removed: false,
       productSupplierId:
         rowPrototype.querySelector(ProductMap.suppliersProductSupplierIdInput(idPlaceholder)).value,
       reference:
