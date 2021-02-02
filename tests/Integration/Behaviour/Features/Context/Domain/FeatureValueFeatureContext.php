@@ -31,6 +31,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
@@ -41,7 +44,7 @@ use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContex
 class FeatureValueFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I create feature value :featureValueReference for feature :featureReference value with following properties:
+     * @When I create feature value :featureValueReference for feature :featureReference with following properties:
      *
      * @param string $featureValueReference
      * @param string $featureReference
@@ -52,10 +55,37 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         $featureId = SharedStorage::getStorage()->get($featureReference);
         $data = $this->localizeByRows($table);
 
-        $command = new AddFeatureValueCommand($featureId, $data['name']);
-        /** @var FeatureValueId $featureValueId */
-        $featureValueId = $this->getCommandBus()->handle($command);
-        SharedStorage::getStorage()->set($featureValueReference, $featureValueId->getValue());
+        $this->cleanLastException();
+        $command = new AddFeatureValueCommand($featureId, $data['value']);
+        try {
+            /** @var FeatureValueId $featureValueId */
+            $featureValueId = $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage()->set($featureValueReference, $featureValueId->getValue());
+        } catch (FeatureValueException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit feature value :featureValueReference with following properties:
+     *
+     * @param string $featureValueReference
+     * @param TableNode $table
+     */
+    public function editFeatureValue(string $featureValueReference, TableNode $table): void
+    {
+        $featureValueId = SharedStorage::getStorage()->get($featureValueReference);
+        $data = $this->localizeByRows($table);
+
+        $command = new EditFeatureValueCommand($featureValueId);
+        $command->setLocalizedValues($data['value']);
+
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (FeatureValueException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -95,5 +125,61 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
                 );
             }
         }
+    }
+
+    /**
+     * @When I associate feature value :featureValueReference to feature :featureReference
+     *
+     * @param string $featureValueReference
+     * @param string $featureReference
+     */
+    public function associateFeatureValueToFeature(string $featureValueReference, string $featureReference): void
+    {
+        $featureValueId = SharedStorage::getStorage()->get($featureValueReference);
+        $featureId = SharedStorage::getStorage()->get($featureReference);
+
+        $command = new EditFeatureValueCommand($featureValueId);
+        $command->setFeatureId($featureId);
+
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (FeatureValueException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then feature value :featureValueReference should be associated to feature :featureReference
+     *
+     * @param string $featureValueReference
+     * @param string $featureReference
+     */
+    public function assertFeatureValueAssociation(string $featureValueReference, string $featureReference): void
+    {
+        $featureValueId = SharedStorage::getStorage()->get($featureValueReference);
+        $featureId = SharedStorage::getStorage()->get($featureReference);
+
+        /** @var EditableFeatureValue $editableFeatureValue */
+        $editableFeatureValue = $this->getQueryBus()->handle(new GetFeatureValueForEditing($featureValueId));
+        if ($editableFeatureValue->getFeatureId()->getValue() !== $featureId) {
+            throw new RuntimeException(sprintf(
+                'Incorrect feature associated to %s, expected %d but got %d',
+                $featureReference,
+                $featureId,
+                $editableFeatureValue->getFeatureId()
+            ));
+        }
+    }
+
+    /**
+     * @Then I should get an error that feature value is invalid
+     */
+    public function iShouldGetAnErrorThatFeatureValueIsInvalid()
+    {
+        $this->assertLastErrorIs(
+            FeatureValueConstraintException::class,
+            FeatureValueConstraintException::INVALID_NAME
+        );
     }
 }
