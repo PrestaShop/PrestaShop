@@ -2784,5 +2784,15 @@
       <title>Category footer</title>
       <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
+    <hook id="displayAdminGridTableBefore">
+      <name>displayAdminGridTableBefore</name>
+      <title>Display before Grid table</title>
+      <description>This hook adds new blocks before Grid component table</description>
+    </hook>
+    <hook id="displayAdminGridTableAfter">
+      <name>displayAdminGridTableAfter</name>
+      <title>Display after Grid table</title>
+      <description>This hook adds new blocks after Grid component table</description>
+    </hook>
   </entities>
 </entity_hook>
