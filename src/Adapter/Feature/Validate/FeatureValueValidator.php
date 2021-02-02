@@ -47,7 +47,7 @@ class FeatureValueValidator extends AbstractObjectModelValidator
     public function validate(FeatureValue $featureValue): void
     {
         $this->validateFeatureValueProperty($featureValue, 'id_feature', FeatureValueConstraintException::INVALID_FEATURE_ID);
-        $this->validateObjectModelLocalizedProperty($featureValue, 'value', FeatureValueConstraintException::class, FeatureValueConstraintException::INVALID_NAME);
+        $this->validateObjectModelLocalizedProperty($featureValue, 'value', FeatureValueConstraintException::class, FeatureValueConstraintException::INVALID_VALUE);
     }
 
     /**
