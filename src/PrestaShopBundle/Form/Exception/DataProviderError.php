@@ -76,7 +76,7 @@ class DataProviderError
     }
 
     /**
-     * @param int|null $languageId
+     * @return int|null
      */
     public function getLanguageId(): ?int
     {
