@@ -35,13 +35,11 @@ use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 
 /**
- * This class is responsible of managing the data manipulated using forms
+ * This class is responsible of managing the data manipulated using Upload Quota form
  * in "Configure > Advanced Parameters > Administration" page.
  */
 final class UploadQuotaDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_NOT_NUMERIC_OR_LOWER_THEN_0 = 1;
-
     /**
      * @var DataConfigurationInterface
      */
@@ -79,20 +77,20 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
     private function validate(array $data): void
     {
         $errors = new DataProviderErrorCollection();
-        $maxSizeAttachedFile = $data['max_size_attached_files'];
-        $maxSizeDownloadableProduct = $data['max_size_downloadable_product'];
-        $maxSizeProductImage = $data['max_size_product_image'];
+        $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
+        $maxSizeDownloadableProduct = $data[UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE];
+        $maxSizeProductImage = $data[UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE];
 
         if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0) {
-            $errors->add(new DataProviderError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
         }
 
         if (!is_numeric($maxSizeDownloadableProduct) || $maxSizeDownloadableProduct < 0) {
-            $errors->add(new DataProviderError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
         }
 
         if (!is_numeric($maxSizeProductImage) || $maxSizeProductImage < 0) {
-            $errors->add(new DataProviderError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
         }
 
         if (!$errors->isEmpty()) {
