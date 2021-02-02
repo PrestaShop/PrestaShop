@@ -324,44 +324,39 @@ class WebserviceOutputBuilderCore
         if (null === $this->wsResource) {
             throw new WebserviceException('You must set web service resource for get the resources list.', [82, 500]);
         }
-        $output = '';
-        $more_attr = ['shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME'))];
-        $output .= $this->objectRender->renderNodeHeader('api', [], $more_attr);
+        
+        $output = ApiNode::list("api")->setAttributes(['shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME'))]);
+        
         foreach ($this->wsResource as $resourceName => $resource) {
             if (in_array($resourceName, array_keys($key_permissions))) {
-                $more_attr = [
+                $resourceNode = $output->addParentNode($resourceName, [
                     'xlink:href' => self::$wsUrl . $resourceName,
                     'get' => (in_array('GET', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'put' => (in_array('PUT', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'post' => (in_array('POST', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'delete' => (in_array('DELETE', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'head' => (in_array('HEAD', $key_permissions[$resourceName]) ? 'true' : 'false'),
-                ];
-                $output .= $this->objectRender->renderNodeHeader($resourceName, [], $more_attr);
+                ]);
 
-                $output .= $this->objectRender->renderNodeHeader('description', [], $more_attr);
-                $output .= $resource['description'];
-                $output .= $this->objectRender->renderNodeFooter('description', []);
+                $resourceNode->addNode("description", $resource['description']);
 
                 if (!isset($resource['specific_management']) || !$resource['specific_management']) {
-                    $more_attr_schema = [
+                    //add blank schema
+                    $resourceNode->addNode("schema")->setAttributes([
                         'xlink:href' => self::$wsUrl . $resourceName . '?schema=blank',
                         'type' => 'blank',
-                    ];
-                    $output .= $this->objectRender->renderNodeHeader('schema', [], $more_attr_schema, false);
-                    $more_attr_schema = [
-                        'xlink:href' => $self::$wsUrl . $resourceName . '?schema=synopsis',
+                    ]);
+
+                    //add synopsis schema
+                    $resourceNode->addNode("schema")->setAttributes([
+                        'xlink:href' => self::$wsUrl . $resourceName . '?schema=synopsis',
                         'type' => 'synopsis',
-                    ];
-                    $output .= $this->objectRender->renderNodeHeader('schema', [], $more_attr_schema, false);
+                    ]);
                 }
-                $output .= $this->objectRender->renderNodeFooter($resourceName, []);
             }
         }
-        $output .= $this->objectRender->renderNodeFooter('api', []);
-        $output = $this->objectRender->overrideContent($output);
-
-        return $output;
+        
+        return $this->objectRender->renderNode($output);
     }
 
     public function registerOverrideWSParameters($wsrObject, $method)
