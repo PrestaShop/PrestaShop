@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Provider\CatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\FileTranslatedCatalogueProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
@@ -63,6 +64,18 @@ class FileTranslatedCatalogueProviderTest extends TestCase
         (new XliffFileDumper())->dump($catalogue, [
             'path' => self::$tempDir . DIRECTORY_SEPARATOR . CatalogueProviderInterface::DEFAULT_LOCALE,
         ]);
+    }
+
+    public function testItFailsWhenDirectoryNotExists()
+    {
+        $this->expectException(FileNotFoundException::class);
+        new FileTranslatedCatalogueProvider('someFakeDirectory', ['filter']);
+    }
+
+    public function testItFailsWhenFiltersAreNotStrings()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new FileTranslatedCatalogueProvider('/tmp', ['filter', 1]);
     }
 
     public function testGetCatalogueFilters()
