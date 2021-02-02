@@ -26,9 +26,8 @@
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
-{% set isOptionsTabValid = productForm.options.vars.valid %}
+{% set isOptionsTabValid = productForm.options.vars.valid  and productForm.suppliers.vars.valid %}
 {% set isStockTabValid = productForm.stock.vars.valid %}
-{% set isSuppliersTypeValid = productForm.suppliers.vars.valid %}
 
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">
@@ -64,7 +63,7 @@
       </a>
     </li>
 
-    <li id="options-tab-nav" class="nav-item{% if not isOptionsTabValid or not isSuppliersTypeValid%} has-error{% endif %}">
+    <li id="options-tab-nav" class="nav-item{% if not isOptionsTabValid %} has-error{% endif %}">
       <a href="#options-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Options'|trans({}, 'Admin.Global') }}
       </a>
