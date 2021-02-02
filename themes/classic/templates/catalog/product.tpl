@@ -43,7 +43,7 @@
 {/block}
 
 {block name='head_microdata_special'}
-  {include file='_partials/microdata/product-jsonld.tpl' listing=$listing}
+  {include file='_partials/microdata/product-jsonld.tpl'}
 {/block}
 
 {block name='content'}
