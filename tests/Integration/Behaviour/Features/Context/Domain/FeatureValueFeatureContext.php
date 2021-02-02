@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureValueForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 
 class FeatureValueFeatureContext extends AbstractDomainFeatureContext
@@ -52,7 +51,7 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
      */
     public function createFeatureValue(string $featureValueReference, string $featureReference, TableNode $table): void
     {
-        $featureId = SharedStorage::getStorage()->get($featureReference);
+        $featureId = $this->getSharedStorage()->get($featureReference);
         $data = $this->localizeByRows($table);
 
         $this->cleanLastException();
@@ -60,7 +59,7 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         try {
             /** @var FeatureValueId $featureValueId */
             $featureValueId = $this->getCommandBus()->handle($command);
-            SharedStorage::getStorage()->set($featureValueReference, $featureValueId->getValue());
+            $this->getSharedStorage()->set($featureValueReference, $featureValueId->getValue());
         } catch (FeatureValueException $e) {
             $this->setLastException($e);
         }
@@ -74,7 +73,7 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
      */
     public function editFeatureValue(string $featureValueReference, TableNode $table): void
     {
-        $featureValueId = SharedStorage::getStorage()->get($featureValueReference);
+        $featureValueId = $this->getSharedStorage()->get($featureValueReference);
         $data = $this->localizeByRows($table);
 
         $command = new EditFeatureValueCommand($featureValueId);
@@ -98,7 +97,7 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertFeatureValue(string $featureValueReference, array $expectedLocalizedValues): void
     {
-        $featureValueId = SharedStorage::getStorage()->get($featureValueReference);
+        $featureValueId = $this->getSharedStorage()->get($featureValueReference);
         /** @var EditableFeatureValue $editableFeatureValue */
         $editableFeatureValue = $this->getQueryBus()->handle(new GetFeatureValueForEditing($featureValueId));
         $actualValues = $editableFeatureValue->getLocalizedValues();
@@ -135,8 +134,8 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
      */
     public function associateFeatureValueToFeature(string $featureValueReference, string $featureReference): void
     {
-        $featureValueId = SharedStorage::getStorage()->get($featureValueReference);
-        $featureId = SharedStorage::getStorage()->get($featureReference);
+        $featureValueId = $this->getSharedStorage()->get($featureValueReference);
+        $featureId = $this->getSharedStorage()->get($featureReference);
 
         $command = new EditFeatureValueCommand($featureValueId);
         $command->setFeatureId($featureId);
@@ -157,8 +156,8 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertFeatureValueAssociation(string $featureValueReference, string $featureReference): void
     {
-        $featureValueId = SharedStorage::getStorage()->get($featureValueReference);
-        $featureId = SharedStorage::getStorage()->get($featureReference);
+        $featureValueId = $this->getSharedStorage()->get($featureValueReference);
+        $featureId = $this->getSharedStorage()->get($featureReference);
 
         /** @var EditableFeatureValue $editableFeatureValue */
         $editableFeatureValue = $this->getQueryBus()->handle(new GetFeatureValueForEditing($featureValueId));
