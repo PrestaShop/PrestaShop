@@ -41,7 +41,7 @@ class DataProviderException extends DomainException
     public function __construct($message = '', $code = 0, Throwable $previous = null, ?DataProviderErrorCollection $dataProviderErrors = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->dataProviderErrors = $dataProviderErrors ? : new DataProviderErrorCollection();
+        $this->dataProviderErrors = $dataProviderErrors ?: new DataProviderErrorCollection();
     }
 
     /**

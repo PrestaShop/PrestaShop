@@ -31,9 +31,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\Exception\ErrorMessageNotFoundException;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
 use PrestaShopBundle\Form\Exception\DataProviderError;
 use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
@@ -163,6 +161,7 @@ class AdministrationController extends FrameworkBundleAdminController
                 $formHandler->save($data);
             } catch (DataProviderException $e) {
                 $this->flashErrors($this->getErrorMessages($e->getDataProviderErrors()));
+
                 return $this->redirectToRoute('admin_administration');
             }
 
@@ -197,7 +196,7 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @var DataProviderErrorCollection $errors
+     * @var DataProviderErrorCollection
      */
     private function getErrorMessages(DataProviderErrorCollection $errors): array
     {
@@ -241,7 +240,7 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     private function getFieldLabel(string $fieldName): string
     {
-        /**
+        /*
          * Reusing same translated string as in UploadQuotaType, ideally I would take strings from there instead
          * Because if somebody changes name in UploadQuotaType it won't be changed here. Not sure how to do that,
          * building the whole form just to retrieve labels sound like an overhead.

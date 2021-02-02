@@ -33,13 +33,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\Type;
 
 class GeneralType extends TranslatorAwareType
 {
     public const FIELD_FRONT_COOKIE_LIFETIME = 'front_cookie_lifetime';
-    public const FIELD_BACK_COOKIE_LIFETIME= 'back_cookie_lifetime';
+    public const FIELD_BACK_COOKIE_LIFETIME = 'back_cookie_lifetime';
 
     /**
      * {@inheritdoc}
