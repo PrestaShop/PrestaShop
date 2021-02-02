@@ -110,7 +110,7 @@ class DomainTranslation
         }
 
         if ($withMetadata) {
-            $data['__metadata'] = [
+            $data[Translations::METADATA_KEY_NAME] = [
                 'count' => count($this->messageTranslations),
                 'missing_translations' => $this->getMissingTranslationsCount(),
             ];
@@ -188,11 +188,11 @@ class DomainTranslation
         ];
         if (empty($tree)) {
             $tree = [
-                '__metadata' => $emptyMeta,
+                Translations::METADATA_KEY_NAME => $emptyMeta,
             ];
         }
 
-        $parts = $this->splitDomain($this->domainName);
+        $parts = self::splitDomain($this->domainName);
 
         $content = $this->toArray();
 
@@ -209,8 +209,8 @@ class DomainTranslation
                 // only initialize tree leaves subtree with catalogue metadata
                 // branches are initialized with empty metadata (which will be updated later)
                 $isLastDomainPart = $partNumber === (count($parts) - 1);
-                $subtree[$subdomainPartName]['__metadata'] = ($isLastDomainPart && isset($content['__metadata']))
-                    ? $content['__metadata']
+                $subtree[$subdomainPartName][Translations::METADATA_KEY_NAME] = ($isLastDomainPart && isset($content[Translations::METADATA_KEY_NAME]))
+                    ? $content[Translations::METADATA_KEY_NAME]
                     : $emptyMeta;
             }
 
@@ -230,7 +230,7 @@ class DomainTranslation
      *
      * @return string[]
      */
-    private function splitDomain(string $domain): array
+    public static function splitDomain(string $domain): array
     {
         // the third component of the domain may have underscores, so we need to limit pieces to 3
         return explode('_', Inflector::tableize($domain), 3);

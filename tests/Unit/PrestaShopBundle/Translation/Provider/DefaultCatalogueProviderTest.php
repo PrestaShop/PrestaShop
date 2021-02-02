@@ -28,8 +28,8 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Provider\CatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
-use PrestaShopBundle\Translation\Provider\TranslationCatalogueProviderInterface;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -66,7 +66,7 @@ class DefaultCatalogueProviderTest extends TestCase
     {
         self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'DefaultCatalogueProviderTest']);
 
-        $catalogue = new MessageCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = new MessageCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
         foreach (self::$wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
         }
@@ -81,7 +81,7 @@ class DefaultCatalogueProviderTest extends TestCase
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         ))
-            ->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+            ->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -95,7 +95,7 @@ class DefaultCatalogueProviderTest extends TestCase
             self::$tempDir,
             ['#^ShopSomething([A-Z]|\.|$)#']
         );
-        $catalogue = $provider->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = $provider->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -112,7 +112,7 @@ class DefaultCatalogueProviderTest extends TestCase
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = $provider->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $messages = $catalogue->all();
         foreach (self::$wordings as $key => $value) {
@@ -120,14 +120,14 @@ class DefaultCatalogueProviderTest extends TestCase
         }
     }
 
-    public function testGetCatalogueEmpty()
+    public function testGetCatalogueWithAndWithoutEmpty()
     {
         $provider = new DefaultCatalogueProvider(
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE, false);
+        $catalogue = $provider->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE, false);
 
         $messages = $catalogue->all();
         foreach (self::$wordings as $key => $value) {

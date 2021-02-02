@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Translation\DTO;
 
 class Translations
 {
+    public const METADATA_KEY_NAME = '__metadata';
+
     /**
      * @var DomainTranslation[]
      */
@@ -52,6 +54,21 @@ class Translations
         }
 
         return $this;
+    }
+
+    /** Returns a single DomainTranslation DTO.
+     *
+     * @param string $domainName
+     *
+     * @return DomainTranslation|null
+     */
+    public function getDomainTranslation(string $domainName): ?DomainTranslation
+    {
+        if (array_key_exists($domainName, $this->domainTranslations)) {
+            return $this->domainTranslations[$domainName];
+        }
+
+        return null;
     }
 
     /**
@@ -83,7 +100,7 @@ class Translations
         }
 
         if ($withMetadata) {
-            $data['__metadata'] = [
+            $data[self::METADATA_KEY_NAME] = [
                 'count' => count($this->domainTranslations),
                 'missing_translations' => $this->getMissingTranslationsCount(),
             ];
@@ -103,7 +120,7 @@ class Translations
         ];
 
         $tree = [
-            '__metadata' => $emptyMeta,
+            self::METADATA_KEY_NAME => $emptyMeta,
         ];
         foreach ($this->domainTranslations as $domainTranslation) {
             $domainTranslation->getTree($tree);
@@ -126,7 +143,7 @@ class Translations
     private function updateCounters(array &$subtree): array
     {
         foreach ($subtree as $key => $values) {
-            if ($key === '__metadata') {
+            if ($key === self::METADATA_KEY_NAME) {
                 continue;
             }
 
@@ -134,13 +151,13 @@ class Translations
             list($count, $missing) = $this->updateCounters($subtree[$key]);
 
             // update this tree's counters by adding the child's
-            $subtree['__metadata']['count'] += $count;
-            $subtree['__metadata']['missing_translations'] += $missing;
+            $subtree[self::METADATA_KEY_NAME]['count'] += $count;
+            $subtree[self::METADATA_KEY_NAME]['missing_translations'] += $missing;
         }
 
         return [
-            $subtree['__metadata']['count'],
-            $subtree['__metadata']['missing_translations'],
+            $subtree[self::METADATA_KEY_NAME]['count'],
+            $subtree[self::METADATA_KEY_NAME]['missing_translations'],
         ];
     }
 }

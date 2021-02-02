@@ -32,8 +32,9 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Gets catalogue within the files filtered by name in the directory given.
+ * The Default catalogue is the base wording, in english, and stored in filesystem or extracted from templates.
  */
-class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
+class DefaultCatalogueProvider
 {
     /**
      * @var string
@@ -66,7 +67,12 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the translation catalogue for the provided locale
+     *
+     * @param string $locale
+     * @param bool $empty
+     *
+     * @return MessageCatalogue
      *
      * @throws FileNotFoundException
      */
@@ -89,7 +95,7 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
         // Otherwise, there is a problem in the locale given or in the default catalogue.
         // Example: If DEFAULT_LOCALE = english $translation = ['This is the text' => 'This is the text'],
         // In french it'll be ['This is the text' => 'Ceci est le texte']. Emptying this will make you loose the translation
-        if ($empty && $locale !== self::DEFAULT_LOCALE) {
+        if ($empty && $locale !== CatalogueProviderInterface::DEFAULT_LOCALE) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
         }
 

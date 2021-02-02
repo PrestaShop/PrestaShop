@@ -33,7 +33,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Test the provider of back translations
+ * Test the provider of backOffice translations
  */
 class BackofficeCatalogueProviderTest extends KernelTestCase
 {

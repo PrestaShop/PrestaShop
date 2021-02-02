@@ -87,15 +87,18 @@ class MessageTranslation
      */
     public function contains(array $search): bool
     {
-        $contains = true;
         foreach ($search as $s) {
             $s = strtolower($s);
-            $contains &= false !== strpos(strtolower($this->defaultTranslation), $s)
+            if (
+                false !== strpos(strtolower($this->defaultTranslation), $s)
                 || (null !== $this->fileTranslation && false !== strpos(strtolower($this->fileTranslation), $s))
-                || (null !== $this->userTranslation && false !== strpos(strtolower($this->userTranslation), $s));
+                || (null !== $this->userTranslation && false !== strpos(strtolower($this->userTranslation), $s))
+            ) {
+                return true;
+            }
         }
 
-        return (bool) $contains;
+        return false;
     }
 
     /**

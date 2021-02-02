@@ -48,7 +48,7 @@ class CatalogueProviderFactoryTest extends TestCase
         $this->factory = new CatalogueProviderFactory($databaseTranslationLoader, 'resourceDirectory');
     }
 
-    public function testGetProviderWrongType()
+    public function testGetProviderFailsWhenWrongTypeIsGiven()
     {
         $this->expectException(UnexpectedTranslationTypeException::class);
         $this->factory->getProvider('wrongType');
@@ -56,7 +56,13 @@ class CatalogueProviderFactoryTest extends TestCase
 
     public function testGetProvider()
     {
-        $provider = $this->factory->getProvider(TranslationCatalogueBuilder::TYPE_BACK);
-        $this->assertInstanceOf(BackofficeCatalogueProvider::class, $provider);
+        $providersByType = [
+            TranslationCatalogueBuilder::TYPE_BACK => BackofficeCatalogueProvider::class,
+        ];
+
+        foreach ($providersByType as $providerType => $providerClass) {
+            $provider = $this->factory->getProvider($providerType);
+            $this->assertInstanceOf($providerClass, $provider);
+        }
     }
 }

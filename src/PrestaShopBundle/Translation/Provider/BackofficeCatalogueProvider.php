@@ -33,6 +33,8 @@ use Symfony\Component\Translation\MessageCatalogue;
 class BackofficeCatalogueProvider implements CatalogueProviderInterface
 {
     /**
+     * We need a connection to DB to load user translated catalogue.
+     *
      * @var DatabaseTranslationLoader
      */
     private $databaseTranslationLoader;

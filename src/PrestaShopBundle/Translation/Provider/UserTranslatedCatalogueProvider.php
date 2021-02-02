@@ -33,7 +33,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * Gets catalogue translated by the user himself ans stored in the database.
  */
-class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
+class UserTranslatedCatalogueProvider
 {
     /**
      * @var DatabaseTranslationLoader
@@ -73,6 +73,8 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     }
 
     /**
+     * Returns the translation catalogue for the provided locale
+     *
      * @param string $locale
      *
      * @return MessageCatalogue

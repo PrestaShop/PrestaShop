@@ -28,8 +28,8 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Provider\CatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\FileTranslatedCatalogueProvider;
-use PrestaShopBundle\Translation\Provider\TranslationCatalogueProviderInterface;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -56,12 +56,12 @@ class FileTranslatedCatalogueProviderTest extends TestCase
                 'Bar' => 'Bar',
             ],
         ];
-        $catalogue = new MessageCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = new MessageCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
         foreach ($wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
         }
         (new XliffFileDumper())->dump($catalogue, [
-            'path' => self::$tempDir . DIRECTORY_SEPARATOR . TranslationCatalogueProviderInterface::DEFAULT_LOCALE,
+            'path' => self::$tempDir . DIRECTORY_SEPARATOR . CatalogueProviderInterface::DEFAULT_LOCALE,
         ]);
     }
 
@@ -71,7 +71,7 @@ class FileTranslatedCatalogueProviderTest extends TestCase
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         ))
-            ->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+            ->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -85,7 +85,7 @@ class FileTranslatedCatalogueProviderTest extends TestCase
             self::$tempDir,
             ['#^ShopSomething([A-Z]|\.|$)#']
         );
-        $catalogue = $provider->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = $provider->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -113,7 +113,7 @@ class FileTranslatedCatalogueProviderTest extends TestCase
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = $provider->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $messages = $catalogue->all();
         ksort($messages);

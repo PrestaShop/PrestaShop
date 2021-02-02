@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\DTO\DomainTranslation;
 use PrestaShopBundle\Translation\DTO\MessageTranslation;
 use PrestaShopBundle\Translation\DTO\Translations;
@@ -64,6 +65,13 @@ class TranslationCatalogueBuilder
     }
 
     /**
+     * Returns the catalogue as array. This catalogue will contain only the required domain.
+     * If search strings are provided, only messages which match them will be returned.
+     * Catalogue is the combination of the 3 layers of catalogue : default, file-translated and user-translated.
+     * User-translated will override file-translated, which will override default catalogue.
+     * Each domain will have counters (number of items and missing translations) as metadata.
+     * 'Normalization' will add extra data.
+     *
      * @param string $type
      * @param string $locale
      * @param string $domain
@@ -85,24 +93,38 @@ class TranslationCatalogueBuilder
     ): array {
         $this->validateParameters($type, $locale, $search, $theme, $module, $domain);
 
-        $provider = $this->catalogueProviderFactory->getProvider($type);
-
-        $defaultCatalogue = $provider->getDefaultCatalogue($locale)->all($domain);
-        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale)->all($domain);
-        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale)->all($domain);
-
-        return $this->normalizeCatalogue(
-            $defaultCatalogue,
-            $fileTranslatedCatalogue,
-            $userTranslatedCatalogue,
+        $domainTranslation = $this->getRawCatalogue(
+            $type,
             $locale,
-            $domain,
             $search,
-            $theme
-        );
+            $theme,
+            $module,
+            $domain
+        )->getDomainTranslation($domain);
+
+        if (null === $domainTranslation) {
+            $domainTranslation = new DomainTranslation($domain);
+        }
+
+        return [
+            'info' => [
+                'locale' => $locale,
+                'domain' => $domain,
+                'theme' => $theme,
+                'total_translations' => $domainTranslation->getTranslationsCount(),
+                'total_missing_translations' => $domainTranslation->getMissingTranslationsCount(),
+            ],
+            'data' => $domainTranslation->toArray(false),
+        ];
     }
 
     /**
+     * Returns the catalogue as array. This catalogue will contain all available domains.
+     * If search strings are provided, only messages which match them will be returned.
+     * Catalogue is the combination of the 3 layers of catalogue : default, file-translated and user-translated.
+     * User-translated will override file-translated, which will override default catalogue.
+     * Each domain will have counters (number of items and missing translations) as metadata.
+     *
      * @param string $type
      * @param string $locale
      * @param array $search
@@ -120,7 +142,7 @@ class TranslationCatalogueBuilder
         ?string $theme,
         ?string $module
     ): array {
-        return $this->getCatalogueObject(
+        return $this->getRawCatalogue(
             $type,
             $locale,
             $search,
@@ -130,29 +152,42 @@ class TranslationCatalogueBuilder
     }
 
     /**
+     * This method will return the catalogue as Translations DTO.
+     * A translationsDTO contains domainTranslationsDTO which contains MessageTranslationsDTO.
+     * Catalogue is the combination of the 3 layers of catalogue : default, file-translated and user-translated.
+     * User-translated will override file-translated, which will override default catalogue.
+     * Each domain will have counters (number of items and missing translations) as metadata.
+     *
      * @param string $type
      * @param string $locale
      * @param array $search
      * @param string|null $theme
      * @param string|null $module
+     * @param string|null $domain
      *
      * @return Translations
      *
-     * @throws Exception
+     * @throws UnexpectedTranslationTypeException
+     * @throws FileNotFoundException
      */
-    public function getCatalogueObject(
+    public function getRawCatalogue(
         string $type,
         string $locale,
         array $search,
         ?string $theme,
-        ?string $module
+        ?string $module,
+        ?string $domain = null
     ): Translations {
         $this->validateParameters($type, $locale, $search, $theme, $module);
 
         $provider = $this->catalogueProviderFactory->getProvider($type);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
-        $defaultCatalogueMessages = $defaultCatalogue->all();
+        if (null === $domain) {
+            $defaultCatalogueMessages = $defaultCatalogue->all();
+        } else {
+            $defaultCatalogueMessages = [$domain => $defaultCatalogue->all($domain)];
+        }
         if (empty($defaultCatalogueMessages)) {
             return new Translations();
         }
@@ -160,17 +195,16 @@ class TranslationCatalogueBuilder
         $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
 
         $translations = new Translations();
-
-        foreach ($defaultCatalogueMessages as $domain => $messages) {
-            $domainTranslation = new DomainTranslation($domain);
+        foreach ($defaultCatalogueMessages as $domainName => $messages) {
+            $domainTranslation = new DomainTranslation($domainName);
 
             foreach ($messages as $translationKey => $translationValue) {
                 $messageTranslation = new MessageTranslation($translationKey);
-                if ($fileTranslatedCatalogue->defines($translationKey, $domain)) {
-                    $messageTranslation->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domain));
+                if ($fileTranslatedCatalogue->defines($translationKey, $domainName)) {
+                    $messageTranslation->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
                 }
-                if ($userTranslatedCatalogue->defines($translationKey, $domain)) {
-                    $messageTranslation->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domain));
+                if ($userTranslatedCatalogue->defines($translationKey, $domainName)) {
+                    $messageTranslation->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
                 }
                 // if search is empty or is in catalog default|xliff|database
                 if (empty($search) || $messageTranslation->contains($search)) {
@@ -214,55 +248,5 @@ class TranslationCatalogueBuilder
         if (null !== $domain && empty($domain)) {
             throw new \InvalidArgumentException('The given \'domain\' is not valid.');
         }
-    }
-
-    /**
-     * @param array $defaultCatalogue
-     * @param array $fileTranslatedCatalogue
-     * @param array $userTranslatedCatalogue
-     * @param string $locale
-     * @param string $domain
-     * @param array $search
-     * @param string $theme
-     *
-     * @return array[]
-     */
-    private function normalizeCatalogue(
-        array $defaultCatalogue,
-        array $fileTranslatedCatalogue,
-        array $userTranslatedCatalogue,
-        string $locale,
-        string $domain,
-        array $search,
-        string $theme
-    ): array {
-        $domainTranslation = new DomainTranslation($domain);
-
-        foreach ($defaultCatalogue as $key => $message) {
-            $messageTranslation = new MessageTranslation($key);
-
-            if (array_key_exists($key, (array) $fileTranslatedCatalogue)) {
-                $messageTranslation->setFileTranslation($fileTranslatedCatalogue[$key]);
-            }
-            if (array_key_exists($key, (array) $userTranslatedCatalogue)) {
-                $messageTranslation->setUserTranslation($userTranslatedCatalogue[$key]);
-            }
-
-            // if search is empty or is in catalog default|xlf|database
-            if (empty($search) || $messageTranslation->contains($search)) {
-                $domainTranslation->addMessageTranslation($messageTranslation);
-            }
-        }
-
-        return [
-            'info' => [
-                'locale' => $locale,
-                'domain' => $domain,
-                'theme' => $theme,
-                'total_translations' => $domainTranslation->getTranslationsCount(),
-                'total_missing_translations' => $domainTranslation->getMissingTranslationsCount(),
-            ],
-            'data' => $domainTranslation->toArray(false),
-        ];
     }
 }
