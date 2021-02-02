@@ -28,6 +28,11 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Exception\ErrorMessageNotFoundException;
+use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
 use PrestaShopBundle\Form\Exception\DataProviderError;
@@ -213,7 +218,7 @@ class AdministrationController extends FrameworkBundleAdminController
     private function getErrorMessage(DataProviderError $error): string
     {
         switch ($error->getErrorCode()) {
-            case UploadQuotaDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0:
+            case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0:
                 return $this->trans(
                     '%s is invalid. Please enter an integer greater or equal to 0.',
                     'Admin.Notifications.Error',
@@ -221,7 +226,12 @@ class AdministrationController extends FrameworkBundleAdminController
                 );
         }
 
-        return '';
+        throw new ErrorMessageNotFoundException(
+            sprintf(
+                'Error message for code %s not found',
+                $error->getErrorCode()
+            )
+        );
     }
 
     /**
@@ -253,9 +263,23 @@ class AdministrationController extends FrameworkBundleAdminController
                     'Maximum size for a product\'s image',
                     'Admin.Advparameters.Feature'
                 );
+            case GeneralType::FIELD_FRONT_COOKIE_LIFETIME:
+                return $this->trans(
+                    'Lifetime of front office cookies',
+                    'Admin.Advparameters.Feature'
+                );
+            case GeneralType::FIELD_BACK_COOKIE_LIFETIME:
+                return $this->trans(
+                    'Lifetime of back office cookies',
+                    'Admin.Advparameters.Feature'
+                );
         }
 
-        /** @todo maybe throw an exception here? */
-        return '';
+        throw new FieldNotFoundException(
+            sprintf(
+                'Field name for field %s not found',
+                $fieldName
+            )
+        );
     }
 }
