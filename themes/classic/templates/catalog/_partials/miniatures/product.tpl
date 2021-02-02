@@ -24,7 +24,6 @@
  *}
 {block name='product_miniature_item'}
 <div>
-  {if isset($position)}<meta content="{$position}" />{/if}
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
@@ -77,11 +76,6 @@
                   {$product.price}
                 {/if}
               </span>
-
-              <div class="invisible">
-                <meta content="{$currency.iso_code}" />
-                <meta content="{$product.price_amount}" />
-              </div>
 
               {hook h='displayProductPriceBlock' product=$product type='unit_price'}
 
