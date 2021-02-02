@@ -32,6 +32,12 @@
   #catalog-actions {
     align-items: start;
 
+    @include media-breakpoint-down(sm) {
+      #product_catalog_category_tree_filter {
+        margin-bottom: 0.5rem;
+      }
+    }
+
     .row + .row {
       padding-top: $grid-gutter-width / 2;
     }
