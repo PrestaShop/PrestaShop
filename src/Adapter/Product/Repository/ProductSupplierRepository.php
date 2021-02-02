@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeletePro
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use ProductSupplier;
 
 /**
@@ -44,16 +46,32 @@ use ProductSupplier;
 class ProductSupplierRepository extends AbstractObjectModelRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
      * @var ProductSupplierValidator
      */
     private $productSupplierValidator;
 
     /**
+     * @param Connection $connection
+     * @param string $dbPrefix
      * @param ProductSupplierValidator $productSupplierValidator
      */
     public function __construct(
+        Connection $connection,
+        string $dbPrefix,
         ProductSupplierValidator $productSupplierValidator
     ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
         $this->productSupplierValidator = $productSupplierValidator;
     }
 
@@ -137,5 +155,33 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             'Failed to delete following product suppliers: %s',
             implode(', ', $failedIds)
         ));
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param bool $noCombination
+     *
+     * @return array
+     */
+    public function getProductSuppliersInfo(ProductId $productId, bool $noCombination = true): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('*')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->leftJoin(
+                'ps',
+                $this->dbPrefix . 'supplier',
+                's',
+                'ps.id_supplier = s.id_supplier'
+            )
+            ->where('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        if ($noCombination) {
+            $qb->andWhere('ps.id_product_attribute = 0');
+        }
+
+        return $qb->execute()->fetchAll();
     }
 }

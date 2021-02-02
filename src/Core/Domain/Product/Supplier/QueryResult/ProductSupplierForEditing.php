@@ -51,11 +51,6 @@ class ProductSupplierForEditing
     /**
      * @var string
      */
-    private $productName;
-
-    /**
-     * @var string
-     */
     private $reference;
 
     /**
@@ -77,7 +72,6 @@ class ProductSupplierForEditing
      * @param int $productSupplierId ProductSupplier entity record id
      * @param int $productId the associated product id
      * @param int $supplierId the associated supplier id
-     * @param string $productName depending if its combination it can be name of combination or name of product
      * @param string $reference the reference for this product supplier
      * @param string $priceTaxExcluded
      * @param int $currencyId
@@ -87,7 +81,6 @@ class ProductSupplierForEditing
         int $productSupplierId,
         int $productId,
         int $supplierId,
-        string $productName,
         string $reference,
         string $priceTaxExcluded,
         int $currencyId,
@@ -96,7 +89,6 @@ class ProductSupplierForEditing
         $this->productSupplierId = $productSupplierId;
         $this->productId = $productId;
         $this->supplierId = $supplierId;
-        $this->productName = $productName;
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
         $this->currencyId = $currencyId;
@@ -125,14 +117,6 @@ class ProductSupplierForEditing
     public function getSupplierId(): int
     {
         return $this->supplierId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProductName(): string
-    {
-        return $this->productName;
     }
 
     /**
