@@ -36,7 +36,7 @@ class CustomizationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('customizations', CollectionType::class, [
+            ->add('customization_fields', CollectionType::class, [
                 'entry_type' => CustomizationFieldType::class,
             ])
         ;

@@ -27,8 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -55,10 +57,21 @@ class CustomizationFieldType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('type', ChoiceType::class)
-            ->add('required', SwitchType::class)
+            ->add('name', TranslateType::class, [
+                'label' => $this->trans('Label', 'Admin.Global'),
+                'type' => TextType::class,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+            ])
+            ->add('type', ChoiceType::class, [
+                'choices' => $this->customizationFieldTypeChoiceProvider->getChoices(),
+            ])
+            ->add('required', SwitchType::class, [
+                'label' => $this->trans('Required', 'Admin.Global'),
+            ])
             ->add('remove', ButtonType::class, [
+                'label' => false,
                 'attr' => [
                     'type' => 'button',
                 ],
