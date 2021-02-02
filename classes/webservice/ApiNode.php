@@ -111,6 +111,16 @@ class ApiNode
     }
 
     /**
+     * @param ApiNode $node
+     * @return ApiNode self
+     */
+    public function addApiNode($node)
+    {
+        $this->nodes[] = $node;
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @param mixed $value
      * @return ApiNode Created child node
