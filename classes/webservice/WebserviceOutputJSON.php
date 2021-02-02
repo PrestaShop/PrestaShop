@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -192,6 +193,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
 
     public function renderAssociationFooter($obj, $params, $assoc_name)
     {
+        
     }
 
     public function renderErrorsHeader()
@@ -212,5 +214,62 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     public function renderi18nField($field)
     {
         return '';
+    }
+
+    /**
+     * Main function used to render node in desired format
+     * 
+     * 
+     * @param ApiNode $apiNode
+     * @param int $type_of_view Use constants WebserviceOutputBuilderCore::VIEW_DETAILS / WebserviceOutputBuilderCore::VIEW_LIST
+     * @return string json-encoded string
+     */
+    public function renderNode($apiNode)
+    {
+        if ($apiNode->getType() == ApiNode::TYPE_LIST) {
+            $jsonArray = [$apiNode->getName() => $this->toJsonArray($apiNode)];
+        } else {
+            $jsonArray = $this->toJsonArray($apiNode);
+        }
+
+        return json_encode($jsonArray, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Transform tree structure of desired node to array, suitable for JSON output.
+     * JSON output completely ignores attributes - those are used just in XML output.
+     * 
+     * @param ApiNode $apiNode
+     * @return array|string Node type ApiNode::TYPE_NODE returns just value as string. 
+     * Node type ApiNode::TYPE_PARENT returns recursive array of underlying nodes in the form of [Name => [... subnodes ...]]
+     * Node type ApiNode::TYPE_LIST returns recursive array of underlying nodes in the form of [[... subnodes ...]]
+     */
+    private function toJsonArray($apiNode)
+    {
+        switch ($apiNode->getType()) {
+            case ApiNode::TYPE_VALUE:
+                return $apiNode->getValue();
+            case ApiNode::TYPE_LANGUAGE:
+                $out = [];
+                foreach ($apiNode->getNodes() as $node) {
+                    /* @var $node ApiNode */
+                    $langId = $node->getAttributes()["id"];
+                    $value = $node->getValue();
+                    $out[] = ["id" => $langId, "value" => $value];
+                }
+                return $out;
+            case ApiNode::TYPE_LIST:
+                $out = [];
+                foreach ($apiNode->getNodes() as $node) {
+                    $out[] = $this->toJsonArray($node);
+                }
+                return $out;
+            case ApiNode::TYPE_PARENT:
+                $out = [];
+                foreach ($apiNode->getNodes() as $node) {
+                    $out[$node->getName()] = $this->toJsonArray($node);
+                }
+                return $out;
+        }
     }
 }
