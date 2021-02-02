@@ -28,9 +28,11 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormError;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
+use PrestaShopBundle\Form\Exception\DataProviderError;
+use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
+use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -152,13 +154,14 @@ class AdministrationController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $saveErrors = $formHandler->save($data);
-
-            if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($this->getErrorMessages($saveErrors));
+            try {
+                $formHandler->save($data);
+            } catch (DataProviderException $e) {
+                $this->flashErrors($this->getErrorMessages($e->getDataProviderErrors()));
+                return $this->redirectToRoute('admin_administration');
             }
+
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_administration');
@@ -189,9 +192,9 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @var FormError[] $errors
+     * @var DataProviderErrorCollection $errors
      */
-    private function getErrorMessages(array $errors): array
+    private function getErrorMessages(DataProviderErrorCollection $errors): array
     {
         $messages = [];
 
@@ -203,16 +206,16 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param FormError $error
+     * @param DataProviderError $error
      *
      * @return string
      */
-    private function getErrorMessage(FormError $error): string
+    private function getErrorMessage(DataProviderError $error): string
     {
         switch ($error->getErrorCode()) {
             case UploadQuotaDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0:
                 return $this->trans(
-                    '"%s is invalid. Please enter an integer greater or equal to 0."',
+                    '%s is invalid. Please enter an integer greater or equal to 0.',
                     'Admin.Notifications.Error',
                     [$this->getFieldLabel($error->getFieldName())]
                 );
@@ -228,7 +231,8 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     private function getFieldLabel(string $fieldName): string
     {
-        /** Reusing same translated string as in UploadQuotaType, ideally I would take strings from there instead
+        /**
+         * Reusing same translated string as in UploadQuotaType, ideally I would take strings from there instead
          * Because if somebody changes name in UploadQuotaType it won't be changed here. Not sure how to do that,
          * building the whole form just to retrieve labels sound like an overhead.
          * Maybe move labels to some other service and then retrieve them in both UploadQuotaType and here.

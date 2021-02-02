@@ -30,6 +30,9 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administratio
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderError;
+use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
+use PrestaShopBundle\Form\Exception\DataProviderException;
 
 /**
  * This class is responsible of managing the data manipulated using forms
@@ -63,9 +66,7 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
+        $this->validate($data);
 
         return $this->dataConfiguration->updateConfiguration($data);
     }
@@ -74,28 +75,28 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
      * Perform validations on form data.
      *
      * @param array $data
-     *
-     * @return array Array of errors if any
      */
-    private function validate(array $data)
+    private function validate(array $data): void
     {
-        $errors = [];
+        $errors = new DataProviderErrorCollection();
         $maxSizeAttachedFile = $data['max_size_attached_files'];
         $maxSizeDownloadableProduct = $data['max_size_downloadable_product'];
         $maxSizeProductImage = $data['max_size_product_image'];
 
         if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0) {
-            $errors[] = new FormError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES);
+            $errors->add(new DataProviderError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
         }
 
         if (!is_numeric($maxSizeDownloadableProduct) || $maxSizeDownloadableProduct < 0) {
-            $errors[] = new FormError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE);
+            $errors->add(new DataProviderError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
         }
 
         if (!is_numeric($maxSizeProductImage) || $maxSizeProductImage < 0) {
-            $errors[] = new FormError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE);
+            $errors->add(new DataProviderError(self::ERROR_NOT_NUMERIC_OR_LOWER_THEN_0, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
         }
 
-        return $errors;
+        if (!$errors->isEmpty()) {
+            throw new DataProviderException('Upload quota data is invalid', 0, null, $errors);
+        }
     }
 }
