@@ -1,7 +1,7 @@
 Contributing to PrestaShop
 --------------------------
 
-PrestaShop is an open source ecommerce solution. Everyone is welcome and even encouraged to contribute with their own improvements.
+PrestaShop is an Open Source ecommerce solution. Everyone is welcome and even encouraged to contribute with their own improvements.
 
 PrestaShop 1.7 is written mostly in PHP. Other languages used throughout are JavaScript, HTML, CSS, the Smarty & Twig templating languages, SQL, and XML.
 
@@ -21,7 +21,7 @@ Contributors should follow the following process:
 7. Create a pull request for your changes on the PrestaShop project. Be sure to follow [the contribution guidelines][2] in your pull request. If you need help to make a pull request, read the [Github help page about creating pull requests][3].
 8. Wait for one of the core developers either to include your change in the codebase, or to comment on possible improvements you should make to your code.
 
-That's it: you have contributed to this open source project! Congratulations!
+That's it: you have contributed to this Open Source project! Congratulations!
 
 You don't exactly know where to start? Pick one of our [good first issues][9] to get the list of all beginner-friendly improvements and bugs to fix. Read more about this label on [Build][10].
 
