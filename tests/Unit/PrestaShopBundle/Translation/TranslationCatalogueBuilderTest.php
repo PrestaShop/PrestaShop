@@ -119,6 +119,19 @@ class TranslationCatalogueBuilderTest extends TestCase
         );
     }
 
+    public function testGetDomainCatalogueFailsWhenDomainIsEmpty()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->translationCatalogueBuilder->getDomainCatalogue(
+            TranslationCatalogueBuilder::TYPE_BACK,
+            'en',
+            '',
+            [],
+            'theme',
+            'module'
+        );
+    }
+
     public function testGetDomainCatalogueFailsWhenTypeIsThemeButEmptyTheme()
     {
         $this->expectException(Exception::class);
@@ -143,6 +156,29 @@ class TranslationCatalogueBuilderTest extends TestCase
             'theme',
             ''
         );
+    }
+
+    public function testGetDomainCatalogueWithNonExistentDomain()
+    {
+        $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
+            TranslationCatalogueBuilder::TYPE_THEMES,
+            'en',
+            'SomeFakeDomain',
+            [],
+            'theme',
+            'module'
+        );
+
+        $this->assertSame([
+            'info' => [
+                'locale' => 'en',
+                'domain' => 'SomeFakeDomain',
+                'theme' => 'theme',
+                'total_translations' => 0,
+                'total_missing_translations' => 0,
+            ],
+            'data' => [],
+        ], $catalogue);
     }
 
     /**

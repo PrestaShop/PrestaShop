@@ -45,7 +45,7 @@ class BackofficeCatalogueProviderTest extends KernelTestCase
     public function setUp()
     {
         self::bootKernel();
-        $this->translationsDir = self::$kernel->getContainer()->getParameter('translations_dir');
+        $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
     }
 
     /**

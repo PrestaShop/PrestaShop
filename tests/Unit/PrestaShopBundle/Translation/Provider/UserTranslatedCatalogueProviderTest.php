@@ -65,6 +65,12 @@ class UserTranslatedCatalogueProviderTest extends TestCase
             ->willReturn($catalogue);
     }
 
+    public function testItFailsWhenTranslationDomainsAreNotStrings()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new UserTranslatedCatalogueProvider($this->databaseTranslationLoader, ['domain', 1]);
+    }
+
     public function testGetCatalogueFilters()
     {
         $catalogue = (new UserTranslatedCatalogueProvider(
