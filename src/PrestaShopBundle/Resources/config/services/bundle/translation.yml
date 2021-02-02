@@ -2,7 +2,6 @@ services:
     _defaults:
         public: true
 
-
     prestashop.translation.view.translation_tree:
         class: PrestaShopBundle\Translation\View\TranslationsTreeBuilder
         arguments:

@@ -64,7 +64,7 @@ class CatalogueProviderFactory
     public function getProvider(string $type): CatalogueProviderInterface
     {
         if (!in_array($type, TranslationCatalogueBuilder::ALLOWED_TYPES)) {
-            throw new UnexpectedTranslationTypeException('Unexpected type');
+            throw new UnexpectedTranslationTypeException(sprintf('Unexpected type %s', $type));
         }
 
         if (isset($this->providers[$type])) {

@@ -30,7 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\Translation\Provider\Catalogue;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopBundle\Translation\Provider\TranslationCatalogueProviderInterface;
+use PrestaShopBundle\Translation\Provider\CatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\UserTranslatedCatalogueProvider;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -54,7 +54,7 @@ class UserTranslatedCatalogueProviderTest extends TestCase
 
     public function setUp()
     {
-        $catalogue = new MessageCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = new MessageCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
         foreach (self::$wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
         }
@@ -71,7 +71,7 @@ class UserTranslatedCatalogueProviderTest extends TestCase
             $this->databaseTranslationLoader,
             ['#^Shop([A-Z]|\.|$)#']
         ))
-            ->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+            ->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -89,7 +89,7 @@ class UserTranslatedCatalogueProviderTest extends TestCase
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
+        $catalogue = $provider->getCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
 
         $messages = $catalogue->all();
         foreach (self::$wordings as $key => $value) {

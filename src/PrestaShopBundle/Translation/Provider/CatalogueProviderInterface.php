@@ -38,6 +38,8 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 interface CatalogueProviderInterface
 {
+    public const DEFAULT_LOCALE = 'en-US';
+
     /**
      * Gets the default catalogue : It the base wording, in english, and stored in filesystem or extracted from templates.
      * This 'locale' parameter won't determinate the content of the catalogue returned

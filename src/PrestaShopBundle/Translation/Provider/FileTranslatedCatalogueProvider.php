@@ -36,7 +36,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  * For example, if the main directory is 'myTranslationsDir',
  * if you call getCatalogue('fr_FR'), the translations files will be searched in 'myTranslationsDir/fr_FR'
  */
-class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
+class FileTranslatedCatalogueProvider
 {
     /**
      * @var string
@@ -69,7 +69,11 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the translation catalogue for the provided locale
+     *
+     * @param string $locale
+     *
+     * @return MessageCatalogue
      *
      * @throws FileNotFoundException
      */

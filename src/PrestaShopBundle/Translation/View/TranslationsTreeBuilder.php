@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\View;
 
 use Exception;
+use PrestaShopBundle\Translation\DTO\Translations;
 use PrestaShopBundle\Translation\TranslationCatalogueBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -96,7 +97,7 @@ class TranslationsTreeBuilder
         ?string $theme,
         ?string $module
     ): array {
-        $tree = $this->translationCatalogueBuilder->getCatalogueObject(
+        $tree = $this->translationCatalogueBuilder->getRawCatalogue(
             $type,
             $locale,
             $search,
@@ -131,7 +132,7 @@ class TranslationsTreeBuilder
         }
 
         foreach ($metadataSubtree as $name => $value) {
-            if ($name === '__metadata') {
+            if ($name === Translations::METADATA_KEY_NAME) {
                 $current['total_translations'] = $value['count'];
                 $current['total_missing_translations'] = $value['missing_translations'];
                 continue;
