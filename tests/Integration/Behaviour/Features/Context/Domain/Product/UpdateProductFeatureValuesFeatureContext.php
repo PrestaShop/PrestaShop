@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeatureValuesFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
@@ -76,6 +77,16 @@ class UpdateProductFeatureValuesFeatureContext extends AbstractProductFeatureCon
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I remove all feature values from product :productReference
+     *
+     * @param string $productReference
+     */
+    public function removeAllFeatureValuesFromProduct(string $productReference): void
+    {
+        $this->getCommandBus()->handle(new RemoveAllFeatureValuesFromProductCommand($this->getSharedStorage()->get($productReference)));
     }
 
     /**
