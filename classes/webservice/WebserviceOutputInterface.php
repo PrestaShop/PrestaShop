@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,23 +26,8 @@
  */
 interface WebserviceOutputInterface
 {
-    public function __construct($languages = []);
-
-    public function setWsUrl($url);
-
-    public function getWsUrl();
 
     public function getContentType();
 
-    public function setSchemaToDisplay($schema);
-
-    public function getSchemaToDisplay();
-
-    public function renderNodeHeader($obj, $params, $more_attr = null);
-
-    public function renderNodeFooter($obj, $params);
-
-    public function overrideContent($content);
-    
     public function renderNode($apiNode);
 }

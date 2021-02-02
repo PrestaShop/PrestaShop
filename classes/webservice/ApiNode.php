@@ -11,9 +11,8 @@ class ApiNode
     public const TYPE_LANGUAGE = "language";
     public const TYPE_PARENT = "parent";
     public const TYPE_LIST = "list";
-    
-    public static $languages;
 
+    public static $languages;
     private $type;
     private $name;
     private $value;
@@ -104,7 +103,7 @@ class ApiNode
         $this->nodes = $nodes;
         return $this;
     }
-    
+
     public function addAttribute($name, $value)
     {
         $this->attributes[$name] = $value;
@@ -169,7 +168,7 @@ class ApiNode
         $this->nodes[] = $newNode;
         return $newNode;
     }
-    
+
     public function addField($field)
     {
         $newNode = self::value($field['sqlId']);
@@ -231,7 +230,7 @@ class ApiNode
                 $newNode->setValue($field['value']);
             }
         }
-        
+
         $this->nodes[] = $newNode;
         return $newNode;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -37,7 +38,7 @@ class WebserviceOutputBuilderCore
 
     public static $wsUrl;
     public static $languages;
-    
+
     /** @var ApiNode */
     protected $output;
 
@@ -51,7 +52,6 @@ class WebserviceOutputBuilderCore
     protected $virtualFields = [];
     protected $statusInt;
     protected $wsParamOverrides;
-
     protected static $_cache_ws_parameters = [];
 
     /* Header properties */
@@ -98,7 +98,7 @@ class WebserviceOutputBuilderCore
         }
 
         $this->objectRender = $obj_render;
-        
+
         if ($this->objectRender->getContentType()) {
             $this->setHeaderParams('Content-Type', $this->objectRender->getContentType());
         }
@@ -324,9 +324,9 @@ class WebserviceOutputBuilderCore
         if (null === $this->wsResource) {
             throw new WebserviceException('You must set web service resource for get the resources list.', [82, 500]);
         }
-        
+
         $output = ApiNode::list("api")->setAttributes(['shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME'))]);
-        
+
         foreach ($this->wsResource as $resourceName => $resource) {
             if (in_array($resourceName, array_keys($key_permissions))) {
                 $resourceNode = $output->addParentNode($resourceName, [
@@ -355,7 +355,7 @@ class WebserviceOutputBuilderCore
                 }
             }
         }
-        
+
         return $this->objectRender->renderNode($output);
     }
 
@@ -397,7 +397,7 @@ class WebserviceOutputBuilderCore
             $object = $p['object'];
             $ws_params = $object->{$p['method']}($ws_params);
         }
-        
+
         $this->output = $type_of_view == self::VIEW_DETAILS ? ApiNode::parent($ws_params['objectsNodeName']) : ApiNode::list($ws_params['objectsNodeName']);
 
         if (null === $this->schemaToDisplay) {
@@ -413,7 +413,7 @@ class WebserviceOutputBuilderCore
         } else {
             $this->renderSchema($objects['empty'], $ws_params);
         }
-        
+
         return $this->objectRender->renderNode($this->output);
     }
 
@@ -426,10 +426,10 @@ class WebserviceOutputBuilderCore
     public function renderEntityMinimum($object)
     {
         $ws_params = $this->loadWsParams($object);
-        
+
         $more_attr['id'] = $object->id;
         $more_attr['xlink:href'] = self::$wsUrl . $ws_params['objectsNodeName'] . '/' . $object->id;
-        
+
         $this->output->addParentNode($ws_params['objectNodeName'], $more_attr);
     }
 
@@ -442,7 +442,7 @@ class WebserviceOutputBuilderCore
     protected function renderSchema($object, $ws_params)
     {
         $parentNode = $this->output->addParentNode($ws_params['objectNodeName'], $ws_params);
-        
+
         foreach ($ws_params['fields'] as $field_name => $field) {
             $this->renderField($object, $ws_params, $field_name, $field, 0);
         }
@@ -468,7 +468,7 @@ class WebserviceOutputBuilderCore
             $o = $p['object'];
             $ws_params = $o->{$p['method']}($ws_params);
         }
-        
+
         $entityNode = $parentNode->addParentNode($ws_params['objectNodeName']);
         if ($object->id != 0) {
             // This to add virtual Fields for a particular entity.
@@ -496,9 +496,7 @@ class WebserviceOutputBuilderCore
             }
         }
 
-        if (isset($ws_params['associations'])
-            && ($this->fieldsToDisplay == 'full'
-            || $subexists)) {
+        if (isset($ws_params['associations']) && ($this->fieldsToDisplay == 'full' || $subexists)) {
             $this->renderAssociations($entityNode, $object, $ws_params['associations'], $ws_params);
         }
     }
@@ -631,7 +629,7 @@ class WebserviceOutputBuilderCore
     {
         //1) add assocatiation node with attributes
         $associationNode = $parentNode->addListNode($assoc_name);
-        
+
         if ($this->schemaToDisplay == 'blank') {//if this is blank schema, adding parent node is sufficient
             return;
         }
@@ -651,7 +649,7 @@ class WebserviceOutputBuilderCore
                 $associationNode->addAttribute("api", $assoc_name);
             }
         }
-        
+
         //2) Add details underneath association node
 
         $parent_details = [
@@ -693,7 +691,7 @@ class WebserviceOutputBuilderCore
                 $more_attr['xlink:href'] = self::$wsUrl . $assoc_name . '/' . $object_assoc['id'];
             }
         }
-        
+
         $flatAssNode = $parentNode->addParentNode($resource_name, $more_attr);
 
         foreach ($fields_assoc as $field_name => $field) {
@@ -707,7 +705,7 @@ class WebserviceOutputBuilderCore
                 $field['sqlId'] = $field_name;
                 $field['value'] = $object_assoc[$field_name];
             }
-            $field['entities_name'] = $assoc_name ;
+            $field['entities_name'] = $assoc_name;
             $field['entity_name'] = $resource_name;
 
             if (null !== $this->schemaToDisplay) {
@@ -848,7 +846,7 @@ class WebserviceOutputBuilderCore
     {
         $this->fieldsToDisplay = $fields;
     }
-    
+
     private function loadWsParams($object)
     {
         $class = get_class($object);
