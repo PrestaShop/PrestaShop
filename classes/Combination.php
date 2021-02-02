@@ -282,7 +282,7 @@ class CombinationCore extends ObjectModel
     /**
      * Delete product combination from cart.
      *
-     * @return array Deletion result
+     * @return bool
      */
     public function deleteCartProductCombination()
     {
