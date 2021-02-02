@@ -43,15 +43,7 @@ interface WebserviceOutputInterface
 
     public function renderNodeFooter($obj, $params);
 
-    public function renderAssociationHeader($obj, $params, $assoc_name);
-
-    public function renderAssociationFooter($obj, $params, $assoc_name);
-
     public function overrideContent($content);
-
-    public function renderErrorsHeader();
-
-    public function renderErrorsFooter();
-
-    public function renderErrors($message, $code = null);
+    
+    public function renderNode($apiNode);
 }
