@@ -75,6 +75,11 @@ class WebserviceOutputBuilderCore
         self::$wsUrl = $ws_url;
     }
 
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
     /**
      * Set the render object for set the output format.
      * Set the Content-type for the http header.
