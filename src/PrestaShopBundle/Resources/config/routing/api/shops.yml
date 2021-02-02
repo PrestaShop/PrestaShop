@@ -1,0 +1,5 @@
+api_multistore_list_shops:
+    path: /{searchTerm}
+    methods: [GET]
+    defaults:
+        _controller: prestashop.core.api.shop.controller:listShopsAction

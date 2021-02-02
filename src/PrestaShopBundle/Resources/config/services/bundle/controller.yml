@@ -133,3 +133,16 @@ services:
 
     prestashop.core.api.improve.design.postions.controller:
         alias:  PrestaShopBundle\Controller\Api\Improve\Design\PositionsController
+
+    PrestaShopBundle\Controller\Api\ShopController:
+        class: PrestaShopBundle\Controller\Api\ShopController
+        parent: PrestaShopBundle\Controller\Api\ApiController
+        public: true
+        properties:
+            queryBus: "@prestashop.core.query_bus"
+            serializer: "@serializer"
+        tags:
+            - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
+
+    prestashop.core.api.shop.controller:
+        alias: PrestaShopBundle\Controller\Api\ShopController
