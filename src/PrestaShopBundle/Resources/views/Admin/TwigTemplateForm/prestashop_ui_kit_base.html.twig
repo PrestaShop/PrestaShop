@@ -153,6 +153,12 @@
   {%- endif %}
 {%- endblock datetime_widget %}
 
+{%- block url_widget -%}
+  {%- set type = type|default('url') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock url_widget -%}
+
 {% block date_widget -%}
   {% if widget == 'single_text' %}
     {{- block('form_widget_simple') -}}

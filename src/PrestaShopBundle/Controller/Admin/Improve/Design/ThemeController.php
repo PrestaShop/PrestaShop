@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
@@ -486,6 +487,11 @@ class ThemeController extends AbstractAdminController
      */
     private function handleImportThemeException(Exception $e)
     {
+        /**
+         * Will be the start for more specific error with the theme.
+         */
+        $couldntToUploadTheme = $this->trans('Couldn\'t upload the theme', 'Admin.Notifications.Error');
+
         return [
             ImportedThemeAlreadyExistsException::class => $this->trans(
                 'There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.',
@@ -494,6 +500,20 @@ class ThemeController extends AbstractAdminController
                     '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
                 ]
             ),
+            ThemeConstraintException::class => [
+                ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $couldntToUploadTheme . ': ' . $this->trans(
+                        'Themes can be changed only in single shop context', 'Admin.Notifications.Error'
+                    ),
+                ThemeConstraintException::MISSING_CONFIGURATION_FILE => $couldntToUploadTheme . ': ' . $this->trans(
+                        'Missing configuration file', 'Admin.Notifications.Error'
+                    ),
+                ThemeConstraintException::INVALID_CONFIGURATION => $couldntToUploadTheme . ': ' . $this->trans(
+                        'Invalid configuration', 'Admin.Notifications.Error'
+                    ),
+                ThemeConstraintException::INVALID_DATA => $couldntToUploadTheme . ': ' . $this->trans(
+                        'Invalid data', 'Admin.Notifications.Error'
+                    ),
+            ],
         ];
     }
 

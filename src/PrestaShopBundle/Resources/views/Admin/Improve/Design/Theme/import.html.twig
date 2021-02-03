@@ -24,7 +24,7 @@
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme importThemeForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
 {% set layoutHeaderToolbarBtn = {
@@ -43,88 +43,79 @@
 {% block content %}
   <div class="row">
     <div class="col">
-      {{ form_errors(importThemeForm) }}
       {{ form_start(importThemeForm) }}
-        <div class="row justify-content-center">
-          <div class="col-xl-10">
-            <div class="card">
-              <h3 class="card-header">
-                <i class="material-icons">file_copy</i>
-                {{ 'Import from your computer'|trans({}, 'Admin.Design.Feature') }}
-              </h3>
-              <div class="card-block row">
-                <div class="card-text">
-                  {{ ps.form_group_row(importThemeForm.import_from_computer, {}, {
-                    label: 'Zip file'|trans({}, 'Admin.Design.Feature'),
-                    help: 'Browse your computer files and select the Zip file for your new theme.'|trans({}, 'Admin.Design.Help')
-                  }) }}
-                </div>
-              </div>
-              <div class="card-footer">
-                <div class="d-flex justify-content-end">
-                  <button class="btn btn-primary">
-                    <i class="material-icons">cloud_upload</i>
-                    {{ 'Save'|trans({}, 'Admin.Actions') }}
-                  </button>
-                </div>
+      {{ form_errors(importThemeForm) }}
+      <div class="row justify-content-center">
+        <div class="col-xl-10">
+          <div class="card">
+            <h3 class="card-header">
+              <i class="material-icons">file_copy</i>
+              {{ 'Import from your computer'|trans({}, 'Admin.Design.Feature') }}
+            </h3>
+            <div class="card-block row">
+              <div class="card-text">
+                {{ form_row(importThemeForm.import_from_computer) }}
               </div>
             </div>
-          </div>
-
-          <div class="col-xl-10">
-            <div class="card">
-              <h3 class="card-header">
-                <i class="material-icons">file_copy</i>
-                {{ 'Import from the web'|trans({}, 'Admin.Design.Feature') }}
-              </h3>
-              <div class="card-block row">
-                <div class="card-text">
-                  {{ ps.form_group_row(importThemeForm.import_from_web, {}, {
-                    label: 'Archive URL'|trans({}, 'Admin.Design.Feature'),
-                    help: 'Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".'|trans({}, 'Admin.Design.Help')
-                  }) }}
-                </div>
-              </div>
-              <div class="card-footer">
-                <div class="d-flex justify-content-end">
-                  <button class="btn btn-primary">
-                    <i class="material-icons">cloud_upload</i>
-                    {{ 'Save'|trans({}, 'Admin.Actions') }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-10">
-            <div class="card">
-              <h3 class="card-header">
-                <i class="material-icons">file_copy</i>
-                {{ 'Import from FTP'|trans({}, 'Admin.Design.Feature') }}
-              </h3>
-              <div class="card-block row">
-                <div class="card-text">
-                  {{ ps.form_group_row(importThemeForm.import_from_ftp, {}, {
-                    label: 'Select the archive'|trans({}, 'Admin.Design.Feature'),
-                    help: 'This selector lists the Zip files that you uploaded in the \'/themes\' folder.'|trans({}, 'Admin.Design.Help')
-                  }) }}
-                </div>
-              </div>
-              <div class="card-footer">
-                <div class="d-flex justify-content-end">
-                  <button class="btn btn-primary">
-                    <i class="material-icons">cloud_upload</i>
-                    {{ 'Save'|trans({}, 'Admin.Actions') }}
-                  </button>
-                </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-primary">
+                  <i class="material-icons">cloud_upload</i>
+                  {{ 'Save'|trans({}, 'Admin.Actions') }}
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        {% block import_theme_form_rest %}
-          {{ form_rest(importThemeForm) }}
-        {% endblock %}
+        <div class="col-xl-10">
+          <div class="card">
+            <h3 class="card-header">
+              <i class="material-icons">file_copy</i>
+              {{ 'Import from the web'|trans({}, 'Admin.Design.Feature') }}
+            </h3>
+            <div class="card-block row">
+              <div class="card-text">
+                {{ form_row(importThemeForm.import_from_web) }}
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-primary">
+                  <i class="material-icons">cloud_upload</i>
+                  {{ 'Save'|trans({}, 'Admin.Actions') }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-10">
+          <div class="card">
+            <h3 class="card-header">
+              <i class="material-icons">file_copy</i>
+              {{ 'Import from FTP'|trans({}, 'Admin.Design.Feature') }}
+            </h3>
+            <div class="card-block row">
+              <div class="card-text">
+                {{ form_row(importThemeForm.import_from_ftp) }}
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-primary">
+                  <i class="material-icons">cloud_upload</i>
+                  {{ 'Save'|trans({}, 'Admin.Actions') }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% block import_theme_form_rest %}
+        {{ form_rest(importThemeForm) }}
+      {% endblock %}
 
       {{ form_end(importThemeForm) }}
     </div>
