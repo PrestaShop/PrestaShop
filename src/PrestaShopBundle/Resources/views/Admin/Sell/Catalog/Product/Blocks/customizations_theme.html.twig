@@ -1,7 +1,7 @@
 {%- block customizations_widget -%}
   <div class="col-md-12">
     <h2>{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-    <ul class="list-unstyled" id="customizationFieldsList">
+    <ul class="list-unstyled" id="customizationFieldsList" data-prototype="{{ form_row(form.customization_fields.vars.prototype)|e('html_attr') }}">
       {{ form_row(form.customization_fields) }}
     </ul>
     <button type="button" class="btn btn-outline-secondary" id="addCustomizationBtn">
@@ -12,11 +12,12 @@
 {%- endblock customizations_widget -%}
 
 {%- block customization_field_row -%}
-  <li class="form-group row">
+  <li class="form-group row customizationFieldItem">
+    {{ form_widget(form.id) }}
     <div class="col-md-5">{{ form_widget(form.name) }}</div>
     <div class="col-md-4">{{ form_widget(form.type) }}</div>
     <div class="col-md-1">
-      <button type="button" class="btn text-secondary">
+      <button type="button" class="btn text-secondary" id="removeCustomizationBtn">
         <i class="material-icons">delete</i>
       </button>
     </div>

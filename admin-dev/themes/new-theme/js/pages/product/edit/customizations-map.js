@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,25 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
-
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class CustomizationsType extends TranslatorAwareType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('customization_fields', CollectionType::class, [
-                'entry_type' => CustomizationFieldType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__CUSTOMIZATION_FIELD_INDEX__',
-            ])
-        ;
-    }
-}
+export default {
+  customizationsContainer: '#productCustomizations',
+  customizationFieldsList: '#customizationFieldsList',
+  addCustomizationBtn: '#addCustomizationBtn',
+  removeCustomizationBtn: '#removeCustomizationBtn',
+  indexPlaceholder: '__CUSTOMIZATION_FIELD_INDEX__',
+  customizationFieldItem: '.customizationFieldItem',
+};

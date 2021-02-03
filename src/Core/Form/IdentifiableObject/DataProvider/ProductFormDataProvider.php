@@ -288,6 +288,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $fields = [];
         foreach ($customizationFields as $customizationField) {
             $fields[] = [
+                'id' => $customizationField->getCustomizationFieldId(),
                 'name' => $customizationField->getLocalizedNames(),
                 'type' => $customizationField->getType(),
                 'required' => $customizationField->isRequired(),
