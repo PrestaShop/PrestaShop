@@ -127,7 +127,7 @@ class AddressControllerTest extends WebTestCase
     /**
      * Validates that test address exists in provided list
      *
-     * @param Address[]
+     * @param TestAddressDTO[]
      */
     private function validateTestAddressExists(array $addresses): void
     {
@@ -196,7 +196,7 @@ class AddressControllerTest extends WebTestCase
     /**
      * @param Crawler $crawler
      *
-     * @return Address[]
+     * @return TestAddressDTO[]
      */
     private function getAddressList(Crawler $crawler): array
     {
@@ -209,11 +209,11 @@ class AddressControllerTest extends WebTestCase
      * Default addresses are not fit for filtering very well because most of the information is identical. So I need
      * new address with unique values to test various filters
      *
-     * @return Address
+     * @return TestAddressDTO
      */
-    private function getTestAddress(): Address
+    private function getTestAddress(): TestAddressDTO
     {
-        return new Address(
+        return new TestAddressDTO(
                 $this->testAddressId,
                 'testfirstname',
                 'testlastname',
@@ -232,11 +232,11 @@ class AddressControllerTest extends WebTestCase
      * @param $tr
      * @param $i
      *
-     * @return Address
+     * @return TestAddressDTO
      */
-    private function getAddress(Crawler $tr, int $i): Address
+    private function getAddress(Crawler $tr, int $i): TestAddressDTO
     {
-        return new Address(
+        return new TestAddressDTO(
             (int) trim($tr->filter('.column-id_address')->text()),
             trim($tr->filter('.column-firstname')->text()),
             trim($tr->filter('.column-lastname')->text()),
