@@ -26,7 +26,6 @@
  */
 class SuperXMLElement extends \SimpleXMLElement
 {
-
     public function addChildCData(string $name, ?string $value = null): SuperXMLElement
     {
         $new = $this->addChild($name);
@@ -35,6 +34,7 @@ class SuperXMLElement extends \SimpleXMLElement
             $docOwner = $base->ownerDocument;
             $base->appendChild($docOwner->createCDATASection($value));
         }
+
         return $new;
     }
 }

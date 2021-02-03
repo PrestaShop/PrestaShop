@@ -26,7 +26,6 @@
  */
 interface WebserviceOutputInterface
 {
-
     public function getContentType();
 
     public function renderNode($apiNode);

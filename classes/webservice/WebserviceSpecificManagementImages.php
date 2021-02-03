@@ -27,7 +27,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 {
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
-    
+
     /** @var ApiNode */
     protected $output;
 
@@ -299,7 +299,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             case 'manufacturers':
             case 'suppliers':
             case 'stores':
-                
                 switch ($this->wsObject->urlSegment[1]) {
                     case 'categories':
                         $directory = _PS_CAT_IMG_DIR_;
@@ -337,6 +336,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     ];
                     $this->output->addNode($image_type_name)->setAttributes($more_attr);
                 }
+
                 return true;
             default:
                 $exception = new WebserviceException(sprintf('Image of type "%s" does not exist', $this->wsObject->urlSegment[1]), [48, 400]);
@@ -462,7 +462,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         }
 
         // Display list of languages
-        
+
         if ($this->wsObject->urlSegment[3] == '' && $this->wsObject->method == 'GET') {
             $this->output = ApiNode::list('languages');
             foreach ($lang_list as $lang) {
@@ -472,7 +472,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     'upload_allowed_mimetypes' => implode(', ', $this->acceptedImgMimeTypes),
                     'iso' => $lang['iso_code'],
                 ];
-                $this->output->addNode("language")->setAttributes($more_attr);
+                $this->output->addNode('language')->setAttributes($more_attr);
             }
 
             return true;
@@ -500,14 +500,14 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         $this->output = ApiNode::parent();
         $typesNode = $this->output->addListNode('image_types');
         foreach ($normal_image_sizes as $image_size) {
-            $typesNode->addParentNode("image_type", ['id' => $image_size['id_image_type'], 'name' => $image_size['name'], 'xlink:href' => $this->wsObject->wsUrl . 'image_types/' . $image_size['id_image_type']]);
+            $typesNode->addParentNode('image_type', ['id' => $image_size['id_image_type'], 'name' => $image_size['name'], 'xlink:href' => $this->wsObject->wsUrl . 'image_types/' . $image_size['id_image_type']]);
         }
-        
+
         $imagesNode = $this->output->addListNode('images');
 
         if ($this->imageType == 'products') {
             foreach (Image::getAllImages() as $image) {
-                $imagesNode->addNode("image")->setAttributes(['id' => $image['id_image'], 'id_product' => $image['id_product'], 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $image['id_product'] . '/' . $image['id_image']]);
+                $imagesNode->addNode('image')->setAttributes(['id' => $image['id_image'], 'id_product' => $image['id_product'], 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $image['id_product'] . '/' . $image['id_image']]);
             }
         } else {
             $nodes = scandir($directory, SCANDIR_SORT_NONE);
@@ -517,7 +517,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     if ($this->imageType != 'products') {
                         preg_match('/^(\d+)\.jpg*$/Ui', $node, $matches);
                         if (isset($matches[1])) {
-                            $imagesNode->addNode("image", $image)->setAttributes(['id' => $matches[1], 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id]);
+                            $imagesNode->addNode('image', $image)->setAttributes(['id' => $matches[1], 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id]);
                         }
                     }
                 }
@@ -577,9 +577,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             } elseif ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD') {
                 // display the list of declinated images
                 if ($available_image_ids) {
-                    $this->output = ApiNode::list("image")->addAttribute("id", $object_id);
+                    $this->output = ApiNode::list('image')->addAttribute('id', $object_id);
                     foreach ($available_image_ids as $available_image_id) {
-                        $this->output->addNode("declination")->setAttributes(['id' => $available_image_id, 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $object_id . '/' . $available_image_id]);
+                        $this->output->addNode('declination')->setAttributes(['id' => $available_image_id, 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $object_id . '/' . $available_image_id]);
                     }
                 } else {
                     $this->objOutput->setStatus(404);
@@ -689,7 +689,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             $this->output = ApiNode::list('carts');
             foreach ($ids as $id) {
                 $this->output->addNode('cart')
-                        ->setAttributes(['id' => $id, 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id]);
+                    ->setAttributes(['id' => $id, 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id]);
             }
 
             return true;
@@ -698,7 +698,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             $customizations = $this->getCustomizations();
             foreach ($customizations as $id) {
                 $this->output->addNode('customization')
-                        ->setAttributes(['id' => $id, 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id]);
+                    ->setAttributes(['id' => $id, 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id]);
             }
 
             return true;
@@ -1153,7 +1153,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $this->imgToDisplay = _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format;
                         $this->objOutput->setFieldsToDisplay('full');
                         $this->output = ApiNode::parent();
-                        
+
                         $this->objOutput->renderEntity($this->output, $image);
                         $image_content = ['sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64'];
                         $this->output->addField($image_content);

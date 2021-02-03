@@ -26,10 +26,10 @@
  */
 class ApiNode
 {
-    public const TYPE_VALUE = "value";
-    public const TYPE_LANGUAGE = "language";
-    public const TYPE_PARENT = "parent";
-    public const TYPE_LIST = "list";
+    public const TYPE_VALUE = 'value';
+    public const TYPE_LANGUAGE = 'language';
+    public const TYPE_PARENT = 'parent';
+    public const TYPE_LIST = 'list';
 
     public static $languages;
     private $type;
@@ -96,30 +96,35 @@ class ApiNode
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
+
         return $this;
     }
 
     public function setNodes($nodes)
     {
         $this->nodes = $nodes;
+
         return $this;
     }
 
@@ -130,61 +135,69 @@ class ApiNode
 
     /**
      * @param ApiNode $node
+     *
      * @return ApiNode self
      */
     public function addApiNode($node)
     {
         $this->nodes[] = $node;
+
         return $this;
     }
 
     /**
      * @param string $name
      * @param mixed $value
+     *
      * @return ApiNode Created child node
      */
     public function addNode($name, $value = null)
     {
         $newNode = self::value($name, $value);
         $this->nodes[] = $newNode;
+
         return $newNode;
     }
 
     /**
      * @param string $name
      * @param array $values
+     *
      * @return ApiNode Created child node
      */
     public function addLanguageNode($name, $values)
     {
         $newNode = self::lang($name, $values);
         $this->nodes[] = $newNode;
+
         return $newNode;
     }
 
     /**
      * @param string $name
      * @param array|null $attributes
-     * 
+     *
      * @return ApiNode Created child node
      */
     public function addParentNode($name = null, $attributes = [])
     {
         $newNode = self::parent($name, $attributes);
         $this->nodes[] = $newNode;
+
         return $newNode;
     }
 
     /**
      * @param string $name
      * @param array|null $attributes
-     * 
+     *
      * @return ApiNode Created child node
      */
     public function addListNode($name = null, $attributes = [])
     {
         $newNode = self::list($name, $attributes);
         $this->nodes[] = $newNode;
+
         return $newNode;
     }
 
@@ -193,7 +206,7 @@ class ApiNode
         $newNode = self::value($field['sqlId']);
 
         if (isset($field['encode'])) {
-            $newNode->addAttribute("encode", $field['encode']);
+            $newNode->addAttribute('encode', $field['encode']);
         }
 
         if (!empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank') {
@@ -202,25 +215,23 @@ class ApiNode
             }
         }
 
-
         // display i18n fields
         if (isset($field['i18n']) && $field['i18n']) {
             foreach (self::$languages as $language) {
-                $langAttributes = ["id" => $language];
+                $langAttributes = ['id' => $language];
 
                 if (isset($field['synopsis_details']) || (isset($field['value']) && is_array($field['value']))) {
-                    $langAttributes["xlink:href"] = WebserviceOutputBuilderCore::$wsUrl . 'languages/' . $language;
+                    $langAttributes['xlink:href'] = WebserviceOutputBuilderCore::$wsUrl . 'languages/' . $language;
                     if (isset($field['synopsis_details']) && $this->schemaToDisplay != 'blank') {
-                        $langAttributes["format"] = "isUnsignedId";
+                        $langAttributes['format'] = 'isUnsignedId';
                     }
                 }
 
                 $newNode->setType(self::TYPE_LANGUAGE);
-                $newNode->addNode("language", $field['value'][$language] ?? '')
-                        ->setAttributes($langAttributes);
+                $newNode->addNode('language', $field['value'][$language] ?? '')
+                    ->setAttributes($langAttributes);
             }
         } else {
-
             // display not i18n fields value
             if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank') {
                 if (!is_array($field['xlink_resource'])) {
@@ -234,15 +245,15 @@ class ApiNode
 
                     $xlink .= $field['value'];
                 }
-                $newNode->addAttribute("xlink:href", $xlink);
+                $newNode->addAttribute('xlink:href', $xlink);
             }
 
             if (isset($field['getter']) && $this->schemaToDisplay != 'blank') {
-                $newNode->addAttribute("notFilterable", "true");
+                $newNode->addAttribute('notFilterable', 'true');
             }
 
             if (isset($field['setter']) && $field['setter'] == false && $this->schemaToDisplay == 'synopsis') {
-                $newNode->addAttribute("read_only", "true");
+                $newNode->addAttribute('read_only', 'true');
             }
 
             if (array_key_exists('value', $field)) {
@@ -251,6 +262,7 @@ class ApiNode
         }
 
         $this->nodes[] = $newNode;
+
         return $newNode;
     }
 }

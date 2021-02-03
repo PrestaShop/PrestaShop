@@ -490,7 +490,7 @@ class WebserviceRequestCore
         $this->wsUrl = Tools::getHttpHost(true) . __PS_BASE_URI__ . 'api/';
         // set the output object which manage the content and header structure and information
         $this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
-        
+
         $this->_key = trim($key);
 
         $this->outputFormat = isset($params['output_format']) ? $params['output_format'] : $this->outputFormat;

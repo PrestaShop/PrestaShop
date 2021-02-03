@@ -296,16 +296,16 @@ class WebserviceOutputBuilderCore
             return '<pre>' . print_r($errors, true) . '</pre>';
         }
 
-        $this->output = ApiNode::list("errors");
+        $this->output = ApiNode::list('errors');
         foreach ($errors as $error) {
-            $errorNode = $this->output->addParentNode("error");
+            $errorNode = $this->output->addParentNode('error');
             if (is_array($error)) {
                 if ($error[0]) {
-                    $errorNode->addNode("code", $error[0]);
+                    $errorNode->addNode('code', $error[0]);
                 }
-                $errorNode->addNode("message", $error[1]);
+                $errorNode->addNode('message', $error[1]);
             } else {
-                $errorNode->addNode("message", $error);
+                $errorNode->addNode('message', $error);
             }
         }
 
@@ -325,7 +325,7 @@ class WebserviceOutputBuilderCore
             throw new WebserviceException('You must set web service resource for get the resources list.', [82, 500]);
         }
 
-        $output = ApiNode::list("api")->setAttributes(['shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME'))]);
+        $output = ApiNode::list('api')->setAttributes(['shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME'))]);
 
         foreach ($this->wsResource as $resourceName => $resource) {
             if (in_array($resourceName, array_keys($key_permissions))) {
@@ -338,17 +338,17 @@ class WebserviceOutputBuilderCore
                     'head' => (in_array('HEAD', $key_permissions[$resourceName]) ? 'true' : 'false'),
                 ]);
 
-                $resourceNode->addNode("description", $resource['description']);
+                $resourceNode->addNode('description', $resource['description']);
 
                 if (!isset($resource['specific_management']) || !$resource['specific_management']) {
                     //add blank schema
-                    $resourceNode->addNode("schema")->setAttributes([
+                    $resourceNode->addNode('schema')->setAttributes([
                         'xlink:href' => self::$wsUrl . $resourceName . '?schema=blank',
                         'type' => 'blank',
                     ]);
 
                     //add synopsis schema
-                    $resourceNode->addNode("schema")->setAttributes([
+                    $resourceNode->addNode('schema')->setAttributes([
                         'xlink:href' => self::$wsUrl . $resourceName . '?schema=synopsis',
                         'type' => 'synopsis',
                     ]);
@@ -573,12 +573,12 @@ class WebserviceOutputBuilderCore
      * @param $object
      * @param $associations
      * @param $ws_params
-     * 
+     *
      * @return string
      */
     protected function renderAssociations(&$parentNode, $object, $associations, $ws_params)
     {
-        $associationsWrapperNode = $parentNode->addParentNode("associations");
+        $associationsWrapperNode = $parentNode->addParentNode('associations');
 
         foreach ($associations as $assoc_name => $association) {
             if ($this->fieldsToDisplay == 'full' || is_array($this->fieldsToDisplay) && array_key_exists($assoc_name, $this->fieldsToDisplay)) {
@@ -619,10 +619,11 @@ class WebserviceOutputBuilderCore
 
     /**
      * Inject one association section into parent node
-     * 
+     *
      * @param ApiNode $parentNode
      * @param string $assoc_name
      * @param array $params
+     *
      * @return void
      */
     private function injectAssociation(&$parentNode, $object, $assoc_name, $association, $params, $class_name, $objects_assoc, $fields_assoc)
@@ -634,19 +635,19 @@ class WebserviceOutputBuilderCore
             return;
         }
 
-        $associationNode->addAttribute("nodeType", $params['associations'][$assoc_name]['resource']);
+        $associationNode->addAttribute('nodeType', $params['associations'][$assoc_name]['resource']);
 
         if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter']) {
-            $associationNode->addAttribute("readOnly", "true");
+            $associationNode->addAttribute('readOnly', 'true');
         }
 
         if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity']) {
-            $associationNode->addAttribute("virtualEntity", "true");
+            $associationNode->addAttribute('virtualEntity', 'true');
         } else {
             if (isset($params['associations'][$assoc_name]['api'])) {
-                $associationNode->addAttribute("api", $params['associations'][$assoc_name]['api']);
+                $associationNode->addAttribute('api', $params['associations'][$assoc_name]['api']);
             } else {
-                $associationNode->addAttribute("api", $assoc_name);
+                $associationNode->addAttribute('api', $assoc_name);
             }
         }
 
@@ -666,7 +667,6 @@ class WebserviceOutputBuilderCore
     }
 
     /**
-     * 
      * @param ApiNode $parentNode
      * @param type $object
      * @param string $assoc_name
@@ -674,7 +674,7 @@ class WebserviceOutputBuilderCore
      * @param array $fields_assoc
      * @param array $object_assoc
      * @param array $parent_details
-     * 
+     *
      * @return void
      */
     protected function injectFlatAssociation(&$parentNode, $object, $assoc_name, $resource_name, $fields_assoc, $object_assoc, $parent_details)
