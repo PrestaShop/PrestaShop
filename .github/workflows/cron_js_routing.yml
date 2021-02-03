@@ -69,6 +69,8 @@ jobs:
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
             commit-message: Updated JS Routing file
+            committer: PrestonBot <noreply@github.com>
+            author: prestonBot <prestonBot@users.noreply.github.com>
             title: 'Updated JS Routing file'
             body: |
                     | Questions         | Answers
