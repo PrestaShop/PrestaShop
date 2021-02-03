@@ -24,7 +24,7 @@ let browserContext;
 let page;
 
 const createLanguageData = new LanguageFaker({isoCode: 'de'});
-const editLanguageData = new LanguageFaker({isoCode: 'nl', status: false});
+const editLanguageData = new LanguageFaker({isoCode: 'nl', enabled: false});
 let numberOfLanguages = 0;
 
 /*
