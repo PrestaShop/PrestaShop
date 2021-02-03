@@ -39,6 +39,7 @@ describe('Enable/Disable demo mode', async () => {
 
     await dashboardPage.setDemoMode(page, true);
     const TableOfTrafficValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
+
     await dashboardPage.setDemoMode(page, false);
     const TableOfTrafficFakerValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
 
