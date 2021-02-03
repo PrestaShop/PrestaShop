@@ -577,7 +577,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             } elseif ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD') {
                 // display the list of declinated images
                 if ($available_image_ids) {
-                    $this->output = ApiNode::list('image')->addAttribute('id', $object_id);
+                    $this->output = ApiNode::list('image');
+                    $this->output->addAttribute('id', $object_id);
                     foreach ($available_image_ids as $available_image_id) {
                         $this->output->addNode('declination')->setAttributes(['id' => $available_image_id, 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $object_id . '/' . $available_image_id]);
                     }
