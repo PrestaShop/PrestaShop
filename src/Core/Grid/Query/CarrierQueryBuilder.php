@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    const ALLOWED_FILTERS = [
+    private const ALLOWED_FILTERS = [
         'id_carrier',
         'name',
         'delay',
