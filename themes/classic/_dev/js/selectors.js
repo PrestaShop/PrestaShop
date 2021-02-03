@@ -40,7 +40,7 @@ prestashop.themeSelectors = {
     searchFilterToggler: '#search_filter_toggler, .js-search-toggler',
     searchFiltersWrapper: '#search_filters_wrapper',
     searchFilterControls: '#search_filter_controls',
-    searchFilters: '#search_filters select, .js-search-filters select',
+    searchFilters: '#search_filters',
     activeSearchFilters: '#js-active-search-filters',
     listTop: '#js-product-list-top',
     list: '#js-product-list',
