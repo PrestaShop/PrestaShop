@@ -86,18 +86,10 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
-      const $productRow = $(OrderViewPageMap.productsTableRow(event.orderDetailId));
-      if ('' === event.newRow) {
-        $productRow.remove();
-      } else {
-        this.orderProductRenderer.addOrUpdateProductToList(
-          $productRow,
-          event.newRow
-        );
-      }
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderPricesRefresher.refreshProductPrices(event.orderId);
+      this.refreshProductsList(event.orderId);
       this.orderPaymentsRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
