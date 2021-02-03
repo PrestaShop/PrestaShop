@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -53,9 +54,14 @@ class CustomizationFieldType extends TranslatorAwareType
         $this->customizationFieldTypeChoiceProvider = $customizationFieldTypeChoiceProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //@todo: add constraints. customization has max length (and for some reason min length in ProductCustomFieldType)
         $builder
+            ->add('id', HiddenType::class)
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Label', 'Admin.Global'),
                 'constraints' => [

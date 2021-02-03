@@ -26,6 +26,7 @@
 import Serp from '@app/utils/serp';
 import ProductMap from '../product-map';
 import ProductPartialUpdater from './product-partial-updater';
+import CustomizationsManager from '@pages/product/edit/customizations-manager';
 
 const {$} = window;
 
@@ -66,4 +67,5 @@ $(() => {
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
+  new CustomizationsManager();
 });
