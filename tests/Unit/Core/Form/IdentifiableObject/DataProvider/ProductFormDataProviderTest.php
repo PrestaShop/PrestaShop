@@ -315,10 +315,10 @@ class ProductFormDataProviderTest extends TestCase
      *
      * @return ProductSupplierOptions
      */
-    private function createProductSupplierOptions(array $productData): ?ProductSupplierOptions
+    private function createProductSupplierOptions(array $productData): ProductSupplierOptions
     {
         if (empty($productData['suppliers'])) {
-            return null;
+            return new ProductSupplierOptions(0, []);
         }
 
         $suppliersInfo = [];

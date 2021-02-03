@@ -37,7 +37,7 @@ interface GetProductSupplierOptionsHandlerInterface
     /**
      * @param GetProductSupplierOptions $query
      *
-     * @return ProductSupplierOptions|null
+     * @return ProductSupplierOptions
      */
-    public function handle(GetProductSupplierOptions $query): ?ProductSupplierOptions;
+    public function handle(GetProductSupplierOptions $query): ProductSupplierOptions;
 }
