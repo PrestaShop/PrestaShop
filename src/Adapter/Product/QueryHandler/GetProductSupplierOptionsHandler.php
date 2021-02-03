@@ -67,16 +67,13 @@ final class GetProductSupplierOptionsHandler extends AbstractProductHandler impl
     /**
      * @param GetProductSupplierOptions $query
      *
-     * @return ProductSupplierOptions|null
+     * @return ProductSupplierOptions
      */
-    public function handle(GetProductSupplierOptions $query): ?ProductSupplierOptions
+    public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
     {
         $product = $this->productRepository->get($query->getProductId());
         $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($query->getProductId());
 
-        if (empty($productSuppliersInfo)) {
-            return null;
-        }
         $supplierOptions = [];
 
         foreach ($productSuppliersInfo as $productSupplierInfo) {
