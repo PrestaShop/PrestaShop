@@ -13,6 +13,21 @@
 
 #product-description-short {
   color: $gray-darker;
+
+  ul,
+  ol {
+    padding-left: 0;
+    list-style-position: inside;
+
+    li {
+      font-size: 0.9375rem;
+      color: $gray;
+    }
+  }
+
+  ul {
+    list-style-type: disc;
+  }
 }
 
 .product-information {
@@ -33,7 +48,6 @@
 
     ul {
       padding-left: 0.75rem;
-      list-style: inherit;
       list-style-position: inside;
     }
   }
