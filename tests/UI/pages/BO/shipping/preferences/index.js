@@ -17,6 +17,7 @@ class Preferences extends BOBasePage {
     this.carrierOptionForm = '#carrier-options';
     this.defaultCarrierSelect = '#carrier-options_default_carrier';
     this.sortBySelect = '#carrier-options_carrier_default_order_by';
+    this.orderBySelect = '#carrier-options_carrier_default_order_way';
     this.saveCarrierOptionsButton = `${this.carrierOptionForm} button`;
   }
 
