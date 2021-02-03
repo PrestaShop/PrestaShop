@@ -129,7 +129,7 @@ class OrderProductRemover
             false // Do not preserve gift removal
         );
 
-        return $cartComparator->getUpdatedProducts($knownUpdates);
+        return $cartComparator->getModifiedProducts($knownUpdates);
     }
 
     /**
