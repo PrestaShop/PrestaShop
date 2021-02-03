@@ -26,6 +26,7 @@
 import Serp from '@app/utils/serp';
 import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import ProductMap from '../product-map';
 import ProductPartialUpdater from './product-partial-updater';
 
@@ -74,4 +75,5 @@ $(() => {
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
   new ProductSuppliersManager();
+  new CustomizationsManager();
 });
