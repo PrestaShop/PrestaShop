@@ -262,6 +262,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.order_detail.updater'
+      - '@prestashop.adapter.order.product.remover'
 
   prestashop.adapter.order.product_quantity.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater
