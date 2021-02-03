@@ -1,3 +1,7 @@
-{% block form_product_suppliers %}
-  {{ form_widget(productForm.customizations) }}
-{% endblock form_product_suppliers %}
+{% form_theme productForm.customizations '@PrestaShop/Admin/Sell/Catalog/Product/Blocks/customizations_theme.html.twig' %}
+
+{% block form_product_customizations %}
+  <div id="productCustomizations">
+    {{ form_widget(productForm.customizations) }}
+  </div>
+{% endblock form_product_customizations %}

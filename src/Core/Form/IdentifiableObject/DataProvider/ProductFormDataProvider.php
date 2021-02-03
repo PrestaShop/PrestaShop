@@ -290,6 +290,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $fields[] = [
                 'name' => $customizationField->getLocalizedNames(),
                 'type' => $customizationField->getType(),
+                'required' => $customizationField->isRequired(),
             ];
         }
 
