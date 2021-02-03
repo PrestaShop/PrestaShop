@@ -60,8 +60,10 @@ class FormCloner
 
         $formOptions = $form->getConfig()->getOptions();
         $formOptions = array_merge($formOptions, $options);
-        // Never initialize child forms automatically
-        $formOptions['auto_initialize'] = false;
+        if (null !== $form->getParent()) {
+            // Never initialize child forms automatically
+            $formOptions['auto_initialize'] = false;
+        }
 
         $formBuilder = $resolvedFormType->createBuilder($factory, $form->getName(), $formOptions);
         $resolvedFormType->buildForm($formBuilder, $formBuilder->getOptions());
