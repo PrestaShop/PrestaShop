@@ -189,7 +189,7 @@ class CmsPageCategoryType extends TranslatorAwareType
             ])
             ->add('friendly_url', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
-                'help' => $this->trans('Only letters and the minus (-) character are allowed.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('Unless the \'Accented URL\' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
