@@ -170,8 +170,8 @@ class OrderProductQuantityUpdater
 
             // Update quantity on the cart and stock
             if ($updateCart) {
-                $updatedProducts = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
-                $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $updatedProducts);
+                $modifiedProducts = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+                $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $modifiedProducts);
             } elseif ($orderDetail->id_customization > 0) {
                 $customization = new Customization($orderDetail->id_customization);
                 $customization->quantity = $newQuantity;
@@ -198,6 +198,7 @@ class OrderProductQuantityUpdater
         // Some products have been affected by the removal of the initial product (probably related to a CartRule)
         // So we detect the changes that happened in the cart and apply them on the OrderDetail
         $orderDetails = $order->getOrderDetailList();
+        $productsToAdd = [];
         foreach ($updatedProducts as $updatedProduct) {
             $updatedCombinationId = $updatedProduct->getCombinationId() !== null ? $updatedProduct->getCombinationId()->getValue() : 0;
             $updatedOrderDetail = null;
@@ -220,7 +221,25 @@ class OrderProductQuantityUpdater
                     $orderInvoice,
                     false
                 );
+            } else {
+                foreach ($cart->getProducts() as $product) {
+                    if ((int) $product['id_product'] === $updatedProduct->getProductId()->getValue()
+                        && (int) $product['id_product_attribute'] === $updatedCombinationId) {
+                        $productsToAdd[] = $product;
+                        break;
+                    }
+                }
             }
+        }
+        if (count($productsToAdd) > 0) {
+            $orderDetail = new OrderDetail();
+            $orderDetail->createList(
+                $order,
+                $cart,
+                $order->getCurrentState(),
+                $productsToAdd,
+                $orderInvoice ? $orderInvoice->id : 0
+            );
         }
     }
 
@@ -286,7 +305,7 @@ class OrderProductQuantityUpdater
             throw new \LogicException('Something went wrong');
         }
 
-        return $cartComparator->getUpdatedProducts($knownUpdates);
+        return $cartComparator->getModifiedProducts($knownUpdates);
     }
 
     /**
