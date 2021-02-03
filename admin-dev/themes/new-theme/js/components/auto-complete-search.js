@@ -24,45 +24,56 @@
  */
 
 /**
- * This component is used with TypeaheadType forms, and is tightly linked to the content of this
- * twig file src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/typeahead.html.twig
- *
- * @todo: the component relies on this TypeaheadType because it was the historic type but it would be worth
- * creating a new clean form type
+ * This component is an overlay of typeahead it allows to have a single config input (since
+ * typeahead weirdly uses two different configs). It also provides some default rendering
+ * functions which are, of course, overridable.
  */
 export default class AutoCompleteSearch {
-  constructor($searchInput, config, dataSetConfig) {
+  constructor($searchInput, config) {
     this.$searchInput = $searchInput;
-    this.$autoCompleteSearchContainer = this.$searchInput.closest('.autocomplete-search');
     this.searchInputId = this.$searchInput.prop('id');
-    this.searchInputFullName = this.$autoCompleteSearchContainer.data('fullname');
-    this.$selectionContainer = $(`#${this.searchInputId}-data`);
 
-    // Merge default and input config
     const inputConfig = config || {};
-    const defaultConfig = {
+    // Merge default and input config
+    this.config = {
       minLength: 2,
       highlight: true,
       cache: false,
       hint: false,
+      ...inputConfig,
     };
-    this.config = {...defaultConfig, ...inputConfig};
 
     // Merge default and input dataSetConfig
-    const inputDataSetConfig = dataSetConfig || {};
-    const defaultDataSetConfig = {
+    this.dataSetConfig = {
       display: 'name', // Which field of the object from the list is used for display (can be a string or a callback)
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
+      /* eslint-disable-next-line no-unused-vars */
+      onSelect(selectedItem, event) {
+        return true;
+      },
+      /* eslint-disable-next-line no-unused-vars */
+      onClose(event) {
+      },
+      ...inputConfig,
     };
-    this.dataSetConfig = {...defaultDataSetConfig, ...inputDataSetConfig};
 
     // Merging object works fine on one level, but on two it erases sub elements even if not present, so
-    // we handle templates separately
-    const defaultTemplates = { // Default rendering functions which can be overridden
-      suggestion(item) {
-        return `<div><img src="${item.image}" style="width:50px" /> ${item.name}</div>`;
+    // we handle templates separately, these are the default rendering functions which can be overridden
+    const defaultTemplates = {
+      // Be careful that your rendering function must return HTML node not pure text so always include the
+      // content in a div at least
+      suggestion: (item) => {
+        let displaySuggestion = item;
+
+        if (typeof this.dataSetConfig.display === 'function') {
+          this.dataSetConfig.display(item);
+        } else if (Object.prototype.hasOwnProperty.call(item, this.dataSetConfig.display)) {
+          displaySuggestion = item[this.dataSetConfig.display];
+        }
+
+        return `<div class="px-2">${displaySuggestion}</div>`;
       },
       pending(query) {
         return `<div class="px-2">Searching for "${query.query}"</div>`;
@@ -70,40 +81,15 @@ export default class AutoCompleteSearch {
       notFound(query) {
         return `<div class="px-2">No results found for "${query.query}"</div>`;
       },
-      renderSelected: (selectedItem) => `<li>
-            <div>
-              <img src="${selectedItem.image}" style="width:50px" /> ${selectedItem.name}
-            </div>
-          </li>`,
     };
-    this.dataSetConfig.templates = {...defaultTemplates, ...inputDataSetConfig.templates};
 
-    this.buildTypeahead();
-  }
-
-  /**
-   * Force set values, the selected items are removed Then the component loops through the inputs
-   * and render each object in the list as if it came from the API so the format must match.
-   *
-   * @param values {array}
-   */
-  setValue(values) {
-    this.clearValue();
-    if (!values || values.length <= 0) {
-      return;
+    if (Object.prototype.hasOwnProperty.call(inputConfig, 'templates')) {
+      this.dataSetConfig.templates = {...defaultTemplates, ...inputConfig.templates};
+    } else {
+      this.dataSetConfig.templates = defaultTemplates;
     }
 
-    values.each((value) => {
-      this.appendSelectedItem(value);
-    });
-  }
-
-  /**
-   * Removes selected items.
-   */
-  clearValue() {
-    const formIdItem = $('li', this.$selectionContainer);
-    formIdItem.remove();
+    this.buildTypeahead();
   }
 
   /**
@@ -111,78 +97,9 @@ export default class AutoCompleteSearch {
    */
   buildTypeahead() {
     this.$searchInput.typeahead(this.config, this.dataSetConfig)
-      .bind('typeahead:select', (e, selectedItem) => {
-        // When limit is one we cannot select additional elements so we replace them instead
-        // @todo: maybe this behaviour should be defined by an option
-        if (this.dataSetConfig.dataLimit === 1) {
-          this.replaceSelectedItem(selectedItem);
-        } else {
-          this.appendSelectedItem(selectedItem);
-        }
-      }).bind('typeahead:close', (e) => {
-        $(e.target).val('');
+      .bind('typeahead:select', (e, selectedItem) => this.config.onSelect(selectedItem, e))
+      .bind('typeahead:close', (e) => {
+        this.config.onClose(e);
       });
-  }
-
-  /**
-   * When the component is configured to have only one selected element on each selection
-   * the previous selection is removed and then replaced.
-   *
-   * @param selectedItem {Object}
-   * @returns {boolean}
-   */
-  replaceSelectedItem(selectedItem) {
-    this.clearValue();
-    this.addSelectedContentToContainer(selectedItem);
-
-    return true;
-  }
-
-  /**
-   * When the component is configured to have more than one selected item on each selection
-   * the item is added to the list.
-   *
-   * @param selectedItem {Object}
-   * @returns {boolean}
-   */
-  appendSelectedItem(selectedItem) {
-    // If collection length is up to limit, return
-    const formIdItem = $('li', this.$selectionContainer);
-
-    if (this.dataSetConfig.dataLimit !== 0 && formIdItem.length >= this.dataSetConfig.dataLimit) {
-      return false;
-    }
-
-    this.addSelectedContentToContainer(selectedItem);
-
-    return true;
-  }
-
-  /**
-   * Add the selected content to the selection container, the HTML is generated based on the render function
-   * then a hidden input is automatically added inside it, and finally the rendered selection is added to the list.
-   *
-   * @param selectedItem {Object}
-   */
-  addSelectedContentToContainer(selectedItem) {
-    let value;
-
-    if (typeof this.dataSetConfig.value === 'function') {
-      value = this.dataSetConfig.value(selectedItem);
-    } else {
-      value = selectedItem[this.dataSetConfig.value];
-    }
-
-    const selectedHtml = this.dataSetConfig.templates.renderSelected(selectedItem);
-    // Hidden input is added into the selected li
-    const $selectedNode = $(selectedHtml);
-    const $hiddenInput = $(`<input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />`);
-    $selectedNode.append($hiddenInput);
-
-    // Then the li is added to the list
-    this.$selectionContainer.append($selectedNode);
-
-    // Trigger the change so that listeners detect the form data has been modified
-    $hiddenInput.trigger('change');
   }
 }
