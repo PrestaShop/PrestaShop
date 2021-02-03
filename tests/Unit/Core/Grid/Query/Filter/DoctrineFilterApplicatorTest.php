@@ -31,14 +31,11 @@ namespace Tests\Unit\Core\Grid\Query\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface;
-use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidFilterDataException;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
 
 class DoctrineFilterApplicatorTest extends TestCase
 {
-
     /**
      * @var SqlFilters
      */
@@ -53,7 +50,6 @@ class DoctrineFilterApplicatorTest extends TestCase
      * @var DoctrineFilterApplicator
      */
     private $doctrineFilterApplicator;
-
 
     public function setUp()
     {
@@ -74,7 +70,7 @@ class DoctrineFilterApplicatorTest extends TestCase
             'price_tax_excluded' => [
                 'min_field' => '10',
                 'max_field' => '20',
-            ]
+            ],
         ];
 
         $queryBuilder = new QueryBuilder($this->createMock(Connection::class));
@@ -90,7 +86,7 @@ class DoctrineFilterApplicatorTest extends TestCase
         $filterValues = [
             'price_tax_excluded' => [
                 'min_field' => '10',
-            ]
+            ],
         ];
 
         $queryBuilder = new QueryBuilder($this->createMock(Connection::class));
@@ -106,7 +102,7 @@ class DoctrineFilterApplicatorTest extends TestCase
         $filterValues = [
             'price_tax_excluded' => [
                 'max_field' => '10',
-            ]
+            ],
         ];
 
         $queryBuilder = new QueryBuilder($this->createMock(Connection::class));
@@ -123,7 +119,7 @@ class DoctrineFilterApplicatorTest extends TestCase
             'price_tax_excluded' => [
                 'min_field' => '10',
                 'max_field' => '10',
-            ]
+            ],
         ];
 
         $queryBuilder = new QueryBuilder($this->createMock(Connection::class));
