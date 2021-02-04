@@ -56,6 +56,8 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer->email = $customerEmail;
         $customer->add();
         $this->customers[$customerName] = $customer;
+
+        SharedStorage::getStorage()->set($customerName, $customer->id);
     }
 
     /**
