@@ -1,15 +1,78 @@
 .btn {
+  font-weight: 600;
+
   &.btn-default {
-    &:hover {
-      background-color: $primary-light-color;
-      border-color: $primary-light-color;
+    &, i {
+      color: $medium-gray;
+      transition: .25s ease-out;
     }
 
-    &.active,
+    &:hover {
+      color: #fff;
+      background-color: $btn-secondary-hover;
+      border-color: $btn-secondary-hover;
+    }
+
+    &:active,
     &:focus {
       color: #fff;
-      background-color: $primary-color;
-      border-color: $primary-color !important;
+      background-color: $btn-secondary-active-color;
+      border-color: $btn-secondary-active-color !important;
+      box-shadow: 0 0 0 0.2rem rgba($btn-secondary-active-color, 0.5);
+      outline: none;
+
+      i {
+        color: #fff;
+      }
+    }
+  }
+
+  &-group {
+    .btn-default {
+      i {
+        display: block;
+        color: white;
+        font-size: 16px;
+        height: 20px;
+        width: 20px;
+        margin-right: 2px;
+      }
+
+      &:hover {
+        border-color: $primary-light-color;
+        background: $primary-light-color;
+        color: #ffffff;
+      }
+
+      &:focus, &:active {
+        box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+        background: $btn-primary-active-bg;
+        border-color: $btn-primary-active-bg;
+        color: #ffffff;
+      }
+    }
+  }
+
+  &-primary {
+    background: $primary-color;
+    color: white;
+    border-color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      border-color: $primary-light-color;
+      background: $primary-light-color;
+      color: #ffffff;
+    }
+
+    &:focus, &:active {
+      box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+      background: $btn-primary-active-bg;
+      // stylelint-disable-next-line
+      border-color: $btn-primary-active-bg!important;
+      color: #ffffff;
     }
   }
 }
