@@ -23,26 +23,51 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
-{%- block supplier_references_row -%}
-  <tr class="product_supplier_row" id="product_supplier_row_{% if form.vars.value is not null %}{{ form.vars.value.supplier_id }}{% else %}__SUPPLIER_ID__{% endif %}">
+{%- block product_supplier_row -%}
+  <tr class="product_supplier_row" id="product_supplier_row_{{ form.vars.name }}">
     {{ form_widget(form.supplier_id) }}
     {{ form_widget(form.supplier_name) }}
-    {{ form_widget(form.product_supplier.product_supplier_id) }}
-    <td>{% if form.supplier_name.vars.value %}{{ form.supplier_name.vars.value }}{% else %}__SUPPLIER_NAME__{% endif %}</td>
-    <td>{{ form_widget(form.product_supplier.supplier_reference) }}</td>
-    <td>{{ form_widget(form.product_supplier.supplier_price_tax_excluded) }}</td>
-    <td>{{ form_widget(form.product_supplier.currency_id) }}</td>
+    {{ form_widget(form.product_supplier_id) }}
+    <td class="supplier_name">
+      {% if form.supplier_name.vars.value %}{{ form.supplier_name.vars.value }}{% endif %}
+    </td>
+    <td>
+      {{ form_widget(form.supplier_reference) }}
+      {{ form_errors(form.supplier_reference) }}
+    </td>
+    <td>
+      {{ form_widget(form.supplier_price_tax_excluded) }}
+      {{ form_errors(form.supplier_price_tax_excluded) }}
+    </td>
+    <td>
+      {{ form_widget(form.currency_id) }}
+      {{ form_errors(form.currency_id) }}
+    </td>
   </tr>
-{%- endblock supplier_references_row -%}
+{%- endblock product_supplier_row -%}
 
-{# Override suppliers reference collection template to remove the label column #}
-{%- block _product_suppliers_supplier_references_row -%}
+{# Override suppliers collection template to remove the label and init the table #}
+{%- block _product_suppliers_product_suppliers_row -%}
   {% if prototype is defined %}
-    {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+    {# We put protoype name in a data attribute, so the JS code can get it dynamically #}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {% endif %}
-  <div class="form-group row" {{ block('widget_attributes') }}>
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row')|trim }) -%}
+  <div {{ block('widget_attributes') }}>
     <div class="col-sm">
-      {{- block('form_rows') -}}
+      <table class="table">
+        <thead class="thead-default">
+        <tr>
+          <th>{{ 'Supplier'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- block('form_rows') -}}
+        </tbody>
+      </table>
     </div>
   </div>
 {%- endblock -%}

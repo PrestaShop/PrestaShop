@@ -33,24 +33,10 @@
         {{ form_row(suppliersForm.supplier_ids) }}
       </div>
       <div class="col">
-        <div id="defaultSupplierIdBlock">
-          {{ form_row(suppliersForm.default_supplier_id) }}
-        </div>
+        {{ form_row(suppliersForm.default_supplier_id) }}
       </div>
     </div>
 
-    <table class="table d-none">
-      <thead class="thead-default">
-        <tr>
-          <th>{{ 'Supplier'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
-          <th>{{ 'Cost price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
-          <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{ form_row(suppliersForm.supplier_references) }}
-      </tbody>
-    </table>
+    {{ form_row(suppliersForm.product_suppliers) }}
   </div>
 {% endblock %}
