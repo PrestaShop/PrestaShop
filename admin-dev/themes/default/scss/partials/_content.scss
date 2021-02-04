@@ -80,7 +80,7 @@ body {
       padding: 10px;
       font-family: $headings-font-family;
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
       color: $main-color;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -132,7 +132,7 @@ body {
     font-size: 16px;
     border: none;
     @include margin(-20px, -20px, 15px, -20px);
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.5rem;
     background-color: #fafbfc;
     border-bottom: 1px solid #dbe6e9;
