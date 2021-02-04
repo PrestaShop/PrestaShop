@@ -33,7 +33,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * Gets catalogue translated by the user himself ans stored in the database.
  */
-class UserTranslatedCatalogueProvider
+class UserTranslatedCatalogueProvider extends AbstractCatalogueProvider
 {
     /**
      * @var DatabaseTranslationLoader
@@ -95,17 +95,5 @@ class UserTranslatedCatalogueProvider
         }
 
         return $catalogue;
-    }
-
-    /**
-     * Validate if an array only have strings in it.
-     *
-     * @param array $array
-     *
-     * @return bool
-     */
-    private function assertIsArrayOfString(array $array): bool
-    {
-        return count($array) === count(array_filter($array, function ($element) { return is_string($element); }));
     }
 }

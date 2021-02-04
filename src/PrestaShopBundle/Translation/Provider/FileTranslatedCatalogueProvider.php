@@ -36,7 +36,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  * For example, if the main directory is 'myTranslationsDir',
  * if you call getCatalogue('fr_FR'), the translations files will be searched in 'myTranslationsDir/fr_FR'
  */
-class FileTranslatedCatalogueProvider
+class FileTranslatedCatalogueProvider extends AbstractCatalogueProvider
 {
     /**
      * @var string
@@ -93,17 +93,5 @@ class FileTranslatedCatalogueProvider
         }
 
         return $catalogue;
-    }
-
-    /**
-     * Validate if an array only have strings in it.
-     *
-     * @param array $array
-     *
-     * @return bool
-     */
-    private function assertIsArrayOfString(array $array): bool
-    {
-        return count($array) === count(array_filter($array, 'is_string'));
     }
 }
