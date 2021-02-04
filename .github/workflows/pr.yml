@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   message-check:
-    if: "!contains(github.event.pull_request.title, '[merge]')"
+    if: "!endsWith(github.event.pull_request.title, '[merge]')"
     name: Block Merge Commits
 
     runs-on: ubuntu-latest
