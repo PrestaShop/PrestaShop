@@ -406,7 +406,7 @@ class CartControllerCore extends FrontController
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
             $this->{$ErrorKey}[] = $this->trans(
                 'The product %product% is no longer available.',
-                ['%product%' => $product->name . (isset($productAttributes) ? ' ' . $productAttributes : '')],
+                ['%product%' => $product->name . (!empty($productAttributes) ? ' ' . $productAttributes : '')],
                 'Shop.Notifications.Error'
             );
 
