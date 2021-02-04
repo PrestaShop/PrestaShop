@@ -45,7 +45,11 @@ body {
 }
 
 #content.bootstrap {
-  padding: 120px 10px 0 225px;
+  padding: 105px 10px 0 225px;
+
+  input, button, textarea, select {
+    font-family: $font-family-mono;
+  }
 
   &.with-tabs {
     padding-top: 160px;
@@ -71,9 +75,9 @@ body {
     .panel-heading {
       padding: 10px;
       font-family: $headings-font-family;
-      font-size: 14px;
-      font-weight: $headings-font-weight;
-      color: #555;
+      font-size: 16px;
+      font-weight: 500;
+      color: $main-color;
       text-overflow: ellipsis;
       white-space: nowrap;
 
@@ -112,12 +116,13 @@ body {
 
   h3:not(.modal-title),
   .panel-heading {
-    padding: 10px;
-    font-size: 12px;
-    text-transform: uppercase;
+    font-size: 16px;
     border: none;
-    border-bottom: solid 1px #eee;
     @include margin(-20px, -20px, 15px, -20px);
+    font-weight: 500;
+    line-height: 1.5rem;
+    background-color: #fafbfc;
+    border-bottom: 1px solid #dbe6e9;
 
     i,
     a {
@@ -218,9 +223,11 @@ body {
     .panel-heading {
       margin: -8px -8px 10px;
       font-size: 13px;
+
       @include ltr () {
         padding-left: 8px;
       }
+
       @include rtl () {
         padding-right: 8px;
       }
@@ -284,7 +291,6 @@ body.display-modal {
 
   .panel {
     .panel-footer {
-      height: 73px;
       margin: 15px -20px -20px;
       background-color: #fcfdfe;
       border-color: #eee;
@@ -294,7 +300,20 @@ body.display-modal {
       }
 
       .btn {
-        line-height: 1em;
+        line-height: 1.5;
+        font-size: 14px;
+        padding: 8px 16px;
+        font-weight: 600;
+
+        i {
+          display: none;
+        }
+
+        &.pull-right {
+          @extend .btn-primary;
+          // stylelint-disable-next-line
+          text-transform: none!important;
+        }
       }
     }
   }
