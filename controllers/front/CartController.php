@@ -393,7 +393,7 @@ class CartControllerCore extends FrontController
 
         $product = new Product($this->id_product, true, $this->context->language->id);
 
-        $productAttributes = null;
+        $productAttributes = '';
         if ($product->hasAttributes()) {
             $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
             $attributes = Product::getAttributesParams($this->id_product, $this->id_product_attribute);
