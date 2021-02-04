@@ -295,17 +295,15 @@ input[type="tel"] {
 
 
 @media (min-width: $screen-sm-min) {
-  .bootstrap {
-    .control-label {
-      padding-top: 7px;
-      padding-right: 25px;
-    }
+  .control-label {
+    padding-top: 7px;
+    padding-right: 25px;
   }
 }
 
 .form-horizontal {
   .form-wrapper {
-    padding: 6px 0;
+    padding: 14px 0;
     flex: 0 0 83.33333%;
     max-width: 83.33333%;
     margin: auto;
