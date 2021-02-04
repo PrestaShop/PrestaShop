@@ -29,12 +29,15 @@ const {$} = window;
 
 export default class ProductSuppliersManager {
   constructor() {
-    this.$supplierSelectionBlock = $(ProductMap.supplierSelectionBlock);
-    this.$supplierReferencesBlock = $(ProductMap.supplierReferencesBlock);
-    this.$productSuppliersTable = $(ProductMap.productSuppliersTable);
-    this.$productSuppliersTBody = this.$productSuppliersTable.find('tbody');
-    this.$defaultSuppliersSelectionBlock = $(ProductMap.defaultSupplierSelectionBlock);
+    this.$productSuppliersCollection = $(ProductMap.suppliers.productSuppliersCollection);
+    this.$supplierIdsGroup = $(ProductMap.suppliers.supplierIdsInput).closest('.form-group');
+    this.$defaultSupplierGroup = $(ProductMap.suppliers.defaultSupplierInput).closest('.form-group');
+    this.$productsTable = $(ProductMap.suppliers.productsTable);
+    this.$productsTableBody = $(ProductMap.suppliers.productsTableBody);
+
     this.suppliers = [];
+    this.prototypeTemplate = this.$productSuppliersCollection.data('prototype');
+    this.prototypeName = this.$productSuppliersCollection.data('prototypeName');
     this.defaultDataForSupplier = this.collectDefaultDataForSupplier();
 
     this.init();
@@ -45,11 +48,11 @@ export default class ProductSuppliersManager {
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
 
-    this.$productSuppliersTable.on('change', 'input', () => {
+    this.$productsTable.on('change', 'input', () => {
       this.memorizeCurrentSuppliers();
     });
 
-    this.$supplierSelectionBlock.on('change', 'input', (e) => {
+    this.$supplierIdsGroup.on('change', 'input', (e) => {
       const input = e.currentTarget;
 
       if (input.checked) {
@@ -94,32 +97,33 @@ export default class ProductSuppliersManager {
   }
 
   renderSuppliers() {
-    this.$productSuppliersTBody.empty();
-    const productSupplierRowPrototype = this.$supplierReferencesBlock.data('prototype');
+    this.$productsTableBody.empty();
 
+    // Custom incremental index since this.suppliers uses the supplierId as key
+    let supplierIndex = 0;
     this.suppliers.forEach((supplier) => {
       if (supplier.removed) {
         return;
       }
 
-      const productSupplierRow = productSupplierRowPrototype
-        .replace(new RegExp(ProductMap.supplierIdPlaceholder, 'g'), supplier.supplierId)
-        .replace(new RegExp(ProductMap.supplierNamePlaceholder, 'g'), supplier.supplierName);
+      const productSupplierRow = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), supplierIndex);
 
-      this.$productSuppliersTBody.append(productSupplierRow);
+      this.$productsTableBody.append(productSupplierRow);
       // Fill inputs
-      $(ProductMap.suppliersSupplierIdInput(supplier.supplierId)).val(supplier.supplierId);
-      $(ProductMap.suppliersProductSupplierIdInput(supplier.supplierId)).val(supplier.productSupplierId);
-      $(ProductMap.suppliersSupplierNameInput(supplier.supplierId)).val(supplier.supplierName);
-      $(ProductMap.suppliersProductSupplierReferenceInput(supplier.supplierId)).val(supplier.reference);
-      $(ProductMap.suppliersProductSupplierPriceInput(supplier.supplierId)).val(supplier.price);
-      $(ProductMap.suppliersProductSupplierCurrencyIdInput(supplier.supplierId)).val(supplier.currencyId);
+      $(ProductMap.suppliers.productSupplierRow.supplierIdInput(supplierIndex)).val(supplier.supplierId);
+      $(ProductMap.suppliers.productSupplierRow.supplierNameCell(supplierIndex)).html(supplier.supplierName);
+      $(ProductMap.suppliers.productSupplierRow.supplierNameInput(supplierIndex)).val(supplier.supplierName);
+      $(ProductMap.suppliers.productSupplierRow.productSupplierIdInput(supplierIndex)).val(supplier.productSupplierId);
+      $(ProductMap.suppliers.productSupplierRow.referenceInput(supplierIndex)).val(supplier.reference);
+      $(ProductMap.suppliers.productSupplierRow.priceInput(supplierIndex)).val(supplier.price);
+      $(ProductMap.suppliers.productSupplierRow.currencyIdInput(supplierIndex)).val(supplier.currencyId);
+      supplierIndex += 1;
     });
   }
 
   getSelectedSuppliers() {
     const selectedSuppliers = [];
-    this.$supplierSelectionBlock.find('input:checked').each((index, input) => {
+    this.$supplierIdsGroup.find('input:checked').each((index, input) => {
       selectedSuppliers.push({
         name: input.dataset.label,
         id: input.value,
@@ -133,7 +137,7 @@ export default class ProductSuppliersManager {
     const suppliers = this.getSelectedSuppliers();
 
     if (suppliers.length === 0) {
-      this.$defaultSuppliersSelectionBlock.find('input').prop('checked', false);
+      this.$defaultSupplierGroup.find('input').prop('checked', false);
       this.hideDefaultSuppliers();
 
       return;
@@ -142,7 +146,7 @@ export default class ProductSuppliersManager {
     this.showDefaultSuppliers();
     const selectedSupplierIds = suppliers.map((supplier) => supplier.id);
 
-    this.$defaultSuppliersSelectionBlock.find('input').each((key, input) => {
+    this.$defaultSupplierGroup.find('input').each((key, input) => {
       const isValid = selectedSupplierIds.includes(input.value);
 
       if (!isValid && input.checked) {
@@ -151,30 +155,30 @@ export default class ProductSuppliersManager {
       input.disabled = !isValid;
     });
 
-    if (this.$defaultSuppliersSelectionBlock.find('input:checked').length === 0) {
+    if (this.$defaultSupplierGroup.find('input:checked').length === 0) {
       this.checkFirstAvailableDefaultSupplier(selectedSupplierIds);
     }
   }
 
   hideDefaultSuppliers() {
-    this.$defaultSuppliersSelectionBlock.addClass('d-none');
+    this.$defaultSupplierGroup.addClass('d-none');
   }
 
   showDefaultSuppliers() {
-    this.$defaultSuppliersSelectionBlock.removeClass('d-none');
+    this.$defaultSupplierGroup.removeClass('d-none');
   }
 
   checkFirstAvailableDefaultSupplier(selectedSupplierIds) {
     const firstSupplierId = selectedSupplierIds[0];
-    this.$defaultSuppliersSelectionBlock.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
+    this.$defaultSupplierGroup.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
   }
 
   showTable() {
-    this.$productSuppliersTable.removeClass('d-none');
+    this.$productsTable.removeClass('d-none');
   }
 
   hideTable() {
-    this.$productSuppliersTable.addClass('d-none');
+    this.$productsTable.addClass('d-none');
   }
 
   /**
@@ -182,36 +186,49 @@ export default class ProductSuppliersManager {
    * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
    */
   memorizeCurrentSuppliers() {
-    this.getSelectedSuppliers().forEach((supplier) => {
+    // this.getSelectedSuppliers values are pushed so it's index is 0-based, we can use it as is
+    this.getSelectedSuppliers().forEach((supplier, index) => {
       this.suppliers[supplier.id] = {
         supplierId: supplier.id,
-        productSupplierId: $(ProductMap.suppliersProductSupplierIdInput(supplier.id)).val(),
-        supplierName: $(ProductMap.suppliersSupplierNameInput(supplier.id)).val(),
-        reference: $(ProductMap.suppliersProductSupplierReferenceInput(supplier.id)).val(),
-        price: $(ProductMap.suppliersProductSupplierPriceInput(supplier.id)).val(),
-        currencyId: $(ProductMap.suppliersProductSupplierCurrencyIdInput(supplier.id)).val(),
+        productSupplierId: $(ProductMap.suppliers.productSupplierRow.productSupplierIdInput(index)).val(),
+        supplierName: $(ProductMap.suppliers.productSupplierRow.supplierNameInput(index)).val(),
+        reference: $(ProductMap.suppliers.productSupplierRow.referenceInput(index)).val(),
+        price: $(ProductMap.suppliers.productSupplierRow.priceInput(index)).val(),
+        currencyId: $(ProductMap.suppliers.productSupplierRow.currencyIdInput(index)).val(),
         removed: false,
       };
     });
   }
 
+  /**
+   * Create a "shadow" prototype just to parse default values set inside the input fields,
+   * this allow to build an object with default values set in the FormType
+   *
+   * @returns {{reference, removed: boolean, price, currencyId, productSupplierId}}
+   */
   collectDefaultDataForSupplier() {
     const rowPrototype = new DOMParser().parseFromString(
-      this.$supplierReferencesBlock.data('prototype'),
+      this.prototypeTemplate,
       'text/html',
     );
-
-    const idPlaceholder = ProductMap.supplierIdPlaceholder;
 
     return {
       removed: false,
       productSupplierId:
-        rowPrototype.querySelector(ProductMap.suppliersProductSupplierIdInput(idPlaceholder)).value,
-      reference:
-        rowPrototype.querySelector(ProductMap.suppliersProductSupplierReferenceInput(idPlaceholder)).value,
-      price:
-        rowPrototype.querySelector(ProductMap.suppliersProductSupplierPriceInput(idPlaceholder)).value,
-      currencyId: rowPrototype.querySelector(ProductMap.suppliersProductSupplierCurrencyIdInput(idPlaceholder)).value,
+        this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.productSupplierIdInput, rowPrototype),
+      reference: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.referenceInput, rowPrototype),
+      price: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.priceInput, rowPrototype),
+      currencyId: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.currencyIdInput, rowPrototype),
     };
+  }
+
+  /**
+   * @param selectorGenerator {function}
+   * @param rowPrototype {Document}
+   *
+   * @returns {*}
+   */
+  collectDataFromRow(selectorGenerator, rowPrototype) {
+    return rowPrototype.querySelector(selectorGenerator(this.prototypeName)).value;
   }
 }
