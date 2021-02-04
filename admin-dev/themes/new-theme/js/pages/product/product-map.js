@@ -23,29 +23,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+const productSuppliersId = '#product_suppliers_product_suppliers';
+const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliersId}_${supplierIndex}_${inputName}`;
+
 export default {
   productForm: 'form[name=product]',
-  suppliersBlock: '#productSuppliers',
-  supplierReferencesBlock: '#product_suppliers_supplier_references',
-  supplierReferencesContainer: '#product_suppliers_supplier_references > .col-sm',
-  productSuppliersTable: '#productSuppliers table',
-  supplierSelectionBlock: '#product_suppliers_supplier_ids',
-  defaultSupplierSelectionBlock: '#defaultSupplierIdBlock',
-  selectedDefaultSupplierInput: 'input[name="product[suppliers][default_supplier_id]"]:checked',
   productFormSubmitButton: 'button[name="product[save]"]',
-  supplierIdPlaceholder: '__SUPPLIER_ID__',
-  supplierNamePlaceholder: '__SUPPLIER_NAME__',
-  suppliersProductSupplierRow: (supplierId) => `#product_supplier_row_${supplierId}`,
-  suppliersSupplierIdInput: (supplierId) => `#product_suppliers_supplier_references_${supplierId}_supplier_id`,
-  suppliersSupplierNameInput: (supplierId) => `#product_suppliers_supplier_references_${supplierId}_supplier_name`,
-  suppliersProductSupplierIdInput:
-    (supplierId) => `#product_suppliers_supplier_references_${supplierId}_product_supplier_product_supplier_id`,
-  suppliersProductSupplierReferenceInput:
-    (supplierId) => `#product_suppliers_supplier_references_${supplierId}_product_supplier_supplier_reference`,
-  suppliersProductSupplierPriceInput:
-    (supplierId) => `#product_suppliers_supplier_references_${supplierId}_product_supplier_supplier_price_tax_excluded`,
-  suppliersProductSupplierCurrencyIdInput:
-    (supplierId) => `#product_suppliers_supplier_references_${supplierId}_product_supplier_currency_id`,
+  suppliers: {
+    productSuppliersCollection: `${productSuppliersId}`,
+    supplierIdsInput: '#product_suppliers_supplier_ids',
+    defaultSupplierInput: '#product_suppliers_default_supplier_id',
+    productsTable: `${productSuppliersId} table`,
+    productsTableBody: `${productSuppliersId} table tbody`,
+    productSupplierRow: {
+      supplierNameCell: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name`,
+      supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
+      supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
+      productSupplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'product_supplier_id'),
+      referenceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_reference'),
+      priceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_price_tax_excluded'),
+      currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
+    },
+  },
   redirectOption: {
     typeInput: '#product_redirect_option_type',
     targetInput: '#product_redirect_option_target',
