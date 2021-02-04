@@ -83,6 +83,15 @@ body {
 
       > .btn-group {
         margin-top: -7px;
+
+        .btn-default {
+          @extend .btn-default;
+
+          i {
+            // stylelint-disable-next-line
+            margin-right: 0!important;
+          }
+        }
       }
 
       .btn {

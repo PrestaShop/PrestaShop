@@ -408,6 +408,8 @@ $search-border-color: #bbcdd2;
     background: #fff;
     border: 1px solid $search-border-color;
     border-left: none;
+    height: 35px;
+    padding-left: 10px;
 
     &::placeholder {
       color: $gray-medium;
@@ -430,6 +432,8 @@ $search-border-color: #bbcdd2;
       @include box-shadow(none);
       height: 29px;
       outline: none;
+      padding: 6px 8px;
+      padding-right: 0;
     }
 
     .btn-default {
