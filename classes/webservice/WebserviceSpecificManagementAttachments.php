@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2016 PrestaShop
  *
@@ -24,6 +23,11 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
+
+use PrestaShop\PrestaShop\Core\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 
 class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificManagementInterface
@@ -177,7 +181,6 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
          * [Utilizes default webservice handling by emulating non-specific management]
          *  attachments/ ("attachment_list")
          *      GET     (xml/json) (list of attachments)
-         *      POST    (xml/json) (create/new) (not recommended, as no file will be automatically set (see attachments/file))
          *  attachments/[1,+] ("attachment_description") (N-3)
          *      GET     (xml/json)
          *      PUT     (xml/json) (update)
@@ -186,9 +189,11 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
          * [Specific management for file upload/download}
          *  attachments/file/
          *      POST    (bin) (create new attachment)
+         *      POST    (multipart) (create new attachment)
          *  attachments/file/[1,+] (file management)
          *      GET     (bin) (download file)
          *      PUT     (bin) (upload/update file)
+         *      PUT    (multipart) (upload/update file)
          *      DELETE
          */
         if ($this->getWsObject()->urlSegment[1] == 'file') {
@@ -220,8 +225,6 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                 case 'HEAD':
                     $this->getWsObject()->executeEntityGetAndHead();
                     break;
-                case 'POST':
-                    $this->getWsObject()->executeEntityPost();
                     break;
                 case 'PUT':
                     $this->getWsObject()->executeEntityPut();
@@ -231,6 +234,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     break;
             }
         }
+
         // Need to set an object for the WebserviceOutputBuilder object in any case
         // because schema need to get webserviceParameters of this object
         if (isset($object)) {
@@ -245,7 +249,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      *
      * @return string[] file details
      */
-    public function executeFileGetAndHead()
+    public function executeFileGetAndHead(): array
     {
         $attachment = new Attachment((int) $this->getWsObject()->urlSegment[2]);
         if (!$attachment) {
@@ -296,47 +300,64 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     public function executeFileAddAndEdit()
     {
         // Load attachment with or without id depending on method
-        $attachment = new Attachment($this->getWsObject()->method == 'PUT' ? (int) $this->getWsObject()->urlSegment[1] : null);
+        $attachment = new Attachment($this->getWsObject()->method === 'PUT' ? (int) $this->getWsObject()->urlSegment[1] : null);
 
-        // Check form data
+        $maximumSize = ((int) Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')) * 1024 * 1024;
+        $uploadedFile = new UploadedFile(
+            _PS_DOWNLOAD_DIR_,
+            $maximumSize
+        );
+
         if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
-            // Ensure file is within allowed size limit
-            if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-                $this->getWsObject()->errors[] = sprintf(
-                    $this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
-                    Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024,
-                    number_format(($_FILES['file']['size'] / 1024), 2, '.', '')
-                );
-            } else {
-                // Assign unique id
-                if (!$attachment->id) {
-                    do {
-                        $uniqid = sha1(uniqid()); // must be a sha1
-                    } while (file_exists(PS_DOWNLOAD_DIR . $uniqid));
-                    $attachment->file = $uniqid;
-                }
-
-                $attachment->file_name = $_FILES['file']['name'];
-                $attachment->mime = $_FILES['file']['type'];
-                $attachment->name[Configuration::get('PS_LANG_DEFAULT')] = $_POST['name'];
-
-                // Move file to download dir
-                if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $attachment->file)) {
-                    $this->getWsObject()->errors[] = $this->l('Failed to copy the file.');
-                } else {
-                    // Create/update attachment
-                    if ($attachment->id) {
-                        $attachment->update();
-                    } else {
-                        $attachment->add();
-                    }
-                    // Remember affected entity
-                    $this->attachment_id = $attachment->id;
-                }
-
-                // Delete temp file
-                @unlink($_FILES['file']['tmp_name']);
-            }
+            // Standard HTTP upload
+            $fileToUpload = $_FILES['file'];
+        } else {
+            // Get data from binary
+            $fileToUpload = file_get_contents('php://input');
         }
+
+        try {
+            $file = $uploadedFile->upload($fileToUpload);
+            if (!empty($attachment->id)) {
+                unlink(PS_DOWNLOAD_DIR . $attachment->file);
+            }
+
+            $attachment->file = $file['id'];
+            $attachment->file_name = $file['file_name'];
+            $attachment->mime = $file['mime_type'];
+            $attachment->name[Configuration::get('PS_LANG_DEFAULT')] = $_POST['name'] ?? $file['file_name'];
+
+            if (!empty($attachment->id)) {
+                $attachment->update();
+            } else {
+                $attachment->add();
+            }
+            // Remember affected entity
+            $this->attachment_id = $attachment->id;
+        } catch (MaximumSizeExceeded $e) {
+            $this->getWsObject()->errors[] = $this->trans(
+                'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
+                [$maximumSize, $e->getMessage()],
+                'Admin.Notifications.Error'
+            );
+        } catch (FailedToCopyException $e) {
+            $this->getWsObject()->errors[] = $this->trans(
+                'Failed to copy the file.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+    }
+
+    /**
+     * @param string $message
+     * @param array $params
+     * @param string $domain
+     *
+     * @return string
+     */
+    protected function trans(string $message, array $params, string $domain)
+    {
+        return Context::getContext()->getTranslator()->trans($message, $params, $domain);
     }
 }
