@@ -225,7 +225,6 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                 case 'HEAD':
                     $this->getWsObject()->executeEntityGetAndHead();
                     break;
-                    break;
                 case 'PUT':
                     $this->getWsObject()->executeEntityPut();
                     break;
@@ -299,8 +298,15 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
     public function executeFileAddAndEdit()
     {
-        // Load attachment with or without id depending on method
-        $attachment = new Attachment($this->getWsObject()->method === 'PUT' ? (int) $this->getWsObject()->urlSegment[1] : null);
+        // Load attachment without checking the method, because of
+        // PUT which is cleared the $_FILES var
+        $attachmentId = null;
+        if (isset($this->getWsObject()->urlSegment[2])
+        ) {
+            $attachmentId = (int) $this->getWsObject()->urlSegment[2];
+        }
+
+        $attachment = new Attachment($attachmentId);
 
         $maximumSize = ((int) Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')) * 1024 * 1024;
         $uploadedFile = new UploadedFile(

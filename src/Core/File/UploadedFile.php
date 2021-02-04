@@ -128,7 +128,6 @@ class UploadedFile implements UploadedFileInterface
     public function uploadFromHttpPost(array $file): array
     {
         $this->validate($file);
-
         $fileName = $this->generateFileName();
         if (!move_uploaded_file($file['tmp_name'], $this->downloadDirectory . $fileName)) {
             throw new FileUploadException();
