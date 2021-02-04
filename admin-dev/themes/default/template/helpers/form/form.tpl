@@ -73,7 +73,7 @@
 						{else}
 							{block name="label"}
 								{if isset($input.label)}
-									<label class="control-label col-lg-3{if isset($input.required) && $input.required && $input.type != 'radio'} required{/if}">
+									<label class="control-label col-lg-4{if isset($input.required) && $input.required && $input.type != 'radio'} required{/if}">
 										{if isset($input.hint)}
 										<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
@@ -96,7 +96,7 @@
 							{/block}
 
 							{block name="field"}
-								<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if}{if !isset($input.label)} col-lg-offset-3{/if}">
+								<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}8{/if}{if !isset($input.label)} col-lg-offset-3{/if}">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang) AND $input.lang}
