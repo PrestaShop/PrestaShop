@@ -1,7 +1,7 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-class OnSale extends FOBasePage {
+class PricesDrop extends FOBasePage {
   constructor() {
     super();
 
@@ -9,4 +9,4 @@ class OnSale extends FOBasePage {
   }
 }
 
-module.exports = new OnSale();
+module.exports = new PricesDrop();
