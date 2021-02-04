@@ -78,7 +78,7 @@ class LegacyContext
      */
     public function getContext()
     {
-        if (null === self::$instance) {
+        if (null === static::$instance) {
             $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
@@ -86,10 +86,10 @@ class LegacyContext
                 $adminController = new AdminController();
                 $adminController->initShopContext();
             }
-            self::$instance = $legacyContext;
+            static::$instance = $legacyContext;
         }
 
-        return self::$instance;
+        return static::$instance;
     }
 
     /**
@@ -352,6 +352,6 @@ class LegacyContext
      */
     public static function setInstanceForTesting(Context $testInstance)
     {
-        self::$instance = $testInstance;
+        static::$instance = $testInstance;
     }
 }

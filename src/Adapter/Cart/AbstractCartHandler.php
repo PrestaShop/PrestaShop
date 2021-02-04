@@ -98,7 +98,7 @@ abstract class AbstractCartHandler
     protected function getCartTaxCountry(Cart $cart): Country
     {
         $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
+        $taxAddressId = $cart->{$taxAddressType} ?? $cart->id_address_delivery;
         $taxAddress = new Address($taxAddressId);
 
         return new Country($taxAddress->id_country);
