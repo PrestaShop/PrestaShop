@@ -86,14 +86,11 @@ class DomainTranslation
 
     public function getMissingTranslationsCount(): int
     {
-        $missingTranslations = 0;
-        foreach ($this->messageTranslations as $messagesTranslation) {
-            if (!$messagesTranslation->isTranslated()) {
-                ++$missingTranslations;
-            }
-        }
+        $missingTranslations = array_filter($this->messageTranslations, function (MessageTranslation $messagesTranslation) {
+            return !$messagesTranslation->isTranslated();
+        });
 
-        return $missingTranslations;
+        return count($missingTranslations);
     }
 
     /**
@@ -156,16 +153,11 @@ class DomainTranslation
      *
      * @return array
      */
-    public function getTree(array &$tree): array
+    public function mergeTree(array &$tree): array
     {
-        // template for initializing metadata
-        $emptyMeta = [
-            'count' => 0,
-            'missing_translations' => 0,
-        ];
         if (empty($tree)) {
             $tree = [
-                Translations::METADATA_KEY_NAME => $emptyMeta,
+                Translations::METADATA_KEY_NAME => Translations::EMPTY_META,
             ];
         }
 
@@ -188,7 +180,7 @@ class DomainTranslation
                 $isLastDomainPart = $partNumber === (count($parts) - 1);
                 $subtree[$subdomainPartName][Translations::METADATA_KEY_NAME] = ($isLastDomainPart && isset($content[Translations::METADATA_KEY_NAME]))
                     ? $content[Translations::METADATA_KEY_NAME]
-                    : $emptyMeta;
+                    : Translations::EMPTY_META;
             }
 
             // move pointer to said branch

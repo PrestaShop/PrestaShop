@@ -25,8 +25,9 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Provider\Catalogue;
+namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
@@ -52,7 +53,7 @@ class UserTranslatedCatalogueProviderTest extends TestCase
      */
     private $databaseTranslationLoader;
 
-    public function setUp()
+    protected function setUp()
     {
         $catalogue = new MessageCatalogue(CatalogueProviderInterface::DEFAULT_LOCALE);
         foreach (self::$wordings as $domain => $messages) {
@@ -67,7 +68,7 @@ class UserTranslatedCatalogueProviderTest extends TestCase
 
     public function testItFailsWhenTranslationDomainsAreNotStrings()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new UserTranslatedCatalogueProvider($this->databaseTranslationLoader, ['domain', 1]);
     }
 

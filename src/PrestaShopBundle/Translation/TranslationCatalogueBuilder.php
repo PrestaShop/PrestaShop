@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation;
 
 use Exception;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\DTO\DomainTranslation;
 use PrestaShopBundle\Translation\DTO\MessageTranslation;
@@ -240,13 +241,13 @@ class TranslationCatalogueBuilder
             throw new UnexpectedTranslationTypeException('This \'type\' param is not valid.');
         }
         if (self::TYPE_MODULES === $type && empty($module)) {
-            throw new \InvalidArgumentException('This \'selected\' param is not valid. Module must be given.');
+            throw new InvalidArgumentException('This \'selected\' param is not valid. Module must be given.');
         }
         if (self::TYPE_THEMES === $type && empty($theme)) {
-            throw new \InvalidArgumentException('This \'selected\' param is not valid. Theme must be given.');
+            throw new InvalidArgumentException('This \'selected\' param is not valid. Theme must be given.');
         }
         if (null !== $domain && empty($domain)) {
-            throw new \InvalidArgumentException('The given \'domain\' is not valid.');
+            throw new InvalidArgumentException('The given \'domain\' is not valid.');
         }
     }
 }
