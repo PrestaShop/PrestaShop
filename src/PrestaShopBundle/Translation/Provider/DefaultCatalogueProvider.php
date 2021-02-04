@@ -34,7 +34,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  * Gets catalogue within the files filtered by name in the directory given.
  * The Default catalogue is the base wording, in english, and stored in filesystem or extracted from templates.
  */
-class DefaultCatalogueProvider
+class DefaultCatalogueProvider extends AbstractCatalogueProvider
 {
     /**
      * @var string
@@ -118,17 +118,5 @@ class DefaultCatalogueProvider
         }
 
         return $messageCatalogue;
-    }
-
-    /**
-     * Validate if an array only have strings in it.
-     *
-     * @param array $array
-     *
-     * @return bool
-     */
-    private function assertIsArrayOfString(array $array): bool
-    {
-        return count($array) === count(array_filter($array, function ($element) { return is_string($element); }));
     }
 }
