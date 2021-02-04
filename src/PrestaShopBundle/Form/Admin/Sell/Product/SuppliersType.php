@@ -69,6 +69,8 @@ class SuppliersType extends TranslatorAwareType
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
                 'choice_attr' => function ($choice, $name) {
                     return ['data-label' => $name];
                 },
@@ -77,17 +79,20 @@ class SuppliersType extends TranslatorAwareType
             ->add('default_supplier_id', ChoiceType::class, [
                 'choices' => $suppliers,
                 'expanded' => true,
+                'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
                 'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
                 'choice_attr' => [
                     'disabled' => true,
                 ],
             ])
-            ->add('supplier_references', CollectionType::class, [
+            ->add('product_suppliers', CollectionType::class, [
                 'label' => false,
-                'entry_type' => SupplierReferencesType::class,
+                'entry_type' => ProductSupplierType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype_name' => '__SUPPLIER_ID__',
+                'prototype_name' => '__PRODUCT_SUPPLIER_INDEX__',
             ])
         ;
     }

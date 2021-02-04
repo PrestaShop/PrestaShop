@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -77,10 +78,19 @@ class ProductSupplierType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('product_supplier_id', HiddenType::class)
-            ->add('combination_id', HiddenType::class)
+            ->add('supplier_id', HiddenType::class, [
+                'required' => true,
+            ])
+            ->add('supplier_name', HiddenType::class, [
+                'required' => false,
+            ])
+            ->add('product_supplier_id', HiddenType::class, [
+                'required' => false,
+            ])
+            ->add('combination_id', HiddenType::class, [
+                'required' => false,
+            ])
             ->add('supplier_reference', TextType::class, [
-                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_REFERENCE),
                     new Length([
@@ -90,16 +100,22 @@ class ProductSupplierType extends TranslatorAwareType
             ])
             ->add('supplier_price_tax_excluded', MoneyType::class, [
                 'currency' => $this->currencyIsoCode,
+                'scale' => self::PRESTASHOP_DECIMALS,
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
-                'data' => '0',
             ])
             ->add('currency_id', ChoiceType::class, [
+                'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
             ])
         ;
+
+        // Used to force default value when empty (especially in the prototype)
+        $builder->get('supplier_price_tax_excluded')->addModelTransformer(new DefaultEmptyDataTransformer(0.0));
     }
 }
