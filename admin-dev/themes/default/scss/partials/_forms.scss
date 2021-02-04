@@ -293,10 +293,21 @@ input[type="tel"] {
   font-family: $url-font-content-name, Helvetica, Arial, $icon-font-family, sans-serif !important;
 }
 
-.bootstrap {
-  .form-horizontal {
+
+@media (min-width: $screen-sm-min) {
+  .bootstrap {
     .control-label {
       padding-top: 7px;
+      padding-right: 25px;
     }
+  }
+}
+
+.form-horizontal {
+  .form-wrapper {
+    padding: 6px 0;
+    flex: 0 0 83.33333%;
+    max-width: 83.33333%;
+    margin: auto;
   }
 }
