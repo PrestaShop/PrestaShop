@@ -130,6 +130,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         );
 
         SharedStorage::getStorage()->set($orderReference, $orderId->getValue());
+
+        // Once the order is created, the cart in the context should be null
+        Context::getContext()->cart = null;
     }
 
     /**
