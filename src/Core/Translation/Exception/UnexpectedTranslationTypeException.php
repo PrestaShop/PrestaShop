@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,16 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShop\PrestaShop\Core\Translation\Exception;
 
-use PrestaShop\PrestaShop\Core\Translation\Finder\TranslationFinder as CoreTranslationFinder;
+use Exception;
 
 /**
- * Helper used to build a MessageCataloguer from xliff files
- *
- * @deprecated Please use PrestaShop\PrestaShop\Core\Translation\Provider\TranslationFinder instead
+ * This exception is thrown when we use a translation type which is not expected.
+ * A translation type represents a part of the application logic (modules, themes, backoffice, frontoffice ...).
+ * The available types are listed in TranslationCatalogueBuilder::ALLOWED_TYPES.
  */
-class TranslationFinder extends CoreTranslationFinder
+class UnexpectedTranslationTypeException extends Exception
 {
 }
