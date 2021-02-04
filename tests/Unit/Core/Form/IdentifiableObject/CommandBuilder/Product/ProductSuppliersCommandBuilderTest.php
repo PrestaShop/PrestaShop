@@ -65,7 +65,7 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
         yield [
             [
                 'suppliers' => [
-                    'supplier_references' => [],
+                    'product_suppliers' => [],
                 ],
             ],
             [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
@@ -98,26 +98,22 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
             [
                 'suppliers' => [
                     'default_supplier_id' => 5,
-                    'supplier_references' => [
+                    'product_suppliers' => [
                         [
                             'supplier_id' => 5,
-                            'product_supplier' => [
-                                'currency_id' => 2,
-                                'supplier_reference' => '',
-                                'supplier_price_tax_excluded' => '0.5',
-                                'combination_id' => 0,
-                                'product_supplier_id' => null,
-                            ],
+                            'currency_id' => 2,
+                            'supplier_reference' => '',
+                            'supplier_price_tax_excluded' => '0.5',
+                            'combination_id' => 0,
+                            'product_supplier_id' => null,
                         ],
                         [
                             'supplier_id' => 3,
-                            'product_supplier' => [
-                                'currency_id' => 5,
-                                'supplier_reference' => 'lel',
-                                'supplier_price_tax_excluded' => '50.65',
-                                'combination_id' => null,
-                                'product_supplier_id' => 1,
-                            ],
+                            'currency_id' => 5,
+                            'supplier_reference' => 'lel',
+                            'supplier_price_tax_excluded' => '50.65',
+                            'combination_id' => null,
+                            'product_supplier_id' => 1,
                         ],
                     ],
                 ],

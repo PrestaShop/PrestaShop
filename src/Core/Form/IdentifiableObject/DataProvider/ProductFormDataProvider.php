@@ -261,11 +261,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $supplierForEditing = $supplierOption->getProductSupplierForEditing();
             $supplierId = $supplierOption->getSupplierId();
 
-            $suppliersData['supplier_ids'][$supplierId] = $supplierId;
-            $suppliersData['supplier_references'][$supplierId]['supplier_id'] = $supplierId;
-            $suppliersData['supplier_references'][$supplierId]['supplier_name'] = $supplierOption->getSupplierName();
-
-            $suppliersData['supplier_references'][$supplierId]['product_supplier'] = [
+            $suppliersData['supplier_ids'][] = $supplierId;
+            $suppliersData['product_suppliers'][] = [
+                'supplier_id' => $supplierId,
+                'supplier_name' => $supplierOption->getSupplierName(),
                 'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
                 'supplier_price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
                 'supplier_reference' => $supplierForEditing->getReference(),

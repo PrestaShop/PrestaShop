@@ -39,25 +39,24 @@ final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInter
      */
     public function buildCommand(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['suppliers']['supplier_references']) && !isset($formData['suppliers']['default_supplier_id'])) {
+        if (!isset($formData['suppliers']['product_suppliers']) && !isset($formData['suppliers']['default_supplier_id'])) {
             return [];
         }
 
-        $suppliers = $formData['suppliers'];
-
-        if (empty($suppliers['supplier_references'])) {
+        $productSuppliersData = $formData['suppliers']['product_suppliers'];
+        if (empty($productSuppliersData)) {
             return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue())];
         }
 
         $productSuppliers = [];
-        $defaultSupplierId = (int) $suppliers['default_supplier_id'];
-        foreach ($suppliers['supplier_references'] as $supplierReferenceForm) {
-            $supplierId = (int) $supplierReferenceForm['supplier_id'];
+        $defaultSupplierId = (int) $formData['suppliers']['default_supplier_id'];
+        foreach ($productSuppliersData as $productSupplierDatum) {
+            $supplierId = (int) $productSupplierDatum['supplier_id'];
 
             $productSuppliers[] = $this->formatProductSupplier(
                 $productId->getValue(),
                 $supplierId,
-                $supplierReferenceForm['product_supplier']
+                $productSupplierDatum
             );
         }
 
