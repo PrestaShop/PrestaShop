@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Provider\CatalogueProviderInterface;
@@ -84,7 +85,7 @@ class DefaultCatalogueProviderTest extends TestCase
 
     public function testItFailsWhenFiltersAreNotStrings()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new DefaultCatalogueProvider('/tmp', ['filter', 1]);
     }
 

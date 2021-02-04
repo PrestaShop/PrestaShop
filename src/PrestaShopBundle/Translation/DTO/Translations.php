@@ -31,16 +31,15 @@ namespace PrestaShopBundle\Translation\DTO;
 class Translations
 {
     public const METADATA_KEY_NAME = '__metadata';
+    public const EMPTY_META = [
+        'count' => 0,
+        'missing_translations' => 0,
+    ];
 
     /**
      * @var DomainTranslation[]
      */
-    private $domainTranslations;
-
-    public function __construct()
-    {
-        $this->domainTranslations = [];
-    }
+    private $domainTranslations = [];
 
     /**
      * @param DomainTranslation $domainTranslations
@@ -81,25 +80,21 @@ class Translations
 
     public function getTranslationsCount(): int
     {
-        $countTranslations = 0;
-        foreach ($this->domainTranslations as $domainTranslation) {
-            $countTranslations += $domainTranslation->getTranslationsCount();
-        }
-
-        return $countTranslations;
+        return array_reduce($this->domainTranslations, function ($carry, $domainTranslation) {
+            return $carry + $domainTranslation->getTranslationsCount();
+        }, 0);
     }
 
     public function getMissingTranslationsCount(): int
     {
-        $missingTranslations = 0;
-        foreach ($this->domainTranslations as $domainTranslation) {
-            $missingTranslations += $domainTranslation->getMissingTranslationsCount();
-        }
-
-        return $missingTranslations;
+        return array_reduce($this->domainTranslations, function ($carry, $domainTranslation) {
+            return $carry + $domainTranslation->getMissingTranslationsCount();
+        }, 0);
     }
 
     /**
+     * @param bool $withMetadata
+     *
      * @return array
      */
     public function toArray(bool $withMetadata = true): array
@@ -121,19 +116,14 @@ class Translations
         return $data;
     }
 
-    public function getTree(): array
+    public function buildTree(): array
     {
         // template for initializing metadata
-        $emptyMeta = [
-            'count' => 0,
-            'missing_translations' => 0,
-        ];
-
         $tree = [
-            self::METADATA_KEY_NAME => $emptyMeta,
+            self::METADATA_KEY_NAME => self::EMPTY_META,
         ];
         foreach ($this->domainTranslations as $domainTranslation) {
-            $domainTranslation->getTree($tree);
+            $domainTranslation->mergeTree($tree);
         }
 
         $this->updateCounters($tree);

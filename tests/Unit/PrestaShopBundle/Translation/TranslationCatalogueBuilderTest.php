@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Translation;
 
 use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\DTO\Translations;
 use PrestaShopBundle\Translation\Exception\UnexpectedTranslationTypeException;
@@ -74,7 +75,7 @@ class TranslationCatalogueBuilderTest extends TestCase
      */
     private $translationCatalogueBuilder;
 
-    public function setUp()
+    protected function setUp()
     {
         $provider = $this->createMock(CatalogueProviderInterface::class);
 
@@ -121,7 +122,7 @@ class TranslationCatalogueBuilderTest extends TestCase
 
     public function testGetDomainCatalogueFailsWhenDomainIsEmpty()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->translationCatalogueBuilder->getDomainCatalogue(
             TranslationCatalogueBuilder::TYPE_BACK,
             'en',

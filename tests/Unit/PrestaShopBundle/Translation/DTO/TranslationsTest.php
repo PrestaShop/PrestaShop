@@ -119,10 +119,7 @@ class TranslationsTest extends TestCase
         $translations = new Translations();
 
         $this->assertSame([
-            Translations::METADATA_KEY_NAME => [
-                'count' => 0,
-                'missing_translations' => 0,
-            ],
+            Translations::METADATA_KEY_NAME => Translations::EMPTY_META,
         ], $translations->toArray());
 
         $messageTranslation = new MessageTranslation('theKey');
@@ -338,11 +335,8 @@ class TranslationsTest extends TestCase
         $translations = new Translations();
 
         $this->assertSame([
-            Translations::METADATA_KEY_NAME => [
-                'count' => 0,
-                'missing_translations' => 0,
-            ],
-        ], $translations->getTree());
+            Translations::METADATA_KEY_NAME => Translations::EMPTY_META,
+        ], $translations->buildTree());
 
         $domainTranslation = new DomainTranslation('firstDomain');
         $translations->addDomainTranslation($domainTranslation);
@@ -364,7 +358,7 @@ class TranslationsTest extends TestCase
                     ],
                 ],
             ],
-        ], $translations->getTree());
+        ], $translations->buildTree());
 
         $domainTranslation = new DomainTranslation('firstDomainFirstSubDomain');
         $translations->addDomainTranslation($domainTranslation);
@@ -392,7 +386,7 @@ class TranslationsTest extends TestCase
                     ],
                 ],
             ],
-        ], $translations->getTree());
+        ], $translations->buildTree());
 
         $domainTranslation = new DomainTranslation('firstDomainSecondSubDomain');
 
@@ -429,6 +423,6 @@ class TranslationsTest extends TestCase
                     ],
                 ],
             ],
-        ], $translations->getTree());
+        ], $translations->buildTree());
     }
 }

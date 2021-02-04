@@ -101,10 +101,7 @@ class DomainTranslationTest extends TestCase
         $domainTranslation = new DomainTranslation('domainName');
 
         $this->assertSame([
-            Translations::METADATA_KEY_NAME => [
-                'count' => 0,
-                'missing_translations' => 0,
-            ],
+            Translations::METADATA_KEY_NAME => Translations::EMPTY_META,
         ], $domainTranslation->toArray());
 
         $messageTranslationFirst = new MessageTranslation('theKey');
@@ -299,7 +296,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
 
         $messageTranslationFirst = new MessageTranslation('theKey');
         $messageTranslationFirst->setFileTranslation('fileTranslation');
@@ -324,7 +321,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
 
         $messageTranslationSecond = new MessageTranslation('aKey');
         $messageTranslationSecond->setFileTranslation('aFileTranslation');
@@ -348,7 +345,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
 
         $messageTranslationThird = new MessageTranslation('theSecondKey');
         $domainTranslation->addMessageTranslation($messageTranslationThird);
@@ -371,7 +368,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
     }
 
     public function testGetTreeWithSubDomain()
@@ -402,7 +399,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
 
         $messageTranslationFirst = new MessageTranslation('theKey');
         $messageTranslationFirst->setFileTranslation('fileTranslation');
@@ -433,7 +430,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
 
         // reset the tree
         $tree = [];
@@ -460,7 +457,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
 
         // Test the missing translations counter
         $messageTranslationSecond = new MessageTranslation('aKey');
@@ -490,7 +487,7 @@ class DomainTranslationTest extends TestCase
                     ],
                 ],
             ],
-        ], $domainTranslation->getTree($tree));
+        ], $domainTranslation->mergeTree($tree));
     }
 
     public function testSplitDomain()

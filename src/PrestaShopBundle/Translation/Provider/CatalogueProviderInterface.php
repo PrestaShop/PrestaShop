@@ -35,6 +35,11 @@ use Symfony\Component\Translation\MessageCatalogue;
  *   - Default catalogue : It the base wording, in english, and stored in filesystem or extracted from templates.
  *   - File translated : It's the translation in a specific language. It's stored in filesystem and given by language pack or a module developer.
  *   - Database or User translated : It's the translation made by the user himself. It's done from the Admin and stored in DB.
+ *
+ * Example: for string "Warning"
+ * - default catalogue contains the string "Warning"
+ * - if French language pack is used, the file catalogue will contain the string "Attention"
+ * - if the BackOffice admin has decided to translate this string in a different way, the user catalogue will contain the BackOffice admin input
  */
 interface CatalogueProviderInterface
 {
@@ -57,7 +62,7 @@ interface CatalogueProviderInterface
     public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogue;
 
     /**
-     * Gets the file translated catalogue : t's the translations in a specific language.
+     * Gets the file translated catalogue : it's the translations in a specific language.
      * It's stored in filesystem and given by language pack or a module developer.
      *
      * @param string $locale

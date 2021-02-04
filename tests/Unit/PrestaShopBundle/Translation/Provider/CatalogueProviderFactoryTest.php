@@ -41,7 +41,7 @@ class CatalogueProviderFactoryTest extends TestCase
      */
     private $factory;
 
-    public function setUp()
+    protected function setUp()
     {
         $databaseTranslationLoader = $this->createMock(DatabaseTranslationLoader::class);
 

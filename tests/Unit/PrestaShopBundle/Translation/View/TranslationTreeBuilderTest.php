@@ -70,7 +70,7 @@ class TranslationTreeBuilderTest extends TestCase
      */
     private $treeBuilder;
 
-    public function setUp()
+    protected function setUp()
     {
         $provider = $this->createMock(CatalogueProviderInterface::class);
 

@@ -103,7 +103,7 @@ class TranslationsTreeBuilder
             $search,
             $theme,
             $module
-        )->getTree();
+        )->buildTree();
 
         return ['tree' => $this->recursivelyBuildApiTree($tree, null)];
     }

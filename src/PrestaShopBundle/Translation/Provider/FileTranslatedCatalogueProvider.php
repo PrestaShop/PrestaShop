@@ -104,6 +104,6 @@ class FileTranslatedCatalogueProvider
      */
     private function assertIsArrayOfString(array $array): bool
     {
-        return count($array) === count(array_filter($array, function ($element) { return is_string($element); }));
+        return count($array) === count(array_filter($array, 'is_string'));
     }
 }
