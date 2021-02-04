@@ -40,6 +40,7 @@
     font-size: $font-size-base;
     @include border-radius(0);
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+
     &::before,
     &::after {
       position: absolute;
@@ -51,12 +52,14 @@
       content: " ";
       border: solid transparent;
     }
+
     &::after {
       margin-right: 1px;
       border-color: transparent;
       border-width: 7px;
       border-bottom-color: #fff;
     }
+
     &::before {
       margin-left: -8px;
       border-color: transparent;
@@ -125,6 +128,7 @@
             bottom: 0;
             display: block;
             width: 100%;
+
             .mobile & {
               bottom: 3.125rem;
             }
@@ -172,6 +176,7 @@
       }
     }
   }
+
   .mobile & {
     .nav-link::before {
       display: none;
@@ -179,15 +184,19 @@
       font-size: 30px;
       color: $gray-dark;
     }
+
     #orders-tab::before {
       content: "\E8CB";
     }
+
     #customers-tab::before {
       content: "\E7FE";
     }
+
     #messages-tab::before {
       content: "\E0BE";
     }
+
     .no-notification {
       top: 7.75rem;
     }

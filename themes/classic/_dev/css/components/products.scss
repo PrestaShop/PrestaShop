@@ -13,6 +13,21 @@
 
 #product-description-short {
   color: $gray-darker;
+
+  ul,
+  ol {
+    padding-left: 0;
+    list-style-position: inside;
+
+    li {
+      font-size: 0.9375rem;
+      color: $gray;
+    }
+  }
+
+  ul {
+    list-style-type: disc;
+  }
 }
 
 .product-information {
@@ -31,10 +46,19 @@
       height: auto;
     }
 
-    ul {
+    ul,
+    ol {
       padding-left: 0.75rem;
-      list-style: inherit;
       list-style-position: inside;
+
+      li {
+        font-size: 0.9375rem;
+        color: $gray;
+      }
+    }
+
+    ul {
+      list-style-type: disc;
     }
   }
 }
@@ -396,6 +420,7 @@
       }
     }
   }
+
   .modal-body {
     padding: 3.125rem 1.875rem;
     background: $btn-warning-color;
@@ -433,6 +458,7 @@
       color: $brand-success;
     }
   }
+
   .product-name {
     font-size: 1.125rem;
     color: $brand-primary;

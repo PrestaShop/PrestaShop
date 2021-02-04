@@ -35,6 +35,7 @@
     line-height: inherit;
     color: #fff;
   }
+
   &.mobile-nav {
     width: 70%;
     margin-top: $size-header-height + ($header-mobile-padding-y * 2);
@@ -68,9 +69,11 @@
       display: block;
       margin-left: 0;
     }
+
     .onboarding-navbar {
       display: none;
     }
+
     .panel-collapse {
       padding-left: 0;
 
@@ -78,6 +81,7 @@
         padding-left: 0.75rem;
       }
     }
+
     .employee-avatar {
       padding-top: 1rem;
       text-align: center;
@@ -113,6 +117,7 @@
         }
       }
     }
+
     .shop-list {
       padding-bottom: 1rem;
       font-weight: 600;
@@ -124,6 +129,7 @@
         }
       }
     }
+
     .main-menu {
       margin-top: 0.625rem;
 
@@ -131,6 +137,7 @@
         padding-bottom: 1rem;
       }
     }
+
     .shop-list-title {
       margin-bottom: 0.9375rem;
       font-size: 1rem;
@@ -147,6 +154,7 @@
         content: "\E313";
       }
     }
+
     .items-list {
       padding-left: 0;
 
@@ -181,6 +189,7 @@
           }
         }
       }
+
       li:first-child a {
         padding: 0.9375rem 1.25rem;
         font-size: 0.9375rem;

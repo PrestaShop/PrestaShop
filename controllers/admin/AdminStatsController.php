@@ -1025,6 +1025,17 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
                 break;
 
+            case 'shopping_cart_total':
+                $cartId = Tools::getValue('cartId');
+                $cart = new Cart((int) $cartId);
+                if (Validate::isLoadedObject($cart)) {
+                    $value = $this->context->getCurrentLocale()->formatPrice(
+                        $cart->getCartTotalPrice(),
+                        Currency::getIsoCodeById((int) $cart->id_currency)
+                    );
+                }
+                break;
+
             default:
                 $value = false;
         }

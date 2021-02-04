@@ -85,6 +85,15 @@ class AddAddress extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
+
+  /**
+   * Is vat number input is required
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async isVatNumberRequired(page) {
+    return this.elementVisible(page, `${this.vatNumberInput}:required`, 1000);
+  }
 }
 
 module.exports = new AddAddress();

@@ -553,6 +553,10 @@ class SearchCore
                             $sql .= ', pa.ean13 AS pa_ean13';
 
                             break;
+                        case 'pa_isbn':
+                            $sql .= ', pa.isbn AS pa_isbn';
+
+                            break;
                         case 'pa_upc':
                             $sql .= ', pa.upc AS pa_upc';
 
@@ -609,6 +613,10 @@ class SearchCore
                             break;
                         case 'ean13':
                             $sql .= ', p.ean13';
+
+                            break;
+                        case 'isbn':
+                            $sql .= ', p.isbn';
 
                             break;
                         case 'upc':
@@ -748,6 +756,8 @@ class SearchCore
             'pa_supplier_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'isbn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_isbn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'mpn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),

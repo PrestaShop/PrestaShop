@@ -32,6 +32,7 @@ use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ContextCore.
@@ -51,6 +52,9 @@ class ContextCore
 
     /** @var Cookie */
     public $cookie;
+
+    /** @var SessionInterface|null */
+    public $session;
 
     /** @var Link */
     public $link;

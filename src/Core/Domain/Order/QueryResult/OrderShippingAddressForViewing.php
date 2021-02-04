@@ -47,6 +47,12 @@ class OrderShippingAddressForViewing
      * @var string
      */
     private $companyName;
+
+    /**
+     * @var string|null
+     */
+    private $vatNumber;
+
     /**
      * @var string
      */
@@ -87,6 +93,21 @@ class OrderShippingAddressForViewing
      */
     private $mobilePhoneNumber;
 
+    /**
+     * @param int $addressId
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $companyName
+     * @param string $address1
+     * @param string $address2
+     * @param string $stateName
+     * @param string $cityName
+     * @param string $countryName
+     * @param string $postCode
+     * @param string $phone
+     * @param string $phoneMobile
+     * @param string|null $vatNumber
+     */
     public function __construct(
         int $addressId,
         string $firstName,
@@ -99,12 +120,14 @@ class OrderShippingAddressForViewing
         string $countryName,
         string $postCode,
         string $phone,
-        string $phoneMobile
+        string $phoneMobile,
+        ?string $vatNumber = null
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->companyName = $companyName;
+        $this->vatNumber = $vatNumber;
         $this->address1 = $address1;
         $this->address2 = $address2;
         $this->stateName = $stateName;
@@ -137,6 +160,14 @@ class OrderShippingAddressForViewing
     public function getCompanyName(): string
     {
         return $this->companyName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVatNumber(): ?string
+    {
+        return $this->vatNumber;
     }
 
     /**

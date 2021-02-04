@@ -8,10 +8,33 @@ class Preferences extends BOBasePage {
     this.pageTitle = 'Preferences •';
     this.successfulUpdateMessage = 'Update successful';
 
+    // Handling form selectors
+    this.handlingForm = '#handling';
+    this.handlingChargesInput = '#handling_shipping_handling_charges';
+    this.saveHandlingButton = `${this.handlingForm} button`;
+
     // Carrier options selectors
+    this.carrierOptionForm = '#carrier-options';
     this.defaultCarrierSelect = '#carrier-options_default_carrier';
     this.sortBySelect = '#carrier-options_carrier_default_order_by';
-    this.saveCarrierOptionsButton = '#save-carrier-options-button';
+    this.orderBySelect = '#carrier-options_carrier_default_order_way';
+    this.saveCarrierOptionsButton = `${this.carrierOptionForm} button`;
+  }
+
+  /* Handling methods */
+
+  /**
+   * Set handling charges button
+   * @param page
+   * @param value
+   * @returns {Promise<string>}
+   */
+  async setHandlingCharges(page, value) {
+    await this.setValue(page, this.handlingChargesInput, value);
+
+    // Save handling form and return successful message
+    await this.clickAndWaitForNavigation(page, this.saveHandlingButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Carrier options methods */
@@ -31,17 +54,19 @@ class Preferences extends BOBasePage {
   }
 
   /**
-   * Set carriers sort By 'Price' or 'Position' in carrier option form
+   * Set carriers sort By 'Price' or 'Position' / order by 'Ascending' or 'descending' in carrier options form
    * @param page
    * @param sortBy
+   * @param orderBy
    * @returns {Promise<string>}
    */
-  async setCarrierSortBy(page, sortBy) {
+  async setCarrierSortOrderBy(page, sortBy, orderBy = 'Ascending') {
     await this.selectByVisibleText(page, this.sortBySelect, sortBy);
+    await this.selectByVisibleText(page, this.orderBySelect, orderBy);
 
     // Save configuration and return successful message
     await this.clickAndWaitForNavigation(page, this.saveCarrierOptionsButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

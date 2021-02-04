@@ -6,6 +6,7 @@ class AddShop extends BOBasePage {
     super();
 
     this.pageTitleCreate = 'Add new •';
+    this.pageTitleEdit = 'Edit:';
 
     // Selectors
     this.nameInput = '#name';

@@ -15,6 +15,7 @@ class Checkout extends FOBasePage {
     this.termsOfServiceLink = '#cta-terms-and-conditions-0';
     this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
+    this.shippingValueSpan = '#cart-subtotal-shipping span.value';
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
     this.createAccountOptionalNotice = `${this.personalInformationStepForm} #customer-form section p`;
@@ -101,7 +102,7 @@ class Checkout extends FOBasePage {
    * @param comment
    * @returns {Promise<boolean>}
    */
-  async chooseShippingMethodAndAddComment(page, shippingMethod, comment) {
+  async chooseShippingMethodAndAddComment(page, shippingMethod, comment = '') {
     await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethod));
     await this.setValue(page, this.deliveryMessage, comment);
     return this.goToPaymentStep(page);
@@ -149,6 +150,15 @@ class Checkout extends FOBasePage {
    */
   async getAllCarriersPrices(page) {
     return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
+  }
+
+  /**
+   * Get shipping value
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getShippingCost(page) {
+    return this.getTextContent(page, this.shippingValueSpan);
   }
 
   /**
