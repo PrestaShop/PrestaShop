@@ -67,6 +67,10 @@ body {
     @include border-radius(5px);
     @include box-shadow(0 0 4px 0 rgba(0, 0, 0, 0.06));
 
+    > h3 {
+      padding: 10px;
+    }
+
     &.panel-highlighted {
       border-color: $brand-primary !important;
       @include box-shadow(rgba($brand-primary,0.15) 0 0 0 6px inset !important);
