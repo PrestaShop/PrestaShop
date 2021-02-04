@@ -319,13 +319,4 @@ module.exports = class FOBasePage extends CommonPage {
     }
     return this.clickAndWaitForNavigation(page, selector);
   }
-
-  /**
-   * CLick on siteMap link on footer and go to page
-   * @param page
-   * @returns {Promise<void>}
-   */
-  async goToSiteMapPage(page) {
-    await this.clickAndWaitForNavigation(page, this.siteMapLink);
-  }
 };

@@ -100,7 +100,7 @@ describe('Enable display brands', async () => {
     it('should verify the existence of the brands page link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkBrandsPage_${test.args.action}`, baseContext);
 
-      await homePage.goToSiteMapPage(page);
+      await homePage.goToFooterLink(page, 'Sitemap');
       const pageTitle = await siteMapPage.getPageTitle(page);
       await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
