@@ -838,6 +838,9 @@ var form = (function() {
       });
 
       elem.submit(function(event) {
+        $.each($('input.attribute_priceTE'), function () {
+          $(this).change();
+        });
         event.preventDefault();
         send();
       });
@@ -854,6 +857,9 @@ var form = (function() {
       });
 
       $('.js-btn-save').on('click', function (event) {
+        $.each($('input.attribute_priceTE'), function () {
+          $(this).change();
+        });
         event.preventDefault();
         $('.js-spinner').css('display', 'inline-block');
         send($(this).attr('href'));
