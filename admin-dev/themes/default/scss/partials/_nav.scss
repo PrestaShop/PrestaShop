@@ -41,7 +41,7 @@
       position: fixed;
       top: 5rem;
       left: 75%;
-      display: block;
+      display: none;
       font-family: "Material Icons", sans-serif;
       font-size: 1.5rem;
       color: #fff;
@@ -64,6 +64,12 @@
     &.expanded {
       display: block;
       margin-left: 0;
+
+      &::before {
+        @include media-breakpoint-down(md) {
+          display: block;
+        }
+      }
     }
 
     .onboarding-navbar {
