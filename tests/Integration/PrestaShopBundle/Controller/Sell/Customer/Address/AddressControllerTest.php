@@ -36,6 +36,8 @@ use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
 
 class AddressControllerTest extends WebTestCase
 {
+    private const TEST_COUNTRY_ID = 21;
+
     /**
      * This will be modified during the setUp
      *
@@ -47,6 +49,11 @@ class AddressControllerTest extends WebTestCase
      * @var FormFiller
      */
     private $formFiller;
+
+    /**
+     * @var Client
+     */
+    private $client;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -60,14 +67,15 @@ class AddressControllerTest extends WebTestCase
      */
     public function setUp()
     {
-        $client = static::createClient();
-        $this->createTestAddress($client);
-        $router = $client->getKernel()->getContainer()->get('router');
+        $this->client = static::createClient();
+        $this->client->followRedirects(true);
+        $this->createTestAddress();
+        $router = $this->client->getKernel()->getContainer()->get('router');
         $addressUrl = $router->generate('admin_addresses_index');
-        $crawler = $client->request('GET', $addressUrl);
+        $crawler = $this->client->request('GET', $addressUrl);
         $addresses = $this->getAddressList($crawler);
         self::assertEquals(3, count($addresses));
-        $this->validateTestAddressExists($addresses);
+        $this->assertTestAddressExists($addresses);
     }
 
     /**
@@ -85,43 +93,49 @@ class AddressControllerTest extends WebTestCase
     }
 
     /**
-     * Tests filter for first name
+     * Tests all the filters of address controller
+     * Putting them all  into one test because it still works as intended and also is 2-3 times faster then creating a separate test for each.
      */
-    public function testFirstNameFilter(): void
+    public function testAddressFilters()
     {
-        $client = static::createClient();
-        $client->followRedirects(true);
-        $router = $client->getKernel()->getContainer()->get('router');
-        $addressUrl = $router->generate('admin_addresses_index');
-        $crawler = $client->request('GET', $addressUrl);
-        $addresses = $this->getAddressList($crawler);
-        /* Make sure we have 3 addresses before we filter by firstname */
-        self::assertEquals(3, count($addresses));
-        $filterForm = $this->fillFiltersForm($crawler, ['address[firstname]' => $this->getTestAddress()->getFirstName()]);
-        $crawler = $client->submit($filterForm);
-        $addresses = $this->getAddressList($crawler);
-        self::assertEquals(1, count($addresses));
-        $this->validateTestAddressExists($addresses);
+        $testFilters = [
+            ['address[id_address]' => $this->getTestAddress()->getId()],
+            ['address[firstname]' => $this->getTestAddress()->getFirstName()],
+            ['address[lastname]' => $this->getTestAddress()->getLastName()],
+            ['address[address1]' => $this->getTestAddress()->getAddress()],
+            ['address[postcode]' => $this->getTestAddress()->getPostCode()],
+            ['address[city]' => $this->getTestAddress()->getCity()],
+            ['address[id_country]' => self::TEST_COUNTRY_ID],
+        ];
+
+        foreach ($testFilters as $testFilter) {
+            $this->assertAddressFiltersFindOnlyTestAddress($testFilter);
+        }
     }
 
     /**
-     * Tests filter for first name
+     * Asserts that there are 3 addresses before filtering, filters by given filters
+     * and then asserts that there is only 1 address left
+     *
+     * @param array $filters
      */
-    public function testIdFilter(): void
+    private function assertAddressFiltersFindOnlyTestAddress(array $filters)
     {
-        $client = static::createClient();
-        $client->followRedirects(true);
-        $router = $client->getKernel()->getContainer()->get('router');
+        $this->client->followRedirects(true);
+        $router = $this->client->getContainer()->get('router');
         $addressUrl = $router->generate('admin_addresses_index');
-        $crawler = $client->request('GET', $addressUrl);
+        $crawler = $this->client->request('GET', $addressUrl);
         $addresses = $this->getAddressList($crawler);
-        /* Make sure we have 3 addresses before we filter by firstname */
+
+        /* Make sure we have 3 addresses before we filter, to make sure list is not affected in some other way */
         self::assertEquals(3, count($addresses));
-        $filterForm = $this->fillFiltersForm($crawler, ['address[id_address]' => $this->getTestAddress()->getId()]);
-        $crawler = $client->submit($filterForm);
+        $filterForm = $this->fillFiltersForm($crawler, $filters);
+        $crawler = $this->client->submit($filterForm);
         $addresses = $this->getAddressList($crawler);
         self::assertEquals(1, count($addresses));
-        $this->validateTestAddressExists($addresses);
+
+        /** Need to make sure not only that there is 1 address left, but also that it's the intended test address */
+        $this->assertTestAddressExists($addresses);
     }
 
     /**
@@ -129,7 +143,7 @@ class AddressControllerTest extends WebTestCase
      *
      * @param TestAddressDTO[]
      */
-    private function validateTestAddressExists(array $addresses): void
+    private function assertTestAddressExists(array $addresses): void
     {
         $addressIds = [];
 
@@ -141,19 +155,25 @@ class AddressControllerTest extends WebTestCase
 
     /**
      * Creates test address that can be used for testing filters
-     *
-     * @param Client $client
      */
-    private function createTestAddress(Client $client): void
+    private function createTestAddress(): void
     {
-        $router = $client->getKernel()->getContainer()->get('router');
+        $router = $this->client->getContainer()->get('router');
         $createAddressUrl = $router->generate('admin_addresses_create');
-        $crawler = $client->request('GET', $createAddressUrl);
+        $crawler = $this->client->request('GET', $createAddressUrl);
         $submitButton = $crawler->selectButton('save-button');
         $addressForm = $submitButton->form();
+
         $addressForm = $this->formFiller->fillForm($addressForm, $this->getAddressModifications());
-        $client->submit($addressForm);
-        $dataChecker = $client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.address_form_data_handler_checker');
+
+        /**
+         * Without changing followRedirects to false when submitting the form
+         * $dataChecker->getLastCreatedId() returns null.
+         */
+        $this->client->followRedirects(false);
+        $this->client->submit($addressForm);
+        $this->client->followRedirects(true);
+        $dataChecker = $this->client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.address_form_data_handler_checker');
         $this->testAddressId = $dataChecker->getLastCreatedId();
     }
 
@@ -174,7 +194,7 @@ class AddressControllerTest extends WebTestCase
             'customer_address[address1]' => $testAddress->getAddress(),
             'customer_address[postcode]' => $testAddress->getPostCode(),
             'customer_address[city]' => $testAddress->getCity(),
-            'customer_address[id_country]' => 21,
+            'customer_address[id_country]' => self::TEST_COUNTRY_ID,
         ];
     }
 
@@ -214,20 +234,17 @@ class AddressControllerTest extends WebTestCase
     private function getTestAddress(): TestAddressDTO
     {
         return new TestAddressDTO(
-                $this->testAddressId,
-                'testfirstname',
-                'testlastname',
-                'testaddress1',
-                '11111',
-                'testcity',
-                'lithuania'
+            $this->testAddressId,
+            'testfirstname',
+            'testlastname',
+            'testaddress1',
+            '11111',
+            'testcity',
+            'lithuania'
         );
     }
 
     /**
-     * I think it makes sense to return an DTO here instead of array. It doesn't make sense to reuse EditableCustomerAddress
-     * because it has more values that are needed. So new DTO it is, but where should I put architecture wise?
-     * Call it AddressForListTest and put it somewhere next to the EditableCustomerAddress? Keep it here?
      *
      * @param $tr
      * @param $i
