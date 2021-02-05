@@ -286,6 +286,10 @@ class CombinationCore extends ObjectModel
      */
     protected function deleteCartProductCombination(): bool
     {
+        if ((int) $this->id === 0) {
+            return false;
+        }
+
         return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id);
     }
 
