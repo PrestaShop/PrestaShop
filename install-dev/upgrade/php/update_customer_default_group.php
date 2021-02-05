@@ -53,7 +53,7 @@ function update_customer_default_group()
 	FROM `'._DB_PREFIX_.'configuration`
 	WHERE `name` IN (\'PS_UNIDENTIFIED_GROUP\', \'PS_GUEST_GROUP\')');
 
-    if (count($carriers) && is_array($carriers) && count($groups) && is_array($groups)) {
+    if (is_array($carriers) && count($carriers) && is_array($groups) && count($groups)) {
         foreach ($carriers as $carrier) {
             foreach ($groups as $group) {
                 Db::getInstance()->execute('
