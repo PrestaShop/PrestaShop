@@ -319,7 +319,12 @@ class StockManager
                 Mail::Send(
                     $idLang,
                     'productoutofstock',
-                    Mail::l('Product out of stock', $idLang),
+                    Context::getContext()->getTranslator()->trans(
+                        'Product out of stock',
+                        array(),
+                        'Emails.Subject',
+                        $context->language->locale
+                    ),
                     $templateVars,
                     $employee->email,
                     null,
