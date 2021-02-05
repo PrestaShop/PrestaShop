@@ -75,30 +75,40 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * Validate uploaded file
+     * Validate file size
      *
      * @param array $file
+     *
+     * @throws InvalidFileException
+     * @throws MaximumSizeExceededException
      */
-    protected function validate(array $file): void
+    protected function validateSize(array $file): void
     {
         if (!isset($file['size'])) {
             throw new InvalidFileException();
         }
 
-        $this->validateSize((int) $file['size']);
+        if ($file['size'] > $this->maximumSize) {
+            throw new MaximumSizeExceededException($file['size']);
+        }
     }
 
     /**
-     * Validate file size
+     * Validate if file is an uploaded file
      *
-     * @param int $fileSize
+     * @param array $file
      *
-     * @throws MaximumSizeExceededException
+     * @throws InvalidFileException
+     * @throws FileUploadException
      */
-    protected function validateSize(int $fileSize): void
+    protected function validateIsUploadedFile(array $file): void
     {
-        if ($fileSize > $this->maximumSize) {
-            throw new MaximumSizeExceededException($fileSize);
+        if (!isset($file['tmp_name'])) {
+            throw new InvalidFileException();
+        }
+
+        if (!is_uploaded_file($file['tmp_name'])) {
+            throw new FileUploadException();
         }
     }
 
@@ -127,7 +137,8 @@ class UploadedFile implements UploadedFileInterface
      */
     public function uploadFromHttpPost(array $file): array
     {
-        $this->validate($file);
+        $this->validateIsUploadedFile($file);
+
         $fileName = $this->generateFileName();
         if (!move_uploaded_file($file['tmp_name'], $this->downloadDirectory . $fileName)) {
             throw new FileUploadException();
@@ -155,7 +166,7 @@ class UploadedFile implements UploadedFileInterface
             // It returns the number of bytes rather than the number of characters
             'size' => strlen($content),
         ];
-        $this->validate($file);
+        $this->validateSize($file);
 
         $fileName = $this->generateFileName();
         if (file_put_contents($this->downloadDirectory . $fileName, $content) === false) {

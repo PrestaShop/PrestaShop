@@ -314,7 +314,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             $maximumSize
         );
 
-        if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+        if (isset($_FILES['file'])) {
             // Standard HTTP upload
             $fileToUpload = $_FILES['file'];
         } else {
