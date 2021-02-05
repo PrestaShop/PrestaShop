@@ -18,7 +18,7 @@ $search-border-color: #bbcdd2;
   background: #fff;
 
   .mobile & {
-    padding: $header-mobile-padding-y 0;
+    height: 60px;
   }
 
   .material-icons {
@@ -56,6 +56,10 @@ $search-border-color: #bbcdd2;
       right: 0.5rem;
       left: 0.5rem;
     };
+
+    @include media-breakpoint-down(sm) {
+      margin: 0;
+    }
     // hide on very small screens
     &.hide-mobile-sm,
     #gamification_notif {
@@ -102,8 +106,17 @@ $search-border-color: #bbcdd2;
     padding: $navbar-padding-vertical 5px;
     line-height: $line-height-computed;
 
+    @include media-breakpoint-down(sm) {
+      display: flex;
+      align-items: center;
+    }
+
     > .material-icons {
       margin-right: $navbar-padding-horizontal;
+      
+      @include media-breakpoint-down(sm) {
+        margin-right: 0;
+      }
     }
   }
 
@@ -148,6 +161,15 @@ $search-border-color: #bbcdd2;
       padding-top: 11px;
       color: $header-text-color !important;
 
+      @include media-breakpoint-down(sm) {
+        // stylelint-disable-next-line
+        height: 100%!important;
+
+        i {
+          height: 18px;
+        }
+      }
+
       &:hover,
       &:focus {
         color: $brand-info !important;
@@ -163,6 +185,11 @@ $search-border-color: #bbcdd2;
       list-style: none;
 
       > a {
+        @include media-breakpoint-down(sm) {
+          // stylelint-disable-next-line
+          height: 100%!important;
+        }
+
         &.notifs {
           box-sizing: border-box;
           display: flex;
@@ -283,6 +310,20 @@ $search-border-color: #bbcdd2;
       margin-right: 10px;
       list-style-type: none;
 
+      @include media-breakpoint-down(sm) {
+        height: 100%;
+        margin-right: 0;
+        width: auto;
+
+        .dropdown-toggle {
+          padding: 0 10px;
+
+          i {
+            overflow: hidden;
+          }
+        }
+      }
+
       #employee_links {
         .employee_avatar {
           width: auto;
@@ -309,6 +350,12 @@ $search-border-color: #bbcdd2;
 
             > .admin-link {
               display: inline-block;
+
+              @include media-breakpoint-down(sm) {
+                display: block;
+                margin: 0 20px;
+                border-radius: 5px;
+              }
             }
           }
         }
@@ -341,6 +388,14 @@ $search-border-color: #bbcdd2;
             font-weight: 600;
             white-space: normal;
             vertical-align: top;
+
+            @include media-breakpoint-down(sm) {
+              max-width: inherit;
+              padding-top: 2rem;
+              color: $gray-dark-menu;
+              font-size: 16px;
+              font-weight: 500;
+            }
           }
 
           &.divider {
@@ -378,6 +433,16 @@ $search-border-color: #bbcdd2;
           &.signout {
             a {
               color: #6c868e;
+
+              @include media-breakpoint-down(sm) {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &, i {
+                  color: #F44336;
+                }
+              }
 
               &:hover {
                 color: #25b9d7;
@@ -525,12 +590,58 @@ $search-border-color: #bbcdd2;
 
 #notification,
 #employee_infos {
+
+  @include media-breakpoint-down(sm) {
+    position: initial;
+
+    &::before {
+      content: '';
+      position: fixed;
+      top: 5rem;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      content: "";
+      background: rgba(0, 0, 0, 0.8);
+      opacity: 0;
+    }
+  }
+
   &.open {
     background: none;
 
     a {
       &.dropdown-toggle {
         background: none !important;
+
+        @include media-breakpoint-down(sm) {
+          border-bottom: 2px solid $brand-primary;
+          padding: 0 10px;
+
+          &, i {
+            color: $brand-primary;
+          }
+        }
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      &::before {
+        opacity: 1;
+        pointer-events: all;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    a {
+      &.dropdown-toggle {
+        text-align: center;
+        justify-content: center;
+        height: 100%;
+        display: flex;
+        align-items: center;
       }
     }
   }
@@ -539,6 +650,10 @@ $search-border-color: #bbcdd2;
     font-size: 22px;
     color: #6c868e;
     vertical-align: bottom;
+
+    @include media-breakpoint-down(sm) {
+      height: 22px;
+    }
   }
 
   #total_notif_number_wrapper {
@@ -574,6 +689,27 @@ $search-border-color: #bbcdd2;
     border-radius: 0;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
 
+    @include media-breakpoint-down(sm) {
+      left: 0;
+      right: inherit;
+      // stylelint-disable-next-line
+      width: 100vw!important;
+      top: 60px;
+      border: none;
+      border-top: 1px solid #EAEBEC;
+      border-radius: 5px;
+      box-shadow: 0 8px 16px 0 rgba(#000, 0.1);
+      transform: inherit !important;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      min-width: inherit;
+      overflow: hidden;
+
+      &::before, &::after {
+        display: none;
+      }
+    }
+
     &::before,
     &::after {
       position: absolute;
@@ -603,6 +739,23 @@ $search-border-color: #bbcdd2;
       .nav-tabs {
         border-bottom: 1px solid #fff;
 
+        @include media-breakpoint-down(sm) {
+          display: flex;
+
+          .nav-item {
+            display: flex;
+            align-self: stretch;
+
+            a.nav-link {
+              display: flex;
+              align-self: stretch;
+              align-items: center;
+              color: #B3C7CD;
+              font-size: 16px;
+            }
+          }
+        }
+
         .nav-item {
           width: 33%;
           margin-bottom: -1px;
@@ -614,6 +767,13 @@ $search-border-color: #bbcdd2;
               color: $brand-info;
               border-top: 0;
               border-bottom: 3px solid $brand-info;
+
+              @include media-breakpoint-down(sm) {
+                &, &:focus, &:active {
+                  background-color: #F4FCFD;
+                  color: $gray-dark-menu;
+                }
+              }
             }
           }
 
@@ -641,6 +801,25 @@ $search-border-color: #bbcdd2;
         background: #f2f4f5;
         border-top: 0.125rem solid $gray-lighter;
 
+        @include media-breakpoint-down(sm) {
+          border-top: none;
+          background: #ffffff;
+
+          .tab-pane.empty.active {
+            display: flex;
+            align-items: center;
+            flex-direction: column-reverse;
+            justify-content: center;
+
+            .no-notification {
+              // stylelint-disable-next-line
+              position: inherit!important;
+              font-size: 14px;
+              color: $gray-dark-menu;
+            }
+          }
+        }
+
         .tab-pane {
           height: 11.875rem;
           overflow-y: auto;
@@ -659,6 +838,12 @@ $search-border-color: #bbcdd2;
               color: #bbcdd2;
               content: "\E7F5";
               opacity: 0.7;
+
+              @include media-breakpoint-down(sm) {
+                color: $gray-dark-menu;
+                opacity: 1;
+                font-size: 25px;
+              }
             }
 
             > .no-notification {
