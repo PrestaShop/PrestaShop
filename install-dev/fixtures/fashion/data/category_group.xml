@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<entity_category_group>
+  <fields primary="id_category, id_group" sql="a.id_category &gt; 1">
+    <field name="id_category" relation="category"/>
+    <field name="id_group" relation="group"/>
+  </fields>
+  <entities>
+    <category_group id="category_group_2_0" id_category="Home" id_group=""/>
+    <category_group id="category_group_2_1" id_category="Home" id_group="Visitor"/>
+    <category_group id="category_group_2_2" id_category="Home" id_group="Guest"/>
+    <category_group id="category_group_2_3" id_category="Home" id_group="Customer"/>
+    <category_group id="category_group_12_1" id_category="Clothes" id_group="Visitor"/>
+    <category_group id="category_group_12_2" id_category="Clothes" id_group="Guest"/>
+    <category_group id="category_group_12_3" id_category="Clothes" id_group="Customer"/>
+    <category_group id="category_group_13_1" id_category="Men" id_group="Visitor"/>
+    <category_group id="category_group_13_2" id_category="Men" id_group="Guest"/>
+    <category_group id="category_group_13_3" id_category="Men" id_group="Customer"/>
+    <category_group id="category_group_14_1" id_category="Women" id_group="Visitor"/>
+    <category_group id="category_group_14_2" id_category="Women" id_group="Guest"/>
+    <category_group id="category_group_14_3" id_category="Women" id_group="Customer"/>
+    <category_group id="category_group_15_1" id_category="Accessories" id_group="Visitor"/>
+    <category_group id="category_group_15_2" id_category="Accessories" id_group="Guest"/>
+    <category_group id="category_group_15_3" id_category="Accessories" id_group="Customer"/>
+    <category_group id="category_group_16_1" id_category="Stationery" id_group="Visitor"/>
+    <category_group id="category_group_16_2" id_category="Stationery" id_group="Guest"/>
+    <category_group id="category_group_16_3" id_category="Stationery" id_group="Customer"/>
+    <category_group id="category_group_17_1" id_category="Home_Accessories" id_group="Visitor"/>
+    <category_group id="category_group_17_2" id_category="Home_Accessories" id_group="Guest"/>
+    <category_group id="category_group_17_3" id_category="Home_Accessories" id_group="Customer"/>
+    <category_group id="category_group_18_1" id_category="Art" id_group="Visitor"/>
+    <category_group id="category_group_18_2" id_category="Art" id_group="Guest"/>
+    <category_group id="category_group_18_3" id_category="Art" id_group="Customer"/>
+  </entities>
+</entity_category_group>

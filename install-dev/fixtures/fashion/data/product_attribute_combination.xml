@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_product_attribute_combination>
+  <fields primary="id_attribute, id_product_attribute">
+    <field name="id_attribute" relation="attribute"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+  </fields>
+  <entities>
+    <product_attribute_combination id="product_attribute_combination_1_46" id_attribute="S" id_product_attribute="product_attribute_46"/>
+    <product_attribute_combination id="product_attribute_combination_8_46" id_attribute="White" id_product_attribute="product_attribute_46"/>
+    <product_attribute_combination id="product_attribute_combination_1_47" id_attribute="S" id_product_attribute="product_attribute_47"/>
+    <product_attribute_combination id="product_attribute_combination_11_47" id_attribute="Black" id_product_attribute="product_attribute_47"/>
+    <product_attribute_combination id="product_attribute_combination_2_48" id_attribute="M" id_product_attribute="product_attribute_48"/>
+    <product_attribute_combination id="product_attribute_combination_8_48" id_attribute="White" id_product_attribute="product_attribute_48"/>
+    <product_attribute_combination id="product_attribute_combination_2_49" id_attribute="M" id_product_attribute="product_attribute_49"/>
+    <product_attribute_combination id="product_attribute_combination_11_49" id_attribute="Black" id_product_attribute="product_attribute_49"/>
+    <product_attribute_combination id="product_attribute_combination_3_50" id_attribute="L" id_product_attribute="product_attribute_50"/>
+    <product_attribute_combination id="product_attribute_combination_8_50" id_attribute="White" id_product_attribute="product_attribute_50"/>
+    <product_attribute_combination id="product_attribute_combination_3_51" id_attribute="L" id_product_attribute="product_attribute_51"/>
+    <product_attribute_combination id="product_attribute_combination_11_51" id_attribute="Black" id_product_attribute="product_attribute_51"/>
+    <product_attribute_combination id="product_attribute_combination_4_52" id_attribute="XL" id_product_attribute="product_attribute_52"/>
+    <product_attribute_combination id="product_attribute_combination_8_52" id_attribute="White" id_product_attribute="product_attribute_52"/>
+    <product_attribute_combination id="product_attribute_combination_4_53" id_attribute="XL" id_product_attribute="product_attribute_53"/>
+    <product_attribute_combination id="product_attribute_combination_11_53" id_attribute="Black" id_product_attribute="product_attribute_53"/>
+    <product_attribute_combination id="product_attribute_combination_1_62" id_attribute="S" id_product_attribute="product_attribute_62"/>
+    <product_attribute_combination id="product_attribute_combination_2_63" id_attribute="M" id_product_attribute="product_attribute_63"/>
+    <product_attribute_combination id="product_attribute_combination_3_64" id_attribute="L" id_product_attribute="product_attribute_64"/>
+    <product_attribute_combination id="product_attribute_combination_4_65" id_attribute="XL" id_product_attribute="product_attribute_65"/>
+    <product_attribute_combination id="product_attribute_combination_25_70" id_attribute="40x60cm" id_product_attribute="product_attribute_70"/>
+    <product_attribute_combination id="product_attribute_combination_26_71" id_attribute="60x90cm" id_product_attribute="product_attribute_71"/>
+    <product_attribute_combination id="product_attribute_combination_27_72" id_attribute="80x120cm" id_product_attribute="product_attribute_72"/>
+    <product_attribute_combination id="product_attribute_combination_25_73" id_attribute="40x60cm" id_product_attribute="product_attribute_73"/>
+    <product_attribute_combination id="product_attribute_combination_26_74" id_attribute="60x90cm" id_product_attribute="product_attribute_74"/>
+    <product_attribute_combination id="product_attribute_combination_27_75" id_attribute="80x120cm" id_product_attribute="product_attribute_75"/>
+    <product_attribute_combination id="product_attribute_combination_25_76" id_attribute="40x60cm" id_product_attribute="product_attribute_76"/>
+    <product_attribute_combination id="product_attribute_combination_26_77" id_attribute="60x90cm" id_product_attribute="product_attribute_77"/>
+    <product_attribute_combination id="product_attribute_combination_27_78" id_attribute="80x120cm" id_product_attribute="product_attribute_78"/>
+    <product_attribute_combination id="product_attribute_combination_8_79" id_attribute="White" id_product_attribute="product_attribute_79"/>
+    <product_attribute_combination id="product_attribute_combination_11_80" id_attribute="Black" id_product_attribute="product_attribute_80"/>
+    <product_attribute_combination id="product_attribute_combination_8_81" id_attribute="White" id_product_attribute="product_attribute_81"/>
+    <product_attribute_combination id="product_attribute_combination_11_82" id_attribute="Black" id_product_attribute="product_attribute_82"/>
+    <product_attribute_combination id="product_attribute_combination_8_83" id_attribute="White" id_product_attribute="product_attribute_83"/>
+    <product_attribute_combination id="product_attribute_combination_11_84" id_attribute="Black" id_product_attribute="product_attribute_84"/>
+    <product_attribute_combination id="product_attribute_combination_28_85" id_attribute="Ruled" id_product_attribute="product_attribute_85"/>
+    <product_attribute_combination id="product_attribute_combination_29_86" id_attribute="Plain" id_product_attribute="product_attribute_86"/>
+    <product_attribute_combination id="product_attribute_combination_30_87" id_attribute="Squarred" id_product_attribute="product_attribute_87"/>
+    <product_attribute_combination id="product_attribute_combination_31_88" id_attribute="Doted" id_product_attribute="product_attribute_88"/>
+    <product_attribute_combination id="product_attribute_combination_28_89" id_attribute="Ruled" id_product_attribute="product_attribute_89"/>
+    <product_attribute_combination id="product_attribute_combination_29_90" id_attribute="Plain" id_product_attribute="product_attribute_90"/>
+    <product_attribute_combination id="product_attribute_combination_30_91" id_attribute="Squarred" id_product_attribute="product_attribute_91"/>
+    <product_attribute_combination id="product_attribute_combination_31_92" id_attribute="Doted" id_product_attribute="product_attribute_92"/>
+    <product_attribute_combination id="product_attribute_combination_28_93" id_attribute="Ruled" id_product_attribute="product_attribute_93"/>
+    <product_attribute_combination id="product_attribute_combination_29_94" id_attribute="Plain" id_product_attribute="product_attribute_94"/>
+    <product_attribute_combination id="product_attribute_combination_30_95" id_attribute="Squarred" id_product_attribute="product_attribute_95"/>
+    <product_attribute_combination id="product_attribute_combination_31_96" id_attribute="Doted" id_product_attribute="product_attribute_96"/>
+  </entities>
+</entity_product_attribute_combination>

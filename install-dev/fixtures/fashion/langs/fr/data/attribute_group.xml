@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<entity_attribute_group>
+  <attribute_group id="Size">
+    <name>Size</name>
+    <public_name>Size</public_name>
+  </attribute_group>
+  <attribute_group id="Color">
+    <name>Color</name>
+    <public_name>Color</public_name>
+  </attribute_group>
+  <attribute_group id="Dimension">
+    <name>Dimension</name>
+    <public_name>Dimension</public_name>
+  </attribute_group>
+  <attribute_group id="Paper_Type">
+    <name>Type de papier</name>
+    <public_name>Type de papier</public_name>
+  </attribute_group>
+</entity_attribute_group>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_pack>
+    <fields class="Pack">
+        <field name="id_product_pack" relation="product"/>
+        <field name="id_product_item" relation="product"/>
+        <field name="id_product_attribute_item"/>
+        <field name="quantity"/>
+    </fields>
+    <entities>
+        <pack id="pack_1_mug" id_product_pack="Pack_Mug_Framed_poster" id_product_item="Mug_The_adventure_begins" id_product_attribute_item="0" quantity="5"/>
+        <pack id="pack_1_poster" id_product_pack="Pack_Mug_Framed_poster" id_product_item="Today_is_a_good_day_Framed_poster" id_product_attribute_item="0" quantity="5"/>
+    </entities>
+</entity_pack>

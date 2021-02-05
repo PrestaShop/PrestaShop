@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_category>
+  <fields id="name" class="Category" sql="a.id_category &gt; 2" image="c">
+    <field name="id_parent" relation="category"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <category id="Clothes" id_parent="Home" active="1"/>
+    <category id="Men" id_parent="Clothes" active="1"/>
+    <category id="Women" id_parent="Clothes" active="1"/>
+    <category id="Accessories" id_parent="Home" active="1"/>
+    <category id="Stationery" id_parent="Accessories" active="1"/>
+    <category id="Home_Accessories" id_parent="Accessories" active="1"/>
+    <category id="Art" id_parent="Home" active="1"/>
+  </entities>
+</entity_category>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<entity_carrier_tax_rules_group_shop>
+  <fields primary="id_carrier,id_tax_rules_group,id_shop">
+    <field name="id_carrier" relation="carrier"/>
+    <field name="id_tax_rules_group" relation="tax_rules_group"/>
+    <field name="id_shop"/>
+  </fields>
+  <entities>
+    <carrier_tax_rules_group_shop id="carrier_tax_rules_group_shop_2_1_1" id_carrier="My_carrier" id_tax_rules_group="default_tax_rule_group" id_shop="1"/>
+    <carrier_tax_rules_group_shop id="carrier_tax_rules_group_shop_3_1_1" id_carrier="My_cheap_carrier" id_tax_rules_group="default_tax_rule_group" id_shop="1"/>
+    <carrier_tax_rules_group_shop id="carrier_tax_rules_group_shop_4_1_1" id_carrier="My_light_carrier" id_tax_rules_group="default_tax_rule_group" id_shop="1"/>
+  </entities>
+</entity_carrier_tax_rules_group_shop>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<entity_manufacturer>
+  <manufacturer id="Studio_Design">
+    <description>&lt;p&gt;استودیو طراحی گستره وسیعی از آیتم ها را از کلکسیون پوشیدنی تا مد روز ارائه می دهد. این برند از تاریخ تاسیس خود در سال 2012 ایده های جدیدی را ارئه کرده است.&lt;/p&gt;</description>
+    <short_description/>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </manufacturer>
+  <manufacturer id="Graphic_Corner">
+    <description>&lt;p&gt;از سال 2010، گرافیک کرنر محصولات متنوعی از پوسترهای قابل انتخاب با کیفیت چاپ شده روی کاغذ و بسیاری از فرمت های دیگر را ارئه می دهد. &lt;/p&gt;</description>
+    <short_description/>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </manufacturer>
+</entity_manufacturer>

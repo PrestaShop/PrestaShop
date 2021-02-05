@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_manufacturer>
+  <fields id="name" class="Manufacturer" image="m">
+    <field name="name"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <manufacturer id="Studio_Design" active="1">
+      <name>Studio Design</name>
+    </manufacturer>
+    <manufacturer id="Graphic_Corner" active="1">
+      <name>Graphic Corner</name>
+    </manufacturer>
+  </entities>
+</entity_manufacturer>

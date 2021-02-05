@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<entity_carrier>
+  <carrier id="My_carrier" id_shop="1">
+    <delay>Delivery next day!</delay>
+  </carrier>
+  <carrier id="My_cheap_carrier" id_shop="1">
+    <delay>Achetez plus vous paierez moins!</delay>
+  </carrier>
+  <carrier id="My_light_carrier" id_shop="1">
+    <delay>Panier léger, prix allégé!</delay>
+  </carrier>
+</entity_carrier>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<entity_product_supplier>
+  <fields class="ProductSupplier">
+    <field name="id_product" relation="product"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+    <field name="id_supplier" relation="supplier"/>
+    <field name="product_supplier_reference"/>
+    <field name="product_supplier_price_te"/>
+  </fields>
+  <entities/>
+</entity_product_supplier>

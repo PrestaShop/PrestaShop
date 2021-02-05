@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="Clothes" id_shop="1">
+    <name>Clothes</name>
+    <description>&lt;p&gt;Discover our favorites fashionable discoveries, a selection of cool items to integrate in your wardrobe. Compose a unique style with personality which matches your own.&lt;/p&gt;</description>
+    <link_rewrite>clothes</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Men" id_shop="1">
+    <name>Men</name>
+    <description>&lt;p&gt;T-shirts, sweaters, hoodies and men's accessories. From basics to original creations, for every style. &lt;/p&gt;</description>
+    <link_rewrite>men</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Women" id_shop="1">
+    <name>Women</name>
+    <description>&lt;p&gt;T-shirts, sweaters, hoodies and women's accessories. From basics to original creations, for every style. &lt;/p&gt;</description>
+    <link_rewrite>women</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Accessories</name>
+    <description>&lt;p&gt;Items and accessories for your desk, kitchen or living room. Make your house a home with our eye-catching designs. &lt;/p&gt;</description>
+    <link_rewrite>accessories</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Stationery" id_shop="1">
+    <name>Stationery</name>
+    <description>&lt;p&gt;Notebooks, agendas, office accessories and more. Everything you need to combine the pleasant and the useful, either at work or at home. &lt;/p&gt;</description>
+    <link_rewrite>stationery</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Home_Accessories" id_shop="1">
+    <name>Home Accessories</name>
+    <description>&lt;p&gt;Details matter! Liven up your interior with our selection of home accessories. &lt;/p&gt;</description>
+    <link_rewrite>home-accessories</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Art" id_shop="1">
+    <name>Art</name>
+    <description>&lt;p&gt;Framed poster and vector images, all you need to give personality to your walls or bring your creative projects to life.&lt;/p&gt;</description>
+    <link_rewrite>art</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+</entity_category>

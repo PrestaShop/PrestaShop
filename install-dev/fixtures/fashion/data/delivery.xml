@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_delivery>
+  <fields class="Delivery" sql="a.id_carrier &gt; 1" null="1">
+    <field name="id_shop"/>
+    <field name="id_shop_group"/>
+    <field name="id_carrier" relation="carrier"/>
+    <field name="id_range_price" relation="range_price"/>
+    <field name="id_range_weight" relation="range_weight"/>
+    <field name="id_zone" relation="zone"/>
+    <field name="price"/>
+  </fields>
+  <entities>
+    <delivery id="delivery_1" id_shop="" id_shop_group="" id_carrier="My_carrier" id_range_price="" id_range_weight="range_weight_1" id_zone="Europe" price="5.000000"/>
+    <delivery id="delivery_2" id_shop="" id_shop_group="" id_carrier="My_carrier" id_range_price="" id_range_weight="range_weight_1" id_zone="North_America" price="5.000000"/>
+    <delivery id="delivery_4" id_shop="" id_shop_group="" id_carrier="My_carrier" id_range_price="range_price_1" id_range_weight="" id_zone="Europe" price="5.000000"/>
+    <delivery id="delivery_5" id_shop="" id_shop_group="" id_carrier="My_carrier" id_range_price="range_price_1" id_range_weight="" id_zone="North_America" price="5.000000"/>
+    <delivery id="delivery_6" id_shop="" id_shop_group="" id_carrier="My_cheap_carrier" id_range_price="range_price_2" id_range_weight="" id_zone="Europe" price="3.000000"/>
+    <delivery id="delivery_7" id_shop="" id_shop_group="" id_carrier="My_cheap_carrier" id_range_price="range_price_2" id_range_weight="" id_zone="North_America" price="4.000000"/>
+    <delivery id="delivery_8" id_shop="" id_shop_group="" id_carrier="My_cheap_carrier" id_range_price="range_price_3" id_range_weight="" id_zone="Europe" price="1.000000"/>
+    <delivery id="delivery_9" id_shop="" id_shop_group="" id_carrier="My_cheap_carrier" id_range_price="range_price_3" id_range_weight="" id_zone="North_America" price="2.000000"/>
+    <delivery id="delivery_10" id_shop="" id_shop_group="" id_carrier="My_cheap_carrier" id_range_price="range_price_4" id_range_weight="" id_zone="Europe" price="0.000000"/>
+    <delivery id="delivery_11" id_shop="" id_shop_group="" id_carrier="My_cheap_carrier" id_range_price="range_price_4" id_range_weight="" id_zone="North_America" price="0.000000"/>
+    <delivery id="delivery_12" id_shop="" id_shop_group="" id_carrier="My_light_carrier" id_range_price="" id_range_weight="range_weight_2" id_zone="Europe" price="0.000000"/>
+    <delivery id="delivery_13" id_shop="" id_shop_group="" id_carrier="My_light_carrier" id_range_price="" id_range_weight="range_weight_2" id_zone="North_America" price="0.000000"/>
+    <delivery id="delivery_14" id_shop="" id_shop_group="" id_carrier="My_light_carrier" id_range_price="" id_range_weight="range_weight_3" id_zone="Europe" price="2.000000"/>
+    <delivery id="delivery_15" id_shop="" id_shop_group="" id_carrier="My_light_carrier" id_range_price="" id_range_weight="range_weight_3" id_zone="North_America" price="3.000000"/>
+    <delivery id="delivery_16" id_shop="" id_shop_group="" id_carrier="My_light_carrier" id_range_price="" id_range_weight="range_weight_4" id_zone="Europe" price="5.000000"/>
+    <delivery id="delivery_17" id_shop="" id_shop_group="" id_carrier="My_light_carrier" id_range_price="" id_range_weight="range_weight_4" id_zone="North_America" price="6.000000"/>
+  </entities>
+</entity_delivery>

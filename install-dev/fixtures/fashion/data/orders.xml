@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_orders>
+  <fields primary="id_order" class="Order">
+    <field name="reference"/>
+    <field name="id_shop_group"/>
+    <field name="id_shop"/>
+    <field name="id_carrier" relation="carrier"/>
+    <field name="id_customer" relation="customer"/>
+    <field name="id_cart" relation="cart"/>
+    <field name="id_currency"/>
+    <field name="id_address_delivery" relation="address"/>
+    <field name="id_address_invoice" relation="address"/>
+    <field name="current_state"/>
+    <field name="secure_key"/>
+    <field name="payment"/>
+    <field name="conversion_rate"/>
+    <field name="module"/>
+    <field name="recyclable"/>
+    <field name="gift"/>
+    <field name="gift_message"/>
+    <field name="shipping_number"/>
+    <field name="total_discounts"/>
+    <field name="total_discounts_tax_incl"/>
+    <field name="total_paid"/>
+    <field name="total_paid_tax_incl"/>
+    <field name="total_paid_tax_excl"/>
+    <field name="total_paid_real"/>
+    <field name="total_products"/>
+    <field name="total_products_wt"/>
+    <field name="total_shipping"/>
+    <field name="total_shipping_tax_incl"/>
+    <field name="total_shipping_tax_excl"/>
+    <field name="carrier_tax_rate"/>
+    <field name="total_wrapping"/>
+    <field name="total_wrapping_tax_incl"/>
+    <field name="total_wrapping_tax_excl"/>
+    <field name="invoice_number"/>
+    <field name="delivery_number"/>
+    <field name="invoice_date"/>
+    <field name="delivery_date"/>
+    <field name="valid"/>
+    <field name="note"/>
+  </fields>
+  <entities>
+    <orders id="orders_1" reference="XKBKNABJK" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_1" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="6" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="61.80" total_paid_tax_incl="68.20" total_paid_tax_excl="66.80" total_paid_real="0.00" total_products="59.80" total_products_wt="59.80" total_shipping="7.00" total_shipping_tax_incl="8.40" total_shipping_tax_excl="7.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0" note="Test">
+      <payment>Payment by check</payment>
+      <module>ps_checkpayment</module>
+      <gift_message/>
+    </orders>
+    <orders id="orders_2" reference="OHSATSERP" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_2" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="1" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="169.90" total_paid_tax_incl="169.90" total_paid_tax_excl="169.90" total_paid_real="0.00" total_products="169.90" total_products_wt="169.90" total_shipping="0.00" total_shipping_tax_incl="0.00" total_shipping_tax_excl="0.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0" note="">
+      <payment>Payment by check</payment>
+      <module>ps_checkpayment</module>
+      <gift_message/>
+    </orders>
+    <orders id="orders_3" reference="UOYEVOLI" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_3" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="8" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="14.90" total_paid_tax_incl="21.30" total_paid_tax_excl="19.90" total_paid_real="0.00" total_products="12.90" total_products_wt="12.90" total_shipping="7.00" total_shipping_tax_incl="8.40" total_shipping_tax_excl="7.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0" note="">
+      <payment>Payment by check</payment>
+      <module>ps_checkpayment</module>
+      <gift_message/>
+    </orders>
+    <orders id="orders_4" reference="FFATNOMMJ" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_4" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="1" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="14.90" total_paid_tax_incl="21.30" total_paid_tax_excl="19.90" total_paid_real="0.00" total_products="12.90" total_products_wt="12.90" total_shipping="7.00" total_shipping_tax_incl="8.40" total_shipping_tax_excl="7.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0" note="">
+      <payment>Payment by check</payment>
+      <module>ps_checkpayment</module>
+      <gift_message/>
+    </orders>
+    <orders id="orders_5" reference="KHWLILZLL" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_5" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="10" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="20.90" total_paid_tax_incl="27.30" total_paid_tax_excl="25.90" total_paid_real="0.00" total_products="18.90" total_products_wt="18.90" total_shipping="7.00" total_shipping_tax_incl="8.40" total_shipping_tax_excl="7.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0" note="">
+      <payment>Bank wire</payment>
+      <module>ps_wirepayment</module>
+      <gift_message/>
+    </orders>
+  </entities>
+</entity_orders>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<entity_carrier>
+  <carrier id="My_carrier" id_shop="1">
+    <delay>تحویل روز بعد!</delay>
+  </carrier>
+  <carrier id="My_cheap_carrier" id_shop="1">
+    <delay>بیشتر بخرید تا هزینه کمتری بپردازید!</delay>
+  </carrier>
+  <carrier id="My_light_carrier" id_shop="1">
+    <delay>هرچه سبک تر ارزان تر!</delay>
+  </carrier>
+</entity_carrier>
