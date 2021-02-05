@@ -91,7 +91,7 @@ class ProductSupplierType extends TranslatorAwareType
             ->add('combination_id', HiddenType::class, [
                 'required' => false,
             ])
-            ->add('supplier_reference', TextType::class, [
+            ->add('reference', TextType::class, [
                 'label' => $this->trans('Supplier reference', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_REFERENCE),
@@ -100,7 +100,7 @@ class ProductSupplierType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('supplier_price_tax_excluded', MoneyType::class, [
+            ->add('price_tax_excluded', MoneyType::class, [
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'currency' => $this->currencyIsoCode,
                 'scale' => self::PRESTASHOP_DECIMALS,
@@ -120,6 +120,6 @@ class ProductSupplierType extends TranslatorAwareType
         ;
 
         // Used to force default value when empty (especially in the prototype)
-        $builder->get('supplier_price_tax_excluded')->addModelTransformer(new DefaultEmptyDataTransformer(0.0));
+        $builder->get('price_tax_excluded')->addModelTransformer(new DefaultEmptyDataTransformer(0.0));
     }
 }

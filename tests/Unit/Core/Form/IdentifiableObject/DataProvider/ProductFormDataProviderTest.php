@@ -232,8 +232,8 @@ class ProductFormDataProviderTest extends TestCase
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
-            'supplier_price_tax_excluded' => '0',
-            'supplier_reference' => 'test supp ref 1',
+            'price_tax_excluded' => '0',
+            'reference' => 'test supp ref 1',
             'currency_id' => 1,
             'combination_id' => 0,
         ];
@@ -241,8 +241,8 @@ class ProductFormDataProviderTest extends TestCase
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
-            'supplier_price_tax_excluded' => '0',
-            'supplier_reference' => 'test supp ref 2',
+            'price_tax_excluded' => '0',
+            'reference' => 'test supp ref 2',
             'currency_id' => 3,
             'combination_id' => 0,
         ];
