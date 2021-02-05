@@ -16,6 +16,13 @@
 .product-page {
   padding-bottom: 80px;
 
+  > #field-disabled {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
   .widget-radio-inline {
     margin-bottom: 10px;
 
