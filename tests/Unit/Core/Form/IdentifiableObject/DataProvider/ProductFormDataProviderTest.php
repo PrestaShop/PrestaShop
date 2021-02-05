@@ -225,36 +225,32 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $expectedOutputData['suppliers']['default_supplier_id'] = 1;
         $expectedOutputData['suppliers']['supplier_ids'] = [
-            1 => 1,
-            2 => 2,
+            0 => 1,
+            1 => 2,
         ];
-        $expectedOutputData['suppliers']['supplier_references'][1] = [
+        $expectedOutputData['suppliers']['product_suppliers'][0] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
-            'product_supplier' => [
-                'product_supplier_id' => 1,
-                'supplier_price_tax_excluded' => '0',
-                'supplier_reference' => 'test supp ref 1',
-                'currency_id' => 1,
-                'combination_id' => 0,
-            ],
+            'product_supplier_id' => 1,
+            'supplier_price_tax_excluded' => '0',
+            'supplier_reference' => 'test supp ref 1',
+            'currency_id' => 1,
+            'combination_id' => 0,
         ];
-        $expectedOutputData['suppliers']['supplier_references'][2] = [
+        $expectedOutputData['suppliers']['product_suppliers'][1] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
-            'product_supplier' => [
-                'product_supplier_id' => 2,
-                'supplier_price_tax_excluded' => '0',
-                'supplier_reference' => 'test supp ref 2',
-                'currency_id' => 3,
-                'combination_id' => 0,
-            ],
+            'product_supplier_id' => 2,
+            'supplier_price_tax_excluded' => '0',
+            'supplier_reference' => 'test supp ref 2',
+            'currency_id' => 3,
+            'combination_id' => 0,
         ];
 
         $productData = [
             'suppliers' => [
                 'default_supplier_id' => 1,
-                'supplier_references' => [
+                'product_suppliers' => [
                     [
                         'product_id' => self::PRODUCT_ID,
                         'supplier_id' => 1,
@@ -322,7 +318,7 @@ class ProductFormDataProviderTest extends TestCase
         }
 
         $suppliersInfo = [];
-        foreach ($productData['suppliers']['supplier_references'] as $supplierInfo) {
+        foreach ($productData['suppliers']['product_suppliers'] as $supplierInfo) {
             $suppliersInfo[] = new ProductSupplierInfo(
                 $supplierInfo['supplier_name'],
                 $supplierInfo['supplier_id'],
