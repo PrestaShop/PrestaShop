@@ -44,6 +44,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     /**
      * Route to the grid you are testing
+     *
      * @var string
      */
     protected $gridRoute;
@@ -51,24 +52,28 @@ abstract class GridControllerTestCase extends WebTestCase
     /**
      * The id of the test entity with which filters will be tested
      * Should be set during SetUp
+     *
      * @var int
      */
     protected $testEntityId;
 
     /**
      * The name of entity you are testing, e.g.,address.
+     *
      * @var string
      */
     protected $testEntityName;
 
     /**
      * The route to delete entity
+     *
      * @var string
      */
     protected $deleteEntityRoute;
 
     /**
      * Amount of entities in starting list
+     *
      * @var int
      */
     protected $initialEntityCount;
@@ -146,6 +151,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     /**
      * Asserts that there is only one entity left in the list after using filters
+     *
      * @param array $testFilters
      *
      * @throws TypeException
@@ -191,6 +197,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     /**
      * Asserts test entity exists with the list
+     *
      * @param TestEntityCollection $entities
      */
     protected function assertTestEntityExists(TestEntityCollection $entities): void

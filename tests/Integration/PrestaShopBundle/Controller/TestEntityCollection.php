@@ -28,9 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
-
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
-use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
 class TestEntityCollection extends AbstractTypedCollection
 {

@@ -90,7 +90,7 @@ class AddressControllerTest extends GridControllerTestCase
 
         $addressForm = $this->formFiller->fillForm($addressForm, $this->getAddressModifications());
 
-        /**
+        /*
          * Without changing followRedirects to false when submitting the form
          * $dataChecker->getLastCreatedId() returns null.
          */
