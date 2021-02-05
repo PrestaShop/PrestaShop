@@ -89,7 +89,7 @@ class UploadedFile implements UploadedFileInterface
         }
 
         if ($file['size'] > $this->maximumSize) {
-            throw new MaximumSizeExceededException($file['size']);
+            throw new MaximumSizeExceededException((string) $file['size']);
         }
     }
 
@@ -103,7 +103,10 @@ class UploadedFile implements UploadedFileInterface
      */
     protected function validateIsUploadedFile(array $file): void
     {
-        if (!isset($file['tmp_name'])) {
+        if (!isset($file['tmp_name'])
+            || !isset($file['type'])
+            || !isset($file['name'])
+        ) {
             throw new InvalidFileException();
         }
 
@@ -137,6 +140,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function uploadFromHttpPost(array $file): array
     {
+        $this->validateSize($file);
         $this->validateIsUploadedFile($file);
 
         $fileName = $this->generateFileName();
@@ -169,7 +173,9 @@ class UploadedFile implements UploadedFileInterface
         $this->validateSize($file);
 
         $fileName = $this->generateFileName();
-        if (file_put_contents($this->downloadDirectory . $fileName, $content) === false) {
+
+        // Ignore warning, we only need to know if everything is ok
+        if (@file_put_contents($this->downloadDirectory . $fileName, $content) === false) {
             throw new FileUploadException();
         }
 
