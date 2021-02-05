@@ -441,7 +441,7 @@ $search-border-color: #bbcdd2;
 
                 &,
                 i {
-                  color: #f44336;
+                  color: $brand-danger;
                 }
               }
 
@@ -603,7 +603,6 @@ $search-border-color: #bbcdd2;
       height: 100vh;
       pointer-events: none;
       content: "";
-      content: "";
       background: rgba(0, 0, 0, 0.8);
       opacity: 0;
     }
@@ -700,7 +699,7 @@ $search-border-color: #bbcdd2;
       min-width: inherit;
       overflow: hidden;
       border: none;
-      border-top: 1px solid #eaebec;
+      border-top: 1px solid $gray-background;
       border-radius: 5px;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
@@ -776,7 +775,7 @@ $search-border-color: #bbcdd2;
                 &:focus,
                 &:active {
                   color: $gray-dark-menu;
-                  background-color: #f4fcfd;
+                  background-color: $input-focus-background;
                 }
               }
             }
