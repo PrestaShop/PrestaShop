@@ -101,30 +101,31 @@
         padding: 8px 16px;
         overflow: hidden;
         font-size: 14px;
+        font-weight: 600;
         line-height: 1.5;
         color: $main-color;
+        color: $medium-gray;
         text-align: center;
         text-overflow: ellipsis;
         text-shadow: none;
         white-space: nowrap;
-        transition: .25s ease-out;
-        @include margin(0, 14px, 2px, 0);
         border: 1px solid $medium-gray;
         border-radius: 4px;
-        color: $medium-gray;
-        font-weight: 600;
+        transition: 0.25s ease-out;
+        @include margin(0, 14px, 2px, 0);
 
         &:hover {
-          border-color: $btn-secondary-hover;
+          color: #fff;
           background: $btn-secondary-hover;
-          color: #ffffff;
+          border-color: $btn-secondary-hover;
         }
 
-        &:focus, &:active {
-          box-shadow: 0 0 0 0.2rem rgba(108, 134, 142, 0.5);
+        &:focus,
+        &:active {
+          color: #fff;
           background: $btn-secondary-active-color;
           border-color: $btn-secondary-active-color;
-          color: #ffffff;
+          box-shadow: 0 0 0 0.2rem rgba(108, 134, 142, 0.5);
         }
 
         @media (max-width: $screen-desktop) {
@@ -142,33 +143,34 @@
         }
 
         &[id^="page-"] {
-          background: $primary-color;
-          color: white;
-          border-color: $primary-color;
           display: flex;
           align-items: center;
           justify-content: center;
+          color: #fff;
+          background: $primary-color;
+          border-color: $primary-color;
 
           i {
             display: block;
-            color: white;
-            font-size: 16px;
-            height: auto;
             width: 20px;
+            height: auto;
             margin-right: 4px;
+            font-size: 16px;
+            color: #fff;
           }
 
           &:hover {
-            border-color: $primary-light-color;
+            color: #fff;
             background: $primary-light-color;
-            color: #ffffff;
+            border-color: $primary-light-color;
           }
 
-          &:focus, &:active {
-            box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+          &:focus,
+          &:active {
+            color: #fff;
             background: $btn-primary-active-bg;
             border-color: $btn-primary-active-bg;
-            color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
           }
         }
       }
