@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
@@ -38,6 +40,28 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class FeatureRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var string
+     */
+    protected $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
     /**
      * @param FeatureId $featureId
      *
@@ -51,5 +75,76 @@ class FeatureRepository extends AbstractObjectModelRepository
             'feature',
             FeatureNotFoundException::class
         );
+    }
+
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param array|null $filters
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getFeatures(?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    {
+        $qb = $this->getFeaturesQueryBuilder($filters)
+            ->select('f.*, fl.*')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
+
+        $results = $qb->execute()->fetchAll();
+        $localizedNames = [];
+        $featuresById = [];
+        foreach ($results as $result) {
+            $featureId = (int) $result['id_feature'];
+            $localizedNames[$featureId][(int) $result['id_lang']] = $result['name'];
+            $featuresById[$featureId] = [
+                'id_feature' => $featureId,
+                'position' => (int) $result['position'],
+            ];
+        }
+
+        $features = [];
+        foreach ($featuresById as $featureById) {
+            $features[] = [
+                'id_feature' => $featureById['id_feature'],
+                'position' => $featureById['position'],
+                'localized_names' => $localizedNames[$featureById['id_feature']],
+            ];
+        }
+
+        return $features;
+    }
+
+    /**
+     * @param array|null $filters
+     *
+     * @return int
+     */
+    public function getFeaturesCount(?array $filters = []): int
+    {
+        $qb = $this->getFeaturesQueryBuilder($filters)
+            ->select('COUNT(f.id_feature_value) AS total_feature_values')
+            ->addGroupBy('f.id_feature_value')
+        ;
+
+        return (int) $qb->execute()->fetch()['total_feature_values'];
+    }
+
+    /**
+     * @param array|null $filters
+     *
+     * @return QueryBuilder
+     */
+    private function getFeaturesQueryBuilder(?array $filters): QueryBuilder
+    {
+        //@todo: filters are not handled.
+        $qb = $this->connection->createQueryBuilder();
+        $qb->from($this->dbPrefix . 'feature', 'f')
+            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature')
+            ->addOrderBy('f.position', 'ASC')
+        ;
+
+        return $qb;
     }
 }
