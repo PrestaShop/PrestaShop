@@ -2,9 +2,10 @@
   font-weight: 600;
 
   &.btn-default {
-    &, i {
+    &,
+    i {
       color: $medium-gray;
-      transition: .25s ease-out;
+      transition: 0.25s ease-out;
     }
 
     &:hover {
@@ -18,8 +19,8 @@
       color: #fff;
       background-color: $btn-secondary-active-color;
       border-color: $btn-secondary-active-color !important;
-      box-shadow: 0 0 0 0.2rem rgba($btn-secondary-active-color, 0.5);
       outline: none;
+      box-shadow: 0 0 0 0.2rem rgba($btn-secondary-active-color, 0.5);
 
       i {
         color: #fff;
@@ -31,48 +32,50 @@
     .btn-default {
       i {
         display: block;
-        color: white;
-        font-size: 16px;
-        height: 20px;
         width: 20px;
+        height: 20px;
         margin-right: 2px;
+        font-size: 16px;
+        color: #fff;
       }
 
       &:hover {
-        border-color: $primary-light-color;
+        color: #fff;
         background: $primary-light-color;
-        color: #ffffff;
+        border-color: $primary-light-color;
       }
 
-      &:focus, &:active {
-        box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+      &:focus,
+      &:active {
+        color: #fff;
         background: $btn-primary-active-bg;
         border-color: $btn-primary-active-bg;
-        color: #ffffff;
+        box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
       }
     }
   }
 
   &-primary {
-    background: $primary-color;
-    color: white;
-    border-color: $primary-color;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #fff;
+    background: $primary-color;
+    border-color: $primary-color;
 
     &:hover {
-      border-color: $primary-light-color;
+      color: #fff;
       background: $primary-light-color;
-      color: #ffffff;
+      border-color: $primary-light-color;
     }
 
-    &:focus, &:active {
-      box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+    &:focus,
+    &:active {
+      color: #fff;
       background: $btn-primary-active-bg;
       // stylelint-disable-next-line
-      border-color: $btn-primary-active-bg!important;
-      color: #ffffff;
+      border-color: $btn-primary-active-bg !important;
+      box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
     }
   }
 }

@@ -27,8 +27,8 @@ label.required::before {
   white-space: normal;
 
   &-inner {
-    background-color: $main-color;
     padding: 10px;
+    background-color: $main-color;
   }
 
   &.top .tooltip-arrow {
@@ -303,9 +303,9 @@ input[type="tel"] {
 
 .form-horizontal {
   .form-wrapper {
-    padding: 14px 0;
     flex: 0 0 83.33333%;
     max-width: 83.33333%;
+    padding: 14px 0;
     margin: auto;
   }
 }

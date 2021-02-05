@@ -446,11 +446,11 @@
 .dash_news {
   h3 {
     // stylelint-disable-next-line
-    font-size: 14px!important;
+    font-size: 14px !important;
 
     i {
-      color: $medium-gray;
       font-size: 20px;
+      color: $medium-gray;
     }
   }
 }
