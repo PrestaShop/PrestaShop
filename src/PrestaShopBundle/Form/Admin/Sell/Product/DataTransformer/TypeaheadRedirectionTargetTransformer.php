@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,11 +24,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default {
-  productForm: 'form[name=product]',
-  productFormSubmitButton: 'button[name="product[save]"]',
-  redirectOption: {
-    typeInput: '#product_redirect_option_type',
-    targetInput: '#product_redirect_option_target',
-  },
-};
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer;
+
+use Symfony\Component\Form\DataTransformerInterface;
+
+class TypeaheadRedirectionTargetTransformer implements DataTransformerInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function transform($targetId)
+    {
+        if (null === $targetId) {
+            return null;
+        }
+
+        return [
+            'data' => [
+                (int) $targetId,
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reverseTransform($targetData)
+    {
+        // TypeaheadProductCollectionType contains a collection of hidden inputs, for redirection
+        // only one target is selected and we just want to retrieve the first (and only) selected ID
+        if (!isset($targetData['data'][0])) {
+            return null;
+        }
+
+        return (int) $targetData['data'][0];
+    }
+}

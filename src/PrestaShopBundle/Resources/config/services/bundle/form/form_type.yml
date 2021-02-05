@@ -1273,6 +1273,21 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.redirect_option_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\RedirectOptionType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+            - "@router"
+            - '@form.type.sell.product.data_transformer.typeahead_redirection_target_transformer'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.data_transformer.typeahead_redirection_target_transformer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\TypeaheadRedirectionTargetTransformer'
+        public: true
+
     form.type.sell.product.options_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\OptionsType'
         parent: 'form.type.translatable.aware'

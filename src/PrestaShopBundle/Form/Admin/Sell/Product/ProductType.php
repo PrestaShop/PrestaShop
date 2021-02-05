@@ -76,6 +76,7 @@ class ProductType extends TranslatorAwareType
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)
             ->add('seo', SEOType::class)
+            ->add('redirect_option', RedirectOptionType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [

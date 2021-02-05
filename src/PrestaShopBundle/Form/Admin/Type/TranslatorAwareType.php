@@ -35,7 +35,10 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 abstract class TranslatorAwareType extends CommonAbstractType
 {
-    private $translator;
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
 
     /**
      * All languages available on shop. Used for translations.

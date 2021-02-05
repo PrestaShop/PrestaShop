@@ -24,6 +24,7 @@
  */
 
 import Serp from '@app/utils/serp';
+import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductMap from '../product-map';
 import ProductPartialUpdater from './product-partial-updater';
 
@@ -57,6 +58,11 @@ $(() => {
     },
     $('#product_preview').data('seo-url'),
   );
+
+  // Init the product/category search field for redirection target
+  const $redirectTypeInput = $(ProductMap.redirectOption.typeInput);
+  const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
+  new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
 
   // Form has no productId data means that we are in creation mode
   if (!$productForm.data('productId')) {

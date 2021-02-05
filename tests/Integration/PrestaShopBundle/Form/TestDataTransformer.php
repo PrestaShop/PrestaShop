@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,11 +24,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default {
-  productForm: 'form[name=product]',
-  productFormSubmitButton: 'button[name="product[save]"]',
-  redirectOption: {
-    typeInput: '#product_redirect_option_type',
-    targetInput: '#product_redirect_option_target',
-  },
-};
+declare(strict_types=1);
+
+namespace Tests\Integration\PrestaShopBundle\Form;
+
+use Symfony\Component\Form\DataTransformerInterface;
+
+/**
+ * This transformer is just used for test purposes.
+ */
+class TestDataTransformer implements DataTransformerInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function transform($value)
+    {
+        return $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reverseTransform($value)
+    {
+        return $value;
+    }
+}

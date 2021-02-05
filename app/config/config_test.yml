@@ -4,6 +4,7 @@ parameters:
 
 imports:
     - { resource: config_dev.yml }
+    - { resource: "../../tests/Resources/config/services.yml" }
 
 framework:
     test: ~
@@ -18,13 +19,6 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
-
-services:
-    prestashop.bundle.routing.converter.cache:
-        class: Symfony\Component\Cache\Adapter\ArrayAdapter
-
-    prestashop.adapter.image.uploader.category_cover_image_uploader:
-      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
 
 # Doctrine Configuration
 doctrine:
