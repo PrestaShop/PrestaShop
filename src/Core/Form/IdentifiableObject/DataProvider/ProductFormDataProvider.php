@@ -266,8 +266,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'supplier_id' => $supplierId,
                 'supplier_name' => $supplierOption->getSupplierName(),
                 'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
-                'supplier_price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
-                'supplier_reference' => $supplierForEditing->getReference(),
+                'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                'reference' => $supplierForEditing->getReference(),
                 'currency_id' => $supplierForEditing->getCurrencyId(),
                 'combination_id' => $supplierForEditing->getCombinationId(),
             ];
