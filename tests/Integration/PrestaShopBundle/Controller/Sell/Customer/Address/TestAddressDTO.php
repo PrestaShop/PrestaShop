@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
-class TestAddressDTO
+use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
+
+class TestAddressDTO implements TestEntityDTO
 {
     /** @var ?int */
     private $id;
