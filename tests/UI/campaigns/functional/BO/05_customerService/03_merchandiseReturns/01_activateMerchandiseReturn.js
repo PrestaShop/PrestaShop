@@ -232,7 +232,7 @@ describe('Activate/Deactivate merchandise return', async () => {
       it('should go to account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
 
-        await homePage.goToYourAccountPage(page);
+        await homePage.goToMyAccountPage(page);
 
         const pageTitle = await myAccountPage.getPageTitle(page);
         await expect(pageTitle).to.contains(myAccountPage.pageTitle);
