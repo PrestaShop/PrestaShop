@@ -49,7 +49,7 @@
 
 {# Override suppliers collection template to remove the label and init the table #}
 {%- block _product_suppliers_product_suppliers_row -%}
-  {# We put protoype name in a data attribute, so the JS code can get it dynamically #}
+  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row')|trim }) -%}
   <div {{ block('widget_attributes') }}>
@@ -58,7 +58,7 @@
         <thead class="thead-default">
         <tr>
         {% for child in prototype.children %}
-          {# We add column for whildren that are not hidden type, unless their label is not empty (like supplier_name) #}
+          {# We add column for children that are not hidden type, unless their label is not empty (like supplier_name) #}
           {% set childType = child.vars.block_prefixes.1 %}
           {% if childType != 'hidden' or (child.vars.label is not empty) %}
             <th>{{ child.vars.label }}</th>
