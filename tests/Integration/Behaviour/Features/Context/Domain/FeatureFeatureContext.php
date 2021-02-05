@@ -24,12 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
-use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
@@ -37,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class FeatureFeatureContext extends AbstractDomainFeatureContext
 {
@@ -49,7 +49,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $properties = $node->getRowsHash();
         $featureId = $this->createProductFeature($properties['name']);
 
-        SharedStorage::getStorage()->set($reference, new Feature($featureId->getValue()));
+        $this->getSharedStorage()->set($reference, (int) $featureId->getValue());
     }
 
     /**
@@ -57,13 +57,8 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
      */
     public function productFeatureNameShouldBe($reference, $name)
     {
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
-        /** @var Feature $productFeature */
-        $productFeature = SharedStorage::getStorage()->get($reference);
-
-        if ($productFeature->name[$defaultLanguageId] !== $name) {
-            throw new RuntimeException(sprintf('Feature "%s" name was expected to be "%s" but is "%s"', $reference, $name, $productFeature->name[$defaultLanguageId]));
-        }
+        $productFeatureId = $this->getSharedStorage()->get($reference);
+        $this->productFeatureWithIdNameShouldBe($productFeatureId, $name);
     }
 
     /**
@@ -72,6 +67,15 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     public function productFeatureWithIdExists($featureId)
     {
         $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
+    }
+
+    /**
+     * @Given /^product feature with reference "([^"]*)" exists$/
+     */
+    public function productFeatureWithReferenceExists(string $featureReference): void
+    {
+        $productFeatureId = $this->getSharedStorage()->get($featureReference);
+        $this->getQueryBus()->handle(new GetFeatureForEditing($productFeatureId));
     }
 
     /**
@@ -97,6 +101,15 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When /^I update product feature with reference "([^"]*)" field "name" in default language to "([^"]*)"$/
+     */
+    public function iUpdateProductFeatureWithReferenceNameTo(string $featureReference, string $featureName): void
+    {
+        $productFeatureId = $this->getSharedStorage()->get($featureReference);
+        $this->iUpdateProductFeatureWithIdNameTo($productFeatureId, $featureName);
+    }
+
+    /**
      * @Then /^product feature with id "([^"]*)" field "name" in default language should be "([^"]*)"$/
      */
     public function productFeatureWithIdNameShouldBe($featureId, $featureName)
@@ -110,6 +123,15 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         if ($featureNames[$defaultLanguageId] !== $featureName) {
             throw new RuntimeException(sprintf('Product feature with id "%s" has name "%s", but "%s" was expected', $featureId, $featureNames[$defaultLanguageId], $featureName));
         }
+    }
+
+    /**
+     * @Then /^product feature with reference "([^"]*)" field "name" in default language should be "([^"]*)"$/
+     */
+    public function productFeatureWithReferenceNameShouldBe(string $featureReference, string $featureName): void
+    {
+        $productFeatureId = $this->getSharedStorage()->get($featureReference);
+        $this->productFeatureWithIdNameShouldBe($productFeatureId, $featureName);
     }
 
     /**
