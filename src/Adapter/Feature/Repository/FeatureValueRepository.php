@@ -153,7 +153,19 @@ class FeatureValueRepository extends AbstractObjectModelRepository
      */
     public function getProductFeatureValues(ProductId $productId, ?int $limit = null, ?int $offset = null, ?array $filters = []): array
     {
-        $qb = $this->getFeatureValuesQueryBuilder($productId, $filters)
+        return $this->getFeatureValues($limit, $offset, array_merge($filters, ['id_product' => $productId->getValue()]));
+    }
+
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param array|null $filters
+     *
+     * @return array
+     */
+    public function getFeatureValues(?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    {
+        $qb = $this->getFeatureValuesQueryBuilder($filters)
             ->select('fv.*')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
@@ -175,7 +187,17 @@ class FeatureValueRepository extends AbstractObjectModelRepository
      */
     public function getProductFeatureValuesCount(ProductId $productId, ?array $filters = []): int
     {
-        $qb = $this->getFeatureValuesQueryBuilder($productId, $filters)
+        return $this->getFeatureValuesCount(array_merge($filters, ['id_product' => $productId->getValue()]));
+    }
+
+    /**
+     * @param array|null $filters
+     *
+     * @return int
+     */
+    public function getFeatureValuesCount(?array $filters = []): int
+    {
+        $qb = $this->getFeatureValuesQueryBuilder($filters)
             ->select('COUNT(fv.id_feature_value) AS total_feature_values')
         ;
 
@@ -206,20 +228,33 @@ class FeatureValueRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
      * @param array|null $filters
      *
      * @return QueryBuilder
      */
-    private function getFeatureValuesQueryBuilder(ProductId $productId, ?array $filters): QueryBuilder
+    private function getFeatureValuesQueryBuilder(?array $filters): QueryBuilder
     {
-        //@todo: filters are not handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'feature_value', 'fv')
             ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
-            ->where('fp.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
         ;
+
+        foreach ($filters as $key => $value) {
+            switch ($key) {
+                case 'id_product':
+                    $qb
+                        ->where('fp.id_product = :productId')
+                        ->setParameter('productId', (int) $value)
+                    ;
+                break;
+                default:
+                    $qb
+                        ->where(sprintf('fv.%s = :%s', $key, $key))
+                        ->setParameter($key, $value)
+                    ;
+                break;
+            }
+        }
 
         return $qb;
     }
