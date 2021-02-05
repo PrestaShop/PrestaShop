@@ -62,7 +62,7 @@ class BulkDeleteEmployeesSessionsCommand
     private function setEmployeeSessionIds(array $sessionIds)
     {
         foreach ($sessionIds as $sessionId) {
-            $this->sessionIds[] = new EmployeeSessionId($sessionId);
+            $this->sessionIds[] = new EmployeeSessionId((int) $sessionId);
         }
     }
 }
