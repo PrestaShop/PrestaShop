@@ -139,6 +139,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     /**
      * Tests all provided entity filters
+     * All filters are tested in one test make tests run faster
      *
      * @throws TypeException
      */
@@ -198,9 +199,9 @@ abstract class GridControllerTestCase extends WebTestCase
     /**
      * Asserts test entity exists with the list
      *
-     * @param TestEntityCollection $entities
+     * @param TestEntityDTOCollection $entities
      */
-    protected function assertTestEntityExists(TestEntityCollection $entities): void
+    protected function assertTestEntityExists(TestEntityDTOCollection $entities): void
     {
         $ids = [];
 
@@ -213,21 +214,21 @@ abstract class GridControllerTestCase extends WebTestCase
     /**
      * @param Crawler $crawler
      *
-     * @return TestEntityCollection
+     * @return TestEntityDTOCollection
      *
      * @throws TypeException
      */
-    protected function getEntityList(Crawler $crawler): TestEntityCollection
+    protected function getEntityList(Crawler $crawler): TestEntityDTOCollection
     {
-        $testEntityCollection = new TestEntityCollection();
+        $TestEntityDTOCollection = new TestEntityDTOCollection();
         $entities = $crawler->filter('#' . $this->testEntityName . '_grid_table')->filter('tbody tr')->each(function ($tr, $i) {
             return $this->getEntity($tr, $i);
         });
         foreach ($entities as $entity) {
-            $testEntityCollection->add($entity);
+            $TestEntityDTOCollection->add($entity);
         }
 
-        return $testEntityCollection;
+        return $TestEntityDTOCollection;
     }
 
     abstract protected function getTestFilters(): array;

@@ -30,7 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller;
 
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
-class TestEntityCollection extends AbstractTypedCollection
+class TestEntityDTOCollection extends AbstractTypedCollection
 {
     protected function getType()
     {
