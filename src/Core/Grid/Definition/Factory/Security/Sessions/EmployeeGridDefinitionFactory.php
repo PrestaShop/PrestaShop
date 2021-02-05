@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BulkDeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -54,6 +55,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
     /**
@@ -262,12 +264,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('bulk_delete_sessions_employees'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_security_sessions_employees_bulk_delete',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_security_sessions_employees_bulk_delete')
             );
     }
 }
