@@ -71,6 +71,7 @@ class ProductType extends TranslatorAwareType
         $formIsUsedToEditAProduct = !empty($options['product_id']);
         $builder
             ->add('basic', BasicInformationType::class)
+            ->add('features', FeaturesType::class)
             ->add('stock', StockType::class)
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
