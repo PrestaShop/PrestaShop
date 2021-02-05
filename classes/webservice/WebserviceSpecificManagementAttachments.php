@@ -342,7 +342,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             $this->attachment_id = $attachment->id;
         } catch (MaximumSizeExceeded $e) {
             $this->getWsObject()->errors[] = $this->trans(
-                'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
+                'The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.',
                 [$maximumSize, $e->getMessage()],
                 'Admin.Notifications.Error'
             );
@@ -350,7 +350,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             $this->getWsObject()->errors[] = $this->trans(
                 'Failed to copy the file.',
                 [],
-                'Admin.Notifications.Error'
+                'Admin.Catalog.Notification'
             );
         }
     }
