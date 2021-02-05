@@ -246,16 +246,17 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      *
      * @throws WebserviceException if attachment is not existing or file not available
      *
-     * @return string[] file details
+     * @return array<string, string> File details
      */
     public function executeFileGetAndHead(): array
     {
-        $attachment = new Attachment((int) $this->getWsObject()->urlSegment[2]);
-        if (!$attachment) {
+        $attachmentId = (int) $this->getWsObject()->urlSegment[2];
+        $attachment = new Attachment($attachmentId);
+        if (empty($attachment->id)) {
             throw new WebserviceException(
                 sprintf(
                     'Attachment %d not found',
-                    $this->getWsObject()->urlSegment[2]
+                    $attachmentId
                 ),
                 [
                     1,
@@ -271,7 +272,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             throw new WebserviceException(
                 sprintf(
                     'Unable to load the attachment file for attachment %d',
-                    $this->getWsObject()->urlSegment[2]
+                    $attachmentId
                 ),
                 [
                     1,
@@ -296,13 +297,12 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      * [PUT] update existing attachment file
      * [POST] create new attachment
      */
-    public function executeFileAddAndEdit()
+    public function executeFileAddAndEdit(): void
     {
         // Load attachment without checking the method, because of
-        // PUT which is cleared the $_FILES var
+        // PUT which is cleared the $_FILES var in multipart/form context
         $attachmentId = null;
-        if (isset($this->getWsObject()->urlSegment[2])
-        ) {
+        if (isset($this->getWsObject()->urlSegment[2])) {
             $attachmentId = (int) $this->getWsObject()->urlSegment[2];
         }
 
@@ -362,7 +362,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      *
      * @return string
      */
-    protected function trans(string $message, array $params, string $domain)
+    protected function trans(string $message, array $params, string $domain): string
     {
         return Context::getContext()->getTranslator()->trans($message, $params, $domain);
     }

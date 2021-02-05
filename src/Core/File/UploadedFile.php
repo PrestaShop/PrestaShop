@@ -79,7 +79,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param array $file
      */
-    protected function validate(array $file)
+    protected function validate(array $file): void
     {
         if (!isset($file['size'])) {
             throw new InvalidFileException();
@@ -95,7 +95,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @throws MaximumSizeExceededException
      */
-    protected function validateSize(int $fileSize)
+    protected function validateSize(int $fileSize): void
     {
         if ($fileSize > $this->maximumSize) {
             throw new MaximumSizeExceededException($fileSize);
@@ -121,7 +121,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param array $file the $_FILES content
      *
-     * @return array
+     * @return array<string, string>
      *
      * @throws FileUploadException
      */
@@ -145,7 +145,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param string $content The binary string
      *
-     * @return array
+     * @return array<string, string>
      *
      * @throws FileUploadException
      */
@@ -167,6 +167,5 @@ class UploadedFile implements UploadedFileInterface
             'file_name' => uniqid('', true),
             'mime_type' => ImageManager::getMimeType($this->downloadDirectory . $fileName),
         ];
-        // Not implemented yet
     }
 }
