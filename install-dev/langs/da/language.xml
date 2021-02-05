@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<language>
-	<name><![CDATA[Dansk (Danish)]]></name>
-	<locale>da-DK</locale>
-	<language_code>da-dk</language_code>
-	<date_format_lite>Y-m-d</date_format_lite>
-	<date_format_full>Y-m-d H:i:s</date_format_full>
-	<is_rtl>false</is_rtl>
-</language>

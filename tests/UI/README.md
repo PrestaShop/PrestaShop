@@ -33,8 +33,8 @@ npm install
 | SHOP_NAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
 | DB_SERVER           | The Database server address (default to **`127.0.0.1`**) |
 | DB_USER             | Login user of your MySql (default to **`root`**) |
-| DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
-| DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+| DB_NAME             | Name of the MySql database (default to **`prestagit**) |
+| DB_PASSWD           | Password for your MySql (default to **`root`**) |
 
 ### Playwright parameters
 
