@@ -82,6 +82,7 @@ class ProductSupplierType extends TranslatorAwareType
                 'required' => true,
             ])
             ->add('supplier_name', HiddenType::class, [
+                'label' => $this->trans('Supplier', 'Admin.Global'),
                 'required' => false,
             ])
             ->add('product_supplier_id', HiddenType::class, [
@@ -91,6 +92,7 @@ class ProductSupplierType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('supplier_reference', TextType::class, [
+                'label' => $this->trans('Supplier reference', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_REFERENCE),
                     new Length([
@@ -99,6 +101,7 @@ class ProductSupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('supplier_price_tax_excluded', MoneyType::class, [
+                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'currency' => $this->currencyIsoCode,
                 'scale' => self::PRESTASHOP_DECIMALS,
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
@@ -108,6 +111,7 @@ class ProductSupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('currency_id', ChoiceType::class, [
+                'label' => $this->trans('Currency', 'Admin.Global'),
                 'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
