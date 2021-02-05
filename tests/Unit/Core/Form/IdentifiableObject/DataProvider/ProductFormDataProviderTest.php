@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
+use Generator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -45,12 +47,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
+use RuntimeException;
 
 class ProductFormDataProviderTest extends TestCase
 {
@@ -101,11 +108,62 @@ class ProductFormDataProviderTest extends TestCase
         $this->assertEquals($expectedData, $formData);
     }
 
-    public function getExpectedData()
+    public function getExpectedData(): Generator
     {
+        $datasetsByType = [
+            $this->getDatasetsForBasicInformation(),
+            $this->getDatasetsForSeo(),
+            $this->getDatasetsForRedirectOption(),
+            $this->getDatasetsForProductSuppliers(),
+        ];
+
+        foreach ($datasetsByType as $datasetByType) {
+            foreach ($datasetByType as $dataset) {
+                yield $dataset;
+            }
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForSeo(): array
+    {
+        $datasets = [];
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'meta_title' => $localizedValues,
+            'meta_description' => $localizedValues,
+            'link_rewrite' => $localizedValues,
+        ];
+        $expectedOutputData['seo']['meta_title'] = $localizedValues;
+        $expectedOutputData['seo']['meta_description'] = $localizedValues;
+        $expectedOutputData['seo']['link_rewrite'] = $localizedValues;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForBasicInformation(): array
+    {
+        $datasets = [];
+
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [];
-        yield [
+
+        $datasets[] = [
             $productData,
             $expectedOutputData,
         ];
@@ -125,24 +183,21 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATION;
         $expectedOutputData['basic']['description'] = $localizedValues;
         $expectedOutputData['basic']['description_short'] = $localizedValues;
-        yield [
+
+        $datasets[] = [
             $productData,
             $expectedOutputData,
         ];
 
-        $expectedOutputData = $this->getDefaultOutputData();
-        $productData = [
-            'meta_title' => $localizedValues,
-            'meta_description' => $localizedValues,
-            'link_rewrite' => $localizedValues,
-        ];
-        $expectedOutputData['seo']['meta_title'] = $localizedValues;
-        $expectedOutputData['seo']['meta_description'] = $localizedValues;
-        $expectedOutputData['seo']['link_rewrite'] = $localizedValues;
-        yield [
-            $productData,
-            $expectedOutputData,
-        ];
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForRedirectOption(): array
+    {
+        $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
@@ -151,10 +206,81 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $expectedOutputData['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
         $expectedOutputData['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
-        yield [
+
+        $datasets[] = [
             $productData,
             $expectedOutputData,
         ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForProductSuppliers(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['suppliers']['default_supplier_id'] = 1;
+        $expectedOutputData['suppliers']['supplier_ids'] = [
+            0 => 1,
+            1 => 2,
+        ];
+        $expectedOutputData['suppliers']['product_suppliers'][0] = [
+            'supplier_id' => 1,
+            'supplier_name' => 'test supplier 1',
+            'product_supplier_id' => 1,
+            'price_tax_excluded' => '0',
+            'reference' => 'test supp ref 1',
+            'currency_id' => 1,
+            'combination_id' => 0,
+        ];
+        $expectedOutputData['suppliers']['product_suppliers'][1] = [
+            'supplier_id' => 2,
+            'supplier_name' => 'test supplier 2',
+            'product_supplier_id' => 2,
+            'price_tax_excluded' => '0',
+            'reference' => 'test supp ref 2',
+            'currency_id' => 3,
+            'combination_id' => 0,
+        ];
+
+        $productData = [
+            'suppliers' => [
+                'default_supplier_id' => 1,
+                'product_suppliers' => [
+                    [
+                        'product_id' => self::PRODUCT_ID,
+                        'supplier_id' => 1,
+                        'supplier_name' => 'test supplier 1',
+                        'product_supplier_id' => 1,
+                        'price' => '0',
+                        'reference' => 'test supp ref 1',
+                        'currency_id' => 1,
+                        'combination_id' => 0,
+                    ],
+                    [
+                        'product_id' => self::PRODUCT_ID,
+                        'supplier_id' => 2,
+                        'supplier_name' => 'test supplier 2',
+                        'product_supplier_id' => 2,
+                        'price' => '0',
+                        'reference' => 'test supp ref 2',
+                        'currency_id' => 3,
+                        'combination_id' => 0,
+                    ],
+                ],
+            ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
     }
 
     /**
@@ -177,6 +303,40 @@ class ProductFormDataProviderTest extends TestCase
             $product['attachments'] ?? [],
             $this->createProductStockInformation($product),
             $this->createVirtualProductFile($product)
+        );
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return ProductSupplierOptions
+     */
+    private function createProductSupplierOptions(array $productData): ProductSupplierOptions
+    {
+        if (empty($productData['suppliers'])) {
+            return new ProductSupplierOptions(0, []);
+        }
+
+        $suppliersInfo = [];
+        foreach ($productData['suppliers']['product_suppliers'] as $supplierInfo) {
+            $suppliersInfo[] = new ProductSupplierInfo(
+                $supplierInfo['supplier_name'],
+                $supplierInfo['supplier_id'],
+                new ProductSupplierForEditing(
+                    $supplierInfo['product_supplier_id'],
+                    $supplierInfo['product_id'],
+                    $supplierInfo['supplier_id'],
+                    $supplierInfo['reference'],
+                    $supplierInfo['price'],
+                    $supplierInfo['currency_id'],
+                    $supplierInfo['combination_id']
+                )
+            );
+        }
+
+        return new ProductSupplierOptions(
+            $productData['suppliers']['default_supplier_id'],
+            $suppliersInfo
         );
     }
 
@@ -344,23 +504,47 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param array $product
+     * @param array $productData
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject|CommandBusInterface
+     * @return MockObject|CommandBusInterface
      */
-    private function createQueryBusMock(array $product)
+    private function createQueryBusMock(array $productData)
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
-        $productForEditing = $this->createProductForEditing($product);
-
         $queryBusMock
             ->method('handle')
-            ->with($this->isInstanceOf(GetProductForEditing::class))
-            ->willReturn($productForEditing)
+            ->with($this->logicalOr(
+                $this->isInstanceOf(GetProductForEditing::class),
+                $this->isInstanceOf(GetProductSupplierOptions::class)
+            ))
+            ->willReturnCallback(function ($query) use ($productData) {
+                return $this->createResultBasedOnQuery($query, $productData);
+            })
         ;
 
         return $queryBusMock;
+    }
+
+    /**
+     * @param $query
+     * @param array $productData
+     *
+     * @return ProductForEditing|ProductSupplierOptions|null
+     */
+    private function createResultBasedOnQuery($query, array $productData)
+    {
+        $queryResultMap = [
+            GetProductForEditing::class => $this->createProductForEditing($productData),
+            GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
+        ];
+
+        $queryClass = get_class($query);
+        if (array_key_exists($queryClass, $queryResultMap)) {
+            return $queryResultMap[$queryClass];
+        }
+
+        throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
     }
 
     /**
@@ -433,6 +617,7 @@ class ProductFormDataProviderTest extends TestCase
                 'isbn' => 'isbn',
                 'reference' => 'reference',
             ],
+            'suppliers' => [],
         ];
     }
 }

@@ -166,16 +166,11 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
 
-    prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSuppliersForEditingHandler
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing
-
     prestashop.adapter.product.query_handler.get_product_supplier_options_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSupplierOptionsHandler
         arguments:
-            - '@prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler'
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
@@ -299,6 +294,8 @@ services:
     prestashop.adapter.product.repository.product_supplier_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
         arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
             - '@prestashop.adapter.product.validate.product_supplier_validator'
 
     prestashop.adapter.product.update.product_supplier_updater:

@@ -24,20 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-/**
- * Defines contract to handle @see GetProductSupplierOptions
- */
-interface GetProductSupplierOptionsHandlerInterface
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Supplier;
+
+final class SupplierNameByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @param GetProductSupplierOptions $query
-     *
-     * @return ProductSupplierOptions
+     * {@inheritDoc}
      */
-    public function handle(GetProductSupplierOptions $query): ProductSupplierOptions;
+    public function getChoices()
+    {
+        $choices = [];
+        foreach (Supplier::getSuppliers() as $supplier) {
+            $choices[$supplier['name']] = (int) $supplier['id_supplier'];
+        }
+
+        return $choices;
+    }
 }

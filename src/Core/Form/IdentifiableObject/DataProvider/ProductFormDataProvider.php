@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -48,8 +50,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    public function __construct(
+        CommandBusInterface $queryBus
+    ) {
         $this->queryBus = $queryBus;
     }
 
@@ -70,6 +73,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
+            'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }
 
@@ -244,5 +248,43 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $tags;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractSuppliersData(ProductForEditing $productForEditing): array
+    {
+        /** @var ProductSupplierOptions $productSupplierOptions */
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
+
+        if (empty($productSupplierOptions->getSuppliersInfo())) {
+            return [];
+        }
+
+        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
+        $suppliersData = [
+            'default_supplier_id' => $defaultSupplierId,
+        ];
+
+        foreach ($productSupplierOptions->getSuppliersInfo() as $supplierOption) {
+            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
+            $supplierId = $supplierOption->getSupplierId();
+
+            $suppliersData['supplier_ids'][] = $supplierId;
+            $suppliersData['product_suppliers'][] = [
+                'supplier_id' => $supplierId,
+                'supplier_name' => $supplierOption->getSupplierName(),
+                'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                'reference' => $supplierForEditing->getReference(),
+                'currency_id' => $supplierForEditing->getCurrencyId(),
+                'combination_id' => $supplierForEditing->getCombinationId(),
+            ];
+        }
+
+        return $suppliersData;
     }
 }

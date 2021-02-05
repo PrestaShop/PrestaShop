@@ -26,33 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult;
 
 /**
- * Provides product suppliers
+ * Transfers product suppliers data
  */
-class GetProductSuppliersForEditing
+class ProductSupplierOptions
 {
     /**
-     * @var ProductId
+     * @var int
      */
-    private $productId;
+    private $defaultSupplierId;
 
     /**
-     * @param int $productId
+     * @var ProductSupplierInfo[]
      */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
+    private $suppliersInfo;
+
+    /**
+     * @param int $defaultSupplierId
+     * @param ProductSupplierInfo[] $suppliersInfo
+     */
+    public function __construct(
+        int $defaultSupplierId,
+        array $suppliersInfo
+    ) {
+        $this->defaultSupplierId = $defaultSupplierId;
+        $this->suppliersInfo = $suppliersInfo;
     }
 
     /**
-     * @return ProductId
+     * @return int
      */
-    public function getProductId(): ProductId
+    public function getDefaultSupplierId(): int
     {
-        return $this->productId;
+        return $this->defaultSupplierId;
+    }
+
+    /**
+     * @return ProductSupplierInfo[]
+     */
+    public function getSuppliersInfo(): array
+    {
+        return $this->suppliersInfo;
     }
 }

@@ -308,7 +308,7 @@ class CombinationRepository extends AbstractObjectModelRepository
 
         $attributesInfoByAttributeId = [];
         foreach ($attributesInfo as $attributeInfo) {
-            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = $attributeInfo;
+            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']] = $attributeInfo;
         }
 
         return $attributesInfoByAttributeId;

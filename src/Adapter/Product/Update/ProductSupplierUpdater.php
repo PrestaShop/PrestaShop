@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -160,7 +161,7 @@ class ProductSupplierUpdater
      * @param int $productId
      * @param ProductSupplier[] $providedProductSuppliers
      *
-     * @return array<int, int>
+     * @return array<int, ProductSupplierId>
      */
     private function getDeletableProductSupplierIds(int $productId, array $providedProductSuppliers): array
     {
@@ -170,7 +171,7 @@ class ProductSupplierUpdater
         /** @var ProductSupplier $currentSupplier */
         foreach ($existingProductSuppliers as $currentSupplier) {
             $currentId = (int) $currentSupplier->id;
-            $idsForDeletion[$currentId] = $currentId;
+            $idsForDeletion[$currentId] = new ProductSupplierId($currentId);
         }
 
         foreach ($providedProductSuppliers as $productSupplier) {
