@@ -526,7 +526,7 @@ class CartControllerCore extends FrontController
                     );
                 } elseif (!$update_quantity) {
                     $this->errors[] = $this->trans(
-                        'You already have the maximum quantity available for product %product%.',
+                        'You have reached the maximum order quantity for product %product%.',
                         ['%product%' => $productName],
                         'Shop.Notifications.Error'
                     );
