@@ -138,19 +138,6 @@ abstract class GridControllerTestCase extends WebTestCase
     }
 
     /**
-     * Tests all provided entity filters
-     * All filters are tested in one test make tests run faster
-     *
-     * @throws TypeException
-     */
-    public function testEntityFilters(): void
-    {
-        foreach ($this->getTestFilters() as $testFilter) {
-            $this->assertFiltersFindOnlyTestEntity($testFilter);
-        }
-    }
-
-    /**
      * Asserts that there is only one entity left in the list after using filters
      *
      * @param array $testFilters
@@ -230,8 +217,6 @@ abstract class GridControllerTestCase extends WebTestCase
 
         return $TestEntityDTOCollection;
     }
-
-    abstract protected function getTestFilters(): array;
 
     abstract protected function getTestEntity(): TestEntityDTO;
 

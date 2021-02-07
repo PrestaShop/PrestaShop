@@ -1,5 +1,6 @@
 imports:
     - { resource: config.yml }
+    - { resource: ../../tests/Integration/PrestaShopBundle/Resources/config/services.yml }
 
 framework:
     router:

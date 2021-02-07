@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
@@ -43,6 +44,19 @@ class AddressControllerTest extends GridControllerTestCase
         $this->testEntityName = 'address';
         $this->deleteEntityRoute = 'admin_addresses_delete';
         $this->initialEntityCount = 2;
+    }
+
+    /**
+     * Tests all provided entity filters
+     * All filters are tested in one test make tests run faster
+     *
+     * @throws TypeException
+     */
+    public function testAddressFilters(): void
+    {
+        foreach ($this->getTestFilters() as $testFilter) {
+            $this->assertFiltersFindOnlyTestEntity($testFilter);
+        }
     }
 
     /**
@@ -101,6 +115,12 @@ class AddressControllerTest extends GridControllerTestCase
         $this->testEntityId = $dataChecker->getLastCreatedId();
     }
 
+    /**
+     * @param $tr
+     * @param $i
+     *
+     * @return TestEntityDTO
+     */
     protected function getEntity($tr, $i): TestEntityDTO
     {
         return new TestAddressDTO(
