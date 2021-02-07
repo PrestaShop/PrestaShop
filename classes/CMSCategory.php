@@ -185,7 +185,9 @@ class CMSCategoryCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'cms_category` c
 				' . Shop::addSqlAssociation('cms_category', 'c') . '
 				WHERE c.`id_parent` = ' . (int) $current .
-                    ($active ? ' AND c.`active` = 1' : '');
+                    ($active ? ' AND c.`active` = 1' : '') .
+        ' ORDER BY c.`position`';
+
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
             $category['children'][] = CMSCategory::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
