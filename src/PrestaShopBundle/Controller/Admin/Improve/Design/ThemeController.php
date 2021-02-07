@@ -496,7 +496,7 @@ class ThemeController extends AbstractAdminController
             ),
             ThemeConstraintException::class => [
                 ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
-                        'Themes can be changed only in single shop context', 'Admin.Notifications.Error'
+                        'Themes can only be changed in single store context.', 'Admin.Notifications.Error'
                 ),
                 ThemeConstraintException::MISSING_CONFIGURATION_FILE => $this->trans(
                         'Missing configuration file', 'Admin.Notifications.Error'
