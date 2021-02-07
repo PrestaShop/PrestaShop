@@ -43,7 +43,7 @@ class AddressControllerTest extends GridControllerTestCase
         $this->gridRoute = 'admin_addresses_index';
         $this->testEntityName = 'address';
         $this->deleteEntityRoute = 'admin_addresses_delete';
-        $this->initialEntityCount = 2;
+        $this->initialEntityCount = 1;
     }
 
     /**
