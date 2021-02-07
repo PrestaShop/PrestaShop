@@ -153,11 +153,11 @@ class CmsPageType extends TranslatorAwareType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => 255,
-                            'maxMessage' => $this->trans(
+                            'max' => 512,
+                            'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                'Admin.Notifications.Error',
-                                ['%limit%' => 255]
+                                ['%limit%' => 512],
+                                'Admin.Notifications.Error'
                             ),
                         ]),
                     ],
