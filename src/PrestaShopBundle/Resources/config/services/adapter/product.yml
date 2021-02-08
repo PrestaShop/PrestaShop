@@ -427,8 +427,8 @@ services:
     prestashop.adapter.product.validate.combination_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator
 
-    prestashop.adapter.product.update.default_combination_updater:
-        class: PrestaShop\PrestaShop\Adapter\Product\Update\DefaultCombinationUpdater
+    prestashop.adapter.product.combination.update.default_combination_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater
         arguments:
             - '@prestashop.adapter.product.repository.combination_repository'
 
@@ -444,7 +444,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationFromListingHandler
         arguments:
             - '@prestashop.adapter.product.repository.combination_repository'
-            - '@prestashop.adapter.product.update.default_combination_updater'
+            - '@prestashop.adapter.product.combination.update.default_combination_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand
