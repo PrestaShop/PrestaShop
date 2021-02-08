@@ -130,7 +130,7 @@
           class="attribute-group-name {% if loop.index > 3 or has_combinations %} collapsed {% endif %}"
           data-toggle="collapse"
           href="#attribute-group-{{ attribute_group.id }}"
-          aria-expanded="{% if loop.index <= 3 or has_combinations %}true{% else %}false{% endif %}"
+          aria-expanded="{% if loop.index <= 3 or not has_combinations %}true{% else %}false{% endif %}"
         >
           {{ attribute_group.name }}
         </a>
