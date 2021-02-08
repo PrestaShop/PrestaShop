@@ -81,7 +81,12 @@ class ProductCore extends ObjectModel
     /** @var string|array Short description or array of short description by id_lang */
     public $description_short;
 
-    /** @var int Quantity available */
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$quantity instead
+     *
+     * @var int Quantity available
+     */
     public $quantity = 0;
 
     /** @var int Minimal quantity for add to cart */
