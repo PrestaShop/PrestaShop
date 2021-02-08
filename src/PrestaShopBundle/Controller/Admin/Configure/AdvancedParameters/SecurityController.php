@@ -33,8 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessio
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\EmployeeFilters;
@@ -190,7 +190,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle($deleteSessionCommand);
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
-        } catch (SessionException $e) {
+        } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -217,7 +217,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle($deleteSessionCommand);
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
-        } catch (SessionException $e) {
+        } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -246,7 +246,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle($deleteSessionsCommand);
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
-        } catch (SessionException $e) {
+        } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -275,7 +275,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle($deleteSessionsCommand);
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
-        } catch (SessionException $e) {
+        } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
