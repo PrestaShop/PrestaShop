@@ -33,21 +33,26 @@ use Symfony\Component\Form\FormInterface;
 
 class FormCloner
 {
-    public function cloneForm(FormInterface $form, array $options = []): FormInterface
+    public function cloneForm(FormInterface $form, array $options = [], array $cloneOptions = []): FormInterface
     {
-        $formBuilder = $this->cloneFormBuilder($form, $options);
+        $formBuilder = $this->cloneFormBuilder($form, $options, $cloneOptions);
 
         return $formBuilder->getForm();
     }
 
-    private function cloneFormBuilder(FormInterface $form, array $options = []): FormBuilderInterface
+    private function cloneFormBuilder(FormInterface $form, array $options = [], array $cloneOptions = []): FormBuilderInterface
     {
         $formBuilder = $this->createFormBuilder($form, $options);
-        foreach ($form->getConfig()->getModelTransformers() as $modelTransformer) {
-            $formBuilder->addModelTransformer($modelTransformer);
+        if (!isset($cloneOptions['clone_model_transformers']) || true === $cloneOptions['clone_model_transformers']) {
+            foreach ($form->getConfig()->getModelTransformers() as $modelTransformer) {
+                $formBuilder->addModelTransformer($modelTransformer);
+            }
         }
-        foreach ($form->getConfig()->getViewTransformers() as $formViewTransformer) {
-            $formBuilder->addViewTransformer($formViewTransformer);
+
+        if (!isset($cloneOptions['clone_view_transformers']) || true === $cloneOptions['clone_view_transformers']) {
+            foreach ($form->getConfig()->getViewTransformers() as $formViewTransformer) {
+                $formBuilder->addViewTransformer($formViewTransformer);
+            }
         }
 
         return $formBuilder;
