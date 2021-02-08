@@ -26,34 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteEmployeesSessionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Handles command that deletes employees sessions in bulk action.
- *
- * @internal
+ * Class CannotBulkDeleteSessionException is a base exception for security sessions context.
  */
-final class BulkDeleteEmployeesSessionsHandler implements BulkDeleteEmployeesSessionsHandlerInterface
+class CannotBulkDeleteSessionException extends DomainException
 {
-    /**
-     * @var EmployeeSessionRepository
-     */
-    private $repository;
-
-    public function __construct(EmployeeSessionRepository $repository)
-    {
-        $this->repository = $repository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(BulkDeleteEmployeesSessionsCommand $command): void
-    {
-        $this->repository->bulkDelete($command->getEmployeeSessionIds());
-    }
 }
