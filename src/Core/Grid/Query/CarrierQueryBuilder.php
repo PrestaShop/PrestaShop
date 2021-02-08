@@ -106,7 +106,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('COUNT(DISTINCT c.id_carrier)');
     }
 
-    private function getCarrierQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    private function getCarrierQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'carrier', 'c')
