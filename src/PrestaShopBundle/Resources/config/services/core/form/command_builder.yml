@@ -38,3 +38,6 @@ services:
 
     prestashop.core.form.command_builder.product.feature_values_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandBuilder
+
+    prestashop.core.form.command_builder.product.customization_fields_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder
