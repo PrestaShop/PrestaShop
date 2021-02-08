@@ -119,7 +119,9 @@
               display: block;
               margin-top: 1rem;
               font-size: 1.625rem;
-              color: $gray-medium;
+              // To be changed to var when UIKit sources are imported
+              color: #363a41;
+              opacity: 1;
             }
           }
 
@@ -132,6 +134,11 @@
             .mobile & {
               bottom: 3.125rem;
             }
+          }
+
+          @include media-breakpoint-down("sm") {
+            // To be changed to var when UIKit sources are imported
+            color: #363a41;
           }
         }
       }
