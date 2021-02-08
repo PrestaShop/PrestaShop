@@ -287,6 +287,8 @@ export default class ProductManager {
 
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(
+      $(createOrderMap.inStockCounter),
+      $(createOrderMap.quantityInput),
       combination.stock,
       this.selectedProduct.availableOutOfStock || combination.stock <= 0
     );
