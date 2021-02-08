@@ -79,11 +79,18 @@
           <p>{{ orderForViewing.customer.accountRegistrationDate|date_format_full }}</p>
         {% endif %}
 
-        {%  if orderForViewing.customer.ape is not empty %}
+        {%  if orderForViewing.customer.siret is not empty %}
           <p class="mb-1">
+            <strong>{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p>{{ orderForViewing.customer.siret }}</p>
+        {% endif %}
+
+        {%  if orderForViewing.customer.ape is not empty %}
+          <p class="mb-1 d-block d-md-none">
             <strong>{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
           </p>
-          <p>{{ orderForViewing.customer.ape }}</p>
+          <p class="d-block d-md-none">{{ orderForViewing.customer.ape }}</p>
         {% endif %}
       </div>
       <div id="validatedOrders" class="col-md-6">
@@ -103,11 +110,11 @@
           </p>
         {% endif %}
 
-        {%  if orderForViewing.customer.siret is not empty %}
-          <p class="mb-1">
-            <strong>{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+        {%  if orderForViewing.customer.ape is not empty %}
+          <p class="mb-1 d-none d-md-block">
+            <strong>{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
           </p>
-          <p>{{ orderForViewing.customer.siret }}</p>
+          <p class="d-none d-md-block">{{ orderForViewing.customer.ape }}</p>
         {% endif %}
       </div>
     </div>
