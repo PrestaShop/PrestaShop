@@ -31,11 +31,16 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class FeatureValueType extends TranslatorAwareType
@@ -67,25 +72,79 @@ class FeatureValueType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $features = $this->featuresChoiceProvider->getChoices();
-        $firstFeatureId = reset($features);
-        $featureValues = $this->featureValuesChoiceProvider->getChoices(['feature_id' => $firstFeatureId]);
 
         $builder
             ->add('feature_id', ChoiceType::class, [
                 'choices' => $features,
+                'required' => false,
+                'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
                 'label' => $this->trans('Feature', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-selector',
+                ],
             ])
             ->add('feature_value_id', ChoiceType::class, [
-                'choices' => $featureValues,
+                'required' => false,
+                'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
                 'label' => $this->trans('Pre-defined value', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'disabled' => true,
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
             ])
             ->add('custom_value', TranslatableType::class, [
                 'label' => $this->trans('OR Customized value', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
+                'attr' => [
+                    'class' => 'custom-values',
+                ],
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
             ])
+            ->add('custom_feature_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'custom-feature-id',
+                ],
+            ])
+            ->add('delete', IconButtonType::class, [
+                'label' => false,
+                'icon' => 'delete',
+                'attr' => [
+                    'class' => 'tooltip-link delete-feature-value pl-0 pr-0',
+                    'data-modal-title' => $this->trans('Warning', 'Admin.Notifications.Warning'),
+                    'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-apply' => $this->trans('Yes', 'Admin.Global'),
+                    'data-modal-cancel' => $this->trans('No', 'Admin.Global'),
+                ],
+            ])
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            if (empty($data) || empty($data['feature_id'])) {
+                return;
+            }
+
+            $featureValues = $this->featureValuesChoiceProvider->getChoices(['feature_id' => (int) $data['feature_id'], 'custom' => !empty($data['custom_value'])]);
+            $cloner = new FormCloner();
+            $newFeatureValueForm = $cloner->cloneForm($form->get('feature_value_id'), [
+                'choices' => $featureValues,
+                'attr' => [
+                    'disabled' => !empty($data['custom_value']) || empty($featureValues),
+                    'data-toggle' => 'select2',
+                    'class' => 'feature-value-selector',
+                ],
+            ], [
+                // Choice type have automatic transformers to check value is in the choices option, since we updated
+                // this value we need new transformers, so we don't clone the previous ones
+                'clone_view_transformers' => false,
+            ]);
+            $form->add($newFeatureValueForm);
+        });
     }
 }

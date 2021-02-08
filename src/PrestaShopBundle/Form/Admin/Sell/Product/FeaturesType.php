@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -44,9 +44,16 @@ class FeaturesType extends TranslatorAwareType
             ->add('feature_values', CollectionType::class, [
                 'entry_type' => FeatureValueType::class,
                 'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype_name' => '__FEATURE_VALUE_INDEX__',
             ])
-            ->add('add_feature', ButtonType::class, [
+            ->add('add_feature', IconButtonType::class, [
                 'label' => $this->trans('Add a feature', 'Admin.Catalog.Feature'),
+                'icon' => 'add_circle',
+                'attr' => [
+                    'class' => 'btn-outline-primary',
+                ],
             ])
         ;
     }
