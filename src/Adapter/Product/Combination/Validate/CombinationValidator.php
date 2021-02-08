@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Validate;
 use Combination;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
@@ -86,6 +87,7 @@ class CombinationValidator extends AbstractObjectModelValidator
      */
     private function validateStock(Combination $combination): void
     {
+        $this->validateCombinationProperty($combination, 'quantity', ProductStockConstraintException::INVALID_QUANTITY);
         $this->validateCombinationProperty($combination, 'minimal_quantity', ProductConstraintException::INVALID_MINIMAL_QUANTITY);
         $this->validateCombinationProperty($combination, 'low_stock_threshold', ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD);
         $this->validateCombinationProperty($combination, 'low_stock_alert', ProductConstraintException::INVALID_LOW_STOCK_ALERT);
