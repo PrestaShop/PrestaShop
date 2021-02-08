@@ -16,12 +16,28 @@ services:
 
   prestashop.adapter.security.command_handler.bulk_delete_employees_sessions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeesSessionsHandler'
+    arguments:
+      - '@prestashop.adapter.security.repository.employee_session_repository'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand'
 
   prestashop.adapter.security.command_handler.bulk_delete_customers_sessions_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteCustomersSessionsHandler'
+    arguments:
+      - '@prestashop.adapter.security.repository.customer_session_repository'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand'
+
+  prestashop.adapter.security.repository.customer_session_repository:
+    class: PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  prestashop.adapter.security.repository.employee_session_repository:
+    class: PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
