@@ -24,7 +24,7 @@
  *#}
 
 {% block material_choice_tree_widget %}
-  <div class="material-choice-tree-container js-choice-tree-container {% if required %}required{% endif %}" id="{{ form.vars.id }}">
+  <div class="material-choice-tree-container js-choice-tree-container{% if required %} required{% endif %}" id="{{ form.vars.id }}">
   <div class="choice-tree-actions">
     <span class="form-control-label js-toggle-choice-tree-action"
           data-expanded-text="{{ 'Expand'|trans({}, 'Admin.Actions') }}"
