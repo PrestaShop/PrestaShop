@@ -23,38 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import CustomizationsMap from './customizations-map.js';
+import ProductMap from '../product-map.js';
 
 const {$} = window;
 
 export default class CustomizationsManager {
   constructor() {
-    this.$customizationsContainer = $(CustomizationsMap.customizationsContainer);
-    this.$customizationFieldsList = $(CustomizationsMap.customizationFieldsList);
+    this.$customizationsContainer = $(ProductMap.customizations.customizationsContainer);
+    this.$customizationFieldsList = $(ProductMap.customizations.customizationFieldsList);
 
     this.init();
   }
 
   init() {
-    this.$customizationsContainer.on('click', CustomizationsMap.addCustomizationBtn, () => {
+    this.$customizationsContainer.on('click', ProductMap.customizations.addCustomizationBtn, () => {
       this.addCustomizationField();
     });
-    this.$customizationsContainer.on('click', CustomizationsMap.removeCustomizationBtn, (e) => {
+    this.$customizationsContainer.on('click', ProductMap.customizations.removeCustomizationBtn, (e) => {
       this.removeCustomizationField(e);
     });
   }
 
   addCustomizationField() {
     const prototype = this.$customizationFieldsList.data('prototype');
-    const newItem = prototype.replace(new RegExp(CustomizationsMap.indexPlaceholder, 'g'), this.getIndex());
+    const newItem = prototype.replace(new RegExp(ProductMap.customizations.indexPlaceholder, 'g'), this.getIndex());
     this.$customizationFieldsList.append(newItem);
   }
 
   removeCustomizationField(event) {
-    $(event.currentTarget).closest(CustomizationsMap.customizationFieldItem).remove();
+    $(event.currentTarget).closest(ProductMap.customizations.customizationFieldItem).remove();
   }
 
   getIndex() {
-    return this.$customizationFieldsList.find(CustomizationsMap.customizationFieldItem).length;
+    return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldItem).length;
   }
 }

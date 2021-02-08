@@ -60,4 +60,12 @@ export default {
     deleteFeatureValue: 'button.delete-feature-value',
     addFeatureValue: '#product_features_add_feature',
   },
+  customizations: {
+    customizationsContainer: '#productCustomizations',
+    customizationFieldsList: '#customizationFieldsList',
+    addCustomizationBtn: '#addCustomizationBtn',
+    removeCustomizationBtn: '#removeCustomizationBtn',
+    indexPlaceholder: '__CUSTOMIZATION_FIELD_INDEX__',
+    customizationFieldItem: '.customizationFieldItem',
+  },
 };
