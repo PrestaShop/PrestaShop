@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -37,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class CustomizationFieldType extends TranslatorAwareType
 {
@@ -66,6 +68,13 @@ class CustomizationFieldType extends TranslatorAwareType
                 'label' => $this->trans('Label', 'Admin.Global'),
                 'constraints' => [
                     new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Length([
+                            'max' => CustomizationFieldSettings::MAX_NAME_LENGTH,
+                        ]),
+                    ],
                 ],
             ])
             ->add('type', ChoiceType::class, [
