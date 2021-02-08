@@ -28,10 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
-use CustomerSession;
+use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteCustomersSessionsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 
 /**
  * Handles command that deletes customers sessions in bulk action.
@@ -41,21 +40,20 @@ use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundExceptio
 final class BulkDeleteCustomersSessionsHandler implements BulkDeleteCustomersSessionsHandlerInterface
 {
     /**
+     * @var CustomerSessionRepository
+     */
+    private $repository;
+
+    public function __construct(CustomerSessionRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(BulkDeleteCustomersSessionsCommand $command): void
     {
-        foreach ($command->getCustomerSessionIds() as $sessionId) {
-            $session = new CustomerSession($sessionId->getValue());
-
-            if ($session->id !== $sessionId->getValue()) {
-                throw new SessionNotFoundException(
-                    $sessionId,
-                    sprintf('Session with id "%d" was not found.', $sessionId->getValue())
-                );
-            }
-
-            $session->delete();
-        }
+        $this->repository->bulkDelete($command->getCustomerSessionIds());
     }
 }
