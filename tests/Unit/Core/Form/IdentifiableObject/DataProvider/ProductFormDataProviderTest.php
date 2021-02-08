@@ -33,6 +33,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
@@ -115,6 +117,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForSeo(),
             $this->getDatasetsForRedirectOption(),
             $this->getDatasetsForProductSuppliers(),
+            $this->getDataSetsForFeatures(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -284,6 +287,56 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    public function getDataSetsForFeatures(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['features']['feature_values'] = [];
+        $expectedOutputData['features']['feature_values'][] = [
+            'feature_id' => 42,
+            'feature_value_id' => 51,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData['features']['feature_values'][] = [
+            'feature_id' => 42,
+            'feature_value_id' => 69,
+            'custom_feature_id' => 69,
+            'custom_value' => $localizedValues,
+        ];
+
+        $productData = [
+            'feature_values' => [
+                [
+                    'feature_id' => 42,
+                    'feature_value_id' => 51,
+                    'custom' => false,
+                    'localized_values' => $localizedValues,
+                ],
+                [
+                    'feature_id' => 42,
+                    'feature_value_id' => 69,
+                    'custom' => true,
+                    'localized_values' => $localizedValues,
+                ],
+            ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
      * @param array $product
      *
      * @return ProductForEditing
@@ -338,6 +391,30 @@ class ProductFormDataProviderTest extends TestCase
             $productData['suppliers']['default_supplier_id'],
             $suppliersInfo
         );
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return ProductFeatureValue[]
+     */
+    private function createProductFeatureValueOptions(array $productData): array
+    {
+        if (empty($productData['feature_values'])) {
+            return [];
+        }
+
+        $productFeatureValues = [];
+        foreach ($productData['feature_values'] as $featureValue) {
+            $productFeatureValues[] = new ProductFeatureValue(
+                $featureValue['feature_id'],
+                $featureValue['feature_value_id'],
+                $featureValue['localized_values'],
+                $featureValue['custom']
+            );
+        }
+
+        return $productFeatureValues;
     }
 
     /**
@@ -516,7 +593,8 @@ class ProductFormDataProviderTest extends TestCase
             ->method('handle')
             ->with($this->logicalOr(
                 $this->isInstanceOf(GetProductForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class)
+                $this->isInstanceOf(GetProductSupplierOptions::class),
+                $this->isInstanceOf(GetProductFeatureValues::class)
             ))
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
@@ -530,13 +608,14 @@ class ProductFormDataProviderTest extends TestCase
      * @param $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|null
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|null
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
         $queryResultMap = [
             GetProductForEditing::class => $this->createProductForEditing($productData),
             GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
+            GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
         ];
 
         $queryClass = get_class($query);
@@ -618,6 +697,8 @@ class ProductFormDataProviderTest extends TestCase
                 'reference' => 'reference',
             ],
             'suppliers' => [],
+            'features' => [
+            ],
         ];
     }
 }
