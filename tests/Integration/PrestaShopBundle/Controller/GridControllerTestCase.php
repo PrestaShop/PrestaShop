@@ -105,7 +105,7 @@ abstract class GridControllerTestCase extends WebTestCase
         $url = $router->generate($this->gridRoute);
         $crawler = $this->client->request('GET', $url);
         $entities = $this->getEntityList($crawler);
-        self::assertCount($this->initialEntityCount, $entities);
+        $this->initialEntityCount = $entities->count();
 
         $this->createTestEntity();
 
