@@ -6,3 +6,5 @@ admin_feature_get_feature_values:
         _controller: PrestaShopBundle:Admin/Feature:getFeatureValues
     requirements:
         idFeature: \d+
+    options:
+        expose: true
