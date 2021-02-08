@@ -774,8 +774,6 @@ services:
         public: true
         tags:
             - { name: form.type }
-
-
     form.type.customer.required_fields:
         class: 'PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType'
         arguments:
