@@ -360,6 +360,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationFromListingHandler
         arguments:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.combination.update.default_combination_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand
