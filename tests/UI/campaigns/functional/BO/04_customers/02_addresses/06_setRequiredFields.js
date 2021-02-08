@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_customers_addresses_setRequiredFields';
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const FakerAddress = require('@data/faker/address');
 
 let browserContext;
@@ -87,7 +87,7 @@ describe('Set required fields for addresses', async () => {
 
       // Go to create account page
       await foHomePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
 
       const connected = await foHomePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;

@@ -25,7 +25,7 @@ const TaxRuleGroup = require('@data/faker/taxRuleGroup');
 const TaxRule = require('@data/faker/taxRule');
 const ProductFaker = require('@data/faker/product');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
 // Test context imports
@@ -218,7 +218,7 @@ describe('Enable tax breakdown', async () => {
         // Checkout the order
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultAccount);
+        await checkoutPage.customerLogin(page, DefaultCustomer);
 
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

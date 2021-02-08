@@ -16,7 +16,7 @@ const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -103,7 +103,7 @@ describe('Enable final summary', async () => {
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultAccount);
+        await checkoutPage.customerLogin(page, DefaultCustomer);
       }
 
       // Address step - Go to delivery step

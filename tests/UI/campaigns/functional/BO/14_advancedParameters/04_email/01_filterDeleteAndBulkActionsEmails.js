@@ -17,7 +17,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Languages} = require('@data/demo/languages');
 
 // Import test context
@@ -86,7 +86,7 @@ describe('Filter, delete and bulk actions email log', async () => {
 
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, DefaultAccount);
+      await checkoutPage.customerLogin(page, DefaultCustomer);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -147,7 +147,7 @@ describe('Filter, delete and bulk actions email log', async () => {
             identifier: 'filterByRecipient',
             filterType: 'input',
             filterBy: 'recipient',
-            filterValue: DefaultAccount.email,
+            filterValue: DefaultCustomer.email,
           },
       },
       {

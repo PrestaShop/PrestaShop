@@ -17,7 +17,7 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
 // Importing data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 let browserContext;
 let page;
@@ -98,7 +98,7 @@ describe('Configure currency restrictions', async () => {
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultAccount);
+        await checkoutPage.customerLogin(page, DefaultCustomer);
       }
 
       // Address step - Go to delivery step

@@ -23,7 +23,7 @@ const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
 const {groupAccess} = require('@data/demo/groupAccess');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const CarrierFaker = require('@data/faker/carrier');
 
 // Import test context
@@ -203,7 +203,7 @@ describe('Test handling charges for carriers in FO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -302,7 +302,7 @@ describe('Test handling charges for carriers in FO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
