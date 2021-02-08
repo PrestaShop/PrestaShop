@@ -49,4 +49,12 @@ export default {
     typeInput: '#product_redirect_option_type',
     targetInput: '#product_redirect_option_target',
   },
+  customizations: {
+    customizationsContainer: '#productCustomizations',
+    customizationFieldsList: '#customizationFieldsList',
+    addCustomizationBtn: '#addCustomizationBtn',
+    removeCustomizationBtn: '#removeCustomizationBtn',
+    indexPlaceholder: '__CUSTOMIZATION_FIELD_INDEX__',
+    customizationFieldItem: '.customizationFieldItem',
+  },
 };
