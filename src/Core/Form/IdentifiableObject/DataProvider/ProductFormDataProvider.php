@@ -128,14 +128,22 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     {
         /** @var ProductFeatureValue[] $featureValues */
         $featureValues = $this->queryBus->handle(new GetProductFeatureValues($productId));
+        if (empty($featureValues)) {
+            return [];
+        }
 
         $productFeatureValues = [];
         foreach ($featureValues as $featureValue) {
-            $productFeatureValues[] = [
+            $productFeatureValue = [
                 'feature_id' => $featureValue->getFeatureId(),
                 'feature_value_id' => $featureValue->getFeatureValueId(),
-                'custom_value' => $featureValue->getLocalizedValues(),
             ];
+            if ($featureValue->isCustom()) {
+                $productFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
+                $productFeatureValue['custom_feature_id'] = $featureValue->getFeatureValueId();
+            }
+
+            $productFeatureValues[] = $productFeatureValue;
         }
 
         return [
