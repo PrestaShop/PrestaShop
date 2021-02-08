@@ -93,6 +93,26 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^the customer "(.+)" has SIRET "(.+)"$/
+     */
+    public function customerHasSIRET(string $reference, string $siret): void
+    {
+        $customer = $this->getCustomerByReference($reference);
+        $customer->siret = $siret;
+        $customer->save();
+    }
+
+    /**
+     * @Given /^the customer "(.+)" has APE "(.+)"$/
+     */
+    public function customerHasAPE(string $reference, string $ape): void
+    {
+        $customer = $this->getCustomerByReference($reference);
+        $customer->ape = $ape;
+        $customer->save();
+    }
+
+    /**
      * @When /^I am logged in as "(.+)"$/
      */
     public function setCurrentCustomer($customerName)
