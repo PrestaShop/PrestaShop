@@ -5,7 +5,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Importing pages
 const foHomePage = require('@pages/FO/home');
@@ -59,7 +59,7 @@ describe('Check number of orders in order history page', async () => {
   it('Should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-    await foLoginPage.customerLogin(page, DefaultAccount);
+    await foLoginPage.customerLogin(page, DefaultCustomer);
     const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
