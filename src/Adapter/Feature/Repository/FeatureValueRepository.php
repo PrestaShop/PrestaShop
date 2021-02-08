@@ -243,13 +243,13 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             switch ($key) {
                 case 'id_product':
                     $qb
-                        ->where('fp.id_product = :productId')
+                        ->andWhere('fp.id_product = :productId')
                         ->setParameter('productId', (int) $value)
                     ;
                 break;
                 default:
                     $qb
-                        ->where(sprintf('fv.%s = :%s', $key, $key))
+                        ->andWhere(sprintf('fv.%s = :%s', $key, $key))
                         ->setParameter($key, $value)
                     ;
                 break;
