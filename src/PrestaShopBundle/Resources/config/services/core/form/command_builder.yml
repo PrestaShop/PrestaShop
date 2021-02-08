@@ -33,3 +33,6 @@ services:
 
     prestashop.core.form.command_builder.product.product_suppliers_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandBuilder
+
+    prestashop.core.form.command_builder.product.customization_fields_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder
