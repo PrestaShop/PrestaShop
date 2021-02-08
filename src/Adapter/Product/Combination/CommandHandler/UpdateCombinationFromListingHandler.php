@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationFromListingHandlerInterface;
@@ -51,15 +52,23 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
     private $defaultCombinationUpdater;
 
     /**
+     * @var CombinationStockUpdater
+     */
+    private $combinationStockUpdater;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
+     * @param CombinationStockUpdater $combinationStockUpdater
      */
     public function __construct(
         CombinationRepository $combinationRepository,
-        DefaultCombinationUpdater $defaultCombinationUpdater
+        DefaultCombinationUpdater $defaultCombinationUpdater,
+        CombinationStockUpdater $combinationStockUpdater
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
+        $this->combinationStockUpdater = $combinationStockUpdater;
     }
 
     /**
@@ -70,6 +79,8 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
         $this->combinationRepository->partialUpdate($combination, $updatableProperties, CannotUpdateCombinationException::FAILED_UPDATE_LISTED_COMBINATION);
+
+        $this->combinationStockUpdater->update($combination, $updatableProperties);
 
         if (true === $command->isDefault()) {
             $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
@@ -91,8 +102,8 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             $updatableProperties[] = 'price';
         }
 
-        //@todo: use stockUpdater instead. PR #22185
         if (null !== $command->getQuantity()) {
+            //@todo: should we deprecate combination->quantity and product->quantity (as we did with location?) because stock_advanced is the real source
             $combination->quantity = $command->getQuantity();
             $updatableProperties[] = 'quantity';
         }

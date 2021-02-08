@@ -92,7 +92,6 @@ class CombinationCore extends ObjectModel
             'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32],
             'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12],
             'mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 40],
-            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10],
             'reference' => ['type' => self::TYPE_STRING, 'size' => 64],
             'supplier_reference' => ['type' => self::TYPE_STRING, 'size' => 64],
 
