@@ -33,6 +33,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
@@ -115,6 +118,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForSeo(),
             $this->getDatasetsForRedirectOption(),
             $this->getDatasetsForProductSuppliers(),
+            $this->getDatasetsForCustomizations(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -284,6 +288,59 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    private function getDatasetsForCustomizations(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $localizedNames = [
+            1 => 'test1',
+            2 => 'test2',
+        ];
+
+        $productData = [
+            'customizations' => [
+                [
+                    'id' => 1,
+                    'name' => $localizedNames,
+                    'type' => 1,
+                    'required' => false,
+                ],
+                [
+                    'id' => 2,
+                    'name' => $localizedNames,
+                    'type' => 0,
+                    'required' => true,
+                ],
+            ],
+        ];
+
+        $expectedOutputData['customizations']['customization_fields'] = [
+            [
+                'id' => 1,
+                'name' => $localizedNames,
+                'type' => CustomizationFieldType::TYPE_TEXT,
+                'required' => false,
+            ],
+            [
+                'id' => 2,
+                'name' => $localizedNames,
+                'type' => CustomizationFieldType::TYPE_FILE,
+                'required' => true,
+            ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
      * @param array $product
      *
      * @return ProductForEditing
@@ -338,6 +395,31 @@ class ProductFormDataProviderTest extends TestCase
             $productData['suppliers']['default_supplier_id'],
             $suppliersInfo
         );
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return CustomizationField[]
+     */
+    private function createProductCustomizationFields(array $productData): array
+    {
+        if (!isset($productData['customizations'])) {
+            return [];
+        }
+
+        $customizationFields = [];
+        foreach ($productData['customizations'] as $customization) {
+            $customizationFields[] = new CustomizationField(
+                $customization['id'],
+                $customization['type'],
+                $customization['name'],
+                $customization['required'],
+                false
+            );
+        }
+
+        return $customizationFields;
     }
 
     /**
@@ -516,7 +598,8 @@ class ProductFormDataProviderTest extends TestCase
             ->method('handle')
             ->with($this->logicalOr(
                 $this->isInstanceOf(GetProductForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class)
+                $this->isInstanceOf(GetProductSupplierOptions::class),
+                $this->isInstanceOf(GetProductCustomizationFields::class)
             ))
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
@@ -537,6 +620,7 @@ class ProductFormDataProviderTest extends TestCase
         $queryResultMap = [
             GetProductForEditing::class => $this->createProductForEditing($productData),
             GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
+            GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
         ];
 
         $queryClass = get_class($query);
@@ -618,6 +702,7 @@ class ProductFormDataProviderTest extends TestCase
                 'reference' => 'reference',
             ],
             'suppliers' => [],
+            'customizations' => [],
         ];
     }
 }

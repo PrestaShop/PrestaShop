@@ -250,6 +250,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             new GetProductCustomizationFields($productForEditing->getProductId())
         );
 
+        if (empty($customizationFields)) {
+            return [];
+        }
+
         $fields = [];
         foreach ($customizationFields as $customizationField) {
             $fields[] = [
