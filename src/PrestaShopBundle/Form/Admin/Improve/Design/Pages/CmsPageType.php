@@ -171,6 +171,14 @@ class CmsPageType extends TranslatorAwareType
                         new TypedRegex([
                             'type' => 'generic_name',
                         ]),
+                        new Length([
+                            'max' => 512,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 512]
+                            ),
+                        ]),
                     ],
                 ],
             ])
