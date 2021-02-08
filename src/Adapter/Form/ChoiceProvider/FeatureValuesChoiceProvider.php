@@ -66,10 +66,14 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
         }
 
         $featureId = (int) $options['feature_id'];
-        $featureValues = $this->featureValueRepository->getFeatureValues(null, null, [
+        $filters = [
             'id_feature' => $featureId,
-            'custom' => 0,
-        ]);
+        ];
+        if (isset($options['custom'])) {
+            $filters['custom'] = $options['custom'];
+        }
+
+        $featureValues = $this->featureValueRepository->getFeatureValues(null, null, $filters);
         $choices = [];
         foreach ($featureValues as $feature) {
             if (!empty($feature['localized_values'][$this->contextLanguageId])) {
@@ -77,7 +81,7 @@ class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInter
             } else {
                 $featureValueName = $feature['localized_values'][$this->defaultLanguageId];
             }
-            $choices[$featureValueName] = $feature['id_feature_value'];
+            $choices[$featureValueName] = (int) $feature['id_feature_value'];
         }
 
         return $choices;
