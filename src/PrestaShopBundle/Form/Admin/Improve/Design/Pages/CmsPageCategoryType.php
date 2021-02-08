@@ -136,14 +136,6 @@ class CmsPageCategoryType extends AbstractType
                         new TypedRegex([
                             'type' => 'generic_name',
                         ]),
-                        new Length([
-                            'max' => 512,
-                            'maxMessage' => $this->translator->trans(
-                                'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 512],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]),
                     ],
                 ],
             ])
