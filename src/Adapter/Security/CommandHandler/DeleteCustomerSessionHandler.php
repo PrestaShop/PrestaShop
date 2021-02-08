@@ -32,8 +32,8 @@ use CustomerSession;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\DeleteCustomerSessionHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\FailedToDeleteSessionException;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
 /**
@@ -61,7 +61,7 @@ final class DeleteCustomerSessionHandler implements DeleteCustomerSessionHandler
                 throw new FailedToDeleteSessionException(sprintf('Failed to delete Session with id %s', var_export($sessionId, true)));
             }
         } catch (PrestaShopException $e) {
-            throw new SessionException(sprintf('Unexpected error occurred when deleting Session with id %s', var_export($sessionId, true)), 0, $e);
+            throw new CoreException(sprintf('Unexpected error occurred when deleting Session with id %s', var_export($sessionId, true)), 0, $e);
         }
     }
 }
