@@ -24,9 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 
 /**
  * Defines contract for UpdateProductStockInformationHandler
