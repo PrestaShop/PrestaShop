@@ -75,11 +75,14 @@ class CustomerSessionRepository extends AbstractObjectModelRepository
      */
     public function get(CustomerSessionId $sessionId): CustomerSession
     {
-        return $this->getObjectModel(
+        /** @var CustomerSession $session */
+        $session = $this->getObjectModel(
             $sessionId->getValue(),
             CustomerSession::class,
             SessionNotFoundException::class
         );
+
+        return $session;
     }
 
     /**

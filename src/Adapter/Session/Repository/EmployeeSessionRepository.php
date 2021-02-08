@@ -73,11 +73,14 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
      */
     public function get(EmployeeSessionId $sessionId): EmployeeSession
     {
-        return $this->getObjectModel(
+        /** @var EmployeeSession $session */
+        $session = $this->getObjectModel(
             $sessionId->getValue(),
             EmployeeSession::class,
             SessionNotFoundException::class
         );
+
+        return $session;
     }
 
     /**
