@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -70,7 +71,12 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
 
-        $this->combinationStockUpdater->update($combination, $updatableProperties);
+        $this->combinationRepository->partialUpdate(
+            $combination,
+            $updatableProperties,
+            CannotUpdateCombinationException::FAILED_UPDATE_STOCK
+        );
+        $this->combinationStockUpdater->update($combination, $command->getQuantity(), $command->getLocation());
     }
 
     /**
