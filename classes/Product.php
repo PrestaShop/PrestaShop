@@ -285,6 +285,9 @@ class ProductCore extends ObjectModel
     public $advanced_stock_management = 0;
 
     /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$out_of_stock instead
+     *
      * @var int
      *          - O Deny orders
      *          - 1 Allow orders
@@ -293,6 +296,9 @@ class ProductCore extends ObjectModel
     public $out_of_stock = OutOfStockType::OUT_OF_STOCK_DEFAULT;
 
     /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$depends_on_stock instead
+     *
      * @var bool
      */
     public $depends_on_stock;
