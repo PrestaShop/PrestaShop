@@ -34,20 +34,20 @@ final class SeoSettings
     /**
      * Maximum length of SEO title (value is constrained by database)
      */
-    const MAX_TITLE_LENGTH = 255;
+    public const MAX_TITLE_LENGTH = 255;
 
     /**
      * Recommended length of SEO title
      */
-    const RECOMMENDED_TITLE_LENGTH = 70;
+    public const RECOMMENDED_TITLE_LENGTH = 70;
 
     /**
      * Maximum length of SEO description (value is constrained by database)
      */
-    const MAX_DESCRIPTION_LENGTH = 512;
+    public const MAX_DESCRIPTION_LENGTH = 512;
 
     /**
      * Recommended length of SEO description
      */
-    const RECOMMENDED_DESCRIPTION_LENGTH = 160;
+    public const RECOMMENDED_DESCRIPTION_LENGTH = 160;
 }

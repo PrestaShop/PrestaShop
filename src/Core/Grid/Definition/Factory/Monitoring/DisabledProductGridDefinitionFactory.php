@@ -41,7 +41,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class DisabledProductGridDefinitionFactory extends AbstractProductGridDefinitionFactory
 {
-    const GRID_ID = 'disabled_product';
+    public const GRID_ID = 'disabled_product';
 
     /**
      * {@inheritdoc}

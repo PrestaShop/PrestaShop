@@ -44,22 +44,22 @@ class CartRow
     /**
      * row round mode by item.
      */
-    const ROUND_MODE_ITEM = 'item';
+    public const ROUND_MODE_ITEM = 'item';
 
     /**
      * row round mode by line.
      */
-    const ROUND_MODE_LINE = 'line';
+    public const ROUND_MODE_LINE = 'line';
 
     /**
      * row round mode by all lines.
      */
-    const ROUND_MODE_TOTAL = 'total';
+    public const ROUND_MODE_TOTAL = 'total';
 
     /**
      * static cache key pattern.
      */
-    const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
+    public const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
 
     /**
      * @var PriceCalculator adapter to calculate price

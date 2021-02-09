@@ -36,12 +36,12 @@ class Password
     /**
      * @var string minimum required password length
      */
-    const MIN_LENGTH = 8;
+    public const MIN_LENGTH = 8;
 
     /**
      * @var string maximum allowed password length
      */
-    const MAX_LENGTH = 255;
+    public const MAX_LENGTH = 255;
 
     /**
      * @var string

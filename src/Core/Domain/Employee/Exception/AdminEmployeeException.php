@@ -34,5 +34,5 @@ class AdminEmployeeException extends EmployeeException
     /**
      * Code is used when the only admin of the shop is being disabled or deleted.
      */
-    const CANNOT_CHANGE_LAST_ADMIN = 1;
+    public const CANNOT_CHANGE_LAST_ADMIN = 1;
 }

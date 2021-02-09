@@ -46,11 +46,11 @@ class PrestaTrustChecker
      */
     protected $checked_extensions = ['php', 'js', 'css', 'tpl'];
 
-    const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
-    const CHECKS_ALL_OK = 'Module is authenticated.';
-    const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Addons Marketplace.';
-    const CHECKS_PROPERTY_NOK = 'Warning, the purchase proof is invalid. This license has already been used on another shop.';
-    const CHECKS_ALL_NOK = 'Warning, the module has been modified and its purchase proof is invalid.';
+    public const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
+    public const CHECKS_ALL_OK = 'Module is authenticated.';
+    public const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Addons Marketplace.';
+    public const CHECKS_PROPERTY_NOK = 'Warning, the purchase proof is invalid. This license has already been used on another shop.';
+    public const CHECKS_ALL_NOK = 'Warning, the module has been modified and its purchase proof is invalid.';
 
     /**
      * @var Cache

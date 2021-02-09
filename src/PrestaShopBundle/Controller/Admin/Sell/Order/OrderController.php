@@ -119,12 +119,12 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Default number of products per page (in case invalid value is used)
      */
-    const DEFAULT_PRODUCTS_NUMBER = 8;
+    public const DEFAULT_PRODUCTS_NUMBER = 8;
 
     /**
      * Options used for the number of products per page
      */
-    const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+    public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
     /**
      * Shows list of orders

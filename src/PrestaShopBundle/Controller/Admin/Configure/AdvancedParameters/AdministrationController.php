@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AdministrationController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminAdminPreferences';
+    public const CONTROLLER_NAME = 'AdminAdminPreferences';
 
     /**
      * Show Administration page.

@@ -38,7 +38,7 @@ class ConfigurationMap
     /**
      * Template used to create configuration names for "closed status"
      */
-    const CLOSED_TEMPLATE = 'PS_SHOWCASECARD_%s_CLOSED';
+    public const CLOSED_TEMPLATE = 'PS_SHOWCASECARD_%s_CLOSED';
 
     /**
      * @var array

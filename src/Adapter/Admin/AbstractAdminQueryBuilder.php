@@ -36,11 +36,11 @@ use Symfony\Component\Process\Exception\LogicException;
  */
 abstract class AbstractAdminQueryBuilder
 {
-    const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
-    const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';
-    const FILTERING_LIKE_RIGHT = 'LIKE \'%s%%\'';
-    const FILTERING_EQUAL_NUMERIC = '= %s';
-    const FILTERING_EQUAL_STRING = '= \'%s\'';
+    public const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
+    public const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';
+    public const FILTERING_LIKE_RIGHT = 'LIKE \'%s%%\'';
+    public const FILTERING_EQUAL_NUMERIC = '= %s';
+    public const FILTERING_EQUAL_STRING = '= \'%s\'';
 
     /**
      * @var string|null

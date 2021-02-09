@@ -39,12 +39,12 @@ class Price extends NumberSpecification
     /**
      * Currency display option: symbol notation.
      */
-    const CURRENCY_DISPLAY_SYMBOL = 'symbol';
+    public const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
     /**
      * Currency display option: ISO code notation.
      */
-    const CURRENCY_DISPLAY_CODE = 'code';
+    public const CURRENCY_DISPLAY_CODE = 'code';
 
     /**
      * Type of display for currency symbol

@@ -34,12 +34,12 @@ interface LocalizationPackImportConfigInterface
     /**
      * Available content to import.
      */
-    const CONTENT_STATES = 'states';
-    const CONTENT_TAXES = 'taxes';
-    const CONTENT_CURRENCIES = 'currencies';
-    const CONTENT_LANGUAGES = 'languages';
-    const CONTENT_UNITS = 'units';
-    const CONTENT_GROUPS = 'groups';
+    public const CONTENT_STATES = 'states';
+    public const CONTENT_TAXES = 'taxes';
+    public const CONTENT_CURRENCIES = 'currencies';
+    public const CONTENT_LANGUAGES = 'languages';
+    public const CONTENT_UNITS = 'units';
+    public const CONTENT_GROUPS = 'groups';
 
     /**
      * Get country ISO code.

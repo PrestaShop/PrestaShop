@@ -34,10 +34,10 @@ class CannotDeleteCatalogPriceRuleException extends CatalogPriceRuleException
     /**
      * When fails to delete single catalog price rule
      */
-    const FAILED_DELETE = 10;
+    public const FAILED_DELETE = 10;
 
     /**
      * When fails to delete catalog price rule in bulk action
      */
-    const FAILED_BULK_DELETE = 20;
+    public const FAILED_BULK_DELETE = 20;
 }

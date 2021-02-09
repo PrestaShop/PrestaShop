@@ -44,7 +44,7 @@ use TabCore as Tab;
  */
 class ModuleTabRegister
 {
-    const SUFFIX = '_MTR';
+    public const SUFFIX = '_MTR';
 
     /**
      * @var string

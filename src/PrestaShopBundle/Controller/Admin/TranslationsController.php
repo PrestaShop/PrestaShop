@@ -43,12 +43,12 @@ class TranslationsController extends FrameworkBundleAdminController
 {
     protected $layoutTitle = 'Translations';
 
-    const CONTROLLER_NAME = 'ADMINTRANSLATIONS';
+    public const CONTROLLER_NAME = 'ADMINTRANSLATIONS';
 
     /**
      * @deprecated
      */
-    const controller_name = self::CONTROLLER_NAME;
+    public const controller_name = self::CONTROLLER_NAME;
 
     /**
      * @Template("@PrestaShop/Admin/Translations/overview.html.twig")

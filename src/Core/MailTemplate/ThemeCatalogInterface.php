@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
  */
 interface ThemeCatalogInterface
 {
-    const LIST_MAIL_THEMES_HOOK = 'actionListMailThemes';
+    public const LIST_MAIL_THEMES_HOOK = 'actionListMailThemes';
 
     /**
      * Returns the list of existing themes.
