@@ -184,6 +184,11 @@ $search-border-color: #bbcdd2;
       display: block;
       list-style: none;
 
+      @include media-breakpoint-down(sm) {
+        display: flex;
+        align-items: center;
+      }
+
       > a {
         @include media-breakpoint-down(sm) {
           // stylelint-disable-next-line
@@ -191,6 +196,7 @@ $search-border-color: #bbcdd2;
         }
 
         &.notifs {
+          position: relative;
           box-sizing: border-box;
           display: flex;
           align-items: center;
@@ -241,7 +247,9 @@ $search-border-color: #bbcdd2;
     @media (max-width: 320px) {
       max-width: 140px;
     }
-  }	// multishop menu
+  }
+
+  // multishop menu
   #header_shop {
     .dropdown {
       &.open {
@@ -672,6 +680,11 @@ $search-border-color: #bbcdd2;
     border-radius: 0.625rem;
     font: {
       size: 0.625rem;
+    }
+
+    @include media-breakpoint-down(sm) {
+      top: 0.8rem;
+      right: 0.3rem;
     }
 
     > span {
