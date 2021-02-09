@@ -136,8 +136,10 @@ final class ContextStateManager
      */
     public function setLanguage(?Language $language): self
     {
-        $this->saveContextField('language');
-        $this->context->language = $language;
+        if (null !== $language->id) {
+            $this->saveContextField('language');
+            $this->context->language = $language;
+        }
 
         return $this;
     }
