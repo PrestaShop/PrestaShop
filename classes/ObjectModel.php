@@ -262,7 +262,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if ($id) {
             /** @var \PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
             $entity_mapper = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper');
-            $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
+            $entity_mapper->load($id, $this->id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
     }
 
