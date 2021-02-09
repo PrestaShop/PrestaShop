@@ -68,7 +68,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
-     * @Given product :productReference should not have default combination
+     * @Given product :productReference should not have a default combination
      *
      * @param string $productReference
      */
@@ -77,6 +77,10 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         $this->assertCachedDefaultCombinationId($productReference, 0);
     }
 
+    /**
+     * @param string $productReference
+     * @param int $combinationId
+     */
     private function assertCachedDefaultCombinationId(string $productReference, int $combinationId): void
     {
         $product = new Product($this->getSharedStorage()->get($productReference));
