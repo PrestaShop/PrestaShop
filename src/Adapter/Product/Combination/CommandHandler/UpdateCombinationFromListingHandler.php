@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
@@ -77,18 +78,20 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
     public function handle(UpdateCombinationFromListingCommand $command): void
     {
         $combination = $this->combinationRepository->get($command->getCombinationId());
-        $updatableProperties = $this->fillUpdatableProperties($combination, $command);
-
         $this->combinationRepository->partialUpdate(
             $combination,
-            $updatableProperties,
+            $this->fillUpdatableProperties($combination, $command),
             CannotUpdateCombinationException::FAILED_UPDATE_LISTED_COMBINATION
         );
-        $this->combinationStockUpdater->update($combination, $command->getQuantity(), null);
 
         if (true === $command->isDefault()) {
             $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
         }
+
+        $this->combinationStockUpdater->update(
+            $command->getCombinationId(),
+            new CombinationStockProperties($command->getQuantity())
+        );
     }
 
     /**
