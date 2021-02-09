@@ -242,10 +242,10 @@ class ConfigurationKPICore extends Configuration
      *
      * @return bool
      */
-    public static function deleteFromContext($key)
+    public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $deleteSuccess = parent::deleteFromContext($key);
+        $deleteSuccess = parent::deleteFromContext($key, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
 
         return $deleteSuccess;

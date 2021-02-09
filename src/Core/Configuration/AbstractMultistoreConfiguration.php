@@ -93,7 +93,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
 
         // If the multistore checkbox value is present but is `false` then the field multistore value is disabled and must be removed from DB
         if (isset($input[$prefix . $fieldName]) && $input[$prefix . $fieldName] === false) {
-            $this->configuration->deleteFromContext($configurationKey);
+            $this->configuration->deleteFromContext($configurationKey, $shopConstraint);
         } else {
             $this->configuration->set($configurationKey, $input[$fieldName], $shopConstraint, $options);
         }
