@@ -14,6 +14,11 @@
     > .count {
       @include notification_counter();
 
+      @include media-breakpoint-down("sm") {
+        top: 0.7rem;
+        right: 0.2rem;
+      }
+
       &.hide {
         display: none;
       }
