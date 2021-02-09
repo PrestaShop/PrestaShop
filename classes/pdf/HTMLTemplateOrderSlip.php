@@ -83,20 +83,17 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
         $temporaryOrderSlip = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
 
-        if(isset($temporaryOrderSlip[0]['date_add'])){
-
+        if (isset($temporaryOrderSlip[0]['date_add'])) {
             $current_year = date('Y-01-01 00:00:00', strtotime($temporaryOrderSlip[0]['date_add']));
 
             $numberOrderSlip = Db::getInstance()->executeS(
                 'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "' . $current_year . '" AND date_add < "' . $temporaryOrderSlip[0]['date_add'] . '"'
             );
-    
-            return intval($numberOrderSlip[0]['n']) + 1;
 
+            return intval($numberOrderSlip[0]['n']) + 1;
         }
 
         return 1;
-        
     }
 
     /**
