@@ -307,7 +307,7 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 69,
-            'custom_feature_id' => 69,
+            'custom_value_id' => 69,
             'custom_value' => $localizedValues,
         ];
 
