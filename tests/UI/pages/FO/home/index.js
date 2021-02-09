@@ -17,12 +17,26 @@ class Home extends FOBasePage {
     this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
     this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
     this.searchInput = '#search_widget input.ui-autocomplete-input';
+
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
     this.addToCartButton = `${this.quickViewModalDiv} button[data-button-action='add-to-cart']`;
+
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
+    this.productName = `${this.blockCartModalDiv} .product-name`;
+    this.productPrice = `${this.blockCartModalDiv} .product-price`;
+    this.productSize = `${this.blockCartModalDiv} .Size strong`;
+    this.productColor = `${this.blockCartModalDiv} .Color strong`;
+    this.productQuantity = `${this.blockCartModalDiv} .product-quantity`;
+
+    this.cartContent = `${this.blockCartModalDiv} .cart-content`;
+    this.cartProductsCount = `${this.cartContent} .cart-products-count`;
+    this.cartShipping = `${this.cartContent} .shipping`;
+    this.cartSubtotal = `${this.cartContent} .subtotals`;
+    this.productTaxIncl = `${this.cartContent} .product-total .value`;
+
     this.blockCartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
   }
 
@@ -45,6 +59,7 @@ class Home extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.productImg(id));
   }
 
+  // Quick view methods
   /**
    * Click on Quick view Product
    * @param page
@@ -80,13 +95,32 @@ class Home extends FOBasePage {
    * @param quantity_wanted, quantity to order
    * @return {Promise<void>}
    */
-  async addProductToCartByQuickView(page, id, quantity_wanted = '1') {
+  async addProductToCartByQuickView(page, id, quantity_wanted = 1) {
     await this.quickViewProduct(page, id);
     await this.setValue(page, this.quantityWantedInput, quantity_wanted.toString());
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
     ]);
+  }
+
+  /**
+   * Get product details from quick view modal
+   * @param page
+   * @returns {Promise<{price: *, name: *, cartProductsCount: number}>}
+   */
+  async getProductDetail(page) {
+    return {
+      name: await this.getTextContent(page, this.productName),
+      price: await this.getTextContent(page, this.productPrice),
+      size: await this.getTextContent(page, this.productSize),
+      color: await this.getTextContent(page, this.productColor),
+      quantity: await this.getNumberFromText(page, this.productQuantity),
+      cartProductsCount: await this.getNumberFromText(page, this.cartProductsCount),
+      cartSubtotal: await this.getTextContent(page, this.cartSubtotal),
+      cartShipping: await this.getTextContent(page, this.cartShipping),
+      totalTaxIncl: await this.getTextContent(page, this.productTaxIncl),
+    };
   }
 
   /**
