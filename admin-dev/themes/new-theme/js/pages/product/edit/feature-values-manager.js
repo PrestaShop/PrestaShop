@@ -34,10 +34,24 @@ export default class FeatureValuesManager {
     this.router = new Router();
     this.featureValuesRoute = featureValuesRoute;
     this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
+    this.$collectionRowsContainer = $(ProductMap.featureValues.collectionRowsContainer);
 
     this.watchFeatureSelectors();
     this.watchCustomInputs();
     this.watchDeleteButtons();
+    this.watchAddButton();
+  }
+
+  watchAddButton() {
+    $(ProductMap.featureValues.addFeatureValue).on('click', () => {
+      const prototype = this.$collectionContainer.data('prototype');
+      const prototypeName = this.$collectionContainer.data('prototypeName');
+      const newIndex = $(ProductMap.featureValues.collectionRow, this.$collectionContainer).length;
+
+      const $newRow = $(prototype.replace(new RegExp(prototypeName, 'g'), newIndex));
+      this.$collectionRowsContainer.append($newRow);
+      $('select[data-toggle="select2"]', $newRow).select2();
+    });
   }
 
   watchDeleteButtons() {
