@@ -317,7 +317,7 @@ class StockManager
                 $templateVars['{lastname}'] = $employee->lastname;
 
                 Mail::Send(
-                    $idLang,
+                    $context->language->local,
                     'productoutofstock',
                     Context::getContext()->getTranslator()->trans(
                         'Product out of stock',
