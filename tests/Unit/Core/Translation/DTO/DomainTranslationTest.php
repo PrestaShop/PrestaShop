@@ -112,8 +112,8 @@ class DomainTranslationTest extends TestCase
         $this->assertSame([
             'theKey' => [
                 'default' => 'theKey',
-                'xliff' => 'fileTranslation',
-                'database' => 'userTranslation',
+                'project' => 'fileTranslation',
+                'user' => 'userTranslation',
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -132,8 +132,8 @@ class DomainTranslationTest extends TestCase
         $this->assertSame([
             'theKey' => [
                 'default' => 'theKey',
-                'xliff' => 'fileTranslation',
-                'database' => 'userTranslation',
+                'project' => 'fileTranslation',
+                'user' => 'userTranslation',
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -141,8 +141,8 @@ class DomainTranslationTest extends TestCase
             ],
             'aKey' => [
                 'default' => 'aKey',
-                'xliff' => 'aFileTranslation',
-                'database' => null,
+                'project' => 'aFileTranslation',
+                'user' => null,
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -160,8 +160,8 @@ class DomainTranslationTest extends TestCase
         $this->assertSame([
             'theSecondKey' => [
                 'default' => 'theSecondKey',
-                'xliff' => null,
-                'database' => null,
+                'project' => null,
+                'user' => null,
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -169,8 +169,8 @@ class DomainTranslationTest extends TestCase
             ],
             'theKey' => [
                 'default' => 'theKey',
-                'xliff' => 'fileTranslation',
-                'database' => 'userTranslation',
+                'project' => 'fileTranslation',
+                'user' => 'userTranslation',
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -178,8 +178,8 @@ class DomainTranslationTest extends TestCase
             ],
             'aKey' => [
                 'default' => 'aKey',
-                'xliff' => 'aFileTranslation',
-                'database' => null,
+                'project' => 'aFileTranslation',
+                'user' => null,
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -206,8 +206,8 @@ class DomainTranslationTest extends TestCase
         $this->assertSame([
             'theKey' => [
                 'default' => 'theKey',
-                'xliff' => 'fileTranslation',
-                'database' => 'userTranslation',
+                'project' => 'fileTranslation',
+                'user' => 'userTranslation',
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -222,8 +222,8 @@ class DomainTranslationTest extends TestCase
         $this->assertSame([
             'theKey' => [
                 'default' => 'theKey',
-                'xliff' => 'fileTranslation',
-                'database' => 'userTranslation',
+                'project' => 'fileTranslation',
+                'user' => 'userTranslation',
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -231,8 +231,8 @@ class DomainTranslationTest extends TestCase
             ],
             'aKey' => [
                 'default' => 'aKey',
-                'xliff' => 'aFileTranslation',
-                'database' => null,
+                'project' => 'aFileTranslation',
+                'user' => null,
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -246,8 +246,8 @@ class DomainTranslationTest extends TestCase
         $this->assertSame([
             'theSecondKey' => [
                 'default' => 'theSecondKey',
-                'xliff' => null,
-                'database' => null,
+                'project' => null,
+                'user' => null,
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -255,8 +255,8 @@ class DomainTranslationTest extends TestCase
             ],
             'theKey' => [
                 'default' => 'theKey',
-                'xliff' => 'fileTranslation',
-                'database' => 'userTranslation',
+                'project' => 'fileTranslation',
+                'user' => 'userTranslation',
                 'tree_domain' => [
                     'domain',
                     'Name',
@@ -264,8 +264,8 @@ class DomainTranslationTest extends TestCase
             ],
             'aKey' => [
                 'default' => 'aKey',
-                'xliff' => 'aFileTranslation',
-                'database' => null,
+                'project' => 'aFileTranslation',
+                'user' => null,
                 'tree_domain' => [
                     'domain',
                     'Name',

@@ -115,8 +115,8 @@ class MessageTranslation
     {
         return [
             'default' => $this->defaultTranslation,
-            'xliff' => $this->fileTranslation,
-            'database' => $this->userTranslation,
+            'project' => $this->fileTranslation,
+            'user' => $this->userTranslation,
         ];
     }
 }
