@@ -53,6 +53,8 @@ use Symfony\Component\Form\FormInterface;
  */
 class MultistoreCheckboxEnabler
 {
+    public const MULTISTORE_FIELD_PREFIX = 'multistore_';
+
     /**
      * @var FeatureInterface
      */
@@ -67,8 +69,6 @@ class MultistoreCheckboxEnabler
      * @var Context
      */
     private $multiStoreContext;
-
-    public const MULTISTORE_FIELD_PREFIX = 'multistore_';
 
     /**
      * MultistoreCheckboxEnabler constructor.
