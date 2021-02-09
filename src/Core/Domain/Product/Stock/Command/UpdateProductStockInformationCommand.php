@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command;
 
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;

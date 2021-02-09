@@ -26,12 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockInformationHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 
