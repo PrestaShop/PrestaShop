@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
@@ -86,6 +85,7 @@ class FeatureValueType extends TranslatorAwareType
             ])
             ->add('feature_value_id', ChoiceType::class, [
                 'required' => false,
+                'empty_data' => null,
                 'placeholder' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
                 'label' => $this->trans('Pre-defined value', 'Admin.Catalog.Feature'),
                 'attr' => [
@@ -96,17 +96,17 @@ class FeatureValueType extends TranslatorAwareType
             ])
             ->add('custom_value', TranslatableType::class, [
                 'label' => $this->trans('OR Customized value', 'Admin.Catalog.Feature'),
+                'required' => false,
                 'type' => TextType::class,
                 'attr' => [
                     'class' => 'custom-values',
                 ],
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
             ])
-            ->add('custom_feature_id', HiddenType::class, [
+            ->add('custom_value_id', HiddenType::class, [
+                'required' => false,
+                'empty_data' => null,
                 'attr' => [
-                    'class' => 'custom-feature-id',
+                    'class' => 'custom-value-id',
                 ],
             ])
             ->add('delete', IconButtonType::class, [
