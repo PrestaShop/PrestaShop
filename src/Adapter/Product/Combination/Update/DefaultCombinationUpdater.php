@@ -76,7 +76,6 @@ class DefaultCombinationUpdater
         }
 
         $this->updateCombination($newDefaultCombination, true);
-        $this->combinationRepository->refreshDefaultCombination($productId);
     }
 
     /**

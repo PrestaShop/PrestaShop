@@ -24,6 +24,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | name[en-US] | universal T-shirt |
       | is_virtual  | false             |
     And product product1 type should be standard
+    And product product1 should not have default combination
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
@@ -39,6 +40,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 100.99      | 0        | false      |
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 100.99      | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 100.99      | 0        | false      |
+    And product product1 default combination should be "product1SWhite"
     When I update combination "product1Blue" from list with following values:
       | impact on price | 5    |
       | quantity        | 10   |
@@ -57,3 +59,4 @@ Feature: Update product combination from listing in Back Office (BO)
       | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | -4.99           | 96          | 9        | false      |
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 100.99      | 50       | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 100.99      | 0        | false      |
+    And product product1 default combination should be "product1Blue"
