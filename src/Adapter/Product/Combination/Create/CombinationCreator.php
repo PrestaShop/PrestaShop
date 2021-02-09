@@ -92,7 +92,6 @@ class CombinationCreator
         $this->disableSpecificPriceRulesApplication();
 
         $combinationIds = $this->addCombinations($product, $generatedCombinations);
-        $this->combinationRepository->refreshDefaultCombination($productId);
 
         // apply all specific price rules at once after all the combinations are generated
         $this->applySpecificPriceRules($productId);

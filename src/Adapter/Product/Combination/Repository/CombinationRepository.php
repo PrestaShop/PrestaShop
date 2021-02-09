@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValida
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -123,10 +122,6 @@ class CombinationRepository extends AbstractObjectModelRepository
         $combination->default_on = $isDefault;
 
         $this->addObjectModel($combination, CannotAddCombinationException::class);
-
-        if ($isDefault) {
-            $this->refreshDefaultCombination($productId);
-        }
 
         return $combination;
     }
@@ -274,26 +269,6 @@ class CombinationRepository extends AbstractObjectModelRepository
         }
 
         return $id ? $this->get(new CombinationId($id)) : null;
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @throws CannotUpdateCombinationException
-     * @throws CoreException
-     */
-    public function refreshDefaultCombination(ProductId $productId): void
-    {
-        try {
-            if (!Product::updateDefaultAttribute($productId->getValue())) {
-                throw new CannotUpdateCombinationException(
-                    sprintf('Failed update default combination for product "#%d"', $productId->getValue()),
-                    CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to update product default combination', 0, $e);
-        }
     }
 
     /**
