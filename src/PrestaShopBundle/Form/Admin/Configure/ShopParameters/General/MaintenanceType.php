@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class returning the content of the form in the maintenance page.
@@ -41,6 +42,27 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MaintenanceType extends TranslatorAwareType
 {
+    /**
+     * @var string
+     */
+    private $currentIp;
+
+    /**
+     * MaintenanceType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param string $currentIp
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        string $currentIp
+    ) {
+        parent::__construct($translator, $locales);
+        $this->currentIp = $currentIp;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -77,6 +99,7 @@ class MaintenanceType extends TranslatorAwareType
                         'Allow IP addresses to access the store, even in maintenance mode. Use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).',
                         'Admin.Shopparameters.Help'
                     ),
+                    'current_ip' => $this->currentIp,
                 ]
             )
             ->add(
