@@ -584,19 +584,20 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
-     * Delete configuration key from current context.
+     * Delete configuration key from current context
      *
-     * @param string $key
+     * @param $key
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
      */
-    public static function deleteFromContext($key)
+    public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
     {
         if (Shop::getContext() == Shop::CONTEXT_ALL) {
             return;
         }
 
-        $idShop = null;
-        $idShopGroup = Shop::getContextShopGroupID(true);
-        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+        $idShopGroup = $idShopGroup ?? Shop::getContextShopGroupID(true);
+        if (!isset($idShop) && Shop::getContext() == Shop::CONTEXT_SHOP) {
             $idShop = Shop::getContextShopID(true);
         }
 

@@ -345,9 +345,17 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
     /**
      * @param string $key
+     * @param ShopConstraint $shopConstraint
      */
-    public function deleteFromContext(string $key): void
+    public function deleteFromContext(string $key, ShopConstraint $shopConstraint): void
     {
-        ConfigurationLegacy::deleteFromContext($key);
+        $shopId = $shopConstraint->getShopId();
+        $shopGroupId = $shopConstraint->getShopGroupId();
+
+        ConfigurationLegacy::deleteFromContext(
+            $key,
+            !empty($shopGroupId) ? $shopGroupId->getValue() : null,
+            !empty($shopId) ? $shopId->getValue() : null
+        );
     }
 }
