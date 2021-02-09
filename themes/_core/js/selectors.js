@@ -99,7 +99,7 @@ prestashop.selectors = {
     summaryProducts: '.cart-summary-products, .js-cart-summary-products',
     detailedActions: '.cart-detailed-actions, .js-cart-detailed-actions',
     voucher: '.cart-voucher, .js-cart-voucher',
-    overview: '.cart-overview, .js-cart',
+    overview: '.cart-overview',
     summaryTop: '.cart-summary-top, .js-cart-summary-top',
     productCustomizationId: '#product_customization_id, .js-product-customization-id',
     lineProductQuantity: '.js-cart-line-product-quantity',
