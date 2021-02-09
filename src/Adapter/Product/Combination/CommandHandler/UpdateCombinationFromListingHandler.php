@@ -78,9 +78,13 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
     {
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
-        $this->combinationRepository->partialUpdate($combination, $updatableProperties, CannotUpdateCombinationException::FAILED_UPDATE_LISTED_COMBINATION);
 
-        $this->combinationStockUpdater->update($combination, $updatableProperties);
+        $this->combinationRepository->partialUpdate(
+            $combination,
+            $updatableProperties,
+            CannotUpdateCombinationException::FAILED_UPDATE_LISTED_COMBINATION
+        );
+        $this->combinationStockUpdater->update($combination, $command->getQuantity(), null);
 
         if (true === $command->isDefault()) {
             $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
@@ -103,7 +107,6 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
         }
 
         if (null !== $command->getQuantity()) {
-            //@todo: should we deprecate combination->quantity and product->quantity (as we did with location?) because stock_advanced is the real source
             $combination->quantity = $command->getQuantity();
             $updatableProperties[] = 'quantity';
         }
