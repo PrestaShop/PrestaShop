@@ -31,10 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopException;
 
 /**
@@ -73,21 +74,79 @@ class CombinationStockUpdater
     }
 
     /**
-     * @param Combination $combination
-     * @param int|null $newQuantity
-     * @param string|null $newLocation
-     *
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
+     * @param CombinationId $combinationId
+     * @param CombinationStockProperties $properties
      */
-    public function update(Combination $combination, ?int $newQuantity, ?string $newLocation): void
+    public function update(CombinationId $combinationId, CombinationStockProperties $properties): void
     {
-        $updateQuantity = null !== $newQuantity;
-        $updateLocation = null !== $newLocation;
+        $combination = $this->combinationRepository->get($combinationId);
+        $this->combinationRepository->partialUpdate(
+            $combination,
+            $this->fillUpdatableProperties($combination, $properties),
+            CannotUpdateCombinationException::FAILED_UPDATE_STOCK
+        );
+
+        $this->updateStockAvailable($combination, $properties);
+    }
+
+    /**
+     * @param Combination $combination
+     * @param CombinationStockProperties $properties
+     *
+     * @return string[]
+     */
+    private function fillUpdatableProperties(Combination $combination, CombinationStockProperties $properties): array
+    {
+        $updatableProperties = [];
+
+        if (null !== $properties->getQuantity()) {
+            $combination->quantity = $properties->getQuantity();
+            $updatableProperties[] = 'quantity';
+        }
+
+        if (null !== $properties->getAvailableDate()) {
+            $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
+            $updatableProperties[] = 'available_date';
+        }
+
+        if (null !== $properties->getLocation()) {
+            $combination->location = $properties->getLocation();
+            $updatableProperties[] = 'location';
+        }
+
+        if (null !== $properties->getLowStockThreshold()) {
+            $combination->low_stock_threshold = $properties->getLowStockThreshold();
+            $updatableProperties[] = 'low_stock_threshold';
+        }
+
+        if (null !== $properties->getMinimalQuantity()) {
+            $combination->minimal_quantity = $properties->getMinimalQuantity();
+            $updatableProperties[] = 'minimal_quantity';
+        }
+
+        if (null !== $properties->isLowStockAlertEnabled()) {
+            $combination->low_stock_alert = $properties->isLowStockAlertEnabled();
+            $updatableProperties[] = 'low_stock_alert';
+        }
+
+        return $updatableProperties;
+    }
+
+    /**
+     * @param Combination $combination
+     * @param CombinationStockProperties $properties
+     */
+    private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
+    {
+        $updateQuantity = null !== $properties->getQuantity();
+        $updateLocation = null !== $properties->getLocation();
 
         if (!$updateQuantity && !$updateLocation) {
             return;
         }
+
+        $newQuantity = $properties->getQuantity();
+        $newLocation = $properties->getLocation();
 
         $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
 
