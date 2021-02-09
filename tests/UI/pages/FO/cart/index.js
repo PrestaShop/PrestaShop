@@ -13,6 +13,7 @@ class Cart extends FOBasePage {
     this.productName = number => `${this.productItem(number)} div.product-line-info > a`;
     this.productPrice = number => `${this.productItem(number)} div.current-price > span`;
     this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
+    this.deleteIcon = number => `${this.productItem(number)} .remove-from-cart`;
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
     this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
@@ -59,6 +60,16 @@ class Cart extends FOBasePage {
     await this.setValue(page, this.productQuantity(productID), quantity.toString());
     // click on price to see that its changed
     await page.click(this.productPrice(productID));
+  }
+
+  /**
+   * Delete product
+   * @param page
+   * @param productID
+   * @returns {Promise<void>}
+   */
+  async deleteProduct(page, productID) {
+    await this.waitForSelectorAndClick(page, this.deleteIcon(productID));
   }
 
   /**

@@ -107,7 +107,8 @@ class Home extends FOBasePage {
   /**
    * Get product details from quick view modal
    * @param page
-   * @returns {Promise<{price: *, name: *, cartProductsCount: number}>}
+   * @returns {Promise<{quantity: number, size: *, color: *, price: *, name: *, cartShipping: *, cartSubtotal: *,
+   * totalTaxIncl: *, cartProductsCount: number}>}
    */
   async getProductDetail(page) {
     return {

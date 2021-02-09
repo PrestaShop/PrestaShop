@@ -48,7 +48,7 @@ describe('Product quick view', async () => {
 
     await homePage.addProductToCartByQuickView(page, 1, 1);
 
-    const result = await homePage.getProductDetail(page, 1);
+    const result = await homePage.getProductDetail(page);
     await Promise.all([
       expect(result.name).to.equal(customCartData.firstProduct.name),
       expect(result.price).to.equal(customCartData.firstProduct.price),
@@ -59,6 +59,38 @@ describe('Product quick view', async () => {
       expect(result.cartSubtotal).to.equal(customCartData.firstProduct.price),
       expect(result.cartShipping).to.contains('Free'),
       expect(result.totalTaxIncl).to.contains(customCartData.firstProduct.price),
+    ]);
+  });
+
+  it('should proceed to checkout and delete product from the cart', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
+
+    await homePage.proceedToCheckout(page);
+
+    const pageTitle = await cartPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(cartPage.pageTitle);
+
+    await cartPage.deleteProduct(page, 1);
+
+    await cartPage.goToHomePage(page);
+  });
+
+  it('should change product quantity by quick view', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'changeQuantityByQuickView', baseContext);
+
+    await homePage.addProductToCartByQuickView(page, 1, 2);
+
+    const result = await homePage.getProductDetail(page);
+    await Promise.all([
+      expect(result.name).to.equal(customCartData.firstProduct.name),
+      expect(result.price).to.equal(customCartData.firstProduct.price),
+      expect(result.size).to.equal('S'),
+      expect(result.color).to.equal('White'),
+      expect(result.quantity).to.equal(2),
+      expect(result.cartProductsCount).to.equal(2),
+      expect(result.cartSubtotal).to.equal('€45.89'),
+      expect(result.cartShipping).to.contains('Free'),
+      expect(result.totalTaxIncl).to.contains('€45.89'),
     ]);
   });
 });
