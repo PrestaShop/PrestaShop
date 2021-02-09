@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -75,37 +74,17 @@ class CombinationStockUpdater
 
     /**
      * @param Combination $combination
-     * @param array $propertiesToUpdate
-     */
-    public function update(Combination $combination, array $propertiesToUpdate): void
-    {
-        $this->combinationRepository->partialUpdate(
-            $combination,
-            $propertiesToUpdate,
-            CannotUpdateCombinationException::FAILED_UPDATE_STOCK
-        );
-
-        $this->updateStockAvailable($combination, $propertiesToUpdate);
-    }
-
-    /**
-     * @param Combination $combination
-     * @param array $propertiesToUpdate
+     * @param int|null $newQuantity
+     * @param string|null $newLocation
      *
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    private function updateStockAvailable(Combination $combination, array $propertiesToUpdate): void
+    public function update(Combination $combination, ?int $newQuantity, ?string $newLocation): void
     {
-        $updateQuantity = false;
-        $updateLocation = false;
+        $updateQuantity = null !== $newQuantity;
+        $updateLocation = null !== $newLocation;
 
-        if (in_array('quantity', $propertiesToUpdate)) {
-            $updateQuantity = true;
-        }
-        if (in_array('location', $propertiesToUpdate)) {
-            $updateLocation = true;
-        }
         if (!$updateQuantity && !$updateLocation) {
             return;
         }
@@ -113,13 +92,12 @@ class CombinationStockUpdater
         $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
 
         if ($updateQuantity) {
-            $newQuantity = (int) $combination->quantity;
             $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
             $stockAvailable->quantity = $newQuantity;
         }
 
         if ($updateLocation) {
-            $stockAvailable->location = $combination->location;
+            $stockAvailable->location = $newLocation;
         }
 
         $this->stockAvailableRepository->update($stockAvailable);
