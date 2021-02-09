@@ -319,7 +319,7 @@ class StockManager
                 Mail::Send(
                     $context->language->local,
                     'productoutofstock',
-                    Context::getContext()->getTranslator()->trans(
+                    $context->getTranslator()->trans(
                         'Product out of stock',
                         [],
                         'Emails.Subject',
