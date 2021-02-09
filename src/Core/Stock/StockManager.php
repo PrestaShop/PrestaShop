@@ -321,7 +321,7 @@ class StockManager
                     'productoutofstock',
                     Context::getContext()->getTranslator()->trans(
                         'Product out of stock',
-                        array(),
+                        [],
                         'Emails.Subject',
                         $context->language->locale
                     ),
