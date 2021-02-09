@@ -51,11 +51,13 @@ export default {
   },
   featureValues: {
     collectionContainer: '#product_features_feature_values',
+    collectionRowsContainer: '#product_features_feature_values > .col-sm',
     collectionRow: 'div.row.product-feature',
     featureSelect: 'select.feature-selector',
     featureValueSelect: 'select.feature-value-selector',
     customValueInput: '.custom-values input',
     customFeatureIdInput: 'input.custom-feature-id',
     deleteFeatureValue: 'button.delete-feature-value',
+    addFeatureValue: '#product_features_add_feature',
   },
 };
