@@ -139,8 +139,8 @@ class TranslationsTest extends TestCase
             'theDomain' => [
                 'theKey' => [
                     'default' => 'theKey',
-                    'xliff' => 'fileTranslation',
-                    'database' => 'userTranslation',
+                    'project' => 'fileTranslation',
+                    'user' => 'userTranslation',
                     'tree_domain' => [
                         'the',
                         'Domain',
@@ -169,8 +169,8 @@ class TranslationsTest extends TestCase
             'theDomain' => [
                 'theKey' => [
                     'default' => 'theKey',
-                    'xliff' => 'fileTranslation',
-                    'database' => 'userTranslation',
+                    'project' => 'fileTranslation',
+                    'user' => 'userTranslation',
                     'tree_domain' => [
                         'the',
                         'Domain',
@@ -184,8 +184,8 @@ class TranslationsTest extends TestCase
             'theSecondDomain' => [
                 'aKey' => [
                     'default' => 'aKey',
-                    'xliff' => 'aFileTranslation',
-                    'database' => null,
+                    'project' => 'aFileTranslation',
+                    'user' => null,
                     'tree_domain' => [
                         'the',
                         'Second',
@@ -214,8 +214,8 @@ class TranslationsTest extends TestCase
             'theDomain' => [
                 'theKey' => [
                     'default' => 'theKey',
-                    'xliff' => 'fileTranslation',
-                    'database' => 'userTranslation',
+                    'project' => 'fileTranslation',
+                    'user' => 'userTranslation',
                     'tree_domain' => [
                         'the',
                         'Domain',
@@ -229,8 +229,8 @@ class TranslationsTest extends TestCase
             'theSecondDomain' => [
                 'aKey' => [
                     'default' => 'aKey',
-                    'xliff' => 'aFileTranslation',
-                    'database' => null,
+                    'project' => 'aFileTranslation',
+                    'user' => null,
                     'tree_domain' => [
                         'the',
                         'Second',
@@ -245,8 +245,8 @@ class TranslationsTest extends TestCase
             'theThirdDomain' => [
                 'someKey' => [
                     'default' => 'someKey',
-                    'xliff' => null,
-                    'database' => null,
+                    'project' => null,
+                    'user' => null,
                     'tree_domain' => [
                         'the',
                         'Third',
@@ -295,8 +295,8 @@ class TranslationsTest extends TestCase
             'theDomain' => [
                 'theKey' => [
                     'default' => 'theKey',
-                    'xliff' => 'fileTranslation',
-                    'database' => 'userTranslation',
+                    'project' => 'fileTranslation',
+                    'user' => 'userTranslation',
                     'tree_domain' => [
                         'the',
                         'Domain',
@@ -306,8 +306,8 @@ class TranslationsTest extends TestCase
             'theSecondDomain' => [
                 'aKey' => [
                     'default' => 'aKey',
-                    'xliff' => 'aFileTranslation',
-                    'database' => null,
+                    'project' => 'aFileTranslation',
+                    'user' => null,
                     'tree_domain' => [
                         'the',
                         'Second',
@@ -318,8 +318,8 @@ class TranslationsTest extends TestCase
             'theThirdDomain' => [
                 'someKey' => [
                     'default' => 'someKey',
-                    'xliff' => null,
-                    'database' => null,
+                    'project' => null,
+                    'user' => null,
                     'tree_domain' => [
                         'the',
                         'Third',

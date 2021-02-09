@@ -235,8 +235,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
-            'xliff' => 'Second Domain First Wording File Translation',
-            'database' => null,
+            'project' => 'Second Domain First Wording File Translation',
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -268,8 +268,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
-            'xliff' => 'Second Domain First Wording File Translation',
-            'database' => null,
+            'project' => 'Second Domain First Wording File Translation',
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -300,8 +300,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain Second Wording',
-            'xliff' => null,
-            'database' => null,
+            'project' => null,
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -311,8 +311,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
-            'xliff' => 'Second Domain First Wording File Translation',
-            'database' => null,
+            'project' => 'Second Domain First Wording File Translation',
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -346,8 +346,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain Second Wording',
-            'xliff' => null,
-            'database' => null,
+            'project' => null,
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -357,8 +357,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
-            'xliff' => 'Second Domain First Wording File Translation',
-            'database' => null,
+            'project' => 'Second Domain First Wording File Translation',
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -413,8 +413,8 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertArrayHasKey('missing_translations', $messages['AdminFirstDomain'][Translations::METADATA_KEY_NAME]);
         $this->assertArrayHasKey('First Domain First Wording', $messages['AdminFirstDomain']);
         $this->assertArrayHasKey('default', $messages['AdminFirstDomain']['First Domain First Wording']);
-        $this->assertArrayHasKey('xliff', $messages['AdminFirstDomain']['First Domain First Wording']);
-        $this->assertArrayHasKey('database', $messages['AdminFirstDomain']['First Domain First Wording']);
+        $this->assertArrayHasKey('project', $messages['AdminFirstDomain']['First Domain First Wording']);
+        $this->assertArrayHasKey('user', $messages['AdminFirstDomain']['First Domain First Wording']);
     }
 
     public function testGetCatalogue()
@@ -441,8 +441,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'First Domain First Wording',
-            'xliff' => 'First Domain First Wording File Translation',
-            'database' => 'First Domain First Wording User Translation',
+            'project' => 'First Domain First Wording File Translation',
+            'user' => 'First Domain First Wording User Translation',
             'tree_domain' => [
                 'Admin',
                 'First',
@@ -457,8 +457,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
-            'xliff' => 'Second Domain First Wording File Translation',
-            'database' => null,
+            'project' => 'Second Domain First Wording File Translation',
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -468,8 +468,8 @@ class TranslationCatalogueBuilderTest extends TestCase
 
         $this->assertSame([
             'default' => 'Second Domain Second Wording',
-            'xliff' => null,
-            'database' => null,
+            'project' => null,
+            'user' => null,
             'tree_domain' => [
                 'Admin',
                 'Second',
@@ -542,8 +542,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'data' => [
                     'Second Domain Second Wording' => [
                         'default' => 'Second Domain Second Wording',
-                        'xliff' => null,
-                        'database' => null,
+                        'project' => null,
+                        'user' => null,
                         'tree_domain' => [
                             'Admin',
                             'Second',
@@ -552,8 +552,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                     ],
                     'Second Domain First Wording' => [
                         'default' => 'Second Domain First Wording',
-                        'xliff' => 'Second Domain First Wording File Translation',
-                        'database' => null,
+                        'project' => 'Second Domain First Wording File Translation',
+                        'user' => null,
                         'tree_domain' => [
                             'Admin',
                             'Second',
@@ -601,8 +601,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                 'data' => [
                     'Delivery time of in-stock products:' => [
                         'default' => 'Delivery time of in-stock products:',
-                        'xliff' => 'Délai de livraison pour les produits en stock :',
-                        'database' => null,
+                        'project' => 'Délai de livraison pour les produits en stock :',
+                        'user' => null,
                         'tree_domain' => [
                             'Admin',
                             'Catalog',
@@ -611,8 +611,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                     ],
                     'Default delivery time' => [
                         'default' => 'Default delivery time',
-                        'xliff' => 'Délai de livraison par défaut',
-                        'database' => null,
+                        'project' => 'Délai de livraison par défaut',
+                        'user' => null,
                         'tree_domain' => [
                             'Admin',
                             'Catalog',
@@ -621,8 +621,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                     ],
                     'Specific delivery time to this product' => [
                         'default' => 'Specific delivery time to this product',
-                        'xliff' => 'Délai de livraison spécifique pour ce produit',
-                        'database' => null,
+                        'project' => 'Délai de livraison spécifique pour ce produit',
+                        'user' => null,
                         'tree_domain' => [
                             'Admin',
                             'Catalog',
@@ -631,8 +631,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                     ],
                     'Delivery Time' => [
                         'default' => 'Delivery Time',
-                        'xliff' => 'Delai de livraison',
-                        'database' => null,
+                        'project' => 'Delai de livraison',
+                        'user' => null,
                         'tree_domain' => [
                             'Admin',
                             'Catalog',
@@ -641,8 +641,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                     ],
                     'Delivery time of out-of-stock products with allowed orders:' => [
                         'default' => 'Delivery time of out-of-stock products with allowed orders:',
-                        'xliff' => 'Délai de livraison des produits épuisés avec commande autorisée:',
-                        'database' => null,
+                        'project' => 'Délai de livraison des produits épuisés avec commande autorisée:',
+                        'user' => null,
                         'tree_domain' => [
                             'Admin',
                             'Catalog',

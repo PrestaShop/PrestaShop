@@ -214,7 +214,7 @@ class TranslationCatalogueBuilder
                 if ($userTranslatedCatalogue->defines($translationKey, $domainName)) {
                     $messageTranslation->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
                 }
-                // if search is empty or is in catalog default|xliff|database
+                // if search is empty or is in catalog default|project|user
                 if (empty($search) || $messageTranslation->contains($search)) {
                     $domainTranslation->addMessageTranslation($messageTranslation);
                 }

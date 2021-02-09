@@ -94,24 +94,24 @@ class MessageTranslationTest extends TestCase
         $messageTranslation = new MessageTranslation('theKey');
         $this->assertSame([
             'default' => 'theKey',
-            'xliff' => null,
-            'database' => null,
+            'project' => null,
+            'user' => null,
         ], $messageTranslation->toArray());
 
         $messageTranslation = new MessageTranslation('theKey');
         $messageTranslation->setFileTranslation('fileTranslation');
         $this->assertSame([
             'default' => 'theKey',
-            'xliff' => 'fileTranslation',
-            'database' => null,
+            'project' => 'fileTranslation',
+            'user' => null,
         ], $messageTranslation->toArray());
 
         $messageTranslation = new MessageTranslation('theKey');
         $messageTranslation->setUserTranslation('userTranslation');
         $this->assertSame([
             'default' => 'theKey',
-            'xliff' => null,
-            'database' => 'userTranslation',
+            'project' => null,
+            'user' => 'userTranslation',
         ], $messageTranslation->toArray());
 
         $messageTranslation = new MessageTranslation('theKey');
@@ -119,8 +119,8 @@ class MessageTranslationTest extends TestCase
         $messageTranslation->setUserTranslation('userTranslation');
         $this->assertSame([
             'default' => 'theKey',
-            'xliff' => 'file Translation',
-            'database' => 'userTranslation',
+            'project' => 'file Translation',
+            'user' => 'userTranslation',
         ], $messageTranslation->toArray());
     }
 }
