@@ -33,7 +33,7 @@ export default class MultistoreConfigField {
   updateMultistoreFieldOnChange() {
     $(document).on('change', '.multistore-checkbox', function () {
       const input = $(this).closest('.form-group').find(':input:not(.multistore-checkbox)');
-      const inputContainer = $(this).closest('.form-group').find('.col-sm');
+      const inputContainer = $(this).closest('.form-group').find('.input-container');
       const labelContainer = $(this).closest('.form-group').find('.form-control-label');
       const isChecked = $(this).is(':checked');
       inputContainer.toggleClass('disabled', !isChecked);
