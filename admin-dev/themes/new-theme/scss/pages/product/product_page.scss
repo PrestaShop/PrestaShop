@@ -241,10 +241,10 @@
     @media screen and (max-width: 1300px) {
       &::after {
         display: inline-block;
-        content: "";
-        border-top: 1px solid $primary;
         width: 100%;
         margin: 0.5rem 0.9375rem;
+        content: "";
+        border-top: 1px solid $primary;
       }
     }
   }
