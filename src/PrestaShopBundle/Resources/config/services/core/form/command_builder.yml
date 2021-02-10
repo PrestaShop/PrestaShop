@@ -14,6 +14,7 @@ services:
                 - '@prestashop.core.form.command_builder.product.product_suppliers_command_builder'
                 - '@prestashop.core.form.command_builder.product.stock_command_builder'
                 - '@prestashop.core.form.command_builder.product.feature_values_command_builder'
+                - '@prestashop.core.form.command_builder.product.customization_fields_command_builder'
 
     prestashop.core.form.command_builder.product.basic_information:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandBuilder
