@@ -28,18 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\FormCloner;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class FeatureValueType extends TranslatorAwareType
@@ -50,19 +47,19 @@ class FeatureValueType extends TranslatorAwareType
     private $featuresChoiceProvider;
 
     /**
-     * @var ConfigurableFormChoiceProviderInterface
+     * @var EventSubscriberInterface
      */
-    private $featureValuesChoiceProvider;
+    private $featureValueListener;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $featuresChoiceProvider,
-        ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider
+        EventSubscriberInterface $featureValueListener
     ) {
         parent::__construct($translator, $locales);
         $this->featuresChoiceProvider = $featuresChoiceProvider;
-        $this->featureValuesChoiceProvider = $featureValuesChoiceProvider;
+        $this->featureValueListener = $featureValueListener;
     }
 
     /**
@@ -122,25 +119,8 @@ class FeatureValueType extends TranslatorAwareType
             ])
         ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $form = $event->getForm();
-            $data = $event->getData();
-
-            if (empty($data) || empty($data['feature_id'])) {
-                return;
-            }
-
-            $featureValues = $this->featureValuesChoiceProvider->getChoices(['feature_id' => (int) $data['feature_id'], 'custom' => !empty($data['custom_value'])]);
-            $cloner = new FormCloner();
-            $newFeatureValueForm = $cloner->cloneForm($form->get('feature_value_id'), [
-                'choices' => $featureValues,
-                'attr' => [
-                    'disabled' => !empty($data['custom_value']) || empty($featureValues),
-                    'data-toggle' => 'select2',
-                    'class' => 'feature-value-selector',
-                ],
-            ]);
-            $form->add($newFeatureValueForm);
-        });
+        // This listeners register to PRE_SET_DATA and PRE_SUBMIT events to dynamically set the proper choices of the
+        // feature_value_id field
+        $builder->addEventSubscriber($this->featureValueListener);
     }
 }
