@@ -34,16 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 class ProductStockProperties
 {
     /**
-     * @var bool|null
-     */
-    private $useAdvancedStockManagement;
-
-    /**
-     * @var bool|null
-     */
-    private $dependsOnStock;
-
-    /**
      * @var PackStockType|null
      */
     private $packStockType;
@@ -94,8 +84,6 @@ class ProductStockProperties
     private $availableDate;
 
     /**
-     * @param bool|null $useAdvancedStockManagement
-     * @param bool|null $dependsOnStock
      * @param PackStockType|null $packStockType
      * @param int|null $quantity
      * @param OutOfStockType|null $outOfStockType
@@ -108,8 +96,6 @@ class ProductStockProperties
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        ?bool $useAdvancedStockManagement = null,
-        ?bool $dependsOnStock = null,
         ?PackStockType $packStockType = null,
         ?int $quantity = null,
         ?OutOfStockType $outOfStockType = null,
@@ -121,8 +107,6 @@ class ProductStockProperties
         ?array $localizedAvailableLaterLabels = null,
         ?DateTimeInterface $availableDate = null
     ) {
-        $this->useAdvancedStockManagement = $useAdvancedStockManagement;
-        $this->dependsOnStock = $dependsOnStock;
         $this->packStockType = $packStockType;
         $this->quantity = $quantity;
         $this->outOfStockType = $outOfStockType;
@@ -133,22 +117,6 @@ class ProductStockProperties
         $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
         $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
         $this->availableDate = $availableDate;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function useAdvancedStockManagement(): ?bool
-    {
-        return $this->useAdvancedStockManagement;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function dependsOnStock(): ?bool
-    {
-        return $this->dependsOnStock;
     }
 
     /**

@@ -34,39 +34,22 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 class ProductStockConstraintException extends ProductStockException
 {
     /**
-     * Code is used when an advanced stock action is performed while
-     * advanced stock managed is disabled
-     */
-    public const ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED = 10;
-
-    /**
-     * Code is used when an advanced stock action is performed while
-     * advanced stock managed is disabled on the product
-     */
-    public const ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED = 20;
-
-    /**
      * Code is sent when invalid out of stock type is used
      */
-    public const INVALID_OUT_OF_STOCK_TYPE = 30;
+    public const INVALID_OUT_OF_STOCK_TYPE = 10;
 
     /**
      * When quantity is invalid
      */
-    public const INVALID_QUANTITY = 40;
+    public const INVALID_QUANTITY = 20;
 
     /**
      * When location is invalid
      */
-    public const INVALID_LOCATION = 50;
-
-    /**
-     * When depends_on_stock is invalid
-     */
-    public const INVALID_DEPENDS_ON_STOCK = 60;
+    public const INVALID_LOCATION = 30;
 
     /**
      * When out_of_stock is invalid
      */
-    public const INVALID_OUT_OF_STOCK = 70;
+    public const INVALID_OUT_OF_STOCK = 40;
 }

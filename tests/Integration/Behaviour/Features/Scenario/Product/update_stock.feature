@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-stock-advanced
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-stock
 @reset-database-before-feature
 @clear-cache-before-feature
 @reboot-kernel-before-feature
 @update-stock
-@update-stock-advanced
+@update-stock-classic
 Feature: Update product stock from Back Office (BO)
   As a BO user
   I need to be able to update product stock from BO
@@ -12,15 +12,13 @@ Feature: Update product stock from Back Office (BO)
     Given shop "shop1" with name "test_shop" exists
     # Single shop context is required to modify product quantity
     And single shop shop1 context is loaded
-    And shop configuration for "PS_ADVANCED_STOCK_MANAGEMENT" is set to 1
+    And shop configuration for "PS_ADVANCED_STOCK_MANAGEMENT" is set to 0
 
   Scenario: I check default stock values
-    Given I add product "product1" with following information:
+    When I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | is_virtual  | false         |
-    And product "product1" should have following stock information:
-      | use_advanced_stock_management | false   |
-      | depends_on_stock              | false   |
+    Then product "product1" should have following stock information:
       | pack_stock_type               | default |
       | out_of_stock_type             | default |
       | quantity                      | 0       |
@@ -35,8 +33,6 @@ Feature: Update product stock from Back Office (BO)
       | name[en-US] | Presta camera |
       | is_virtual  | true          |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | false     |
-      | depends_on_stock              | false     |
       | pack_stock_type               | default   |
       | out_of_stock_type             | available |
       | quantity                      | 0         |
@@ -46,57 +42,14 @@ Feature: Update product stock from Back Office (BO)
       | low_stock_alert               | false     |
       | available_date                |           |
 
-  Scenario: I update product stock management
-    Given I add product "product1" with following information:
-      | name[en-US] | Presta camera |
-      | is_virtual  | false         |
-    And product "product1" should have following stock information:
-      | use_advanced_stock_management | false |
-    When I update product "product1" stock with following information:
-      | use_advanced_stock_management | true |
-    Then product "product1" should have following stock information:
-      | use_advanced_stock_management | true |
-
-  Scenario: I update product depends on stock (also check automatic update when disabling advanced stock on product)
-    Given I add product "product1" with following information:
-      | name[en-US] | Presta camera |
-      | is_virtual  | false         |
-    And product "product1" should have following stock information:
-      | use_advanced_stock_management | false |
-      | depends_on_stock              | false |
-    When I update product "product1" stock with following information:
-      | depends_on_stock | true |
-    And I should get error that stock management is disabled on product
-    When I update product "product1" stock with following information:
-      | use_advanced_stock_management | false |
-      | depends_on_stock              | true  |
-    And I should get error that stock management is disabled on product
-    When I update product "product1" stock with following information:
-      | use_advanced_stock_management | true |
-      | depends_on_stock              | true |
-    Then product "product1" should have following stock information:
-      | use_advanced_stock_management | true |
-      | depends_on_stock              | true |
-    When I update product "product1" stock with following information:
-      | use_advanced_stock_management | false |
-    Then product "product1" should have following stock information:
-      | use_advanced_stock_management | false |
-      | depends_on_stock              | false |
-    When I update product "product1" stock with following information:
-      | use_advanced_stock_management | true  |
-      | depends_on_stock              | false |
-    Then product "product1" should have following stock information:
-      | use_advanced_stock_management | true  |
-      | depends_on_stock              | false |
-
-  Scenario: I update pack stock type
+  Scenario: I update product pack stock type
     Given I add product "productPack1" with following information:
       | name[en-US] | weird sunglasses box |
       | is_virtual  | false                |
     And product "productPack1" type should be standard
     And I add product "product2" with following information:
-      | name[en-US] | weird sunglasses box |
-      | is_virtual  | false                |
+      | name[en-US] | shady sunglasses |
+      | is_virtual  | false            |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -124,80 +77,6 @@ Feature: Update product stock from Back Office (BO)
     Then I should get error that pack stock type is invalid
     And product "productPack1" should have following stock information:
       | pack_stock_type | both |
-
-  Scenario: I update product pack stock type which depends on stock
-    Given I add product "productPack1" with following information:
-      | name[en-US] | weird sunglasses box |
-      | is_virtual  | false                |
-    And product "productPack1" type should be standard
-    And I add product "product2" with following information:
-      | name[en-US] | shady sunglasses |
-      | is_virtual  | false            |
-    And product "product2" type should be standard
-    And I add product "product3" with following information:
-      | name[en-US] | unicorn boc case |
-      | is_virtual  | false            |
-    And product "product3" type should be standard
-    When I update pack "productPack1" with following product quantities:
-      | product  | quantity |
-      | product2 | 5        |
-      | product3 | 1        |
-    Then product "productPack1" type should be pack
-    # Can not depends on stock since default config depends on product
-    Given shop configuration for "PS_PACK_STOCK_TYPE" is set to 1
-    When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | true |
-      | depends_on_stock              | true |
-    And I should get error that pack stock type is incompatible
-    # Can not depends on stock since default config depends on both
-    Given shop configuration for "PS_PACK_STOCK_TYPE" is set to 2
-    When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | true |
-      | depends_on_stock              | true |
-    And I should get error that pack stock type is incompatible
-    # Let's ignore default configuration If it depends on pack stock only it is compatible with depends on stock
-    When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | true      |
-      | depends_on_stock              | true      |
-      | pack_stock_type               | pack_only |
-    Then product "productPack1" should have following stock information:
-      | use_advanced_stock_management | true      |
-      | depends_on_stock              | true      |
-      | pack_stock_type               | pack_only |
-    # If pack depends on product or both it is still not possible
-    When I update product "productPack1" stock with following information:
-      | pack_stock_type | products_only |
-    And I should get error that pack stock type is incompatible
-    When I update product "productPack1" stock with following information:
-      | pack_stock_type | both |
-    And I should get error that pack stock type is incompatible
-    # Unless all the pack's products have advanced stock management
-    When I update product "product2" stock with following information:
-      | use_advanced_stock_management | true |
-    Then product "product2" should have following stock information:
-      | use_advanced_stock_management | true |
-    When I update product "productPack1" stock with following information:
-      | pack_stock_type | products_only |
-    And I should get error that pack stock type is incompatible
-    # I said ALL of them
-    When I update product "product3" stock with following information:
-      | use_advanced_stock_management | true |
-    Then product "product3" should have following stock information:
-      | use_advanced_stock_management | true |
-    When I update product "productPack1" stock with following information:
-      | pack_stock_type | products_only |
-    Then product "productPack1" should have following stock information:
-      | pack_stock_type | products_only |
-    # Of course stock type on both works as well
-    When I update product "productPack1" stock with following information:
-      | pack_stock_type | both |
-    Then product "productPack1" should have following stock information:
-      | pack_stock_type | both |
-    # We can even switch back to default configuration
-    When I update product "productPack1" stock with following information:
-      | pack_stock_type | default |
-    Then product "productPack1" should have following stock information:
-      | pack_stock_type | default |
 
   Scenario: I update product out of stock
     Given I add product "product1" with following information:
