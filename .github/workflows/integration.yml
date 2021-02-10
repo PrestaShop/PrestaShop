@@ -1,8 +1,8 @@
 name: Behat
 on: [push, pull_request]
 jobs:
-    behat:
-        name: Behat
+    integration:
+        name: Integration tests
         runs-on: ubuntu-latest
         strategy:
             matrix:
