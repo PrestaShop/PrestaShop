@@ -41,8 +41,8 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given order :orderReference has customer :customerReference
      *
-     * @param string $orderId
-     * @param string $customerId
+     * @param string $orderReference
+     * @param string $customerReference
      */
     public function orderHasCustomer(string $orderReference, string $customerReference)
     {
