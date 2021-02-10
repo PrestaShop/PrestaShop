@@ -20,6 +20,7 @@ class Home extends FOBasePage {
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
+    this.quickViewCloseButton = `${this.quickViewModalDiv} button.close`;
     this.quickViewProductName = `${this.quickViewModalDiv} h1`;
     this.quickViewRegularPrice = `${this.quickViewModalDiv} span.regular-price`;
     this.quickViewProductPrice = `${this.quickViewModalDiv} div.current-price span[itemprop="price"]`;
@@ -185,6 +186,17 @@ class Home extends FOBasePage {
       coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
       thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'src'),
     };
+  }
+
+  /**
+   * Close quick view modal
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async closeQuickViewModal(page) {
+    await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
+
+    return this.elementVisible(page, this.quickViewModalDiv);
   }
 
   /**

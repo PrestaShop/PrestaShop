@@ -152,4 +152,11 @@ describe('Product quick view', async () => {
       expect(result.thumbImage).to.contains(firstProductData.thumb_image),
     ]);
   });
+
+  it('should close quick option modal and check it', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
+
+    const isQuickViewModalClosed = await homePage.closeQuickViewModal(page);
+    await expect(isQuickViewModalClosed).to.be.false;
+  });
 });
