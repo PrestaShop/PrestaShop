@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command;
 
-use DateTime;
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
@@ -299,17 +298,17 @@ class UpdateProductStockInformationCommand
     /**
      * @return DateTimeInterface|null
      */
-    public function getAvailableDate(): ?DateTime
+    public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
     }
 
     /**
-     * @param DateTime $availableDate
+     * @param DateTimeInterface $availableDate
      *
      * @return UpdateProductStockInformationCommand
      */
-    public function setAvailableDate(DateTime $availableDate): UpdateProductStockInformationCommand
+    public function setAvailableDate(DateTimeInterface $availableDate): UpdateProductStockInformationCommand
     {
         $this->availableDate = $availableDate;
 
