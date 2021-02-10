@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValue
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\ValueObject\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -97,7 +99,7 @@ class ProductFeatureValueUpdater
 
     /**
      * @param ProductId $productId
-     * @param array $productFeatureValues
+     * @param ProductFeatureValue[] $productFeatureValues
      *
      * @return FeatureValueId[]
      *
@@ -113,10 +115,18 @@ class ProductFeatureValueUpdater
     {
         // First assert that all entities exist
         $this->productRepository->assertProductExists($productId);
+        $previousFeatureIds = [];
         foreach ($productFeatureValues as $productFeatureValue) {
             $this->featureRepository->assertExists($productFeatureValue->getFeatureId());
             if (null !== $productFeatureValue->getFeatureValueId()) {
-                $this->featureValueRepository->assertExists($productFeatureValue->getFeatureValueId());
+                $featureValue = $this->featureValueRepository->get($productFeatureValue->getFeatureValueId());
+                if ((int) $featureValue->id_feature !== $productFeatureValue->getFeatureId()->getValue()) {
+                    throw new InvalidAssociatedFeatureException('You cannot associate a value to another feature.');
+                }
+                if (in_array($productFeatureValue->getFeatureValueId()->getValue(), $previousFeatureIds)) {
+                    throw new DuplicateFeatureValueAssociationException('You cannot associate the same feature value more than once.');
+                }
+                $previousFeatureIds[] = $productFeatureValue->getFeatureValueId()->getValue();
             }
         }
 

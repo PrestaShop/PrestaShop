@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeatureValuesFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use RuntimeException;
@@ -190,5 +192,21 @@ class UpdateProductFeatureValuesFeatureContext extends AbstractProductFeatureCon
                 count($productFeatureValues)
             ));
         }
+    }
+
+    /**
+     * @Then I should get an error that a feature can only be associated once
+     */
+    public function assertDuplicateException(): void
+    {
+        $this->assertLastErrorIs(DuplicateFeatureValueAssociationException::class);
+    }
+
+    /**
+     * @Then I should get an error that a feature value cannot be associated to another feature
+     */
+    public function assertInvalidFeatureAssociation(): void
+    {
+        $this->assertLastErrorIs(InvalidAssociatedFeatureException::class);
     }
 }
