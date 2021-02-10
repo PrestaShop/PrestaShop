@@ -31,20 +31,45 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCus
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder;
+use RuntimeException;
 
 class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
+    /**
+     * @var CustomizationFieldsCommandBuilder
+     */
+    private $customizationFieldsCommandBuilder;
+
+    public function setUp()
+    {
+        $this->customizationFieldsCommandBuilder = new CustomizationFieldsCommandBuilder();
+    }
+
     /**
      * @dataProvider getExpectedCommands
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new CustomizationFieldsCommandBuilder();
-        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommand($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    public function testThrowsExceptionWhenEmptyCustomizationFieldsArrayIsProvided(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Empty customization fields array provided in PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand. To remove customization fields use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand');
+
+        $this->customizationFieldsCommandBuilder->buildCommand(
+            $this->getProductId(),
+            [
+                'customizations' => [
+                    'customization_fields' => [],
+                ],
+            ]
+        );
     }
 
     public function getExpectedCommands()
@@ -52,6 +77,13 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
         yield [
             [
                 'how did I get here?' => ['useless val'],
+            ],
+            [],
+        ];
+
+        yield [
+            [
+                'customizations' => null,
             ],
             [],
         ];
@@ -98,23 +130,25 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
         yield [
             [
                 'customizations' => [
-                    [
-                        'type' => 1,
-                        'name' => $localizedNames,
-                        'required' => 0,
-                        'id' => '3',
-                    ],
-                    [
-                        'type' => 1,
-                        'name' => $localizedNames,
-                        'required' => false,
-                        'id' => '0',
-                    ],
-                    [
-                        'type' => '0',
-                        'name' => $localizedNames,
-                        'required' => true,
-                        'id' => 0,
+                    'customization_fields' => [
+                        [
+                            'type' => 1,
+                            'name' => $localizedNames,
+                            'required' => 0,
+                            'id' => '3',
+                        ],
+                        [
+                            'type' => 1,
+                            'name' => $localizedNames,
+                            'required' => false,
+                            'id' => '0',
+                        ],
+                        [
+                            'type' => '0',
+                            'name' => $localizedNames,
+                            'required' => true,
+                            'id' => 0,
+                        ],
                     ],
                 ],
             ],
