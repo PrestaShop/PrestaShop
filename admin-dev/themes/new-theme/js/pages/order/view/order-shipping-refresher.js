@@ -25,19 +25,23 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import OrderShippingManager from '@pages/order/order-shipping-manager';
 
 const $ = window.$;
 
 export default class OrderShippingRefresher {
     constructor() {
         this.router = new Router();
+        this.orderShippingManager = new OrderShippingManager();
+        this.orderShippingManager.initOrderShippingUpdateEventHandler();
     }
 
     refresh(orderId) {
         $.getJSON(this.router.generate('admin_orders_get_shipping', {orderId}))
             .then((response) => {
-                $(OrderViewPageMap.orderShippingTabCount).text(response.total);
-                $(OrderViewPageMap.orderShippingTabBody).html(response.html);
+              $(OrderViewPageMap.orderShippingTabCount).text(response.total);
+              $(OrderViewPageMap.orderShippingTabBody).html(response.html);
+              this.orderShippingManager.initOrderShippingUpdateEventHandler();
             });
     }
 }
