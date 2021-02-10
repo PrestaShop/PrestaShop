@@ -20,11 +20,22 @@ class Home extends FOBasePage {
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
-    this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
+    this.quickViewProductName = `${this.quickViewModalDiv} h1`;
+    this.quickViewRegularPrice = `${this.quickViewModalDiv} span.regular-price`;
+    this.quickViewProductPrice = `${this.quickViewModalDiv} div.current-price span[itemprop="price"]`;
+    this.quickViewDiscountPercentage = `${this.quickViewModalDiv} div.current-price span.discount-percentage`;
+    this.quickViewTaxShippingDeliveryLabel = `${this.quickViewModalDiv} div.tax-shipping-delivery-label`;
+    this.quickViewShortDescription = `${this.quickViewModalDiv} div#product-description-short`;
+    this.quickViewProductVariants = `${this.quickViewModalDiv} div.product-variants`;
+    this.quickViewProductSize = `${this.quickViewProductVariants} select#group_1`;
+    this.quickViewProductColor = `${this.quickViewProductVariants} ul#group_2`;
+    this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
+    this.quickViewThumbImage = `${this.quickViewModalDiv} img.js-thumb`;
+    this.quickViewQuantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
+    this.quickViewFacebookSocialSharing = `${this.quickViewModalDiv} .facebook a`;
+    this.quickViewTwitterSocialSharing = `${this.quickViewModalDiv} .twitter a`;
+    this.quickViewPinterestSocialSharing = `${this.quickViewModalDiv} .pinterest a`;
     this.addToCartButton = `${this.quickViewModalDiv} button[data-button-action='add-to-cart']`;
-    this.facebookSocialSharing = `${this.quickViewModalDiv} .facebook a`;
-    this.twitterSocialSharing = `${this.quickViewModalDiv} .twitter a`;
-    this.pinterestSocialSharing = `${this.quickViewModalDiv} .pinterest a`;
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
@@ -148,7 +159,7 @@ class Home extends FOBasePage {
    */
   async addProductToCartByQuickView(page, id, quantity_wanted = 1) {
     await this.quickViewProduct(page, id);
-    await this.setValue(page, this.quantityWantedInput, quantity_wanted.toString());
+    await this.setValue(page, this.quickViewQuantityWantedInput, quantity_wanted.toString());
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
@@ -158,10 +169,31 @@ class Home extends FOBasePage {
   /**
    * Get product details from quick view modal
    * @param page
+   * @returns {Promise<{discountPercentage: *, thumbImage: *, size: *, color: *, price: *, taxShippingDeliveryLabel: *,
+   * regularPrice: *, coverImage: *, name: *, shortDescription: *}>}
+   */
+  async getProductDetailsFromQuickViewModal(page) {
+    return {
+      name: await this.getTextContent(page, this.quickViewProductName),
+      regularPrice: parseFloat((await this.getTextContent(page, this.quickViewRegularPrice)).replace('€', '')),
+      price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
+      discountPercentage: await this.getTextContent(page, this.quickViewDiscountPercentage),
+      taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
+      shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
+      size: await this.getTextContent(page, this.quickViewProductSize),
+      color: await this.getTextContent(page, this.quickViewProductColor, false),
+      coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
+      thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'src'),
+    };
+  }
+
+  /**
+   * Get product details from blockCart modal
+   * @param page
    * @returns {Promise<{quantity: number, size: *, color: *, price: *, name: *, cartShipping: *, cartSubtotal: *,
    * totalTaxIncl: *, cartProductsCount: number}>}
    */
-  async getProductDetail(page) {
+  async getProductDetailsFromBlockCartModal(page) {
     return {
       name: await this.getTextContent(page, this.productName),
       price: await this.getTextContent(page, this.productPrice),
@@ -195,15 +227,15 @@ class Home extends FOBasePage {
     let selector;
     switch (socialSharing) {
       case 'facebook':
-        selector = this.facebookSocialSharing;
+        selector = this.quickViewFacebookSocialSharing;
         break;
 
       case 'twitter':
-        selector = this.twitterSocialSharing;
+        selector = this.quickViewTwitterSocialSharing;
         break;
 
       case 'pinterest':
-        selector = this.pinterestSocialSharing;
+        selector = this.quickViewPinterestSocialSharing;
         break;
 
       default:

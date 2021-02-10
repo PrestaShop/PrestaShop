@@ -15,6 +15,7 @@ const baseContext = 'functional_FO_productPage_quickView';
 
 // Import data
 const {customCartData} = require('@data/FO/cart');
+const {firstProductData} = require('@data/FO/product');
 
 let browserContext;
 let page;
@@ -48,7 +49,7 @@ describe('Product quick view', async () => {
 
     await homePage.addProductToCartByQuickView(page, 1, 1);
 
-    const result = await homePage.getProductDetail(page);
+    const result = await homePage.getProductDetailsFromBlockCartModal(page);
     await Promise.all([
       expect(result.name).to.equal(customCartData.firstProduct.name),
       expect(result.price).to.equal(customCartData.firstProduct.price),
@@ -80,7 +81,7 @@ describe('Product quick view', async () => {
 
     await homePage.addProductToCartByQuickView(page, 1, 2);
 
-    const result = await homePage.getProductDetail(page);
+    const result = await homePage.getProductDetailsFromBlockCartModal(page);
     await Promise.all([
       expect(result.name).to.equal(customCartData.firstProduct.name),
       expect(result.price).to.equal(customCartData.firstProduct.price),
@@ -132,5 +133,23 @@ describe('Product quick view', async () => {
     await expect(url).to.contains('pinterest');
 
     page = await homePage.closePage(browserContext, page, 0);
+  });
+
+  it('should check product information from quick view modal', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
+
+    const result = await homePage.getProductDetailsFromQuickViewModal(page);
+    await Promise.all([
+      expect(result.name.toUpperCase()).to.equal(firstProductData.name),
+      expect(result.regularPrice).to.equal(firstProductData.regular_price),
+      expect(result.price).to.equal(firstProductData.price),
+      expect(result.discountPercentage).to.equal(firstProductData.discount_percentage),
+      expect(result.taxShippingDeliveryLabel).to.equal(firstProductData.tax_shipping_delivery),
+      expect(result.shortDescription).to.equal(firstProductData.short_description),
+      expect(result.size).to.equal(firstProductData.size),
+      expect(result.color).to.equal(firstProductData.color),
+      expect(result.coverImage).to.contains(firstProductData.cover_image),
+      expect(result.thumbImage).to.contains(firstProductData.thumb_image),
+    ]);
   });
 });
