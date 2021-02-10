@@ -24,7 +24,7 @@
  *#}
 {%
   set moduleImage = module.attributes.img is null ?
-    public constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo :
+    constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo :
     module.attributes.img
 %}
 <tr>
