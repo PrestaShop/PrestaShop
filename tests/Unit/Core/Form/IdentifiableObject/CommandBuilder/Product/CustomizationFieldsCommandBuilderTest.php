@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
@@ -40,7 +41,7 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
      */
     private $customizationFieldsCommandBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->customizationFieldsCommandBuilder = new CustomizationFieldsCommandBuilder();
     }
@@ -72,7 +73,7 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
         );
     }
 
-    public function getExpectedCommands()
+    public function getExpectedCommands(): Generator
     {
         yield [
             [
