@@ -60,8 +60,6 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
         $this->productStockUpdater->update(
             $command->getProductId(),
             new ProductStockProperties(
-                $command->useAdvancedStockManagement(),
-                $command->dependsOnStock(),
                 $command->getPackStockType(),
                 $command->getQuantity(),
                 $command->getOutOfStockType(),

@@ -160,22 +160,6 @@ class ProductStockUpdater
             $updatableProperties[] = 'available_date';
         }
 
-        if (null !== $properties->dependsOnStock()) {
-            $product->depends_on_stock = $properties->dependsOnStock();
-            $updatableProperties[] = 'depends_on_stock';
-        }
-
-        if (null !== $properties->useAdvancedStockManagement()) {
-            $product->advanced_stock_management = $properties->useAdvancedStockManagement();
-            $updatableProperties[] = 'advanced_stock_management';
-        }
-
-        // When advanced stock is being disabled depend_on_stock must be disabled automatically
-        if (false === $properties->useAdvancedStockManagement() && (bool) $product->depends_on_stock) {
-            $product->depends_on_stock = false;
-            $updatableProperties[] = 'depends_on_stock';
-        }
-
         return $updatableProperties;
     }
 
@@ -194,16 +178,6 @@ class ProductStockUpdater
         }
         if (null !== $properties->getLocation()) {
             $stockAvailable->location = $properties->getLocation();
-            $stockUpdateRequired = true;
-        }
-        if (null !== $properties->dependsOnStock()) {
-            $stockAvailable->depends_on_stock = $properties->dependsOnStock();
-            $stockUpdateRequired = true;
-        }
-
-        // When advanced stock is disabled depend_on_stock must be disabled automatically
-        if (!(bool) $product->advanced_stock_management && (bool) $stockAvailable->depends_on_stock) {
-            $stockAvailable->depends_on_stock = false;
             $stockUpdateRequired = true;
         }
 
