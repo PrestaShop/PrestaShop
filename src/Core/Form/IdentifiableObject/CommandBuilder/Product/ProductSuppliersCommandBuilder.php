@@ -82,7 +82,7 @@ final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInter
             'product_id' => $productId,
             'supplier_id' => $supplierId,
             'currency_id' => (int) $productSupplierData['currency_id'],
-            'reference' => $productSupplierData['reference'],
+            'reference' => (string) $productSupplierData['reference'],
             'price_tax_excluded' => (string) $productSupplierData['price_tax_excluded'],
             'combination_id' => (int) $productSupplierData['combination_id'],
             'product_supplier_id' => (int) $productSupplierData['product_supplier_id'],
