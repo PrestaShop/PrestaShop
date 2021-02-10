@@ -24,6 +24,7 @@
  */
 
 import _ from 'lodash';
+import EventMap from '../event-map.js';
 
 const {$} = window;
 
@@ -59,7 +60,16 @@ export default class ProductPartialUpdater {
     this.$productForm.submit(() => this.updatePartialForm());
     // 'dp.change' event allows tracking datepicker input changes
     this.$productForm.on('keyup change dp.change', ':input', () => this.updateSubmitButtonState());
+    this.watchCustomizations();
     this.initFormattedTextarea();
+  }
+
+  /**
+   * Watch events specifically related to customizations subform
+   */
+  watchCustomizations() {
+    this.eventEmitter.on(EventMap.customizations.customizationFieldAdded, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(EventMap.customizations.customizationFieldRemoved, () => this.updateSubmitButtonState());
   }
 
   /**

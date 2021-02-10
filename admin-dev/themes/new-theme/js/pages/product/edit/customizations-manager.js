@@ -24,6 +24,7 @@
  */
 
 import ProductMap from '../product-map.js';
+import EventMap from '../event-map.js';
 
 const {$} = window;
 
@@ -31,6 +32,7 @@ export default class CustomizationsManager {
   constructor() {
     this.$customizationsContainer = $(ProductMap.customizations.customizationsContainer);
     this.$customizationFieldsList = $(ProductMap.customizations.customizationFieldsList);
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
 
     this.init();
   }
@@ -46,12 +48,15 @@ export default class CustomizationsManager {
 
   addCustomizationField() {
     const prototype = this.$customizationFieldsList.data('prototype');
+    const index = this.getIndex();
     const newItem = prototype.replace(new RegExp(ProductMap.customizations.indexPlaceholder, 'g'), this.getIndex());
     this.$customizationFieldsList.append(newItem);
+    this.eventEmitter.emit(EventMap.customizations.customizationFieldAdded, {index});
   }
 
   removeCustomizationField(event) {
     $(event.currentTarget).closest(ProductMap.customizations.customizationFieldItem).remove();
+    this.eventEmitter.emit(EventMap.customizations.customizationFieldRemoved);
   }
 
   getIndex() {
