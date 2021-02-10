@@ -7,6 +7,7 @@ const helper = require('@utils/helpers');
 // Importing pages
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
+const productPage = require('@pages/FO/product');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -186,5 +187,32 @@ describe('Product quick view', async () => {
       expect(result.quantity).to.equal(combination.quantity),
       expect(result.totalPrice).to.equal(totalPrice),
     ]);
+  });
+
+  it('should select color on hover on product list and check it on product page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
+
+    await cartPage.goToHomePage(page);
+
+    const isHomePage = await homePage.isHomePage(page);
+    await expect(isHomePage).to.be.true;
+
+    await homePage.selectProductColor(page, 1, 'White');
+
+    let pageTitle = await productPage.getPageTitle(page);
+    await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+
+    const imageFirstColor = await productPage.getProductInformation(page);
+
+    await productPage.goToHomePage(page);
+
+    await homePage.selectProductColor(page, 1, 'Black');
+
+    pageTitle = await productPage.getPageTitle(page);
+    await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+
+    const imageSecondColor = await productPage.getProductInformation(page);
+
+    await expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
   });
 });

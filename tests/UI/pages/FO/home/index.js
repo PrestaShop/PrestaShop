@@ -12,6 +12,7 @@ class Home extends FOBasePage {
     this.productImg = number => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
+    this.productColorLink = (number, color) => `${this.productArticle(number)} .variant-links a[aria-label='${color}']`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
@@ -210,6 +211,26 @@ class Home extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
 
     return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
+  }
+
+  async selectProductColor(page, id, color) {
+    await page.hover(this.productImg(id));
+    let displayed = false;
+    /* eslint-disable no-await-in-loop */
+    // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
+    // and compare it with value 'block'
+    for (let i = 0; i < 10 && !displayed; i++) {
+      /* eslint-env browser */
+      displayed = await page.evaluate(
+        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+          .getPropertyValue('display') === 'block',
+        this.productDescriptionDiv(id),
+      );
+      await page.waitForTimeout(100);
+    }
+    /* eslint-enable no-await-in-loop */
+
+    await this.waitForSelectorAndClick(page, this.productColorLink(id, color));
   }
 
   // Block cart modal methods
