@@ -55,7 +55,7 @@
             <div class="js-modal-mask mask {if $imagesCount <= 5} nomargin {/if}">
               <ul class="product-images js-modal-product-images">
                 {foreach from=$product.images item=image}
-                  <li class="thumb-container">
+                  <li class="thumb-container js-thumb-container">
                     <img
                       data-image-large-src="{$image.large.url}"
                       class="thumb js-modal-thumb"
