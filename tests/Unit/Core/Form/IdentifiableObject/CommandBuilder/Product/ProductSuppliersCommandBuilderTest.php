@@ -85,7 +85,7 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                 [
                     'supplier_id' => 3,
                     'currency_id' => 5,
-                    'reference' => 'lel',
+                    'reference' => '',
                     'price_tax_excluded' => '50.65',
                     'combination_id' => 0,
                     'product_supplier_id' => 1,
@@ -110,7 +110,7 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                         [
                             'supplier_id' => 3,
                             'currency_id' => 5,
-                            'reference' => 'lel',
+                            'reference' => null,
                             'price_tax_excluded' => '50.65',
                             'combination_id' => null,
                             'product_supplier_id' => 1,
