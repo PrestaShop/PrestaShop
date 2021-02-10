@@ -76,8 +76,8 @@ export default class ProductRenderer {
         this.renderStock(
           $template.find(createOrderMap.listedProductQtyStock),
           $template.find(createOrderMap.listedProductQtyInput),
-          product.stock,
-          product.availableOutOfStock || (product.stock <= 0)
+          product.availableStock,
+          product.availableOutOfStock || (product.availableStock <= 0)
         );
         $template.find(createOrderMap.productTotalPriceField).text(product.price);
         $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);

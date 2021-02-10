@@ -83,7 +83,7 @@ class CartProduct
     /**
      * @var int
      */
-    private $stock;
+    private $availableStock;
 
     /**
      * @var bool
@@ -108,7 +108,7 @@ class CartProduct
      * @param string $price
      * @param string $imageLink
      * @param Customization|null $customization
-     * @param int $stock
+     * @param int $availableStock
      * @param bool $availableOutOfStock
      * @param bool $isGift
      */
@@ -123,7 +123,7 @@ class CartProduct
         string $price,
         string $imageLink,
         ?Customization $customization,
-        int $stock,
+        int $availableStock,
         bool $availableOutOfStock,
         bool $isGift = false
     ) {
@@ -137,7 +137,7 @@ class CartProduct
         $this->price = $price;
         $this->imageLink = $imageLink;
         $this->customization = $customization;
-        $this->stock = $stock;
+        $this->availableStock = $availableStock;
         $this->availableOutOfStock = $availableOutOfStock;
         $this->isGift = $isGift;
     }
@@ -225,9 +225,9 @@ class CartProduct
     /**
      * @return int
      */
-    public function getStock(): int
+    public function getAvailableStock(): int
     {
-        return $this->stock;
+        return $this->availableStock;
     }
 
     /**
