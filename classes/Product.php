@@ -278,7 +278,8 @@ class ProductCore extends ObjectModel
     public $id_color_default = 0;
 
     /**
-     * @since 1.5.0
+     * @deprecated since 1.7.8
+     * The advanced stock management feature is not maintained anymore
      *
      * @var bool Tells if the product uses the advanced stock management
      */
@@ -297,7 +298,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @deprecated since 1.7.8
-     * @see StockAvailable::$depends_on_stock instead
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore
      *
      * @var bool
      */
