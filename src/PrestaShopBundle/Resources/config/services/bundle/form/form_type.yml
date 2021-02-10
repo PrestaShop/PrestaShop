@@ -1340,10 +1340,16 @@ services:
         parent: 'form.type.translatable.aware'
         arguments:
             - '@prestashop.adapter.form.choice_provider.features_choice_provider'
-            - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
+            - '@form.type.sell.product.event_listener.feature_value_listener'
         public: true
         tags:
             - { name: form.type }
+
+    form.type.sell.product.event_listener.feature_value_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
+        public: true
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
