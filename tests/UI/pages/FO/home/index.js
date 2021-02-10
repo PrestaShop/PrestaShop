@@ -22,6 +22,9 @@ class Home extends FOBasePage {
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
     this.addToCartButton = `${this.quickViewModalDiv} button[data-button-action='add-to-cart']`;
+    this.facebookSocialSharing = `${this.quickViewModalDiv} .facebook a`;
+    this.twitterSocialSharing = `${this.quickViewModalDiv} .twitter a`;
+    this.pinterestSocialSharing = `${this.quickViewModalDiv} .pinterest a`;
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
@@ -30,13 +33,11 @@ class Home extends FOBasePage {
     this.productSize = `${this.blockCartModalDiv} .Size strong`;
     this.productColor = `${this.blockCartModalDiv} .Color strong`;
     this.productQuantity = `${this.blockCartModalDiv} .product-quantity`;
-
     this.cartContent = `${this.blockCartModalDiv} .cart-content`;
     this.cartProductsCount = `${this.cartContent} .cart-products-count`;
     this.cartShipping = `${this.cartContent} .shipping`;
     this.cartSubtotal = `${this.cartContent} .subtotals`;
     this.productTaxIncl = `${this.cartContent} .product-total .value`;
-
     this.blockCartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
   }
 
@@ -57,6 +58,56 @@ class Home extends FOBasePage {
    */
   async goToProductPage(page, id) {
     await this.clickAndWaitForNavigation(page, this.productImg(id));
+  }
+
+  /**
+   * Check product price
+   * @param page
+   * @param id, index of product in list of products
+   * @return {Promise<boolean>}
+   */
+  async isPriceVisible(page, id = 1) {
+    return this.elementVisible(page, this.productPrice(id), 1000);
+  }
+
+  /**
+   * Check new flag
+   * @param page
+   * @param id
+   * @returns {Promise<boolean>}
+   */
+  async isNewFlagVisible(page, id = 1) {
+    return this.elementVisible(page, this.newFlag(id), 1000);
+  }
+
+  /**
+   * Search product
+   * @param page
+   * @param productName
+   * @returns {Promise<void>}
+   */
+  async searchProduct(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    await page.keyboard.press('Enter');
+    await page.waitForNavigation();
+  }
+
+  /**
+   * Go to home category page by clicking on all products
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAllProductsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.allProductLink);
+  }
+
+  /**
+   * Get popular product title
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getPopularProductTitle(page) {
+    return this.getTextContent(page, this.popularProductTitle);
   }
 
   // Quick view methods
@@ -135,53 +186,31 @@ class Home extends FOBasePage {
   }
 
   /**
-   * Check product price
+   * Go to social sharing link
    * @param page
-   * @param id, index of product in list of products
-   * @return {Promise<boolean>}
-   */
-  async isPriceVisible(page, id = 1) {
-    return this.elementVisible(page, this.productPrice(id), 1000);
-  }
-
-  /**
-   * Check new flag
-   * @param page
-   * @param id
-   * @returns {Promise<boolean>}
-   */
-  async isNewFlagVisible(page, id = 1) {
-    return this.elementVisible(page, this.newFlag(id), 1000);
-  }
-
-  /**
-   * Search product
-   * @param page
-   * @param productName
+   * @param socialSharing
    * @returns {Promise<void>}
    */
-  async searchProduct(page, productName) {
-    await this.setValue(page, this.searchInput, productName);
-    await page.keyboard.press('Enter');
-    await page.waitForNavigation();
-  }
+  async goToSocialSharingLink(page, socialSharing) {
+    let selector;
+    switch (socialSharing) {
+      case 'facebook':
+        selector = this.facebookSocialSharing;
+        break;
 
-  /**
-   * Go to home category page by clicking on all products
-   * @param page
-   * @return {Promise<void>}
-   */
-  async goToAllProductsPage(page) {
-    await this.clickAndWaitForNavigation(page, this.allProductLink);
-  }
+      case 'twitter':
+        selector = this.twitterSocialSharing;
+        break;
 
-  /**
-   * Get popular product title
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getPopularProductTitle(page) {
-    return this.getTextContent(page, this.popularProductTitle);
+      case 'pinterest':
+        selector = this.pinterestSocialSharing;
+        break;
+
+      default:
+        throw new Error(`${socialSharing} was not found`);
+    }
+
+    return this.openLinkWithTargetBlank(page, selector, 'body');
   }
 }
 

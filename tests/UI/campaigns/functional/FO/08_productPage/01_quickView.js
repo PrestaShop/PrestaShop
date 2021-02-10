@@ -75,7 +75,7 @@ describe('Product quick view', async () => {
     await cartPage.goToHomePage(page);
   });
 
-  it('should change product quantity by quick view', async function () {
+  it('should change product quantity from quick view modal and check details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeQuantityByQuickView', baseContext);
 
     await homePage.addProductToCartByQuickView(page, 1, 2);
@@ -92,5 +92,45 @@ describe('Product quick view', async () => {
       expect(result.cartShipping).to.contains('Free'),
       expect(result.totalTaxIncl).to.contains('€45.89'),
     ]);
+  });
+
+  it('should proceed to checkout and delete product from the cart', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
+
+    await homePage.proceedToCheckout(page);
+
+    const pageTitle = await cartPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(cartPage.pageTitle);
+
+    await cartPage.deleteProduct(page, 1);
+
+    await cartPage.goToHomePage(page);
+  });
+
+  it('should check share links \'Facebook, Twitter and Pinterest\' from quick view modal', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkShareLinks', baseContext);
+
+    await homePage.quickViewProduct(page, 1);
+
+    page = await homePage.goToSocialSharingLink(page, 'facebook');
+
+    let url = await homePage.getCurrentURL(page);
+    await expect(url).to.contains('facebook');
+
+    page = await homePage.closePage(browserContext, page, 0);
+
+    page = await homePage.goToSocialSharingLink(page, 'twitter');
+
+    url = await homePage.getCurrentURL(page);
+    await expect(url).to.contains('twitter');
+
+    page = await homePage.closePage(browserContext, page, 0);
+
+    page = await homePage.goToSocialSharingLink(page, 'pinterest');
+
+    url = await homePage.getCurrentURL(page);
+    await expect(url).to.contains('pinterest');
+
+    page = await homePage.closePage(browserContext, page, 0);
   });
 });
