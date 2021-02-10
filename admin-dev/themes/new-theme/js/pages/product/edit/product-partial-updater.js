@@ -61,7 +61,17 @@ export default class ProductPartialUpdater {
     // 'dp.change' event allows tracking datepicker input changes
     this.$productForm.on('keyup change dp.change', ':input', () => this.updateSubmitButtonState());
     this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateSubmitButtonState());
+
+    this.watchCustomizations();
     this.initFormattedTextarea();
+  }
+
+  /**
+   * Watch events specifically related to customizations subform
+   */
+  watchCustomizations() {
+    this.eventEmitter.on(ProductEventMap.customizations.customizationFieldAdded, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.customizations.customizationFieldRemoved, () => this.updateSubmitButtonState());
   }
 
   /**
