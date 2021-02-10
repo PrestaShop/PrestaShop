@@ -70,6 +70,7 @@ class CartProduct
      * @var string
      */
     private $price;
+
     /**
      * @var string
      */

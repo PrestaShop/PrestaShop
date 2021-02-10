@@ -179,15 +179,15 @@ export default class ProductRenderer {
   /**
    * Updates stock text helper value
    *
-   * @param {object} inputStockCounter
-   * @param {object} inputQuantity
-   * @param {number} stock
-   * @param {boolean} infinitMax
+   * @param {object} inputStockCounter Text Help with the stock counter
+   * @param {object} inputQuantity Input for the stock
+   * @param {number} stock Available stock for the product
+   * @param {boolean} infiniteMax If the product order has no limits
    */
-  renderStock(inputStockCounter, inputQuantity, stock, infinitMax) {
+  renderStock(inputStockCounter, inputQuantity, stock, infiniteMax) {
     inputStockCounter.text(stock);
 
-    if (!infinitMax) {
+    if (!infiniteMax) {
       inputQuantity.attr('max', stock);
     } else {
       inputQuantity.removeAttr('max');

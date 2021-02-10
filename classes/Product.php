@@ -3887,6 +3887,11 @@ class ProductCore extends ObjectModel
         return false;
     }
 
+    /**
+     * @param int $out_of_stock
+     *
+     * @return bool|int Returns false is Stock Management is disabled, or the (int) configuration if it's enabled
+     */
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
         /** @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK */
