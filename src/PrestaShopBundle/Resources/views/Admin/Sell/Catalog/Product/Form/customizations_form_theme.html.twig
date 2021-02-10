@@ -14,14 +14,23 @@
 {%- block customization_field_row -%}
   <li class="form-group row customization-field-item">
     {{ form_widget(form.id) }}
-    <div class="col-md-5">{{ form_widget(form.name) }}</div>
-    <div class="col-md-4">{{ form_widget(form.type) }}</div>
+    <div class="col-md-5">
+      {{ form_widget(form.name) }}
+      {{ form_errors(form.name) }}
+    </div>
+    <div class="col-md-4">
+      {{ form_widget(form.type) }}
+      {{ form_errors(form.type) }}
+    </div>
     <div class="col-md-1">
       <button type="button" class="btn text-secondary remove-customization-btn">
         <i class="material-icons">delete</i>
       </button>
     </div>
-    <div class="col-md-2">{{ form_widget(form.required) }}</div>
+    <div class="col-md-2">
+      {{ form_widget(form.required) }}
+      {{ form_errors(form.required) }}
+    </div>
   </li>
 {%- endblock customization_field_row -%}
 
