@@ -47,14 +47,14 @@ final class CustomizationFieldsCommandBuilder implements ProductCommandBuilderIn
 
         $customizations = $formData['customizations'];
 
-        if (empty($customizations)) {
+        if (empty($customizations) || !isset($customizations['customization_fields'])) {
             return [new RemoveAllCustomizationFieldsFromProductCommand($productId->getValue())];
         }
 
         return [
             new SetProductCustomizationFieldsCommand(
                 $productId->getValue(),
-                $this->buildCustomizationFields($customizations)
+                $this->buildCustomizationFields($customizations['customization_fields'])
             ),
         ];
     }
