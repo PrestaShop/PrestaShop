@@ -72,10 +72,12 @@ class AdvancedFormType extends TranslatorAwareType
 
         if ($options['add_model_transformer'] instanceof DataTransformerInterface) {
             $builder->get('target')->addModelTransformer($options['add_model_transformer']);
+            $builder->addModelTransformer($options['add_model_transformer']);
         }
 
         if ($options['add_view_transformer'] instanceof DataTransformerInterface) {
             $builder->get('target')->addViewTransformer($options['add_view_transformer']);
+            $builder->addViewTransformer($options['add_view_transformer']);
         }
 
         if (isset($options['add_event_subscriber'])) {
