@@ -35,7 +35,6 @@ class ApiNode
     private $type;
     private $name;
     private $value;
-    private $values;
     private $attributes;
     private $nodes;
 
@@ -48,51 +47,97 @@ class ApiNode
         $this->nodes = $nodes;
     }
 
+    /**
+     * Create new ApiNode instance of type "value"
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return \ApiNode
+     */
     private static function value($name, $value = null)
     {
         return new ApiNode(self::TYPE_VALUE, $name, $value);
     }
 
-    private static function lang($name, $values = null)
+    /**
+     * Create new ApiNode instance of type "lang"
+     * Lang ApiNode serves as ApiNode with name. All the translated values are supposed to be children of that Node.
+     *
+     * @param string $name
+     *
+     * @return \ApiNode
+     */
+    private static function lang($name)
     {
-        return new ApiNode(self::TYPE_LANGUAGE, $name, $values);
+        return new ApiNode(self::TYPE_LANGUAGE, $name);
     }
 
+    /**
+     * Create new ApiNode instance of type "parent"
+     * Parent ApiNode serves as ApiNode with name and array of child nodes (and potentionally array of attributes)
+     * Its children nodes are meant to be rendered as associative arrays
+     *
+     * @param string $name
+     * @param array $attributes
+     *
+     * @return \ApiNode
+     */
     public static function parent($name = null, $attributes = [])
     {
         return new ApiNode(self::TYPE_PARENT, $name, null, $attributes);
     }
 
+    /**
+     * Create new ApiNode instance of type "list"
+     * List ApiNode serves as ApiNode with name and array of child nodes.
+     * Its children nodes are meant to be rendered as non-associative arrays
+     *
+     * @param string $name
+     * @param array $attributes
+     *
+     * @return \ApiNode
+     */
     public static function list($name = null, $attributes = [])
     {
         return new ApiNode(self::TYPE_LIST, $name, null, $attributes);
     }
 
+    /** @return string */
     public function getType()
     {
         return $this->type;
     }
 
+    /** @return string */
     public function getName()
     {
         return $this->name;
     }
 
+    /** @return string */
     public function getValue()
     {
         return $this->value;
     }
 
+    /** @return array|null */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
+    /** @return array|null */
     public function getNodes()
     {
         return $this->nodes;
     }
 
+    /**
+     * @param string $type
+     *
+     * @return self
+     */
     public function setType($type)
     {
         $this->type = $type;
@@ -100,6 +145,11 @@ class ApiNode
         return $this;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return self
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -107,6 +157,11 @@ class ApiNode
         return $this;
     }
 
+    /**
+     * @param string $value
+     *
+     * @return self
+     */
     public function setValue($value)
     {
         $this->value = $value;
@@ -114,6 +169,11 @@ class ApiNode
         return $this;
     }
 
+    /**
+     * @param array $attributes
+     *
+     * @return self
+     */
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
@@ -121,6 +181,11 @@ class ApiNode
         return $this;
     }
 
+    /**
+     * @param array $nodes
+     *
+     * @return self
+     */
     public function setNodes($nodes)
     {
         $this->nodes = $nodes;
@@ -128,12 +193,22 @@ class ApiNode
         return $this;
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     *
+     * @return self
+     */
     public function addAttribute($name, $value)
     {
         $this->attributes[$name] = $value;
+
+        return $this;
     }
 
     /**
+     * Appends $node as child to current ApiNode
+     *
      * @param ApiNode $node
      *
      * @return ApiNode self
@@ -146,6 +221,8 @@ class ApiNode
     }
 
     /**
+     * Create new ApiNode of type "value" and appends it as child to current ApiNode
+     *
      * @param string $name
      * @param mixed $value
      *
@@ -160,6 +237,8 @@ class ApiNode
     }
 
     /**
+     * Create new ApiNode of type "lang" and appends it as child to current ApiNode
+     *
      * @param string $name
      * @param array $values
      *
@@ -174,6 +253,8 @@ class ApiNode
     }
 
     /**
+     * Create new ApiNode of type "parent" and appends it as child to current ApiNode
+     *
      * @param string $name
      * @param array|null $attributes
      *
@@ -188,6 +269,8 @@ class ApiNode
     }
 
     /**
+     * Create new ApiNode of type "list" and appends it as child to current ApiNode
+     *
      * @param string $name
      * @param array|null $attributes
      *
@@ -201,6 +284,13 @@ class ApiNode
         return $newNode;
     }
 
+    /**
+     * Transform $field array into ApiNode and appends it as child to current node
+     *
+     * @param array $field
+     *
+     * @return ApiNode
+     */
     public function addField($field)
     {
         $newNode = self::value($field['sqlId']);
