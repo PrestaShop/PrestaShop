@@ -75,5 +75,5 @@ $(() => {
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
   new ProductSuppliersManager();
-  new FeatureValuesManager('admin_feature_get_feature_values');
+  new FeatureValuesManager(window.prestashop.instance.eventEmitter);
 });

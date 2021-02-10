@@ -26,13 +26,17 @@
 import ProductMap from '@pages/product/product-map';
 import Router from '@components/router';
 import ConfirmModal from '@components/modal';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
 export default class FeatureValuesManager {
-  constructor(featureValuesRoute) {
+  /**
+   * @param eventEmitter {EventEmitter}
+   */
+  constructor(eventEmitter) {
     this.router = new Router();
-    this.featureValuesRoute = featureValuesRoute;
+    this.eventEmitter = eventEmitter;
     this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
     this.$collectionRowsContainer = $(ProductMap.featureValues.collectionRowsContainer);
 
@@ -68,6 +72,7 @@ export default class FeatureValuesManager {
         },
         () => {
           $collectionRow.remove();
+          this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
         },
       );
       modal.show();
@@ -111,7 +116,7 @@ export default class FeatureValuesManager {
       $featureValueSelector.val('');
       $customFeatureIdInput.val('');
 
-      $.get(this.router.generate(this.featureValuesRoute, {idFeature}))
+      $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
         .then((featureValuesData) => {
           $featureValueSelector.prop('disabled', featureValuesData.length === 0);
           $featureValueSelector.empty();
