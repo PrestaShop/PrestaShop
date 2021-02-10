@@ -53,7 +53,7 @@ final class CustomizationFieldTypeChoiceProvider implements FormChoiceProviderIn
     public function getChoices()
     {
         return [
-            $this->translator->trans('Text', [], 'Admin.Global') => CustomizationFieldType::TYPE_FILE,
+            $this->translator->trans('Text', [], 'Admin.Global') => CustomizationFieldType::TYPE_TEXT,
             $this->translator->trans('File', [], 'Admin.Global') => CustomizationFieldType::TYPE_FILE,
         ];
     }
