@@ -61,7 +61,6 @@ class CustomizationFieldType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //@todo: add constraints. customization has max length (and for some reason min length in ProductCustomFieldType)
         $builder
             ->add('id', HiddenType::class)
             ->add('name', TranslatableType::class, [
