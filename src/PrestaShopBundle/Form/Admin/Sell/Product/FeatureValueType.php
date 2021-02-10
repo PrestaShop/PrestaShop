@@ -139,10 +139,6 @@ class FeatureValueType extends TranslatorAwareType
                     'data-toggle' => 'select2',
                     'class' => 'feature-value-selector',
                 ],
-            ], [
-                // Choice type have automatic transformers to check value is in the choices option, since we updated
-                // this value we need new transformers, so we don't clone the previous ones
-                'clone_view_transformers' => false,
             ]);
             $form->add($newFeatureValueForm);
         });
