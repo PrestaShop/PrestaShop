@@ -48,7 +48,12 @@ class StockAvailableCore extends ObjectModel
     /** @var int the quantity available for sale */
     public $quantity = 0;
 
-    /** @var bool determine if the available stock value depends on physical stock */
+    /**
+     * @deprecated since 1.7.8
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore
+     *
+     * @var bool determine if the available stock value depends on physical stock
+     */
     public $depends_on_stock = false;
 
     /**
