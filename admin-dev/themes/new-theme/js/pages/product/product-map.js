@@ -50,11 +50,11 @@ export default {
     targetInput: '#product_redirect_option_target',
   },
   customizations: {
-    customizationsContainer: '#productCustomizations',
-    customizationFieldsList: '#customizationFieldsList',
-    addCustomizationBtn: '#addCustomizationBtn',
-    removeCustomizationBtn: '#removeCustomizationBtn',
+    customizationsContainer: '#product-customizations',
+    customizationFieldsList: '#customization-fields-list',
+    addCustomizationBtn: '#add-customization-btn',
+    removeCustomizationBtn: '#remove-customization-btn',
     indexPlaceholder: '__CUSTOMIZATION_FIELD_INDEX__',
-    customizationFieldItem: '.customizationFieldItem',
+    customizationFieldItem: '.customization-field-item',
   },
 };
