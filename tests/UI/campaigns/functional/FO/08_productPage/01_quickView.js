@@ -16,9 +16,12 @@ const baseContext = 'functional_FO_productPage_quickView';
 // Import data
 const {customCartData} = require('@data/FO/cart');
 const {firstProductData} = require('@data/FO/product');
+const ProductFaker = require('@data/faker/product');
 
 let browserContext;
 let page;
+const combination = new ProductFaker({size: 'M', color: 'Black', quantity: 4});
+const totalPrice = 91.78;
 
 /*
 
@@ -157,6 +160,31 @@ describe('Product quick view', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
 
     const isQuickViewModalClosed = await homePage.closeQuickViewModal(page);
-    await expect(isQuickViewModalClosed).to.be.false;
+    await expect(isQuickViewModalClosed).to.be.true;
+  });
+
+  it('should change combination on popup and check it in cart page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
+
+    await homePage.quickViewProduct(page, 1);
+    await homePage.changeCombinationAndAddToCart(page, combination);
+
+    const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+    await expect(notificationsNumber).to.be.equal(combination.quantity);
+
+    await homePage.proceedToCheckout(page);
+
+    const result = await cartPage.getProductDetail(page, 1);
+    await Promise.all([
+      expect(result.name.toUpperCase()).to.equal(firstProductData.name),
+      expect(result.regularPrice).to.equal(firstProductData.regular_price),
+      expect(result.price).to.equal(firstProductData.price),
+      expect(result.discountPercentage).to.equal(firstProductData.discount),
+      expect(result.size).to.equal(combination.size),
+      expect(result.color).to.equal(combination.color),
+      expect(result.image).to.contains(firstProductData.cover_image),
+      expect(result.quantity).to.equal(combination.quantity),
+      expect(result.totalPrice).to.equal(totalPrice),
+    ]);
   });
 });

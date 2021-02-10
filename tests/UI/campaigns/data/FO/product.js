@@ -4,6 +4,7 @@ module.exports = {
     regular_price: 28.68,
     price: 22.94,
     discount_percentage: 'Save 20%',
+    discount: '-20%',
     tax_shipping_delivery: 'Tax included',
     short_description: 'Regular fit, round neckline, short sleeves. Made of extra long staple pima cotton.',
     size: 'S M L XL',

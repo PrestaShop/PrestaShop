@@ -168,6 +168,19 @@ class Home extends FOBasePage {
   }
 
   /**
+   * Change combination and add to cart
+   * @param page
+   * @param combination
+   * @returns {Promise<void>}
+   */
+  async changeCombinationAndAddToCart(page, combination) {
+    await this.selectByVisibleText(page, this.quickViewProductSize, combination.size);
+    await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${combination.color}']`);
+    await this.setValue(page, this.quickViewQuantityWantedInput, combination.quantity);
+    await this.waitForSelectorAndClick(page, this.addToCartButton);
+  }
+
+  /**
    * Get product details from quick view modal
    * @param page
    * @returns {Promise<{discountPercentage: *, thumbImage: *, size: *, color: *, price: *, taxShippingDeliveryLabel: *,
@@ -196,9 +209,10 @@ class Home extends FOBasePage {
   async closeQuickViewModal(page) {
     await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
 
-    return this.elementVisible(page, this.quickViewModalDiv);
+    return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
   }
 
+  // Block cart modal methods
   /**
    * Get product details from blockCart modal
    * @param page
