@@ -38,6 +38,16 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 final class CleanHtmlValidator extends ConstraintValidator
 {
     /**
+     * @var bool
+     */
+    private $allowIframe;
+
+    public function __construct(bool $allowIframe)
+    {
+        $this->allowIframe = $allowIframe;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
@@ -57,7 +67,8 @@ final class CleanHtmlValidator extends ConstraintValidator
         $containsScriptTags = preg_match('/<[\s]*script/ims', $value) || preg_match('/.*script\:/ims', $value);
         $containsJavascriptEvents = preg_match('/(' . $this->getJavascriptEvents() . ')[\s]*=/ims', $value);
 
-        if ($containsScriptTags || $containsJavascriptEvents) {
+        $iframe = !$this->allowIframe && preg_match('/<[\s]*(i?frame|form|input|embed|object)/ims', $value);
+        if ($containsScriptTags || $containsJavascriptEvents || $iframe) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter('%s', $this->formatValue($value))
