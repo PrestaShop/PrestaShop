@@ -69,6 +69,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
 
     /**
      * @Given product :productReference should not have a default combination
+     * @Given product :productReference does not have a default combination
      *
      * @param string $productReference
      */
