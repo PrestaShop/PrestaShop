@@ -2,6 +2,17 @@ services:
     _defaults:
         public: true
 
+    prestashop.translation.view.translation_tree:
+        class: PrestaShopBundle\Translation\View\TranslationsTreeBuilder
+        arguments:
+            - '@router.default'
+            - '@prestashop.translation.translation_catalogue_builder'
+
+    prestashop.translation.translation_catalogue_builder:
+        class: PrestaShopBundle\Translation\TranslationCatalogueBuilder
+        arguments:
+            - '@prestashop.translation.provider.catalogue_provider_factory'
+
     #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:
         class: PrestaShopBundle\Translation\Factory\TranslationsFactory
@@ -19,6 +30,12 @@ services:
         alias: "prestashop.translation.theme_translations_factory"
 
     #TRANSLATIONS PROVIDERS
+    prestashop.translation.provider.catalogue_provider_factory:
+        class: PrestaShopBundle\Translation\Provider\CatalogueProviderFactory
+        arguments:
+            - '@prestashop.translation.database_loader'
+            - "%translations_dir%"
+
     prestashop.translation.backoffice_provider:
         class: PrestaShopBundle\Translation\Provider\BackOfficeProvider
         arguments:

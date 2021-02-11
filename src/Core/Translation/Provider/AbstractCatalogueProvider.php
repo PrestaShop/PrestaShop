@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,16 +23,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Translation\Finder\TranslationFinder as CoreTranslationFinder;
-
-/**
- * Helper used to build a MessageCataloguer from xliff files
- *
- * @deprecated Please use PrestaShop\PrestaShop\Core\Translation\Provider\TranslationFinder instead
- */
-class TranslationFinder extends CoreTranslationFinder
+class AbstractCatalogueProvider
 {
+    /**
+     * Validate if an array only have strings in it.
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    protected function assertIsArrayOfString(array $array): bool
+    {
+        return count($array) === count(array_filter($array, 'is_string'));
+    }
 }
