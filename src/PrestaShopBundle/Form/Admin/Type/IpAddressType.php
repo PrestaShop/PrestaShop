@@ -58,6 +58,7 @@ class IpAddressType extends TextType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
             'current_ip' => '',
         ])->setAllowedTypes('current_ip', 'string');
@@ -68,6 +69,7 @@ class IpAddressType extends TextType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        parent::buildView($view, $form, $options);
         $view->vars['currentIp'] = $options['current_ip'];
     }
 }
