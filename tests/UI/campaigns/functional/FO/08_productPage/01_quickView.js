@@ -3,11 +3,17 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
+const loginCommon = require('@commonTests/loginBO');
+const files = require('@utils/files');
 
 // Importing pages
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const productPage = require('@pages/FO/product');
+const boDashboardPage = require('@pages/BO/dashboard');
+const boProductsPage = require('@pages/BO/catalog/products');
+const boAddProductPage = require('@pages/BO/catalog/products/add');
+const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -23,6 +29,11 @@ let browserContext;
 let page;
 const combination = new ProductFaker({size: 'M', color: 'Black', quantity: 4});
 const totalPrice = 91.78;
+const productToCreate = {
+  type: 'Standard product',
+  productHasCombinations: false,
+};
+const productData = new ProductFaker(productToCreate);
 
 /*
 
@@ -214,5 +225,73 @@ describe('Product quick view', async () => {
     const imageSecondColor = await productPage.getProductInformation(page);
 
     await expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
+  });
+
+  describe('Go to BO and create product with 2 images', async () => {
+    before(async () => {
+      page = await helper.newTab(browserContext);
+
+      // Create products images
+      await Promise.all([
+        files.generateImage(`${productData.name}1.jpg`),
+        files.generateImage(`${productData.name}2.jpg`),
+      ]);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
+      );
+
+      await boProductsPage.closeSfToolBar(page);
+
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(boProductsPage.pageTitle);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      await boProductsPage.goToAddProductPage(page);
+
+      const createProductMessage = await boAddProductPage.createEditBasicProduct(page, productData);
+      await expect(createProductMessage).to.equal(boAddProductPage.settingUpdatedMessage);
+    });
+
+    after(async () => {
+      page = await boAddProductPage.closePage(browserContext, page, 0);
+
+      /* Delete the generated images */
+      await Promise.all([
+        files.deleteFile(`${productData.name}1.jpg`),
+        files.deleteFile(`${productData.name}2.jpg`),
+      ]);
+    });
+  });
+
+  describe('Check change product images on quick view modal', async () => {
+    it('should search for the created product and quick view', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchForProductAndQuickView', baseContext);
+
+      await homePage.searchProduct(page, productData.name);
+      await searchResultsPage.quickViewProduct(page, 1);
+    });
+
+    it('should verify when we change thumb image in quick view modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      const coverSecondImageURL = await searchResultsPage.selectThumbImage(page, 2);
+      const coverFirstImageURL = await searchResultsPage.selectThumbImage(page, 1);
+
+      await expect(coverSecondImageURL).to.not.equal(coverFirstImageURL);
+    });
   });
 });

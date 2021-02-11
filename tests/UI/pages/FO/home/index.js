@@ -32,7 +32,7 @@ class Home extends FOBasePage {
     this.quickViewProductSize = `${this.quickViewProductVariants} select#group_1`;
     this.quickViewProductColor = `${this.quickViewProductVariants} ul#group_2`;
     this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
-    this.quickViewThumbImage = `${this.quickViewModalDiv} img.js-thumb`;
+    this.quickViewThumbImage = `${this.quickViewModalDiv} img.js-thumb.selected`;
     this.quickViewQuantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
     this.quickViewFacebookSocialSharing = `${this.quickViewModalDiv} .facebook a`;
     this.quickViewTwitterSocialSharing = `${this.quickViewModalDiv} .twitter a`;
@@ -213,6 +213,13 @@ class Home extends FOBasePage {
     return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
   }
 
+  /**
+   * Select product color
+   * @param page
+   * @param id
+   * @param color
+   * @returns {Promise<void>}
+   */
   async selectProductColor(page, id, color) {
     await page.hover(this.productImg(id));
     let displayed = false;

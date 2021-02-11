@@ -95,6 +95,8 @@ class AddProduct extends BOBasePage {
    */
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
+    await this.uploadFilePath(page, '#product-images-dropzone', `${productData.name}1.jpg`);
+    await this.uploadFilePath(page, '.disabled.openfilemanager.dz-clickable', `${productData.name}2.jpg`);
     await page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await page.click(this.productShortDescriptionTab);

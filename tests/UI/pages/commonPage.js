@@ -361,6 +361,21 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Upload image path in all type
+   * @param page
+   * @param selector
+   * @param filePath
+   * @returns {Promise<void>}
+   */
+  async uploadFilePath(page, selector, filePath) {
+    // Set value when fileChooser is open
+    page.once('filechooser', async (fileChooser) => {
+      await fileChooser.setFiles(filePath);
+    });
+    await page.click(selector);
+  }
+
+  /**
    * Get a float price from text
    * @param page
    * @param selector
