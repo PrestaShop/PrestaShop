@@ -32,9 +32,8 @@ use CustomerSession;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteSessionException;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteCustomerSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteCustomerSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\CustomerSessionId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -92,7 +91,7 @@ class CustomerSessionRepository extends AbstractObjectModelRepository
      */
     public function delete(CustomerSessionId $customerSessionId): void
     {
-        $this->deleteObjectModel($this->get($customerSessionId), CannotDeleteProductException::class);
+        $this->deleteObjectModel($this->get($customerSessionId), CannotDeleteCustomerSessionException::class);
     }
 
     /**
@@ -106,7 +105,7 @@ class CustomerSessionRepository extends AbstractObjectModelRepository
         foreach ($customerSessionIds as $customerSessionId) {
             try {
                 $this->delete($customerSessionId);
-            } catch (CannotDeleteSessionException $e) {
+            } catch (CannotDeleteCustomerSessionException $e) {
                 $failedIds[] = $customerSessionId->getValue();
             }
         }
@@ -115,7 +114,7 @@ class CustomerSessionRepository extends AbstractObjectModelRepository
             return;
         }
 
-        throw new CannotBulkDeleteSessionException(
+        throw new CannotBulkDeleteCustomerSessionException(
             $failedIds,
             sprintf('Failed to delete following customers sessions: "%s"', implode(', ', $failedIds))
         );
