@@ -23,18 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+import {GridExtension} from '@PSTypes/grid';
+
+const {$}: Window = window;
 
 /**
  * Class is responsible for handling Grid events
  */
 export default class Grid {
+  id: string;
+
+  $container: JQuery;
+
   /**
    * Grid id
    *
    * @param {string} id
    */
-  constructor(id) {
+  constructor(id: string) {
     this.id = id;
     this.$container = $(`#${this.id}_grid`);
   }
@@ -44,7 +50,7 @@ export default class Grid {
    *
    * @returns {string}
    */
-  getId() {
+  getId(): string {
     return this.id;
   }
 
@@ -53,7 +59,7 @@ export default class Grid {
    *
    * @returns {jQuery}
    */
-  getContainer() {
+  getContainer(): JQuery {
     return this.$container;
   }
 
@@ -62,7 +68,7 @@ export default class Grid {
    *
    * @returns {jQuery}
    */
-  getHeaderContainer() {
+  getHeaderContainer(): JQuery {
     return this.$container.closest('.js-grid-panel').find('.js-grid-header');
   }
 
@@ -71,7 +77,7 @@ export default class Grid {
    *
    * @param {object} extension
    */
-  addExtension(extension) {
+  addExtension(extension: GridExtension): void {
     extension.extend(this);
   }
 }

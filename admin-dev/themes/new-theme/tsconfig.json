@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "./public/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "typeRoots": ["./js/types"],
+    "types": ["jquery"],
+    "paths": {
+      "@app/*": "js/app/*",
+      "@js/*": "js/*",
+      "@pages/*": "js/pages/*",
+      "@components/*": "js/components/*",
+      "@scss/*": "scss/*",
+      "@node_modules/*": "node_modules/*",
+      "@vue/*": "js/vue/*",
+      "@PSTypes/*": "js/types/*"
+    }
+  }
+}
