@@ -30,15 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 use StockAvailable;
 
@@ -86,29 +85,19 @@ class ProductStockUpdater
     }
 
     /**
-     * @param Product $product
-     * @param array $propertiesToUpdate
-     *
-     * @throws CoreException
-     * @throws ProductConstraintException
-     * @throws ProductPackConstraintException
-     * @throws ProductStockConstraintException
-     * @throws ProductStockException
+     * @param ProductId $productId
+     * @param ProductStockProperties $properties
      */
-    public function update(Product $product, array $propertiesToUpdate): void
+    public function update(ProductId $productId, ProductStockProperties $properties)
     {
-        // When advanced stock is disabled depend_on_stock must be disabled automatically
-        if (in_array('advanced_stock_management', $propertiesToUpdate)
-            && !in_array('depends_on_stock', $propertiesToUpdate)
-            && false === (bool) $product->advanced_stock_management) {
-            $product->depends_on_stock = false;
-            $propertiesToUpdate[] = 'depends_on_stock';
-        }
+        $product = $this->productRepository->get($productId);
+        $this->productRepository->partialUpdate(
+            $product,
+            $this->fillUpdatableProperties($product, $properties),
+            CannotUpdateProductException::FAILED_UPDATE_STOCK
+        );
 
-        $stockAvailable = $this->getStockAvailable($product);
-        $this->productRepository->partialUpdate($product, $propertiesToUpdate, CannotUpdateProductException::FAILED_UPDATE_STOCK);
-
-        $this->updateStockAvailable($product, $stockAvailable, $propertiesToUpdate);
+        $this->updateStockAvailable($product, $properties);
 
         if ($this->advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
@@ -117,31 +106,83 @@ class ProductStockUpdater
 
     /**
      * @param Product $product
-     * @param StockAvailable $stockAvailable
-     * @param array $propertiesToUpdate
+     * @param ProductStockProperties $properties
      *
-     * @throws CoreException
-     * @throws ProductStockException
+     * @return string[]|array<string, int[]>
      */
-    private function updateStockAvailable(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate): void
+    private function fillUpdatableProperties(
+        Product $product,
+        ProductStockProperties $properties
+    ): array {
+        $updatableProperties = [];
+
+        $localizedLaterLabels = $properties->getLocalizedAvailableLaterLabels();
+        if (null !== $localizedLaterLabels) {
+            $product->available_later = $localizedLaterLabels;
+            $updatableProperties['available_later'] = array_keys($localizedLaterLabels);
+        }
+
+        $localizedNowLabels = $properties->getLocalizedAvailableNowLabels();
+        if (null !== $localizedNowLabels) {
+            $product->available_now = $localizedNowLabels;
+            $updatableProperties['available_now'] = array_keys($localizedNowLabels);
+        }
+        if (null !== $properties->getLocation()) {
+            $product->location = $properties->getLocation();
+            $updatableProperties[] = 'location';
+        }
+        if (null !== $properties->isLowStockAlertEnabled()) {
+            $product->low_stock_alert = $properties->isLowStockAlertEnabled();
+            $updatableProperties[] = 'low_stock_alert';
+        }
+        if (null !== $properties->getLowStockThreshold()) {
+            $product->low_stock_threshold = $properties->getLowStockThreshold();
+            $updatableProperties[] = 'low_stock_threshold';
+        }
+        if (null !== $properties->getMinimalQuantity()) {
+            $product->minimal_quantity = $properties->getMinimalQuantity();
+            $updatableProperties[] = 'minimal_quantity';
+        }
+        if (null !== $properties->getOutOfStockType()) {
+            $product->out_of_stock = $properties->getOutOfStockType()->getValue();
+            $updatableProperties[] = 'out_of_stock';
+        }
+        if (null !== $properties->getPackStockType()) {
+            $product->pack_stock_type = $properties->getPackStockType()->getValue();
+            $updatableProperties[] = 'pack_stock_type';
+        }
+        if (null !== $properties->getQuantity()) {
+            $product->quantity = $properties->getQuantity();
+            $updatableProperties[] = 'quantity';
+        }
+        if (null !== $properties->getAvailableDate()) {
+            $product->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
+            $updatableProperties[] = 'available_date';
+        }
+
+        return $updatableProperties;
+    }
+
+    /**
+     * @param Product $product
+     * @param ProductStockProperties $properties
+     */
+    private function updateStockAvailable(Product $product, ProductStockProperties $properties)
     {
+        $stockAvailable = $this->getStockAvailable($product);
         $stockUpdateRequired = false;
-        if (in_array('depends_on_stock', $propertiesToUpdate)) {
-            $stockAvailable->depends_on_stock = (bool) $product->depends_on_stock;
+
+        if (null !== $properties->getOutOfStockType()) {
+            $stockAvailable->out_of_stock = $properties->getOutOfStockType()->getValue();
             $stockUpdateRequired = true;
         }
-        if (in_array('out_of_stock', $propertiesToUpdate)) {
-            $stockAvailable->out_of_stock = (int) $product->out_of_stock;
-            $stockUpdateRequired = true;
-        }
-        if (in_array('location', $propertiesToUpdate)) {
-            $stockAvailable->location = $product->location;
+        if (null !== $properties->getLocation()) {
+            $stockAvailable->location = $properties->getLocation();
             $stockUpdateRequired = true;
         }
 
-        // Quantity is handled separately as it is also related to Stock movements
-        if (in_array('quantity', $propertiesToUpdate)) {
-            $this->updateQuantity($product, $stockAvailable);
+        if (null !== $properties->getQuantity()) {
+            $this->updateQuantity($stockAvailable, $properties->getQuantity());
             $stockUpdateRequired = true;
         }
 
@@ -151,13 +192,13 @@ class ProductStockUpdater
     }
 
     /**
-     * @param Product $product
      * @param StockAvailable $stockAvailable
+     * @param int $newQuantity
      */
-    private function updateQuantity(Product $product, StockAvailable $stockAvailable): void
+    private function updateQuantity(StockAvailable $stockAvailable, int $newQuantity): void
     {
-        $deltaQuantity = (int) $product->quantity - (int) $stockAvailable->quantity;
-        $stockAvailable->quantity = (int) $product->quantity;
+        $deltaQuantity = $newQuantity - (int) $stockAvailable->quantity;
+        $stockAvailable->quantity = $newQuantity;
 
         if (0 !== $deltaQuantity) {
             $this->stockManager->saveMovement($stockAvailable->id_product, $stockAvailable->id_product_attribute, $deltaQuantity);

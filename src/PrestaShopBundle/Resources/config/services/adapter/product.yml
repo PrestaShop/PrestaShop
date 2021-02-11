@@ -216,9 +216,6 @@ services:
 
     prestashop.adapter.product.validate.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
-        arguments:
-            - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ADVANCED_STOCK_MANAGEMENT")'
-            - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
 
     prestashop.adapter.product.repository.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository

@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
+use Product;
 
 /**
  * Provides access to Combination data source
@@ -250,6 +251,24 @@ class CombinationRepository extends AbstractObjectModelRepository
         } catch (PrestaShopException $e) {
             throw new CoreException('Error occurred when saving product-combination associations', 0, $e);
         }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Combination|null
+     *
+     * @throws CoreException
+     */
+    public function findDefaultCombination(ProductId $productId): ?Combination
+    {
+        try {
+            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
+        }
+
+        return $id ? $this->get(new CombinationId($id)) : null;
     }
 
     /**

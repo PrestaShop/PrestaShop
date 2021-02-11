@@ -24,6 +24,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | name[en-US] | universal T-shirt |
       | is_virtual  | false             |
     Then product product1 type should be standard
+    And product product1 does not have a default combination
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
@@ -35,6 +36,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    And product product1 default combination should be "product1SWhite"
 
   Scenario: Product combinations pagination returns correct results
     Given product product1 should have following list of combinations:

@@ -81,7 +81,12 @@ class ProductCore extends ObjectModel
     /** @var string|array Short description or array of short description by id_lang */
     public $description_short;
 
-    /** @var int Quantity available */
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$quantity instead
+     *
+     * @var int Quantity available
+     */
     public $quantity = 0;
 
     /** @var int Minimal quantity for add to cart */
@@ -273,13 +278,17 @@ class ProductCore extends ObjectModel
     public $id_color_default = 0;
 
     /**
-     * @since 1.5.0
+     * @deprecated since 1.7.8
+     * The advanced stock management feature is not maintained anymore
      *
      * @var bool Tells if the product uses the advanced stock management
      */
     public $advanced_stock_management = 0;
 
     /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$out_of_stock instead
+     *
      * @var int
      *          - O Deny orders
      *          - 1 Allow orders
@@ -288,6 +297,9 @@ class ProductCore extends ObjectModel
     public $out_of_stock = OutOfStockType::OUT_OF_STOCK_DEFAULT;
 
     /**
+     * @deprecated since 1.7.8
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore
+     *
      * @var bool
      */
     public $depends_on_stock;

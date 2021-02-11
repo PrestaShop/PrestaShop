@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command;
 
-use DateTime;
+use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
@@ -44,16 +44,6 @@ class UpdateProductStockInformationCommand
      * @var ProductId
      */
     private $productId;
-
-    /**
-     * @var bool|null
-     */
-    private $useAdvancedStockManagement;
-
-    /**
-     * @var bool|null
-     */
-    private $dependsOnStock;
 
     /**
      * @var PackStockType|null
@@ -101,7 +91,7 @@ class UpdateProductStockInformationCommand
     private $localizedAvailableLaterLabels;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface|null
      */
     private $availableDate;
 
@@ -119,46 +109,6 @@ class UpdateProductStockInformationCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function useAdvancedStockManagement(): ?bool
-    {
-        return $this->useAdvancedStockManagement;
-    }
-
-    /**
-     * @param bool $useAdvancedStockManagement
-     *
-     * @return UpdateProductStockInformationCommand
-     */
-    public function setUseAdvancedStockManagement(bool $useAdvancedStockManagement): UpdateProductStockInformationCommand
-    {
-        $this->useAdvancedStockManagement = $useAdvancedStockManagement;
-
-        return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function dependsOnStock(): ?bool
-    {
-        return $this->dependsOnStock;
-    }
-
-    /**
-     * @param bool $dependsOnStock
-     *
-     * @return UpdateProductStockInformationCommand
-     */
-    public function setDependsOnStock(bool $dependsOnStock): UpdateProductStockInformationCommand
-    {
-        $this->dependsOnStock = $dependsOnStock;
-
-        return $this;
     }
 
     /**
@@ -346,19 +296,19 @@ class UpdateProductStockInformationCommand
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getAvailableDate(): ?DateTime
+    public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
     }
 
     /**
-     * @param DateTime $availableDate
+     * @param DateTimeInterface $availableDate
      *
      * @return UpdateProductStockInformationCommand
      */
-    public function setAvailableDate(DateTime $availableDate): UpdateProductStockInformationCommand
+    public function setAvailableDate(DateTimeInterface $availableDate): UpdateProductStockInformationCommand
     {
         $this->availableDate = $availableDate;
 
