@@ -266,6 +266,10 @@ describe('Product quick view', async () => {
       await expect(createProductMessage).to.equal(boAddProductPage.settingUpdatedMessage);
     });
 
+    it('should logout from BO', async function () {
+      await loginCommon.logoutBO(this, page);
+    });
+
     after(async () => {
       page = await boAddProductPage.closePage(browserContext, page, 0);
 
@@ -292,6 +296,50 @@ describe('Product quick view', async () => {
       const coverFirstImageURL = await searchResultsPage.selectThumbImage(page, 1);
 
       await expect(coverSecondImageURL).to.not.equal(coverFirstImageURL);
+    });
+  });
+
+  describe('Delete the created product', async () => {
+    before(async () => {
+      page = await helper.newTab(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
+      );
+
+      await boProductsPage.closeSfToolBar(page);
+
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(boProductsPage.pageTitle);
+    });
+
+    it('should delete product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+
+      const testResult = await boProductsPage.deleteProduct(page, productData);
+      await expect(testResult).to.equal(boProductsPage.productDeletedSuccessfulMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      await boProductsPage.resetFilterCategory(page);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    after(async () => {
+      page = await boAddProductPage.closePage(browserContext, page, 0);
     });
   });
 });
