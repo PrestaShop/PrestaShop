@@ -40,7 +40,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
  */
 class NoManufacturerId implements ManufacturerIdInterface
 {
-    const NO_MANUFACTURER_ID = 0;
+    public const NO_MANUFACTURER_ID = 0;
 
     /**
      * {@inheritdoc}

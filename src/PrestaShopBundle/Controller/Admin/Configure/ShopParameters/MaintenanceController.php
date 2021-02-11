@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MaintenanceController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminMaintenance';
+    public const CONTROLLER_NAME = 'AdminMaintenance';
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")

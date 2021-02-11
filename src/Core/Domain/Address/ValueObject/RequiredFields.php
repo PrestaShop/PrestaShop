@@ -31,19 +31,19 @@ namespace PrestaShop\PrestaShop\Core\Domain\Address\ValueObject;
  */
 class RequiredFields
 {
-    const REQUIRED_FIELD_COMPANY = 'company';
-    const REQUIRED_FIELD_ADDRESS_2 = 'address2';
-    const REQUIRED_FIELD_POST_CODE = 'postcode';
-    const REQUIRED_FIELD_OTHER = 'other';
-    const REQUIRED_FIELD_PHONE = 'phone';
-    const REQUIRED_FIELD_PHONE_MOBILE = 'phone_mobile';
-    const REQUIRED_FIELD_VAT_NUMBER = 'vat_number';
-    const REQUIRED_FIELD_DNI = 'dni';
+    public const REQUIRED_FIELD_COMPANY = 'company';
+    public const REQUIRED_FIELD_ADDRESS_2 = 'address2';
+    public const REQUIRED_FIELD_POST_CODE = 'postcode';
+    public const REQUIRED_FIELD_OTHER = 'other';
+    public const REQUIRED_FIELD_PHONE = 'phone';
+    public const REQUIRED_FIELD_PHONE_MOBILE = 'phone_mobile';
+    public const REQUIRED_FIELD_VAT_NUMBER = 'vat_number';
+    public const REQUIRED_FIELD_DNI = 'dni';
 
     /**
      * Stores all allowed required fields to be configured for address
      */
-    const ALLOWED_REQUIRED_FIELDS = [
+    public const ALLOWED_REQUIRED_FIELDS = [
         self::REQUIRED_FIELD_COMPANY,
         self::REQUIRED_FIELD_ADDRESS_2,
         self::REQUIRED_FIELD_POST_CODE,

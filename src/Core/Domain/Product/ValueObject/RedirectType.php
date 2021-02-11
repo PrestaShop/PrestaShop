@@ -38,32 +38,32 @@ class RedirectType
     /**
      * Represents value of no redirection. Page not found (404) will be displayed.
      */
-    const TYPE_NOT_FOUND = '404';
+    public const TYPE_NOT_FOUND = '404';
 
     /**
      * Represents value of permanent redirection to a category
      */
-    const TYPE_CATEGORY_PERMANENT = '301-category';
+    public const TYPE_CATEGORY_PERMANENT = '301-category';
 
     /**
      * Represents value of temporary redirection to a category
      */
-    const TYPE_CATEGORY_TEMPORARY = '302-category';
+    public const TYPE_CATEGORY_TEMPORARY = '302-category';
 
     /**
      * Represents value of permanent redirection to another product
      */
-    const TYPE_PRODUCT_PERMANENT = '301-product';
+    public const TYPE_PRODUCT_PERMANENT = '301-product';
 
     /**
      * Represents value of temporary redirection to another product
      */
-    const TYPE_PRODUCT_TEMPORARY = '302-product';
+    public const TYPE_PRODUCT_TEMPORARY = '302-product';
 
     /**
      * Available redirection types
      */
-    const AVAILABLE_REDIRECT_TYPES = [
+    public const AVAILABLE_REDIRECT_TYPES = [
         self::TYPE_NOT_FOUND => self::TYPE_NOT_FOUND,
         self::TYPE_CATEGORY_PERMANENT => self::TYPE_CATEGORY_PERMANENT,
         self::TYPE_CATEGORY_TEMPORARY => self::TYPE_CATEGORY_TEMPORARY,

@@ -35,12 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConst
  */
 class PriorityList
 {
-    const PRIORITY_COUNTRY = 'id_country';
-    const PRIORITY_CURRENCY = 'id_currency';
-    const PRIORITY_GROUP = 'id_group';
-    const PRIORITY_SHOP = 'id_shop';
+    public const PRIORITY_COUNTRY = 'id_country';
+    public const PRIORITY_CURRENCY = 'id_currency';
+    public const PRIORITY_GROUP = 'id_group';
+    public const PRIORITY_SHOP = 'id_shop';
 
-    const AVAILABLE_PRIORITIES = [
+    public const AVAILABLE_PRIORITIES = [
         'country' => self::PRIORITY_COUNTRY,
         'currency' => self::PRIORITY_CURRENCY,
         'group' => self::PRIORITY_GROUP,

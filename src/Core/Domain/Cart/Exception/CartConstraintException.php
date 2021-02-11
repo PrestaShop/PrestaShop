@@ -34,15 +34,15 @@ class CartConstraintException extends CartException
     /**
      * When cart product quantity is invalid
      */
-    const INVALID_QUANTITY = 1;
+    public const INVALID_QUANTITY = 1;
 
     /**
      * When cart product quantity is already correct
      */
-    const UNCHANGED_QUANTITY = 2;
+    public const UNCHANGED_QUANTITY = 2;
 
     /**
      * When carrier is not found or inactive
      */
-    const INVALID_CARRIER = 3;
+    public const INVALID_CARRIER = 3;
 }

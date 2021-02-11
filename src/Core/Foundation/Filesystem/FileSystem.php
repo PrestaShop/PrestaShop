@@ -33,12 +33,12 @@ class FileSystem
     /**
      * Default mode for directories
      */
-    const DEFAULT_MODE_FOLDER = 0755;
+    public const DEFAULT_MODE_FOLDER = 0755;
 
     /**
      * Default mode for files
      */
-    const DEFAULT_MODE_FILE = 0644;
+    public const DEFAULT_MODE_FILE = 0644;
 
     /**
      * Replaces directory separators with the system's native one

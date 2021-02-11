@@ -34,7 +34,7 @@ use Symfony\Component\Security\Core\User\User;
  */
 class UserProvider
 {
-    const ANONYMOUS_USER = 'ANONYMOUS_USER';
+    public const ANONYMOUS_USER = 'ANONYMOUS_USER';
 
     private $tokenStorage;
 

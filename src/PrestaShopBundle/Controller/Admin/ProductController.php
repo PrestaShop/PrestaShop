@@ -90,7 +90,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Used to validate connected user authorizations.
      */
-    const PRODUCT_OBJECT = 'ADMINPRODUCTS_';
+    public const PRODUCT_OBJECT = 'ADMINPRODUCTS_';
 
     /**
      * Get the Catalog page with KPI banner, product list, bulk actions, filters, search, etc...

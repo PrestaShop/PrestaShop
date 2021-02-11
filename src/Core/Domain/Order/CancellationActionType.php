@@ -35,11 +35,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order;
  */
 class CancellationActionType
 {
-    const CANCEL_PRODUCT = 0;
+    public const CANCEL_PRODUCT = 0;
 
-    const STANDARD_REFUND = 1;
+    public const STANDARD_REFUND = 1;
 
-    const PARTIAL_REFUND = 2;
+    public const PARTIAL_REFUND = 2;
 
-    const RETURN_PRODUCT = 3;
+    public const RETURN_PRODUCT = 3;
 }

@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PerformanceController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminAdvancedParametersPerformance';
+    public const CONTROLLER_NAME = 'AdminAdvancedParametersPerformance';
 
     /**
      * Displays the Performance main page.

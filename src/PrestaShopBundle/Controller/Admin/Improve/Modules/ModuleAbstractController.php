@@ -32,7 +32,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'ADMINMODULESSF';
+    public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     /**
      * Common method of alerts & updates routes for getting template variables.

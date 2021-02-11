@@ -37,7 +37,7 @@ class Name
     /**
      * @var string Maximum allowed length for name
      */
-    const MAX_LENGTH = 255;
+    public const MAX_LENGTH = 255;
 
     /**
      * @var string

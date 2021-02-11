@@ -63,7 +63,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    const GRID_ID = 'order';
+    public const GRID_ID = 'order';
 
     /**
      * @var ConfigurationInterface

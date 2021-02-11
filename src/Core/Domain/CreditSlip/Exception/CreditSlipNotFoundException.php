@@ -34,5 +34,5 @@ class CreditSlipNotFoundException extends CreditSlipException
     /**
      * Thrown when no credit slips are found when querying by specific date range
      */
-    const BY_DATE_RANGE = 1;
+    public const BY_DATE_RANGE = 1;
 }

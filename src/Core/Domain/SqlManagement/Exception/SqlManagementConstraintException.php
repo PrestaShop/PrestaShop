@@ -34,20 +34,20 @@ class SqlManagementConstraintException extends SqlManagementException
     /**
      * When database table name is invalid
      */
-    const INVALID_DATABASE_TABLE_NAME = 10;
+    public const INVALID_DATABASE_TABLE_NAME = 10;
 
     /**
      * When database table field is invalid
      */
-    const INVALID_DATABASE_TABLE_FIELD = 20;
+    public const INVALID_DATABASE_TABLE_FIELD = 20;
 
     /**
      * When database table field name is invalid
      */
-    const INVALID_DATABASE_TABLE_FIELD_NAME = 30;
+    public const INVALID_DATABASE_TABLE_FIELD_NAME = 30;
 
     /**
      * When database table field type is invalid
      */
-    const INVALID_DATABASE_TABLE_FIELD_TYPE = 40;
+    public const INVALID_DATABASE_TABLE_FIELD_TYPE = 40;
 }

@@ -55,7 +55,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'language';
+    public const GRID_ID = 'language';
 
     /**
      * {@inheritdoc}

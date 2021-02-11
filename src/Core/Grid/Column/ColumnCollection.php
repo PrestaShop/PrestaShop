@@ -39,12 +39,12 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     /**
      * @internal
      */
-    const POSITION_AFTER = 'after';
+    public const POSITION_AFTER = 'after';
 
     /**
      * @internal
      */
-    const POSITION_BEFORE = 'before';
+    public const POSITION_BEFORE = 'before';
 
     /**
      * {@inheritdoc}

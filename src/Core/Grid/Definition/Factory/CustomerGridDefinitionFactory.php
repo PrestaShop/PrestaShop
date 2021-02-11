@@ -56,7 +56,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'customer';
+    public const GRID_ID = 'customer';
 
     /**
      * @var bool

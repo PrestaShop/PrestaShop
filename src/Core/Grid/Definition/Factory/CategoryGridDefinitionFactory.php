@@ -58,7 +58,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    const GRID_ID = 'category';
+    public const GRID_ID = 'category';
 
     /**
      * @var string

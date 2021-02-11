@@ -34,5 +34,5 @@ class ProfileConstraintException extends ProfileException
     /**
      * @var string Code is used when invalid profile name is encountered
      */
-    const INVALID_NAME = 1;
+    public const INVALID_NAME = 1;
 }

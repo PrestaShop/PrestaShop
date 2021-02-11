@@ -34,31 +34,31 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
  */
 class PatternTransformer
 {
-    const NO_BREAK_SPACE = "\u{00A0}";
-    const RTL_CHARACTER = "\u{200F}";
-    const REGULAR_SPACE = ' ';
-    const CURRENCY_SYMBOL = '¤';
+    public const NO_BREAK_SPACE = "\u{00A0}";
+    public const RTL_CHARACTER = "\u{200F}";
+    public const REGULAR_SPACE = ' ';
+    public const CURRENCY_SYMBOL = '¤';
 
-    const TYPE_LEFT_SYMBOL_WITH_SPACE = 'leftWithSpace';
-    const TYPE_LEFT_SYMBOL_WITHOUT_SPACE = 'leftWithoutSpace';
-    const TYPE_RIGHT_SYMBOL_WITH_SPACE = 'rightWithSpace';
-    const TYPE_RIGHT_SYMBOL_WITHOUT_SPACE = 'rightWithoutSpace';
+    public const TYPE_LEFT_SYMBOL_WITH_SPACE = 'leftWithSpace';
+    public const TYPE_LEFT_SYMBOL_WITHOUT_SPACE = 'leftWithoutSpace';
+    public const TYPE_RIGHT_SYMBOL_WITH_SPACE = 'rightWithSpace';
+    public const TYPE_RIGHT_SYMBOL_WITHOUT_SPACE = 'rightWithoutSpace';
 
-    const ALLOWED_TRANSFORMATIONS = [
+    public const ALLOWED_TRANSFORMATIONS = [
         self::TYPE_LEFT_SYMBOL_WITH_SPACE,
         self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
         self::TYPE_RIGHT_SYMBOL_WITH_SPACE,
         self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
     ];
 
-    const CHARACTERS_TO_TRIM =
+    public const CHARACTERS_TO_TRIM =
         self::CURRENCY_SYMBOL .
         self::NO_BREAK_SPACE .
         self::REGULAR_SPACE .
         self::RTL_CHARACTER
     ;
 
-    const TRANSFORM_DICTIONARY = [
+    public const TRANSFORM_DICTIONARY = [
         self::TYPE_LEFT_SYMBOL_WITH_SPACE => '$rtl$currencySymbol$nbsp$pattern',
         self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '$rtl$currencySymbol$pattern',
         self::TYPE_RIGHT_SYMBOL_WITH_SPACE => '$rtl$pattern$nbsp$currencySymbol',

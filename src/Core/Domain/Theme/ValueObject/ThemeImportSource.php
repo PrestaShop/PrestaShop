@@ -34,9 +34,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ThemeImportSource
 {
-    const FROM_ARCHIVE = 'from_archive';
-    const FROM_WEB = 'from_web';
-    const FROM_FTP = 'from_ftp';
+    public const FROM_ARCHIVE = 'from_archive';
+    public const FROM_WEB = 'from_web';
+    public const FROM_FTP = 'from_ftp';
 
     /**
      * @var string

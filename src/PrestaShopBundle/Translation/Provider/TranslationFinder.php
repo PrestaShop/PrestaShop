@@ -39,8 +39,8 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class TranslationFinder
 {
-    const ERR_NO_FILES_IN_DIRECTORY = 1;
-    const ERR_DIRECTORY_NOT_FOUND = 2;
+    public const ERR_NO_FILES_IN_DIRECTORY = 1;
+    public const ERR_DIRECTORY_NOT_FOUND = 2;
 
     /**
      * @param string|array $paths a list of paths when we can look for translations

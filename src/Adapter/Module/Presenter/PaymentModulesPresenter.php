@@ -39,7 +39,7 @@ class PaymentModulesPresenter
     /**
      * @var string It will use legacy controller name to get payment modules for controller
      */
-    const PAYMENT_METHODS_CONTROLLER = 'AdminPayment';
+    public const PAYMENT_METHODS_CONTROLLER = 'AdminPayment';
 
     /**
      * @var TabModuleListProviderInterface
