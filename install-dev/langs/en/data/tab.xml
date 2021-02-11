@@ -136,6 +136,6 @@
     <tab id="FeatureFlag" name="Experimental Features" />
     <tab id="Security_1" name="Configuration" />
     <tab id="Security_1" name="Security" />
-    <tab id="EmployeesSessions" name="Employees Sessions" />
-    <tab id="CustomersSessions" name="Customers Sessions" />
+    <tab id="EmployeesSessions" name="Employee Sessions" />
+    <tab id="CustomersSessions" name="Customer Sessions" />
 </entity_tab>
