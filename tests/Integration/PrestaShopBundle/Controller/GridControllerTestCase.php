@@ -207,15 +207,15 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected function getEntityList(Crawler $crawler): TestEntityDTOCollection
     {
-        $TestEntityDTOCollection = new TestEntityDTOCollection();
+        $testEntityDTOCollection = new TestEntityDTOCollection();
         $entities = $crawler->filter('#' . $this->testEntityName . '_grid_table')->filter('tbody tr')->each(function ($tr, $i) {
             return $this->getEntity($tr, $i);
         });
         foreach ($entities as $entity) {
-            $TestEntityDTOCollection->add($entity);
+            $testEntityDTOCollection->add($entity);
         }
 
-        return $TestEntityDTOCollection;
+        return $testEntityDTOCollection;
     }
 
     abstract protected function getTestEntity(): TestEntityDTO;
