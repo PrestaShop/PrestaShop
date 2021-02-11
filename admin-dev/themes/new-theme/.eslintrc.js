@@ -13,28 +13,21 @@ module.exports = {
     document: true,
     navigator: false,
     window: true,
+    JQuery: true,
+    JQueryStatic: true,
   },
   parserOptions: {
     parser: 'babel-eslint',
   },
-  extends: [
-    'prestashop',
-    'plugin:vue/strongly-recommended',
-  ],
-  plugins: [
-    'import',
-    'vue',
-  ],
+  extends: ['prestashop'],
+  plugins: ['import'],
   rules: {
     'class-methods-use-this': 0,
     'func-names': 0,
     'import/no-extraneous-dependencies': [
       'error',
       {
-        devDependencies: [
-          'tests/**/*.js',
-          '.webpack/**/*.js',
-        ],
+        devDependencies: ['tests/**/*.js', '.webpack/**/*.js'],
       },
     ],
     'max-len': ['error', {code: 120}],
@@ -67,6 +60,17 @@ module.exports = {
       files: ['*.vue'],
       rules: {
         indent: 0,
+      },
+      extends: ['plugin:vue/strongly-recommended'],
+      plugins: ['vue'],
+    },
+    {
+      files: ['*.ts'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended', 'prestashop'],
+      rules: {
+        'spaced-comment': 0,
       },
     },
   ],
