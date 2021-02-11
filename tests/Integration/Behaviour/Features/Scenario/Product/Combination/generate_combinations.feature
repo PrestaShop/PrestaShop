@@ -24,7 +24,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | name[en-US] | universal T-shirt |
       | is_virtual  | false             |
     Then product product1 type should be standard
-    And product product1 should not have a default combination
+    And product product1 does not have a default combination
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |

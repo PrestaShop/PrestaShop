@@ -24,7 +24,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | name[en-US] | universal T-shirt |
       | is_virtual  | false             |
     And product product1 type should be standard
-    And product product1 should not have a default combination
+    And product product1 does not have a default combination
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
