@@ -174,6 +174,10 @@ class CombinationCore extends ObjectModel
             return false;
         }
 
+        if (!$this->deleteCartProductCombination()) {
+            return false;
+        }
+
         $this->deleteFromSupplier($this->id_product);
         Product::updateDefaultAttribute($this->id_product);
         Tools::clearColorListCache((int) $this->id_product);
@@ -266,7 +270,6 @@ class CombinationCore extends ObjectModel
             return false;
         }
         $result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = ' . (int) $this->id);
-        $result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = ' . (int) $this->id);
         $result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = ' . (int) $this->id);
 
         if ($result) {
@@ -274,6 +277,20 @@ class CombinationCore extends ObjectModel
         }
 
         return $result;
+    }
+
+    /**
+     * Delete product combination from cart.
+     *
+     * @return bool
+     */
+    protected function deleteCartProductCombination(): bool
+    {
+        if ((int) $this->id === 0) {
+            return false;
+        }
+
+        return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id);
     }
 
     /**
