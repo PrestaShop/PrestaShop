@@ -113,7 +113,6 @@ class MaintenanceType extends TranslatorAwareType
                     'locales' => $this->locales,
                     'hideTabs' => false,
                     'required' => true,
-                    'disabled' => true,
                     'attr' => [
                         'multistore_configuration_key' => 'PS_MAINTENANCE_TEXT',
                     ],

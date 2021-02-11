@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
@@ -46,15 +47,22 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
     protected $shopContext;
 
     /**
+     * @var MultistoreFeature
+     */
+    protected $multistoreFeature;
+
+    /**
      * AbstractMultistoreConfiguration constructor.
      *
      * @param Configuration $configuration
      * @param Context $shopContext
+     * @param MultistoreFeature $multistoreFeature
      */
-    public function __construct(Configuration $configuration, Context $shopContext)
+    public function __construct(Configuration $configuration, Context $shopContext, MultistoreFeature $multistoreFeature)
     {
         $this->configuration = $configuration;
         $this->shopContext = $shopContext;
+        $this->multistoreFeature == $multistoreFeature;
     }
 
     /**
@@ -91,8 +99,9 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
 
         $prefix = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX;
 
-        // If the multistore checkbox value is present but is `false` then the field multistore value is disabled and must be removed from DB
-        if (isset($input[$prefix . $fieldName]) && $input[$prefix . $fieldName] === false) {
+        // If we are in multistore context and the multistore checkbox value is absent (it was unchecked),
+        // then the field multistore value must be removed from DB for current context
+        if ($this->multistoreFeature->isUsed() && !isset($input[$prefix . $fieldName])) {
             $this->configuration->deleteFromContext($configurationKey, $shopConstraint);
         } else {
             $this->configuration->set($configurationKey, $input[$fieldName], $shopConstraint, $options);

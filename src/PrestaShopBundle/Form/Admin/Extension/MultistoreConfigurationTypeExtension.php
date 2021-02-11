@@ -34,6 +34,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\Request;
 
 class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
 {
@@ -52,6 +53,9 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
         if (!$this->multistoreCheckboxEnabler->shouldAddCheckboxes()) {
             return;
         }
+
+        // when we have multistore checkboxes, we send partial data, so we need to use the http PATCH method
+        $builder->setMethod(Request::METHOD_PATCH);
 
         $checkboxEnabler = $this->multistoreCheckboxEnabler;
 
