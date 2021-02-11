@@ -70,6 +70,7 @@ class AddressControllerTest extends GridControllerTestCase
             ['address[postcode]' => '11111'],
             ['address[city]' => 'stcity'],
             ['address[id_country]' => self::TEST_COUNTRY_ID],
+            ['address[id_state]' => 0],
         ];
     }
 
@@ -83,9 +84,9 @@ class AddressControllerTest extends GridControllerTestCase
             'testfirstname',
             'testlastname',
             'testaddress1',
-            '111',
+            '11111',
             'testcity',
-            'italy'
+            'lithuania'
         );
     }
 
