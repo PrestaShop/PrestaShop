@@ -23,11 +23,14 @@ $color-active: #25b9d7;
     color: $gray-medium;
   }
 }
+
 .total-remaining-translations {
   color: $color-error;
 }
+
 .search-translation {
   margin-bottom: 1.25rem;
+
   .summary {
     font-size: 0.875rem;
     color: #363a41;
@@ -157,6 +160,7 @@ $color-active: #25b9d7;
     &.active {
       font-weight: 600;
     }
+
     .material-icons {
       cursor: pointer;
     }
@@ -238,6 +242,7 @@ $color-active: #25b9d7;
       position: relative;
     }
   }
+
   .forms-container + .navbar-container {
     position: relative;
     right: 0;
