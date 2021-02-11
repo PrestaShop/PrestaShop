@@ -28,13 +28,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
+use Country;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
 class AddressControllerTest extends GridControllerTestCase
 {
-    private const TEST_COUNTRY_ID = 130;
+    private $countryId;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -69,8 +70,7 @@ class AddressControllerTest extends GridControllerTestCase
             ['address[address1]' => 'address1'],
             ['address[postcode]' => '11111'],
             ['address[city]' => 'stcity'],
-            ['address[id_country]' => self::TEST_COUNTRY_ID],
-            ['address[id_state]' => 0],
+            ['address[id_country]' => $this->countryId],
         ];
     }
 
@@ -95,6 +95,13 @@ class AddressControllerTest extends GridControllerTestCase
      */
     protected function createTestEntity(): void
     {
+        // We get the country ID for Lithuania, and we set this country in the context so the controller will generate a
+        // adapted to this country (especially regarding states selctor)
+        $this->countryId = Country::getByIso('LT');
+        $legacyContext = $this->client->getContainer()->get('prestashop.adapter.legacy.context');
+        $backupCountry = $legacyContext->getContext()->country;
+        $legacyContext->getContext()->country = new Country($this->countryId);
+
         $router = $this->client->getContainer()->get('router');
         $createAddressUrl = $router->generate('admin_addresses_create');
         $crawler = $this->client->request('GET', $createAddressUrl);
@@ -112,6 +119,10 @@ class AddressControllerTest extends GridControllerTestCase
         $this->client->followRedirects(true);
         $dataChecker = $this->client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.address_form_data_handler_checker');
         $this->testEntityId = $dataChecker->getLastCreatedId();
+        $this->assertNotNull($this->testEntityId);
+
+        // We can now reset the original context country
+        $legacyContext->getContext()->country = $backupCountry;
     }
 
     /**
@@ -150,7 +161,7 @@ class AddressControllerTest extends GridControllerTestCase
             'customer_address[address1]' => $testAddress->getAddress(),
             'customer_address[postcode]' => $testAddress->getPostCode(),
             'customer_address[city]' => $testAddress->getCity(),
-            'customer_address[id_country]' => self::TEST_COUNTRY_ID,
+            'customer_address[id_country]' => $this->countryId,
         ];
     }
 }
