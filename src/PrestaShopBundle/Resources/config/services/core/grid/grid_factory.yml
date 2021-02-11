@@ -344,18 +344,18 @@ services:
           - '@prestashop.core.grid.filter.form_factory'
           - '@prestashop.core.hook.dispatcher'
 
-    prestashop.core.grid.factory.security.sessions.employees:
+    prestashop.core.grid.factory.security.session.employee:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
-            - '@prestashop.core.grid.definition.factory.security.sessions.employees'
-            - '@prestashop.core.grid.data_factory.security.sessions.employees'
+            - '@prestashop.core.grid.definition.factory.security.session.employee'
+            - '@prestashop.core.grid.data_factory.security.session.employee'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
-    prestashop.core.grid.factory.security.sessions.customers:
+    prestashop.core.grid.factory.security.session.customer:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
-            - '@prestashop.core.grid.definition.factory.security.sessions.customers'
-            - '@prestashop.core.grid.data_factory.security.sessions.customers'
+            - '@prestashop.core.grid.definition.factory.security.session.customer'
+            - '@prestashop.core.grid.data_factory.security.session.customer'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
