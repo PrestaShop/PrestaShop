@@ -190,7 +190,7 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected function assertTestEntityExists(TestEntityDTOCollection $entities): void
     {
-        $ids = array_map(function($entity) {
+        $ids = array_map(function ($entity) {
             return $entity->getId();
         }, iterator_to_array($entities));
         self::assertContains($this->getTestEntity()->getId(), $ids);
