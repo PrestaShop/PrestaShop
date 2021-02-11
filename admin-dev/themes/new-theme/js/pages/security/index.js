@@ -41,21 +41,21 @@ import FiltersSubmitButtonEnablerExtension
 const {$} = window;
 
 $(() => {
-  const employeesSessionsGrid = new Grid('security_sessions_employees');
+  const employeeSessionGrid = new Grid('security_session_employee');
 
-  employeesSessionsGrid.addExtension(new ReloadListActionExtension());
-  employeesSessionsGrid.addExtension(new ExportToSqlManagerExtension());
-  employeesSessionsGrid.addExtension(new FiltersResetExtension());
-  employeesSessionsGrid.addExtension(new SortingExtension());
-  employeesSessionsGrid.addExtension(new BulkActionCheckboxExtension());
-  employeesSessionsGrid.addExtension(new SubmitBulkExtension());
-  employeesSessionsGrid.addExtension(new SubmitGridExtension());
-  employeesSessionsGrid.addExtension(new SubmitRowActionExtension());
-  employeesSessionsGrid.addExtension(new LinkRowActionExtension());
-  employeesSessionsGrid.addExtension(new ColumnTogglingExtension());
-  employeesSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  employeeSessionGrid.addExtension(new ReloadListActionExtension());
+  employeeSessionGrid.addExtension(new ExportToSqlManagerExtension());
+  employeeSessionGrid.addExtension(new FiltersResetExtension());
+  employeeSessionGrid.addExtension(new SortingExtension());
+  employeeSessionGrid.addExtension(new BulkActionCheckboxExtension());
+  employeeSessionGrid.addExtension(new SubmitBulkExtension());
+  employeeSessionGrid.addExtension(new SubmitGridExtension());
+  employeeSessionGrid.addExtension(new SubmitRowActionExtension());
+  employeeSessionGrid.addExtension(new LinkRowActionExtension());
+  employeeSessionGrid.addExtension(new ColumnTogglingExtension());
+  employeeSessionGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
-  const customersSessionsGrid = new Grid('security_sessions_customers');
+  const customersSessionsGrid = new Grid('security_session_customer');
 
   customersSessionsGrid.addExtension(new ReloadListActionExtension());
   customersSessionsGrid.addExtension(new ExportToSqlManagerExtension());

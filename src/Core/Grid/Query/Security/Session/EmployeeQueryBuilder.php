@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query\Security\Sessions;
+namespace PrestaShop\PrestaShop\Core\Grid\Query\Security\Session;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;

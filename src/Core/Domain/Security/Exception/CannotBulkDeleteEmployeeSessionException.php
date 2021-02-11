@@ -26,26 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
 
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class CustomerFilters is responsible for providing default filter values for Customers grid.
+ * Class CannotBulkDeleteEmployeeSessionException is a base exception for security sessions context.
  */
-final class CustomerFilters extends Filters
+class CannotBulkDeleteEmployeeSessionException extends DomainException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaults(): array
-    {
-        return [
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_customer_session',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
-    }
 }
