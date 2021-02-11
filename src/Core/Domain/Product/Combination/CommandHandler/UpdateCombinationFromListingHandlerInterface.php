@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 
 /**
- * Defines contract to handle @see UpdateCombinationFromListingCommand
+ * Updates combination in BO product combinations listing
  */
 interface UpdateCombinationFromListingHandlerInterface
 {
