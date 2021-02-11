@@ -114,7 +114,7 @@ abstract class GridControllerTestCase extends WebTestCase
         $crawler = $this->client->request('GET', $url);
         $entities = $this->getEntityList($crawler);
 
-        /** If this fails it means entity was not created correctly */
+        /* If this fails it means entity was not created correctly */
         self::assertCount($this->initialEntityCount + 1, $entities);
         $this->assertTestEntityExists($entities);
     }
@@ -137,7 +137,7 @@ abstract class GridControllerTestCase extends WebTestCase
         $crawler = $this->client->request('POST', $deleteUrl);
         $entities = $this->getEntityList($crawler);
 
-        /** If this fails it means entity deletion did not work as intended */
+        /* If this fails it means entity deletion did not work as intended */
         self::assertCount($this->initialEntityCount, $entities);
     }
 
