@@ -3784,10 +3784,10 @@ class ProductCore extends ObjectModel
      * Get available product quantities (this method already have decreased products in cart).
      *
      * @param int $idProduct Product id
-     * @param int $idProductAttribute Product attribute id (optional)
+     * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param Cart|null $cart
-     * @param int $idCustomization Product customization id (optional)
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
