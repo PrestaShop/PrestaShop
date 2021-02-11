@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Sessions;
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
@@ -50,12 +50,17 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class EmployeeGridDefinitionFactory responsible for creating Employee grid definition.
+ * Class CustomerGridDefinitionFactory responsible for creating Customer sessions grid definition.
  */
-final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    /**
+     * @var string
+     */
+    public const GRID_ID = 'security_session_customer';
 
     /**
      * @var string
@@ -88,7 +93,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId(): string
     {
-        return 'security_sessions_employees';
+        return static::GRID_ID;
     }
 
     /**
@@ -96,7 +101,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Employees sessions', [], 'Admin.Navigation.Menu');
+        return $this->trans('Customer sessions', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -108,21 +113,21 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new BulkActionColumn('bulk'))
                     ->setOptions([
-                        'bulk_field' => 'id_employee_session',
+                        'bulk_field' => 'id_customer_session',
                     ])
             )
             ->add(
-                (new DataColumn('id_employee_session'))
+                (new DataColumn('id_customer_session'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'id_employee_session',
+                        'field' => 'id_customer_session',
                     ])
             )
             ->add(
-                (new DataColumn('id_employee'))
-                    ->setName($this->trans('Employee ID', [], 'Admin.Global'))
+                (new DataColumn('id_customer'))
+                    ->setName($this->trans('Customer ID', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
-                        'field' => 'id_employee',
+                        'field' => 'id_customer',
                     ])
             )
             ->add(
@@ -153,9 +158,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'actions' => (new RowActionCollection())
                             ->add(
                             $this->buildDeleteAction(
-                                'admin_security_sessions_employees_delete',
+                                'admin_security_session_customer_delete',
                                 'sessionId',
-                                'id_employee_session',
+                                'id_customer_session',
                                 'DELETE'
                             )
                         ),
@@ -193,7 +198,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new FilterCollection())
             ->add(
-                (new Filter('id_employee_session', TextType::class))
+                (new Filter('id_customer_session', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'size' => 'small',
@@ -201,10 +206,10 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                         ],
                     ])
-                    ->setAssociatedColumn('id_employee_session')
+                    ->setAssociatedColumn('id_customer_session')
             )
             ->add(
-                (new Filter('id_employee', TextType::class))
+                (new Filter('id_customer', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'size' => 'small',
@@ -212,7 +217,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                         ],
                     ])
-                    ->setAssociatedColumn('id_employee')
+                    ->setAssociatedColumn('id_customer')
             )
             ->add(
                 (new Filter('firstname', TextType::class))
@@ -263,7 +268,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_security_sessions_employees_bulk_delete')
+                $this->buildBulkDeleteAction('admin_security_session_customer_bulk_delete')
             );
     }
 }
