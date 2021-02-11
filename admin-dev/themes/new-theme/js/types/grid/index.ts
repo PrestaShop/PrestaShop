@@ -1,7 +1,3 @@
-import Grid from '@components/grid/grid';
-
-interface GridExtension {
-  extend: (grid: Grid) => void;
+export interface GridExtension {
+  extend: () => void;
 }
-
-export {Grid, GridExtension};

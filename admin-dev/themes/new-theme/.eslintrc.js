@@ -78,6 +78,17 @@ module.exports = {
         '@typescript-eslint/ban-ts-comment': 0,
         '@typescript-eslint/no-non-null-assertion': 0,
       },
+      extends: ['plugin:vue/strongly-recommended'],
+      plugins: ['vue'],
+    },
+    {
+      files: ['*.ts'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended', 'prestashop'],
+      rules: {
+        'spaced-comment': 0,
+      },
     },
   ],
 };

@@ -24,7 +24,6 @@
  */
 
 import {GridExtension} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
 
 const {$}: Window = window;
 
@@ -70,7 +69,7 @@ export default class Grid {
    * @returns {jQuery}
    */
   getHeaderContainer(): JQuery {
-    return this.$container.closest(GridMap.gridPanel).find(GridMap.gridHeader);
+    return this.$container.closest('.js-grid-panel').find('.js-grid-header');
   }
 
   /**
