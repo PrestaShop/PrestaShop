@@ -113,6 +113,8 @@ abstract class GridControllerTestCase extends WebTestCase
         $url = $router->generate($this->gridRoute);
         $crawler = $this->client->request('GET', $url);
         $entities = $this->getEntityList($crawler);
+
+        /** If this fails it means entity was not created correctly */
         self::assertCount($this->initialEntityCount + 1, $entities);
         $this->assertTestEntityExists($entities);
     }
@@ -134,10 +136,13 @@ abstract class GridControllerTestCase extends WebTestCase
         $deleteUrl = $router->generate($this->deleteEntityRoute, [$this->testEntityName . 'Id' => $this->testEntityId]);
         $crawler = $this->client->request('POST', $deleteUrl);
         $entities = $this->getEntityList($crawler);
+
+        /** If this fails it means entity deletion did not work as intended */
         self::assertCount($this->initialEntityCount, $entities);
     }
 
     /**
+     * If this test fails it's likely problem with filters being incorrect or filtering not working
      * Asserts that there is only one entity left in the list after using filters
      *
      * @param array $testFilters

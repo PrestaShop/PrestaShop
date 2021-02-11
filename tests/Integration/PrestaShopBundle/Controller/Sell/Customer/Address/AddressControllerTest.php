@@ -34,7 +34,7 @@ use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
 class AddressControllerTest extends GridControllerTestCase
 {
-    private const TEST_COUNTRY_ID = 21;
+    private const TEST_COUNTRY_ID = 130;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -50,8 +50,7 @@ class AddressControllerTest extends GridControllerTestCase
      * All filters are tested in one test make tests run faster
      *
      * @throws TypeException
-     */
-    public function testAddressFilters(): void
+     */    public function testAddressFilters(): void
     {
         foreach ($this->getTestFilters() as $testFilter) {
             $this->assertFiltersFindOnlyTestEntity($testFilter);
@@ -68,7 +67,7 @@ class AddressControllerTest extends GridControllerTestCase
             ['address[firstname]' => 'firstname'],
             ['address[lastname]' => 'testLa'],
             ['address[address1]' => 'address1'],
-            ['address[postcode]' => '1111'],
+            ['address[postcode]' => '11111'],
             ['address[city]' => 'stcity'],
             ['address[id_country]' => self::TEST_COUNTRY_ID],
         ];
@@ -84,9 +83,9 @@ class AddressControllerTest extends GridControllerTestCase
             'testfirstname',
             'testlastname',
             'testaddress1',
-            '11111',
+            '111',
             'testcity',
-            'lithuania'
+            'italy'
         );
     }
 
