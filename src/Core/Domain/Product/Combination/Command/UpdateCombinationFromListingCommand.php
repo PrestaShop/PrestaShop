@@ -29,10 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationFromListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 /**
- * Updates combination in list of combinations
+ * @see UpdateCombinationFromListingHandlerInterface
  */
 class UpdateCombinationFromListingCommand
 {
