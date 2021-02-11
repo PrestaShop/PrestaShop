@@ -63,6 +63,7 @@ class SearchResultProductFilter extends HashMapWhitelistFilter
             'reference',
             'regular_price',
             'regular_price_amount',
+            'show_price',
             'tax_name',
             'unit_price',
             'url',
