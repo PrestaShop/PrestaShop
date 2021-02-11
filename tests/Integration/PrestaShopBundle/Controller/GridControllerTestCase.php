@@ -192,7 +192,7 @@ abstract class GridControllerTestCase extends WebTestCase
     {
         $ids = array_map(function($entity) {
             return $entity->getId();
-        }, $entities);
+        }, iterator_to_array($entities));
         self::assertContains($this->getTestEntity()->getId(), $ids);
     }
 
