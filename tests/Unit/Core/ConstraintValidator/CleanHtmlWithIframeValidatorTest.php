@@ -24,13 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
-class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
+class CleanHtmlWithIframeValidatorTest extends ConstraintValidatorTestCase
 {
     public function testItFailsWhenScriptTagsAreGiven()
     {
@@ -56,20 +58,18 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
-    public function testItFailsWhenIframeIsGiven()
+    public function testItSucceedsWhenIframeIsGiven()
     {
         $htmlTag = '<iframe src="catvideo.html" /></iframe>';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
+        $this->assertNoViolation();
+        $this->context->getViolations();
     }
 
     protected function createValidator()
     {
-        return new CleanHtmlValidator(false);
+        return new CleanHtmlValidator(true);
     }
 }
