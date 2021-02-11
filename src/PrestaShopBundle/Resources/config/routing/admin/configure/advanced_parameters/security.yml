@@ -14,72 +14,72 @@ admin_security_general_save:
         _legacy_controller: AdminSecurity
         _legacy_link: AdminSecurity
 
-admin_security_sessions_customers:
-    path: /sessions/customers
+admin_security_session_customer:
+    path: /session/customer
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:customersSessions'
-        _legacy_controller: AdminSecuritySessionsCustomers
-        _legacy_link: AdminSecuritySessionsCustomers
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:customerSession'
+        _legacy_controller: AdminSecuritySessionCustomer
+        _legacy_link: AdminSecuritySessionCustomer
 
-admin_security_sessions_customers_delete:
-    path: /sessions/customers/{sessionId}
+admin_security_session_customer_delete:
+    path: /session/customer/{sessionId}
     methods: [DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:deleteCustomerSession'
-        _legacy_controller: AdminSecuritySessionsCustomers
-        _legacy_link: AdminSecuritySessionsCustomers
+        _legacy_controller: AdminSecuritySessionCustomer
+        _legacy_link: AdminSecuritySessionCustomer
     requirements:
         sessionId: \d+
 
-admin_security_sessions_employees:
-    path: /sessions/employees
+admin_security_session_employee:
+    path: /session/employee
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:employeesSessions'
-        _legacy_controller: AdminSecuritySessionsEmployees
-        _legacy_link: AdminSecuritySessionsEmployees
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:employeeSession'
+        _legacy_controller: AdminSecuritySessionEmployee
+        _legacy_link: AdminSecuritySessionEmployee
 
-admin_security_sessions_employees_delete:
-    path: /sessions/employees/{sessionId}
+admin_security_session_employee_delete:
+    path: /session/employee/{sessionId}
     methods: [DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:deleteEmployeeSession'
-        _legacy_controller: AdminSecuritySessionsEmployees
-        _legacy_link: AdminSecuritySessionsEmployees
+        _legacy_controller: AdminSecuritySessionEmployee
+        _legacy_link: AdminSecuritySessionEmployee
     requirements:
         sessionId: \d+
 
-admin_security_sessions_employees_bulk_delete:
-    path: /sessions/employees/delete/bulk
+admin_security_session_employee_bulk_delete:
+    path: /session/employee/delete/bulk
     methods: [POST,DELETE]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteEmployeesSessions'
-        _legacy_controller: AdminSecuritySessionsEmployees
-        _legacy_link: AdminSecuritySessionsEmployees:submitBulkdeleteemployees
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteEmployeeSession'
+        _legacy_controller: AdminSecuritySessionEmployee
+        _legacy_link: AdminSecuritySessionEmployee:submitBulkdeleteemployees
 
-admin_security_sessions_customers_bulk_delete:
-    path: /sessions/customers/delete/bulk
+admin_security_session_customer_bulk_delete:
+    path: /session/customer/delete/bulk
     methods: [POST,DELETE]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteCustomersSessions'
-        _legacy_controller: AdminSecuritySessionsCustomers
-        _legacy_link: AdminSecuritySessionsCustomers:submitBulkdeleteemployees
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteCustomerSession'
+        _legacy_controller: AdminSecuritySessionCustomer
+        _legacy_link: AdminSecuritySessionCustomer:submitBulkdeleteemployees
 
-admin_security_sessions_customers_search:
-  path: /sessions/customers
+admin_security_session_customer_search:
+  path: /session/customer
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
-    _legacy_controller: AdminSecuritySessionsCustomers
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.sessions.customers
-    redirectRoute: admin_security_sessions_customers
+    _legacy_controller: AdminSecuritySessionCustomer
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.session.customer
+    redirectRoute: admin_security_session_customer
 
-admin_security_sessions_employees_search:
-  path: /sessions/employees
+admin_security_session_employee_search:
+  path: /session/employee
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
-    _legacy_controller: AdminSecuritySessionsEmployees
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.sessions.employees
-    redirectRoute: admin_security_sessions_employees
+    _legacy_controller: AdminSecuritySessionEmployee
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.session.employee
+    redirectRoute: admin_security_session_employee
