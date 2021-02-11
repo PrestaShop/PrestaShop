@@ -51,7 +51,8 @@ class AddressControllerTest extends GridControllerTestCase
      * All filters are tested in one test make tests run faster
      *
      * @throws TypeException
-     */    public function testAddressFilters(): void
+     */
+    public function testAddressFilters(): void
     {
         foreach ($this->getTestFilters() as $testFilter) {
             $this->assertFiltersFindOnlyTestEntity($testFilter);
