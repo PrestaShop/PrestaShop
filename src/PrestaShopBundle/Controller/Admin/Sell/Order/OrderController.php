@@ -1928,7 +1928,7 @@ class OrderController extends FrameworkBundleAdminController
             ),
             OrderConstraintException::class => [
                 OrderConstraintException::INVALID_PAYMENT_METHOD => sprintf(
-                    '%s %s ^<>={}',
+                    '%s %s %s',
                     $this->trans(
                         'The selected payment method is invalid.',
                         'Admin.Orderscustomers.Notification'
@@ -1936,7 +1936,8 @@ class OrderController extends FrameworkBundleAdminController
                     $this->trans(
                         'Invalid characters:',
                         'Admin.Notifications.Info'
-                    )
+                    ),
+                    AddPaymentCommand::INVALID_CHARACTERS_NAME
                 ),
             ],
         ]);
