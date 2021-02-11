@@ -36,8 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionComm
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\CustomerFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\CustomerFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -133,12 +133,12 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function employeesSessionsAction(EmployeeFilters $filters): Response
+    public function employeeSessionAction(EmployeeFilters $filters): Response
     {
-        $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.sessions.employees');
+        $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.session.employee');
 
         return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employee.html.twig',
             [
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Employees sessions', 'Admin.Navigation.Menu'),
@@ -156,12 +156,12 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function customersSessionsAction(CustomerFilters $filters): Response
+    public function customerSessionAction(CustomerFilters $filters): Response
     {
-        $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.sessions.customers');
+        $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.session.customer');
 
         return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customers.html.twig',
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customer.html.twig',
             [
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Employees sessions', 'Admin.Navigation.Menu'),
@@ -194,7 +194,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_employees');
+        return $this->redirectToRoute('admin_security_session_employee');
     }
 
     /**
@@ -221,11 +221,11 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_customers');
+        return $this->redirectToRoute('admin_security_session_customer');
     }
 
     /**
-     * Bulk delete customers sessions.
+     * Bulk delete customer session.
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
@@ -236,9 +236,9 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteCustomersSessionsAction(Request $request): RedirectResponse
+    public function bulkDeleteCustomerSessionAction(Request $request): RedirectResponse
     {
-        $sessionIds = $request->request->get('security_sessions_customers_bulk');
+        $sessionIds = $request->request->get('security_session_customer_bulk');
 
         try {
             $deleteSessionsCommand = new BulkDeleteCustomersSessionsCommand($sessionIds);
@@ -250,11 +250,11 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_customers');
+        return $this->redirectToRoute('admin_security_session_customer');
     }
 
     /**
-     * Bulk delete employees sessions.
+     * Bulk delete employee session.
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
@@ -265,9 +265,9 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteEmployeesSessionsAction(Request $request): RedirectResponse
+    public function bulkDeleteEmployeeSessionAction(Request $request): RedirectResponse
     {
-        $sessionIds = $request->request->get('security_sessions_employees_bulk');
+        $sessionIds = $request->request->get('security_session_employee_bulk');
 
         try {
             $deleteSessionsCommand = new BulkDeleteEmployeesSessionsCommand($sessionIds);
@@ -279,7 +279,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_employees');
+        return $this->redirectToRoute('admin_security_session_employee');
     }
 
     /**
