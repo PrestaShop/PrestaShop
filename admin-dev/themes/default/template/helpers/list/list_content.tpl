@@ -182,7 +182,7 @@
 					{$compiled_actions[0]}
 					{if $compiled_actions|count > 1}
 					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						<i class="icon-caret-down"></i>&nbsp;
+						<i class="icon-caret-down"></i>
 					</button>
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
