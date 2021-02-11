@@ -74,7 +74,7 @@
         "prestashop/ps_languageselector": "^2",
         "prestashop/ps_linklist": "^3",
         "prestashop/ps_mainmenu": "^2",
-        "prestashop/ps_searchbar": "^2",
+        "prestashop/ps_searchbar": "~2.0.0",
         "prestashop/ps_sharebuttons": "^2",
         "prestashop/ps_shoppingcart": "^2",
         "prestashop/ps_socialfollow": "^2",
