@@ -192,7 +192,11 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         $shopGroupId = $this->getShopGroupId($shopConstraint);
         $isStrict = $this->isStrict($shopConstraint);
 
-        $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
+        if (ConfigurationLegacy::isLangKey($key)) {
+            return $this->hasMultilang($key, $shopId, $shopGroupId, $isStrict);
+        }
+
+        $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId);
         if ($hasKey || $isStrict) {
             return $hasKey;
         }
@@ -203,6 +207,36 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         return ConfigurationLegacy::hasKey($key);
+    }
+
+    /**
+     * Same as 'has' method, but for multilang configuration keys
+     *
+     * @param string $key
+     * @param int|null $shopId
+     * @param int|null $shopGroupId
+     * @param bool $isStrict
+     *
+     * @return bool
+     */
+    private function hasMultilang(string $key, ?int $shopId, ?int $shopGroupId, bool $isStrict): bool
+    {
+        $langIds = Language::getIDs(false, $shopId ?: false);
+
+        // check that we have a key for at least one of the used languages for given constraints
+        foreach ($langIds as $langId) {
+            if (ConfigurationLegacy::hasKey($key, $langId, $shopGroupId, $shopId)) {
+                return true;
+            } elseif ($isStrict) {
+                continue;
+            }
+
+            if (ConfigurationLegacy::hasKey($key, $langId, $shopGroupId) || ConfigurationLegacy::hasKey($key, $langId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
