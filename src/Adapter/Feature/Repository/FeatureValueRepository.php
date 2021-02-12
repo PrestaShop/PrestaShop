@@ -239,7 +239,18 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
         ;
 
+        $availableFilters = [
+            'id_product',
+            'id_feature',
+            'id_feature_value',
+            'custom',
+        ];
+
         foreach ($filters as $key => $value) {
+            if (!in_array($key, $availableFilters)) {
+                continue;
+            }
+
             switch ($key) {
                 case 'id_product':
                     $qb
