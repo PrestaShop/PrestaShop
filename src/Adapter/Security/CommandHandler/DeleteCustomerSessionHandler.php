@@ -28,13 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
-use CustomerSession;
+use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\DeleteCustomerSessionHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\FailedToDeleteSessionException;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 
 /**
  * Class DeleteCustomerSessionHandler
@@ -44,24 +40,20 @@ use PrestaShopException;
 final class DeleteCustomerSessionHandler implements DeleteCustomerSessionHandlerInterface
 {
     /**
+     * @var CustomerSessionRepository
+     */
+    private $repository;
+
+    public function __construct(CustomerSessionRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(DeleteCustomerSessionCommand $command): void
     {
-        $sessionId = $command->getCustomerSessionId()->getValue();
-
-        try {
-            $entity = new CustomerSession($sessionId);
-
-            if ($entity->id != $sessionId) {
-                throw new SessionNotFoundException(sprintf('Session with id %s cannot be found.', var_export($sessionId, true)));
-            }
-
-            if (false === $entity->delete()) {
-                throw new FailedToDeleteSessionException(sprintf('Failed to delete Session with id %s', var_export($sessionId, true)));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(sprintf('Unexpected error occurred when deleting Session with id %s', var_export($sessionId, true)), 0, $e);
-        }
+        $this->repository->delete($command->getCustomerSessionId());
     }
 }
