@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 
 abstract class AbstractMultistoreConfiguration implements DataConfigurationInterface
@@ -58,7 +58,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
      * @param Context $shopContext
      * @param MultistoreFeature $multistoreFeature
      */
-    public function __construct(Configuration $configuration, Context $shopContext, MultistoreFeature $multistoreFeature)
+    public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature)
     {
         $this->configuration = $configuration;
         $this->shopContext = $shopContext;
