@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Address;
 use Carrier;
-use Configuration;
 use ConnectionsSource;
 use Context;
 use Country;
@@ -43,6 +42,7 @@ use OrderPayment;
 use OrderSlip;
 use OrderState;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
@@ -78,6 +78,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourceForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourcesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use State;
@@ -113,6 +114,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private $customerDataProvider;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @var Context
      */
     private $context;
@@ -129,6 +135,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      * @param Context $context
      * @param CustomerDataProvider $customerDataProvider
      * @param GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler
+     * @param Configuration $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -136,7 +143,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         Locale $locale,
         Context $context,
         CustomerDataProvider $customerDataProvider,
-        GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler
+        GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
+        Configuration $configuration
     ) {
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
@@ -145,6 +153,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $this->context = $context;
         $this->customerDataProvider = $customerDataProvider;
         $this->getOrderProductsForViewingHandler = $getOrderProductsForViewingHandler;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -162,7 +171,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->translator->trans('Tax included', [], 'Admin.Global') :
             $this->translator->trans('Tax excluded', [], 'Admin.Global');
 
-        $invoiceManagementIsEnabled = (bool) Configuration::get('PS_INVOICE', null, null, $order->id_shop);
+        $invoiceManagementIsEnabled = (bool) $this->configuration->get(
+            'PS_INVOICE',
+            null,
+            new ShopConstraint((int) $order->id_shop, (int) $order->id_shop_group)
+        );
 
         return new OrderForViewing(
             (int) $order->id,
@@ -223,6 +236,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $customerStats = $customer->getStats();
         $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
 
+        $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
+
         return new OrderCustomerForViewing(
             $customer->id,
             $customer->firstname,
@@ -233,7 +248,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
             $customer->note,
-            (bool) $customer->is_guest
+            (bool) $customer->is_guest,
+            $isB2BEnabled ? ($customer->ape ?: '') : '',
+            $isB2BEnabled ? ($customer->siret ?: '') : ''
         );
     }
 
@@ -393,9 +410,14 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     }
                 }
             } elseif (OrderDocumentType::DELIVERY_SLIP === $type) {
+                $conf = $this->configuration->get(
+                    'PS_DELIVERY_PREFIX',
+                    null,
+                    new ShopConstraint($order->id_shop, $order->id_shop_group)
+                );
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_DELIVERY_PREFIX', $this->contextLanguageId, null, $order->id_shop),
+                    $conf[$this->contextLanguageId] ?? '',
                     $document->delivery_number
                 );
                 $amount = $this->locale->formatPrice(
@@ -404,9 +426,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 );
                 $numericAmount = $document->total_shipping_tax_incl;
             } elseif (OrderDocumentType::CREDIT_SLIP === $type) {
+                $conf = $this->configuration->get('PS_CREDIT_SLIP_PREFIX');
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),
+                    $conf[$this->contextLanguageId] ?? '',
                     $document->id
                 );
                 $amount = $this->locale->formatPrice(
@@ -429,7 +452,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             );
         }
 
-        $canGenerateInvoice = Configuration::get('PS_INVOICE') &&
+        $canGenerateInvoice = $this->configuration->get('PS_INVOICE') &&
             count($order->getInvoicesCollection()) &&
             $order->invoice_number;
 
@@ -483,7 +506,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
                 }
 
-                $weight = sprintf('%.3f %s', $item['weight'], Configuration::get('PS_WEIGHT_UNIT'));
+                $weight = sprintf('%.3f %s', $item['weight'], $this->configuration->get('PS_WEIGHT_UNIT'));
 
                 $carriers[] = new OrderCarrierForViewing(
                     (int) $item['id_order_carrier'],

@@ -18,7 +18,7 @@ const cartPage = require('@pages/FO/cart');
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
 const ProductData = require('@data/FO/product');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 
 // import test context
@@ -32,7 +32,7 @@ let page;
 const newCartRuleData = new CartRuleFaker(
   {
     code: '4QABV6L3',
-    customer: DefaultAccount.email,
+    customer: DefaultCustomer.email,
     discountType: 'Percent',
     discountPercent: 20,
   },
@@ -114,7 +114,7 @@ describe('CRUD cart rule', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -223,7 +223,7 @@ describe('CRUD cart rule', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });

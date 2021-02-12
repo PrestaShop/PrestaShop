@@ -16,7 +16,7 @@ const foCheckoutPage = require('@pages/FO/checkout');
 
 // Import data
 const {Carriers} = require('@data/demo/carriers');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -110,7 +110,7 @@ describe('Update default carrier and check it in FO', async () => {
         if (index === 0) {
           // Personal information step - Login
           await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, DefaultAccount);
+          await foCheckoutPage.customerLogin(page, DefaultCustomer);
         }
 
         // Address step - Go to delivery step
