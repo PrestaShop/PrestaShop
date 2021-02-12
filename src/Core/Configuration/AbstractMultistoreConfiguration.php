@@ -62,7 +62,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
     {
         $this->configuration = $configuration;
         $this->shopContext = $shopContext;
-        $this->multistoreFeature == $multistoreFeature;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
