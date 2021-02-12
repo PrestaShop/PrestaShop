@@ -59,7 +59,8 @@ describe('Product quick view', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  describe('Add to cart by quick view', async () => {
+  // 1 - Add to cart from quick view
+  describe('Add to cart from quick view', async () => {
     it('should add product to cart by quick view and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addToCartByQuickView', baseContext);
 
@@ -80,6 +81,7 @@ describe('Product quick view', async () => {
     });
   });
 
+  // 2 - Change quantity from quick view
   describe('Change quantity from quick view', async () => {
     it('should proceed to checkout and delete product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
@@ -127,32 +129,21 @@ describe('Product quick view', async () => {
     });
   });
 
+  // 3 - Share links from quick view
   describe('Share links from quick view', async () => {
-    it('should check share links \'Facebook, Twitter and Pinterest\' from quick view modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkShareLinks', baseContext);
+    ['Facebook', 'Twitter', 'Pinterest'].forEach((test) => {
+      it(`should check share link of '${test}' from quick view modal`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${test}`, baseContext);
 
-      await homePage.quickViewProduct(page, 1);
+        if (test === 'Facebook') await homePage.quickViewProduct(page, 1);
 
-      page = await homePage.goToSocialSharingLink(page, 'facebook');
+        page = await homePage.goToSocialSharingLink(page, test);
 
-      let url = await homePage.getCurrentURL(page);
-      await expect(url).to.contains('facebook');
+        const url = await homePage.getCurrentURL(page);
+        await expect(url).to.contains(test.toLowerCase());
 
-      page = await homePage.closePage(browserContext, page, 0);
-
-      page = await homePage.goToSocialSharingLink(page, 'twitter');
-
-      url = await homePage.getCurrentURL(page);
-      await expect(url).to.contains('twitter');
-
-      page = await homePage.closePage(browserContext, page, 0);
-
-      page = await homePage.goToSocialSharingLink(page, 'pinterest');
-
-      url = await homePage.getCurrentURL(page);
-      await expect(url).to.contains('pinterest');
-
-      page = await homePage.closePage(browserContext, page, 0);
+        page = await homePage.closePage(browserContext, page, 0);
+      });
     });
   });
 
@@ -358,5 +349,4 @@ describe('Product quick view', async () => {
       });
     });
   });
-})
-;
+});

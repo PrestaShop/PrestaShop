@@ -280,15 +280,15 @@ class Home extends FOBasePage {
   async goToSocialSharingLink(page, socialSharing) {
     let selector;
     switch (socialSharing) {
-      case 'facebook':
+      case 'Facebook':
         selector = this.quickViewFacebookSocialSharing;
         break;
 
-      case 'twitter':
+      case 'Twitter':
         selector = this.quickViewTwitterSocialSharing;
         break;
 
-      case 'pinterest':
+      case 'Pinterest':
         selector = this.quickViewPinterestSocialSharing;
         break;
 
