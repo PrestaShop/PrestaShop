@@ -158,7 +158,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'actions' => (new RowActionCollection())
                             ->add(
                             $this->buildDeleteAction(
-                                'admin_security_session_employee_delete',
+                                'admin_security_sessions_employee_delete',
                                 'sessionId',
                                 'id_employee_session',
                                 'DELETE'
@@ -268,7 +268,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_security_session_employee_bulk_delete')
+                $this->buildBulkDeleteAction('admin_security_sessions_employee_bulk_delete')
             );
     }
 }

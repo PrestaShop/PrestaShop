@@ -14,7 +14,7 @@ admin_security_general_save:
         _legacy_controller: AdminSecurity
         _legacy_link: AdminSecurity
 
-admin_security_session_customer:
+admin_security_sessions_customer:
     path: /session/customer
     methods: [GET]
     defaults:
@@ -22,7 +22,7 @@ admin_security_session_customer:
         _legacy_controller: AdminSecuritySessionCustomer
         _legacy_link: AdminSecuritySessionCustomer
 
-admin_security_session_customer_delete:
+admin_security_sessions_customer_delete:
     path: /session/customer/{sessionId}
     methods: [DELETE]
     defaults:
@@ -32,7 +32,7 @@ admin_security_session_customer_delete:
     requirements:
         sessionId: \d+
 
-admin_security_session_employee:
+admin_security_sessions_employee:
     path: /session/employee
     methods: [GET]
     defaults:
@@ -40,7 +40,7 @@ admin_security_session_employee:
         _legacy_controller: AdminSecuritySessionEmployee
         _legacy_link: AdminSecuritySessionEmployee
 
-admin_security_session_employee_delete:
+admin_security_sessions_employee_delete:
     path: /session/employee/{sessionId}
     methods: [DELETE]
     defaults:
@@ -50,7 +50,7 @@ admin_security_session_employee_delete:
     requirements:
         sessionId: \d+
 
-admin_security_session_employee_bulk_delete:
+admin_security_sessions_employee_bulk_delete:
     path: /session/employee/delete/bulk
     methods: [POST,DELETE]
     defaults:
@@ -58,7 +58,7 @@ admin_security_session_employee_bulk_delete:
         _legacy_controller: AdminSecuritySessionEmployee
         _legacy_link: AdminSecuritySessionEmployee:submitBulkdeleteemployees
 
-admin_security_session_customer_bulk_delete:
+admin_security_sessions_customer_bulk_delete:
     path: /session/customer/delete/bulk
     methods: [POST,DELETE]
     defaults:
@@ -66,20 +66,20 @@ admin_security_session_customer_bulk_delete:
         _legacy_controller: AdminSecuritySessionCustomer
         _legacy_link: AdminSecuritySessionCustomer:submitBulkdeleteemployees
 
-admin_security_session_customer_search:
+admin_security_sessions_customer_search:
   path: /session/customer
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
     _legacy_controller: AdminSecuritySessionCustomer
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.session.customer
-    redirectRoute: admin_security_session_customer
+    redirectRoute: admin_security_sessions_customer
 
-admin_security_session_employee_search:
+admin_security_sessions_employee_search:
   path: /session/employee
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
     _legacy_controller: AdminSecuritySessionEmployee
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.session.employee
-    redirectRoute: admin_security_session_employee
+    redirectRoute: admin_security_sessions_employee
