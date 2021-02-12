@@ -24,12 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-function add_quick_access_tab()
+function delete_hook($hook)
 {
-    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
-    add_new_tab_17(
-        'AdminQuickAccesses',
-        'en:Quick access|fr:Accès rapide|es:Quick access|de:Quick access|it:Quick access',
-        -1
+    $modules = Hook::getHookModuleExecList($hook);
+    if (is_array($modules)) {
+        foreach ($modules as $module) {
+            $moduleInstance = Module::getInstanceByName($module['module']);
+            if ($moduleInstance instanceof Module) {
+                Hook::unregisterHook($moduleInstance, $hook);
+            }
+        }
+    }
+
+    return (bool) Db::getInstance()->execute(
+        'DELETE FROM `' . _DB_PREFIX_ . 'hook` WHERE `name` = "' . pSQL($hook) . '"'
     );
 }
