@@ -158,7 +158,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'actions' => (new RowActionCollection())
                             ->add(
                             $this->buildDeleteAction(
-                                'admin_security_session_customer_delete',
+                                'admin_security_sessions_customer_delete',
                                 'sessionId',
                                 'id_customer_session',
                                 'DELETE'
@@ -268,7 +268,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_security_session_customer_bulk_delete')
+                $this->buildBulkDeleteAction('admin_security_sessions_customer_bulk_delete')
             );
     }
 }
