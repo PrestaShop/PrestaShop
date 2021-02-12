@@ -697,8 +697,7 @@ class ProductFormDataProviderTest extends TestCase
                 'reference' => 'reference',
             ],
             'suppliers' => [],
-            'features' => [
-            ],
+            'features' => [],
         ];
     }
 }

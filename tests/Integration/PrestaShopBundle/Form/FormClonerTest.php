@@ -53,7 +53,7 @@ class FormClonerTest extends KernelTestCase
         self::bootKernel();
     }
 
-    public function testClone()
+    public function testClone(): void
     {
         $form = $this->createForm(AdvancedFormType::class);
         $this->assertTotalNumberOfListeners($form, 5);
@@ -62,7 +62,7 @@ class FormClonerTest extends KernelTestCase
         $this->compareForms($form, $clonedForm);
     }
 
-    public function testCloneWithModelTransformer()
+    public function testCloneWithModelTransformer(): void
     {
         $transformer = new TestDataTransformer();
         $form = $this->createForm(AdvancedFormType::class, [
@@ -84,7 +84,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertContains($transformer, $clonedTargetFormTransformers);
     }
 
-    public function testCloneChildWithModelTransformer()
+    public function testCloneChildWithModelTransformer(): void
     {
         $transformer = new TestDataTransformer();
         $form = $this->createForm(AdvancedFormType::class, [
@@ -105,7 +105,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertContains($transformer, $clonedTargetFormTransformers);
     }
 
-    public function testCloneWithViewTransformer()
+    public function testCloneWithViewTransformer(): void
     {
         $transformer = new TestDataTransformer();
         $form = $this->createForm(AdvancedFormType::class, [
@@ -127,7 +127,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertContains($transformer, $clonedTargetFormTransformers);
     }
 
-    public function testCloneChildWithViewTransformer()
+    public function testCloneChildWithViewTransformer(): void
     {
         $transformer = new TestDataTransformer();
         $form = $this->createForm(AdvancedFormType::class, [
@@ -148,7 +148,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertContains($transformer, $clonedTargetFormTransformers);
     }
 
-    public function testCloneWithEventSubscriber()
+    public function testCloneWithEventSubscriber(): void
     {
         $subscriber = new FormEventCounterSubscriber();
         $form = $this->createForm(AdvancedFormType::class, [
@@ -162,7 +162,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertTotalNumberOfListeners($clonedForm, 10);
     }
 
-    public function testCloneWithEventListener()
+    public function testCloneWithEventListener(): void
     {
         $listener = [
             'event' => FormEvents::SUBMIT,
@@ -181,7 +181,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertTotalNumberOfListeners($clonedForm, 6);
     }
 
-    public function testCloneWithOptions()
+    public function testCloneWithOptions(): void
     {
         $form = $this->createForm(AdvancedFormType::class, [
             'required' => false,
@@ -201,7 +201,7 @@ class FormClonerTest extends KernelTestCase
      * view transformers based on the options. So we need to check that cloning the form didn't duplicate
      * this transformer but instead replaced it with the appropriate options.
      */
-    public function testOverrideViewTransformers()
+    public function testOverrideViewTransformers(): void
     {
         $originalChoices = [
             'English' => 1,
@@ -236,6 +236,11 @@ class FormClonerTest extends KernelTestCase
         $this->assertEquals($overrideChoices, $clonedChoicesList->getStructuredValues());
     }
 
+    /**
+     * @param DataTransformerInterface $transformer
+     *
+     * @return ChoiceListInterface
+     */
     private function getTransformerChoiceList(DataTransformerInterface $transformer): ChoiceListInterface
     {
         $reflectionProperty = new \ReflectionProperty(ChoiceToValueTransformer::class, 'choiceList');
