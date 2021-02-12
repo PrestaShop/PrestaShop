@@ -36,7 +36,14 @@ const productToCreate = {
 const productData = new ProductFaker(productToCreate);
 
 /*
-
+Add to cart from quick view
+Change quantity from quick view
+Share links from quick view
+Check product information from quick view
+Close quick view modal
+Change combination from quick view
+Select color on hover from product list
+Change image from quick view
  */
 
 describe('Product quick view', async () => {
@@ -147,6 +154,7 @@ describe('Product quick view', async () => {
     });
   });
 
+  // 4 - Check product information from quick view
   describe('Display product from quick view', async () => {
     it('should check product information from quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
@@ -167,6 +175,7 @@ describe('Product quick view', async () => {
     });
   });
 
+  // 5 - Close quick view modal
   describe('Close quick view modal', async () => {
     it('should close quick view product modal and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
@@ -176,6 +185,7 @@ describe('Product quick view', async () => {
     });
   });
 
+  // 6 - Change combination from quick view
   describe('Change combination from quick view modal', async () => {
     it('should change combination on popup and check it in cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
@@ -203,6 +213,7 @@ describe('Product quick view', async () => {
     });
   });
 
+  // 7 - Select color on hover from product list
   describe('Select color on hover on product list', async () => {
     it('should select color on hover on product list and check it on product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
@@ -232,6 +243,7 @@ describe('Product quick view', async () => {
     });
   });
 
+  // 8 - Change image from quick view
   describe('Change image from quick view product modal', async () => {
     describe('Go to BO and create product with 2 images', async () => {
       before(async () => {
