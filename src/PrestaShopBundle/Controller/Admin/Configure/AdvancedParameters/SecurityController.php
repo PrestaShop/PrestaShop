@@ -194,7 +194,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_session_employee');
+        return $this->redirectToRoute('admin_security_sessions_employee');
     }
 
     /**
@@ -221,7 +221,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_session_customer');
+        return $this->redirectToRoute('admin_security_sessions_customer');
     }
 
     /**
@@ -250,7 +250,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_session_customer');
+        return $this->redirectToRoute('admin_security_sessions_customer');
     }
 
     /**
@@ -279,7 +279,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_session_employee');
+        return $this->redirectToRoute('admin_security_sessions_employee');
     }
 
     /**
