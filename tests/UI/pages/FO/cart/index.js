@@ -16,8 +16,8 @@ class Cart extends FOBasePage {
     this.productPrice = number => `${this.productItem(number)} div.current-price span`;
     this.productTotalPrice = number => `${this.productItem(number)} span.product-price`;
     this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
-    this.productSize = number => `${this.productItem(number)} div#size span.value`;
-    this.productColor = number => `${this.productItem(number)} div#color span.value`;
+    this.productSize = number => `${this.productItem(number)} div.product-line-info-size span.value`;
+    this.productColor = number => `${this.productItem(number)} div.product-line-info-color span.value`;
     this.productImage = number => `${this.productItem(number)} span.product-image img`;
     this.deleteIcon = number => `${this.productItem(number)} .remove-from-cart`;
     this.proceedToCheckoutButton = '#main div.checkout a';
