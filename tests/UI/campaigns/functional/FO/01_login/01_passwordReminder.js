@@ -145,7 +145,7 @@ describe('Password reminder', async () => {
     });
 
     it('should check if reset password mail is in mailbox', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordLink', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResetPasswordMail', baseContext);
 
       await expect(newMail.subject).to.contains(resetPasswordMailSubject);
     });
