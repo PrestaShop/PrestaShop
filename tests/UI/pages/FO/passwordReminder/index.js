@@ -9,8 +9,8 @@ class PasswordReminder extends FOBasePage {
 
     // Selectors
     this.emailFormField = '#email';
-    this.backToLoginLink = '#back_to_login';
-    this.sendResetLinkButton = '#send_reset_link';
+    this.backToLoginLink = '#back-to-login';
+    this.sendResetLinkButton = '#send-reset-link';
 
     // Success message
     this.sendResetLinkSuccessAlert = '.ps-alert-success';
