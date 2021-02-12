@@ -64,7 +64,7 @@ class MaintenanceController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminMaintenance'),
             'requireFilterStatus' => false,
-            'generalForm' => $form->createView()
+            'generalForm' => $form->createView(),
         ]);
     }
 
