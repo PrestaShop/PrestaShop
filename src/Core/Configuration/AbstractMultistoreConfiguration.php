@@ -47,7 +47,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
     protected $shopContext;
 
     /**
-     * @var MultistoreFeature
+     * @var FeatureInterface
      */
     protected $multistoreFeature;
 
@@ -56,7 +56,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
      *
      * @param Configuration $configuration
      * @param Context $shopContext
-     * @param MultistoreFeature $multistoreFeature
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature)
     {
