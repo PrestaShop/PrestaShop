@@ -29,8 +29,6 @@ Release Notes for PrestaShop 1.7
 
 - Back Office:
   - Bug fix:
-    - #GHSA-557h-hf3c-whcg - Improper session management for soft logout (by @PierreRambaud)
-    - #GHSA-2rw4-2p99-cmx9 - CSV Injection via csv export (by @PierreRambaud)
     - #23078: [BC Break] Fixed missing APE/SIRET Code in BackOffice Order View (by @Progi1984)
     - #22980: Replaced hooks displayAdminList<Before|After> with displayAdminGridTable<Before|After> (by @Progi1984)
     - #22997: Fix compare function of dashboard's calendar (by @NeOMakinG)
@@ -57,6 +55,8 @@ Release Notes for PrestaShop 1.7
     - #23224: Update PrestaShop's composer dependencies (by @atomiix)
     - #23220: Update composer versions of native modules for 1.7.7.2 (by @matks)
   - Bug fix:
+    - #GHSA-557h-hf3c-whcg: Improper session management for soft logout (by @PierreRambaud)
+    - #GHSA-2rw4-2p99-cmx9: CSV Injection via csv export (by @PierreRambaud)
     - #22682: Fix warning/errors from upgrade scripts (by @atomiix)
     - #23139: Update pear/archive_tar to 1.4.12 (by @matks)
     - #22768: Exclude gifts from getOrderTotal when selected ONLY_PRODUCTS (by @PierreRambaud)
