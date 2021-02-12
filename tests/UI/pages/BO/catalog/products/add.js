@@ -92,7 +92,7 @@ class AddProduct extends BOBasePage {
   /**
    * Set Name, type of product, Reference, price ATI, description and short description
    * @param page
-   * @param productDat
+   * @param productData
    * @return {Promise<void>}
    */
   async setBasicSetting(page, productData) {

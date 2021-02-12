@@ -27,8 +27,12 @@ const ProductFaker = require('@data/faker/product');
 
 let browserContext;
 let page;
-const combination = new ProductFaker({size: 'M', color: 'Black', quantity: 4});
-const totalPrice = 91.78;
+const combination = {
+  size: 'M',
+  color: 'Black',
+  quantity: 4,
+  totalPrice: 91.78,
+};
 const productToCreate = {
   type: 'Standard product',
   productHasCombinations: false,
@@ -228,7 +232,7 @@ describe('Product quick view', async () => {
         expect(result.color).to.equal(combination.color),
         expect(result.image).to.contains(firstProductData.cover_image),
         expect(result.quantity).to.equal(combination.quantity),
-        expect(result.totalPrice).to.equal(totalPrice),
+        expect(result.totalPrice).to.equal(combination.totalPrice),
       ]);
     });
   });

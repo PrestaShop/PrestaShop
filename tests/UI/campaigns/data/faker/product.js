@@ -18,8 +18,6 @@ module.exports = class Product {
       Color: ['White', 'Black'],
       Size: ['S', 'M'],
     };
-    this.color = productToCreate.color;
-    this.size = productToCreate.size;
     this.pack = productToCreate.pack || {
       demo_1: faker.random.number({min: 10, max: 100}),
       demo_2: faker.random.number({min: 10, max: 100}),
