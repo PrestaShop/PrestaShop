@@ -1349,6 +1349,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
         arguments:
             - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
+            - '@form.form_cloner'
         public: true
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:

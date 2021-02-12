@@ -46,11 +46,20 @@ class FeatureValueListener implements EventSubscriberInterface
     private $featureValuesChoiceProvider;
 
     /**
-     * @param ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider
+     * @var FormCloner
      */
-    public function __construct(ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider)
-    {
+    private $formCloner;
+
+    /**
+     * @param ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider
+     * @param FormCloner $formCloner
+     */
+    public function __construct(
+        ConfigurableFormChoiceProviderInterface $featureValuesChoiceProvider,
+        FormCloner $formCloner
+    ) {
         $this->featureValuesChoiceProvider = $featureValuesChoiceProvider;
+        $this->formCloner = $formCloner;
     }
 
     /**
@@ -72,7 +81,7 @@ class FeatureValueListener implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        if (empty($data) || empty($data['feature_id'])) {
+        if (empty($data['feature_id'])) {
             return;
         }
 
@@ -81,8 +90,7 @@ class FeatureValueListener implements EventSubscriberInterface
         }, false);
 
         $featureValues = $this->featureValuesChoiceProvider->getChoices(['feature_id' => (int) $data['feature_id'], 'custom' => $hasCustomValue]);
-        $cloner = new FormCloner();
-        $newFeatureValueForm = $cloner->cloneForm($form->get('feature_value_id'), [
+        $newFeatureValueForm = $this->formCloner->cloneForm($form->get('feature_value_id'), [
             'choices' => $featureValues,
             'attr' => [
                 'disabled' => $hasCustomValue || empty($featureValues),
