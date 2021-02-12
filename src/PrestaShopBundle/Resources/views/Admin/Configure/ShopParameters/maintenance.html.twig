@@ -30,6 +30,7 @@
 {% block content %}
   {{ form_start(generalForm, {'attr' : {'class': 'form', 'id': 'form-maintenance'} }) }}
     <div class="row justify-content-center">
+      {% block maintenance_form_general %}
         <div class="col-xl-10">
           <div class="card">
             <h3 class="card-header">
@@ -48,6 +49,7 @@
             </div>
           </div>
         </div>
+      {% endblock %}
     </div>
   {{ form_end(generalForm) }}
 {% endblock %}
