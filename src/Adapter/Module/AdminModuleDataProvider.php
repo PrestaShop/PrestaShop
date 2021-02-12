@@ -201,7 +201,7 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules,
+            $this->catalog_modules,
             $filters
         );
     }
@@ -435,6 +435,10 @@ class AdminModuleDataProvider implements ModuleInterface
             $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
 
+        if ($this->catalog_modules) {
+            var_dump('AdminModuleDataProvider loadCatalogData - getted from cache');
+        }
+
         if (!$this->catalog_modules) {
             $params = ['format' => 'json'];
             $requests = [
@@ -449,15 +453,22 @@ class AdminModuleDataProvider implements ModuleInterface
 
             try {
                 $listAddons = [];
+                var_dump('AdminModuleDataProvider loadCatalogData - Requests');
+                var_dump($requests);
+
                 // We execute each addons request
                 foreach ($requests as $action_filter_value => $action) {
                     if (!$this->addonsDataProvider->isAddonsUp()) {
+                        var_dump('AdminModuleDataProvider loadCatalogData - Addons is down');
                         continue;
                     }
                     // We add the request name in each product returned by Addons,
                     // so we know whether is bought
 
                     $addons = $this->addonsDataProvider->request($action, $params);
+                    if (empty($addons)) {
+                        var_dump('AdminModuleDataProvider loadCatalogData - Addons requests results are empty');
+                    }
                     /** @var \stdClass $addon */
                     foreach ($addons as $addonsType => $addon) {
                         if (empty($addon->name)) {

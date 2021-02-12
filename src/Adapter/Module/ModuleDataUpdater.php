@@ -63,6 +63,9 @@ class ModuleDataUpdater
      */
     public function setModuleOnDiskFromAddons($name)
     {
+        if ('ps_linklist' === $name) {
+            var_dump('setModuleOnDiskFromAddons - name = ps_linklist');
+        }
         // Note : Data caching should be handled by the addons data provider
         // Check if the module can be downloaded from addons
         foreach ($this->adminModuleDataProvider->getCatalogModules(['name' => $name]) as $catalog_module) {
@@ -70,6 +73,7 @@ class ModuleDataUpdater
                 return $this->addonsDataProvider->downloadModule($catalog_module->id);
             }
         }
+        var_dump('setModuleOnDiskFromAddons - module ps_linklist not found');
 
         return false;
     }
