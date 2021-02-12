@@ -64,12 +64,13 @@ class ModuleGraphTest extends TestCase
     public function getEscapeCellValues()
     {
         return [
-            ['=CMD', '\'=CMD'],
-            ['@here', '\'@here'],
-            ['+something', '\'+something'],
-            ['-thing', '\'-thing'],
-            ['hello world', 'hello world'],
-            ['=@+-', '\'=@+-'],
+            ['=CMD', '"\'=CMD"'],
+            ['@here', '"\'@here"'],
+            ['+something', '"\'+something"'],
+            ['-thing', '"\'-thing"'],
+            ['hello world', '"hello world"'],
+            ['=@+-', '"\'=@+-"'],
+            ['Hey "you"!', '"Hey ""you""!"'],
         ];
     }
 }

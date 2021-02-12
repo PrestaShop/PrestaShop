@@ -379,10 +379,14 @@ abstract class ModuleGraphCore extends Module
      */
     public function escapeCell(string $content): string
     {
+        $escaped = '"'; sprintf('"%s"', str_replace('"', '""', $content));
         if (preg_match('~^[=+\-@]~', $content)) {
-            return '\'' . $content;
+            $content = '\'' . $content;
         }
 
-        return $content;
+        $escaped .= str_replace('"', '""', $content);
+        $escaped .= '"';
+
+        return $escaped;
     }
 }
