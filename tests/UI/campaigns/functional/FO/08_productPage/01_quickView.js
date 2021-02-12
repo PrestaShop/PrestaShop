@@ -42,6 +42,16 @@ const firstCheckProductDetails = {
   quantity: 1,
   shipping: 'Free',
 };
+const secondCheckProductDetails = {
+  name: customCartData.firstProduct.name,
+  price: customCartData.firstProduct.price,
+  size: 'S',
+  color: 'White',
+  quantity: 2,
+  subtotal: '€45.89',
+  shipping: 'Free',
+  totalTaxInc: '€45.89',
+};
 
 /*
 Add to cart from quick view
@@ -118,15 +128,15 @@ describe('Product quick view', async () => {
 
       const result = await homePage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
-        expect(result.name).to.equal(customCartData.firstProduct.name),
-        expect(result.price).to.equal(customCartData.firstProduct.price),
-        expect(result.size).to.equal('S'),
-        expect(result.color).to.equal('White'),
-        expect(result.quantity).to.equal(2),
-        expect(result.cartProductsCount).to.equal(2),
-        expect(result.cartSubtotal).to.equal('€45.89'),
-        expect(result.cartShipping).to.contains('Free'),
-        expect(result.totalTaxIncl).to.contains('€45.89'),
+        expect(result.name).to.equal(secondCheckProductDetails.name),
+        expect(result.price).to.equal(secondCheckProductDetails.price),
+        expect(result.size).to.equal(secondCheckProductDetails.size),
+        expect(result.color).to.equal(secondCheckProductDetails.color),
+        expect(result.quantity).to.equal(secondCheckProductDetails.quantity),
+        expect(result.cartProductsCount).to.equal(secondCheckProductDetails.quantity),
+        expect(result.cartSubtotal).to.equal(secondCheckProductDetails.subtotal),
+        expect(result.cartShipping).to.contains(secondCheckProductDetails.shipping),
+        expect(result.totalTaxIncl).to.contains(secondCheckProductDetails.totalTaxInc),
       ]);
     });
 
