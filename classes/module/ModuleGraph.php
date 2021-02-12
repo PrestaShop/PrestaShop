@@ -371,7 +371,10 @@ abstract class ModuleGraphCore extends Module
     }
 
     /**
-     * Escape cell content
+     * Escape cell content.
+     * If the content begins with =+-@ a quote is added at the beginning of
+     * the string.
+     * In all situation, add double quote to encapsulate the content.
      *
      * @param string $content
      *
@@ -379,7 +382,7 @@ abstract class ModuleGraphCore extends Module
      */
     public function escapeCell(string $content): string
     {
-        $escaped = '"'; sprintf('"%s"', str_replace('"', '""', $content));
+        $escaped = '"';
         if (preg_match('~^[=+\-@]~', $content)) {
             $content = '\'' . $content;
         }
