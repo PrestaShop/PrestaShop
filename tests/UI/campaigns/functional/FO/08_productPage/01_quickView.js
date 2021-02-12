@@ -34,6 +34,14 @@ const productToCreate = {
   productHasCombinations: false,
 };
 const productData = new ProductFaker(productToCreate);
+const firstCheckProductDetails = {
+  name: customCartData.firstProduct.name,
+  price: customCartData.firstProduct.price,
+  size: 'S',
+  color: 'White',
+  quantity: 1,
+  shipping: 'Free',
+};
 
 /*
 Add to cart from quick view
@@ -75,15 +83,15 @@ describe('Product quick view', async () => {
 
       const result = await homePage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
-        expect(result.name).to.equal(customCartData.firstProduct.name),
-        expect(result.price).to.equal(customCartData.firstProduct.price),
-        expect(result.size).to.equal('S'),
-        expect(result.color).to.equal('White'),
-        expect(result.quantity).to.equal(1),
-        expect(result.cartProductsCount).to.equal(1),
-        expect(result.cartSubtotal).to.equal(customCartData.firstProduct.price),
-        expect(result.cartShipping).to.contains('Free'),
-        expect(result.totalTaxIncl).to.contains(customCartData.firstProduct.price),
+        expect(result.name).to.equal(firstCheckProductDetails.name),
+        expect(result.price).to.equal(firstCheckProductDetails.price),
+        expect(result.size).to.equal(firstCheckProductDetails.size),
+        expect(result.color).to.equal(firstCheckProductDetails.color),
+        expect(result.quantity).to.equal(firstCheckProductDetails.quantity),
+        expect(result.cartProductsCount).to.equal(firstCheckProductDetails.quantity),
+        expect(result.cartSubtotal).to.equal(firstCheckProductDetails.price),
+        expect(result.cartShipping).to.contains(firstCheckProductDetails.shipping),
+        expect(result.totalTaxIncl).to.contains(firstCheckProductDetails.price),
       ]);
     });
   });
