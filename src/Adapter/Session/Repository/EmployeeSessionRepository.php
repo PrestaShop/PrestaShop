@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Session\Repository;
 use Doctrine\DBAL\Connection;
 use EmployeeSession;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteSessionException;
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteEmployeeSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteEmployeeSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\EmployeeSessionId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -90,13 +90,13 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
      */
     public function delete(EmployeeSessionId $employeeSessionId): void
     {
-        $this->deleteObjectModel($this->get($employeeSessionId), CannotDeleteSessionException::class);
+        $this->deleteObjectModel($this->get($employeeSessionId), CannotDeleteEmployeeSessionException::class);
     }
 
     /**
      * @param array $employeeSessionIds
      *
-     * @throws CannotBulkDeleteSessionException
+     * @throws CannotBulkDeleteEmployeeSessionException
      */
     public function bulkDelete(array $employeeSessionIds): void
     {
@@ -104,7 +104,7 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
         foreach ($employeeSessionIds as $employeeSessionId) {
             try {
                 $this->delete($employeeSessionId);
-            } catch (CannotDeleteSessionException $e) {
+            } catch (CannotDeleteEmployeeSessionException $e) {
                 $failedIds[] = $employeeSessionId->getValue();
             }
         }
@@ -113,7 +113,7 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
             return;
         }
 
-        throw new CannotBulkDeleteSessionException(
+        throw new CannotBulkDeleteEmployeeSessionException(
             $failedIds,
             sprintf('Failed to delete following employees sessions: "%s"', implode(', ', $failedIds))
         );
