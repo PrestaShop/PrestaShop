@@ -53,6 +53,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 abstract class AbstractCategoryType extends TranslatorAwareType
 {
+    private const MAX_TITLE_LENGTH = 128;
+
     /**
      * @var array
      */
@@ -125,10 +127,23 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'maxlength' => self::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>;=#{}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => self::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
@@ -265,8 +280,19 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_KEYWORDS_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_KEYWORDS_LENGTH,
+                                ]
+                            ),
+                        ]),
                     ],
                     'attr' => [
+                        'maxlength' => SeoSettings::MAX_KEYWORDS_LENGTH,
                         'class' => 'js-taggable-field',
                         'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
@@ -281,10 +307,23 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'maxlength' => self::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL') ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => self::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
