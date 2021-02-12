@@ -27,12 +27,18 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
  */
 class MaintenanceConfiguration extends AbstractMultistoreConfiguration
 {
+    /**
+     * @var string[]
+     */
+    private $fields = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
+
     /**
      * {@inheritdoc}
      */
@@ -50,11 +56,13 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
      */
     public function updateConfiguration(array $configurationInputValues)
     {
-        $shopConstraint = $this->getShopConstraint();
+        if ($this->validateConfiguration($configurationInputValues)) {
+            $shopConstraint = $this->getShopConstraint();
 
-        $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
-        $this->updateConfigurationValue('PS_MAINTENANCE_IP', 'maintenance_ip', $configurationInputValues, $shopConstraint);
-        $this->updateConfigurationValue('PS_MAINTENANCE_TEXT', 'maintenance_text', $configurationInputValues, $shopConstraint, ['html' => true]);
+            $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAINTENANCE_IP', 'maintenance_ip', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAINTENANCE_TEXT', 'maintenance_text', $configurationInputValues, $shopConstraint, ['html' => true]);
+        }
 
         return [];
     }
@@ -64,9 +72,20 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
      *
      * @return bool
      */
-    public function validateConfiguration(array $configuration): bool
+    public function validateConfiguration(array $configurationInputValues): bool
     {
-        // TODO: Implement validateConfiguration() method.
+        // add multistore fields in list of expected fields
+        foreach ($this->fields as $value) {
+            $this->fields[] = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $value;
+        }
+
+        // check all given fields are expected
+        foreach ($configurationInputValues as $key => $value) {
+            if (!in_array($key, $this->fields)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
