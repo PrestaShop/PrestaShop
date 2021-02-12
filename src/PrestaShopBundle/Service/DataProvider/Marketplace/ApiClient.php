@@ -240,6 +240,9 @@ class ApiClient
 
     public function getResponse()
     {
+        var_dump('ApiClient - getResponse');
+        var_dump($this->addonsApiClient->getBaseUrl());
+        var_dump($this->queryParameters);
         return (string) $this->addonsApiClient
             ->get(
                 null,
