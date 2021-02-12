@@ -141,7 +141,7 @@ class SecurityController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employee.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Employees sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
             ]
         );
@@ -164,7 +164,7 @@ class SecurityController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customer.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Employees sessions', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
             ]
         );
@@ -291,7 +291,7 @@ class SecurityController extends FrameworkBundleAdminController
     {
         return [
             SessionNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
         ];
