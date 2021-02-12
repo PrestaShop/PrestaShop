@@ -68,7 +68,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * @param array $configuration
+     * @param array $configurationInputValues
      *
      * @return bool
      */
