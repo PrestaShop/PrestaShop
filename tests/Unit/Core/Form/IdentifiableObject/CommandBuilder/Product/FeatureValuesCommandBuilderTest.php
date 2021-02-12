@@ -42,7 +42,7 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new FeatureValuesCommandBuilder();
         $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
@@ -236,7 +236,7 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
      * @param array $formData
      * @param string $exceptionClass
      */
-    public function testInvalidBuildCommand(array $formData, string $exceptionClass)
+    public function testInvalidBuildCommand(array $formData, string $exceptionClass): void
     {
         $this->expectException($exceptionClass);
         $builder = new FeatureValuesCommandBuilder();
