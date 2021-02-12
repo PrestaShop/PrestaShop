@@ -52,13 +52,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     /**
      * @var string
      */
     public const GRID_ID = 'supplier';
-
-    use BulkDeleteActionTrait;
-    use DeleteActionTrait;
 
     /**
      * {@inheritdoc}
