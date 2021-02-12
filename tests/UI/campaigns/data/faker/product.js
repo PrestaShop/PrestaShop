@@ -3,6 +3,8 @@ const faker = require('faker');
 module.exports = class Product {
   constructor(productToCreate) {
     this.name = (productToCreate.name || faker.commerce.productName()).toUpperCase();
+    this.coverImage = productToCreate.coverImage || null;
+    this.thumbImage = productToCreate.thumbImage || null;
     this.type = productToCreate.type;
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;

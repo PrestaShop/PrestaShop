@@ -16,7 +16,9 @@ class AddProduct extends BOBasePage {
 
     // Selectors
     this.productNameInput = '#form_step1_name_1';
+    this.productImageDropZoneDiv = '#product-images-dropzone';
     this.productTypeSelect = '#form_step1_type_product';
+    this.openFileManagerDiv = '.disabled.openfilemanager.dz-clickable';
     this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
@@ -90,13 +92,17 @@ class AddProduct extends BOBasePage {
   /**
    * Set Name, type of product, Reference, price ATI, description and short description
    * @param page
-   * @param productData
+   * @param productDat
    * @return {Promise<void>}
    */
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
-    await this.uploadFilePath(page, '#product-images-dropzone', `${productData.name}1.jpg`);
-    await this.uploadFilePath(page, '.disabled.openfilemanager.dz-clickable', `${productData.name}2.jpg`);
+    if (productData.coverImage != null) {
+      await this.uploadFilePath(page, this.productImageDropZoneDiv, productData.coverImage);
+    }
+    if (productData.thumbImage != null) {
+      await this.uploadFilePath(page, this.openFileManagerDiv, productData.thumbImage);
+    }
     await page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await page.click(this.productShortDescriptionTab);

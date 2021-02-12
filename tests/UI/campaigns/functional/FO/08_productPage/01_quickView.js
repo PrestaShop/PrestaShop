@@ -32,6 +32,8 @@ const totalPrice = 91.78;
 const productToCreate = {
   type: 'Standard product',
   productHasCombinations: false,
+  coverImage: 'cover.jpg',
+  thumbImage: 'thumb.jpg',
 };
 const productData = new ProductFaker(productToCreate);
 const firstCheckProductDetails = {
@@ -269,8 +271,8 @@ describe('Product quick view', async () => {
 
         // Create products images
         await Promise.all([
-          files.generateImage(`${productData.name}1.jpg`),
-          files.generateImage(`${productData.name}2.jpg`),
+          files.generateImage(productData.coverImage),
+          files.generateImage(productData.thumbImage),
         ]);
       });
 
@@ -311,8 +313,8 @@ describe('Product quick view', async () => {
 
         /* Delete the generated images */
         await Promise.all([
-          files.deleteFile(`${productData.name}1.jpg`),
-          files.deleteFile(`${productData.name}2.jpg`),
+          files.deleteFile(productData.coverImage),
+          files.deleteFile(productData.thumbImage),
         ]);
       });
     });
