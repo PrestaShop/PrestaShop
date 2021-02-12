@@ -115,7 +115,7 @@ describe('Product quick view', async () => {
   // 2 - Change quantity from quick view
   describe('Change quantity from quick view', async () => {
     it('should proceed to checkout and delete product from the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProductFromCart1', baseContext);
 
       await homePage.proceedToCheckout(page);
 
@@ -147,7 +147,7 @@ describe('Product quick view', async () => {
     });
 
     it('should proceed to checkout and delete product from the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeBlockCartModal', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProductFromCart2', baseContext);
 
       await homePage.proceedToCheckout(page);
 
@@ -285,7 +285,7 @@ describe('Product quick view', async () => {
       });
 
       it('should go to Products page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCreate', baseContext);
 
         await boDashboardPage.goToSubMenu(
           page,
@@ -332,7 +332,7 @@ describe('Product quick view', async () => {
       });
 
       it('should verify when we change thumb image in quick view modal', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'verifyThumbImage', baseContext);
 
         const coverSecondImageURL = await searchResultsPage.selectThumbImage(page, 2);
         const coverFirstImageURL = await searchResultsPage.selectThumbImage(page, 1);
@@ -351,7 +351,7 @@ describe('Product quick view', async () => {
       });
 
       it('should go to Products page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
 
         await boDashboardPage.goToSubMenu(
           page,
