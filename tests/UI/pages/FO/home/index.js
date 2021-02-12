@@ -43,13 +43,13 @@ class Home extends FOBasePage {
     this.blockCartModalDiv = '#blockcart-modal';
     this.productName = `${this.blockCartModalDiv} .product-name`;
     this.productPrice = `${this.blockCartModalDiv} .product-price`;
-    this.productSize = `${this.blockCartModalDiv} .Size strong`;
-    this.productColor = `${this.blockCartModalDiv} .Color strong`;
+    this.productSize = `${this.blockCartModalDiv} .size strong`;
+    this.productColor = `${this.blockCartModalDiv} .color strong`;
     this.productQuantity = `${this.blockCartModalDiv} .product-quantity`;
     this.cartContent = `${this.blockCartModalDiv} .cart-content`;
     this.cartProductsCount = `${this.cartContent} .cart-products-count`;
-    this.cartShipping = `${this.cartContent} .shipping`;
-    this.cartSubtotal = `${this.cartContent} .subtotals`;
+    this.cartShipping = `${this.cartContent} #shipping`;
+    this.cartSubtotal = `${this.cartContent} #subtotals`;
     this.productTaxIncl = `${this.cartContent} .product-total .value`;
     this.blockCartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
   }

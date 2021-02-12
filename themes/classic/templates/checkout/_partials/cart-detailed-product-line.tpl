@@ -66,7 +66,7 @@
     <br/>
 
     {foreach from=$product.attributes key="attribute" item="value"}
-      <div id={$attribute} class="product-line-info">
+      <div id={$attribute|lower} class="product-line-info">
         <span class="label">{$attribute}:</span>
         <span class="value">{$value}</span>
       </div>
