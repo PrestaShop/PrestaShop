@@ -372,7 +372,9 @@ class ProductLazyArray extends AbstractLazyArray
         $seoAvailability = 'https://schema.org/';
         if ($this->product['quantity'] > 0) {
             $seoAvailability .= 'InStock';
-        } elseif ($this->product['quantity'] <= 0 && $this->product['allow_oosp']) {
+        } elseif (!Configuration::get('PS_STOCK_MANAGEMENT')) {
+            $seoAvailability .= 'InStock';
+        } elseif ($this->product['quantity'] <= 0 && $this->product['allow_oosp'] && Configuration::get('PS_STOCK_MANAGEMENT')) {
             $seoAvailability .= 'PreOrder';
         } else {
             $seoAvailability .= 'OutOfStock';
