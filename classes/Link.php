@@ -1173,9 +1173,18 @@ class LinkCore
             $request['token'] = Tools::getToken(false);
         }
 
-        $uriPath = Dispatcher::getInstance()->createUrl($controller, $idLang, $request, false, '', $idShop);
-
-        return $this->getBaseLink($idShop, $ssl, $relativeProtocol) . $this->getLangLink($idLang, null, $idShop) . ltrim($uriPath, '/');
+        $uriPath = ltrim(
+            $Dispatcher::getInstance()->createUrl($controller, $idLang, $request, false, '', $idShop),
+            '/'
+        );
+        
+        // If URL refer to index.php, do not use locale as root dir
+        $needle = 'index.php';
+        if( substr($uriPath, 0, strlen($needle)) === $needle ) {
+            return $this->getBaseLink($idShop, $ssl, $relativeProtocol) . $uriPath;
+        } else {
+            return $this->getBaseLink($idShop, $ssl, $relativeProtocol) . $this->getLangLink($idLang, null, $idShop) . $uriPath;
+        }
     }
 
     /**
