@@ -94,10 +94,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         /**
          * In some cases in form menu_thumbnail_images can be disabled so value won't get here.
          */
-        $menuThumbnailImages = [];
-        if (isset($data['menu_thumbnail_images'])) {
-            $menuThumbnailImages = $data['menu_thumbnail_images'];
-        }
+        $menuThumbnailImages = $data['menu_thumbnail_images'] ?? [];
         $this->uploadImages(
             $categoryId,
             $data['cover_image'],
