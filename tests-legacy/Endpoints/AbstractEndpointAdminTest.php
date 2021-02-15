@@ -44,7 +44,9 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
 
         parent::setUp();
+
         $this->initContainerInstance();
+
         if (!defined('_PS_TAB_MODULE_LIST_URL_')) {
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }

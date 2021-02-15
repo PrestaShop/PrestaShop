@@ -182,8 +182,9 @@ class AppKernel extends Kernel
      */
     private function enableComposerAutoloaderOnModules($modules)
     {
+        $moduleDirectoryPath = rtrim(_PS_MODULE_DIR_, '/') . '/';
         foreach ($modules as $module) {
-            $autoloader = __DIR__ . '/../modules/' . $module . '/vendor/autoload.php';
+            $autoloader = $moduleDirectoryPath . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {
                 include_once $autoloader;
