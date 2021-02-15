@@ -1,0 +1,137 @@
+// stylelint-disable-next-line
+$component-name: multishop-modal;
+
+.#{$component-name} {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  pointer-events: all;
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  transform: translateX(-50%);
+  @include transition(0.25s ease-out);
+
+  &-hidden {
+    pointer-events: none;
+    opacity: 0;
+
+    .#{$component-name}-dialog {
+      transform: translateX(-5rem);
+    }
+  }
+
+  &-dialog {
+    width: 100%;
+    max-width: 39.375rem;
+    padding: 1.875rem 3.125rem;
+    background: #fff;
+    border: 1px solid #b7ced3;
+    // stylelint-disable
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    // stylelint-enable
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+    @include transition(0.25s ease-out);
+
+    ul,
+    li {
+      padding: 0;
+      margin-left: 0;
+      list-style-type: none;
+    }
+  }
+
+  &-search {
+    min-height: auto;
+    padding: 0.3rem 1rem;
+    padding-left: 2.2rem;
+    margin-bottom: 2rem;
+
+    &-container {
+      position: relative;
+
+      i {
+        position: absolute;
+        top: 52%;
+        left: 0.75rem;
+        font-size: 1.2rem;
+        color: $medium-gray;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  &-all-name,
+  &-group-name,
+  &-shop-name {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 19px;
+    color: #4a4a4a;
+    text-decoration: underline;
+
+    i {
+      text-decoration: none;
+    }
+  }
+
+  &-all-name,
+  &-group-name {
+    font-weight: 600;
+  }
+
+  &-all {
+    margin-bottom: 2rem;
+
+    &-name {
+      text-decoration: none;
+
+      i {
+        margin-right: 0.6rem;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      span {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &-group-item {
+    margin-bottom: 1.425rem;
+
+    &:not(:first-of-type) {
+      margin-top: 2rem;
+    }
+  }
+
+  &-shop-item {
+    margin-bottom: 1.275rem;
+  }
+
+  &-color {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 1rem;
+    background-color: $multishop-header-default-background;
+    @include border-radius(3px);
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
