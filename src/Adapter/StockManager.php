@@ -133,10 +133,10 @@ class StockManager implements StockInterface
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
     {
-        $invalidStates = [
+        $statesToIgnore = [
             (int) $errorState,
             (int) $cancellationState,
-            (int) (new ConfigurationAdapter())->get('PS_OS_REFUND')
+            (int) (new ConfigurationAdapter())->get('PS_OS_REFUND'),
         ];
         $updateReservedQuantityQuery = '
             UPDATE {table_prefix}stock_available sa
