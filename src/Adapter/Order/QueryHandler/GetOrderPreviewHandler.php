@@ -77,7 +77,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     public function __construct(
         LocaleRepository $localeRepository,
         string $locale,
-        ?int $contextLanguageId
+        ?int $contextLanguageId = null
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;
