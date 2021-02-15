@@ -26,7 +26,7 @@ jobs:
                   ${{ runner.os }}-composer-
 
       -   name: Composer Install
-          run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+          run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
       -   name: Run PHPCSFixer
           run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
@@ -56,7 +56,7 @@ jobs:
                     ${{ runner.os }}-composer-
 
         -   name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+            run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
         -   name: Run phpstan
             run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
@@ -93,7 +93,7 @@ jobs:
                     ${{ runner.os }}-composer-
 
         -   name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+            run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
         -   name: Run phpunit
             run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
@@ -139,7 +139,7 @@ jobs:
                     ${{ runner.os }}-composer-
 
         -   name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+            run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
         -   name: Install PrestaShop
             run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
