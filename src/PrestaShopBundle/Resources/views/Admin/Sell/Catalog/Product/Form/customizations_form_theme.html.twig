@@ -23,20 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {%- block customizations_widget -%}
-  {% set prototype = form.customization_fields.vars.prototype %}
-  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' col-md-12')|trim }) -%}
-  <div {{ block('widget_attributes') }}>
-    <ul class="list-unstyled">
-      {{ form_row(form.customization_fields) }}
-    </ul>
-    {{ form_widget(form.add_customization_field) }}
-  </div>
+  {{ form_row(form.customization_fields) }}
+  {{ form_row(form.add_customization_field) }}
 {%- endblock customizations_widget -%}
 
 {%- block customizations_row -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' col-md-12')|trim }) -%}
   <h2>{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-  {{ form_widget(form) }}
+  <div {{ block('widget_attributes') }}>
+    {{ form_widget(form) }}
+  </div>
 {%- endblock customizations_row -%}
 
 {%- block customization_field_row -%}
@@ -65,5 +61,9 @@
 {%- endblock customization_field_row -%}
 
 {%- block _product_customizations_customization_fields_row -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' list-unstyled')|trim }) -%}
+  <ul {{ block('widget_attributes') }}>
     {{- block('form_rows') -}}
+  </ul>
 {%- endblock _product_customizations_customization_fields_row -%}

@@ -33,8 +33,8 @@ export default class CustomizationsManager {
     this.$customizationsContainer = $(ProductMap.customizations.customizationsContainer);
     this.$customizationFieldsList = $(ProductMap.customizations.customizationFieldsList);
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.prototypeTemplate = this.$customizationsContainer.data('prototype');
-    this.prototypeName = this.$customizationsContainer.data('prototypeName');
+    this.prototypeTemplate = this.$customizationFieldsList.data('prototype');
+    this.prototypeName = this.$customizationFieldsList.data('prototypeName');
 
     this.init();
   }
