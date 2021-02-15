@@ -2,6 +2,7 @@ $component-name: header-multishop !default;
 
 .#{$component-name} {
   position: relative;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,8 +28,17 @@ $component-name: header-multishop !default;
 
   &-default {
     .#{$component-name}-title,
-    .#{$component-name}-view-action {
+    .#{$component-name}-center,
+    .#{$component-name}-view-action, {
       color: $multishop-header-default-color;
+
+      i {
+        color: #757575;
+      }
+    }
+
+    .#{$component-name}-button {
+      background: #fff;
     }
   }
 
@@ -45,12 +55,47 @@ $component-name: header-multishop !default;
       margin-top: 0.1rem;
       margin-left: 0.5rem;
       font-size: 1.25rem;
-      color: #757575;
+      color: #fff;
     }
 
     &:hover {
+      color: #fff;
       text-decoration: none;
       opacity: 0.7;
+    }
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 1rem;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    @include border-radius(3px);
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:active,
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &-center {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    cursor: pointer;
+    @include transition(0.25s ease-out);
+
+    &:hover {
+      opacity: 0.6;
     }
   }
 }
