@@ -68,12 +68,15 @@ class MultistoreController extends FrameworkBundleAdminController
             if ($this->multistoreContext->isShopContext()) {
                 $shop = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
             }
+
+            $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         }
 
         return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
             'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
             'currentShop' => $shop ?: null,
             'currentShopGroup' => $shopGroup ?: null,
+            'groupList' => $groupList ?: null,
         ]);
     }
 }
