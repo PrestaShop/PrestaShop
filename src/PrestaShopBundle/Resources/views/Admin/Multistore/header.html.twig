@@ -2,8 +2,6 @@
 
 {% if isMultistoreUsed %}
   <div class="header-multishop{% if currentContext.color is empty %} header-multishop-default{% endif %}"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
-    <div class="clearfix"></div>
-
     <div class="header-multishop-center">
       <h2 class="header-multishop-title">
         {{ currentContext.name }}
