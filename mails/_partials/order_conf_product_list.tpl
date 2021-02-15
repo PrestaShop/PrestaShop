@@ -107,7 +107,7 @@
   					<td width="5">&nbsp;</td>
   					<td>
   						<font size="2" face="Open-sans, sans-serif" color="#555454">
-  							{$customization['customization_text']}
+  							{$customization['customization_text'] nofilter}
   						</font>
   					</td>
   					<td width="5">&nbsp;</td>
