@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
 use PrestaShopBundle\Entity\Shop;
+use PrestaShopBundle\Entity\ShopGroup;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\MultistoreHeaderShop;
 
 class MultistoreController extends FrameworkBundleAdminController
@@ -57,19 +58,22 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     public function header(): Response
     {
-        if ($this->multistoreFeature->isUsed()) {
-
+        // this whole code is temporary, shop and group shop data will be stored in a presentation class
+        if ($this->multistoreFeature->isUsed() && !$this->multistoreContext->isAllShopContext()) {
+            // $legacyUrlProvider = $this->get('prestashop.adapter.shop.url.base_url_provider');
+            if ($this->multistoreContext->isGroupShopContext()) {
+                $shopGroup = $this->multistoreContext->getContextShopGroup();
+                $shopGroup = $this->entityManager->getRepository(ShopGroup::class)->findOneById($shopGroup->id);
+            }
+            if ($this->multistoreContext->isShopContext()) {
+                $shop = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
+            }
         }
-        $shopId = $this->multistoreContext->getContextShopID();
-
-        $legacyUrlProvider = $this->get('prestashop.adapter.shop.url.base_url_provider');
-
-
-        $shop = $this->entityManager->getRepository(Shop::class)->findOneById($shopId);
-        $test = new MultistoreHeaderShop($shop);
 
         return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
             'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
+            'currentShop' => $shop ?: null,
+            'currentShopGroup' => $shopGroup ?: null,
         ]);
     }
 }
