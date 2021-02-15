@@ -82,10 +82,12 @@ class CustomizationFieldType extends TranslatorAwareType
             ->add('required', SwitchType::class, [
                 'label' => $this->trans('Required', 'Admin.Global'),
             ])
+            //@todo: icon button type with "delete" icon. https://github.com/PrestaShop/PrestaShop/pull/23159
             ->add('remove', ButtonType::class, [
                 'label' => false,
                 'attr' => [
                     'type' => 'button',
+                    'class' => 'text-secondary remove-customization-btn',
                 ],
             ])
         ;

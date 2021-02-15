@@ -23,20 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {%- block customizations_widget -%}
-  <div class="col-md-12">
-    <h2>{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-    <ul class="list-unstyled" id="customization-fields-list"
-        data-prototype="{{ form_row(form.customization_fields.vars.prototype)|e('html_attr') }}"
-        data-prototype-name="{{ form.customization_fields.vars.prototype.vars.name }}"
-    >
+  {% set prototype = form.customization_fields.vars.prototype %}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' col-md-12')|trim }) -%}
+  <div {{ block('widget_attributes') }}>
+    <ul class="list-unstyled">
       {{ form_row(form.customization_fields) }}
     </ul>
-    <button type="button" class="btn btn-outline-secondary" id="add-customization-btn">
-      <i class="material-icons">add_circle</i>
-      {{ 'Add a customization field'|trans({}, 'Admin.Catalog.Feature') }}
-    </button>
+    {{ form_widget(form.add_customization_field) }}
   </div>
 {%- endblock customizations_widget -%}
+
+{%- block customizations_row -%}
+  <h2>{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+  {{ form_widget(form) }}
+{%- endblock customizations_row -%}
 
 {%- block customization_field_row -%}
   <li class="form-group row customization-field-item">
@@ -50,6 +51,8 @@
       {{ form_errors(form.type) }}
     </div>
     <div class="col-md-1">
+{#      @todo: render form_widget instead of custom button once IconButtonType is implemented #}
+{#      {{ form_widget(form.remove) }}#}
       <button type="button" class="btn text-secondary remove-customization-btn">
         <i class="material-icons">delete</i>
       </button>

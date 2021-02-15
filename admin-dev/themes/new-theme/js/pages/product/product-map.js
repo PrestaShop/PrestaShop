@@ -61,9 +61,9 @@ export default {
     addFeatureValue: '#product_features_add_feature',
   },
   customizations: {
-    customizationsContainer: '#product-customizations',
-    customizationFieldsList: '#customization-fields-list',
-    addCustomizationBtn: '#add-customization-btn',
+    customizationsContainer: '#product_customizations',
+    customizationFieldsList: '#product_customizations ul',
+    addCustomizationBtn: '#product_customizations_add_customization_field',
     removeCustomizationBtn: '.remove-customization-btn',
     customizationFieldItem: '.customization-field-item',
   },

@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -36,6 +37,14 @@ class CustomizationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            //@todo: icon button type with add_circle icon. https://github.com/PrestaShop/PrestaShop/pull/23159
+            ->add('add_customization_field', ButtonType::class, [
+                'label' => $this->trans('Add a customization field', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'type' => 'button',
+                    'class' => 'btn-outline-secondary',
+                ],
+            ])
             ->add('customization_fields', CollectionType::class, [
                 'entry_type' => CustomizationFieldType::class,
                 'allow_add' => true,
