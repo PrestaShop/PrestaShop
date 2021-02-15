@@ -143,7 +143,7 @@ class OrderAmountUpdater
             // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
             $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
 
-            // synchronize modified products with the order
+            // Synchronize modified products with the order
             $modifiedProducts = $productsComparator->getModifiedProducts();
             $this->updateOrderModifiedProducts($modifiedProducts, $cart, $order);
 
@@ -175,7 +175,7 @@ class OrderAmountUpdater
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function updateOrderModifiedProducts(array $modifiedProducts, Cart $cart, Order $order)
+    private function updateOrderModifiedProducts(array $modifiedProducts, Cart $cart, Order $order): void
     {
         $productsToAddToOrder = [];
         foreach ($modifiedProducts as $modifiedProduct) {
