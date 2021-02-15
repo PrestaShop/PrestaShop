@@ -173,10 +173,13 @@ class OrderStateCore extends ObjectModel
     public static function countByLocalizedName(string $name, int $idLang, ?int $excludeIdOrderState): int
     {
         return (int) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT COUNT(*) AS count FROM ' . _DB_PREFIX_ . 'order_state_lang' .
-            ' WHERE id_lang = ' . $idLang .
-            ' AND name =  \'' . pSQL($name) . '\'' .
-            ($excludeIdOrderState ? ' AND id_order_state != ' . $excludeIdOrderState : '')
+            'SELECT COUNT(*) AS count' .
+            ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
+            ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .
+            ' WHERE osl.id_lang = ' . $idLang .
+            ' AND osl.name =  \'' . pSQL($name) . '\'' .
+            ' AND os.deleted = 0' .
+            ($excludeIdOrderState ? ' AND osl.id_order_state != ' . $excludeIdOrderState : '')
         );
     }
 }
