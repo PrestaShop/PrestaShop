@@ -28,13 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\EntityManager;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\MultistoreHeaderShop;
+use Symfony\Component\HttpFoundation\Response;
 
 class MultistoreController extends FrameworkBundleAdminController
 {
@@ -58,19 +57,21 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     public function header(): Response
     {
-        // this whole code is temporary, shop and group shop data will be stored in a presentation class
-        if ($this->multistoreFeature->isUsed() && !$this->multistoreContext->isAllShopContext()) {
-            // $legacyUrlProvider = $this->get('prestashop.adapter.shop.url.base_url_provider');
-            if ($this->multistoreContext->isGroupShopContext()) {
-                $shopGroup = $this->multistoreContext->getContextShopGroup();
-                $shopGroup = $this->entityManager->getRepository(ShopGroup::class)->findOneById($shopGroup->id);
-            }
-            if ($this->multistoreContext->isShopContext()) {
-                $shop = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
-            }
-
-            $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        if (!$this->multistoreFeature->isUsed() || $this->multistoreContext->isAllShopContext()) {
+            return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
+                'isMultistoreUsed' => false,
+            ]);
         }
+
+        // $legacyUrlProvider = $this->get('prestashop.adapter.shop.url.base_url_provider');
+        $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
+        $shopGroup = $this->entityManager->getRepository(ShopGroup::class)->findOneById($shopGroupLegacy->id);
+        $shop = null;
+        if ($this->multistoreContext->isShopContext()) {
+            $shop = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
+        }
+
+        $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
 
         return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
             'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
