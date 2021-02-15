@@ -160,7 +160,7 @@ class StockManager implements StockInterface
         $strParams = [
             '{table_prefix}' => _DB_PREFIX_,
             ':shop_id' => (int) $shopId,
-            ':invalidStates' => implode(',', $invalidStates)
+            ':statesToIgnore' => implode(',', $statesToIgnore),
         ];
 
         if ($idProduct) {
