@@ -65,7 +65,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     private $locale;
 
     /**
-     * @var int
+     * @var int|false|null
      */
     private $contextLanguageId;
 
