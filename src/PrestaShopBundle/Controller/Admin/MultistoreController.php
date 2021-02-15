@@ -64,20 +64,27 @@ class MultistoreController extends FrameworkBundleAdminController
         }
 
         // $legacyUrlProvider = $this->get('prestashop.adapter.shop.url.base_url_provider');
-        $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
-        $shopGroup = $this->entityManager->getRepository(ShopGroup::class)->findOneById($shopGroupLegacy->id);
+
         $shop = null;
-        if ($this->multistoreContext->isShopContext()) {
-            $shop = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
+        $isShopContext = $this->multistoreContext->isShopContext();
+        if ($isShopContext) {
+            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
+        } else {
+            $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
+            $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneById($shopGroupLegacy->id);
         }
+
+        // @todo build legacy urls
+        $currentContext->urlBO = 'http://urlBO';
+        $currentContext->urlFO = 'http://urlFO';
 
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
 
         return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
             'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
-            'currentShop' => $shop ?: null,
-            'currentShopGroup' => $shopGroup ?: null,
-            'groupList' => $groupList ?: null,
+            'currentContext' => $currentContext,
+            'groupList' => $groupList,
+            'isShopContext' => $isShopContext,
         ]);
     }
 }
