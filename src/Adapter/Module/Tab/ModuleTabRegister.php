@@ -280,9 +280,7 @@ class ModuleTabRegister
      */
     protected function getModuleControllersFromRouting(string $moduleName): array
     {
-        $routingFile = _PS_ROOT_DIR_ . '/' . basename(_PS_MODULE_DIR_) .
-            '/' . $moduleName . '/config/routes.yml';
-
+        $routingFile = rtrim(_PS_MODULE_DIR_, '/') . '/' . $moduleName . '/config/routes.yml';
         if (!$this->filesystem->exists($routingFile)) {
             return [];
         }
