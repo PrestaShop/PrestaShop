@@ -1218,6 +1218,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 0 invoice
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
+    # There is not tax when a french address is used (in this test context)
       | total_products           | 12.00 |
       | total_products_wt        | 12.00 |
       | total_discounts_tax_excl | 0.0   |
