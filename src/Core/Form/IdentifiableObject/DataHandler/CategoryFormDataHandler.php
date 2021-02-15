@@ -242,7 +242,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
                 $usedKeys[] = (int) $matches[1];
             }
         }
+
         return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
     }
-
 }
