@@ -150,6 +150,7 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ->setOptions([
                         'field' => 'description',
                         'sortable' => false,
+                        'raw' => true
                     ])
             )
             ->add(
