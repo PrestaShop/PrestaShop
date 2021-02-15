@@ -148,7 +148,7 @@ class StockManager implements StockInterface
                 WHERE o.id_shop = :shop_id AND
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
-                        os.id_order_state NOT IN (:invalidStates)
+                        os.id_order_state NOT IN (:statesToIgnore)
                     )
                 ) AND sa.id_product = od.product_id AND
                 sa.id_product_attribute = od.product_attribute_id
