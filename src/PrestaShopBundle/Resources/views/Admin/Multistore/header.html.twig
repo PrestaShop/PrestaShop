@@ -1,13 +1,17 @@
 {# this is temporary, shop context and list of shops will be stored in presentation class, made available here #}
 
 {% if isMultistoreUsed %}
-<div style="width:100%; height: 40px; background-color:#d06868; padding:12px;">
-<h2 style="color: white; font-size: 14px; text-align:center;">
-  {% if currentShop %}
-    {{ currentShop.name }}
-  {% else %}
-    {{ currentShopGroup.name }}
-  {% endif %}
-</h2>
-</div>
+  <div class="header-multishop{% if currentContext.color is empty %} header-multishop-default{% endif %}"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
+    <div class="clearfix"></div>
+
+    <div class="header-multishop-center">
+      <h2 class="header-multishop-title">
+        {{ currentContext.name }}
+      </h2>
+    </div>
+
+    <div class="header-multishop-right">
+      <a class="header-multishop-view-action" href="{{currentContext.urlFO}}" target="_blank" rel="nofollow">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+    </div>
+  </div>
 {% endif %}
