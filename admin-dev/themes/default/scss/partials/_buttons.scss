@@ -9,21 +9,21 @@
     }
 
     &:hover {
-      color: #fff;
+      color: $btn-secondary-color;
       background-color: $btn-secondary-hover;
       border-color: $btn-secondary-hover;
     }
 
     &:active,
     &:focus {
-      color: #fff;
+      color: $btn-secondary-color;
       background-color: $btn-secondary-active-color;
       border-color: $btn-secondary-active-color !important;
       outline: none;
       box-shadow: 0 0 0 0.2rem rgba($btn-secondary-active-color, 0.5);
 
       i {
-        color: #fff;
+        color: $btn-secondary-color;
       }
     }
   }
@@ -39,14 +39,14 @@
       }
 
       &:hover {
-        color: #fff;
+        color: $btn-primary-color;
         background: $primary-light-color;
         border-color: $primary-light-color;
       }
 
       &:focus,
       &:active {
-        color: #fff;
+        color: $btn-primary-color;
         background: $btn-primary-active-bg;
         border-color: $btn-primary-active-bg;
         box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
@@ -58,19 +58,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: $btn-primary-color;
     background: $primary-color;
     border-color: $primary-color;
 
     &:hover {
-      color: #fff;
+      color: $btn-primary-color;
       background: $primary-light-color;
       border-color: $primary-light-color;
     }
 
     &:focus,
     &:active {
-      color: #fff;
+      color: $btn-primary-color;
       background: $btn-primary-active-bg;
       // stylelint-disable-next-line
       border-color: $btn-primary-active-bg !important;
