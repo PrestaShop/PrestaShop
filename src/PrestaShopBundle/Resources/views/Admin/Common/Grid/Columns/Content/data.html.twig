@@ -24,7 +24,7 @@
  *#}
 
 {% if column.options.raw %}
-  {{ record[column.options.field]|escape('html') }}
+  {{ record[column.options.field]|raw }}
 {% else %}
   {{ record[column.options.field] }}
 {% endif %}
