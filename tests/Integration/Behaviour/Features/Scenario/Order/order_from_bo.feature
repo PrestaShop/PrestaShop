@@ -735,7 +735,7 @@ Feature: Order from Back Office (BO)
       | total_tax_excl | rate | total_amount |
       | 7              | 6.00 | 0.42         |
 
-  Scenario: View order passed with a now deleted language
+  Scenario: View order created on a currently deleted language
     Given language "Spanish" with locale "es-ES" exists
     And language with iso code "es" is the default one
     When I create an empty cart "dummy_cart-ES" for customer "testCustomer"
