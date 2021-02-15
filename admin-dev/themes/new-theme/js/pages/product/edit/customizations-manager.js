@@ -33,6 +33,8 @@ export default class CustomizationsManager {
     this.$customizationsContainer = $(ProductMap.customizations.customizationsContainer);
     this.$customizationFieldsList = $(ProductMap.customizations.customizationFieldsList);
     this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.prototypeTemplate = this.$customizationFieldsList.data('prototype');
+    this.prototypeName = this.$customizationFieldsList.data('prototypeName');
 
     this.init();
   }
@@ -47,9 +49,9 @@ export default class CustomizationsManager {
   }
 
   addCustomizationField() {
-    const prototype = this.$customizationFieldsList.data('prototype');
     const index = this.getIndex();
-    const newItem = prototype.replace(new RegExp(ProductMap.customizations.indexPlaceholder, 'g'), this.getIndex());
+    const newItem = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), this.getIndex());
+
     this.$customizationFieldsList.append(newItem);
     this.eventEmitter.emit(EventMap.customizations.customizationFieldAdded, {index});
   }

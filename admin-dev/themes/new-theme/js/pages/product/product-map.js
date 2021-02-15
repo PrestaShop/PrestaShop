@@ -65,7 +65,6 @@ export default {
     customizationFieldsList: '#customization-fields-list',
     addCustomizationBtn: '#add-customization-btn',
     removeCustomizationBtn: '.remove-customization-btn',
-    indexPlaceholder: '__CUSTOMIZATION_FIELD_INDEX__',
     customizationFieldItem: '.customization-field-item',
   },
 };

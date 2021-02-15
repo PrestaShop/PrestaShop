@@ -1,7 +1,10 @@
 {%- block customizations_widget -%}
   <div class="col-md-12">
     <h2>{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-    <ul class="list-unstyled" id="customization-fields-list" data-prototype="{{ form_row(form.customization_fields.vars.prototype)|e('html_attr') }}">
+    <ul class="list-unstyled" id="customization-fields-list"
+        data-prototype="{{ form_row(form.customization_fields.vars.prototype)|e('html_attr') }}"
+        data-prototype-name="{{ form.customization_fields.vars.prototype.vars.name }}"
+    >
       {{ form_row(form.customization_fields) }}
     </ul>
     <button type="button" class="btn btn-outline-secondary" id="add-customization-btn">
