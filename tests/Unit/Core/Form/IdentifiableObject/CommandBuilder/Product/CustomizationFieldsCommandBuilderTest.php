@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCus
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder;
-use RuntimeException;
 
 class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -56,21 +55,6 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
     {
         $builtCommands = $this->customizationFieldsCommandBuilder->buildCommand($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
-    }
-
-    public function testThrowsExceptionWhenEmptyCustomizationFieldsArrayIsProvided(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Empty customization fields array provided in PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand. To remove customization fields use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand');
-
-        $this->customizationFieldsCommandBuilder->buildCommand(
-            $this->getProductId(),
-            [
-                'customizations' => [
-                    'customization_fields' => [],
-                ],
-            ]
-        );
     }
 
     public function getExpectedCommands(): Generator
