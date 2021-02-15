@@ -48,6 +48,7 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         if (!defined('_PS_TAB_MODULE_LIST_URL_')) {
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }
+
         Shop::initialize();
         Context::getContext()->employee = new Employee(1);
     }
@@ -55,6 +56,8 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
     protected function employeeLogin()
     {
         $cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
+
+        // Create Employee Session to be sure the user is connected
         $session = new EmployeeSession();
         $session->setUserId(1);
         $session->setToken(sha1(time() . uniqid()));
@@ -62,7 +65,14 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 
         $cookieContent = 'id_employee|1¤session_id|' . $session->getId() . '¤session_token|' . $session->getToken() . '¤';
         $cookieContent .= 'checksum|' . hash('sha256', _COOKIE_IV_ . $cookieContent);
-        $cookieName = 'PrestaShop-' . md5(_PS_VERSION_ . 'psAdmin' . Tools::getHttpHost(false, false));
+
+        // Reproduce Cookie::getDomain behavior
+        $httpHost = Tools::getHttpHost(false, false);
+        if (!strstr($httpHost, '.')) {
+            $httpHost = false;
+        }
+
+        $cookieName = 'PrestaShop-' . md5(_PS_VERSION_ . 'psAdmin' . $httpHost);
         $_COOKIE[$cookieName] = $cipherTool->encrypt($cookieContent);
 
         Cache::store('isLoggedBack' . 1, true);
