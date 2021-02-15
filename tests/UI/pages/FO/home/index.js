@@ -47,7 +47,7 @@ class Home extends FOBasePage {
     this.productColor = `${this.blockCartModalDiv} .color strong`;
     this.productQuantity = `${this.blockCartModalDiv} .product-quantity`;
     this.cartContent = `${this.blockCartModalDiv} .cart-content`;
-    this.cartProductsCount = `${this.cartContent} .cart-products-count`;
+    this.productsCount = `${this.cartContent} .cart-products-count`;
     this.cartShipping = `${this.cartContent} .shipping-value`;
     this.cartSubtotal = `${this.cartContent} .subtotal-value`;
     this.productTaxIncl = `${this.cartContent} .product-total .value`;
@@ -195,10 +195,20 @@ class Home extends FOBasePage {
       discountPercentage: await this.getTextContent(page, this.quickViewDiscountPercentage),
       taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
       shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
-      size: await this.getTextContent(page, this.quickViewProductSize),
-      color: await this.getTextContent(page, this.quickViewProductColor, false),
       coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
       thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'src'),
+    };
+  }
+
+  /**
+   * Get product attributes from quick view modal
+   * @param page
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getProductAttributesFromQuickViewModal(page) {
+    return {
+      size: await this.getTextContent(page, this.quickViewProductSize),
+      color: await this.getTextContent(page, this.quickViewProductColor, false),
     };
   }
 
@@ -250,14 +260,24 @@ class Home extends FOBasePage {
   async getProductDetailsFromBlockCartModal(page) {
     return {
       name: await this.getTextContent(page, this.productName),
-      price: await this.getTextContent(page, this.productPrice),
+      price: parseFloat((await this.getTextContent(page, this.productPrice)).replace('€', '')),
+      quantity: await this.getNumberFromText(page, this.productQuantity),
+      cartProductsCount: await this.getNumberFromText(page, this.productsCount),
+      cartSubtotal: parseFloat((await this.getTextContent(page, this.cartSubtotal)).replace('€', '')),
+      cartShipping: await this.getTextContent(page, this.cartShipping),
+      totalTaxIncl: parseFloat((await this.getTextContent(page, this.productTaxIncl)).replace('€', '')),
+    };
+  }
+
+  /**
+   * Get product attributes from block cart modal
+   * @param page
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getProductAttributesFromBlockCartModal(page) {
+    return {
       size: await this.getTextContent(page, this.productSize),
       color: await this.getTextContent(page, this.productColor),
-      quantity: await this.getNumberFromText(page, this.productQuantity),
-      cartProductsCount: await this.getNumberFromText(page, this.cartProductsCount),
-      cartSubtotal: await this.getTextContent(page, this.cartSubtotal),
-      cartShipping: await this.getTextContent(page, this.cartShipping),
-      totalTaxIncl: await this.getTextContent(page, this.productTaxIncl),
     };
   }
 

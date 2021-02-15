@@ -44,11 +44,22 @@ class Cart extends FOBasePage {
       regularPrice: parseFloat((await this.getTextContent(page, this.productRegularPrice(row))).replace('€', '')),
       price: parseFloat((await this.getTextContent(page, this.productPrice(row))).replace('€', '')),
       discountPercentage: await this.getTextContent(page, this.productDiscountPercentage(row)),
-      size: await this.getTextContent(page, this.productSize(row)),
-      color: await this.getTextContent(page, this.productColor(row)),
       image: await this.getAttributeContent(page, this.productImage(row), 'src'),
       quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value')),
       totalPrice: parseFloat((await this.getTextContent(page, this.productTotalPrice(row))).replace('€', '')),
+    };
+  }
+
+  /**
+   * Get product attributes
+   * @param page
+   * @param row
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getProductAttributes(page, row) {
+    return {
+      size: await this.getTextContent(page, this.productSize(row)),
+      color: await this.getTextContent(page, this.productColor(row)),
     };
   }
 
