@@ -1,5 +1,4 @@
-// stylelint-disable-next-line
-$component-name: header-multishop;
+$component-name: header-multishop !default;
 
 .#{$component-name} {
   position: relative;
