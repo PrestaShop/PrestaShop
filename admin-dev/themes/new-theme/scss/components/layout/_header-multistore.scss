@@ -1,0 +1,57 @@
+// stylelint-disable-next-line
+$component-name: header-multishop;
+
+.#{$component-name} {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5625rem 1rem;
+  background-color: $multishop-header-default-background;
+
+  &-title {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 18px;
+    color: #fff;
+    text-align: center;
+  }
+
+  &-right {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+  }
+
+  &-default {
+    .#{$component-name}-title,
+    .#{$component-name}-view-action {
+      color: $multishop-header-default-color;
+    }
+  }
+
+  &-view-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    line-height: 18px;
+    color: #fff;
+    @include transition(0.25s ease-out);
+
+    i {
+      margin-top: 0.1rem;
+      margin-left: 0.5rem;
+      font-size: 1.25rem;
+      color: #757575;
+    }
+
+    &:hover {
+      text-decoration: none;
+      opacity: 0.7;
+    }
+  }
+}
