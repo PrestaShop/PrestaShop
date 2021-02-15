@@ -271,7 +271,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $stateName = $state->name;
         }
 
-        $dni = Address::dniRequired($address->id_country) ? $address->dni : '';
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
 
         return new OrderShippingAddressForViewing(
             $address->id,

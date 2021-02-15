@@ -94,7 +94,7 @@ class OrderInvoiceAddressForViewing
     private $mobilePhoneNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $dni;
 
@@ -112,7 +112,7 @@ class OrderInvoiceAddressForViewing
      * @param string $phone
      * @param string $phoneMobile
      * @param string|null $vatNumber
-     * @param string $dni
+     * @param string|null $dni
      */
     public function __construct(
         int $addressId,
@@ -128,7 +128,7 @@ class OrderInvoiceAddressForViewing
         string $phone,
         string $phoneMobile,
         ?string $vatNumber = null,
-        string $dni = ''
+        ?string $dni = null
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
@@ -203,9 +203,9 @@ class OrderInvoiceAddressForViewing
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDni(): string
+    public function getDni(): ?string
     {
         return $this->dni;
     }
