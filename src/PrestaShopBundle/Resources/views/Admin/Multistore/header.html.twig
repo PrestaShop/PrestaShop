@@ -2,14 +2,53 @@
 
 {% if isMultistoreUsed %}
   <div class="header-multishop{% if currentContext.color is empty %} header-multishop-default{% endif %}"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
-    <div class="header-multishop-center">
+    <div class="header-multishop-center js-header-multishop-open-modal">
       <h2 class="header-multishop-title">
         {{ currentContext.name }}
       </h2>
+
+      <button class="header-multishop-button">
+        <i class="material-icons">expand_more</i>
+      </button>
     </div>
 
     <div class="header-multishop-right">
       <a class="header-multishop-view-action" href="{{currentContext.urlFO}}" target="_blank" rel="nofollow">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
     </div>
+
+    <div id="multishop-modal" class="multishop-modal multishop-modal-hidden js-multishop-modal" tabindex="-1" role="dialog" aria-labelledby="multishop-modal" aria-hidden="true">
+      <div class="multishop-modal-dialog" role="document">
+        <div class="multishop-modal-body">
+          <div class="multishop-modal-search-container">
+            <i class="material-icons">search</i>
+            <input type="text" class="form-control multishop-modal-search" placeholder="Search shop name">
+          </div>
+
+          <ul class="multishop-modal-group-list">
+              <li class="multishop-modal-all multishop-modal-item">
+                <a class="multishop-modal-all-name" href="#"><i class="material-icons">check</i> <span>{{ "All Shops"|trans({}, 'Admin.Shop') }}</span></a>
+              </li>
+
+            {% for group in groupList %}
+              <li class="multishop-modal-group-item multishop-modal-item">
+                <a class="multishop-modal-group-name" href="#"><span class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %}></span>
+{{ group.name }}</a>
+              </li>
+
+              {% for shop in group.shops %}
+                <li class="multishop-modal-shop-item multishop-modal-item">
+                  <a class="multishop-modal-shop-name" href="#"><span class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %}></span>
+{{ shop.name }}</a>
+                  <a class="multishop-modal-shop-view" href="#" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Shop') }}</a>
+                </li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
+
+
+  <script src="{{ asset('themes/new-theme/public/multistore_header.bundle.js') }}"></script>
 {% endif %}
