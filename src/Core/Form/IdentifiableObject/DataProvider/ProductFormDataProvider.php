@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -67,6 +69,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
+            'features' => $this->extractFeatureValues((int) $id),
             'stock' => $this->extractStockData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
@@ -113,6 +116,38 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'type' => $productForEditing->getBasicInformation()->getType()->getValue(),
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
+        ];
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array
+     */
+    private function extractFeatureValues(int $productId): array
+    {
+        /** @var ProductFeatureValue[] $featureValues */
+        $featureValues = $this->queryBus->handle(new GetProductFeatureValues($productId));
+        if (empty($featureValues)) {
+            return [];
+        }
+
+        $productFeatureValues = [];
+        foreach ($featureValues as $featureValue) {
+            $productFeatureValue = [
+                'feature_id' => $featureValue->getFeatureId(),
+                'feature_value_id' => $featureValue->getFeatureValueId(),
+            ];
+            if ($featureValue->isCustom()) {
+                $productFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
+                $productFeatureValue['custom_value_id'] = $featureValue->getFeatureValueId();
+            }
+
+            $productFeatureValues[] = $productFeatureValue;
+        }
+
+        return [
+            'feature_values' => $productFeatureValues,
         ];
     }
 

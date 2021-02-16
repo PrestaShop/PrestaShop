@@ -49,4 +49,15 @@ export default {
     typeInput: '#product_redirect_option_type',
     targetInput: '#product_redirect_option_target',
   },
+  featureValues: {
+    collectionContainer: '#product_features_feature_values',
+    collectionRowsContainer: '#product_features_feature_values > .col-sm',
+    collectionRow: 'div.row.product-feature',
+    featureSelect: 'select.feature-selector',
+    featureValueSelect: 'select.feature-value-selector',
+    customValueInput: '.custom-values input',
+    customFeatureIdInput: 'input.custom-value-id',
+    deleteFeatureValue: 'button.delete-feature-value',
+    addFeatureValue: '#product_features_add_feature',
+  },
 };

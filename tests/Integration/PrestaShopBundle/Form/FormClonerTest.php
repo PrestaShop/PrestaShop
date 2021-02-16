@@ -32,7 +32,10 @@ use Closure;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Extension\Core\DataTransformer\ChoiceToValueTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -50,7 +53,7 @@ class FormClonerTest extends KernelTestCase
         self::bootKernel();
     }
 
-    public function testClone()
+    public function testClone(): void
     {
         $form = $this->createForm(AdvancedFormType::class);
         $this->assertTotalNumberOfListeners($form, 5);
@@ -59,13 +62,16 @@ class FormClonerTest extends KernelTestCase
         $this->compareForms($form, $clonedForm);
     }
 
-    public function testCloneWithModelTransformer()
+    public function testCloneWithModelTransformer(): void
     {
         $transformer = new TestDataTransformer();
         $form = $this->createForm(AdvancedFormType::class, [
             'add_model_transformer' => $transformer,
         ]);
         $this->assertTotalNumberOfListeners($form, 5);
+
+        $formTransformers = $form->getConfig()->getModelTransformers();
+        $this->assertContains($transformer, $formTransformers);
 
         $targetFormTransformers = $form->get('target')->getConfig()->getModelTransformers();
         $this->assertContains($transformer, $targetFormTransformers);
@@ -78,13 +84,37 @@ class FormClonerTest extends KernelTestCase
         $this->assertContains($transformer, $clonedTargetFormTransformers);
     }
 
-    public function testCloneWithViewTransformer()
+    public function testCloneChildWithModelTransformer(): void
+    {
+        $transformer = new TestDataTransformer();
+        $form = $this->createForm(AdvancedFormType::class, [
+            'add_model_transformer' => $transformer,
+        ]);
+        $this->assertTotalNumberOfListeners($form, 5);
+
+        $formTransformers = $form->get('target')->getConfig()->getModelTransformers();
+        $this->assertContains($transformer, $formTransformers);
+
+        $targetForm = $form->get('target');
+        $formCloner = new FormCloner();
+        $clonedForm = $formCloner->cloneForm($targetForm);
+        // When children form are cloned auto_initialize must be set to false to be able to add them to another form
+        $this->compareForms($targetForm, $clonedForm, ['auto_initialize' => false]);
+
+        $clonedTargetFormTransformers = $clonedForm->getConfig()->getModelTransformers();
+        $this->assertContains($transformer, $clonedTargetFormTransformers);
+    }
+
+    public function testCloneWithViewTransformer(): void
     {
         $transformer = new TestDataTransformer();
         $form = $this->createForm(AdvancedFormType::class, [
             'add_view_transformer' => $transformer,
         ]);
         $this->assertTotalNumberOfListeners($form, 5);
+
+        $formTransformers = $form->getConfig()->getViewTransformers();
+        $this->assertContains($transformer, $formTransformers);
 
         $targetFormTransformers = $form->get('target')->getConfig()->getViewTransformers();
         $this->assertContains($transformer, $targetFormTransformers);
@@ -97,7 +127,28 @@ class FormClonerTest extends KernelTestCase
         $this->assertContains($transformer, $clonedTargetFormTransformers);
     }
 
-    public function testCloneWithEventSubscriber()
+    public function testCloneChildWithViewTransformer(): void
+    {
+        $transformer = new TestDataTransformer();
+        $form = $this->createForm(AdvancedFormType::class, [
+            'add_view_transformer' => $transformer,
+        ]);
+        $this->assertTotalNumberOfListeners($form, 5);
+
+        $formTransformers = $form->get('target')->getConfig()->getViewTransformers();
+        $this->assertContains($transformer, $formTransformers);
+
+        $targetForm = $form->get('target');
+        $formCloner = new FormCloner();
+        $clonedForm = $formCloner->cloneForm($targetForm);
+        // When children form are cloned auto_initialize must be set to false to be able to add them to another form
+        $this->compareForms($targetForm, $clonedForm, ['auto_initialize' => false]);
+
+        $clonedTargetFormTransformers = $clonedForm->getConfig()->getViewTransformers();
+        $this->assertContains($transformer, $clonedTargetFormTransformers);
+    }
+
+    public function testCloneWithEventSubscriber(): void
     {
         $subscriber = new FormEventCounterSubscriber();
         $form = $this->createForm(AdvancedFormType::class, [
@@ -111,7 +162,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertTotalNumberOfListeners($clonedForm, 10);
     }
 
-    public function testCloneWithEventListener()
+    public function testCloneWithEventListener(): void
     {
         $listener = [
             'event' => FormEvents::SUBMIT,
@@ -130,7 +181,7 @@ class FormClonerTest extends KernelTestCase
         $this->assertTotalNumberOfListeners($clonedForm, 6);
     }
 
-    public function testCloneWithOptions()
+    public function testCloneWithOptions(): void
     {
         $form = $this->createForm(AdvancedFormType::class, [
             'required' => false,
@@ -143,6 +194,62 @@ class FormClonerTest extends KernelTestCase
         $this->compareForms($form, $clonedForm, [
             'required' => true,
         ]);
+    }
+
+    /**
+     * This is based on a use case of duplicating a choice type, which internally builds its own
+     * view transformers based on the options. So we need to check that cloning the form didn't duplicate
+     * this transformer but instead replaced it with the appropriate options.
+     */
+    public function testOverrideViewTransformers(): void
+    {
+        $originalChoices = [
+            'English' => 1,
+            'French' => 3,
+        ];
+        $choiceForm = $this->createForm(ChoiceType::class, [
+            'choices' => $originalChoices,
+        ]);
+
+        $formCloner = new FormCloner();
+        $overrideChoices = [
+            'Spanish' => 2,
+        ];
+        $newOptions = [
+            'choices' => $overrideChoices,
+        ];
+        $clonedChoiceForm = $formCloner->cloneForm($choiceForm, $newOptions);
+        $this->compareForms($choiceForm, $clonedChoiceForm, $newOptions);
+
+        $viewTransformers = $choiceForm->getConfig()->getViewTransformers();
+        $this->assertCount(1, $viewTransformers);
+        $viewTransformer = $viewTransformers[0];
+        $this->assertInstanceOf(ChoiceToValueTransformer::class, $viewTransformer);
+        $choicesList = $this->getTransformerChoiceList($viewTransformer);
+        $this->assertEquals($originalChoices, $choicesList->getStructuredValues());
+
+        $clonedViewTransformers = $clonedChoiceForm->getConfig()->getViewTransformers();
+        $this->assertCount(1, $clonedViewTransformers);
+        $clonedViewTransformer = $clonedViewTransformers[0];
+        $this->assertInstanceOf(ChoiceToValueTransformer::class, $clonedViewTransformer);
+        $clonedChoicesList = $this->getTransformerChoiceList($clonedViewTransformer);
+        $this->assertEquals($overrideChoices, $clonedChoicesList->getStructuredValues());
+    }
+
+    /**
+     * @param DataTransformerInterface $transformer
+     *
+     * @return ChoiceListInterface
+     */
+    private function getTransformerChoiceList(DataTransformerInterface $transformer): ChoiceListInterface
+    {
+        $reflectionProperty = new \ReflectionProperty(ChoiceToValueTransformer::class, 'choiceList');
+        $reflectionProperty->setAccessible(true);
+
+        $choiceList = $reflectionProperty->getValue($transformer);
+        $reflectionProperty->setAccessible(false);
+
+        return $choiceList;
     }
 
     /**
@@ -165,7 +272,7 @@ class FormClonerTest extends KernelTestCase
      */
     private function compareForms(FormInterface $originalForm, FormInterface $clonedForm, array $newOptions = []): void
     {
-        // Note: we use assertSame everywhere instead of assertSame because of a bug with isolated process in PHPUnit
+        // Note: we use assertSame everywhere instead of assertEquals because of a bug with isolated process in PHPUnit
         // https://github.com/sebastianbergmann/phpunit/issues/1515
         $this->assertSame($originalForm->getData(), $clonedForm->getData());
         $this->compareFormConfigs($originalForm->getConfig(), $clonedForm->getConfig(), $newOptions);
@@ -217,9 +324,6 @@ class FormClonerTest extends KernelTestCase
             if ($originalOption instanceof Closure) {
                 // Closure cannot be serialized so we just check the type
                 $this->assertInstanceOf(Closure::class, $clonedOption);
-            } elseif (is_array($originalOption)) {
-                $this->assertIsArray($clonedOption);
-                $this->compareFormOptions($originalOption, $clonedOption, $newOptions[$optionName] ?? []);
             } else {
                 // This allows us to check if option overriding works correctly
                 if (isset($newOptions[$optionName])) {
