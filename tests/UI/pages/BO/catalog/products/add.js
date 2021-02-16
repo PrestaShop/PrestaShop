@@ -97,7 +97,7 @@ class AddProduct extends BOBasePage {
    */
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
-    if (productData.coverImage != null) {
+    if (productData.coverImage !== null) {
       await this.uploadFilePath(page, this.productImageDropZoneDiv, productData.coverImage);
     }
     if (productData.thumbImage != null) {
