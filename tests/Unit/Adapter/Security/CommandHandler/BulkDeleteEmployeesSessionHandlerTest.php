@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Security\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeeSessionsHandler;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeeSessionsHandler;
 use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand;
 
