@@ -56,10 +56,10 @@
   </li>
 {%- endblock customization_field_row -%}
 
-{%- block _product_customizations_customization_fields_row -%}
+{%- block collection_row -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' list-unstyled')|trim }) -%}
   <ul {{ block('widget_attributes') }}>
     {{- block('form_rows') -}}
   </ul>
-{%- endblock _product_customizations_customization_fields_row -%}
+{%- endblock collection_row -%}
