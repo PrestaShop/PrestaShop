@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
@@ -241,7 +241,7 @@ class SecurityController extends FrameworkBundleAdminController
         $sessionIds = $request->request->get('security_session_customer_bulk');
 
         try {
-            $deleteSessionsCommand = new BulkDeleteCustomersSessionsCommand($sessionIds);
+            $deleteSessionsCommand = new BulkDeleteCustomerSessionsCommand($sessionIds);
 
             $this->getCommandBus()->handle($deleteSessionsCommand);
 
@@ -270,7 +270,7 @@ class SecurityController extends FrameworkBundleAdminController
         $sessionIds = $request->request->get('security_session_employee_bulk');
 
         try {
-            $deleteSessionsCommand = new BulkDeleteEmployeesSessionsCommand($sessionIds);
+            $deleteSessionsCommand = new BulkDeleteEmployeeSessionsCommand($sessionIds);
 
             $this->getCommandBus()->handle($deleteSessionsCommand);
 

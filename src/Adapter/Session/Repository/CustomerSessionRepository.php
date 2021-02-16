@@ -29,9 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Session\Repository;
 
 use CustomerSession;
-use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteCustomerSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteCustomerSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
@@ -43,28 +41,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class CustomerSessionRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
-    public function __construct(
-        Connection $connection,
-        string $dbPrefix
-    ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
-    }
-
     /**
      * @param CustomerSessionId $sessionId
      *
@@ -97,7 +73,7 @@ class CustomerSessionRepository extends AbstractObjectModelRepository
     /**
      * @param array $customerSessionIds
      *
-     * @throws CannotBulkDeleteProductException
+     * @throws CannotBulkDeleteCustomerSessionException
      */
     public function bulkDelete(array $customerSessionIds): void
     {

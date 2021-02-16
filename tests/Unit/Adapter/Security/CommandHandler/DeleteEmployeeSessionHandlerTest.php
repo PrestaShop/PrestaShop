@@ -26,34 +26,32 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
+namespace Tests\Unit\Adapter\Security\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteCustomersSessionsHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Security\CommandHandler\DeleteEmployeeSessionHandler;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
 
-/**
- * Handles command that deletes customers sessions in bulk action.
- *
- * @internal
- */
-final class BulkDeleteCustomersSessionsHandler implements BulkDeleteCustomersSessionsHandlerInterface
+class DeleteEmployeeSessionHandlerTest extends TestCase
 {
-    /**
-     * @var CustomerSessionRepository
-     */
-    private $repository;
-
-    public function __construct(CustomerSessionRepository $repository)
+    public function testHandleDeleteShouldBeCalledOnlyOnce(): void
     {
-        $this->repository = $repository;
-    }
+        $sessionId = new DeleteEmployeeSessionCommand(1);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(BulkDeleteCustomersSessionsCommand $command): void
-    {
-        $this->repository->bulkDelete($command->getCustomerSessionIds());
+        $repo = $this->getMockBuilder(EmployeeSessionRepository::class)
+            ->setMethods([
+                'delete',
+            ])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $repo->expects($this->once())
+            ->method('delete')
+            ->with($sessionId->getEmployeeSessionId())
+            ->willReturn([]);
+
+        $commandHandler = new DeleteEmployeeSessionHandler($repo);
+        $commandHandler->handle($sessionId);
     }
 }
