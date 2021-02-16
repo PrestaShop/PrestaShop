@@ -203,7 +203,7 @@ abstract class ModuleCore implements ModuleInterface
     private $container;
 
     /** @var array|null used to cache module ids */
-    private static $cachedModuleNames = null;
+    protected static $cachedModuleNames = null;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
