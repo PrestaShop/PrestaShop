@@ -24,17 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
+namespace Tests\Unit\Adapter\Security\CommandHandler;
 
-/**
- * Defines interface for employee bulk delete command handler.
- */
-interface BulkDeleteEmployeesSessionsHandlerInterface
+use PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeeSessionsHandler;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand;
+
+class BulkDeleteEmployeesSessionHandlerTest extends TestCase
 {
-    /**
-     * @param BulkDeleteEmployeesSessionsCommand $command
-     */
-    public function handle(BulkDeleteEmployeesSessionsCommand $command): void;
+    public function testHandleDeleteShouldBeCalledOnlyOnce(): void
+    {
+        $sessionId = new BulkDeleteEmployeeSessionsCommand([1, 2, 3]);
+
+        $repo = $this->getMockBuilder(EmployeeSessionRepository::class)
+            ->setMethods([
+                'bulkDelete',
+            ])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $repo->expects($this->once())
+            ->method('bulkDelete')
+            ->with($sessionId->getEmployeeSessionIds())
+            ->willReturn([]);
+
+        $commandHandler = new BulkDeleteEmployeeSessionsHandler($repo);
+        $commandHandler->handle($sessionId);
+    }
 }
