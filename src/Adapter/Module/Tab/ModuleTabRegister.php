@@ -251,8 +251,7 @@ class ModuleTabRegister
      */
     protected function getModuleAdminControllers($moduleName)
     {
-        $modulePath = _PS_ROOT_DIR_ . '/' . basename(_PS_MODULE_DIR_) .
-                '/' . $moduleName . '/controllers/admin/';
+        $modulePath = rtrim(_PS_MODULE_DIR_, '/') . '/' . $moduleName . '/controllers/admin/';
 
         if (!$this->filesystem->exists($modulePath)) {
             return [];
