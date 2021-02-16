@@ -100,7 +100,7 @@ class AddProduct extends BOBasePage {
     if (productData.coverImage !== null) {
       await this.uploadFilePath(page, this.productImageDropZoneDiv, productData.coverImage);
     }
-    if (productData.thumbImage != null) {
+    if (productData.thumbImage !== null) {
       await this.uploadFilePath(page, this.openFileManagerDiv, productData.thumbImage);
     }
     await page.click(this.productDescriptionTab);
