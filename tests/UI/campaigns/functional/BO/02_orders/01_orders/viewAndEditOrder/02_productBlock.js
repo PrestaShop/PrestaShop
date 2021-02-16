@@ -15,6 +15,8 @@ const foCheckoutPage = require('@pages/FO/checkout');
 const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
+const productsPage = require('@pages/BO/catalog/products');
+const addProductPage = require('@pages/BO/catalog/products/add');
 const customersPage = require('@pages/BO/customers');
 
 // Import data
@@ -35,8 +37,23 @@ let page;
 
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
+const ProductFaker = require('@data/faker/product');
 
 const productQuantity = 4;
+
+const productOutOfStockAllowed = {
+  name: 'Out of stock allowed',
+  type: 'Standard product',
+  quantity: -12,
+  minimumQuantity: 1,
+  stockLocation: 'Stock location',
+  lowStockLevel: 3,
+  labelWhenInStock: 'Label when in stock',
+  LabelWhenOutOfStock: 'Label when out of stock',
+  behaviourOutOfStock: 'Allow orders',
+};
+
+const firstProduct = new ProductFaker(productOutOfStockAllowed);
 
 /*
 Create order by guest in FO
@@ -115,12 +132,45 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 2 - Go to view order page
-  describe('View order page', async () => {
+  // 2 - Create product out of stock allowed
+  describe('Create a product out of stock allowed', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
+    it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+
+      await productsPage.closeSfToolBar(page);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+      await productsPage.resetFilterCategory(page);
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+      const createProductMessage = await addProductPage.setProduct(page, firstProduct);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // 3 - Go to view order page
+  describe('View order page', async () => {
     it('should go to Orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -162,7 +212,7 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 3 - check product block
+  // 4 - check product block
   describe('View product block', async () => {
     it('should check number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'check numberProducts', baseContext);
@@ -172,8 +222,8 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 4 - Delete the created customer
-  /*describe(`Delete the customer ${customerData.lastName}`, async () => {
+  // 5 - Delete the created customer
+  describe(`Delete the customer ${customerData.lastName}`, async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
@@ -211,5 +261,5 @@ describe('Check customer block in view order page', async () => {
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterReset).to.be.above(0);
     });
-  });*/
+  });
 });

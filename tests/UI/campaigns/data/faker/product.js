@@ -1,5 +1,7 @@
 const faker = require('faker');
 
+const behavior = ['Deny orders', 'Allow orders', 'Default behavior'];
+
 module.exports = class Product {
   constructor(productToCreate) {
     this.name = (productToCreate.name || faker.commerce.productName()).toUpperCase();
@@ -26,5 +28,13 @@ module.exports = class Product {
       discount: faker.random.number({min: 10, max: 100}),
       startingAt: faker.random.number({min: 2, max: 5}),
     };
+    this.minimumQuantity = productToCreate.minimumQuantity === undefined
+      ? faker.random.number({min: 1, max: 9})
+      : productToCreate.minimumQuantity;
+    this.stockLocation = productToCreate.stockLocation;
+    this.lowStockLevel = productToCreate.lowStockLevel;
+    this.labelWhenInStock = productToCreate.labelWhenInStock;
+    this.LabelWhenOutOfStock = productToCreate.LabelWhenOutOfStock;
+    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.random.arrayElement(behavior);
   }
 };
