@@ -31,9 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
 use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\CustomerSessionId;
 
 /**
- * Deletes customers sessions in bulk action
+ * Deletes customer sessions in bulk action
  */
-class BulkDeleteCustomersSessionsCommand
+class BulkDeleteCustomerSessionsCommand
 {
     /**
      * @var CustomerSessionId[]
