@@ -87,6 +87,9 @@ final class ModuleRepository
             $modulesFiles = Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
             $activeModules = $this->getActiveModules();
 
+            var_dump('ModuleRepository::getActiveModulesPaths');
+            var_dump($modulesFiles);
+            var_dump($activeModules);
             foreach ($modulesFiles as $moduleFile) {
                 if (in_array($moduleFile->getFilename(), $activeModules)) {
                     $this->activeModulesPaths[] = $moduleFile->getPathname();

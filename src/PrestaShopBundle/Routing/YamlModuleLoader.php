@@ -61,6 +61,8 @@ class YamlModuleLoader extends Loader
         }
 
         $routes = new RouteCollection();
+var_dump('YamlMmoduleLoader::load::activeModulesPaths');
+var_dump($this->activeModulesPaths);
 
         foreach ($this->activeModulesPaths as $modulePath) {
             $routingFile = $modulePath . '/config/routes.yml';
