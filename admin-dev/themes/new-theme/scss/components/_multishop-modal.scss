@@ -39,6 +39,10 @@ $component-name: multishop-modal;
     transform: translateX(0);
     @include transition(0.25s ease-out);
 
+    @include media-breakpoint-down(sm) {
+      padding: 1.875rem 1.5rem;
+    }
+
     ul,
     li {
       padding: 0;
@@ -51,18 +55,41 @@ $component-name: multishop-modal;
     min-height: auto;
     padding: 0.3rem 1rem;
     padding-left: 2.2rem;
-    margin-bottom: 2rem;
 
     &-container {
       position: relative;
+      margin-bottom: 2rem;
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
 
       i {
         position: absolute;
-        top: 52%;
+        top: 0.5rem;
         left: 0.75rem;
+        z-index: 1;
         font-size: 1.2rem;
         color: $medium-gray;
-        transform: translateY(-50%);
+      }
+
+      .tt-menu {
+        width: 100%;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+        @include border-bottom-radius(4px);
+
+        .tt-dataset > div {
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          @include transition(0.25s ease-out);
+
+          &:hover,
+          &.tt-cursor {
+            background-color: #f4fcfd;
+          }
+        }
       }
     }
   }
@@ -108,20 +135,24 @@ $component-name: multishop-modal;
   }
 
   &-group-item {
-    margin-bottom: 1.425rem;
+    &.#{$component-name}-item {
+      justify-content: flex-start;
+      margin-bottom: 1.425rem;
 
-    &:not(:first-of-type) {
-      margin-top: 2rem;
+      &:not(:first-of-type) {
+        margin-top: 2rem;
+      }
     }
   }
 
-  &-shop-item {
+  &-shop-item:not(:last-of-type) {
     margin-bottom: 1.275rem;
   }
 
   &-color {
     display: block;
     width: 1rem;
+    min-width: 1rem;
     height: 1rem;
     margin-right: 1rem;
     background-color: $multishop-header-default-background;
@@ -133,5 +164,38 @@ $component-name: multishop-modal;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    &-left {
+      display: flex;
+      align-items: center;
+
+      @include media-breakpoint-down(sm) {
+        max-width: 80%;
+      }
+    }
+  }
+
+  &-group-list {
+    max-height: 500px;
+    overflow-y: scroll;
+  }
+
+  &-shop-view {
+    min-width: 18%;
+
+    i {
+      display: none;
+      color: $medium-gray;
+    }
+
+    @include media-breakpoint-down(sm) {
+      min-width: auto;
+      font-size: 0;
+
+      i {
+        display: block;
+        font-size: 1rem;
+      }
+    }
   }
 }
