@@ -55,19 +55,19 @@ $(() => {
   employeeSessionGrid.addExtension(new ColumnTogglingExtension());
   employeeSessionGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
-  const customersSessionsGrid = new Grid('security_session_customer');
+  const customerSessionsGrid = new Grid('security_session_customer');
 
-  customersSessionsGrid.addExtension(new ReloadListActionExtension());
-  customersSessionsGrid.addExtension(new ExportToSqlManagerExtension());
-  customersSessionsGrid.addExtension(new FiltersResetExtension());
-  customersSessionsGrid.addExtension(new SortingExtension());
-  customersSessionsGrid.addExtension(new BulkActionCheckboxExtension());
-  customersSessionsGrid.addExtension(new SubmitBulkExtension());
-  customersSessionsGrid.addExtension(new SubmitGridExtension());
-  customersSessionsGrid.addExtension(new SubmitRowActionExtension());
-  customersSessionsGrid.addExtension(new LinkRowActionExtension());
-  customersSessionsGrid.addExtension(new ColumnTogglingExtension());
-  customersSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  customerSessionsGrid.addExtension(new ReloadListActionExtension());
+  customerSessionsGrid.addExtension(new ExportToSqlManagerExtension());
+  customerSessionsGrid.addExtension(new FiltersResetExtension());
+  customerSessionsGrid.addExtension(new SortingExtension());
+  customerSessionsGrid.addExtension(new BulkActionCheckboxExtension());
+  customerSessionsGrid.addExtension(new SubmitBulkExtension());
+  customerSessionsGrid.addExtension(new SubmitGridExtension());
+  customerSessionsGrid.addExtension(new SubmitRowActionExtension());
+  customerSessionsGrid.addExtension(new LinkRowActionExtension());
+  customerSessionsGrid.addExtension(new ColumnTogglingExtension());
+  customerSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new FormSubmitButton();
 });

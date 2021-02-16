@@ -445,10 +445,10 @@
                     <tab id="Security_1" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
                         <class_name>AdminSecurity</class_name>
                     </tab>
-                    <tab id="EmployeesSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
+                    <tab id="EmployeeSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
                         <class_name>AdminSecuritySessionEmployee</class_name>
                     </tab>
-                    <tab id="CustomersSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
+                    <tab id="CustomerSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
                         <class_name>AdminSecuritySessionCustomer</class_name>
                     </tab>
 
