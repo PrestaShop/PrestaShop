@@ -134,8 +134,8 @@ class StockManager implements StockInterface
     private function updateReservedProductQuantity(int $shopId, int $errorState, int $cancellationState, ?int $idProduct = null, ?int $idOrder = null)
     {
         $statesToIgnore = [
-            (int) $errorState,
-            (int) $cancellationState,
+            $errorState,
+            $cancellationState,
             (int) (new ConfigurationAdapter())->get('PS_OS_REFUND'),
         ];
         $updateReservedQuantityQuery = '
