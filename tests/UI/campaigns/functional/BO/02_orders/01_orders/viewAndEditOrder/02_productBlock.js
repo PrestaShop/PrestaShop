@@ -130,7 +130,7 @@ describe('Check customer block in view order page', async () => {
   });
 
   // 2 - Create product out of stock allowed
-  describe('Create a product out of stock allowed', async () => {
+  describe('Create product out of stock allowed', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -212,10 +212,21 @@ describe('Check customer block in view order page', async () => {
   // 4 - check product block
   describe('View product block', async () => {
     it('should check number of products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'check numberProducts', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
       const productCount = await viewOrderPage.getProductsNumber(page);
       await expect(productCount).to.equal(1);
+    });
+
+    it('should add the created product \'Out of stock allowed to the cart\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'AddProductToCart', baseContext);
+
+      await viewOrderPage.SearchProduct(page, firstProduct.name);
+      const result = await viewOrderPage.getSearchedProductDetail(page);
+      await Promise.all([
+        expect(result.stockLocation).to.equal(firstProduct.stockLocation),
+        expect(result.available).to.equal(firstProduct.quantity),
+      ]);
     });
   });
 
@@ -257,6 +268,34 @@ describe('Check customer block in view order page', async () => {
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterReset).to.be.above(0);
+    });
+  });
+
+  // 6 - Delete the created product
+  describe('Delete the created product', async () => {
+    it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
+
+      await addProductPage.goToSubMenu(page, addProductPage.catalogParentLink, addProductPage.productsLink);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should delete product with from DropDown Menu', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+
+      const deleteTextResult = await productsPage.deleteProduct(page, firstProduct);
+      await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
+
+      await productsPage.resetFilterCategory(page);
+
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
     });
   });
 });

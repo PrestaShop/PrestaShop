@@ -34,6 +34,15 @@ class Order extends BOBasePage {
     this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
     this.returnProductsButton = '#order-view-page button.return-product-display';
+    this.addProductTableRow = '#addProductTableRow';
+    this.addProductButton = '#addProductBtn';
+    this.addProductRowSearch = '#add_product_row_search';
+    this.addProductRowPriceTaxExcluded = '#add_product_row_price_tax_excluded';
+    this.addProductRowPriceTaxIncluded = '#add_product_row_price_tax_included';
+    this.addProductRowQuantity = '#add_product_row_quantity';
+    this.addProductRowStockLocation = '#addProductLocation';
+    this.addProductAvailable = '#addProductAvailable';
+    this.addProductTotalPrice = '#addProductTotalPrice';
 
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -367,6 +376,30 @@ class Order extends BOBasePage {
    */
   getProductsNumber(page) {
     return this.getNumberFromText(page, this.productsCountSpan);
+  }
+
+  /**
+   * Search product
+   * @param page
+   * @param name
+   * @returns {Promise<void>}
+   */
+  async SearchProduct(page, name) {
+    await this.waitForSelectorAndClick(page, this.addProductButton);
+    await this.setValue(page, this.addProductRowSearch, name);
+    await this.waitForSelectorAndClick(page, `${this.addProductTableRow} a`);
+  }
+
+  /**
+   * Get searched product details
+   * @param page
+   * @returns {Promise<{available: *, basePriceTInc: *, basePriceTExc: *}>}
+   */
+  async getSearchedProductDetail(page) {
+    return {
+      stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
+      available: await this.getTextContent(page, this.addProductAvailable),
+    };
   }
 }
 
