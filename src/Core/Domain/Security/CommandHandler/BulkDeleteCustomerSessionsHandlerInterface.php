@@ -24,45 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\EmployeeSessionId;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand;
 
 /**
- * Deletes employees sessions in bulk action
+ * Defines interface for customer bulk delete command handler.
  */
-class BulkDeleteEmployeesSessionsCommand
+interface BulkDeleteCustomerSessionsHandlerInterface
 {
     /**
-     * @var EmployeeSessionId[]
+     * @param BulkDeleteCustomerSessionsCommand $command
      */
-    private $sessionIds;
-
-    /**
-     * @param int[] $sessionIds
-     */
-    public function __construct(array $sessionIds)
-    {
-        $this->setEmployeeSessionIds($sessionIds);
-    }
-
-    /**
-     * @return EmployeeSessionId[]
-     */
-    public function getEmployeeSessionIds()
-    {
-        return $this->sessionIds;
-    }
-
-    /**
-     * @param int[] $sessionIds
-     */
-    private function setEmployeeSessionIds(array $sessionIds)
-    {
-        foreach ($sessionIds as $sessionId) {
-            $this->sessionIds[] = new EmployeeSessionId((int) $sessionId);
-        }
-    }
+    public function handle(BulkDeleteCustomerSessionsCommand $command): void;
 }

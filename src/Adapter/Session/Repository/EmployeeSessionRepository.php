@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Session\Repository;
 
-use Doctrine\DBAL\Connection;
 use EmployeeSession;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteEmployeeSessionException;
@@ -42,28 +41,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class EmployeeSessionRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
-    public function __construct(
-        Connection $connection,
-        string $dbPrefix
-    ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
-    }
-
     /**
      * @param EmployeeSessionId $sessionId
      *

@@ -26,34 +26,43 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
 
-use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteEmployeesSessionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\EmployeeSessionId;
 
 /**
- * Handles command that deletes employees sessions in bulk action.
- *
- * @internal
+ * Deletes employees sessions in bulk action
  */
-final class BulkDeleteEmployeesSessionsHandler implements BulkDeleteEmployeesSessionsHandlerInterface
+class BulkDeleteEmployeeSessionsCommand
 {
     /**
-     * @var EmployeeSessionRepository
+     * @var EmployeeSessionId[]
      */
-    private $repository;
+    private $sessionIds;
 
-    public function __construct(EmployeeSessionRepository $repository)
+    /**
+     * @param int[] $sessionIds
+     */
+    public function __construct(array $sessionIds)
     {
-        $this->repository = $repository;
+        $this->setEmployeeSessionIds($sessionIds);
     }
 
     /**
-     * {@inheritdoc}
+     * @return EmployeeSessionId[]
      */
-    public function handle(BulkDeleteEmployeesSessionsCommand $command): void
+    public function getEmployeeSessionIds()
     {
-        $this->repository->bulkDelete($command->getEmployeeSessionIds());
+        return $this->sessionIds;
+    }
+
+    /**
+     * @param int[] $sessionIds
+     */
+    private function setEmployeeSessionIds(array $sessionIds)
+    {
+        foreach ($sessionIds as $sessionId) {
+            $this->sessionIds[] = new EmployeeSessionId((int) $sessionId);
+        }
     }
 }
