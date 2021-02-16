@@ -31,10 +31,10 @@ module.exports = class Product {
     this.minimumQuantity = productToCreate.minimumQuantity === undefined
       ? faker.random.number({min: 1, max: 9})
       : productToCreate.minimumQuantity;
-    this.stockLocation = productToCreate.stockLocation;
+    this.stockLocation = productToCreate.stockLocation || 'Stock location';
     this.lowStockLevel = productToCreate.lowStockLevel;
-    this.labelWhenInStock = productToCreate.labelWhenInStock;
-    this.LabelWhenOutOfStock = productToCreate.LabelWhenOutOfStock;
+    this.labelWhenInStock = productToCreate.labelWhenInStock || 'Label when in stock';
+    this.LabelWhenOutOfStock = productToCreate.LabelWhenOutOfStock || 'Label when out of stock';
     this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.random.arrayElement(behavior);
   }
 };

@@ -46,10 +46,7 @@ const productOutOfStockAllowed = {
   type: 'Standard product',
   quantity: -12,
   minimumQuantity: 1,
-  stockLocation: 'Stock location',
   lowStockLevel: 3,
-  labelWhenInStock: 'Label when in stock',
-  LabelWhenOutOfStock: 'Label when out of stock',
   behaviourOutOfStock: 'Allow orders',
 };
 
