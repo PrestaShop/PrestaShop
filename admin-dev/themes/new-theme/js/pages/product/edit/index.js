@@ -28,8 +28,8 @@ import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
-import ProductMap from '../product-map';
-import ProductPartialUpdater from './product-partial-updater';
+import ProductMap from '@pages/product/product-map';
+import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 
 const {$} = window;
 

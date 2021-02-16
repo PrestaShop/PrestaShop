@@ -25,4 +25,8 @@
 
 export default {
   updateSubmitButtonState: 'updateSubmitButtonState',
+  customizations: {
+    rowRemoved: 'customizationRowRemoved',
+    rowAdded: 'customizationRowAdded',
+  },
 };

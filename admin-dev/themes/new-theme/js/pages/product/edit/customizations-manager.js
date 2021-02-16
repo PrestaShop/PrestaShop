@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '../product-map.js';
-import EventMap from '../event-map.js';
+import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -53,12 +53,12 @@ export default class CustomizationsManager {
     const newItem = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), this.getIndex());
 
     this.$customizationFieldsList.append(newItem);
-    this.eventEmitter.emit(EventMap.customizations.customizationFieldAdded, {index});
+    this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
   }
 
   removeCustomizationField(event) {
     $(event.currentTarget).closest(ProductMap.customizations.customizationFieldRow).remove();
-    this.eventEmitter.emit(EventMap.customizations.customizationFieldRemoved);
+    this.eventEmitter.emit(ProductEventMap.customizations.rowRemoved);
   }
 
   getIndex() {

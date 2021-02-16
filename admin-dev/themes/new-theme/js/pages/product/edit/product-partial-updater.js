@@ -70,8 +70,8 @@ export default class ProductPartialUpdater {
    * Watch events specifically related to customizations subform
    */
   watchCustomizations() {
-    this.eventEmitter.on(ProductEventMap.customizations.customizationFieldAdded, () => this.updateSubmitButtonState());
-    this.eventEmitter.on(ProductEventMap.customizations.customizationFieldRemoved, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateSubmitButtonState());
   }
 
   /**
