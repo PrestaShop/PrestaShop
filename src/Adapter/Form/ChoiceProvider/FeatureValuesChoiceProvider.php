@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 class FeatureValuesChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
+    /**
+     * @var FeatureValueRepository
+     */
     private $featureValueRepository;
 
     /**

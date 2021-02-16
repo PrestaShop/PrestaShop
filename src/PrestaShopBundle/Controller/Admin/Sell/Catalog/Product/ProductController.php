@@ -189,7 +189,7 @@ class ProductController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             InvalidAssociatedFeatureException::class => $this->trans(
-                'You cannot associate a feature value to another feature.',
+                'The selected value belongs to another feature.',
                 'Admin.Notifications.Error'
             ),
         ];
