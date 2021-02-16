@@ -36,6 +36,8 @@ let page;
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
 
+const productQuantity = 4;
+
 /*
 Create order by guest in FO
 Go to orders page BO and view the created order page
@@ -73,7 +75,7 @@ describe('Check customer block in view order page', async () => {
       await foHomePage.goToProductPage(page, 4);
 
       // Add the created product to the cart
-      await foProductPage.addProductToTheCart(page);
+      await foProductPage.addProductToTheCart(page, productQuantity);
 
       // Proceed to checkout the shopping cart
       await foCartPage.clickOnProceedToCheckout(page);
@@ -160,8 +162,18 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
+  // 3 - check product block
+  describe('View product block', async () => {
+    it('should check number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'check numberProducts', baseContext);
+
+      const productCount = await viewOrderPage.getProductsNumber(page);
+      await expect(productCount).to.equal(1);
+    });
+  });
+
   // 4 - Delete the created customer
-  describe(`Delete the customer ${customerData.lastName}`, async () => {
+  /*describe(`Delete the customer ${customerData.lastName}`, async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
@@ -199,5 +211,5 @@ describe('Check customer block in view order page', async () => {
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterReset).to.be.above(0);
     });
-  });
+  });*/
 });

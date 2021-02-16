@@ -8,7 +8,7 @@ class Order extends BOBasePage {
     this.pageTitle = 'Order';
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
 
-    // Customer card
+    // Customer block
     this.customerInfoBlock = '#customerInfo';
     this.ViewAllDetailsLink = '#viewFullDetails a';
     this.customerEmailLink = '#customerEmail';
@@ -20,7 +20,8 @@ class Order extends BOBasePage {
     this.addNewPrivateNoteLink = '#privateNote a.js-private-note-toggle-btn';
     this.privateNoteSaveButton = `${this.privateNoteDiv} .js-private-note-btn`;
 
-    // Order page
+    // Products block
+    this.productsCountSpan = '#orderProductsPanelCount';
     this.orderProductsTable = '#orderProductsTable';
     this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
     this.orderProductsTableNameColumn = row => `${this.orderProductsRowTable(row)} td.cellProductName`;
@@ -92,7 +93,7 @@ class Order extends BOBasePage {
    * @returns {Promise<number>}
    */
   async modifyProductQuantity(page, row, quantity) {
-    this.dialogListener(page);
+    await this.dialogListener(page);
     await Promise.all([
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
@@ -357,6 +358,15 @@ class Order extends BOBasePage {
    */
   getPrivateNoteContent(page) {
     return this.getTextContent(page, this.privateNoteTextarea);
+  }
+
+  /**
+   * Get products number
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getProductsNumber(page) {
+    return this.getNumberFromText(page, this.productsCountSpan);
   }
 }
 
