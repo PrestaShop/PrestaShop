@@ -40,12 +40,9 @@ abstract class AbstractEndpointTest extends TestCase
     {
         define('_PS_ROOT_DIR_', __DIR__ . '/../..');
         define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev');
-        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
-
         require_once _PS_ROOT_DIR_ . '/config/defines.inc.php';
         require_once _PS_CONFIG_DIR_ . 'autoload.php';
         require_once _PS_CONFIG_DIR_ . 'bootstrap.php';
-
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
         parent::setUp();
