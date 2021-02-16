@@ -47,11 +47,7 @@
       {{ form_errors(form.type) }}
     </div>
     <div class="col-md-1">
-{#      @todo: render form_widget instead of custom button once IconButtonType is implemented #}
-{#      {{ form_widget(form.remove) }}#}
-      <button type="button" class="btn text-secondary remove-customization-btn">
-        <i class="material-icons">delete</i>
-      </button>
+      {{ form_widget(form.remove) }}
     </div>
     <div class="col-md-2">
       {{ form_widget(form.required) }}

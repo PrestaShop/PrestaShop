@@ -30,10 +30,10 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -82,11 +82,10 @@ class CustomizationFieldType extends TranslatorAwareType
             ->add('required', SwitchType::class, [
                 'label' => $this->trans('Required', 'Admin.Global'),
             ])
-            //@todo: icon button type with "delete" icon. https://github.com/PrestaShop/PrestaShop/pull/23159
-            ->add('remove', ButtonType::class, [
+            ->add('remove', IconButtonType::class, [
                 'label' => false,
+                'icon' => 'delete',
                 'attr' => [
-                    'type' => 'button',
                     'class' => 'text-secondary remove-customization-btn',
                 ],
             ])
