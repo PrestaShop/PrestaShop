@@ -135,6 +135,6 @@
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="Tabs" name="Menu" />
     <tab id="Security_1" name="Security" />
-    <tab id="EmployeesSessions" name="Employee Sessions" />
-    <tab id="CustomersSessions" name="Customer Sessions" />
+    <tab id="EmployeeSessions" name="Employee Sessions" />
+    <tab id="CustomerSessions" name="Customer Sessions" />
 </entity_tab>
