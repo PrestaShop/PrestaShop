@@ -2091,9 +2091,6 @@ class AdminControllerCore extends Controller
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
         $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
-var_dump('AdminController::getTabs');
-var_dump($tabs);
-die();
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || !$tab['enabled']
