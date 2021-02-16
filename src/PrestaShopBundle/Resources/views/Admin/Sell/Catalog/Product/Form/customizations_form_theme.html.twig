@@ -22,16 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{%- block customizations_widget -%}
-  {{ form_row(form.customization_fields) }}
-  {{ form_row(form.add_customization_field) }}
-{%- endblock customizations_widget -%}
 
 {%- block customizations_row -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' col-md-12')|trim }) -%}
   <h2>{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
   <div {{ block('widget_attributes') }}>
-    {{ form_widget(form) }}
+    {{- block('form_rows') -}}
   </div>
 {%- endblock customizations_row -%}
 

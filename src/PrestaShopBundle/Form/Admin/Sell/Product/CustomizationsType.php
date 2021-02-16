@@ -37,18 +37,18 @@ class CustomizationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('customization_fields', CollectionType::class, [
+                'entry_type' => CustomizationFieldType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype_name' => '__CUSTOMIZATION_FIELD_INDEX__',
+            ])
             ->add('add_customization_field', IconButtonType::class, [
                 'label' => $this->trans('Add a customization field', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle',
                 'attr' => [
                     'class' => 'btn-outline-secondary',
                 ],
-            ])
-            ->add('customization_fields', CollectionType::class, [
-                'entry_type' => CustomizationFieldType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__CUSTOMIZATION_FIELD_INDEX__',
             ])
         ;
     }
