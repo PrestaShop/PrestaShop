@@ -41,7 +41,7 @@ class DatabaseCreator
         define('_PS_IN_TEST_', true);
         define('__PS_BASE_URI__', '/');
         define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
-        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
+        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
         require_once __DIR__ . '/../../../install-dev/init.php';
 
         $install = new Install();
