@@ -57,11 +57,11 @@ export default class CustomizationsManager {
   }
 
   removeCustomizationField(event) {
-    $(event.currentTarget).closest(ProductMap.customizations.customizationFieldItem).remove();
+    $(event.currentTarget).closest(ProductMap.customizations.customizationFieldRow).remove();
     this.eventEmitter.emit(EventMap.customizations.customizationFieldRemoved);
   }
 
   getIndex() {
-    return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldItem).length;
+    return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldRow).length;
   }
 }
