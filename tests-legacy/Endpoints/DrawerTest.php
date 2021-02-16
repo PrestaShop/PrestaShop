@@ -27,6 +27,7 @@
 namespace LegacyTests\Endpoints;
 
 use Tools;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
  * Test class for admin/drawer.php
@@ -54,6 +55,7 @@ class DrawerTest extends AbstractEndpointAdminTest
 
         ob_start();
         require _PS_ROOT_DIR_ . '/admin-dev/drawer.php';
+
         $output = json_decode(ob_get_clean());
 
         $this->assertNotNull($output);
