@@ -209,9 +209,6 @@ var combinations = (function() {
 
         // open combination form
         .on('click', '#accordion_combinations .btn-open', function(e) {
-          $.each($('input.attribute_priceTE'), function () {
-            $(this).change();
-          });
           e.preventDefault();
           var contentElem = $($(this).attr('href'));
 
