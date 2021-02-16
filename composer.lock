@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99c3fe70ae733dbccff7a6006b493e11",
+    "content-hash": "bfea84585532672c3b185d0b974d46e3",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5071,16 +5071,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v3.2.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "4abf07d4ee2b007df78849fc9475c2dcab087a69"
+                "reference": "3072601605c569e7aa3565a6d57e7bae56428b00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/4abf07d4ee2b007df78849fc9475c2dcab087a69",
-                "reference": "4abf07d4ee2b007df78849fc9475c2dcab087a69",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/3072601605c569e7aa3565a6d57e7bae56428b00",
+                "reference": "3072601605c569e7aa3565a6d57e7bae56428b00",
                 "shasum": ""
             },
             "require": {
@@ -5112,10 +5112,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "issues": "https://github.com/PrestaShop/ps_linklist/issues",
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/master"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v4.0.0"
             },
-            "time": "2020-07-10T07:10:55+00:00"
+            "time": "2021-02-11T15:55:29+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -10842,5 +10841,5 @@
     "platform-overrides": {
         "php": "7.1.3"
     },
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

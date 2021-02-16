@@ -84,7 +84,7 @@ final class ModuleRepository
     {
         if (null === $this->activeModulesPaths) {
             $this->activeModulesPaths = [];
-            $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../modules')->depth(0);
+            $modulesFiles = Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
             $activeModules = $this->getActiveModules();
 
             foreach ($modulesFiles as $moduleFile) {

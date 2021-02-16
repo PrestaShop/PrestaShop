@@ -38,7 +38,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    private $translator;
 
     /**
      * All languages available on shop. Used for translations.
@@ -65,6 +65,14 @@ abstract class TranslatorAwareType extends CommonAbstractType
     protected function trans($key, $domain, $parameters = [])
     {
         return $this->translator->trans($key, $parameters, $domain);
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    protected function getTranslator(): TranslatorInterface
+    {
+        return $this->translator;
     }
 
     /**

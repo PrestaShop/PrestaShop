@@ -74,7 +74,7 @@
     "prestashop/ps_featuredproducts": "^2",
     "prestashop/ps_imageslider": "^3",
     "prestashop/ps_languageselector": "^2",
-    "prestashop/ps_linklist": "^3",
+    "prestashop/ps_linklist": "^4",
     "prestashop/ps_mainmenu": "^2",
     "prestashop/ps_searchbar": "^2",
     "prestashop/ps_sharebuttons": "^2",
@@ -191,6 +191,7 @@
       "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
     ],
     "phpunit-endpoints": [
+      "@composer create-test-db",
       "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
     ],
     "unit-tests": [

@@ -137,7 +137,7 @@ class RedirectOptionType extends TranslatorAwareType
         // This will transform the target ID from model data into an array adapted for TypeaheadProductCollectionType
         $builder->get('target')->addModelTransformer($this->targetTransformer);
         // In case a transformation occurs it will be displayed as an inline error
-        $builder->addEventSubscriber(new TransformationFailureListener($this->translator));
+        $builder->addEventSubscriber(new TransformationFailureListener($this->getTranslator()));
 
         // Preset the input attributes correctly depending on the data
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($entityAttributes) {

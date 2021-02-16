@@ -280,8 +280,8 @@ namespace PrestaShopBundle\Install {
             if (!defined('_PS_TRANSLATIONS_DIR_')) {
                 define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_ . '/translations/');
             }
-            if (!defined('_PS_MODULES_DIR_')) {
-                define('_PS_MODULES_DIR_', _PS_ROOT_DIR_ . '/modules/');
+            if (!defined('_PS_MODULE_DIR_')) {
+                define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
             }
             if (!defined('_PS_MAILS_DIR_')) {
                 define('_PS_MAILS_DIR_', _PS_ROOT_DIR_ . '/mails/');
