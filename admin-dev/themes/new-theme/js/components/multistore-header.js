@@ -23,14 +23,86 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import Bloodhound from 'typeahead.js';
+import Router from '@components/router';
+
 const {$} = window;
 
 const initMultistoreHeader = () => {
   const headerButton = document.querySelector('.js-header-multishop-open-modal');
   const modalMultishop = document.querySelector('.js-multishop-modal');
+  const $searchInput = $('.js-multishop-modal-search');
+  const router = new Router();
+  const route = router.generate('admin_shops_search', {searchTerm: '__QUERY__'});
+
+  const config = {
+    minLength: 2,
+    highlight: true,
+    cache: false,
+    hint: false,
+  };
+
+  const source = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace,
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: {
+      url: route,
+      wildcard: '__QUERY__',
+    },
+  });
+
+  const dataSetConfig = {
+    display: 'name',
+    value: 'id',
+    source,
+    /* eslint-disable-next-line no-unused-vars */
+    onSelect(selectedItem, event) {
+      window.location.href = selectedItem.url;
+
+      return true;
+    },
+    /* eslint-disable-next-line no-unused-vars */
+    onClose(event) {},
+  };
+
+  const defaultTemplates = {
+    // Be careful that your rendering function must return HTML node not pure text so always include the
+    // content in a div at least
+    suggestion: (item) => {
+      let displaySuggestion = item;
+
+      if (typeof dataSetConfig.display === 'function') {
+        dataSetConfig.display(item);
+      } else if (Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)) {
+        displaySuggestion = item[dataSetConfig.display];
+      }
+
+      return `<div class="px-2">${displaySuggestion}</div>`;
+    },
+    pending(query) {
+      return `<div class="px-2">Searching for "${query.query}"</div>`;
+    },
+    notFound(query) {
+      return `<div class="px-2">No results found for "${query.query}"</div>`;
+    },
+  };
+
+  if (Object.prototype.hasOwnProperty.call(config, 'templates')) {
+    dataSetConfig.templates = {...defaultTemplates, ...config.templates};
+  } else {
+    dataSetConfig.templates = defaultTemplates;
+  }
+
+  $searchInput
+    .typeahead(config, dataSetConfig)
+    .bind('typeahead:select', (e, selectedItem) => dataSetConfig.onSelect(selectedItem, e))
+    .bind('typeahead:close', (e) => {
+      dataSetConfig.onClose(e);
+    });
 
   headerButton.addEventListener('click', () => {
     modalMultishop.classList.toggle('multishop-modal-hidden');
+    headerButton.classList.toggle('active');
   });
 };
 
