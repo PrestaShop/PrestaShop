@@ -189,6 +189,7 @@
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
         ],
         "phpunit-endpoints": [
+            "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
         ],
         "unit-tests": [
