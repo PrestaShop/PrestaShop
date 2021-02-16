@@ -23,6 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
+{%- block features_row -%}
+  <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+
+  {{ form_errors(form) }}
+  {{- block('form_rows') -}}
+{%- endblock -%}
+
 {%- block feature_value_row -%}
   <div class="form-group row product-feature">
     <div class="col-lg-12 col-xl-4">
