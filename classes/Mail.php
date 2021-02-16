@@ -113,8 +113,8 @@ class MailCore extends ObjectModel
      * @param string $template Template: the name of template not be a var but a string !
      * @param string $subject Subject of the email
      * @param array $templateVars Template variables for the email
-     * @param string $to To email
-     * @param string $toName To name
+     * @param string|string[] $to To email
+     * @param string|string[] $toName To name
      * @param string $from From email
      * @param string $fromName To email
      * @param array $fileAttachment array with three parameters (content, mime and name).
