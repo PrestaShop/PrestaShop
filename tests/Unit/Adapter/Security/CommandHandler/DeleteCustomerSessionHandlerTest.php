@@ -24,17 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
+namespace Tests\Unit\Adapter\Security\CommandHandler;
 
-/**
- * Defines interface for customer bulk delete command handler.
- */
-interface BulkDeleteCustomersSessionsHandlerInterface
+use PrestaShop\PrestaShop\Adapter\Security\CommandHandler\DeleteCustomerSessionHandler;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
+
+class DeleteCustomerSessionHandlerTest extends TestCase
 {
-    /**
-     * @param BulkDeleteCustomersSessionsCommand $command
-     */
-    public function handle(BulkDeleteCustomersSessionsCommand $command): void;
+    public function testHandleDeleteShouldBeCalledOnlyOnce(): void
+    {
+        $sessionId = new DeleteCustomerSessionCommand(1);
+
+        $repo = $this->getMockBuilder(CustomerSessionRepository::class)
+            ->setMethods([
+                'delete',
+            ])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $repo->expects($this->once())
+            ->method('delete')
+            ->with($sessionId->getCustomerSessionId())
+            ->willReturn([]);
+
+        $commandHandler = new DeleteCustomerSessionHandler($repo);
+        $commandHandler->handle($sessionId);
+    }
 }
