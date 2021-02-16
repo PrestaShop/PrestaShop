@@ -48,8 +48,8 @@ class Home extends FOBasePage {
     this.productQuantity = `${this.blockCartModalDiv} .product-quantity`;
     this.cartContent = `${this.blockCartModalDiv} .cart-content`;
     this.productsCount = `${this.cartContent} .cart-products-count`;
-    this.cartShipping = `${this.cartContent} .shipping-value`;
-    this.cartSubtotal = `${this.cartContent} .subtotal-value`;
+    this.cartShipping = `${this.cartContent} .shipping.value`;
+    this.cartSubtotal = `${this.cartContent} .subtotal.value`;
     this.productTaxIncl = `${this.cartContent} .product-total .value`;
     this.blockCartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
   }
