@@ -51,9 +51,11 @@
       </button>
     </div>
 
+    {% if isShopContext %}
     <div class="header-multishop-right">
-      <a class="header-multishop-view-action" href="{{currentContext.urlFO}}" target="_blank" rel="nofollow">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+      <a class="header-multishop-view-action" href="{{ link.getBaseLink(currentContext.id) }}" target="_blank" rel="nofollow">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
     </div>
+    {% endif %}
 
     <div id="multishop-modal" class="multishop-modal multishop-modal-hidden js-multishop-modal" tabindex="-1" role="dialog" aria-labelledby="multishop-modal" aria-hidden="true">
       <div class="multishop-modal-dialog" role="document">
@@ -70,17 +72,17 @@
 
             {% for group in groupList %}
               <li class="multishop-modal-group-item multishop-modal-item">
-                <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="#" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Shop') }}" data-original-title="" title=""></a>
-                <a class="multishop-modal-group-name" href="#">{{ group.name }}</a>
+                <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Shop') }}" data-original-title="" title=""></a>
+                <a class="multishop-modal-group-name" href="{{ app.request.requestURI ~ '&setShopContext=g-' ~ group.id }}">{{ group.name }}</a>
               </li>
 
               {% for shop in group.shops %}
                 <li class="multishop-modal-shop-item multishop-modal-item">
                   <div class="multishop-modal-item-left">
-                    <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="#" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Shop') }}" data-original-title="" title=""></a>
-                    <a class="multishop-modal-shop-name" href="#">{{ shop.name }}</a>
+                    <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Shop') }}" data-original-title="" title=""></a>
+                    <a class="multishop-modal-shop-name" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>
                   </div>
-                  <a class="multishop-modal-shop-view" href="#" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+                  <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
                 </li>
               {% endfor %}
             {% endfor %}
@@ -89,7 +91,6 @@
       </div>
     </div>
   </div>
-
 
   <script src="{{ asset('themes/new-theme/public/multistore_header.bundle.js') }}"></script>
 {% endif %}
