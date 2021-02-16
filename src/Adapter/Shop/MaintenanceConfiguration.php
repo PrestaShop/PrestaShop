@@ -35,7 +35,7 @@ use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 class MaintenanceConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var string[]
+     * @var array<int, string>
      */
     private $fields = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
 

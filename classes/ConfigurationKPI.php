@@ -238,7 +238,9 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param string $key
+     * @param $key
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
      *
      * @return bool
      */

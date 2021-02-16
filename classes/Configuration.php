@@ -586,7 +586,7 @@ class ConfigurationCore extends ObjectModel
     /**
      * Delete configuration key from current context
      *
-     * @param $key
+     * @param string $key
      * @param int|null $idShopGroup
      * @param int|null $idShop
      */
