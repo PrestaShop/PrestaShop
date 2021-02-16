@@ -3439,6 +3439,10 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function isUsingNewTranslationSystem()
     {
+        if ($this->context === null || $this->context->getTranslator() === null) {
+            return false;
+        }
+
         $moduleName = $this->name;
         $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
         $moduleBaseDomain = DomainHelper::buildModuleBaseDomain($moduleName);
