@@ -131,7 +131,7 @@ class StockManager implements StockInterface
      *
      * @return bool
      */
-    private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
+    private function updateReservedProductQuantity(int $shopId, int $errorState, int $cancellationState, ?int $idProduct = null, ?int $idOrder = null)
     {
         $statesToIgnore = [
             (int) $errorState,
