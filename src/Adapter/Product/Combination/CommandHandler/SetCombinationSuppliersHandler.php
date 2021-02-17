@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\AddCombinationSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use ProductSupplier;
 
-final class AddCombinationSupplierHandler implements AddCombinationSupplierHandlerInterface
+final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHandlerInterface
 {
     /**
      * @var ProductSupplierRepository
@@ -61,7 +61,7 @@ final class AddCombinationSupplierHandler implements AddCombinationSupplierHandl
     /**
      * {@inheritdoc}
      */
-    public function handle(AddCombinationSupplierCommand $command): ProductSupplierId
+    public function handle(SetCombinationSuppliersCommand $command): ProductSupplierId
     {
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $productSupplier = $this->buildEntity((int) $combination->id_product, $command);
@@ -71,11 +71,11 @@ final class AddCombinationSupplierHandler implements AddCombinationSupplierHandl
 
     /**
      * @param int $productId
-     * @param AddCombinationSupplierCommand $command
+     * @param SetCombinationSuppliersCommand $command
      *
      * @return ProductSupplier
      */
-    private function buildEntity(int $productId, AddCombinationSupplierCommand $command): ProductSupplier
+    private function buildEntity(int $productId, SetCombinationSuppliersCommand $command): ProductSupplier
     {
         $productSupplier = new ProductSupplier();
 

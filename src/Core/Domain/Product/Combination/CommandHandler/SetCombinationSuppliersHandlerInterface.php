@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 /**
- * Defines contract to handle @see AddCombinationSupplierCommand
+ * Defines contract to handle @see SetCombinationSuppliersCommand
  */
-interface AddCombinationSupplierHandlerInterface
+interface SetCombinationSuppliersHandlerInterface
 {
     /**
-     * @param AddCombinationSupplierCommand $command
+     * @param SetCombinationSuppliersCommand $command
      *
      * @return ProductSupplierId
      */
-    public function handle(AddCombinationSupplierCommand $command): ProductSupplierId;
+    public function handle(SetCombinationSuppliersCommand $command): ProductSupplierId;
 }

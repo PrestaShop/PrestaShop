@@ -94,11 +94,11 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand
 
-    prestashop.adapter.product.combination.command_handler_add_combination_supplier_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\AddCombinationSupplierHandler
+    prestashop.adapter.product.combination.command_handler.set_combination_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationSuppliersHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_supplier_repository'
             - '@prestashop.adapter.product.combination.repository.combination_repository'
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationSupplierCommand
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand
