@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use Cookie;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderError;
@@ -53,10 +54,24 @@ final class GeneralDataProvider implements FormDataProviderInterface
      */
     private $dataConfiguration;
 
+    /**
+     * @var bool
+     */
+    private $sslEnabled;
+
+    /**
+     * @var bool
+     */
+    private $sslEnabledEverywhere;
+
     public function __construct(
-        DataConfigurationInterface $dataConfiguration
+        DataConfigurationInterface $dataConfiguration,
+        bool $sslEnabled,
+        bool $sslEnabledEverywhere
     ) {
         $this->dataConfiguration = $dataConfiguration;
+        $this->sslEnabled = $sslEnabled;
+        $this->sslEnabledEverywhere = $sslEnabledEverywhere;
     }
 
     /**
@@ -104,8 +119,29 @@ final class GeneralDataProvider implements FormDataProviderInterface
             $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
         }
 
+        if (!$this->validateSameSite($data[GeneralType::FIELD_COOKIE_SAMESITE])) {
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_COOKIE_SAMESITE_NONE, GeneralType::FIELD_COOKIE_SAMESITE));
+        }
+
         if (!$errors->isEmpty()) {
             throw new DataProviderException('Administration general data is invalid', 0, null, $errors);
         }
+    }
+
+    /**
+     * Validate SameSite.
+     * The SameSite=None is only working when Secure is settled
+     *
+     * @param string $sameSite
+     *
+     * @return bool
+     */
+    protected function validateSameSite(string $sameSite): bool
+    {
+        if ($sameSite === Cookie::SAMESITE_NONE) {
+            return $this->sslEnabled && $this->sslEnabledEverywhere;
+        }
+
+        return true;
     }
 }

@@ -109,6 +109,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider'
         arguments:
             - '@prestashop.adapter.general.configuration'
+            - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_SSL_ENABLED")'
+            - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_SSL_ENABLED_EVERYWHERE")'
 
     prestashop.adapter.administration.upload_quota.form_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider'

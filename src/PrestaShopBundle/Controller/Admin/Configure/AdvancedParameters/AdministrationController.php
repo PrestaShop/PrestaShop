@@ -233,6 +233,11 @@ class AdministrationController extends FrameworkBundleAdminController
                         GeneralDataProvider::MAX_COOKIE_VALUE,
                     ]
                 );
+            case FormDataProvider::ERROR_COOKIE_SAMESITE_NONE:
+                return $this->trans(
+                    'The SameSite=None is only available in Secure mode.',
+                    'Admin.Advparameters.Notification'
+                );
         }
 
         throw new ErrorMessageNotFoundException(
