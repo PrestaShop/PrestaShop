@@ -23,21 +23,26 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\QueryHandler\AbstractSupplierOptionsHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSupplierOptionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-/**
- * Handles @see GetProductSupplierOptions query
- */
-final class GetProductSupplierOptionsHandler extends AbstractSupplierOptionsHandler
+final class GetCombinationSupplierOptionsHandler extends AbstractSupplierOptionsHandler implements GetCombinationSupplierOptionsHandlerInterface
 {
+    /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
     /**
      * @var ProductRepository
      */
@@ -45,28 +50,28 @@ final class GetProductSupplierOptionsHandler extends AbstractSupplierOptionsHand
 
     /**
      * @param ProductSupplierRepository $productSupplierRepository
+     * @param CombinationRepository $combinationRepository
      * @param ProductRepository $productRepository
      */
     public function __construct(
         ProductSupplierRepository $productSupplierRepository,
+        CombinationRepository $combinationRepository,
         ProductRepository $productRepository
     ) {
         parent::__construct($productSupplierRepository);
+        $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
     }
 
-    /**
-     * @param GetProductSupplierOptions $query
-     *
-     * @return ProductSupplierOptions
-     */
-    public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
+    public function handle(GetCombinationSupplierOptions $query): CombinationSupplierOptions
     {
-        $product = $this->productRepository->get($query->getProductId());
+        $combination = $this->combinationRepository->get($query->getCombinationId());
+        $productId = new ProductId((int) $combination->id_product);
+        $product = $this->productRepository->get($productId);
 
-        return new ProductSupplierOptions(
+        return new CombinationSupplierOptions(
             (int) $product->id_supplier,
-            $this->getProductSuppliersInfo($query->getProductId())
+            $this->getProductSuppliersInfo($productId, $query->getCombinationId())
         );
     }
 }
