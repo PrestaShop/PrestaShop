@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
+use Context;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -51,12 +52,20 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
     private $locale;
 
     /**
+     * @var string
+     */
+    private $defaultCurrencyIsoCode;
+
+    /**
      * @param Locale $locale
+     * @param string|null $defaultCurrencyIsoCode
      */
     public function __construct(
-        Locale $locale
+        Locale $locale,
+        ?string $defaultCurrencyIsoCode = null
     ) {
         $this->locale = $locale;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode ?? Context::getContext()->currency->iso_code;
     }
 
     /**
@@ -123,12 +132,14 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                             $product->id,
                             $combination['id_product_attribute']
                         );
+                        $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency'])
+                            ?: $this->defaultCurrencyIsoCode;
                         $combinations[$attributeId] = [
                             'reference' => $combination['reference'],
                             'supplier_reference' => $combination['supplier_reference'],
                             'wholesale_price' => $this->locale->formatPrice(
                                 $productInfo['product_supplier_price_te'],
-                                Currency::getIsoCodeById((int) $productInfo['id_currency'])
+                                $isoCode
                             ),
                             'ean13' => $combination['ean13'],
                             'upc' => $combination['upc'],
@@ -154,6 +165,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                     $product->id,
                     0
                 );
+                $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: $this->defaultCurrencyIsoCode;
                 $product->wholesale_price = $productInfo['product_supplier_price_te'];
                 $product->supplier_reference = $productInfo['product_supplier_reference'];
                 $products[] = [
@@ -161,7 +173,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                     'name' => $product->name,
                     'reference' => $product->reference,
                     'supplier_reference' => $product->supplier_reference,
-                    'wholesale_price' => $this->locale->formatPrice($product->wholesale_price, Currency::getIsoCodeById((int) $productInfo['id_currency'])),
+                    'wholesale_price' => $this->locale->formatPrice($product->wholesale_price, $isoCode),
                     'ean13' => $product->ean13,
                     'upc' => $product->upc,
                     'quantity' => $product->quantity,
