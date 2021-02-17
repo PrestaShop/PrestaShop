@@ -174,7 +174,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         $parentId = (int) $request->query->get('id_parent', $this->getConfiguration()->getInt('PS_HOME_CATEGORY'));
 
-        /**
+        /*
          * Parent category can be root category only if you specifically click to add root category.
          * In all other cases it should be at least home category(Or one of it's children).
          */
