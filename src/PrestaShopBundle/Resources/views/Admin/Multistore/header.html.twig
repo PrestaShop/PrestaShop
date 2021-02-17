@@ -1,6 +1,6 @@
 {# this is temporary, shop context and list of shops will be stored in presentation class, made available here #}
 
-{% if isMultistoreUsed %}
+{% if isMultistoreUsed and app.request is not null %}
   <div class="header-multishop{% if currentContext.color is empty %} header-multishop-default{% endif %}"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
     <div class="header-multishop-center js-header-multishop-open-modal">
       {% if isShopContext %}
@@ -82,7 +82,11 @@
                     <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Shop') }}" data-original-title="" title=""></a>
                     <a class="multishop-modal-shop-name" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>
                   </div>
-                  <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+                  {% if shop.hasMainUrl() %}
+                    <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+                  {% else %}
+                    <a class="multishop-modal-shop-view" href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id}) }}" rel="noreferrer">{{ "Configure URL"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+                  {% endif %}
                 </li>
               {% endfor %}
             {% endfor %}
