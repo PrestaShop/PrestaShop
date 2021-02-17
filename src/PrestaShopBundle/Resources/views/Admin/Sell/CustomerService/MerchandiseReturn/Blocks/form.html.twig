@@ -33,8 +33,22 @@
     <div class="card-text">
       {{ form_errors(merchandiseReturnForm) }}
 
-      {{ ps.form_group_row(merchandiseReturnForm.question, {}, {
-        'label': 'Question'|trans({}, 'Admin.Global')
+      <p>Customer: {{ editableMerchandiseReturn.customerFullName }}</p>
+      <a href="{{ path('admin_customers_view', {'customerId': editableMerchandiseReturn.customerId.value }) }}" class="btn btn-outline-secondary">
+        {{ 'View details on the customer page'|trans({}, 'Admin.Actions') }}
+      </a>
+
+
+      <p>Order: Order # {{ editableMerchandiseReturn.orderId }} froms {{ editableMerchandiseReturn.orderDate.format('d/m/y') }}</p>
+      <a href="{{ path('admin_orders_view', {'orderId': editableMerchandiseReturn.orderId.value }) }}" class="btn btn-outline-secondary">
+        {{ 'View details on the order page'|trans({}, 'Admin.Actions') }}
+      </a>
+
+
+      <p> {{ editableMerchandiseReturn.question }}</p>
+
+      {{ ps.form_group_row(merchandiseReturnForm.state, {}, {
+        'label': 'Order State'|trans({}, 'Admin.Global')
       }) }}
 
       {% block merchandise_return_form_rest %}

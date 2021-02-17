@@ -1192,6 +1192,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.merchandise.return:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnType'
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.merchandise_return_state").getChoices()'
+        tags:
+            - { name: form.type }
+
     form.type.order.customer_service_message:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
         arguments:
