@@ -23,12 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
-{% set featuresForm = productForm.features %}
-{% form_theme featuresForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/features_form_theme.html.twig' %}
+{% form_theme productForm.features '@PrestaShop/Admin/Sell/Catalog/Product/Form/features_form_theme.html.twig' %}
 
-<div id="features-content" class="content">
-  <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-  {{ form_errors(featuresForm) }}
-  {{ form_row(featuresForm.feature_values) }}
-  {{ form_row(featuresForm.add_feature) }}
-</div>
+{% block form_product_features %}
+  {{ form_row(productForm.features) }}
+{% endblock form_product_features %}

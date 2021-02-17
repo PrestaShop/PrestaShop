@@ -23,6 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
+{%- block features_row -%}
+  <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+
+  {{ form_errors(form) }}
+  {{- block('form_rows') -}}
+{%- endblock -%}
+
 {%- block feature_value_row -%}
   <div class="form-group row product-feature">
     <div class="col-lg-12 col-xl-4">
@@ -54,7 +61,7 @@
 {%- endblock -%}
 
 {# Override features collection template to remove the label and init the table #}
-{%- block _product_features_feature_values_row -%}
+{%- block collection_row -%}
   {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row')|trim }) -%}

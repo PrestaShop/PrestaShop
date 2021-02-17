@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -77,6 +79,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
 
@@ -267,6 +270,37 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'ean_13' => $details->getEan13(),
             'isbn' => $details->getIsbn(),
             'reference' => $details->getReference(),
+        ];
+    }
+
+    /**
+     * * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractCustomizationsData(ProductForEditing $productForEditing): array
+    {
+        /** @var CustomizationField[] $customizationFields */
+        $customizationFields = $this->queryBus->handle(
+            new GetProductCustomizationFields($productForEditing->getProductId())
+        );
+
+        if (empty($customizationFields)) {
+            return [];
+        }
+
+        $fields = [];
+        foreach ($customizationFields as $customizationField) {
+            $fields[] = [
+                'id' => $customizationField->getCustomizationFieldId(),
+                'name' => $customizationField->getLocalizedNames(),
+                'type' => $customizationField->getType(),
+                'required' => $customizationField->isRequired(),
+            ];
+        }
+
+        return [
+            'customization_fields' => $fields,
         ];
     }
 
