@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Collection;
 
 /**
  * Shop.
@@ -92,6 +94,14 @@ class Shop
      * @ORM\Column(name="deleted", type="boolean")
      */
     private $deleted;
+
+    /**
+     * @var Collection
+     *
+     * One group shop has many shops. This is the inverse side.
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\ShopUrl", mappedBy="shop")
+     */
+    private $shopUrls;
 
     /**
      * Get id.
@@ -265,5 +275,27 @@ class Shop
     public function getShopGroup()
     {
         return $this->shopGroup;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getShopUrls(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->shopUrls;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMainUrl(): bool
+    {
+        foreach ($this->shopUrls as $shopUrl) {
+            if ($shopUrl->getActive() && $shopUrl->getMain()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
