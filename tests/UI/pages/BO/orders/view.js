@@ -420,6 +420,15 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Is button disabled
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isAddButtonDisabled(page) {
+    return this.elementVisible(page, `${this.addButtonButton},disabled`);
+  }
+
+  /**
    * Get product details
    * @param page
    * @param row

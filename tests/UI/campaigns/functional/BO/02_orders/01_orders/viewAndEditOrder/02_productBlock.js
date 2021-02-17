@@ -44,14 +44,27 @@ const productQuantity = 4;
 const productOutOfStockAllowed = {
   name: 'Out of stock allowed',
   type: 'Standard product',
-  quantity: -12,
   taxRule: 'No tax',
+  quantity: -12,
   minimumQuantity: 1,
   lowStockLevel: 3,
   behaviourOutOfStock: 'Allow orders',
 };
 
 const firstProduct = new ProductFaker(productOutOfStockAllowed);
+
+const productOutOfStockNotAllowed = {
+  name: 'Out of stock not allowed',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: -36,
+  minimumQuantity: 3,
+  stockLocation: 'stock 3',
+  lowStockLevel: 3,
+  behaviourOutOfStock: 'Deny orders',
+};
+
+const secondProduct = new ProductFaker(productOutOfStockNotAllowed);
 
 /*
 Create order by guest in FO
@@ -168,6 +181,40 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
+  // 2 - Create product out of stock not allowed
+  describe('Create product out of stock not allowed', async () => {
+    it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+
+      await productsPage.closeSfToolBar(page);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
+
+      await productsPage.resetFilterCategory(page);
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct2', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const createProductMessage = await addProductPage.setProduct(page, secondProduct);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
   // 3 - Go to view order page
   describe('View order page', async () => {
     it('should go to Orders page', async function () {
@@ -244,6 +291,20 @@ describe('Check customer block in view order page', async () => {
         expect(result.available).to.equal(firstProduct.quantity - 1),
         expect(result.total).to.equal(firstProduct.price),
       ]);
+    });
+
+    it('should try to add product \'Out of stock not allowed\' to the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
+
+      await viewOrderPage.SearchProduct(page, secondProduct.name);
+      const result = await viewOrderPage.getSearchedProductDetails(page);
+      await Promise.all([
+        expect(result.stockLocation).to.equal(secondProduct.stockLocation),
+        expect(result.available).to.equal(secondProduct.quantity - 1),
+      ]);
+
+      const isDisabled = await viewOrderPage.isAddButtonDisabled(page);
+      await expect(isDisabled).to.be.true;
     });
   });
 
