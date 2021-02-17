@@ -21,7 +21,7 @@ $component-name: multishop-modal;
     opacity: 0;
 
     .#{$component-name}-dialog {
-      transform: translateX(-5rem);
+      transform: translateY(-2rem);
     }
   }
 
@@ -36,7 +36,7 @@ $component-name: multishop-modal;
     border-bottom-left-radius: 4px;
     // stylelint-enable
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
-    transform: translateX(0);
+    transform: translateY(0);
     @include transition(0.25s ease-out);
 
     @include media-breakpoint-down(sm) {
