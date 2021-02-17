@@ -83,7 +83,7 @@ const initMultistoreHeader = () => {
       return `<div class="px-2">${$searchInput.data('searching')} "${query.query}"</div>`;
     },
     notFound(query) {
-      return `<div class="px-2">${$searchInput.data('no-resulsts')} "${query.query}"</div>`;
+      return `<div class="px-2">${$searchInput.data('no-results')} "${query.query}"</div>`;
     },
   };
 
