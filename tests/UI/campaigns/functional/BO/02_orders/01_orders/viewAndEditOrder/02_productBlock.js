@@ -225,8 +225,11 @@ describe('Check customer block in view order page', async () => {
       const result = await viewOrderPage.getSearchedProductDetail(page);
       await Promise.all([
         expect(result.stockLocation).to.equal(firstProduct.stockLocation),
-        expect(result.available).to.equal(firstProduct.quantity),
+        expect(result.available).to.equal(firstProduct.quantity - 1),
       ]);
+
+      const textResult = await viewOrderPage.addProductToCart(page);
+      await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
     });
   });
 

@@ -7,6 +7,7 @@ class Order extends BOBasePage {
 
     this.pageTitle = 'Order';
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
+    this.successfulAddProductMessage = 'The product was successfully added.';
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
@@ -43,6 +44,7 @@ class Order extends BOBasePage {
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
     this.addProductTotalPrice = '#addProductTotalPrice';
+    this.addButtonButton = '#add_product_row_add';
 
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -398,8 +400,18 @@ class Order extends BOBasePage {
   async getSearchedProductDetail(page) {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
-      available: await this.getTextContent(page, this.addProductAvailable),
+      available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
     };
+  }
+
+  /**
+   * Add product to cart
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async addProductToCart(page) {
+    await this.waitForSelectorAndClick(page, this.addButtonButton);
+    return this.getGrowlMessageContent(page);
   }
 }
 
