@@ -79,16 +79,44 @@ class ProductSupplierUpdater
      * @param ProductId $productId
      * @param SupplierId $defaultSupplierId
      * @param ProductSupplier[] $productSuppliers
-     * @param CombinationId|null $combinationId
      *
      * @return ProductSupplierId[]
      */
     public function setProductSuppliers(
         ProductId $productId,
         SupplierId $defaultSupplierId,
-        array $productSuppliers,
-        ?CombinationId $combinationId = null
+        array $productSuppliers
     ): array {
+        $this->persist($productId, $productSuppliers);
+        $this->updateDefaultSupplier($productId, $defaultSupplierId);
+
+        return $this->getCurrentProductSupplierIds($productId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CombinationId $combinationId
+     * @param ProductSupplier[] $productSuppliers
+     *
+     * @return ProductSupplierId[]
+     */
+    public function setCombinationSuppliers(
+        ProductId $productId,
+        CombinationId $combinationId,
+        array $productSuppliers
+    ): array {
+        $this->persist($productId, $productSuppliers, $combinationId);
+
+        return $this->getCurrentProductSupplierIds($productId);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ProductSupplier[] $productSuppliers
+     * @param CombinationId|null $combinationId
+     */
+    private function persist(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
+    {
         $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers, $combinationId);
 
         foreach ($productSuppliers as $productSupplier) {
@@ -100,9 +128,6 @@ class ProductSupplierUpdater
         }
 
         $this->productSupplierRepository->bulkDelete($deletableProductSupplierIds);
-        $this->updateDefaultSupplier($productId, $defaultSupplierId);
-
-        return $this->getCurrentProductSupplierIds($productId, $combinationId);
     }
 
     /**
@@ -197,7 +222,7 @@ class ProductSupplierUpdater
      *
      * @return ProductSupplierId[]
      */
-    private function getCurrentProductSupplierIds(ProductId $productId, ?CombinationId $combinationId): array
+    private function getCurrentProductSupplierIds(ProductId $productId, ?CombinationId $combinationId = null): array
     {
         $existingProductSuppliers = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
 

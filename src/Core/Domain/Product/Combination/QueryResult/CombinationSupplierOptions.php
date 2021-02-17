@@ -34,4 +34,5 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSuppli
  */
 class CombinationSupplierOptions extends ProductSupplierOptions
 {
+    //@todo: default supplier doesn't make sense in combinations.
 }

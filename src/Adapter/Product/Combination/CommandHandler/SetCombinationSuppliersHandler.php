@@ -73,9 +73,9 @@ final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHan
             $productSuppliers[] = $this->buildEntityFromDTO($productId, $command->getCombinationId(), $productSupplierDTO);
         }
 
-        return $this->productSupplierUpdater->setProductSuppliers(
+        return $this->productSupplierUpdater->setCombinationSuppliers(
             $productId,
-            $command->getDefaultSupplierId(),
+            $command->getCombinationId(),
             $productSuppliers
         );
     }
