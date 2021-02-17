@@ -80,10 +80,10 @@ const initMultistoreHeader = () => {
       return `<div class="px-2">${displaySuggestion}</div>`;
     },
     pending(query) {
-      return `<div class="px-2">Searching for "${query.query}"</div>`;
+      return `<div class="px-2">${$searchInput.data('searching')} "${query.query}"</div>`;
     },
     notFound(query) {
-      return `<div class="px-2">No results found for "${query.query}"</div>`;
+      return `<div class="px-2">${$searchInput.data('no-resulsts')} "${query.query}"</div>`;
     },
   };
 
