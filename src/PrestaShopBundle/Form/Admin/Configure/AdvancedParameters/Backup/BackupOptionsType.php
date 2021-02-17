@@ -76,7 +76,7 @@ class BackupOptionsType extends TranslatorAwareType
         );
 
         $backupDropTablesHelp = $this->trans(
-            'If enabled, the backup script will drop your tables prior to restoring data.',
+            'If enabled, the backup script will drop your tables prior to restoring data. (ie. "DROP TABLE IF EXISTS")',
             'Admin.Advparameters.Help'
         );
 
