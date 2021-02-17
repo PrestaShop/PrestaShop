@@ -23,30 +23,36 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\AddCombinationSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 
 /**
- * Transfers data of product supplier
+ * Associates supplier with product combination
+ *
+ * @see AddCombinationSupplierHandlerInterface
  */
-class ProductSupplier
+class AddCombinationSupplierCommand
 {
     /**
-     * @var int
+     * @var CombinationId
+     */
+    private $combinationId;
+
+    /**
+     * @var SupplierId
      */
     private $supplierId;
 
     /**
-     * @var int
+     * @var CurrencyId
      */
     private $currencyId;
-
-    /**
-     * @var string
-     */
-    private $reference;
 
     /**
      * @var string
@@ -54,62 +60,46 @@ class ProductSupplier
     private $priceTaxExcluded;
 
     /**
-     * @var int|null
+     * @var string
      */
-    private $productSupplierId;
+    private $reference;
 
-    /**
-     * @var int
-     */
-    private $combinationId;
-
-    /**
-     * @param int $supplierId
-     * @param int $currencyId
-     * @param string $reference
-     * @param string $priceTaxExcluded
-     * @param int $combinationId
-     * @param int|null $productSupplierId Provide value to update existing resource. Null means this is new resource
-     */
     public function __construct(
+        int $combinationId,
         int $supplierId,
         int $currencyId,
-        string $reference,
         string $priceTaxExcluded,
-        int $combinationId,
-        ?int $productSupplierId = null
+        string $reference = ''
     ) {
-        //@todo: supplierId, currencyId VO?
-        $this->supplierId = $supplierId;
-        $this->currencyId = $currencyId;
-        $this->reference = $reference;
+        $this->combinationId = new CombinationId($combinationId);
+        $this->supplierId = new SupplierId($supplierId);
+        $this->currencyId = new CurrencyId($currencyId);
         $this->priceTaxExcluded = $priceTaxExcluded;
-        $this->combinationId = $combinationId;
-        $this->productSupplierId = $productSupplierId;
+        $this->reference = $reference;
     }
 
     /**
-     * @return int
+     * @return CombinationId
      */
-    public function getSupplierId(): int
+    public function getCombinationId(): CombinationId
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @return SupplierId
+     */
+    public function getSupplierId(): SupplierId
     {
         return $this->supplierId;
     }
 
     /**
-     * @return int
+     * @return CurrencyId
      */
-    public function getCurrencyId(): int
+    public function getCurrencyId(): CurrencyId
     {
         return $this->currencyId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReference(): string
-    {
-        return $this->reference;
     }
 
     /**
@@ -121,18 +111,10 @@ class ProductSupplier
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getCombinationId(): int
+    public function getReference(): string
     {
-        return $this->combinationId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getProductSupplierId(): ?int
-    {
-        return $this->productSupplierId;
+        return $this->reference;
     }
 }
