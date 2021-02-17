@@ -134,13 +134,13 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                         );
                         $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency'])
                             ?: $this->defaultCurrencyIsoCode;
+                        $formattedWholesalePrice = null !== $productInfo['product_supplier_price_te']
+                            ? $this->locale->formatPrice($productInfo['product_supplier_price_te'], $isoCode)
+                            : null;
                         $combinations[$attributeId] = [
                             'reference' => $combination['reference'],
                             'supplier_reference' => $combination['supplier_reference'],
-                            'wholesale_price' => $this->locale->formatPrice(
-                                $productInfo['product_supplier_price_te'],
-                                $isoCode
-                            ),
+                            'wholesale_price' => $formattedWholesalePrice,
                             'ean13' => $combination['ean13'],
                             'upc' => $combination['upc'],
                             'quantity' => $combination['quantity'],
@@ -165,15 +165,18 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                     $product->id,
                     0
                 );
-                $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: $this->defaultCurrencyIsoCode;
                 $product->wholesale_price = $productInfo['product_supplier_price_te'];
                 $product->supplier_reference = $productInfo['product_supplier_reference'];
+                $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: $this->defaultCurrencyIsoCode;
+                $formattedWholesalePrice = null !== $product->wholesale_price
+                    ? $this->locale->formatPrice($product->wholesale_price, $isoCode)
+                    : null;
                 $products[] = [
                     'id' => $product->id,
                     'name' => $product->name,
                     'reference' => $product->reference,
                     'supplier_reference' => $product->supplier_reference,
-                    'wholesale_price' => $this->locale->formatPrice($product->wholesale_price, $isoCode),
+                    'wholesale_price' => $formattedWholesalePrice,
                     'ean13' => $product->ean13,
                     'upc' => $product->upc,
                     'quantity' => $product->quantity,
