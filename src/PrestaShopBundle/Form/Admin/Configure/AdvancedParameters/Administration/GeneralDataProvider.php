@@ -41,6 +41,14 @@ use PrestaShopBundle\Form\Exception\DataProviderException;
 final class GeneralDataProvider implements FormDataProviderInterface
 {
     /**
+     * If you set cookie lifetime value too high there can be multiple problems.
+     * Hours are converted to seconds, so int might be turned to float if it's way to high.
+     * Cookie classes crashes if lifetime goes beyond year 9999, there are probably multiple other things.
+     * So we need to set some sort of max value. 100 years seems like a lifetime beyond reasonable use.
+     */
+    public const MAX_COOKIE_VALUE = 876000;
+
+    /**
      * @var DataConfigurationInterface
      */
     private $dataConfiguration;
@@ -84,7 +92,15 @@ final class GeneralDataProvider implements FormDataProviderInterface
             $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
         }
 
+        if ($frontOfficeLifeTimeCookie > self::MAX_COOKIE_VALUE) {
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
+        }
+
         if (!is_numeric($backOfficeLifeTimeCookie) || $backOfficeLifeTimeCookie < 0) {
+            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
+        }
+
+        if ($backOfficeLifeTimeCookie > self::MAX_COOKIE_VALUE) {
             $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
         }
 

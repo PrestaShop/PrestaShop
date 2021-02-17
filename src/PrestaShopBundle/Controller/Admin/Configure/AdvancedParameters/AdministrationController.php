@@ -31,6 +31,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\Exception\ErrorMessageNotFoundException;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
 use PrestaShopBundle\Form\Exception\DataProviderError;
@@ -222,6 +223,15 @@ class AdministrationController extends FrameworkBundleAdminController
                     '%s is invalid. Please enter an integer greater or equal to 0.',
                     'Admin.Notifications.Error',
                     [$this->getFieldLabel($error->getFieldName())]
+                );
+            case FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_NUMBER_EXCEEDED:
+                return $this->trans(
+                    '%s is invalid. Please enter number lower then %s.',
+                    'Admin.Notifications.Error',
+                    [
+                        $this->getFieldLabel($error->getFieldName()),
+                        GeneralDataProvider::MAX_COOKIE_VALUE,
+                    ]
                 );
         }
 
