@@ -107,7 +107,7 @@ class ProductSupplierUpdater
     ): array {
         $this->persist($productId, $productSuppliers, $combinationId);
 
-        return $this->getCurrentProductSupplierIds($productId);
+        return $this->getCurrentProductSupplierIds($productId, $combinationId);
     }
 
     /**

@@ -66,12 +66,12 @@ final class GetCombinationSupplierOptionsHandler extends AbstractSupplierOptions
     public function handle(GetCombinationSupplierOptions $query): CombinationSupplierOptions
     {
         $combination = $this->combinationRepository->get($query->getCombinationId());
-        $productId = new ProductId((int) $combination->id_product);
-        $product = $this->productRepository->get($productId);
 
         return new CombinationSupplierOptions(
-            (int) $product->id_supplier,
-            $this->getProductSuppliersInfo($productId, $query->getCombinationId())
+            $this->getProductSuppliersInfo(
+                new ProductId((int) $combination->id_product),
+                $query->getCombinationId()
+            )
         );
     }
 }

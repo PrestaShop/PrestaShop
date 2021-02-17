@@ -49,7 +49,13 @@ abstract class AbstractSupplierOptionsHandler
         $this->productSupplierRepository = $productSupplierRepository;
     }
 
-    public function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
+    /**
+     * @param ProductId $productId
+     * @param CombinationId|null $combinationId
+     *
+     * @return ProductSupplierInfo[]
+     */
+    protected function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
     {
         $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
 

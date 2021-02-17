@@ -27,12 +27,29 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 
-/**
- * Transfers product combination supplier data
- */
-class CombinationSupplierOptions extends ProductSupplierOptions
+class CombinationSupplierOptions
 {
-    //@todo: default supplier doesn't make sense in combinations.
+    /**
+     * @var ProductSupplierInfo[]
+     */
+    private $suppliersInfo;
+
+    /**
+     * @param ProductSupplierInfo[] $combinationSuppliersInfo
+     */
+    public function __construct(
+        array $combinationSuppliersInfo
+    ) {
+        $this->suppliersInfo = $combinationSuppliersInfo;
+    }
+
+    /**
+     * @return ProductSupplierInfo[]
+     */
+    public function getSuppliersInfo(): array
+    {
+        return $this->suppliersInfo;
+    }
 }

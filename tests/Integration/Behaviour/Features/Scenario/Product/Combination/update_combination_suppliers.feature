@@ -8,7 +8,11 @@ Feature: Update product combination suppliers in Back Office (BO)
   I need to be able to update product combination suppliers from BO
 
   Background:
-    Given language with iso code "en" is the default one
+    Given shop "shop1" with name "test_shop" exists
+    And language "language1" with locale "en-US" exists
+    And language with iso code "en" is the default one
+    And there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
+    And there is a currency named "currency3" with iso code "EUR" and exchange rate of 0.63
     And attribute group "Size" named "Size" in en language exists
     And attribute group "Color" named "Color" in en language exists
     And attribute "S" named "S" in en language exists
@@ -71,7 +75,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     And combination "product1SWhite" should not have any suppliers assigned
     When I set following suppliers for combination "product1SWhite":
       | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
-      | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 5                  |
+      | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
     Then combination "product1SWhite" should have following suppliers:
-      | product supplier reference     | currency | price tax excluded |
-      | my first supplier for product3 | USD      | 10                 |
+      | combination supplier reference | currency | price tax excluded |
+      | sup white shirt S 1            | USD      | 10                 |

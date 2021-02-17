@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use RuntimeException;
 
 /**
  * Associates supplier with product combination
@@ -50,14 +52,14 @@ class SetCombinationSuppliersCommand
 
     /**
      * @param int $combinationId
-     * @param ProductSupplier[] $combinationSuppliers
+     * @param array<string, string|int|null> $combinationSuppliers
      */
     public function __construct(
         int $combinationId,
         array $combinationSuppliers
     ) {
         $this->combinationId = new CombinationId($combinationId);
-        $this->combinationSuppliers = $combinationSuppliers;
+        $this->setCombinationSuppliers($combinationSuppliers);
     }
 
     /**
@@ -74,5 +76,30 @@ class SetCombinationSuppliersCommand
     public function getCombinationSuppliers(): array
     {
         return $this->combinationSuppliers;
+    }
+
+    /**
+     * @param array<string, string|int|null> $productSuppliers
+     */
+    private function setCombinationSuppliers(array $productSuppliers): void
+    {
+        if (empty($productSuppliers)) {
+            throw new RuntimeException(sprintf(
+                'Empty array of combination suppliers provided in %s. To remove all product suppliers use %s.',
+                self::class,
+                //@todo: RemoveAllCombinationSuppliersCommand
+                RemoveAllAssociatedProductSuppliersCommand::class
+            ));
+        }
+
+        foreach ($productSuppliers as $productSupplier) {
+            $this->combinationSuppliers[] = new ProductSupplier(
+                $productSupplier['supplier_id'],
+                $productSupplier['currency_id'],
+                $productSupplier['reference'],
+                $productSupplier['price_tax_excluded'],
+                $productSupplier['product_supplier_id'] ?? null
+            );
+        }
     }
 }

@@ -34,7 +34,6 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
@@ -43,19 +42,35 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
      * @When I set following suppliers for combination ":combinationReference":
      *
      * @param string $combinationReference
-     * @param array<string, array> $referencedProductSuppliers
-     *
-     * @see transformCombinationSuppliers
+     * @param TableNode $table
      */
-    public function setCombinationSuppliers(string $combinationReference, array $referencedProductSuppliers): void
+    public function setCombinationSuppliers(string $combinationReference, TableNode $table): void
     {
+        $references = [];
+        $productSuppliers = [];
+        foreach ($table->getColumnsHash() as $row) {
+            $productSupplierId = null;
+            $references[] = $row['reference'];
+            if ($this->getSharedStorage()->exists($row['reference'])) {
+                $productSupplierId = $this->getSharedStorage()->get($row['reference']);
+            }
+
+            $productSuppliers[] = [
+                'supplier_id' => $this->getSharedStorage()->get($row['supplier reference']),
+                'currency_id' => (int) Currency::getIdByIsoCode($row['currency'], 0, true),
+                'reference' => $row['combination supplier reference'],
+                'price_tax_excluded' => $row['price tax excluded'],
+                'combination_id' => $this->getSharedStorage()->get($combinationReference),
+                'product_supplier_id' => $productSupplierId,
+            ];
+        }
+
         $command = new SetCombinationSuppliersCommand(
             $this->getSharedStorage()->get($combinationReference),
-            $referencedProductSuppliers['product_suppliers']
+            $productSuppliers
         );
 
         $productSupplierIds = $this->getCommandBus()->handle($command);
-        $references = $referencedProductSuppliers['references'];
 
         Assert::assertSameSize(
             $references,
@@ -77,12 +92,11 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
      */
     public function assertSuppliers(string $combinationReference, TableNode $table): void
     {
-        $combinationId = $this->getSharedStorage()->get($combinationReference);
         $expectedCombinationSuppliers = $table->getColumnsHash();
         $actualCombinationSupplierOptions = $this->getCombinationSupplierOptions($combinationReference);
 
         foreach ($expectedCombinationSuppliers as &$expectedCombinationSupplier) {
-            $expectedCombinationSupplier['combination'] = $combinationId;
+            $expectedCombinationSupplier['combination'] = $this->getSharedStorage()->get($combinationReference);
             $expectedCombinationSupplier['price tax excluded'] = new DecimalNumber($expectedCombinationSupplier['price tax excluded']);
         }
 
@@ -90,7 +104,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         foreach ($actualCombinationSupplierOptions->getSuppliersInfo() as $actualProductSupplierOption) {
             $productSupplierForEditing = $actualProductSupplierOption->getProductSupplierForEditing();
             $actualCombinationSuppliers[] = [
-                'product supplier reference' => $productSupplierForEditing->getReference(),
+                'combination supplier reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
                 'price tax excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
                 'combination' => $productSupplierForEditing->getCombinationId(),
@@ -117,39 +131,6 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
             $combinationSupplierOptions->getSuppliersInfo(),
             sprintf('Combination "%s" should not have any suppliers assigned', $combinationReference)
         );
-    }
-
-    /**
-     * @Transform table:reference,supplier reference,combination supplier reference,currency,price tax excluded
-     *
-     * @param TableNode $table
-     *
-     * @return array<string, array>>
-     */
-    public function transformCombinationSuppliers(TableNode $table): array
-    {
-        $productSuppliers = [];
-        $references = [];
-        foreach ($table->getColumnsHash() as $row) {
-            $productSupplierId = null;
-            $references[] = $row['reference'];
-            if ($this->getSharedStorage()->exists($row['reference'])) {
-                $productSupplierId = $this->getSharedStorage()->get($row['reference']);
-            }
-
-            $productSuppliers[] = new ProductSupplier(
-                $this->getSharedStorage()->get($row['supplier reference']),
-                $this->getSharedStorage()->get($row['currency']),
-                $row['combination supplier reference'],
-                $row['price tax excluded'],
-                $productSupplierId
-            );
-        }
-
-        return [
-            'product_suppliers' => $productSuppliers,
-            'references' => $references,
-        ];
     }
 
     /**

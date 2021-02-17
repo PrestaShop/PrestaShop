@@ -94,7 +94,7 @@ final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHan
     ): ProductSupplier {
         $productSupplier = new ProductSupplier();
         $productSupplier->id_product = $productId->getValue();
-        $productSupplier->id_product_attribute = $combinationId;
+        $productSupplier->id_product_attribute = $combinationId->getValue();
         $productSupplier->id = $productSupplierDTO->getProductSupplierId();
         $productSupplier->id_supplier = $productSupplierDTO->getSupplierId();
         $productSupplier->id_currency = $productSupplierDTO->getCurrencyId();
