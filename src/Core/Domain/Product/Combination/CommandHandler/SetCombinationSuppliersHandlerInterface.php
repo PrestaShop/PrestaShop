@@ -37,7 +37,7 @@ interface SetCombinationSuppliersHandlerInterface
     /**
      * @param SetCombinationSuppliersCommand $command
      *
-     * @return ProductSupplierId
+     * @return ProductSupplierId[] new product combination suppliers ids list
      */
-    public function handle(SetCombinationSuppliersCommand $command): ProductSupplierId;
+    public function handle(SetCombinationSuppliersCommand $command): array;
 }

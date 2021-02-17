@@ -28,61 +28,78 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use ProductSupplier;
 
 final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHandlerInterface
 {
-    /**
-     * @var ProductSupplierRepository
-     */
-    private $productSupplierRepository;
-
     /**
      * @var CombinationRepository
      */
     private $combinationRepository;
 
     /**
-     * @param ProductSupplierRepository $productSupplierRepository
+     * @var ProductSupplierUpdater
+     */
+    private $productSupplierUpdater;
+
+    /**
      * @param CombinationRepository $combinationRepository
+     * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        ProductSupplierRepository $productSupplierRepository,
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        ProductSupplierUpdater $productSupplierUpdater
     ) {
-        $this->productSupplierRepository = $productSupplierRepository;
         $this->combinationRepository = $combinationRepository;
+        $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(SetCombinationSuppliersCommand $command): ProductSupplierId
+    public function handle(SetCombinationSuppliersCommand $command): array
     {
         $combination = $this->combinationRepository->get($command->getCombinationId());
-        $productSupplier = $this->buildEntity((int) $combination->id_product, $command);
+        $productId = new ProductId((int) $combination->id_product);
 
-        return $this->productSupplierRepository->add($productSupplier);
+        $productSuppliers = [];
+        foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
+            $productSuppliers[] = $this->buildEntityFromDTO($productId, $command->getCombinationId(), $productSupplierDTO);
+        }
+
+        return $this->productSupplierUpdater->setProductSuppliers(
+            $productId,
+            $command->getDefaultSupplierId(),
+            $productSuppliers
+        );
     }
 
     /**
-     * @param int $productId
-     * @param SetCombinationSuppliersCommand $command
+     * @param ProductId $productId
+     * @param CombinationId $combinationId
+     * @param ProductSupplierDTO $productSupplierDTO
      *
      * @return ProductSupplier
      */
-    private function buildEntity(int $productId, SetCombinationSuppliersCommand $command): ProductSupplier
-    {
+    private function buildEntityFromDTO(
+        ProductId $productId,
+        CombinationId $combinationId,
+        ProductSupplierDTO $productSupplierDTO
+    ): ProductSupplier {
         $productSupplier = new ProductSupplier();
-
-        $productSupplier->id_product = $productId;
-        $productSupplier->id_supplier = $command->getSupplierId()->getValue();
-        $productSupplier->id_product_attribute = $command->getCombinationId()->getValue();
-        $productSupplier->id_currency = $command->getCurrencyId()->getValue();
+        $productSupplier->id_product = $productId->getValue();
+        $productSupplier->id_product_attribute = $combinationId;
+        $productSupplier->id = $productSupplierDTO->getProductSupplierId();
+        $productSupplier->id_supplier = $productSupplierDTO->getSupplierId();
+        $productSupplier->id_currency = $productSupplierDTO->getCurrencyId();
+        $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
+        $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
 
         return $productSupplier;
     }

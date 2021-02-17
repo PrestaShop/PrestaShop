@@ -28,6 +28,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 
 /**
  * Associates supplier with product combination
@@ -36,5 +39,57 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetComb
  */
 class SetCombinationSuppliersCommand
 {
-    //@todo
+    /**
+     * @var CombinationId
+     */
+    private $combinationId;
+
+    /**
+     * @var SupplierId
+     */
+    private $defaultSupplierId;
+
+    /**
+     * @var array
+     */
+    private $combinationSuppliers;
+
+    /**
+     * @param int $combinationId
+     * @param int $defaultSupplierId
+     * @param ProductSupplier[] $combinationSuppliers
+     */
+    public function __construct(
+        int $combinationId,
+        int $defaultSupplierId,
+        array $combinationSuppliers
+    ) {
+        $this->combinationId = new CombinationId($combinationId);
+        $this->defaultSupplierId = new SupplierId($defaultSupplierId);
+        $this->combinationSuppliers = $combinationSuppliers;
+    }
+
+    /**
+     * @return CombinationId
+     */
+    public function getCombinationId(): CombinationId
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @return SupplierId
+     */
+    public function getDefaultSupplierId(): SupplierId
+    {
+        return $this->defaultSupplierId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCombinationSuppliers(): array
+    {
+        return $this->combinationSuppliers;
+    }
 }

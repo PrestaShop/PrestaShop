@@ -31,13 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 use ProductSupplier;
 
@@ -80,14 +79,17 @@ class ProductSupplierUpdater
      * @param ProductId $productId
      * @param SupplierId $defaultSupplierId
      * @param ProductSupplier[] $productSuppliers
+     * @param CombinationId|null $combinationId
      *
-     * @throws CannotUpdateProductSupplierException
-     * @throws CoreException
-     * @throws ProductSupplierNotFoundException
+     * @return ProductSupplierId[]
      */
-    public function setProductSuppliers(ProductId $productId, SupplierId $defaultSupplierId, array $productSuppliers): void
-    {
-        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId->getValue(), $productSuppliers);
+    public function setProductSuppliers(
+        ProductId $productId,
+        SupplierId $defaultSupplierId,
+        array $productSuppliers,
+        ?CombinationId $combinationId = null
+    ): array {
+        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers, $combinationId);
 
         foreach ($productSuppliers as $productSupplier) {
             if ($productSupplier->id) {
@@ -99,6 +101,8 @@ class ProductSupplierUpdater
 
         $this->productSupplierRepository->bulkDelete($deletableProductSupplierIds);
         $this->updateDefaultSupplier($productId, $defaultSupplierId);
+
+        return $this->getCurrentProductSupplierIds($productId, $combinationId);
     }
 
     /**
@@ -158,20 +162,22 @@ class ProductSupplierUpdater
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      * @param ProductSupplier[] $providedProductSuppliers
+     * @param CombinationId|null $combinationId
      *
      * @return array<int, ProductSupplierId>
      */
-    private function getDeletableProductSupplierIds(int $productId, array $providedProductSuppliers): array
-    {
-        $existingProductSuppliers = ProductSupplier::getSupplierCollection($productId);
+    private function getDeletableProductSupplierIds(
+        ProductId $productId,
+        array $providedProductSuppliers,
+        ?CombinationId $combinationId
+    ): array {
+        $existingIds = $this->getCurrentProductSupplierIds($productId, $combinationId);
         $idsForDeletion = [];
 
-        /** @var ProductSupplier $currentSupplier */
-        foreach ($existingProductSuppliers as $currentSupplier) {
-            $currentId = (int) $currentSupplier->id;
-            $idsForDeletion[$currentId] = new ProductSupplierId($currentId);
+        foreach ($existingIds as $productSupplierId) {
+            $idsForDeletion[$productSupplierId->getValue()] = $productSupplierId;
         }
 
         foreach ($providedProductSuppliers as $productSupplier) {
@@ -183,5 +189,23 @@ class ProductSupplierUpdater
         }
 
         return $idsForDeletion;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CombinationId|null $combinationId
+     *
+     * @return ProductSupplierId[]
+     */
+    private function getCurrentProductSupplierIds(ProductId $productId, ?CombinationId $combinationId): array
+    {
+        $existingProductSuppliers = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
+
+        $ids = [];
+        foreach ($existingProductSuppliers as $currentSupplier) {
+            $ids[] = new ProductSupplierId((int) $currentSupplier['id_product_supplier']);
+        }
+
+        return $ids;
     }
 }

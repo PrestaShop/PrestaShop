@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use ProductSupplier;
 
@@ -67,9 +67,11 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
             $productSuppliers[] = $this->buildEntityFromDTO($productId, $productSupplierDTO);
         }
 
-        $this->productSupplierUpdater->setProductSuppliers($productId, $command->getDefaultSupplierId(), $productSuppliers);
-
-        return $this->getProductSupplierIds($productId);
+        return $this->productSupplierUpdater->setProductSuppliers(
+            $productId,
+            $command->getDefaultSupplierId(),
+            $productSuppliers
+        );
     }
 
     /**
@@ -82,7 +84,7 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
     {
         $productSupplier = new ProductSupplier();
         $productSupplier->id_product = $productId->getValue();
-        $productSupplier->id_product_attribute = $productSupplierDTO->getCombinationId();
+        $productSupplier->id_product_attribute = CombinationId::NO_COMBINATION;
         $productSupplier->id = $productSupplierDTO->getProductSupplierId();
         $productSupplier->id_supplier = $productSupplierDTO->getSupplierId();
         $productSupplier->id_currency = $productSupplierDTO->getCurrencyId();
@@ -90,22 +92,5 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
         $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
 
         return $productSupplier;
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return ProductSupplierId[]
-     */
-    private function getProductSupplierIds(ProductId $productId): array
-    {
-        $productSupplierIds = [];
-
-        /** @var ProductSupplier $productSupplierEntity */
-        foreach (ProductSupplier::getSupplierCollection($productId->getValue(), false) as $productSupplierEntity) {
-            $productSupplierIds[] = new ProductSupplierId((int) $productSupplierEntity->id);
-        }
-
-        return $productSupplierIds;
     }
 }

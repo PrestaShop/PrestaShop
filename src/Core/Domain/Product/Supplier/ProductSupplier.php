@@ -59,16 +59,10 @@ class ProductSupplier
     private $productSupplierId;
 
     /**
-     * @var int
-     */
-    private $combinationId;
-
-    /**
      * @param int $supplierId
      * @param int $currencyId
      * @param string $reference
      * @param string $priceTaxExcluded
-     * @param int $combinationId
      * @param int|null $productSupplierId Provide value to update existing resource. Null means this is new resource
      */
     public function __construct(
@@ -76,7 +70,6 @@ class ProductSupplier
         int $currencyId,
         string $reference,
         string $priceTaxExcluded,
-        int $combinationId,
         ?int $productSupplierId = null
     ) {
         //@todo: supplierId, currencyId VO?
@@ -84,7 +77,6 @@ class ProductSupplier
         $this->currencyId = $currencyId;
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
-        $this->combinationId = $combinationId;
         $this->productSupplierId = $productSupplierId;
     }
 
@@ -118,14 +110,6 @@ class ProductSupplier
     public function getPriceTaxExcluded(): string
     {
         return $this->priceTaxExcluded;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCombinationId(): int
-    {
-        return $this->combinationId;
     }
 
     /**
