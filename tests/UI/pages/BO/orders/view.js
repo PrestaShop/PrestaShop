@@ -26,7 +26,12 @@ class Order extends BOBasePage {
     this.orderProductsTable = '#orderProductsTable';
     this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
     this.orderProductsTableNameColumn = row => `${this.orderProductsRowTable(row)} td.cellProductName`;
-    this.orderProductsTableNameNameParagraph = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductName = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductBasePrice = row => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
+    this.orderProductsTableProductQuantity = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
+    this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
+     td.cellProductAvailableQuantity`;
+    this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
     this.editProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Edit']`;
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
@@ -93,7 +98,7 @@ class Order extends BOBasePage {
    * @return {Promise<string>}
    */
   getProductNameFromTable(page, row) {
-    return this.getTextContent(page, this.orderProductsTableNameNameParagraph(row));
+    return this.getTextContent(page, this.orderProductsTableProductName(row));
   }
 
   /**
@@ -397,7 +402,7 @@ class Order extends BOBasePage {
    * @param page
    * @returns {Promise<{available: *, basePriceTInc: *, basePriceTExc: *}>}
    */
-  async getSearchedProductDetail(page) {
+  async getSearchedProductDetails(page) {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
@@ -412,6 +417,25 @@ class Order extends BOBasePage {
   async addProductToCart(page) {
     await this.waitForSelectorAndClick(page, this.addButtonButton);
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Get product details
+   * @param page
+   * @param row
+   * @returns {Promise<{total: number, quantity: number, name: *, available: number, basePrice: number}>}
+   */
+  async getProductDetails(page, row) {
+    return {
+      name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
+      basePrice: parseFloat((await this.getTextContent(
+        page,
+        this.orderProductsTableProductBasePrice(row))).replace('€', ''),
+      ),
+      quantity: parseInt(await this.getTextContent(page, this.orderProductsTableProductQuantity(row)), 10),
+      available: parseInt(await this.getTextContent(page, this.orderProductsTableProductAvailable(row)), 10),
+      total: parseFloat((await this.getTextContent(page, this.orderProductsTableProductPrice(row))).replace('€', '')),
+    };
   }
 }
 

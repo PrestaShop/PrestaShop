@@ -45,6 +45,7 @@ const productOutOfStockAllowed = {
   name: 'Out of stock allowed',
   type: 'Standard product',
   quantity: -12,
+  taxRule: 'No tax',
   minimumQuantity: 1,
   lowStockLevel: 3,
   behaviourOutOfStock: 'Allow orders',
@@ -161,6 +162,7 @@ describe('Check customer block in view order page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
       await productsPage.goToAddProductPage(page);
+
       const createProductMessage = await addProductPage.setProduct(page, firstProduct);
       await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
@@ -218,11 +220,11 @@ describe('Check customer block in view order page', async () => {
       await expect(productCount).to.equal(1);
     });
 
-    it('should add the created product \'Out of stock allowed to the cart\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'AddProductToCart', baseContext);
+    it('should add the created product \'Out of stock allowed\' to the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await viewOrderPage.SearchProduct(page, firstProduct.name);
-      const result = await viewOrderPage.getSearchedProductDetail(page);
+      const result = await viewOrderPage.getSearchedProductDetails(page);
       await Promise.all([
         expect(result.stockLocation).to.equal(firstProduct.stockLocation),
         expect(result.available).to.equal(firstProduct.quantity - 1),
@@ -230,6 +232,18 @@ describe('Check customer block in view order page', async () => {
 
       const textResult = await viewOrderPage.addProductToCart(page);
       await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+    });
+
+    it('should check product \'Out of stock allowed\' details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails', baseContext);
+      const result = await viewOrderPage.getProductDetails(page, 1);
+      await Promise.all([
+        expect(result.name).to.equal(firstProduct.name),
+        expect(result.basePrice).to.equal(firstProduct.price),
+        expect(result.quantity).to.equal(1),
+        expect(result.available).to.equal(firstProduct.quantity - 1),
+        expect(result.total).to.equal(firstProduct.price),
+      ]);
     });
   });
 
