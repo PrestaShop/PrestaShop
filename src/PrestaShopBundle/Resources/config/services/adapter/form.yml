@@ -79,3 +79,8 @@ services:
 
   prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\SupplierNameByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.merchandise_return_state:
+      class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\MerchandiseReturnStateChoiceProvider'
+      arguments:
+          - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

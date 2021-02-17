@@ -95,11 +95,17 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     public function editAction(int $merchandiseReturnId, Request $request): Response
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.merchandise_return_form_builder');
+
        // $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_message_form_handler');
 
         try {
             /** @var EditableMerchandiseReturn $editableMerchandiseReturn */
-            $editableMerchandiseReturn = $this->getQueryBus()->handle(new GetMerchandiseReturnForEditing($merchandiseReturnId));
+            $editableMerchandiseReturn = $this->getQueryBus()->handle(
+                new GetMerchandiseReturnForEditing(
+                    $merchandiseReturnId,
+                    $this->getContextLangId()
+                )
+            );
 
             $form = $formBuilder->getFormFor($merchandiseReturnId);
 //            $form->handleRequest($request);
@@ -124,6 +130,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Actions')),
             'merchandiseReturnForm' => $form->createView(),
+            'editableMerchandiseReturn' => $editableMerchandiseReturn
         ]);
     }
 
