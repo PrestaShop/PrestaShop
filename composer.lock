@@ -4330,16 +4330,16 @@
         },
         {
             "name": "prestashop/ps_categorytree",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_categorytree.git",
-                "reference": "37b36138c083c8c724b5a6dd6c32f25aabbb08a5"
+                "reference": "70a8504d2fd1396359efa0184497c4082afe2ebd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_categorytree/zipball/37b36138c083c8c724b5a6dd6c32f25aabbb08a5",
-                "reference": "37b36138c083c8c724b5a6dd6c32f25aabbb08a5",
+                "url": "https://api.github.com/repos/PrestaShop/ps_categorytree/zipball/70a8504d2fd1396359efa0184497c4082afe2ebd",
+                "reference": "70a8504d2fd1396359efa0184497c4082afe2ebd",
                 "shasum": ""
             },
             "require": {
@@ -4367,9 +4367,9 @@
             "description": "PrestaShop category tree links",
             "homepage": "https://github.com/PrestaShop/ps_categorytree",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_categorytree/tree/v2.0.1"
+                "source": "https://github.com/PrestaShop/ps_categorytree/tree/v2.0.2"
             },
-            "time": "2021-01-12T13:41:05+00:00"
+            "time": "2021-02-16T14:53:25+00:00"
         },
         {
             "name": "prestashop/ps_checkpayment",
