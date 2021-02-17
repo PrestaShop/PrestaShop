@@ -29,8 +29,8 @@ services:
             - '@router'
             - 'admin_merchandise_returns_filter'
 
-    prestashop.core.grid.filter.merchandise_return_products_form_factory:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Filter\MerchandiseReturnProductsFilterFormFactory'
+    prestashop.core.grid.filter.order_return_products_form_factory:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Filter\OrderReturnProductsFilterFormFactory'
       arguments:
         - '@prestashop.core.grid.filter.form_factory'
         - '@router'
