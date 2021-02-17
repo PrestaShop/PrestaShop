@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\QueryHandler;
 
+use Customer;
+use DateTime;
+use Order;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
@@ -46,12 +49,18 @@ final class GetMerchandiseReturnForEditingHandler extends AbstractMerchandiseRet
     public function handle(GetMerchandiseReturnForEditing $query)
     {
         $merchandiseReturnId = $query->getMerchandiseReturnId();
+        $languageId = $query->getLanguageId();
         $orderReturn = $this->getOrderReturn($merchandiseReturnId);
+        $customer = new Customer($orderReturn->id_customer, $languageId->getValue());
+        $order = new Order($orderReturn->id_order);
 
         return new EditableMerchandiseReturn(
             $merchandiseReturnId,
             new CustomerId((int) $orderReturn->id_customer),
+            $customer->firstname,
+            $customer->lastname,
             new OrderId((int) $orderReturn->id_order),
+            new DateTime($order->date_add),
             (int) $orderReturn->state,
             $orderReturn->question
         );
