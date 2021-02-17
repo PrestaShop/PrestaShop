@@ -80,9 +80,6 @@ class BackupOptionsType extends TranslatorAwareType
             'Admin.Advparameters.Help'
         );
 
-        $backupDropTablesHelp .= ' ';
-        $backupDropTablesHelp .= $this->trans('(ie. "DROP TABLE IF EXISTS")', 'Admin.Advparameters.Help');
-
         $builder
             ->add('backup_all', SwitchType::class, [
                 'label' => $this->trans('Ignore statistics tables', 'Admin.Advparameters.Feature'),
