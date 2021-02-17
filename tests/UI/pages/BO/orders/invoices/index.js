@@ -35,7 +35,7 @@ class Invoice extends BOBasePage {
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} #save-invoices-options-button`;
     this.invoicePrefixInput = '#form_invoice_prefix_1';
     this.invoiceAddCurrentYearToggleInput = toggle => `#form_add_current_year_${toggle}`;
-    this.optionYearPositionRadioButton = id => `#form_year_position_${id} + i`;
+    this.optionYearPositionRadioButton = id => `#form_year_position_${id}`;
   }
 
   /*
