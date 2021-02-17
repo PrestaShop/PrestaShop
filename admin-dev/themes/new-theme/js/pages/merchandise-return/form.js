@@ -35,7 +35,7 @@ import ReloadListExtension from '../../components/grid/extension/reload-list-ext
 const {$} = window;
 
 $(() => {
-  const grid = new Grid('merchandise_return_products');
+  const grid = new Grid('order_return_products');
   grid.addExtension(new FiltersResetExtension());
   grid.addExtension(new SortingExtension());
   grid.addExtension(new ReloadListExtension());
