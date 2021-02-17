@@ -1355,6 +1355,7 @@ i.mce-i-resize {
 }
 
 .mce-textbox {
+  z-index: 1;
   display: inline-block;
   height: 28px;
   padding: 0 4px;
