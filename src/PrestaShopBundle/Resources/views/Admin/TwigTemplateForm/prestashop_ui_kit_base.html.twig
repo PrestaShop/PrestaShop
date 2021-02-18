@@ -576,7 +576,21 @@
 {# Errors #}
 
 {% block form_errors -%}
-  <div class="form-errors-container">
+  {% set formErrorsField = true %}
+  {% for error in errors %}
+    {% if error.cause == null %}
+      {% set formErrorsField = false %}
+    {% endif %}
+  {% endfor%}
+
+  {% if formErrorsField %}
+    {{ block('form_errors_input') }}
+  {% else %}
+    {{ block('form_errors_other') }}
+  {% endif %}
+{%- endblock form_errors %}
+
+{% block form_errors_input %}
   {% if errors|length > 0 -%}
     {# If we got more then one error then we need to display popover instead of errors list #}
     {%- if errors|length > 1 -%}
@@ -624,7 +638,7 @@
 
       {# If there is only one error then display it without popover #}
     {%- else -%}
-      <div class="d-inline-block text-danger align-top form-error-icon-container">
+      <div class="d-inline-block text-danger align-top">
         <i class="material-icons form-error-icon">error_outline</i>
       </div>
       <div class="d-inline-block">
@@ -641,8 +655,25 @@
       </div>
     {%- endif -%}
   {%- endif %}
+{% endblock %}
+
+{% block form_errors_other %}
+  <div class="alert alert-danger d-print-none" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true"><i class="material-icons">close</i></span>
+    </button>
+    <div class="alert-text">
+      {% for error in errors %}
+          <p> {{
+            error.messagePluralization is null
+            ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+            : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+            }}
+          </p>
+      {%- endfor -%}
+    </div>
   </div>
-{%- endblock form_errors %}
+{% endblock %}
 
 {# Material design widgets #}
 
