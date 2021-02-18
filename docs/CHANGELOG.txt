@@ -24,11 +24,12 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
-#   v1.7.7.2 - (2021-02-12)
+#   v1.7.7.2 - (2021-02-18)
 ####################################
 
 - Back Office:
   - Bug fix:
+    - #23289: Use default currency when supplier currency setting is incorrect (by @atomiix)
     - #23078: [BC Break] Fixed missing APE/SIRET Code in BackOffice Order View (by @Progi1984)
     - #22980: Replaced hooks displayAdminList<Before|After> with displayAdminGridTable<Before|After> (by @Progi1984)
     - #22997: Fix compare function of dashboard's calendar (by @NeOMakinG)
@@ -57,6 +58,7 @@ Release Notes for PrestaShop 1.7
   - Bug fix:
     - #GHSA-557h-hf3c-whcg: Improper session management for soft logout (by @PierreRambaud)
     - #GHSA-2rw4-2p99-cmx9: CSV Injection via csv export (by @PierreRambaud)
+    - #23276: Update composer version of ps_categorytree (by @atomiix)
     - #22682: Fix warning/errors from upgrade scripts (by @atomiix)
     - #23139: Update pear/archive_tar to 1.4.12 (by @matks)
     - #22768: Exclude gifts from getOrderTotal when selected ONLY_PRODUCTS (by @PierreRambaud)
