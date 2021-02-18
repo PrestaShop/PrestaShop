@@ -27,9 +27,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\AbstractCoreProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\FrontofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ThemeProviderDefinition;
+use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 
 /**
  * This factory will return the provider matching the given 'type'.
@@ -49,6 +58,38 @@ class CatalogueProviderFactory
      * @var string
      */
     private $resourceDirectory;
+    /**
+     * @var LegacyModuleExtractorInterface
+     */
+    private $legacyModuleExtractor;
+    /**
+     * @var LoaderInterface
+     */
+    private $legacyFileLoader;
+    /**
+     * @var string
+     */
+    private $modulesDirectory;
+    /**
+     * @var string
+     */
+    private $translationsDirectory;
+    /**
+     * @var ThemeExtractor
+     */
+    private $themeExtractor;
+    /**
+     * @var ThemeRepository
+     */
+    private $themeRepository;
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+    /**
+     * @var string
+     */
+    private $themesDirectory;
 
     /**
      * @TODO We keep for now the dependency to PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
@@ -57,43 +98,109 @@ class CatalogueProviderFactory
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
+        LegacyModuleExtractorInterface $legacyModuleExtractor,
+        LoaderInterface $legacyFileLoader,
+        ThemeExtractor $themeExtractor,
+        ThemeRepository $themeRepository,
+        Filesystem $filesystem,
+        string $themesDirectory,
+        string $modulesDirectory,
+        string $translationsDirectory,
         string $resourceDirectory
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->resourceDirectory = $resourceDirectory;
+        $this->legacyModuleExtractor = $legacyModuleExtractor;
+        $this->legacyFileLoader = $legacyFileLoader;
+        $this->modulesDirectory = $modulesDirectory;
+        $this->translationsDirectory = $translationsDirectory;
+        $this->themeExtractor = $themeExtractor;
+        $this->themeRepository = $themeRepository;
+        $this->filesystem = $filesystem;
+        $this->themesDirectory = $themesDirectory;
     }
 
     /**
-     * @param string $type
+     * @param ProviderDefinitionInterface $providerDefinition
      *
      * @return CatalogueLayersProviderInterface
      *
      * @throws UnexpectedTranslationTypeException
      */
-    public function getProvider(string $type): CatalogueLayersProviderInterface
+    public function getProvider(ProviderDefinitionInterface $providerDefinition): CatalogueLayersProviderInterface
     {
-        if (!in_array($type, TranslationCatalogueBuilder::ALLOWED_TYPES)) {
+        $type = $providerDefinition->getType();
+        if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
             throw new UnexpectedTranslationTypeException(sprintf('Unexpected type %s', $type));
         }
 
-        switch ($type) {
-            case TranslationCatalogueBuilder::TYPE_BACK:
-                return $this->getBackofficeProvider();
+        if ($providerDefinition instanceof ModuleProviderDefinition) {
+            return $this->getModuleCatalogueProvider($providerDefinition);
+        } elseif ($providerDefinition instanceof AbstractCoreProviderDefinition) {
+            return $this->getCoreCatalogueProvider($providerDefinition);
+        } elseif ($providerDefinition instanceof ThemeProviderDefinition) {
+            return $this->getThemeCatalogueProvider($providerDefinition);
         }
 
         // This should never be thrown if every Type has his Provider defined in constructor
         throw new UnexpectedTranslationTypeException(sprintf('Unexpected type %s', $type));
     }
 
-    private function getBackofficeProvider(): CatalogueLayersProviderInterface
+    private function getCoreCatalogueProvider(ProviderDefinitionInterface $providerDefinition): CatalogueLayersProviderInterface
     {
-        if (!array_key_exists(TranslationCatalogueBuilder::TYPE_BACK, $this->providers)) {
-            $this->providers[TranslationCatalogueBuilder::TYPE_BACK] = new BackofficeCatalogueLayersProvider(
+        if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
+            $this->providers[$providerDefinition->getType()] = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
-                $this->resourceDirectory
+                $this->resourceDirectory,
+                $providerDefinition->getFilenameFilters(),
+                $providerDefinition->getTranslationDomains()
             );
         }
 
-        return $this->providers[TranslationCatalogueBuilder::TYPE_BACK];
+        return $this->providers[$providerDefinition->getType()];
+    }
+
+    private function getModuleCatalogueProvider(ModuleProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
+    {
+        if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
+            $this->providers[$providerDefinition->getType()] = new ModuleCatalogueLayersProvider(
+                $this->databaseTranslationLoader,
+                $this->legacyModuleExtractor,
+                $this->legacyFileLoader,
+                $this->modulesDirectory,
+                $this->translationsDirectory,
+                $this->resourceDirectory,
+                $providerDefinition->getModuleName(),
+                $providerDefinition->getFilenameFilters(),
+                $providerDefinition->getTranslationDomains()
+            );
+        }
+
+        return $this->providers[$providerDefinition->getType()];
+    }
+
+    private function getThemeCatalogueProvider(ThemeProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
+    {
+        if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
+            $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+            $coreFrontProvider = new CoreCatalogueLayersProvider(
+                $this->databaseTranslationLoader,
+                $this->resourceDirectory,
+                $coreFrontProviderDefinition->getFilenameFilters(),
+                $coreFrontProviderDefinition->getTranslationDomains()
+            );
+
+            $this->providers[$providerDefinition->getType()] = new ThemeCatalogueLayersProvider(
+                $coreFrontProvider,
+                $this->databaseTranslationLoader,
+                $this->themeExtractor,
+                $this->themeRepository,
+                $this->filesystem,
+                $this->themesDirectory,
+                $providerDefinition->getThemeName()
+            );
+        }
+
+        return $this->providers[$providerDefinition->getType()];
     }
 }
