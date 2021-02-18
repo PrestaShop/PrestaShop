@@ -25,6 +25,8 @@
 
 import Bloodhound from 'typeahead.js';
 import Router from '@components/router';
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 const {$} = window;
 
@@ -34,6 +36,8 @@ const initMultistoreHeader = () => {
   const $searchInput = $('.js-multishop-modal-search');
   const router = new Router();
   const route = router.generate('admin_shops_search', {searchTerm: '__QUERY__'});
+
+  new PerfectScrollbar('.js-multishop-scrollbar');
 
   const config = {
     minLength: 2,
