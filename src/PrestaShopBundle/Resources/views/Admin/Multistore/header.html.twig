@@ -56,7 +56,7 @@
         {% if currentContext.hasMainUrl() %}
           <a class="header-multishop-view-action" href="{{ link.getBaseLink(currentContext.id) }}" target="_blank" rel="nofollow">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
         {% else %}
-          <a class="header-multishop-view-action" href="{{ getAdminLink('AdminShop', true, {'shop_id' : currentContegxt.id}) }}" rel="nofollow">{{ "Configure URL"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+          <a class="header-multishop-view-action" href="{{ getAdminLink('AdminShop', true, {'shop_id' : currentContext.id}) }}" rel="nofollow">{{ "Configure URL"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
         {% endif %}
       </div>
     {% endif %}

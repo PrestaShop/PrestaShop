@@ -44,6 +44,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\SearchShopsHandler'
     arguments:
       - '@prestashop.core.admin.shop.repository'
+      - '@prestashop.core.admin.shop_group.repository'
     tags:
       - name: 'tactician.handler'
         command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
