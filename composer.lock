@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfea84585532672c3b185d0b974d46e3",
+    "content-hash": "4cc2e63416d9e67f46f55d6e852ba5c3",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -499,6 +499,54 @@
                 "dot"
             ],
             "time": "2018-09-05T17:16:47+00:00"
+        },
+        {
+            "name": "davidgorges/color-contrast",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davidgorges/color-contrast-php.git",
+                "reference": "92513baf33753cc75a76b3f9ad2f5c1fd694d81a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/davidgorges/color-contrast-php/zipball/92513baf33753cc75a76b3f9ad2f5c1fd694d81a",
+                "reference": "92513baf33753cc75a76b3f9ad2f5c1fd694d81a",
+                "shasum": ""
+            },
+            "require": {
+                "mischiefcollective/colorjizz": "^1.0",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.15",
+                "phpstan/phpstan": "^0.11.8",
+                "phpunit/phpunit": "^8.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ColorContrast\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A tiny library to find color combinations with a contrast threshold",
+            "homepage": "http://www.davidgorges.de",
+            "keywords": [
+                "WCAG 2.0",
+                "color",
+                "contrast",
+                "library",
+                "usability"
+            ],
+            "support": {
+                "issues": "https://github.com/davidgorges/color-contrast-php/issues",
+                "source": "https://github.com/davidgorges/color-contrast-php/tree/v1.0.0"
+            },
+            "time": "2019-06-28T13:49:45+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -3246,6 +3294,37 @@
             "description": "Internal MaxMind Web Service API",
             "homepage": "https://github.com/maxmind/web-service-common-php",
             "time": "2020-05-06T14:07:26+00:00"
+        },
+        {
+            "name": "mischiefcollective/colorjizz",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:mikeemoo/ColorJizz-PHP.git",
+                "reference": "361b8a8727d13b67cb593a936a715ad2204ececb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikeemoo/ColorJizz-PHP/zipball/361b8a8727d13b67cb593a936a715ad2204ececb",
+                "reference": "361b8a8727d13b67cb593a936a715ad2204ececb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.10"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MischiefCollective": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Classes for manipulating colors, converting to different formats and finding color harmonies",
+            "homepage": "http://mikeefranklin.co.uk:8080/job/ColorJizz-PHP/",
+            "time": "2016-11-14T16:58:48+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
