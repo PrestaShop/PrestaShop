@@ -28,8 +28,11 @@ const {$} = window;
 /** Fixed error design where error appears at the top of the form instead of next to one of the fields */
 export default class FormError {
   constructor() {
-    if ($('form > .form-errors-container .d-inline-block').length > 0) {
-      $('form > .form-errors-container').addClass('alert alert-danger');
+    const formErrorContainer = $('form > .form-errors-container');
+    if (formErrorContainer.find('.d-inline-block').length > 0) {
+      formErrorContainer.addClass('alert alert-danger');
+      formErrorContainer.find('.text-danger').removeClass('text-danger');
+      formErrorContainer.find('.form-error-icon-container').remove();
     }
   }
 }

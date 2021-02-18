@@ -100,18 +100,6 @@
   padding-top: 8px;
 }
 
-/* Fixes design when there are form errors inside alert-danger block */
-form > .form-errors-container {
-  .form-error-icon-container {
-    display: none!important;
-  }
-  .text-danger{
-    p {
-      color: $gray-dark !important;
-    }
-  }
-}
-
 .modal {
   > form {
     display: initial;
