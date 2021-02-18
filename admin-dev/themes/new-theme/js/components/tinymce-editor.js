@@ -93,6 +93,10 @@ class TinyMCEEditor {
       },
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       skin: 'prestashop',
+      mobile: {
+        theme: 'mobile',
+        plugins: ['lists', 'align', 'link', 'filemanager', 'table', 'media', 'placeholder', 'advlist', 'code'],
+      },
       menubar: false,
       statusbar: false,
       relative_urls: false,
