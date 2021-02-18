@@ -1,7 +1,9 @@
 const MailDev = require('maildev');
 
 module.exports = {
+
   /**
+   * create a maildev instance (the default smtp port is 1025)
    *
    * @param config
    * @returns {*}
@@ -12,6 +14,7 @@ module.exports = {
     });
   },
   /**
+   * start the maildev listener (listen on 1025 smtp port)
    *
    * @param mailListener
    */
@@ -23,6 +26,7 @@ module.exports = {
     });
   },
   /**
+   * stop the maildev listener
    *
    * @param mailListener
    */

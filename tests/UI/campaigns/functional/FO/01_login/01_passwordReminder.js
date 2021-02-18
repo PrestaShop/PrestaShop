@@ -86,8 +86,12 @@ describe('Password reminder', async () => {
     it('should fill the smtp parameters form fields', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillSmtpParametersFormField', baseContext);
 
-      const alertSuccessMessage = await emailPage.setupSmtpParameters(page, smtpServer, DefaultAccount.email,
-        DefaultAccount.password, smtpPort);
+      const alertSuccessMessage = await emailPage.setupSmtpParameters(
+        page,
+        smtpServer,
+        DefaultAccount.email,
+        DefaultAccount.password,
+        smtpPort);
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
 
