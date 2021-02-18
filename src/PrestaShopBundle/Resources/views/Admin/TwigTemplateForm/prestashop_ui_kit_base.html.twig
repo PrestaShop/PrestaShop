@@ -576,21 +576,14 @@
 {# Errors #}
 
 {% block form_errors -%}
-  {% set formErrorsField = true %}
-  {% for error in errors %}
-    {% if error.cause == null %}
-      {% set formErrorsField = false %}
-    {% endif %}
-  {% endfor%}
-
-  {% if formErrorsField %}
-    {{ block('form_errors_input') }}
+  {% if attr['fieldError'] is defined and attr['fieldError'] == true %}
+    {{ block('form_errors_field') }}
   {% else %}
     {{ block('form_errors_other') }}
   {% endif %}
 {%- endblock form_errors %}
 
-{% block form_errors_input %}
+{% block form_errors_field %}
   {% if errors|length > 0 -%}
     {# If we got more then one error then we need to display popover instead of errors list #}
     {%- if errors|length > 1 -%}
@@ -658,21 +651,23 @@
 {% endblock %}
 
 {% block form_errors_other %}
-  <div class="alert alert-danger d-print-none" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true"><i class="material-icons">close</i></span>
-    </button>
-    <div class="alert-text">
-      {% for error in errors %}
-          <p> {{
-            error.messagePluralization is null
-            ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-            : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-            }}
-          </p>
-      {%- endfor -%}
+  {% if errors|length > 0 -%}
+    <div class="alert alert-danger d-print-none" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="material-icons">close</i></span>
+      </button>
+      <div class="alert-text">
+        {% for error in errors %}
+            <p> {{
+              error.messagePluralization is null
+              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+              }}
+            </p>
+        {%- endfor -%}
+      </div>
     </div>
-  </div>
+  {% endif %}
 {% endblock %}
 
 {# Material design widgets #}
