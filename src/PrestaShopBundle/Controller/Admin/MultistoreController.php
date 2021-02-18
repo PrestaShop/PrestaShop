@@ -92,7 +92,9 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     private function isTitleDark(string $backgroundColor): bool
     {
-        if (empty($backgroundColor) || $backgroundColor[0] !== '#') {
+        if (empty($backgroundColor)) {
+            return true;
+        } elseif ($backgroundColor[0] !== '#') {
             return false;
         }
 
