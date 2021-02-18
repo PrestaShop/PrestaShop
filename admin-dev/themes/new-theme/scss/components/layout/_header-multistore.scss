@@ -3,12 +3,17 @@ $component-name: header-multishop !default;
 .#{$component-name} {
   position: relative;
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 0.5625rem 1rem;
-  background-color: $multishop-header-default-background;
+
+  &-top-bar {
+    position: relative;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5625rem 1rem;
+    background-color: $multishop-header-default-background;
+  }
 
   &-title {
     margin: 0;
@@ -23,10 +28,17 @@ $component-name: header-multishop !default;
     position: absolute;
     top: 50%;
     right: 1rem;
+    z-index: 1002;
     transform: translateY(-50%);
 
     @include media-breakpoint-down(sm) {
-      display: none;
+      a {
+        font-size: 0;
+
+        i {
+          margin: 0;
+        }
+      }
     }
   }
 
