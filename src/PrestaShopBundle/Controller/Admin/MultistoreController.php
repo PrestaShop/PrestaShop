@@ -101,6 +101,6 @@ class MultistoreController extends FrameworkBundleAdminController
         $contrast = new ColorContrast();
         $textContrast = $contrast->complimentaryTheme($backgroundColor);
 
-        return $textContrast == ColorContrast::LIGHT;
+        return $textContrast == ColorContrast::DARK;
     }
 }
