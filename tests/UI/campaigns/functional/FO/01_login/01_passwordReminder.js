@@ -23,7 +23,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_FO_userAccount_editInformation';
+const baseContext = 'functional_FO_login_passwordReminder';
 
 let browserContext;
 let page;
