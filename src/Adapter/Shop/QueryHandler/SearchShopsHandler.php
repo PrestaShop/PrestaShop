@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler\SearchShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
+use PrestaShopBundle\Entity\Repository\ShopGroupRepository;
 use PrestaShopBundle\Entity\Repository\ShopRepository;
 
 /**
@@ -44,13 +46,20 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
     private $shopRepository;
 
     /**
+     * @var ShopGroupRepository
+     */
+    private $shopGroupRepository;
+
+    /**
      * SearchShopsHandler constructor.
      *
      * @param ShopRepository $shopRepository
+     * @param ShopGroupRepository $shopGroupRepository
      */
-    public function __construct(ShopRepository $shopRepository)
+    public function __construct(ShopRepository $shopRepository, ShopGroupRepository $shopGroupRepository)
     {
         $this->shopRepository = $shopRepository;
+        $this->shopGroupRepository = $shopGroupRepository;
     }
 
     /**
@@ -59,8 +68,18 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
     public function handle(SearchShops $query): array
     {
         $searchTerm = $query->getSearchTerm();
+        $shopGroupList = $this->shopGroupRepository->findBySearchTerm($searchTerm);
         $shopList = $this->shopRepository->findBySearchTerm($searchTerm);
+
         $result = [];
+
+        foreach ($shopGroupList as $shopGroup) {
+            $result[] = new FoundShopGroup(
+                $shopGroup['id'],
+                $shopGroup['color'] ?? '',
+                $shopGroup['name']
+            );
+        }
 
         foreach ($shopList as $shop) {
             $result[] = new FoundShop(

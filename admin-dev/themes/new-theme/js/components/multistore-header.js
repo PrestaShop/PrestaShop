@@ -61,7 +61,9 @@ const initMultistoreHeader = () => {
     source,
     /* eslint-disable-next-line no-unused-vars */
     onSelect(selectedItem, event) {
-      window.location.href = selectedItem.url;
+      const contextUrlLetter = typeof selectedItem.groupName !== 'undefined' ? 's' : 'g';
+      const setContextUrl = `${window.location.href}&setShopContext=${contextUrlLetter}-${selectedItem.id}`;
+      window.location.href = setContextUrl;
 
       return true;
     },
