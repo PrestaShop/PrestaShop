@@ -64,12 +64,12 @@ describe('Password reminder', async () => {
 
   describe('Go to BO to setup the smtp parameters', async () => {
     it('should login in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginToBo', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginToBoForSetupSmtpParams', baseContext);
       await loginCommon.loginBO(this, page);
     });
 
     it('should go to email parameters page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForSetupSmtpParams', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -105,7 +105,7 @@ describe('Password reminder', async () => {
     });
 
     it('should logout from BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'logOutFromBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'logOutFromBOAfterSmtpParamsSetup', baseContext);
       await loginCommon.logoutBO(this, page);
     });
   });
@@ -153,12 +153,12 @@ describe('Password reminder', async () => {
 
   describe('Go to BO and reset to default mail parameters', async () => {
     it('should login in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginToBo', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginToBoForResetSmtpParams', baseContext);
       await loginCommon.loginBO(this, page);
     });
 
     it('should go to email setup page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -180,7 +180,7 @@ describe('Password reminder', async () => {
     });
 
     it('should logout from BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'logOutFromBO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'logOutFromBOAfterSmtpParamsReset', baseContext);
       await loginCommon.logoutBO(this, page);
     });
   });
