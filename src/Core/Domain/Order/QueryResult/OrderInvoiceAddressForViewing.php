@@ -112,7 +112,7 @@ class OrderInvoiceAddressForViewing
      * @param string $phone
      * @param string $phoneMobile
      * @param string|null $vatNumber
-     * @param string|null $dni
+     * @param string|null $dni If null the DNI is not required for the country, else string
      */
     public function __construct(
         int $addressId,
@@ -203,6 +203,8 @@ class OrderInvoiceAddressForViewing
     }
 
     /**
+     * If null the DNI is not required for the country, else string
+     *
      * @return string|null
      */
     public function getDni(): ?string
