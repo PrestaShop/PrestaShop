@@ -38,7 +38,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  *
  * @see CatalogueLayersProviderInterface to understand the 3 layers.
  */
-class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterface
+class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
 {
     /**
      * We need a connection to DB to load user translated catalogue.
@@ -71,17 +71,31 @@ class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterf
      * @var UserTranslatedCatalogueProvider
      */
     private $userTranslatedCatalogueProvider;
+    /**
+     * @var array
+     */
+    private $filenameFilters;
+    /**
+     * @var array
+     */
+    private $translationDomains;
 
     /**
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param string $resourceDirectory
+     * @param string[] $filenameFilters
+     * @param string[] $translationDomains
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
-        string $resourceDirectory
+        string $resourceDirectory,
+        array $filenameFilters,
+        array $translationDomains
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->resourceDirectory = $resourceDirectory;
+        $this->filenameFilters = $filenameFilters;
+        $this->translationDomains = $translationDomains;
     }
 
     /**
@@ -108,38 +122,12 @@ class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterf
         return $this->getUserTranslatedCatalogueProvider()->getCatalogue($locale);
     }
 
-    /**
-     * This is for Default and FileTranslated catalogue.
-     * In the translations directory, we will take any file starting with 'Admin' and followed by alphabetical characters.
-     *
-     * @return string[]
-     */
-    protected function getFilenameFilters(): array
-    {
-        return [
-            '#^Admin[A-Z]#',
-        ];
-    }
-
-    /**
-     * This is for UserTranslated catalogue.
-     * In the translations table, we will take any translation having domain starting with 'Admin' and followed by alphabetical characters.
-     *
-     * @return string[]
-     */
-    protected function getTranslationDomains(): array
-    {
-        return [
-            '^Admin[A-Z]',
-        ];
-    }
-
     private function getDefaultCatalogueProvider(): DefaultCatalogueProvider
     {
         if (null === $this->defaultCatalogueProvider) {
             $this->defaultCatalogueProvider = new DefaultCatalogueProvider(
                 $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
-                $this->getFilenameFilters()
+                $this->filenameFilters
             );
         }
 
@@ -151,7 +139,7 @@ class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterf
         if (null === $this->fileTranslatedCatalogueProvider) {
             $this->fileTranslatedCatalogueProvider = new FileTranslatedCatalogueProvider(
                 $this->resourceDirectory,
-                $this->getFilenameFilters()
+                $this->filenameFilters
             );
         }
 
@@ -163,7 +151,7 @@ class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterf
         if (null === $this->userTranslatedCatalogueProvider) {
             $this->userTranslatedCatalogueProvider = new UserTranslatedCatalogueProvider(
                 $this->databaseTranslationLoader,
-                $this->getTranslationDomains()
+                $this->translationDomains
             );
         }
 
