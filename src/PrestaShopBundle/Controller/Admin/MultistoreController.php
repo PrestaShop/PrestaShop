@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use ColorContrast\ColorContrast;
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -63,7 +64,6 @@ class MultistoreController extends FrameworkBundleAdminController
             ]);
         }
 
-        $shop = null;
         $isShopContext = $this->multistoreContext->isShopContext();
         if ($isShopContext) {
             $currentContext = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
@@ -81,6 +81,24 @@ class MultistoreController extends FrameworkBundleAdminController
             'groupList' => $groupList,
             'isShopContext' => $isShopContext,
             'link' => $this->getContext()->link,
+            'isTitleDark' => $this->isTitleDark($currentContext->getColor()),
         ]);
+    }
+
+    /**
+     * @param string $backgroundColor
+     *
+     * @return bool
+     */
+    private function isTitleDark(string $backgroundColor): bool
+    {
+        if (empty($backgroundColor) || $backgroundColor[0] !== '#') {
+            return false;
+        }
+
+        $contrast = new ColorContrast();
+        $textContrast = $contrast->complimentaryTheme($backgroundColor);
+
+        return $textContrast == ColorContrast::LIGHT;
     }
 }

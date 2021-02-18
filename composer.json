@@ -20,6 +20,7 @@
     "csa/guzzle-bundle": "dev-compat-php",
     "cssjanus/cssjanus": "dev-patch-1",
     "curl/curl": "^1.2.1",
+    "davidgorges/color-contrast": "^1.0",
     "defuse/php-encryption": "~2.0.1",
     "doctrine/cache": "^1.8",
     "doctrine/doctrine-bundle": "^1.6",
