@@ -5,6 +5,7 @@ $component-name: multishop-modal;
   position: absolute;
   top: 100%;
   left: 50%;
+  z-index: 1000;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -29,6 +30,7 @@ $component-name: multishop-modal;
     width: 100%;
     max-width: 39.375rem;
     padding: 1.875rem 3.125rem;
+    padding-right: 2.125rem;
     background: #fff;
     border: 1px solid #b7ced3;
     // stylelint-disable
@@ -139,9 +141,10 @@ $component-name: multishop-modal;
       justify-content: flex-start;
       margin-bottom: 1.425rem;
 
-      &:not(:first-of-type) {
-        margin-top: 2rem;
-      }
+    }
+
+    &:not(:nth-child(2)) {
+      margin-top: 3.4rem;
     }
   }
 
@@ -175,9 +178,10 @@ $component-name: multishop-modal;
     }
   }
 
-  &-group-list {
+  ul.#{$component-name}-group-list {
+    position: relative;
     max-height: 500px;
-    overflow-y: scroll;
+    padding-right: 1rem;
   }
 
   &-shop-view {
@@ -185,7 +189,7 @@ $component-name: multishop-modal;
 
     i {
       display: none;
-      color: $medium-gray;
+      color: $primary;
     }
 
     @include media-breakpoint-down(sm) {
