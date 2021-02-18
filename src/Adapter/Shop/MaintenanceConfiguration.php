@@ -72,7 +72,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
      *
      * @return bool
      */
-    public function validateConfiguration(array $configurationInputValues): bool
+    public function validateConfiguration(array $configurationInputValues)
     {
         // add multistore fields in list of expected fields
         foreach ($this->fields as $value) {
