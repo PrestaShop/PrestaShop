@@ -576,6 +576,7 @@
 {# Errors #}
 
 {% block form_errors -%}
+  <div class="form-errors-container">
   {% if errors|length > 0 -%}
     {# If we got more then one error then we need to display popover instead of errors list #}
     {%- if errors|length > 1 -%}
@@ -640,6 +641,7 @@
       </div>
     {%- endif -%}
   {%- endif %}
+  </div>
 {%- endblock form_errors %}
 
 {# Material design widgets #}

@@ -44,7 +44,7 @@
   <div class="row">
     <div class="col">
       {{ form_start(importThemeForm) }}
-      <div class="alert alert-danger">{{ form_errors(importThemeForm) }}</div>
+      {{ form_errors(importThemeForm) }}
       <div class="row justify-content-center">
         <div class="col-xl-10">
           <div class="card">
@@ -120,4 +120,10 @@
       {{ form_end(importThemeForm) }}
     </div>
   </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/themes_import_theme.bundle.js') }}"></script>
 {% endblock %}

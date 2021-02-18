@@ -101,16 +101,17 @@
 }
 
 /* Fixes design when there are form errors inside alert-danger block */
-.alert.alert-danger {
+form > .form-errors-container {
   .form-error-icon-container {
-      display: none!important;
+    display: none!important;
   }
   .text-danger{
-    p{
+    p {
       color: $gray-dark !important;
     }
   }
 }
+
 
 .modal {
   > form {

@@ -102,6 +102,7 @@ module.exports = {
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
     themes: './js/pages/themes',
+    themes_import_theme: './js/pages/themes/import-theme.js',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
