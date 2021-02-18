@@ -35,6 +35,14 @@ use PrestaShop\PrestaShop\Core\Translation\DTO\MessageTranslation;
 use PrestaShop\PrestaShop\Core\Translation\DTO\Translations;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\FrontofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\MailsBodyProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\MailsProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\OthersProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ThemeProviderDefinition;
 
 /**
  * This class provides the catalogue represented as an array.
@@ -45,23 +53,6 @@ use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
  */
 class TranslationCatalogueBuilder
 {
-    public const TYPE_BACK = 'back';
-    public const TYPE_FRONT = 'front';
-    public const TYPE_MAILS = 'mails';
-    public const TYPE_MAILS_BODY = 'mails_body';
-    public const TYPE_OTHERS = 'others';
-    public const TYPE_MODULES = 'modules';
-    public const TYPE_THEMES = 'themes';
-
-    public const ALLOWED_TYPES = [
-        self::TYPE_BACK,
-        self::TYPE_FRONT,
-        self::TYPE_MAILS,
-        self::TYPE_MAILS_BODY,
-        self::TYPE_OTHERS,
-        self::TYPE_MODULES,
-        self::TYPE_THEMES,
-    ];
     /**
      * @var CatalogueProviderFactory
      */
@@ -188,7 +179,32 @@ class TranslationCatalogueBuilder
     ): Translations {
         $this->validateParameters($type, $locale, $search, $theme, $module);
 
-        $provider = $this->catalogueProviderFactory->getProvider($type);
+        $definition = null;
+        switch ($type) {
+            case ProviderDefinitionInterface::TYPE_BACK:
+                $definition = new BackofficeProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_FRONT:
+                $definition = new FrontofficeProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_MAILS_BODY:
+                $definition = new MailsBodyProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_MAILS:
+                $definition = new MailsProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_OTHERS:
+                $definition = new OthersProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_MODULES:
+                $definition = new ModuleProviderDefinition($module);
+                break;
+            case ProviderDefinitionInterface::TYPE_THEMES:
+                $definition = new ThemeProviderDefinition($theme);
+                break;
+        }
+
+        $provider = $this->catalogueProviderFactory->getProvider($definition);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
         if (null === $domain) {
@@ -244,13 +260,13 @@ class TranslationCatalogueBuilder
         ?string $module,
         ?string $domain = null
     ): void {
-        if (!in_array($type, self::ALLOWED_TYPES)) {
+        if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
             throw new UnexpectedTranslationTypeException('This \'type\' param is not valid.');
         }
-        if (self::TYPE_MODULES === $type && empty($module)) {
+        if (ProviderDefinitionInterface::TYPE_MODULES === $type && empty($module)) {
             throw new InvalidArgumentException('This \'selected\' param is not valid. Module must be given.');
         }
-        if (self::TYPE_THEMES === $type && empty($theme)) {
+        if (ProviderDefinitionInterface::TYPE_THEMES === $type && empty($theme)) {
             throw new InvalidArgumentException('This \'selected\' param is not valid. Theme must be given.');
         }
         if (null !== $domain && empty($domain)) {

@@ -29,14 +29,14 @@ namespace Tests\Integration\Core\Translation\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\OthersProviderDefinition;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Test the provider of backOffice translations
+ * Test the provider of frontOffice translations
  */
-class BackofficeCatalogueLayersProviderTest extends KernelTestCase
+class OthersCatalogueLayersProviderTest extends KernelTestCase
 {
     /**
      * @var string
@@ -46,6 +46,18 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
     public function setUp()
     {
         self::bootKernel();
+        /*
+         * The translation directory actually contains these files for locale = fr-FR
+         * - AdminActions.fr-FR.xlf
+         * - EmailsBody.fr-FR.xlf
+         * - EmailsSubject.fr-FR.xlf
+         * - messages.fr-FR.xlf
+         * - ModulesCheckpaymentAdmin.fr-FR.xlf
+         * - ModulesCheckpaymentShop.fr-FR.xlf
+         * - ModulesWirepaymentAdmin.fr-FR.xlf
+         * - ModulesWirepaymentShop.fr-FR.xlf
+         * - ShopNotificationsWarning.fr-FR.xlf
+         */
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
     }
 
@@ -54,26 +66,9 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory()
     {
-        $databaseContent = [
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Uninstall',
-                'translation' => 'Traduction customisée',
-                'domain' => 'AdminActions',
-                'theme' => null,
-            ],
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Some made up text',
-                'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
-                'theme' => 'classic',
-            ],
-        ];
-
-        $providerDefinition = new BackofficeProviderDefinition();
+        $providerDefinition = new OthersProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -89,16 +84,13 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
         $domains = $catalogue->getDomains();
         sort($domains);
 
-        $this->assertSame('AdminActions', array_keys($messages)[0]);
-
         // verify all catalogues are loaded
-        $this->assertSame(['AdminActions'], $domains);
+        $this->assertSame(['messages'], $domains);
 
         // verify that the catalogues are complete
-        $this->assertCount(90, $messages['AdminActions']);
+        $this->assertCount(522, $messages['messages']);
 
-        $this->assertSame('Enregistrer et rester', $catalogue->get('Save and stay', 'AdminActions'));
-        $this->assertSame('Désinstaller', $catalogue->get('Uninstall', 'AdminActions'));
+        $this->assertSame('Générateur de déclinaisons de produits', $catalogue->get('Attributes generator', 'messages'));
     }
 
     /**
@@ -106,26 +98,9 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
     {
-        $databaseContent = [
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Uninstall',
-                'translation' => 'Traduction customisée',
-                'domain' => 'AdminActions',
-                'theme' => null,
-            ],
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Some made up text',
-                'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
-                'theme' => 'classic',
-            ],
-        ];
-
-        $providerDefinition = new BackofficeProviderDefinition();
+        $providerDefinition = new OthersProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -142,35 +117,34 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
         sort($domains);
 
         // verify all catalogues are loaded
-        $this->assertSame(['AdminActions'], $domains);
+        $this->assertSame(['messages'], $domains);
 
         // verify that the catalogues are complete
-        $this->assertCount(91, $messages['AdminActions']);
+        $this->assertCount(522, $messages['messages']);
 
-        $this->assertSame('', $catalogue->get('Save and stay', 'AdminActions'));
-        $this->assertSame('', $catalogue->get('Uninstall', 'AdminActions'));
+        $this->assertSame('Attributes generator', $catalogue->get('Attributes generator', 'ShopNotificationsWarning'));
     }
 
-    public function testItLoadsCustomizedTranslationsFromDatabase()
+    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase()
     {
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
                 'key' => 'Uninstall',
-                'translation' => 'Traduction customisée',
-                'domain' => 'AdminActions',
-                'theme' => null,
+                'translation' => 'Uninstall Traduction customisée',
+                'domain' => 'messages',
+                'theme' => 'classic',
             ],
             [
                 'lang' => 'fr-FR',
-                'key' => 'Some made up text',
-                'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
+                'key' => 'Install',
+                'translation' => 'Install Traduction customisée',
+                'domain' => 'messages',
                 'theme' => 'classic',
             ],
         ];
 
-        $providerDefinition = new BackofficeProviderDefinition();
+        $providerDefinition = new OthersProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
             new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
             $this->translationsDir,
@@ -188,13 +162,68 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
         $domains = $catalogue->getDomains();
         sort($domains);
 
-        // verify all catalogues are loaded
-        $this->assertSame(['AdminActions'], $domains);
+        // If the theme name is null, the translations which have theme = 'classic' are taken
+        $this->assertEmpty($domains);
+        $this->assertEmpty($messages);
+    }
+
+    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase()
+    {
+        $databaseContent = [
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Uninstall',
+                'translation' => 'Uninstall Traduction customisée',
+                'domain' => 'messages',
+                'theme' => null,
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Install',
+                'translation' => 'Install Traduction customisée',
+                'domain' => 'messages',
+                'theme' => null,
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Some made up text 1',
+                'translation' => 'Un texte inventé 1',
+                'domain' => 'AdminActions',
+                'theme' => 'classic',
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Some made up text 2',
+                'translation' => 'Un texte inventé 2',
+                'domain' => 'ModuleWirepaymentShop',
+                'theme' => 'classic',
+            ],
+        ];
+
+        $providerDefinition = new OthersProviderDefinition();
+        $provider = new CoreCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            $this->translationsDir,
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains()
+        );
+
+        // load catalogue from database translations
+        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        $this->assertSame(['messages'], $domains);
 
         // verify that the catalogues are complete
-        $this->assertCount(1, $messages['AdminActions']);
+        $this->assertCount(2, $messages['messages']);
 
-        $this->assertSame('Save and stay', $catalogue->get('Save and stay', 'AdminActions'));
-        $this->assertSame('Traduction customisée', $catalogue->get('Uninstall', 'AdminActions'));
+        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'messages'));
+        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'messages'));
     }
 }

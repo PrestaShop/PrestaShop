@@ -50,22 +50,22 @@ class FileTranslatedCatalogueProvider extends AbstractCatalogueProvider
     private $filenameFilters;
 
     /**
-     * @param string $directory
+     * @param string $translatedCatalogueDirectory
      * @param array $filenameFilters
      *
      * @throws FileNotFoundException
      */
-    public function __construct(string $directory, array $filenameFilters)
+    public function __construct(string $translatedCatalogueDirectory, array $filenameFilters)
     {
-        if (!is_dir($directory) || !is_readable($directory)) {
-            throw new FileNotFoundException(sprintf('Directory %s does not exist', $directory));
+        if (!is_dir($translatedCatalogueDirectory) || !is_readable($translatedCatalogueDirectory)) {
+            throw new FileNotFoundException(sprintf('Directory %s does not exist', $translatedCatalogueDirectory));
         }
 
         if (!$this->assertIsArrayOfString($filenameFilters)) {
             throw new \InvalidArgumentException('Given filename filters are invalid. An array of strings was expected.');
         }
 
-        $this->translatedCatalogueDirectory = $directory;
+        $this->translatedCatalogueDirectory = $translatedCatalogueDirectory;
         $this->filenameFilters = $filenameFilters;
     }
 
