@@ -1,5 +1,3 @@
-{# this is temporary, shop context and list of shops will be stored in presentation class, made available here #}
-
 {% if isMultistoreUsed and app.request is not null %}
   <div class="header-multishop{% if currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}">
     <div class="header-multishop-top-bar"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
@@ -55,7 +53,11 @@
 
     {% if isShopContext %}
       <div class="header-multishop-right">
-        <a class="header-multishop-view-action" href="{{ link.getBaseLink(currentContext.id) }}" target="_blank" rel="nofollow">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+        {% if currentContext.hasMainUrl() %}
+          <a class="header-multishop-view-action" href="{{ link.getBaseLink(currentContext.id) }}" target="_blank" rel="nofollow">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+        {% else %}
+          <a class="header-multishop-view-action" href="{{ getAdminLink('AdminShop', true, {'shop_id' : currentContegxt.id}) }}" rel="nofollow">{{ "Configure URL"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+        {% endif %}
       </div>
     {% endif %}
 
