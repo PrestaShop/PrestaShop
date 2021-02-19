@@ -783,6 +783,13 @@ class ProductFormDataProviderTest extends TestCase
             'suppliers' => [],
             'features' => [],
             'customizations' => [],
+            'shortcuts' => [
+                'price' => [
+                    'price_tax_excluded' => 19.86,
+                    'price_tax_included' => 19.86,
+                    'tax_rules_group_id' => 1,
+                ],
+            ],
         ];
     }
 }
