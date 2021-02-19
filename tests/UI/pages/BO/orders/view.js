@@ -37,6 +37,7 @@ class Order extends BOBasePage {
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
+    this.editProductPriceInput = `${this.orderProductsEditRowTable} input.editProductPriceTaxIncl`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
@@ -44,12 +45,9 @@ class Order extends BOBasePage {
     this.addProductTableRow = '#addProductTableRow';
     this.addProductButton = '#addProductBtn';
     this.addProductRowSearch = '#add_product_row_search';
-    this.addProductRowPriceTaxExcluded = '#add_product_row_price_tax_excluded';
-    this.addProductRowPriceTaxIncluded = '#add_product_row_price_tax_included';
     this.addProductRowQuantity = '#add_product_row_quantity';
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
-    this.addProductTotalPrice = '#addProductTotalPrice';
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
 
@@ -123,6 +121,27 @@ class Order extends BOBasePage {
     ]);
     await this.waitForVisibleSelector(page, this.productQuantitySpan(row));
     return parseFloat(await this.getTextContent(page, this.productQuantitySpan(row)));
+  }
+
+  /**
+   * Modify product price
+   * @param page
+   * @param row
+   * @param price
+   * @returns {Promise<void>}
+   */
+  async modifyProductPrice(page, row, price) {
+    await this.dialogListener(page);
+    await Promise.all([
+      page.click(this.editProductButton(row)),
+      this.waitForVisibleSelector(page, this.editProductPriceInput),
+    ]);
+    await this.setValue(page, this.editProductPriceInput, price);
+    await Promise.all([
+      page.click(this.UpdateProductButton),
+      this.waitForVisibleSelector(page, this.editProductPriceInput),
+    ]);
+    await this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row));
   }
 
   /**

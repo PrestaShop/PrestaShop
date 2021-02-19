@@ -391,6 +391,25 @@ describe('Check customer block in view order page', async () => {
       await expect(productCount).to.equal(1);
     });
 
+    it('Update the quantity of an ordered product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updatePrice', baseContext);
+
+      const newQuantity = await viewOrderPage.modifyProductQuantity(page, 1, 2);
+      await expect(newQuantity, 'Quantity was not updated').to.equal(2);
+    });
+
+    it('Update the price of an ordered product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updatePrice', baseContext);
+
+      await viewOrderPage.modifyProductPrice(page, 1, 25);
+
+      const result = await viewOrderPage.getProductDetails(page, 1);
+      await Promise.all([
+        expect(result.basePrice, 'Base price was not updated').to.equal(25),
+        expect(result.total, 'Total price was not updated').to.equal(25 * 2),
+      ]);
+    });
+
     it('should add the created product \'Out of stock allowed\' to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
@@ -511,15 +530,11 @@ describe('Check customer block in view order page', async () => {
   });
 
   // 8 - Delete the created customer
-  describe(`Delete the customer ${customerData.lastName}`, async () => {
+  describe('Delete the created customer', async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
-      );
+      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
 
       await customersPage.closeSfToolBar(page);
 
