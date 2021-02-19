@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use TaxRulesGroup;
 
 /**
  * Provides access to TaxRulesGroup data source
@@ -39,9 +41,81 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 class TaxRulesGroupRepository extends AbstractObjectModelRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
+    public function getTaxRulesGroupDetails(TaxRulesGroupId $taxRulesGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('trg.*, tr.id_country, tr.id_state, t.rate')
+            ->from($this->dbPrefix . 'tax_rules_group', 'trg')
+            ->leftJoin('trg', $this->dbPrefix . 'tax_rule', 'tr', 'tr.id_tax_rules_group = trg.id_tax_rules_group')
+            ->leftJoin('tr', $this->dbPrefix . 'tax', 't', 't.id_tax = tr.id_tax')
+            ->andWhere('trg.id_tax_rules_group = :taxRulesGroupId')
+            ->setParameter('taxRulesGroupId', $taxRulesGroupId->getValue())
+        ;
+
+        $rawData = $qb->execute()->fetchAll();
+        if (empty($rawData)) {
+            return [];
+        }
+        $firstRow = reset($rawData);
+        $taxRulesGroup = [
+            'id_tax_rules_group' => (int) $firstRow['id_tax_rules_group'],
+            'active' => (bool) $firstRow['active'],
+            'rates_by_country' => [],
+        ];
+        foreach ($rawData as $taxData) {
+            $taxRulesGroup['rates_by_country'][(int) $taxData['id_country']] = (float) $taxData['rate'];
+        }
+
+        return $taxRulesGroup;
+    }
+
+    /**
+     * @param TaxRulesGroupId $taxRulesGroupId
+     *
+     * @return TaxRulesGroup
+     *
+     * @throws CoreException
+     * @throws TaxRulesGroupNotFoundException
+     */
+    public function get(TaxRulesGroupId $taxRulesGroupId): TaxRulesGroup
+    {
+        /** @var TaxRulesGroup $taxRulesGroup */
+        $taxRulesGroup = $this->getObjectModel(
+            $taxRulesGroupId->getValue(),
+            TaxRulesGroup::class,
+            TaxRulesGroupNotFoundException::class
+        );
+
+        return $taxRulesGroup;
+    }
+
+    /**
      * @param TaxRulesGroupId $taxRulesGroupId
      *
      * @throws CoreException
+     * @throws TaxRulesGroupNotFoundException
      */
     public function assertTaxRulesGroupExists(TaxRulesGroupId $taxRulesGroupId): void
     {
