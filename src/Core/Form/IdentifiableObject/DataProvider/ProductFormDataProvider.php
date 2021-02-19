@@ -52,12 +52,28 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
+     * @var bool
+     */
+    private $defaultProductActivation;
+
+    /**
+     * @var int
+     */
+    private $mostUsedTaxRulesGroupId;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param bool $defaultProductActivation
+     * @param int $mostUsedTaxRulesGroupId
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        bool $defaultProductActivation,
+        int $mostUsedTaxRulesGroupId
     ) {
         $this->queryBus = $queryBus;
+        $this->defaultProductActivation = $defaultProductActivation;
+        $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
     }
 
     /**
@@ -97,6 +113,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
+                'tax_rules_group_id' => $this->mostUsedTaxRulesGroupId,
                 'wholesale_price' => 0,
                 'unit_price' => 0,
             ],
@@ -106,6 +123,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'depth' => 0,
                 'weight' => 0,
             ],
+            'activate' => $this->defaultProductActivation,
         ];
     }
 
@@ -209,8 +227,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     {
         return [
             'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
-            // @todo: we don't have the price tax included for now This should be computed by GetProductForEditing
-            'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
+            'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
             'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
             'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
             'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
