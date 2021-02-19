@@ -28,6 +28,7 @@ $component-name: multistore-dropdown;
         z-index: 1;
         font-size: 1.2rem;
         color: $medium-gray;
+        pointer-events: none;
       }
 
       .tt-menu {
