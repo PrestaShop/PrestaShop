@@ -511,7 +511,7 @@ class AddProduct extends BOBasePage {
         columnSelector = this.behaviourOutOfStockInput(1);
         break;
 
-      case 'default behavior':
+      case 'Default behavior':
         columnSelector = this.behaviourOutOfStockInput(2);
         break;
 
@@ -519,6 +519,7 @@ class AddProduct extends BOBasePage {
         throw new Error(`Column ${product.behaviourOutOfStock} was not found`);
     }
     await this.waitForSelectorAndClick(page, columnSelector);
+    await this.scrollTo(page, this.labelWhenInStockInput);
     await this.setValue(page, this.labelWhenInStockInput, product.labelWhenInStock);
     await this.setValue(page, this.labelWhenOutOfStock, product.LabelWhenOutOfStock);
   }
@@ -531,6 +532,9 @@ class AddProduct extends BOBasePage {
    */
   async setProduct(page, productData) {
     await this.setBasicSetting(page, productData);
+    if (productData.type === 'Pack of products') {
+      await this.addPackOfProducts(page, productData.pack);
+    }
     await this.setProductStatus(page, productData.status);
     await this.setQuantitiesSettings(page, productData);
     return this.saveProduct(page);

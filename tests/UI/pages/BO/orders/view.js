@@ -8,6 +8,7 @@ class Order extends BOBasePage {
     this.pageTitle = 'Order';
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
     this.successfulAddProductMessage = 'The product was successfully added.';
+    this.errorAddProductMessage = 'Minimum quantity of "3" must be added';
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
@@ -49,7 +50,8 @@ class Order extends BOBasePage {
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
     this.addProductTotalPrice = '#addProductTotalPrice';
-    this.addButtonButton = '#add_product_row_add';
+    this.addProductAddButton = '#add_product_row_add';
+    this.addProductCancelButton = '#add_product_row_cancel';
 
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -412,11 +414,24 @@ class Order extends BOBasePage {
   /**
    * Add product to cart
    * @param page
+   * @param quantity
    * @returns {Promise<string>}
    */
-  async addProductToCart(page) {
-    await this.waitForSelectorAndClick(page, this.addButtonButton);
+  async addProductToCart(page, quantity = 0) {
+    if (quantity !== 0) {
+      await this.setValue(page, this.addProductRowQuantity, quantity);
+    }
+    await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Cancel add product
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async cancelAddProductToCart(page) {
+    await this.waitForSelectorAndClick(page, this.addProductCancelButton);
   }
 
   /**
@@ -425,7 +440,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isAddButtonDisabled(page) {
-    return this.elementVisible(page, `${this.addButtonButton},disabled`);
+    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 1000);
   }
 
   /**
