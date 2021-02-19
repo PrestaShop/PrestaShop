@@ -68,7 +68,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->queryBus->handle(new GetProductForEditing((int) $id));
 
-        return [
+        $productData = [
             'id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
             'features' => $this->extractFeatureValues((int) $id),
@@ -81,6 +81,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'suppliers' => $this->extractSuppliersData($productForEditing),
             'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
+
+        return $this->addShortcutData($productData);
     }
 
     /**
@@ -105,6 +107,26 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'weight' => 0,
             ],
         ];
+    }
+
+    /**
+     * Returned product data with shortcut data that is picked from existing data.
+     *
+     * @param array $productData
+     *
+     * @return array
+     */
+    private function addShortcutData(array $productData): array
+    {
+        $productData['shortcuts'] = [
+            'price' => [
+                'price_tax_excluded' => $productData['price']['price_tax_excluded'],
+                'price_tax_included' => $productData['price']['price_tax_included'],
+                'tax_rules_group_id' => $productData['price']['tax_rules_group_id'],
+            ],
+        ];
+
+        return $productData;
     }
 
     /**
