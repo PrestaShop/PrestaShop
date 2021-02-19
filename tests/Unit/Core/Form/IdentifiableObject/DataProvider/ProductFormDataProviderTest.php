@@ -74,7 +74,7 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetDefaultData()
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new ProductFormDataProvider($queryBusMock);
+        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
 
         $expectedDefaultData = [
             'basic' => [
@@ -83,6 +83,7 @@ class ProductFormDataProviderTest extends TestCase
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
+                'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
                 'unit_price' => 0,
             ],
@@ -92,6 +93,32 @@ class ProductFormDataProviderTest extends TestCase
                 'depth' => 0,
                 'weight' => 0,
             ],
+            'activate' => false,
+        ];
+
+        $defaultData = $provider->getDefaultData();
+        $this->assertEquals($expectedDefaultData, $defaultData);
+
+        $provider = new ProductFormDataProvider($queryBusMock, true, 42);
+
+        $expectedDefaultData = [
+            'basic' => [
+                'type' => ProductType::TYPE_STANDARD,
+            ],
+            'price' => [
+                'price_tax_excluded' => 0,
+                'price_tax_included' => 0,
+                'tax_rules_group_id' => 42,
+                'wholesale_price' => 0,
+                'unit_price' => 0,
+            ],
+            'shipping' => [
+                'width' => 0,
+                'height' => 0,
+                'depth' => 0,
+                'weight' => 0,
+            ],
+            'activate' => true,
         ];
 
         $defaultData = $provider->getDefaultData();
@@ -107,7 +134,7 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetData(array $productData, array $expectedData)
     {
         $queryBusMock = $this->createQueryBusMock($productData);
-        $provider = new ProductFormDataProvider($queryBusMock);
+        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
 
         $formData = $provider->getData(static::PRODUCT_ID);
         $this->assertEquals($expectedData, $formData);
@@ -623,6 +650,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductPricesInformation(
             $product['price'] ?? new DecimalNumber('19.86'),
+            $product['price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['ecotax'] ?? new DecimalNumber('19.86'),
             $product['id_tax_rules_group'] ?? 1,
             $product['on_sale'] ?? false,
@@ -737,7 +765,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'price' => [
                 'price_tax_excluded' => 19.86,
-                'price_tax_included' => 19.86,
+                'price_tax_included' => 23.832,
                 'ecotax' => 19.86,
                 'tax_rules_group_id' => 1,
                 'on_sale' => false,
@@ -786,7 +814,7 @@ class ProductFormDataProviderTest extends TestCase
             'shortcuts' => [
                 'price' => [
                     'price_tax_excluded' => 19.86,
-                    'price_tax_included' => 19.86,
+                    'price_tax_included' => 23.832,
                     'tax_rules_group_id' => 1,
                 ],
             ],
