@@ -92,6 +92,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     /**
      * Service id form form handler
+     *
      * @var string
      */
     protected $formHandlerServiceId;

@@ -88,9 +88,9 @@ class AddressControllerTest extends GridControllerTestCase
                 'firstName' => 'testfirstname',
                 'lastName' => 'testlastname',
                 'address' => 'testaddress1',
-                'postCode' =>'11111',
+                'postCode' => '11111',
                 'city' => 'testcity',
-                'country' => 'lithuania'
+                'country' => 'lithuania',
             ]
         );
     }
@@ -128,7 +128,7 @@ class AddressControllerTest extends GridControllerTestCase
                 'address' => trim($tr->filter('.column-postcode')->text()),
                 'postCode' => trim($tr->filter('.column-city')->text()),
                 'city' => trim($tr->filter('.column-city')->text()),
-                'country' => trim($tr->filter('.column-country_name')->text())
+                'country' => trim($tr->filter('.column-country_name')->text()),
             ]
         );
     }

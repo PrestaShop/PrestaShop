@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Integration\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;

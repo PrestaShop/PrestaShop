@@ -57,6 +57,7 @@ class FormHandlerChecker implements FormHandlerInterface
     {
         $result = $this->formHandler->handle($form);
         $this->lastCreatedId = $result->getIdentifiableObjectId();
+
         return $result;
     }
 
