@@ -294,6 +294,10 @@ function saveDashConfig(widget_name) {
 }
 
 $(document).ready( function () {
+    $("#datepicker-compare").on('change', function() {
+        $("#compare-options").prop('disabled', !this.checked);
+    });
+    
 	$('#calendar_form input[type="submit"]').on('click', function(elt) {
 		elt.preventDefault();
 		setDashboardDateRange(elt.currentTarget.name);
