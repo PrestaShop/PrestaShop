@@ -96,8 +96,8 @@ class AddressControllerTest extends GridControllerTestCase
      */
     protected function createTestEntity(): void
     {
-        // We get the country ID for Lithuania, and we set this country in the context so the controller will generate a
-        // adapted to this country (especially regarding states selctor)
+        // We get the country ID for Lithuania, and we set this country in the context so the controller will
+        // generate a form adapted to this country (especially regarding states selector)
         $this->countryId = Country::getByIso('LT');
         $legacyContext = $this->client->getContainer()->get('prestashop.adapter.legacy.context');
         $backupCountry = $legacyContext->getContext()->country;
