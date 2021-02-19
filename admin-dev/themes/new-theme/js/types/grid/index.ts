@@ -1,3 +1,3 @@
 export interface GridExtension {
-  extend: () => void;
+  extend: (grid: unknown) => void;
 }
