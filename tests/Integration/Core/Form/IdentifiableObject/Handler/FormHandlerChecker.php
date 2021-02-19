@@ -26,49 +26,47 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Core\Form\IdentifiableObject\DataHandler;
+namespace Tests\Integration\Core\Form\IdentifiableObject\Handler;
 
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use Symfony\Component\Form\FormInterface;
 
-class AddressFormDataHandlerChecker implements FormDataHandlerInterface
+class FormHandlerChecker implements FormHandlerInterface
 {
     /**
-     * @var FormDataHandlerInterface
+     * @var FormHandlerInterface
      */
-    private $addressFormDataHandler;
+    private $formHandler;
 
     /**
-     * @var ?int
+     * @var int
      */
     private $lastCreatedId;
 
     /**
      * AddressFormDataHandlerChecker constructor.
      *
-     * @param FormDataHandlerInterface $addressFormDataHandler
+     * @param FormHandlerInterface $formHandler
      */
-    public function __construct(FormDataHandlerInterface $addressFormDataHandler)
+    public function __construct(FormHandlerInterface $formHandler)
     {
-        $this->addressFormDataHandler = $addressFormDataHandler;
+        $this->formHandler = $formHandler;
     }
 
-    public function create(array $data): ?int
+    public function handle(FormInterface $form)
     {
-        $this->lastCreatedId = $this->addressFormDataHandler->create($data);
+        $result = $this->formHandler->handle($form);
+        $this->lastCreatedId = $result->getIdentifiableObjectId();
+        return $result;
+    }
 
+    public function handleFor($id, FormInterface $form)
+    {
+        return $this->formHandler->handleFor($form, $id);
+    }
+
+    public function getLastCreatedId(): int
+    {
         return $this->lastCreatedId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getLastCreatedId(): ?int
-    {
-        return $this->lastCreatedId;
-    }
-
-    public function update($id, array $data)
-    {
-        return $this->addressFormDataHandler->update($id, $data);
     }
 }

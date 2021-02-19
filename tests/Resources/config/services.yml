@@ -15,3 +15,11 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    test.integration.core.form.identifiable_object.handler.form_handler_factory:
+        decorates: prestashop.core.form.identifiable_object.handler.form_handler_factory
+        class: 'Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerFactory'
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
+            - '@translator'
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODE_DEMO_")'

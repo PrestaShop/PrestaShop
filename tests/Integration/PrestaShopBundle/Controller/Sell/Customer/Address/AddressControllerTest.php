@@ -118,7 +118,7 @@ class AddressControllerTest extends GridControllerTestCase
         $this->client->followRedirects(false);
         $this->client->submit($addressForm);
         $this->client->followRedirects(true);
-        $dataChecker = $this->client->getContainer()->get('test.integration.core.form.identifiable_object.data_handler.address_form_data_handler_checker');
+        $dataChecker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.handler.address_form_handler');
         $this->testEntityId = $dataChecker->getLastCreatedId();
         $this->assertNotNull($this->testEntityId);
 
