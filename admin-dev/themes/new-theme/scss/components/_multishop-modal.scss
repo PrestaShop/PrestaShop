@@ -73,6 +73,7 @@ $component-name: multishop-modal;
         z-index: 1;
         font-size: 1.2rem;
         color: $medium-gray;
+        pointer-events: none;
       }
 
       .tt-menu {
@@ -140,7 +141,6 @@ $component-name: multishop-modal;
     &.#{$component-name}-item {
       justify-content: flex-start;
       margin-bottom: 1.425rem;
-
     }
 
     &:not(:nth-child(2)) {
