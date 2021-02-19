@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -131,7 +132,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Transform table:name,group_name,color,group_color
+     * @Transform table:name,group_name,color,group_color,is_shop_group
      *
      * @param TableNode $tableNode
      *
@@ -140,24 +141,32 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     public function transformShops(TableNode $shopsTable): array
     {
         $dataRows = $shopsTable->getHash();
-        $foundShops = [];
+        $foundElements = [];
 
         foreach ($dataRows as $row) {
-            $foundShops[] = new FoundShop(
-                4, // id not relevant for the test
-                $row['color'],
-                $row['name'],
-                4, // id not relevant for the test
-                $row['group_name'],
-                $row['group_color']
-            );
+            if (!$row['is_shop_group']) {
+                $foundElements[] = new FoundShop(
+                    4, // id not relevant for the test
+                    $row['color'],
+                    $row['name'],
+                    4, // id not relevant for the test
+                    $row['group_name'],
+                    $row['group_color']
+                );
+            } else {
+                $foundElements[] = new FoundShopGroup(
+                    4, // id not relevant for the test
+                    $row['color'],
+                    $row['name']
+                );
+            }
         }
 
-        return $foundShops;
+        return $foundElements;
     }
 
     /**
-     * @When I search for shops with the term :searchTerm I should get the following results:
+     * @When I search for the term :searchTerm I should get the following results:
      *
      * @param string $searchTerm
      * @param array $expectedShops
@@ -171,24 +180,27 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             foreach ($foundShops as $currentFoundShop) {
                 if ($currentExpectedShop->getName() === $currentFoundShop->getName()) {
                     $wasCurrentExpectedShopFound = true;
-                    Assert::assertEquals(
-                        $currentExpectedShop->getGroupName(),
-                        $currentFoundShop->getGroupName(),
-                        sprintf(
-                            'Expected and found shops\'s groups don\'t match (%s and %s)',
+                    if ($currentExpectedShop instanceof FoundShop) {
+                        Assert::assertEquals(
                             $currentExpectedShop->getGroupName(),
-                            $currentFoundShop->getGroupName()
-                        )
-                    );
-                    Assert::assertEquals(
-                        $currentExpectedShop->getGroupColor(),
-                        $currentFoundShop->getGroupColor(),
-                        sprintf(
-                            'Expected and found shop groups\'s colors don\'t match (%s and %s)',
+                            $currentFoundShop->getGroupName(),
+                            sprintf(
+                                'Expected and found shops\'s groups don\'t match (%s and %s)',
+                                $currentExpectedShop->getGroupName(),
+                                $currentFoundShop->getGroupName()
+                            )
+                        );
+                        Assert::assertEquals(
                             $currentExpectedShop->getGroupColor(),
-                            $currentFoundShop->getGroupColor()
-                        )
-                    );
+                            $currentFoundShop->getGroupColor(),
+                            sprintf(
+                                'Expected and found shop groups\'s colors don\'t match (%s and %s)',
+                                $currentExpectedShop->getGroupColor(),
+                                $currentFoundShop->getGroupColor()
+                            )
+                        );
+                    }
+
                     Assert::assertEquals(
                         $currentExpectedShop->getColor(),
                         $currentFoundShop->getColor(),
@@ -212,7 +224,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I search for shops with the term :searchTerm I should not get any results
+     * @When I search for the term :searchTerm I should not get any results
      *
      * @param string $searchTerm
      */
@@ -223,7 +235,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I search for shops with the term :searchTerm I should get a SearchShopException
+     * @When I search for the term :searchTerm I should get a SearchShopException
      */
     public function assertShopException(string $searchTerm): void
     {

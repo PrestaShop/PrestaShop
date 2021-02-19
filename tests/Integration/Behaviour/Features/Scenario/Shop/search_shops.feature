@@ -11,23 +11,27 @@ Feature: Search shops given a search term (BO)
     Given multiple shop context is loaded
     Given shop "shop1" with name "test_shop" exists
 
-  Scenario: I search for existing shops
+  Scenario: I search for existing shops and shop groups
     Given I add a shop group "shopGroup2" with name "test_second_shop_group" and color "green"
     And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "test_second_shop_group"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
-    When I search for shops with the term "test" I should get the following results:
-      | name             | group_name             | color | group_color |
-      | test_shop        | Default                |       |             |
-      | test_second_shop | test_second_shop_group | red   | green       |
-      | test_third_shop  | test_second_shop_group | blue  | green       |
-    When I search for shops with the term "second" I should get the following results:
-      | name             | group_name             | color | group_color |
-      | test_second_shop | test_second_shop_group | red   | green       |
-    When I search for shops with the term "third" I should get the following results:
-      | name             | group_name             | color | group_color |
-      | test_third_shop  | test_second_shop_group | blue  | green       |
-    When I search for shops with the term "THIRD" I should get the following results:
-      | name             | group_name             | color | group_color |
-      | test_third_shop  | test_second_shop_group | blue  | green       |
-    When I search for shops with the term "doesnt_exist" I should not get any results
-    When I search for shops with the term " " I should get a SearchShopException
+    When I search for the term "test" I should get the following results:
+      | name             | group_name             | color | group_color | is_shop_group |
+      | test_shop        | Default                |       |             | false         |
+      | test_second_shop | test_second_shop_group | red   | green       | false         |
+      | test_third_shop  | test_second_shop_group | blue  | green       | false         |
+    When I search for the term "second" I should get the following results:
+      | name             | group_name             | color | group_color | is_shop_group |
+      | test_second_shop | test_second_shop_group | red   | green       | false         |
+      | test_second_shop_group |                  | green |             | true          |
+    When I search for the term "third" I should get the following results:
+      | name             | group_name             | color | group_color | is_shop_group |
+      | test_third_shop  | test_second_shop_group | blue  | green       | false         |
+    When I search for the term "THIRD" I should get the following results:
+      | name             | group_name             | color | group_color | is_shop_group |
+      | test_third_shop  | test_second_shop_group | blue  | green       | false         |
+    When I search for the term "second_shop_group" I should get the following results:
+      | name                    | group_name      | color | group_color | is_shop_group |
+      | test_second_shop_group  |                 | green |             | true          |
+    When I search for the term "doesnt_exist" I should not get any results
+    When I search for the term " " I should get a SearchShopException
