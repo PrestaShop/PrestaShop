@@ -188,6 +188,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     {
         $numberPriceFields = [
             'price',
+            'price_tax_included',
             'ecotax',
             'wholesale_price',
             'unit_price',
