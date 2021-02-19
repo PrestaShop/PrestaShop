@@ -26,23 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Shortcut;
 
 use Currency;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-/**
- * Form type containing price fields for Pricing tab
- */
-class PriceType extends TranslatorAwareType
+class PriceShortcutType extends ShortcutType
 {
     /**
      * @var array
@@ -86,7 +80,6 @@ class PriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
@@ -117,29 +110,8 @@ class PriceType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
             ])
-            ->add('on_sale', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans(
-                    'Display the "On sale!" flag on the product page, and on product listings.',
-                    'Admin.Catalog.Feature'
-                ),
-            ])
-            ->add('wholesale_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-            ])
-            ->add('unit_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-            ])
-            ->add('unity', TextType::class, [
-                'required' => false,
-                'attr' => ['placeholder' => $this->trans('Per kilo, per litre', 'Admin.Catalog.Help')],
-            ])
         ;
+
+        parent::buildForm($builder, $options);
     }
 }
