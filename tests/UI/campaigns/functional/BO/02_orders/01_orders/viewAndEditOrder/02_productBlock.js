@@ -80,6 +80,30 @@ const packOfProducts = {
 
 const thirdProduct = new ProductFaker(packOfProducts);
 
+const virtualProduct = {
+  name: 'Virtual',
+  type: 'Virtual product',
+  taxRule: 'No tax',
+  quantity: 20,
+};
+
+const fourthProduct = new ProductFaker(virtualProduct);
+
+const combinationProduct = {
+  name: 'Product with combination',
+  type: 'Standard product',
+  productHasCombinations: true,
+  taxRule: 'No tax',
+  quantity: 197,
+  minimumQuantity: 3,
+  stockLocation: 'stock 3',
+  lowStockLevel: 3,
+  behaviourOutOfStock: 'Default behavior',
+};
+
+const fifthProduct = new ProductFaker(combinationProduct);
+
+
 /*
 Create order by guest in FO
 Go to orders page BO and view the created order page
@@ -195,7 +219,7 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 2 - Create product out of stock not allowed
+  // 3 - Create product out of stock not allowed
   describe('Create product out of stock not allowed', async () => {
     it('should go to Products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
@@ -227,7 +251,7 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 2 - Create pack of products
+  // 4 - Create pack of products
   describe('Create pack of products', async () => {
     it('should go to Products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
@@ -257,9 +281,65 @@ describe('Check customer block in view order page', async () => {
       const createProductMessage = await addProductPage.setProduct(page, thirdProduct);
       await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
+  });// 4 - Create pack of products
+
+  // 5 - Create virtual product
+  describe('Create virtual product', async () => {
+    it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
+
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct2', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const createProductMessage = await addProductPage.createEditBasicProduct(page, fourthProduct);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
   });
 
-  // 3 - Go to view order page
+  // 6 - Create product with combination
+  describe('Create product with combination', async () => {
+    it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
+
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct2', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const createProductMessage = await addProductPage.setProduct(page, fifthProduct);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // 6 - Go to view order page
   describe('View order page', async () => {
     it('should go to Orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
@@ -302,7 +382,7 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 4 - check product block
+  // 7 - check product block
   describe('View product block', async () => {
     it('should check number of products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
@@ -386,9 +466,51 @@ describe('Check customer block in view order page', async () => {
         expect(result.total).to.equal(thirdProduct.price * thirdProduct.minimumQuantity),
       ]);
     });
+
+    it('should add the created product \'Virtual\' to the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+
+      await viewOrderPage.SearchProduct(page, fourthProduct.name);
+      const result = await viewOrderPage.getSearchedProductDetails(page);
+      await Promise.all([
+        expect(result.stockLocation).to.equal(''),
+        expect(result.available).to.equal(fourthProduct.quantity - 1),
+      ]);
+
+      const textResult = await viewOrderPage.addProductToCart(page);
+      await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+    });
+
+    it('should check number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+      const productCount = await viewOrderPage.getProductsNumber(page);
+      await expect(productCount).to.equal(3);
+    });
+
+    it('should add the created product \'Product with combination\' to the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+
+      await viewOrderPage.SearchProduct(page, fifthProduct.name);
+      const result = await viewOrderPage.getSearchedProductDetails(page);
+      await Promise.all([
+        expect(result.stockLocation).to.equal(fifthProduct.stockLocation),
+        expect(result.available).to.equal(fifthProduct.quantity - 1),
+      ]);
+
+      const textResult = await viewOrderPage.addProductToCart(page);
+      await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+    });
+
+    it('should check number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+      const productCount = await viewOrderPage.getProductsNumber(page);
+      await expect(productCount).to.equal(4);
+    });
   });
 
-  // 5 - Delete the created customer
+  // 8 - Delete the created customer
   describe(`Delete the customer ${customerData.lastName}`, async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
@@ -429,8 +551,8 @@ describe('Check customer block in view order page', async () => {
     });
   });
 
-  // 6 - Delete the created products
-  describe('Delete the 3 created products', async () => {
+  // 9 - Delete the created products
+  describe('Delete the created products', async () => {
     it('should go to Products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
 
@@ -439,8 +561,9 @@ describe('Check customer block in view order page', async () => {
       const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
-    [firstProduct, secondProduct, thirdProduct].forEach((product, index) => {
-      it('should delete products from DropDown Menu', async function () {
+
+    [firstProduct, secondProduct, thirdProduct, fourthProduct, fifthProduct].forEach((product, index) => {
+      it(`should delete product '${product.name}' from DropDown Menu`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
 
         const deleteTextResult = await productsPage.deleteProduct(page, product);

@@ -535,6 +535,9 @@ class AddProduct extends BOBasePage {
     if (productData.type === 'Pack of products') {
       await this.addPackOfProducts(page, productData.pack);
     }
+    if (productData.productHasCombinations) {
+      await this.setCombinationsInProduct(page, productData);
+    }
     await this.setProductStatus(page, productData.status);
     await this.setQuantitiesSettings(page, productData);
     return this.saveProduct(page);
