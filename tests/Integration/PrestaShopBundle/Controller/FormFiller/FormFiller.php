@@ -43,31 +43,37 @@ class FormFiller
     public function fillForm(Form $form, array $formModifications): Form
     {
         foreach ($formModifications as $fieldName => $formValue) {
-            if (is_array($formValue)) {
-                // For multi select checkboxes or select inputs
-                /** @var ChoiceFormField[]|ChoiceFormField $formFields */
-                $formFields = $form->get($fieldName);
-                // Multiple checkboxes are returned as array
-                if (is_array($formFields)) {
-                    foreach ($formFields as $formField) {
-                        if ('checkbox' === $formField->getType()) {
-                            $optionValue = $formField->availableOptionValues()[0];
-                            if (in_array($optionValue, $formValue)) {
-                                $formField->tick();
-                            } else {
-                                $formField->untick();
-                            }
-                        } else {
-                            $formField->select($formValue);
-                        }
-                    }
-                } else {
-                    $formFields->select($formValue);
-                }
-            } else {
+            if (!is_array($formValue)) {
                 /** @var FormField $formField */
                 $formField = $form->get($fieldName);
                 $formField->setValue($formValue);
+
+                continue;
+            }
+
+            // For multi select checkboxes or select inputs
+            /** @var ChoiceFormField[]|ChoiceFormField $formFields */
+            $formFields = $form->get($fieldName);
+            if (!is_array($formFields)) {
+                $formFields->select($formValue);
+
+                continue;
+            }
+
+            // Multiple checkboxes are returned as array
+            foreach ($formFields as $formField) {
+                if ('checkbox' !== $formField->getType()) {
+                    $formField->select($formValue);
+
+                    continue;
+                }
+
+                $optionValue = $formField->availableOptionValues()[0];
+                if (in_array($optionValue, $formValue)) {
+                    $formField->tick();
+                } else {
+                    $formField->untick();
+                }
             }
         }
 
