@@ -102,7 +102,8 @@ const combinationProduct = {
 };
 
 const fifthProduct = new ProductFaker(combinationProduct);
-
+const newQuantity = 2;
+const newPrice = 25;
 
 /*
 Create order by guest in FO
@@ -312,19 +313,19 @@ describe('Check customer block in view order page', async () => {
     it('should update the quantity of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
-      const newQuantity = await viewOrderPage.modifyProductQuantity(page, 1, 2);
-      await expect(newQuantity, 'Quantity was not updated').to.equal(2);
+      const newQuantity = await viewOrderPage.modifyProductQuantity(page, 1, newQuantity);
+      await expect(newQuantity, 'Quantity was not updated').to.equal(newQuantity);
     });
 
     it('should update the price of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updatePrice', baseContext);
 
-      await viewOrderPage.modifyProductPrice(page, 1, 25);
+      await viewOrderPage.modifyProductPrice(page, 1, newPrice);
 
       const result = await viewOrderPage.getProductDetails(page, 1);
       await Promise.all([
         expect(result.basePrice, 'Base price was not updated').to.equal(25),
-        expect(result.total, 'Total price was not updated').to.equal(25 * 2),
+        expect(result.total, 'Total price was not updated').to.equal(newPrice * newQuantity),
       ]);
     });
 
