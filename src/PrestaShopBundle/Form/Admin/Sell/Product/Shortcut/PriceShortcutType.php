@@ -112,6 +112,7 @@ class PriceShortcutType extends ShortcutType
             ])
         ;
 
+        // Call parent build to add potential target tab button
         parent::buildForm($builder, $options);
     }
 }
