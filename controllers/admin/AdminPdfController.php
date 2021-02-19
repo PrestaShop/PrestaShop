@@ -72,7 +72,6 @@ class AdminPdfControllerCore extends AdminController
             die($this->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
 
-        $order->products = OrderSlip::getOrdersSlipProducts($order_slip->id, $order);
         $this->generatePDF($order_slip, PDF::TEMPLATE_ORDER_SLIP);
     }
 
