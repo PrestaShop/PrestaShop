@@ -53,13 +53,9 @@
 
     <div id="form_content" class="tab-content">
       {% block product_tab_basic %}
-        <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
-          {{ form_widget(productForm.basic) }}
-
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
-            'productForm': productForm,
-          }) }}
-        </div>
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/basic.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
 
       {% block product_tab_stock %}
