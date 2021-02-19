@@ -57,19 +57,25 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     public function header(): Response
     {
-        if (!$this->multistoreFeature->isUsed() || $this->multistoreContext->isAllShopContext()) {
+        if (!$this->multistoreFeature->isUsed()) {
             return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
                 'isMultistoreUsed' => false,
             ]);
         }
 
+        $isAllShopContext = $this->multistoreContext->isAllShopContext();
         $isShopContext = $this->multistoreContext->isShopContext();
+
         if ($isShopContext) {
             $currentContext = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
-            $currentContext->urlFO = $this->getContext()->link->getBaseLink($currentContext->getId());
-        } else {
+        } elseif (!$isAllShopContext) {
             $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
             $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneById($shopGroupLegacy->id);
+        } else {
+            // use ShopGroup object as a the container for "all shops" context so that it can be used transparently in twig
+            $currentContext = new ShopGroup();
+            $currentContext->setName($this->trans('All shops', 'Admin.Shop'));
+            $currentContext->setColor('');
         }
 
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
@@ -82,6 +88,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'isShopContext' => $isShopContext,
             'link' => $this->getContext()->link,
             'isTitleDark' => empty($currentContext->getColor()) ? true : $colorBrightnessCalculator->isBright($currentContext->getColor()),
+            'isAllShopContext' => $isAllShopContext,
         ]);
     }
 }
