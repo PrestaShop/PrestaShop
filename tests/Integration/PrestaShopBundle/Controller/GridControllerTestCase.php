@@ -65,6 +65,13 @@ abstract class GridControllerTestCase extends WebTestCase
     protected $testEntityName;
 
     /**
+     * The route to create entity
+     *
+     * @var string
+     */
+    protected $createEntityRoute;
+
+    /**
      * The route to delete entity
      *
      * @var string
@@ -82,6 +89,12 @@ abstract class GridControllerTestCase extends WebTestCase
      * @var FormFiller
      */
     protected $formFiller;
+
+    /**
+     * Service id form form handler
+     * @var string
+     */
+    protected $formHandlerServiceId;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
@@ -139,6 +152,31 @@ abstract class GridControllerTestCase extends WebTestCase
 
         /* If this fails it means entity deletion did not work as intended */
         self::assertCount($this->initialEntityCount, $entities);
+    }
+
+    /**
+     * @return void
+     */
+    protected function createTestEntity(): void
+    {
+        $router = $this->client->getContainer()->get('router');
+        $createEntityUrl = $router->generate($this->createEntityRoute);
+        $crawler = $this->client->request('GET', $createEntityUrl);
+        $submitButton = $crawler->selectButton('save-button');
+        $addressForm = $submitButton->form();
+
+        $addressForm = $this->formFiller->fillForm($addressForm, $this->getCreateEntityFormModifications());
+
+        /*
+         * Without changing followRedirects to false when submitting the form
+         * $dataChecker->getLastCreatedId() returns null.
+         */
+        $this->client->followRedirects(false);
+        $this->client->submit($addressForm);
+        $this->client->followRedirects(true);
+        $formHandlerChecker = $this->client->getContainer()->get($this->formHandlerServiceId);
+        $this->testEntityId = $formHandlerChecker->getLastCreatedId();
+        $this->assertNotNull($this->testEntityId);
     }
 
     /**
@@ -223,7 +261,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     abstract protected function getTestEntity(): TestEntityDTO;
 
-    abstract protected function createTestEntity(): void;
+    abstract protected function getCreateEntityFormModifications(): array;
 
     abstract protected function getEntity($tr, $i): TestEntityDTO;
 }

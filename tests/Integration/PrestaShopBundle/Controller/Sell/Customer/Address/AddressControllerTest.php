@@ -41,9 +41,11 @@ class AddressControllerTest extends GridControllerTestCase
     {
         parent::__construct($name, $data, $dataName);
 
+        $this->createEntityRoute = 'admin_addresses_create';
         $this->gridRoute = 'admin_addresses_index';
         $this->testEntityName = 'address';
         $this->deleteEntityRoute = 'admin_addresses_delete';
+        $this->formHandlerServiceId = 'prestashop.core.form.identifiable_object.handler.address_form_handler';
     }
 
     /**
@@ -80,14 +82,16 @@ class AddressControllerTest extends GridControllerTestCase
      */
     protected function getTestEntity(): TestEntityDTO
     {
-        return new TestAddressDTO(
+        return new TestEntityDTO(
             $this->testEntityId,
-            'testfirstname',
-            'testlastname',
-            'testaddress1',
-            '11111',
-            'testcity',
-            'lithuania'
+            [
+                'firstName' => 'testfirstname',
+                'lastName' => 'testlastname',
+                'address' => 'testaddress1',
+                'postCode' =>'11111',
+                'city' => 'testcity',
+                'country' => 'lithuania'
+            ]
         );
     }
 
@@ -103,25 +107,7 @@ class AddressControllerTest extends GridControllerTestCase
         $backupCountry = $legacyContext->getContext()->country;
         $legacyContext->getContext()->country = new Country($this->countryId);
 
-        $router = $this->client->getContainer()->get('router');
-        $createAddressUrl = $router->generate('admin_addresses_create');
-        $crawler = $this->client->request('GET', $createAddressUrl);
-        $submitButton = $crawler->selectButton('save-button');
-        $addressForm = $submitButton->form();
-
-        $addressForm = $this->formFiller->fillForm($addressForm, $this->getAddressModifications());
-
-        /*
-         * Without changing followRedirects to false when submitting the form
-         * $dataChecker->getLastCreatedId() returns null.
-         */
-        $this->client->followRedirects(false);
-        $this->client->submit($addressForm);
-        $this->client->followRedirects(true);
-        $dataChecker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.handler.address_form_handler');
-        $this->testEntityId = $dataChecker->getLastCreatedId();
-        $this->assertNotNull($this->testEntityId);
-
+        parent::createTestEntity();
         // We can now reset the original context country
         $legacyContext->getContext()->country = $backupCountry;
     }
@@ -134,14 +120,16 @@ class AddressControllerTest extends GridControllerTestCase
      */
     protected function getEntity($tr, $i): TestEntityDTO
     {
-        return new TestAddressDTO(
+        return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_address')->text()),
-            trim($tr->filter('.column-firstname')->text()),
-            trim($tr->filter('.column-lastname')->text()),
-            trim($tr->filter('.column-address1')->text()),
-            trim($tr->filter('.column-postcode')->text()),
-            trim($tr->filter('.column-city')->text()),
-            trim($tr->filter('.column-country_name')->text())
+            [
+                'firstName' => trim($tr->filter('.column-lastname')->text()),
+                'lastName' => trim($tr->filter('.column-address1')->text()),
+                'address' => trim($tr->filter('.column-postcode')->text()),
+                'postCode' => trim($tr->filter('.column-city')->text()),
+                'city' => trim($tr->filter('.column-city')->text()),
+                'country' => trim($tr->filter('.column-country_name')->text())
+            ]
         );
     }
 
@@ -150,18 +138,18 @@ class AddressControllerTest extends GridControllerTestCase
      *
      * @return array
      */
-    public function getAddressModifications(): array
+    protected function getCreateEntityFormModifications(): array
     {
-        $testAddress = $this->getTestEntity();
+        $testEntity = $this->getTestEntity();
 
         return [
             'customer_address[customer_email]' => 'pub@prestashop.com',
             'customer_address[alias]' => 'test_alias',
-            'customer_address[first_name]' => $testAddress->getFirstName(),
-            'customer_address[last_name]' => $testAddress->getLastName(),
-            'customer_address[address1]' => $testAddress->getAddress(),
-            'customer_address[postcode]' => $testAddress->getPostCode(),
-            'customer_address[city]' => $testAddress->getCity(),
+            'customer_address[first_name]' => $testEntity->firstName,
+            'customer_address[last_name]' => $testEntity->lastName,
+            'customer_address[address1]' => $testEntity->address,
+            'customer_address[postcode]' => $testEntity->postCode,
+            'customer_address[city]' => $testEntity->city,
             'customer_address[id_country]' => $this->countryId,
         ];
     }

@@ -24,9 +24,47 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
-interface TestEntityDTO
+class TestEntityDTO
 {
-    public function getId(): ?int;
+    /** @var ?int */
+    private $id;
+    /**
+     * @var array
+     */
+    private $variables;
+
+    /**
+     * Address constructor.
+     *
+     * @param int|null $id
+     * @param array $variables
+     */
+    public function __construct(
+        ?int $id,
+        array $variables
+    ) {
+        $this->id = $id;
+        $this->variables = $variables;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function __get(string $variableName)
+    {
+        if (!isset($this->variables[$variableName])) {
+            throw new \Exception('Something wrong ' . $variableName);
+        }
+
+        return $this->variables[$variableName];
+    }
 }
