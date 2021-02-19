@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use ColorContrast\ColorContrast;
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -74,6 +73,7 @@ class MultistoreController extends FrameworkBundleAdminController
         }
 
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
 
         return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
             'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
@@ -81,26 +81,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'groupList' => $groupList,
             'isShopContext' => $isShopContext,
             'link' => $this->getContext()->link,
-            'isTitleDark' => $this->isTitleDark($currentContext->getColor()),
+            'isTitleDark' => empty($currentContext->getColor()) ? true : $colorBrightnessCalculator->isBright($currentContext->getColor()),
         ]);
-    }
-
-    /**
-     * @param string $backgroundColor
-     *
-     * @return bool
-     */
-    private function isTitleDark(string $backgroundColor): bool
-    {
-        if (empty($backgroundColor)) {
-            return true;
-        } elseif ($backgroundColor[0] !== '#') {
-            return false;
-        }
-
-        $contrast = new ColorContrast();
-        $textContrast = $contrast->complimentaryTheme($backgroundColor);
-
-        return $textContrast == ColorContrast::DARK;
     }
 }
