@@ -106,8 +106,14 @@ const fifthProduct = new ProductFaker(combinationProduct);
 
 /*
 Create order by guest in FO
-Go to orders page BO and view the created order page
-Check product block content
+Create 5 products in BO: Out of stock allowed, out of stock not allowed, with combination, pack and virtual
+Check product block content:
+- Check Number of products
+- Update the price of an ordered
+- Update the quantity of an ordered product
+- Add and check product out of stock not allowed
+- Add and check product out of stock allowed
+- Add all types of products
 */
 describe('Check customer block in view order page', async () => {
   // before and after functions
@@ -304,7 +310,7 @@ describe('Check customer block in view order page', async () => {
     });
 
     it('should update the quantity of the ordered product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updatePrice', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
       const newQuantity = await viewOrderPage.modifyProductQuantity(page, 1, 2);
       await expect(newQuantity, 'Quantity was not updated').to.equal(2);
