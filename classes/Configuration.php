@@ -128,14 +128,14 @@ class ConfigurationCore extends ObjectModel
     public const SHOP_DOMAIN = 'PS_SHOP_DOMAIN';
     public const SHOP_DOMAIN_SSL = 'PS_SHOP_DOMAIN_SSL';
 
-    public const ROUTE_category_rule =  'PS_ROUTE_category_rule';
-    public const ROUTE_supplier_rule =  'PS_ROUTE_supplier_rule';
-    public const ROUTE_manufacturer_rule =  'PS_ROUTE_manufacturer_rule';
-    public const ROUTE_cms_rule =  'PS_ROUTE_cms_rule';
-    public const ROUTE_cms_category_rule =  'PS_ROUTE_cms_category_rule';
-    public const ROUTE_module =  'PS_ROUTE_module';
-    public const ROUTE_product_rule =  'PS_ROUTE_product_rule';
-    public const ROUTE_layered_rule =  'PS_ROUTE_layered_rule';
+    public const ROUTE_CATEGORY_RULE =  'PS_ROUTE_category_rule';
+    public const ROUTE_SUPPLIER_RULE =  'PS_ROUTE_supplier_rule';
+    public const ROUTE_MANUFACTURER_RULE =  'PS_ROUTE_manufacturer_rule';
+    public const ROUTE_CMS_RULE =  'PS_ROUTE_cms_rule';
+    public const ROUTE_CMS_CATEGORY_RULE =  'PS_ROUTE_cms_category_rule';
+    public const ROUTE_MODULE =  'PS_ROUTE_module';
+    public const ROUTE_PRODUCT_RULE =  'PS_ROUTE_product_rule';
+    public const ROUTE_LAYERED_RULE =  'PS_ROUTE_layered_rule';
 
     /** Search */
     public const SEARCH_INDEXATION = 'PS_SEARCH_INDEXATION';
