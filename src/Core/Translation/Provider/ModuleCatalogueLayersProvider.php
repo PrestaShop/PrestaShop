@@ -53,16 +53,6 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     private $databaseTranslationLoader;
 
     /**
-     * This is the directory where Default and FileTranslated translations are stored.
-     * For the Backoffice catalogue,
-     *   - Default catalogue is within resourceDirectory/default
-     *   - FileTranslated catalogue is in resourceDirectory/locale
-     *
-     * @var string
-     */
-    private $resourceDirectory;
-
-    /**
      * @var DefaultCatalogueProvider
      */
     private $defaultCatalogueProvider;
@@ -116,7 +106,6 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @param LoaderInterface $legacyFileLoader
      * @param string $modulesDirectory
      * @param string $translationsDirectory
-     * @param string $resourceDirectory
      * @param string $moduleName
      * @param array $filenameFilters
      * @param array $translationDomains
@@ -127,13 +116,11 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         LoaderInterface $legacyFileLoader,
         string $modulesDirectory,
         string $translationsDirectory,
-        string $resourceDirectory,
         string $moduleName,
         array $filenameFilters,
         array $translationDomains
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
-        $this->resourceDirectory = $resourceDirectory;
         $this->moduleName = $moduleName;
         $this->modulesDirectory = $modulesDirectory;
         $this->translationsDirectory = $translationsDirectory;
@@ -151,7 +138,6 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         try {
             $defaultCatalogue = $this->getDefaultCatalogueProvider($locale)->getCatalogue($locale);
         } catch (FileNotFoundException $e) {
-            var_dump($e->getMessage());
             $defaultCatalogue = $this->getCachedDefaultCatalogue($locale);
         }
 

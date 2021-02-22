@@ -55,10 +55,6 @@ class CatalogueProviderFactory
      */
     private $databaseTranslationLoader;
     /**
-     * @var string
-     */
-    private $resourceDirectory;
-    /**
      * @var LegacyModuleExtractorInterface
      */
     private $legacyModuleExtractor;
@@ -105,11 +101,9 @@ class CatalogueProviderFactory
         Filesystem $filesystem,
         string $themesDirectory,
         string $modulesDirectory,
-        string $translationsDirectory,
-        string $resourceDirectory
+        string $translationsDirectory
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
-        $this->resourceDirectory = $resourceDirectory;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->modulesDirectory = $modulesDirectory;
@@ -151,7 +145,7 @@ class CatalogueProviderFactory
         if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
             $this->providers[$providerDefinition->getType()] = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
-                $this->resourceDirectory,
+                $this->translationsDirectory,
                 $providerDefinition->getFilenameFilters(),
                 $providerDefinition->getTranslationDomains()
             );
@@ -169,7 +163,6 @@ class CatalogueProviderFactory
                 $this->legacyFileLoader,
                 $this->modulesDirectory,
                 $this->translationsDirectory,
-                $this->resourceDirectory,
                 $providerDefinition->getModuleName(),
                 $providerDefinition->getFilenameFilters(),
                 $providerDefinition->getTranslationDomains()
@@ -185,7 +178,7 @@ class CatalogueProviderFactory
             $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
             $coreFrontProvider = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
-                $this->resourceDirectory,
+                $this->translationsDirectory,
                 $coreFrontProviderDefinition->getFilenameFilters(),
                 $coreFrontProviderDefinition->getTranslationDomains()
             );

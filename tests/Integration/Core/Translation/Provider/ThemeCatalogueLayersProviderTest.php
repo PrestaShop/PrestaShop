@@ -28,10 +28,16 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Translation\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ModuleProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Provider\ModuleCatalogueLayersProvider;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\FrontofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ThemeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\ThemeCatalogueLayersProvider;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
+use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -47,15 +53,23 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|LegacyModuleExtractorInterface
      */
-    private $legacyModuleExtractor;
+    private $themeExtractor;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|LoaderInterface
      */
-    private $legacyFileLoader;
+    private $themeRepository;
     /**
      * @var mixed
      */
     private $modulesDir;
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+    /**
+     * @var mixed
+     */
+    private $themesDir;
 
     public function setUp()
     {
@@ -74,27 +88,42 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
          */
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
         $this->modulesDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
+        $this->themesDir = self::$kernel->getContainer()->getParameter('translations_theme_dir');
+        $this->themeExtractor = self::$kernel->getContainer()->get('prestashop.translation.theme_extractor');
 
-        $this->legacyModuleExtractor = $this->createMock(LegacyModuleExtractorInterface::class);
-        $this->legacyFileLoader = $this->createMock(LoaderInterface::class);
+        $this->themeRepository = $this->createMock(ThemeRepository::class);
+        $this->themeRepository
+            ->method('getInstanceByName')
+            ->willReturn(new Theme([
+                'name' => 'fakeThemeForTranslations',
+                'directory' => rtrim($this->themesDir, '/') . '/fakeThemeForTranslations',
+            ])); //doesn't really matter
+        $this->filesystem = new Filesystem();
     }
 
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
-    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory()
+    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
+        $databaseTranslationLoader = new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class));
+        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
+        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+        $coreFrontProvider = new CoreCatalogueLayersProvider(
+            $databaseTranslationLoader,
             $this->translationsDir,
-            $this->modulesDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $coreFrontProviderDefinition->getFilenameFilters(),
+            $coreFrontProviderDefinition->getTranslationDomains()
+        );
+
+        $provider = new ThemeCatalogueLayersProvider(
+            $coreFrontProvider,
+            $databaseTranslationLoader,
+            $this->themeExtractor,
+            $this->themeRepository,
+            $this->filesystem,
+            $this->themesDir,
+            $providerDefinition->getThemeName()
         );
 
         // load catalogue from translations/fr-FR
@@ -108,32 +137,65 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
         sort($domains);
 
         // verify all catalogues are loaded
-        $this->assertSame(['ModulesCheckpaymentAdmin', 'ModulesCheckpaymentShop'], $domains);
+        // this is a merge of core Shop domains and Theme's domains
+        $this->assertSame([
+            'ModulesCheckpaymentShop',
+            'ModulesWirepaymentShop',
+            'ShopNotificationsWarning',
+            'ShopTheme',
+            'ShopThemeCustomeraccount',
+        ], $domains);
 
         // verify that the catalogues are complete
-        $this->assertCount(15, $messages['ModulesCheckpaymentAdmin']);
         $this->assertCount(19, $messages['ModulesCheckpaymentShop']);
+        $this->assertCount(15, $messages['ModulesWirepaymentShop']);
+        $this->assertCount(8, $messages['ShopNotificationsWarning']);
+        $this->assertCount(64, $messages['ShopTheme']);
+        $this->assertCount(83, $messages['ShopThemeCustomeraccount']);
 
-        $this->assertSame('Aucune devise disponible pour ce module', $catalogue->get('No currency has been set for this module.', 'ModulesCheckpaymentAdmin'));
         $this->assertSame('Envoyez votre chèque à cette adresse', $catalogue->get('Send your check to this address', 'ModulesCheckpaymentShop'));
+        $this->assertSame('La page que vous cherchez n\'a pas été trouvée.', $catalogue->get('The page you are looking for was not found.', 'ShopTheme'));
     }
 
     /**
      * Test it loads a default catalogue from the `translations` default directory
      */
-    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
+    public function testItExtractsDefaultCatalogueFromThemeFiles(): void
     {
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
+        $databaseTranslationLoader = new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class));
+
+        /**
+         * @TODO: In the next PR, break that silly dependency
+         */
+        $themeProvider = new ThemeProvider(
+            $databaseTranslationLoader,
+            $this->themesDir
+        );
+        $themeProvider->themeResourcesDirectory = $this->themesDir;
+        $themeProvider->defaultTranslationDir = $this->translationsDir;
+        $themeProvider->filesystem = $this->filesystem;
+        $themeProvider->themeRepository = $this->themeRepository;
+        $themeProvider->themeExtractor = $this->themeExtractor;
+        $this->themeExtractor->setThemeProvider($themeProvider);
+        $this->themeExtractor->setOutputPath('/tmp/ThemeExtract');
+
+        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
+        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+        $coreFrontProvider = new CoreCatalogueLayersProvider(
+            $databaseTranslationLoader,
             $this->translationsDir,
-            $this->modulesDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $coreFrontProviderDefinition->getFilenameFilters(),
+            $coreFrontProviderDefinition->getTranslationDomains()
+        );
+
+        $provider = new ThemeCatalogueLayersProvider(
+            $coreFrontProvider,
+            $databaseTranslationLoader,
+            $this->themeExtractor,
+            $this->themeRepository,
+            $this->filesystem,
+            $this->themesDir,
+            $providerDefinition->getThemeName()
         );
 
         // load catalogue from translations/default
@@ -147,45 +209,62 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
         sort($domains);
 
         // verify all catalogues are loaded
-        $this->assertSame(['ModulesCheckpaymentAdmin', 'ModulesCheckpaymentShop'], $domains);
+        // The domains from smarty templates in tests/Resources/themes/fakeThemeForTranslations
+        $this->assertSame([
+            'ShopFooBar',
+            'ShopThemeActions',
+            'ShopThemeCart',
+            'ShopThemeProduct',
+        ], $domains);
 
         // verify that the catalogues are complete
-        $this->assertCount(15, $messages['ModulesCheckpaymentAdmin']);
-        $this->assertCount(19, $messages['ModulesCheckpaymentShop']);
+        $this->assertCount(1, $messages['ShopFooBar']);
+        $this->assertCount(1, $messages['ShopThemeActions']);
+        $this->assertCount(1, $messages['ShopThemeCart']);
+        $this->assertCount(1, $messages['ShopThemeProduct']);
 
-        $this->assertSame('', $catalogue->get('No currency has been set for this module.', 'ModulesCheckpaymentAdmin'));
+        $this->assertSame('Refresh', $catalogue->get('Refresh', 'ShopThemeActions'));
+        $this->assertSame('Apply cart', $catalogue->get('Apply cart', 'ShopThemeCart'));
+        $this->assertSame('Show product', $catalogue->get('Show product', 'ShopThemeProduct'));
     }
 
-    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase()
+    public function testItDoesntLoadsCustomizedTranslationsWithThemeNotDefinedOrDifferentFromDatabase(): void
     {
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
                 'key' => 'Uninstall',
                 'translation' => 'Uninstall Traduction customisée',
-                'domain' => 'ModulesCheckpaymentAdmin',
-                'theme' => 'classic',
+                'domain' => 'ShopThemeCart',
+                'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Install',
                 'translation' => 'Install Traduction customisée',
-                'domain' => 'ModulesCheckpaymentShop',
+                'domain' => 'ShopThemeActions',
                 'theme' => 'classic',
             ],
         ];
 
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
+        $databaseTranslationLoader = new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class));
+        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
+        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+        $coreFrontProvider = new CoreCatalogueLayersProvider(
+            $databaseTranslationLoader,
             $this->translationsDir,
-            $this->modulesDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $coreFrontProviderDefinition->getFilenameFilters(),
+            $coreFrontProviderDefinition->getTranslationDomains()
+        );
+
+        $provider = new ThemeCatalogueLayersProvider(
+            $coreFrontProvider,
+            $databaseTranslationLoader,
+            $this->themeExtractor,
+            $this->themeRepository,
+            $this->filesystem,
+            $this->themesDir,
+            $providerDefinition->getThemeName()
         );
 
         // load catalogue from database translations
@@ -203,50 +282,43 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
         $this->assertEmpty($messages);
     }
 
-    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase()
+    public function testItLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
     {
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
                 'key' => 'Uninstall',
                 'translation' => 'Uninstall Traduction customisée',
-                'domain' => 'ModulesCheckpaymentAdmin',
-                'theme' => null,
+                'domain' => 'ShopThemeCart',
+                'theme' => 'fakeThemeForTranslations',
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Install',
                 'translation' => 'Install Traduction customisée',
-                'domain' => 'ModulesCheckpaymentShop',
-                'theme' => null,
-            ],
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Some made up text 1',
-                'translation' => 'Un texte inventé 1',
-                'domain' => 'AdminActions',
-                'theme' => 'classic',
-            ],
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Some made up text 2',
-                'translation' => 'Un texte inventé 2',
-                'domain' => 'ModulesCheckpaymentAdmin',
-                'theme' => 'classic',
+                'domain' => 'ShopThemeActions',
+                'theme' => 'fakeThemeForTranslations',
             ],
         ];
 
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
+        $databaseTranslationLoader = new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class));
+        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
+        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+        $coreFrontProvider = new CoreCatalogueLayersProvider(
+            $databaseTranslationLoader,
             $this->translationsDir,
-            $this->modulesDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $coreFrontProviderDefinition->getFilenameFilters(),
+            $coreFrontProviderDefinition->getTranslationDomains()
+        );
+
+        $provider = new ThemeCatalogueLayersProvider(
+            $coreFrontProvider,
+            $databaseTranslationLoader,
+            $this->themeExtractor,
+            $this->themeRepository,
+            $this->filesystem,
+            $this->themesDir,
+            $providerDefinition->getThemeName()
         );
 
         // load catalogue from database translations
@@ -259,17 +331,13 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
         $domains = $catalogue->getDomains();
         sort($domains);
 
-        $this->assertSame(['ModulesCheckpaymentAdmin', 'ModulesCheckpaymentShop'], $domains);
+        // If the theme name is null, the translations which have theme = 'classic' are taken
+        $this->assertSame([
+            'ShopThemeActions',
+            'ShopThemeCart',
+        ], $domains);
 
-        // verify that the catalogues are complete
-        $this->assertCount(1, $messages['ModulesCheckpaymentAdmin']);
-        $this->assertCount(1, $messages['ModulesCheckpaymentShop']);
-
-        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'ModulesCheckpaymentAdmin'));
-        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ModulesCheckpaymentShop'));
+        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ShopThemeActions'));
+        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'ShopThemeCart'));
     }
-
-    /*
-     * @TODO: Test fallbacks to load legacy translations
-     */
 }

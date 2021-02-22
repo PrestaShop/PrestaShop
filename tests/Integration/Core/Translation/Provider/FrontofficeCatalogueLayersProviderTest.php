@@ -64,7 +64,7 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
-    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory()
+    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         $providerDefinition = new FrontofficeProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
@@ -100,7 +100,7 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a default catalogue from the `translations` default directory
      */
-    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
+    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         $providerDefinition = new FrontofficeProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
@@ -133,7 +133,7 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
         $this->assertSame('', $catalogue->get('(order processing will be longer)', 'ModulesWirepaymentShop'));
     }
 
-    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase()
+    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase(): void
     {
         $databaseContent = [
             [
@@ -181,7 +181,7 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
         $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ModulesWirepaymentShop'));
     }
 
-    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase()
+    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
     {
         $databaseContent = [
             [
