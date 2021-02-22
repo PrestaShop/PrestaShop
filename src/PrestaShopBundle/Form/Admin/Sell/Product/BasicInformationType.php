@@ -76,17 +76,25 @@ class BasicInformationType extends TranslatorAwareType
                 ],
             ])
             ->add('description_short', TranslatableType::class, [
+                'required' => false,
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'attr' => [
-                        'class' => 'serp-default-description',
+                        'class' => 'serp-default-description h2',
                     ],
+                ],
+                'label_attr' => [
+                    'title' => 'h2',
                 ],
             ])
             ->add('description', TranslatableType::class, [
+                'required' => false,
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
+                'label_attr' => [
+                    'title' => 'h2',
+                ],
             ])
         ;
     }

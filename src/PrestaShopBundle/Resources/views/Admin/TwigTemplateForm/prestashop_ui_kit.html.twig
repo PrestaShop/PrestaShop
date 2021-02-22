@@ -36,7 +36,9 @@
 
 {% block form_label -%}
   {% spaceless %}
-    {% if label is same as(false) %}
+    {% if label is same as(null) or label_attr.title is defined %}
+      {# nothing #}
+    {% elseif label is same as(false) %}
       <div class="{{ block('form_label_class') }}"></div>
     {% else %}
       {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ block('form_label_class'))|trim}) %}
@@ -53,6 +55,12 @@
 
 {% block form_row -%}
   {% spaceless %}
+    {% if label_attr.title is defined %}
+      <{{ label_attr.title }}{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+      {{ label|raw }}
+      </{{ label_attr.title }}>
+    {% endif %}
+
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
     {% set disabledField = false %}
@@ -71,7 +79,6 @@
         {{ form_errors(form, {'attr': {'fieldError': true}}) }}
       </div>
     </div>
-
   {% endspaceless %}
 {%- endblock form_row %}
 
