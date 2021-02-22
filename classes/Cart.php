@@ -1663,6 +1663,24 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Returns the language related to the cart or the default one if deleted
+     *
+     * @return Language
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function getLanguage(): Language
+    {
+        $language = new Language($this->id_lang);
+        if (null === $language->id) {
+            $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+        }
+
+        return $language;
+    }
+
+    /**
      * Customization management.
      *
      * @param int $quantity Quantity value to add or subtract
