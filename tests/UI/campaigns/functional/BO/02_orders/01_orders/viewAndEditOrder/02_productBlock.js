@@ -23,6 +23,7 @@ const customersPage = require('@pages/BO/customers');
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
+const {Products} = require('@data/demo/products');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -81,7 +82,7 @@ const combinationProduct = new ProductFaker({
   productHasCombinations: true,
   taxRule: 'No tax',
   quantity: 197,
-  minimumQuantity: 3,
+  minimumQuantity: 1,
   stockLocation: 'stock 3',
   lowStockLevel: 3,
   behaviourOutOfStock: 'Default behavior',
@@ -300,6 +301,96 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.errorAddSameProduct);
+
+        await viewOrderPage.closeGrowlMessage(page);
+
+        await viewOrderPage.cancelAddProductToCart(page);
+      });
+    });
+
+    describe('Add \'Product with combination\'', async () => {
+      it(`should add the product '${combinationProduct.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderCombinationProduct', baseContext);
+
+        await viewOrderPage.SearchProduct(page, combinationProduct.name);
+        const result = await viewOrderPage.getSearchedProductDetails(page);
+        await Promise.all([
+          expect(result.stockLocation).to.equal(combinationProduct.stockLocation),
+          expect(result.available).to.equal(combinationProduct.quantity - 1),
+        ]);
+
+        const textResult = await viewOrderPage.addProductToCart(page);
+        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+      });
+    });
+
+    describe('Add \'Virtual product\'', async () => {
+      it(`should add the product '${virtualProduct.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'ordervirtualProduct', baseContext);
+
+        await viewOrderPage.SearchProduct(page, virtualProduct.name);
+        const result = await viewOrderPage.getSearchedProductDetails(page);
+        await Promise.all([
+          expect(result.stockLocation).to.equal(''),
+          expect(result.available).to.equal(virtualProduct.quantity - 1),
+        ]);
+
+        const textResult = await viewOrderPage.addProductToCart(page);
+        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+
+        await viewOrderPage.closeGrowlMessage(page);
+      });
+    });
+
+    describe('Add \'Pack of products\'', async () => {
+      it(`should add the product '${packOfProducts.name}' and test minimal quantity`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPackOfProducts', baseContext);
+
+        await viewOrderPage.SearchProduct(page, packOfProducts.name);
+        const result = await viewOrderPage.getSearchedProductDetails(page);
+        await Promise.all([
+          expect(result.stockLocation).to.equal(packOfProducts.stockLocation),
+          expect(result.available).to.equal(packOfProducts.quantity - 1),
+        ]);
+
+        const textResult = await viewOrderPage.addProductToCart(page);
+        await expect(textResult).to.contains(viewOrderPage.errorMinimumQuantityMessage);
+
+        await viewOrderPage.closeGrowlMessage(page);
+      });
+
+      it('should check ordered product details', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkPackOfProductsDetails', baseContext);
+
+        const textResult = await viewOrderPage.addProductToCart(page, packOfProducts.minimumQuantity);
+        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+
+        await viewOrderPage.closeGrowlMessage(page);
+
+        const result = await viewOrderPage.getProductDetails(page, 1);
+        await Promise.all([
+          expect(result.name).to.equal(packOfProducts.name),
+          expect(result.basePrice).to.equal(packOfProducts.price),
+          expect(result.quantity).to.equal(packOfProducts.minimumQuantity),
+          expect(result.available).to.equal(packOfProducts.quantity - packOfProducts.minimumQuantity),
+          expect(result.total).to.equal(packOfProducts.price * packOfProducts.minimumQuantity),
+        ]);
+      });
+    });
+
+    describe('Add \'Customized product\'', async () => {
+      it(`should add the product '${Products.demo_14.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderCustomizedProduct', baseContext);
+
+        await viewOrderPage.SearchProduct(page, Products.demo_14.name);
+        const result = await viewOrderPage.getSearchedProductDetails(page);
+        await Promise.all([
+          expect(result.stockLocation).to.equal(''),
+          expect(result.available).to.be.above(0),
+        ]);
+
+        const textResult = await viewOrderPage.addProductToCart(page);
+        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
       });
     });
 
@@ -348,72 +439,6 @@ describe('Check product block in view order page', async () => {
         await expect(isDisabled).to.be.true;
 
         await viewOrderPage.cancelAddProductToCart(page);
-      });
-    });
-
-    describe('Add \'Pack of products\'', async () => {
-      it(`should add the product '${packOfProducts.name}' and test minimal quantity`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'orderpackOfProducts', baseContext);
-
-        await viewOrderPage.SearchProduct(page, packOfProducts.name);
-        const result = await viewOrderPage.getSearchedProductDetails(page);
-        await Promise.all([
-          expect(result.stockLocation).to.equal(packOfProducts.stockLocation),
-          expect(result.available).to.equal(packOfProducts.quantity - 1),
-        ]);
-
-        let textResult = await viewOrderPage.addProductToCart(page);
-        await expect(textResult).to.contains(viewOrderPage.errorMinimumQuantityMessage);
-
-        await viewOrderPage.closeGrowlMessage(page);
-
-        textResult = await viewOrderPage.addProductToCart(page, packOfProducts.minimumQuantity);
-        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-      });
-
-      it('should check ordered product details', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkpackOfProductsDetails', baseContext);
-
-        const result = await viewOrderPage.getProductDetails(page, 1);
-        await Promise.all([
-          expect(result.name).to.equal(packOfProducts.name),
-          expect(result.basePrice).to.equal(packOfProducts.price),
-          expect(result.quantity).to.equal(packOfProducts.minimumQuantity),
-          expect(result.available).to.equal(packOfProducts.quantity - packOfProducts.minimumQuantity),
-          expect(result.total).to.equal(packOfProducts.price * packOfProducts.minimumQuantity),
-        ]);
-      });
-    });
-
-    describe('Add \'Virtual product\'', async () => {
-      it(`should add the product '${virtualProduct.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'ordervirtualProduct', baseContext);
-
-        await viewOrderPage.SearchProduct(page, virtualProduct.name);
-        const result = await viewOrderPage.getSearchedProductDetails(page);
-        await Promise.all([
-          expect(result.stockLocation).to.equal(''),
-          expect(result.available).to.equal(virtualProduct.quantity - 1),
-        ]);
-
-        const textResult = await viewOrderPage.addProductToCart(page);
-        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-      });
-    });
-
-    describe('Add \'Product with combination\'', async () => {
-      it(`should add the product '${combinationProduct.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'ordercombinationProduct', baseContext);
-
-        await viewOrderPage.SearchProduct(page, combinationProduct.name);
-        const result = await viewOrderPage.getSearchedProductDetails(page);
-        await Promise.all([
-          expect(result.stockLocation).to.equal(combinationProduct.stockLocation),
-          expect(result.available).to.equal(combinationProduct.quantity - 1),
-        ]);
-
-        const textResult = await viewOrderPage.addProductToCart(page);
-        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
       });
     });
 
@@ -494,7 +519,13 @@ describe('Check product block in view order page', async () => {
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    [productOutOfStockAllowed, productOutOfStockNotAllowed, packOfProducts, virtualProduct, combinationProduct].forEach((product, index) => {
+    [productOutOfStockAllowed,
+      productOutOfStockNotAllowed,
+      packOfProducts,
+      virtualProduct,
+      combinationProduct,
+      simpleProduct,
+    ].forEach((product, index) => {
       it(`should delete product '${product.name}' from DropDown Menu`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
 
