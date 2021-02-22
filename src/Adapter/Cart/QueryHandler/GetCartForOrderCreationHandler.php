@@ -33,7 +33,6 @@ use Cart;
 use CartRule;
 use Currency;
 use Customer;
-use Language;
 use Link;
 use Message;
 use PrestaShop\Decimal\Number;
@@ -121,7 +120,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     {
         $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
-        $language = new Language($cart->id_lang);
+        $language = $cart->getLanguage();
 
         $this->contextStateManager
             ->setCart($cart)
