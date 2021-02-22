@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use RuntimeException;
 
@@ -87,8 +86,7 @@ class SetCombinationSuppliersCommand
             throw new RuntimeException(sprintf(
                 'Empty array of combination suppliers provided in %s. To remove all product suppliers use %s.',
                 self::class,
-                //@todo: RemoveAllCombinationSuppliersCommand
-                RemoveAllAssociatedProductSuppliersCommand::class
+                RemoveAllAssociatedCombinationSuppliersCommand::class
             ));
         }
 
