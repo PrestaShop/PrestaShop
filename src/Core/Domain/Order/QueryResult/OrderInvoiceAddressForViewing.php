@@ -123,19 +123,19 @@ class OrderInvoiceAddressForViewing
         ?string $phoneMobile,
         ?string $vatNumber = null
     ) {
-        $this->addressId	 = $addressId;
-        $this->firstName	 = strval($firstName);
-	$this->lastName		 = strval($lastName);
-	$this->companyName	 = strval($companyName);
-	$this->vatNumber	 = strval($vatNumber);
-	$this->address1		 = strval($address1);
-	$this->address2		 = strval($address2);
-	$this->stateName	 = strval($stateName);
-	$this->cityName		 = strval($cityName);
-	$this->countryName	 = strval($countryName);
-	$this->postCode		 = strval($postCode);
-	$this->phoneNumber	 = strval($phone);
-	$this->mobilePhoneNumber = strval($phoneMobile);
+        $this->addressId = $addressId;
+        $this->firstName = strval($firstName);
+        $this->lastName = strval($lastName);
+        $this->companyName = strval($companyName);
+        $this->vatNumber = strval($vatNumber);
+        $this->address1 = strval($address1);
+        $this->address2 = strval($address2);
+        $this->stateName = strval($stateName);
+        $this->cityName = strval($cityName);
+        $this->countryName = strval($countryName);
+        $this->postCode = strval($postCode);
+        $this->phoneNumber = strval($phone);
+        $this->mobilePhoneNumber = strval($phoneMobile);
     }
 
     /**
