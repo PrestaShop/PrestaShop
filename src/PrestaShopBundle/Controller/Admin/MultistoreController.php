@@ -89,6 +89,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'link' => $this->getContext()->link,
             'isTitleDark' => empty($currentContext->getColor()) ? true : $colorBrightnessCalculator->isBright($currentContext->getColor()),
             'isAllShopContext' => $isAllShopContext,
+            'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
         ]);
     }
 }
