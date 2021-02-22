@@ -47,6 +47,11 @@ class CartProductsComparator
     private $savedProducts;
 
     /**
+     * @var CartProductUpdate[]
+     */
+    private $knownUpdates = [];
+
+    /**
      * @param Cart $cart
      */
     public function __construct(Cart $cart)
@@ -56,51 +61,53 @@ class CartProductsComparator
     }
 
     /**
+     * @param array $knownUpdates
+     */
+    public function setKnownUpdates(array $knownUpdates): void
+    {
+        $this->knownUpdates = $knownUpdates;
+    }
+
+    /**
      * Returns a list of products that were strictly updated (not created) compared to the state of the cart
      * when this object was created, it removes the already known modified products provided as argument.
      *
-     * @param CartProductUpdate[] $knownUpdates
-     *
      * @return CartProductUpdate[]
      */
-    public function getUpdatedProducts(array $knownUpdates = []): array
+    public function getUpdatedProducts(): array
     {
         $newProducts = $this->cart->getProducts(true);
         $allUpdateProducts = $this->getAllUpdatedProducts($newProducts);
 
-        return $this->filterKnownUpdates($allUpdateProducts, $knownUpdates);
+        return $this->filterKnownUpdates($allUpdateProducts);
     }
 
     /**
      * Returns a list of products that were strictly created (not updated) compared to the state of the cart
      * when this object was created, it removes the already known modified products provided as argument.
      *
-     * @param CartProductUpdate[] $knownUpdates
-     *
      * @return CartProductUpdate[]
      */
-    public function getAdditionalProducts(array $knownUpdates = []): array
+    public function getAdditionalProducts(): array
     {
         $newProducts = $this->cart->getProducts(true);
         $allAdditionalProducts = $this->getAllAdditionalProducts($newProducts);
 
-        return $this->filterKnownUpdates($allAdditionalProducts, $knownUpdates);
+        return $this->filterKnownUpdates($allAdditionalProducts);
     }
 
     /**
      * Returns a list of products that were modified (created and/or updated) compared to the state of the cart
      * when this object was created, it removes the already known modified products provided as argument.
      *
-     * @param CartProductUpdate[] $knownUpdates
-     *
      * @return CartProductUpdate[]
      */
-    public function getModifiedProducts(array $knownUpdates = []): array
+    public function getModifiedProducts(): array
     {
         $newProducts = $this->cart->getProducts(true);
         $modifiedProducts = array_merge($this->getAllUpdatedProducts($newProducts), $this->getAllAdditionalProducts($newProducts));
 
-        return $this->filterKnownUpdates($modifiedProducts, $knownUpdates);
+        return $this->filterKnownUpdates($modifiedProducts);
     }
 
     /**
@@ -165,15 +172,14 @@ class CartProductsComparator
 
     /**
      * @param CartProductUpdate[] $updates
-     * @param CartProductUpdate[] $knownUpdates
      *
      * @return CartProductUpdate[]
      */
-    private function filterKnownUpdates(array $updates, array $knownUpdates): array
+    private function filterKnownUpdates(array $updates): array
     {
         $filteredUpdates = [];
         foreach ($updates as $updateProduct) {
-            foreach ($knownUpdates as $knownUpdate) {
+            foreach ($this->knownUpdates as $knownUpdate) {
                 if ($knownUpdate->productMatches($updateProduct)) {
                     $updateProduct->setDeltaQuantity(
                         $updateProduct->getDeltaQuantity() - $knownUpdate->getDeltaQuantity()
