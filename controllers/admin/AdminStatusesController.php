@@ -605,12 +605,12 @@ class AdminStatusesControllerCore extends AdminController
             $langIds = Language::getIDs(false);
 
             foreach ($langIds as $id_lang) {
-                $count = OrderState::countByLocalizedName(
+                $exists = OrderState::existsLocalizedNameInDatabase(
                     (string) Tools::getValue('name_' . $id_lang),
                     (int) $id_lang,
                     Tools::getIsset('id_order_state') ? (int) Tools::getValue('id_order_state') : null
                 );
-                if ($count) {
+                if ($exists) {
                     $this->errors[] = $this->trans('This name already exists.', [], 'Admin.Design.Notification');
                     break;
                 }
