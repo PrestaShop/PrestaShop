@@ -53,7 +53,7 @@ abstract class AbstractSupplierOptionsHandler
      * @param ProductId $productId
      * @param CombinationId|null $combinationId
      *
-     * @return ProductSupplierInfo[]
+     * @return array<int, ProductSupplierInfo>
      */
     protected function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
     {

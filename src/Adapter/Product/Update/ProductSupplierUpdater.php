@@ -78,9 +78,9 @@ class ProductSupplierUpdater
     /**
      * @param ProductId $productId
      * @param SupplierId $defaultSupplierId
-     * @param ProductSupplier[] $productSuppliers
+     * @param array<int, ProductSupplier> $productSuppliers
      *
-     * @return ProductSupplierId[]
+     * @return array<int, ProductSupplierId>
      */
     public function setProductSuppliers(
         ProductId $productId,
@@ -96,9 +96,9 @@ class ProductSupplierUpdater
     /**
      * @param ProductId $productId
      * @param CombinationId $combinationId
-     * @param ProductSupplier[] $productSuppliers
+     * @param array<int, ProductSupplier> $productSuppliers
      *
-     * @return ProductSupplierId[]
+     * @return array<int, ProductSupplierId>
      */
     public function setCombinationSuppliers(
         ProductId $productId,
@@ -134,7 +134,7 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductId $productId
-     * @param ProductSupplier[] $productSuppliers
+     * @param array<int, ProductSupplier> $productSuppliers
      * @param CombinationId|null $combinationId
      */
     private function persist(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
@@ -242,17 +242,12 @@ class ProductSupplierUpdater
      * @param ProductId $productId
      * @param CombinationId|null $combinationId
      *
-     * @return ProductSupplierId[]
+     * @return array<int, ProductSupplierId>
      */
     private function getCurrentProductSupplierIds(ProductId $productId, ?CombinationId $combinationId = null): array
     {
-        $existingProductSuppliers = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
-
-        $ids = [];
-        foreach ($existingProductSuppliers as $currentSupplier) {
-            $ids[] = new ProductSupplierId((int) $currentSupplier['id_product_supplier']);
-        }
-
-        return $ids;
+        return array_map(function (array $currentSupplier): ProductSupplierId {
+            return new ProductSupplierId((int) $currentSupplier['id_product_supplier']);
+        }, $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId));
     }
 }

@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombination
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext

@@ -51,7 +51,7 @@ class SetCombinationSuppliersCommand
 
     /**
      * @param int $combinationId
-     * @param array<string, string|int|null> $combinationSuppliers
+     * @param array<int, array<string, string|int|null>> $combinationSuppliers
      */
     public function __construct(
         int $combinationId,
@@ -78,7 +78,7 @@ class SetCombinationSuppliersCommand
     }
 
     /**
-     * @param array<string, string|int|null> $productSuppliers
+     * @param array<int, array<string, string|int|null>> $productSuppliers
      */
     private function setCombinationSuppliers(array $productSuppliers): void
     {
