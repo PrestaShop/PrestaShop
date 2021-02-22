@@ -142,6 +142,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'price_tax_included' => $productData['price']['price_tax_included'],
                 'tax_rules_group_id' => $productData['price']['tax_rules_group_id'],
             ],
+            'stock' => [
+                'quantity' => $productData['stock']['quantity'],
+            ],
         ];
 
         return $productData;
