@@ -73,6 +73,11 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
     And combination "product1SWhite" should not have any suppliers assigned
+    And combination "product1SBlack" should not have any suppliers assigned
+    And combination "product1Blue" should not have any suppliers assigned
+    And combination "product1MWhite" should not have any suppliers assigned
+    And combination "product1MBlack" should not have any suppliers assigned
+    And combination "product1MBlue" should not have any suppliers assigned
     When I set following suppliers for combination "product1SWhite":
       | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
@@ -83,6 +88,11 @@ Feature: Update product combination suppliers in Back Office (BO)
       | sup white shirt S 1            | USD      | 10                 |
       | sup S2                         | USD      | 0                  |
       | sup S3                         | USD      | 5.5                |
+    And combination "product1SBlack" should not have any suppliers assigned
+    And combination "product1Blue" should not have any suppliers assigned
+    And combination "product1MWhite" should not have any suppliers assigned
+    And combination "product1MBlack" should not have any suppliers assigned
+    And combination "product1MBlue" should not have any suppliers assigned
 
   Scenario: Remove all associated combination suppliers
     Given product product1 type should be combination
