@@ -164,15 +164,17 @@ class OrderStateCore extends ObjectModel
     }
 
     /**
+     * Check if a localized name in database for a specific lang (and excluding some IDs)
+     *
      * @param string $name
      * @param int $idLang
      * @param int|null $excludeIdOrderState ID of the order state excluded for the search
      *
-     * @return int
+     * @return bool
      */
-    public static function countByLocalizedName(string $name, int $idLang, ?int $excludeIdOrderState): int
+    public static function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderState): bool
     {
-        return (int) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        return (bool) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT COUNT(*) AS count' .
             ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
             ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .
