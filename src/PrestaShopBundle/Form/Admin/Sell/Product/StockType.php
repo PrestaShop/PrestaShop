@@ -104,6 +104,7 @@ class StockType extends TranslatorAwareType
                     'Admin.Catalog.Feature'
                 ),
             ])
+            ->add('virtual_product_file', VirtualProductFileType::class)
             ->add('pack_stock_type', ChoiceType::class, [
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
             ])
