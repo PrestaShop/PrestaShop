@@ -51,14 +51,16 @@ class ShortcutType extends TranslatorAwareType
             return;
         }
 
-        $builder->add('tab_button', IconButtonType::class, [
+        $options = [
             'label' => $options['target_tab_name'],
             'icon' => 'open_in_new',
             'attr' => [
-                'class' => 'btn btn-link px-0',
-                'href' => '#' . $options['target_tab'],
+                'class' => 'btn btn-link px-0 tab-link',
+                'data-target-tab' => $options['target_tab'],
             ],
-        ]);
+        ];
+
+        $builder->add('tab_button', IconButtonType::class, $options);
     }
 
     /**
