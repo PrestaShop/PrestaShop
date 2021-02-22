@@ -110,32 +110,32 @@ class OrderShippingAddressForViewing
      */
     public function __construct(
         int $addressId,
-        string $firstName,
-        string $lastName,
-        string $companyName,
-        string $address1,
-        string $address2,
-        string $stateName,
-        string $cityName,
-        string $countryName,
-        string $postCode,
-        string $phone,
-        string $phoneMobile,
+        ?string $firstName,
+        ?string $lastName,
+        ?string $companyName,
+        ?string $address1,
+        ?string $address2,
+        ?string $stateName,
+        ?string $cityName,
+        ?string $countryName,
+        ?string $postCode,
+        ?string $phone,
+        ?string $phoneMobile,
         ?string $vatNumber = null
     ) {
-        $this->addressId = $addressId;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->companyName = $companyName;
-        $this->vatNumber = $vatNumber;
-        $this->address1 = $address1;
-        $this->address2 = $address2;
-        $this->stateName = $stateName;
-        $this->cityName = $cityName;
-        $this->countryName = $countryName;
-        $this->postCode = $postCode;
-        $this->phoneNumber = $phone;
-        $this->mobilePhoneNumber = $phoneMobile;
+        $this->addressId	 = $addressId;
+        $this->firstName	 = strval($firstName);
+	$this->lastName		 = strval($lastName);
+	$this->companyName	 = strval($companyName);
+	$this->vatNumber	 = strval($vatNumber);
+	$this->address1		 = strval($address1);
+	$this->address2		 = strval($address2);
+	$this->stateName	 = strval($stateName);
+	$this->cityName		 = strval($cityName);
+	$this->countryName	 = strval($countryName);
+	$this->postCode		 = strval($postCode);
+	$this->phoneNumber	 = strval($phone);
+	$this->mobilePhoneNumber = strval($phoneMobile);
     }
 
     /**
