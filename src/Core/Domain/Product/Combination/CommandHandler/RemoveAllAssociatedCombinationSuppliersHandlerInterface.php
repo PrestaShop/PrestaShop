@@ -24,38 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 
 /**
- * Removes all product suppliers for specified product without combinations
- *
- * @see RemoveAllAssociatedProductAttachmentsHandlerInterface
+ * Defines contract to handle @see RemoveAllAssociatedCombinationSuppliersCommand
  */
-class RemoveAllAssociatedProductSuppliersCommand
+interface RemoveAllAssociatedCombinationSuppliersHandlerInterface
 {
     /**
-     * @var ProductId
+     * @param RemoveAllAssociatedCombinationSuppliersCommand $command
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
+    public function handle(RemoveAllAssociatedCombinationSuppliersCommand $command): void;
 }

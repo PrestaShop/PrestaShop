@@ -111,6 +111,28 @@ class ProductSupplierUpdater
     }
 
     /**
+     * Removes associated product suppliers
+     * If combinationId is provided, then it only removes product suppliers associated to that combination
+     * If combinationId is null, then it only removes product suppliers that are not associated to any combination
+     *
+     * @param ProductId $productId
+     * @param CombinationId|null $combinationId
+     */
+    public function removeAll(ProductId $productId, ?CombinationId $combinationId = null): void
+    {
+        $product = $this->productRepository->get($productId);
+        $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
+
+        $productSupplierIds = [];
+        foreach ($productSuppliersInfo as $productSupplier) {
+            $productSupplierIds[] = new ProductSupplierId((int) $productSupplier['id_product_supplier']);
+        }
+
+        $this->productSupplierRepository->bulkDelete($productSupplierIds);
+        $this->resetDefaultSupplier($product);
+    }
+
+    /**
      * @param ProductId $productId
      * @param ProductSupplier[] $productSuppliers
      * @param CombinationId|null $combinationId

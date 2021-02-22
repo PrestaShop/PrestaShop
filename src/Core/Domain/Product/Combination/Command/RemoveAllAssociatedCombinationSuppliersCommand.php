@@ -23,39 +23,39 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 /**
- * Removes all product suppliers for specified product without combinations
+ * Removes associated product suppliers related to certain combination
  *
- * @see RemoveAllAssociatedProductAttachmentsHandlerInterface
+ * @see RemoveAllAssociatedCombinationSuppliersHandlerInterface
  */
-class RemoveAllAssociatedProductSuppliersCommand
+class RemoveAllAssociatedCombinationSuppliersCommand
 {
     /**
-     * @var ProductId
+     * @var CombinationId
      */
-    private $productId;
+    private $combinationId;
 
     /**
-     * @param int $productId
+     * @param int $combinationId
      */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
+    public function __construct(
+        int $combinationId
+    ) {
+        $this->combinationId = new CombinationId($combinationId);
     }
 
     /**
-     * @return ProductId
+     * @return CombinationId
      */
-    public function getProductId(): ProductId
+    public function getCombinationId(): CombinationId
     {
-        return $this->productId;
+        return $this->combinationId;
     }
 }

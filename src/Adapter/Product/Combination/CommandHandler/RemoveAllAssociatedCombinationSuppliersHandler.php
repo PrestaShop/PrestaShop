@@ -23,39 +23,51 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles @see RemoveAllAssociatedProductSuppliersCommand using legacy object model
+ * Removes product suppliers associated to a certain combination using legacy object model
  */
-final class RemoveAllAssociatedProductSuppliersHandler implements RemoveAllAssociatedProductSuppliersHandlerInterface
+final class RemoveAllAssociatedCombinationSuppliersHandler implements RemoveAllAssociatedCombinationSuppliersHandlerInterface
 {
+    /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
     /**
      * @var ProductSupplierUpdater
      */
     private $productSupplierUpdater;
 
     /**
+     * @param CombinationRepository $combinationRepository
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
+        CombinationRepository $combinationRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
         $this->productSupplierUpdater = $productSupplierUpdater;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(RemoveAllAssociatedProductSuppliersCommand $command): void
+    public function handle(RemoveAllAssociatedCombinationSuppliersCommand $command): void
     {
-        $this->productSupplierUpdater->removeAll($command->getProductId());
+        $combination = $this->combinationRepository->get($command->getCombinationId());
+        $productId = new ProductId((int) $combination->id_product);
+
+        $this->productSupplierUpdater->removeAll($productId, $command->getCombinationId());
     }
 }
