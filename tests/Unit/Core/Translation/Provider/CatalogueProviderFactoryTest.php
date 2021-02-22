@@ -81,8 +81,7 @@ class CatalogueProviderFactoryTest extends TestCase
             $filesystem,
             'themesDirectory',
             'modulesDirectory',
-            'translationsDirectory',
-            'resourceDirectory'
+            'translationsDirectory'
         );
     }
 
@@ -99,13 +98,13 @@ class CatalogueProviderFactoryTest extends TestCase
      *
      * @throws UnexpectedTranslationTypeException
      */
-    public function testGetProvider($providerDefinition, $providerClass)
+    public function testGetProvider($providerDefinition, $providerClass): void
     {
         $provider = $this->factory->getProvider($providerDefinition);
         $this->assertInstanceOf($providerClass, $provider);
     }
 
-    public function getProviderData()
+    public function getProviderData(): iterable
     {
         yield [
             new BackofficeProviderDefinition(),

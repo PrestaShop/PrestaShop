@@ -64,7 +64,7 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
-    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory()
+    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         $providerDefinition = new MailsProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
@@ -96,7 +96,7 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a default catalogue from the `translations` default directory
      */
-    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
+    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         $providerDefinition = new MailsProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
@@ -125,7 +125,7 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
         $this->assertSame('Log: You have a new alert from your shop', $catalogue->get('Log: You have a new alert from your shop', 'ShopNotificationsWarning'));
     }
 
-    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase()
+    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
     {
         $databaseContent = [
             [
@@ -167,7 +167,7 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
         $this->assertEmpty($messages);
     }
 
-    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase()
+    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase(): void
     {
         $databaseContent = [
             [

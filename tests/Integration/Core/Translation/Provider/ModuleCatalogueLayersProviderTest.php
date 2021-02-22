@@ -30,7 +30,10 @@ namespace Tests\Integration\Core\Translation\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ModuleProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Provider\ModuleCatalogueLayersProvider;
+use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
+use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
+use PrestaShopBundle\Translation\Loader\LegacyFileReader;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -73,7 +76,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
          * - ShopNotificationsWarning.fr-FR.xlf
          */
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
-        $this->modulesDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
+        $this->modulesDir = self::$kernel->getContainer()->getParameter('translations_modules_dir');
 
         $this->legacyModuleExtractor = $this->createMock(LegacyModuleExtractorInterface::class);
         $this->legacyFileLoader = $this->createMock(LoaderInterface::class);
@@ -82,7 +85,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
-    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory()
+    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         $providerDefinition = new ModuleProviderDefinition('Checkpayment');
         $provider = new ModuleCatalogueLayersProvider(
@@ -91,7 +94,6 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $this->legacyFileLoader,
             $this->modulesDir,
             $this->translationsDir,
-            $this->modulesDir,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -119,9 +121,67 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
     }
 
     /**
+     * Test it loads a XLIFF catalogue from the locale's `translations` directory
+     */
+    public function testItLoadsCatalogueFromXliffWhenLocaleDirectoryNotFound(): void
+    {
+        $converter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
+        $legacyFileReader = new LegacyFileReader($converter);
+        $legacyFileLoader = new LegacyFileLoader($legacyFileReader);
+
+        $phpExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.php');
+        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty.legacy');
+        $twigExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.twig');
+        $legacyModuleExtractor = new LegacyModuleExtractor(
+            $phpExtractor,
+            $smartyExtractor,
+            $twigExtractor,
+            $this->modulesDir
+        );
+
+        $providerDefinition = new ModuleProviderDefinition('translationtest');
+        $provider = new ModuleCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
+            $legacyModuleExtractor,
+            $legacyFileLoader,
+            $this->modulesDir,
+            $this->translationsDir,
+            $providerDefinition->getModuleName(),
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains()
+        );
+
+        // load catalogue from translations/fr-FR
+        $catalogue = $provider->getFileTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'ModulesTranslationtestAdmin',
+            'ModulesTranslationtestSomefile.with-things',
+            'ModulesTranslationtestTranslationtest',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['ModulesTranslationtestAdmin']);
+        $this->assertCount(1, $messages['ModulesTranslationtestSomefile.with-things']);
+        $this->assertCount(1, $messages['ModulesTranslationtestTranslationtest']);
+
+        $this->assertSame('Bonjour le monde', $catalogue->get('Hello World', 'ModulesTranslationtestTranslationtest'));
+        $this->assertSame('Le template Smarty', $catalogue->get('Smarty template', 'ModulesTranslationtestSomefile.with-things'));
+        $this->assertSame('Contrôleur moderne', $catalogue->get('Modern controller', 'ModulesTranslationtestAdmin'));
+    }
+
+    /**
      * Test it loads a default catalogue from the `translations` default directory
      */
-    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
+    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         $providerDefinition = new ModuleProviderDefinition('Checkpayment');
         $provider = new ModuleCatalogueLayersProvider(
@@ -130,7 +190,6 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $this->legacyFileLoader,
             $this->modulesDir,
             $this->translationsDir,
-            $this->modulesDir,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -156,7 +215,60 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
         $this->assertSame('', $catalogue->get('No currency has been set for this module.', 'ModulesCheckpaymentAdmin'));
     }
 
-    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase()
+    /**
+     * Test it loads a default catalogue from the `translations` default directory
+     */
+    public function testItBuildsCatalogueFromLegacyWhenDefaultCatalogueNotFound(): void
+    {
+        $phpExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.php');
+        $smartyExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.smarty.legacy');
+        $twigExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.twig');
+        $legacyModuleExtractor = new LegacyModuleExtractor(
+            $phpExtractor,
+            $smartyExtractor,
+            $twigExtractor,
+            $this->modulesDir
+        );
+        $providerDefinition = new ModuleProviderDefinition('translationtest');
+        $provider = new ModuleCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
+            $legacyModuleExtractor,
+            $this->legacyFileLoader,
+            $this->modulesDir,
+            $this->translationsDir,
+            $providerDefinition->getModuleName(),
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains()
+        );
+
+        // load catalogue from translations/default
+        $catalogue = $provider->getDefaultCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'ModulesTranslationtestAdmin',
+            'ModulesTranslationtestSomefile.with-things',
+            'ModulesTranslationtestTranslationtest',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['ModulesTranslationtestAdmin']);
+        $this->assertCount(1, $messages['ModulesTranslationtestSomefile.with-things']);
+        $this->assertCount(3, $messages['ModulesTranslationtestTranslationtest']);
+
+        $this->assertSame('Hello World', $catalogue->get('Hello World', 'ModulesTranslationtestTranslationtest'));
+        $this->assertSame('Smarty template', $catalogue->get('Smarty template', 'ModulesTranslationtestSomefile.with-things'));
+        $this->assertSame('Modern controller', $catalogue->get('Modern controller', 'ModulesTranslationtestAdmin'));
+    }
+
+    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
     {
         $databaseContent = [
             [
@@ -182,7 +294,6 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $this->legacyFileLoader,
             $this->modulesDir,
             $this->translationsDir,
-            $this->modulesDir,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -203,7 +314,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
         $this->assertEmpty($messages);
     }
 
-    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase()
+    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase(): void
     {
         $databaseContent = [
             [
@@ -243,7 +354,6 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $this->legacyFileLoader,
             $this->modulesDir,
             $this->translationsDir,
-            $this->modulesDir,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -268,8 +378,4 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
         $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'ModulesCheckpaymentAdmin'));
         $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ModulesCheckpaymentShop'));
     }
-
-    /*
-     * @TODO: Test fallbacks to load legacy translations
-     */
 }

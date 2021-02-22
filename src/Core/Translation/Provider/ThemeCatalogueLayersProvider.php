@@ -118,7 +118,9 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
         bool $refreshCache = false
     ): MessageCatalogue {
         // Extracts wordings from the theme's templates
-        return $this->themeExtractor->extract($this->theme, $locale, $refreshCache);
+        $catalogue = $this->themeExtractor->extract($this->theme, $locale, $refreshCache);
+
+        return $this->normalize($catalogue);
     }
 
     /**
@@ -194,5 +196,41 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
         $this->filesystem->mkdir($resourceDirectory);
 
         return $resourceDirectory;
+    }
+
+    /**
+     * Normalizes domains in a catalogue by removing dots
+     *
+     * @param MessageCatalogue $catalogue
+     *
+     * @return MessageCatalogue
+     */
+    private function normalize(MessageCatalogue $catalogue): MessageCatalogue
+    {
+        $newCatalogue = new MessageCatalogue($catalogue->getLocale());
+
+        foreach ($catalogue->all() as $domain => $messages) {
+            $newDomain = $this->normalizeDomain($domain);
+            $newCatalogue->add($messages, $newDomain);
+        }
+
+        foreach ($catalogue->getMetadata('', '') as $domain => $metadata) {
+            $newDomain = $this->normalizeDomain($domain);
+            foreach ($metadata as $key => $value) {
+                $newCatalogue->setMetadata($key, $value, $newDomain);
+            }
+        }
+
+        return $newCatalogue;
+    }
+
+    /**
+     * @param string $domain
+     *
+     * @return string
+     */
+    private function normalizeDomain(string $domain): string
+    {
+        return strtr($domain, ['.' => '']);
     }
 }
