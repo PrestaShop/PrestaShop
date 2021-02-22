@@ -355,8 +355,6 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
         $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id));
 
         return new ProductStockInformation(
-            (bool) $product->advanced_stock_management,
-            (bool) $stockAvailable->depends_on_stock,
             (int) $product->pack_stock_type,
             (int) $stockAvailable->out_of_stock,
             (int) $stockAvailable->quantity,
