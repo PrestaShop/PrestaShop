@@ -30,6 +30,7 @@ import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import ProductMap from '@pages/product/product-map';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
+import NavbarHandler from '@components/navbar-handler';
 
 const {$} = window;
 
@@ -61,6 +62,8 @@ $(() => {
     },
     $('#product_preview').data('seo-url'),
   );
+
+  new NavbarHandler(ProductMap.navigationBar);
 
   // Init the product/category search field for redirection target
   const $redirectTypeInput = $(ProductMap.redirectOption.typeInput);
