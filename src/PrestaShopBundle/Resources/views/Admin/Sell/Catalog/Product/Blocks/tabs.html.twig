@@ -42,7 +42,14 @@
     </li>
     <li id="stock-tab-nav" class="nav-item{% if not isStockTabValid %} has-error{% endif %}">
       <a href="#stock-tab" role="tab" data-toggle="tab" class="nav-link">
-        {{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}
+        {% set productType = productForEditing ? productForEditing.basicInformation.type.value : 'standard' %}
+        {% if productType == 'virtual' %}
+          {{ 'Virtual product'|trans({}, 'Admin.Catalog.Feature') }}
+        {% elseif productType == 'combination' %}
+          {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
+        {% else %}
+          {{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}
+        {% endif %}
       </a>
     </li>
     <li id="pricing-tab-nav" class="nav-item{% if not isPriceTabValid %} has-error{% endif %}">

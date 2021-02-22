@@ -47,7 +47,8 @@
   <div class="col-xxl-10">
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
-        'productForm': productForm
+        'productForm': productForm,
+        'productForEditing': productForEditing
       }) }}
     {% endblock %}
 
@@ -107,7 +108,8 @@
 
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
     'productForm': productForm,
-    'editable': editable
+    'editable': editable,
+    'productId': productForEditing ? productForEditing.productId : null,
   }) }}
 
   {{ form_end(productForm) }}
