@@ -28,8 +28,7 @@ const baseContext = 'functional_FO_login_passwordReminder';
 let browserContext;
 let page;
 let newMail;
-const {smtpServer} = global.maildevConfig;
-const {smtpPort} = global.maildevConfig;
+const {smtpServer, smtpPort} = global.maildevConfig;
 const testMailSubject = 'Test message -- Prestashop';
 const resetPasswordMailSubject = 'Password query confirmation';
 
