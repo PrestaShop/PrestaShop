@@ -27,14 +27,14 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
 use PrestaShopBundle\Form\Admin\Type\EmailType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class TestEmailSendingType is responsible for building form type used to send testing emails.
  */
-class TestEmailSendingType extends AbstractType
+class TestEmailSendingType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -42,7 +42,9 @@ class TestEmailSendingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('send_email_to', EmailType::class)
+            ->add('send_email_to', EmailType::class, [
+                'label' => $this->trans('Send a test email to', 'Admin.Advparameters.Feature'),
+            ])
             ->add('mail_method', HiddenType::class)
             ->add('smtp_server', HiddenType::class)
             ->add('smtp_username', HiddenType::class)
