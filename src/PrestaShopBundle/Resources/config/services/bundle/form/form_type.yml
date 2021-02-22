@@ -1273,6 +1273,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.shortcut.stock_shortcut_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.shipping_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
         parent: 'form.type.translatable.aware'
