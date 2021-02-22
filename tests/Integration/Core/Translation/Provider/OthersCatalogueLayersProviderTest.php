@@ -64,7 +64,7 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
-    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory()
+    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         $providerDefinition = new OthersProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
@@ -96,7 +96,7 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a default catalogue from the `translations` default directory
      */
-    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
+    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         $providerDefinition = new OthersProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
@@ -125,7 +125,7 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
         $this->assertSame('Attributes generator', $catalogue->get('Attributes generator', 'ShopNotificationsWarning'));
     }
 
-    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase()
+    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
     {
         $databaseContent = [
             [
@@ -167,7 +167,7 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
         $this->assertEmpty($messages);
     }
 
-    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase()
+    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase(): void
     {
         $databaseContent = [
             [

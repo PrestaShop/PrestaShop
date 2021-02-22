@@ -52,28 +52,11 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
-    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory()
+    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
-        $databaseContent = [
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Uninstall',
-                'translation' => 'Traduction customisée',
-                'domain' => 'AdminActions',
-                'theme' => null,
-            ],
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Some made up text',
-                'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
-                'theme' => 'classic',
-            ],
-        ];
-
         $providerDefinition = new BackofficeProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -104,28 +87,11 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
     /**
      * Test it loads a default catalogue from the `translations` default directory
      */
-    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
+    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
-        $databaseContent = [
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Uninstall',
-                'translation' => 'Traduction customisée',
-                'domain' => 'AdminActions',
-                'theme' => null,
-            ],
-            [
-                'lang' => 'fr-FR',
-                'key' => 'Some made up text',
-                'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
-                'theme' => 'classic',
-            ],
-        ];
-
         $providerDefinition = new BackofficeProviderDefinition();
         $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
@@ -151,7 +117,7 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
         $this->assertSame('', $catalogue->get('Uninstall', 'AdminActions'));
     }
 
-    public function testItLoadsCustomizedTranslationsFromDatabase()
+    public function testItLoadsCustomizedTranslationsFromDatabase(): void
     {
         $databaseContent = [
             [
