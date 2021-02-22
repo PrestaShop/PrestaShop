@@ -34,8 +34,8 @@ use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\Form
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
-use PrestaShopBundle\Form\Exception\DataProviderError;
-use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -161,7 +161,7 @@ class AdministrationController extends FrameworkBundleAdminController
             try {
                 $formHandler->save($data);
             } catch (DataProviderException $e) {
-                $this->flashErrors($this->getErrorMessages($e->getDataProviderErrors()));
+                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
 
                 return $this->redirectToRoute('admin_administration');
             }
@@ -197,9 +197,9 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @var DataProviderErrorCollection
+     * @var InvalidConfigurationDataErrorCollection
      */
-    private function getErrorMessages(DataProviderErrorCollection $errors): array
+    private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
     {
         $messages = [];
 
@@ -211,11 +211,14 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param DataProviderError $error
+     * @param InvalidConfigurationDataError $error
      *
      * @return string
+     *
+     * @throws ErrorMessageNotFoundException
+     * @throws FieldNotFoundException
      */
-    private function getErrorMessage(DataProviderError $error): string
+    private function getErrorMessage(InvalidConfigurationDataError $error): string
     {
         switch ($error->getErrorCode()) {
             case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:

@@ -31,8 +31,8 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administratio
 use Cookie;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShopBundle\Form\Exception\DataProviderError;
-use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 
 /**
@@ -99,32 +99,32 @@ final class GeneralDataProvider implements FormDataProviderInterface
      */
     private function validate(array $data): void
     {
-        $errors = new DataProviderErrorCollection();
+        $errors = new InvalidConfigurationDataErrorCollection();
         if (isset($data[GeneralType::FIELD_FRONT_COOKIE_LIFETIME])) {
             $frontOfficeLifeTimeCookie = $data[GeneralType::FIELD_FRONT_COOKIE_LIFETIME];
             if (!is_numeric($frontOfficeLifeTimeCookie) || $frontOfficeLifeTimeCookie < 0) {
-                $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
+                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
             }
 
             if ($frontOfficeLifeTimeCookie > self::MAX_COOKIE_VALUE) {
-                $errors->add(new DataProviderError(FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
+                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_FRONT_COOKIE_LIFETIME));
             }
         }
 
         if (isset($data[GeneralType::FIELD_BACK_COOKIE_LIFETIME])) {
             $backOfficeLifeTimeCookie = $data[GeneralType::FIELD_BACK_COOKIE_LIFETIME];
             if (!is_numeric($backOfficeLifeTimeCookie) || $backOfficeLifeTimeCookie < 0) {
-                $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
+                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
             }
 
             if ($backOfficeLifeTimeCookie > self::MAX_COOKIE_VALUE) {
-                $errors->add(new DataProviderError(FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
+                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, GeneralType::FIELD_BACK_COOKIE_LIFETIME));
             }
         }
 
         if (isset($data[GeneralType::FIELD_COOKIE_SAMESITE])) {
             if (!$this->validateSameSite($data[GeneralType::FIELD_COOKIE_SAMESITE])) {
-                $errors->add(new DataProviderError(FormDataProvider::ERROR_COOKIE_SAMESITE_NONE, GeneralType::FIELD_COOKIE_SAMESITE));
+                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_COOKIE_SAMESITE_NONE, GeneralType::FIELD_COOKIE_SAMESITE));
             }
         }
 

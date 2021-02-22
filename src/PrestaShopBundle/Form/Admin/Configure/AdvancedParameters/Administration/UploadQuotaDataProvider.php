@@ -30,8 +30,8 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administratio
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShopBundle\Form\Exception\DataProviderError;
-use PrestaShopBundle\Form\Exception\DataProviderErrorCollection;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 
 /**
@@ -76,21 +76,21 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
      */
     private function validate(array $data): void
     {
-        $errors = new DataProviderErrorCollection();
+        $errors = new InvalidConfigurationDataErrorCollection();
         $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
         $maxSizeDownloadableProduct = $data[UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE];
         $maxSizeProductImage = $data[UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE];
 
         if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0) {
-            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
+            $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
         }
 
         if (!is_numeric($maxSizeDownloadableProduct) || $maxSizeDownloadableProduct < 0) {
-            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
+            $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
         }
 
         if (!is_numeric($maxSizeProductImage) || $maxSizeProductImage < 0) {
-            $errors->add(new DataProviderError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
+            $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
         }
 
         if (!$errors->isEmpty()) {
