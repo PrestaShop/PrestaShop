@@ -553,6 +553,11 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             \Tools::ps_round($product['total'], $currency->precision),
             $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             $this->getProductCustomizedData($cart, $product),
+            Product::getQuantity(
+                (int) $product['id_product'],
+                isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : null
+            ),
+            Product::isAvailableWhenOutOfStock((int) $product['out_of_stock']) !== 0,
             !empty($product['is_gift'])
         );
     }
