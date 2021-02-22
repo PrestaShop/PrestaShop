@@ -110,17 +110,17 @@ class OrderInvoiceAddressForViewing
      */
     public function __construct(
         int $addressId,
-        string $firstName,
-        string $lastName,
-        string $companyName,
-        string $address1,
-        string $address2,
-        string $stateName,
-        string $cityName,
-        string $countryName,
-        string $postCode,
-        string $phone,
-        string $phoneMobile,
+        ?string $firstName,
+        ?string $lastName,
+        ?string $companyName,
+        ?string $address1,
+        ?string $address2,
+        ?string $stateName,
+        ?string $cityName,
+        ?string $countryName,
+        ?string $postCode,
+        ?string $phone,
+        ?string $phoneMobile,
         ?string $vatNumber = null
     ) {
         $this->addressId = $addressId;
