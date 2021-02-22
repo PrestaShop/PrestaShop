@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use Exception;
 
 /**
  * Class FieldNotFoundException
  *
  * Thrown when field for error message is not found
  */
-class FieldNotFoundException extends DomainException
+class FieldNotFoundException extends Exception
 {
 }
