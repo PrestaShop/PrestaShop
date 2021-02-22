@@ -143,6 +143,7 @@ class StockType extends TranslatorAwareType
                     ]
                 ),
             ])
+            ->add('virtual_product_file', VirtualProductFileType::class)
             ->add('pack_stock_type', ChoiceType::class, [
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
             ])
