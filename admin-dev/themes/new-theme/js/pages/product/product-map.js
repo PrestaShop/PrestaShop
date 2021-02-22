@@ -29,6 +29,7 @@ const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliers
 export default {
   productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
+  navigationBar: '#form-nav',
   suppliers: {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',
