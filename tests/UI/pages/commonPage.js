@@ -173,6 +173,7 @@ module.exports = class CommonPage {
     await this.waitForSelectorAndClick(page, selector);
     await page.click(selector, {clickCount: 3});
     // Delete text from input before typing
+    await page.waitForTimeout(100);
     await page.press(selector, 'Delete');
     if (value !== null) {
       await page.type(selector, value.toString());
@@ -357,6 +358,21 @@ module.exports = class CommonPage {
   async uploadFile(page, selector, filePath) {
     const input = await page.$(selector);
     await input.setInputFiles(filePath);
+  }
+
+  /**
+   * Upload image path in all type
+   * @param page
+   * @param selector
+   * @param filePath
+   * @returns {Promise<void>}
+   */
+  async uploadFilePath(page, selector, filePath) {
+    // Set value when fileChooser is open
+    page.once('filechooser', async (fileChooser) => {
+      await fileChooser.setFiles(filePath);
+    });
+    await page.click(selector);
   }
 
   /**

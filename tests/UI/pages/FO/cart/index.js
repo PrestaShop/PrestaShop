@@ -10,9 +10,16 @@ class Cart extends FOBasePage {
     // Selectors for cart page
     this.cartGridBlock = 'div.cart-grid';
     this.productItem = number => `#main li:nth-of-type(${number})`;
-    this.productName = number => `${this.productItem(number)} div.product-line-info > a`;
-    this.productPrice = number => `${this.productItem(number)} div.current-price > span`;
+    this.productName = number => `${this.productItem(number)} div.product-line-info a`;
+    this.productRegularPrice = number => `${this.productItem(number)} span.regular-price`;
+    this.productDiscountPercentage = number => `${this.productItem(number)} span.discount-percentage`;
+    this.productPrice = number => `${this.productItem(number)} div.current-price span`;
+    this.productTotalPrice = number => `${this.productItem(number)} span.product-price`;
     this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
+    this.productSize = number => `${this.productItem(number)} div.product-line-info.size span.value`;
+    this.productColor = number => `${this.productItem(number)} div.product-line-info.color span.value`;
+    this.productImage = number => `${this.productItem(number)} span.product-image img`;
+    this.deleteIcon = number => `${this.productItem(number)} .remove-from-cart`;
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
     this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
@@ -25,16 +32,34 @@ class Cart extends FOBasePage {
   }
 
   /**
-   * Get Product detail from cart (product name, price, quantity)
+   * Get Product detail from cart
    * @param page
-   * @param row, product row in cart
-   * @returns {Promise<{quantity: (number), price: (string), name: (string)}>}
+   * @param row
+   * @returns {Promise<{discountPercentage: *, image: *, quantity: number, size: *, color: *, totalPrice: *,
+   * price: number, regularPrice: number, name: *}>}
    */
   async getProductDetail(page, row) {
     return {
       name: await this.getTextContent(page, this.productName(row)),
-      price: await this.getTextContent(page, this.productPrice(row)),
+      regularPrice: parseFloat((await this.getTextContent(page, this.productRegularPrice(row))).replace('€', '')),
+      price: parseFloat((await this.getTextContent(page, this.productPrice(row))).replace('€', '')),
+      discountPercentage: await this.getTextContent(page, this.productDiscountPercentage(row)),
+      image: await this.getAttributeContent(page, this.productImage(row), 'src'),
       quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value')),
+      totalPrice: parseFloat((await this.getTextContent(page, this.productTotalPrice(row))).replace('€', '')),
+    };
+  }
+
+  /**
+   * Get product attributes
+   * @param page
+   * @param row
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getProductAttributes(page, row) {
+    return {
+      size: await this.getTextContent(page, this.productSize(row)),
+      color: await this.getTextContent(page, this.productColor(row)),
     };
   }
 
@@ -59,6 +84,16 @@ class Cart extends FOBasePage {
     await this.setValue(page, this.productQuantity(productID), quantity.toString());
     // click on price to see that its changed
     await page.click(this.productPrice(productID));
+  }
+
+  /**
+   * Delete product
+   * @param page
+   * @param productID
+   * @returns {Promise<void>}
+   */
+  async deleteProduct(page, productID) {
+    await this.waitForSelectorAndClick(page, this.deleteIcon(productID));
   }
 
   /**
