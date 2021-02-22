@@ -32,6 +32,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -133,15 +134,21 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
     {
+        $statsLink = null;
+        $productForEditing = null;
+
+        if ($productId) {
+            $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing($productId));
+            $statsLink = $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]);
+        }
+
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
-
-        $statsLink = null !== $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null;
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'productId' => $productId,
+            'productForEditing' => $productForEditing,
             'statsLink' => $statsLink,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,
