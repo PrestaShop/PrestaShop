@@ -242,12 +242,13 @@ class AdministrationController extends FrameworkBundleAdminController
                     'Admin.Advparameters.Notification'
                 );
         }
-
-        throw new ErrorMessageNotFoundException(
-            sprintf(
-                'Error message for code %s not found',
-                $error->getErrorCode()
-            )
+        return $this->trans(
+            '%s is invalid.',
+            'Admin.Notifications.Error',
+            [
+                $this->getFieldLabel($error->getFieldName()),
+                GeneralDataProvider::MAX_COOKIE_VALUE,
+            ]
         );
     }
 
