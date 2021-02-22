@@ -40,9 +40,11 @@
                 alt="{$product.name}"
               {/if}
               itemprop="image"
+              width="800"
+              height="800"
             >
           {else}
-            <img src="{$urls.no_picture_image.bySize.large_default.url}" loading="lazy" />
+            <img src="{$urls.no_picture_image.bySize.large_default.url}" loading="lazy" width="800" height="800" />
           {/if}
           <figcaption class="image-caption">
           {block name='product_description_short'}
@@ -68,6 +70,7 @@
                       {/if}
                       width="{$image.medium.width}"
                       itemprop="image"
+                      height="148"
                     >
                   </li>
                 {/foreach}
