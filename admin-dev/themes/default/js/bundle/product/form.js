@@ -791,6 +791,12 @@ var form = (function() {
       target.html(`<div class="alert alert-danger">${content}</div>`);
     }
   }
+  
+  function replaceBadLocaleCharacters() {
+    $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
+        $(this).val($(this).val().replace("−", "-"));
+    });
+  }
 
   return {
     'init': function() {
@@ -838,9 +844,7 @@ var form = (function() {
       });
 
       elem.submit(function(event) {
-        $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
-          $(this).val($(this).val().replace("−", "-"));
-        });
+        replaceBadLocaleCharacters();
         event.preventDefault();
         send();
       });
@@ -857,9 +861,7 @@ var form = (function() {
       });
 
       $('.js-btn-save').on('click', function (event) {
-        $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
-          $(this).val($(this).val().replace("−", "-"));
-        });
+        replaceBadLocaleCharacters();
         event.preventDefault();
         $('.js-spinner').css('display', 'inline-block');
         send($(this).attr('href'));
