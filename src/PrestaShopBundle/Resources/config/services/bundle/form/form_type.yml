@@ -1402,6 +1402,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.virtual_product_file_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\VirtualProductFileType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.event_listener.feature_value_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
         arguments:
