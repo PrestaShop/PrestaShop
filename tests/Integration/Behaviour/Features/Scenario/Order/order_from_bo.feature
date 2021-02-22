@@ -749,6 +749,7 @@ Feature: Order from Back Office (BO)
     And I change order "bo_order-ES" shipping address to "test-address"
     Then order "bo_order-ES" shipping address should be "test-address"
     And order "bo_order-ES" preview shipping address should have the following details:
+      # country is not translated here but should be on the develop branch (https://github.com/PrestaShop/PrestaShop/pull/19818)
       | country | United States |
     When language with iso code "en" is the default one
     And I delete language "Spanish"
