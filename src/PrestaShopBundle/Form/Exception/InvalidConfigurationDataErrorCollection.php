@@ -28,58 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Exception;
 
-class DataProviderError
+use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+
+class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
 {
-    /**
-     * @var int
-     */
-    private $errorCode;
-
-    /**
-     * @var string
-     */
-    private $fieldName;
-
-    /**
-     * @var int|null
-     */
-    private $languageId;
-
-    /**
-     * DataProviderError constructor.
-     *
-     * @param int $errorCode
-     * @param string $fieldName
-     * @param int|null $languageId
-     */
-    public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
+    protected function getType(): string
     {
-        $this->errorCode = $errorCode;
-        $this->fieldName = $fieldName;
-        $this->languageId = $languageId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getErrorCode(): int
-    {
-        return $this->errorCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFieldName(): string
-    {
-        return $this->fieldName;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getLanguageId(): ?int
-    {
-        return $this->languageId;
+        return InvalidConfigurationDataError::class;
     }
 }

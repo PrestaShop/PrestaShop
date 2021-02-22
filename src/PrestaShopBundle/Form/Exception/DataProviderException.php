@@ -34,21 +34,21 @@ use Throwable;
 class DataProviderException extends DomainException
 {
     /**
-     * @var DataProviderErrorCollection
+     * @var InvalidConfigurationDataErrorCollection
      */
-    private $dataProviderErrors;
+    private $InvalidConfigurationDataErrors;
 
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?DataProviderErrorCollection $dataProviderErrors = null)
+    public function __construct($message = '', $code = 0, Throwable $previous = null, ?InvalidConfigurationDataErrorCollection $InvalidConfigurationDataErrors = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->dataProviderErrors = $dataProviderErrors ?: new DataProviderErrorCollection();
+        $this->InvalidConfigurationDataErrors = $InvalidConfigurationDataErrors ?: new InvalidConfigurationDataErrorCollection();
     }
 
     /**
-     * @return DataProviderErrorCollection
+     * @return InvalidConfigurationDataErrorCollection
      */
-    public function getDataProviderErrors(): DataProviderErrorCollection
+    public function getInvalidConfigurationDataErrors(): InvalidConfigurationDataErrorCollection
     {
-        return $this->dataProviderErrors;
+        return $this->InvalidConfigurationDataErrors;
     }
 }
