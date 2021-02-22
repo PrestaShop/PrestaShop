@@ -35,7 +35,9 @@
  * and of course the hash is kept in sync when the navbar or alternative links are used.
  */
 export default class NavbarHandler {
-  constructor($navigationContainer) {
+  constructor($navigationContainer, tabPrefix) {
+    // We use a tab prefix for hastag so that on reload the page doesn't auto scroll to the anchored element
+    this.tabPrefix = tabPrefix || 'tab-';
     this.$navigationContainer = $navigationContainer;
 
     this.watchNavbar();
@@ -43,7 +45,7 @@ export default class NavbarHandler {
     this.switchOnPageLoad();
   }
 
-  switchToTab(target) {
+  switchToTarget(target) {
     if (!target) {
       return;
     }
@@ -55,15 +57,21 @@ export default class NavbarHandler {
     }
 
     const tabLink = matchingTabs.first();
-    tabLink.click();
-    this.updateBrowserHash(target);
+    this.switchToTab(tabLink);
+  }
+
+  switchToTab(tab) {
+    tab.click();
+    this.updateBrowserHash(tab.attr('href'));
   }
 
   updateBrowserHash(target) {
+    const hashName = target.replace('#', `#${this.tabPrefix}`);
+
     if (window.history.pushState) {
-      window.history.pushState(null, null, target);
+      window.history.pushState(null, null, hashName);
     } else {
-      window.location.hash = target;
+      window.location.hash = hashName;
     }
   }
 
@@ -83,12 +91,20 @@ export default class NavbarHandler {
         return;
       }
 
-      this.switchToTab(`#${target}`);
+      this.switchToTarget(`#${target}`);
     });
   }
 
   switchOnPageLoad() {
-    const {hash} = document.location;
-    this.switchToTab(hash);
+    const errorTabs = $('.has-error', this.$navigationContainer);
+
+    if (errorTabs.length) {
+      const errorTab = $('a[role="tab"]', errorTabs.first()).first();
+      this.switchToTab(errorTab);
+    } else {
+      const {hash} = document.location;
+      const target = hash.replace(`#${this.tabPrefix}`, '#');
+      this.switchToTarget(target);
+    }
   }
 }
