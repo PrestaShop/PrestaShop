@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Shortcut;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
-class ShortcutsType extends TranslatorAwareType
+class StockShortcutType extends ShortcutType
 {
     /**
      * {@inheritDoc}
@@ -41,18 +41,17 @@ class ShortcutsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('stock', StockShortcutType::class, [
-                'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
-                'target_tab' => 'stock-tab',
-                'target_tab_name' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-            ])
-            ->add('price', PriceShortcutType::class, [
-                'label' => $this->trans('Price', 'Admin.Global'),
-                'help' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
-                'target_tab' => 'pricing-tab',
-                'target_tab_name' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
+            ->add('quantity', NumberType::class, [
+                'required' => false,
+                'label' => null,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'numeric']),
+                ],
             ])
         ;
+
+        // Call parent build to add potential target tab button
+        parent::buildForm($builder, $options);
     }
 }
