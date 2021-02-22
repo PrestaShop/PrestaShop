@@ -121,6 +121,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $country = new Country($address->id_country);
         $state = new State($address->id_state);
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
 
         return new OrderPreviewInvoiceDetails(
             $address->firstname,
@@ -134,7 +135,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $stateName,
             $country->name[$order->id_lang],
             $customer ? $customer->email : null,
-            $address->phone
+            $address->phone,
+            $dni
         );
     }
 
@@ -158,6 +160,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $orderCarrierId = $order->getIdOrderCarrier();
         $orderCarrier = new OrderCarrier($orderCarrierId);
 
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
+
         return new OrderPreviewShippingDetails(
             $address->firstname,
             $address->lastname,
@@ -171,7 +175,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $country->name[$order->id_lang],
             $address->phone,
             $carrierName,
-            $orderCarrier->tracking_number ?: null
+            $orderCarrier->tracking_number ?: null,
+            $dni
         );
     }
 

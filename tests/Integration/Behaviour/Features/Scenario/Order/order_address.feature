@@ -37,7 +37,21 @@ Feature: Order from Back Office (BO)
       | status              | Awaiting bank wire payment |
     And I change order "bo_order1" shipping address to "test-customer-france-address"
     And I change order "bo_order1" invoice address to "test-customer-france-address"
-    Then the order "bo_order1" has following shipping address
+    Then the preview order "bo_order1" has following shipping address
+      | Fullname         | testFirstName testLastName   |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+      | DNI              |                              |
+    And the preview order "bo_order1" has following invoice address
+      | Fullname         | testFirstName testLastName   |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+      | DNI              |                              |
+    And the order "bo_order1" has following shipping address
       | Fullname         | testFirstName testLastName   |
       | Address          | 36 Avenue des Champs Elysees |
       | City             | Paris                        |
@@ -69,7 +83,21 @@ Feature: Order from Back Office (BO)
       | status              | Awaiting bank wire payment |
     And I change order "bo_order1" shipping address to "test-customer-spain-address"
     And I change order "bo_order1" invoice address to "test-customer-spain-address"
-    Then the order "bo_order1" has following shipping address
+    Then the preview order "bo_order1" has following shipping address
+      | Fullname         | testFirstName testLastName   |
+      | Address          | Calle de Bailén              |
+      | City             | Madrid                       |
+      | Country          | Spain                        |
+      | Postal code      | 28071                        |
+      | DNI              | 12345                        |
+    And the preview order "bo_order1" has following invoice address
+      | Fullname         | testFirstName testLastName   |
+      | Address          | Calle de Bailén              |
+      | City             | Madrid                       |
+      | Country          | Spain                        |
+      | Postal code      | 28071                        |
+      | DNI              | 12345                        |
+    And the order "bo_order1" has following shipping address
       | Fullname         | testFirstName testLastName   |
       | Address          | Calle de Bailén              |
       | City             | Madrid                       |
