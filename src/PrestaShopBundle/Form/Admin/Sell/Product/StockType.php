@@ -73,6 +73,7 @@ class StockType extends TranslatorAwareType
     {
         $builder
             ->add('quantity', NumberType::class, [
+                'required' => false,
                 'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new NotBlank(),
