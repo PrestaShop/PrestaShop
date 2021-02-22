@@ -39,6 +39,16 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 class AddPaymentCommand
 {
     /**
+     * @var string
+     */
+    public const INVALID_CHARACTERS_NAME = '<>={}';
+
+    /**
+     * @var string
+     */
+    private const PATTERN_PAYMENT_METHOD_NAME = '/^[^' . self::INVALID_CHARACTERS_NAME . ']*$/u';
+
+    /**
      * @var OrderId
      */
     private $orderId;
@@ -162,8 +172,11 @@ class AddPaymentCommand
      */
     private function assertPaymentMethodIsGenericName($paymentMethod)
     {
-        if (empty($paymentMethod) || !preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
-            throw new OrderConstraintException('The selected payment method is invalid.');
+        if (empty($paymentMethod) || !preg_match(self::PATTERN_PAYMENT_METHOD_NAME, $paymentMethod)) {
+            throw new OrderConstraintException(
+                'The selected payment method is invalid.',
+                OrderConstraintException::INVALID_PAYMENT_METHOD
+            );
         }
     }
 
