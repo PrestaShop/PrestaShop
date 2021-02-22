@@ -218,7 +218,7 @@ class AdministrationController extends FrameworkBundleAdminController
     private function getErrorMessage(DataProviderError $error): string
     {
         switch ($error->getErrorCode()) {
-            case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THEN_ZERO:
+            case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
                 return $this->trans(
                     '%s is invalid. Please enter an integer greater or equal to 0.',
                     'Admin.Notifications.Error',
