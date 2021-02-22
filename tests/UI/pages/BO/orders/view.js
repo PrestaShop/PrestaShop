@@ -8,7 +8,8 @@ class Order extends BOBasePage {
     this.pageTitle = 'Order';
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
     this.successfulAddProductMessage = 'The product was successfully added.';
-    this.errorAddProductMessage = 'Minimum quantity of "3" must be added';
+    this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
+    this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
