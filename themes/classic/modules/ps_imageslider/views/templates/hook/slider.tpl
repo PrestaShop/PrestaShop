@@ -30,7 +30,7 @@
       <li data-target="#carousel" data-slide-to="{$idxSlide}"{if $idxSlide == 0} class="active"{/if}></li>
       {/foreach}
     </ol>
-    <ul class="carousel-inner" role="listbox">
+    <ul class="carousel-inner" role="listbox" aria-label="Carousel container">
       {foreach from=$homeslider.slides item=slide name='homeslider'}
         <li class="carousel-item {if $smarty.foreach.homeslider.first}active{/if}" role="option" aria-hidden="{if $smarty.foreach.homeslider.first}false{else}true{/if}">
           <a href="{$slide.url}">
