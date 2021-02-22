@@ -98,6 +98,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationSuppliersHandler
         arguments:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
             - '@prestashop.adapter.product.update.product_supplier_updater'
         tags:
             - name: tactician.handler

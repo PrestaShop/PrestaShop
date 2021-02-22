@@ -179,6 +179,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductSuppliersHandler
         arguments:
             - '@prestashop.adapter.product.update.product_supplier_updater'
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand

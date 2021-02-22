@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
@@ -44,19 +45,27 @@ final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHan
     private $combinationRepository;
 
     /**
+     * @var ProductSupplierRepository
+     */
+    private $productSupplierRepository;
+
+    /**
      * @var ProductSupplierUpdater
      */
     private $productSupplierUpdater;
 
     /**
      * @param CombinationRepository $combinationRepository
+     * @param ProductSupplierRepository $productSupplierRepository
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
         CombinationRepository $combinationRepository,
+        ProductSupplierRepository $productSupplierRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->productSupplierRepository = $productSupplierRepository;
         $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
@@ -70,7 +79,7 @@ final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHan
 
         $productSuppliers = [];
         foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
-            $productSuppliers[] = $this->buildEntityFromDTO($productId, $command->getCombinationId(), $productSupplierDTO);
+            $productSuppliers[] = $this->loadEntity($productId, $command->getCombinationId(), $productSupplierDTO);
         }
 
         return $this->productSupplierUpdater->setCombinationSuppliers(
@@ -87,15 +96,17 @@ final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHan
      *
      * @return ProductSupplier
      */
-    private function buildEntityFromDTO(
+    private function loadEntity(
         ProductId $productId,
         CombinationId $combinationId,
         ProductSupplierDTO $productSupplierDTO
     ): ProductSupplier {
-        $id = $productSupplierDTO->getProductSupplierId() ? $productSupplierDTO->getProductSupplierId()->getValue() : null;
+        if ($productSupplierDTO->getProductSupplierId()) {
+            $productSupplier = $this->productSupplierRepository->get($productSupplierDTO->getProductSupplierId());
+        } else {
+            $productSupplier = new ProductSupplier();
+        }
 
-        $productSupplier = new ProductSupplier();
-        $productSupplier->id = $id;
         $productSupplier->id_product = $productId->getValue();
         $productSupplier->id_product_attribute = $combinationId->getValue();
         $productSupplier->id_supplier = $productSupplierDTO->getSupplierId()->getValue();
