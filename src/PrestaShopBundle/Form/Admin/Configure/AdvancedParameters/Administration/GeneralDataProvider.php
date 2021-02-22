@@ -44,7 +44,7 @@ final class GeneralDataProvider implements FormDataProviderInterface
     /**
      * If you set cookie lifetime value too high there can be multiple problems.
      * Hours are converted to seconds, so int might be turned to float if it's way to high.
-     * Cookie classes crashes if lifetime goes beyond year 9999, there are probably multiple other things.
+     * Cookie classes crash if lifetime goes beyond year 9999, there are probably multiple other things.
      * So we need to set some sort of max value. 100 years seems like a lifetime beyond reasonable use.
      */
     public const MAX_COOKIE_VALUE = 876000;
