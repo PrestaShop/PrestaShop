@@ -28,18 +28,22 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+
 /**
  * Transfers data of product supplier
  */
 class ProductSupplier
 {
     /**
-     * @var int
+     * @var SupplierId
      */
     private $supplierId;
 
     /**
-     * @var int
+     * @var CurrencyId
      */
     private $currencyId;
 
@@ -54,7 +58,7 @@ class ProductSupplier
     private $priceTaxExcluded;
 
     /**
-     * @var int|null
+     * @var ProductSupplierId|null
      */
     private $productSupplierId;
 
@@ -72,26 +76,25 @@ class ProductSupplier
         string $priceTaxExcluded,
         ?int $productSupplierId = null
     ) {
-        //@todo: supplierId, currencyId VO?
-        $this->supplierId = $supplierId;
-        $this->currencyId = $currencyId;
+        $this->supplierId = new SupplierId($supplierId);
+        $this->currencyId = new CurrencyId($currencyId);
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
-        $this->productSupplierId = $productSupplierId;
+        $this->productSupplierId = $productSupplierId ? new ProductSupplierId($productSupplierId) : null;
     }
 
     /**
-     * @return int
+     * @return SupplierId
      */
-    public function getSupplierId(): int
+    public function getSupplierId(): SupplierId
     {
         return $this->supplierId;
     }
 
     /**
-     * @return int
+     * @return CurrencyId
      */
-    public function getCurrencyId(): int
+    public function getCurrencyId(): CurrencyId
     {
         return $this->currencyId;
     }
@@ -113,9 +116,9 @@ class ProductSupplier
     }
 
     /**
-     * @return int|null
+     * @return ProductSupplierId|null
      */
-    public function getProductSupplierId(): ?int
+    public function getProductSupplierId(): ?ProductSupplierId
     {
         return $this->productSupplierId;
     }

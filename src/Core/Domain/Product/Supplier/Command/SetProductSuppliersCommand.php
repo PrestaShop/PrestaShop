@@ -125,7 +125,7 @@ class SetProductSuppliersCommand
         $defaultSupplierId = $this->getDefaultSupplierId()->getValue();
 
         foreach ($this->productSuppliers as $productSupplier) {
-            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
+            if ($productSupplier->getSupplierId()->getValue() === $defaultSupplierId) {
                 return;
             }
         }
