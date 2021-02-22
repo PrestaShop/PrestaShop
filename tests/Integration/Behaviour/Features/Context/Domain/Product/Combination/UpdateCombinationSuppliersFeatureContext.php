@@ -31,9 +31,12 @@ use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
@@ -81,6 +84,22 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         /** @var ProductSupplierId $productSupplierId */
         foreach ($productSupplierIds as $key => $productSupplierId) {
             $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+        }
+    }
+
+    /**
+     * @When I remove all associated combination ":combinationReference" suppliers
+     *
+     * @param string $combinationReference
+     */
+    public function removeAssociatedCombinationSuppliers(string $combinationReference): void
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveAllAssociatedCombinationSuppliersCommand(
+                $this->getSharedStorage()->get($combinationReference))
+            );
+        } catch (ProductException $e) {
+            $this->setLastException($e);
         }
     }
 

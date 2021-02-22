@@ -76,6 +76,22 @@ Feature: Update product combination suppliers in Back Office (BO)
     When I set following suppliers for combination "product1SWhite":
       | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
+      | product1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |
+      | product1SWhiteSupplier3 | supplier3          | sup S3                         | USD      | 5.5                |
     Then combination "product1SWhite" should have following suppliers:
       | combination supplier reference | currency | price tax excluded |
       | sup white shirt S 1            | USD      | 10                 |
+      | sup S2                         | USD      | 0                  |
+      | sup S3                         | USD      | 5.5                |
+
+  Scenario: Remove all associated combination suppliers
+    Given product product1 type should be combination
+    And combination "product1SWhite" should have following suppliers:
+      | combination supplier reference | currency | price tax excluded |
+      | sup white shirt S 1            | USD      | 10                 |
+      | sup S2                         | USD      | 0                  |
+      | sup S3                         | USD      | 5.5                |
+    When I remove all associated combination "product1SWhite" suppliers
+    And combination "product1SWhite" should not have any suppliers assigned
+    And product product1 should not have a default supplier
+    And product product1 default supplier reference should be empty
