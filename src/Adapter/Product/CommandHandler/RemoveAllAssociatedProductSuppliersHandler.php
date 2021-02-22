@@ -79,8 +79,8 @@ final class RemoveAllAssociatedProductSuppliersHandler implements RemoveAllAssoc
         $product = $this->productRepository->get($command->getProductId());
 
         $productSupplierIds = [];
-        foreach (ProductSupplier::getSupplierCollection($product->id, false) as $productSupplier) {
-            $productSupplierIds[] = new ProductSupplierId((int) $productSupplier->id);
+        foreach ($this->productSupplierRepository->getProductSuppliersInfo($command->getProductId()) as $productSupplier) {
+            $productSupplierIds[] = new ProductSupplierId((int) $productSupplier['id_product_supplier']);
         }
 
         $this->productSupplierRepository->bulkDelete($productSupplierIds);

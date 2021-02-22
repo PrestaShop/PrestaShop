@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Removes all product suppliers for provided product
- * //@todo: adjust to not remove combination suppliers, when RemoveAllCombinationSuppliersCommand is implemented for that
  */
 class RemoveAllAssociatedProductSuppliersCommand
 {
