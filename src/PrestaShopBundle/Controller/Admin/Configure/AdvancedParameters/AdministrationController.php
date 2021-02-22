@@ -226,7 +226,7 @@ class AdministrationController extends FrameworkBundleAdminController
                 );
             case FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_NUMBER_EXCEEDED:
                 return $this->trans(
-                    '%s is invalid. Please enter a integer lower than %s.',
+                    '%s is invalid. Please enter an integer lower than %s.',
                     'Admin.Notifications.Error',
                     [
                         $this->getFieldLabel($error->getFieldName()),
