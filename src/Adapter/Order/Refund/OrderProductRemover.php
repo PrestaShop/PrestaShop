@@ -70,10 +70,13 @@ class OrderProductRemover
      * @param OrderDetail $orderDetail
      * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
      *
-     * @return array
+     * @return CartProductsComparator
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true): array
-    {
+    public function deleteProductFromOrder(
+        Order $order,
+        OrderDetail $orderDetail,
+        bool $updateCart = true
+    ): CartProductsComparator {
         $cart = new Cart($order->id_cart);
 
         // Important to remove order cart rule before the product is removed, so that cart rule can detect if it's applied on it
@@ -83,9 +86,9 @@ class OrderProductRemover
             $this->deleteCustomization($order, $orderDetail);
         }
 
-        $updatedProducts = [];
+        $cartComparator = new CartProductsComparator($cart);
         if ($updateCart) {
-            $updatedProducts = $this->updateCart($cart, $orderDetail);
+            $this->updateCart($cart, $orderDetail, $cartComparator);
         }
 
         $this->deleteSpecificPrice($order, $orderDetail, $cart);
@@ -95,18 +98,19 @@ class OrderProductRemover
             $orderDetail
         );
 
-        return $updatedProducts;
+        return $cartComparator;
     }
 
     /**
      * @param Cart $cart
      * @param OrderDetail $orderDetail
-     *
-     * @return CartProductUpdate[]
+     * @param CartProductsComparator $cartComparator
      */
-    private function updateCart(Cart $cart, OrderDetail $orderDetail): array
-    {
-        $cartComparator = new CartProductsComparator($cart);
+    private function updateCart(
+        Cart $cart,
+        OrderDetail $orderDetail,
+        CartProductsComparator &$cartComparator
+    ): void {
         $knownUpdates = [
             new CartProductUpdate(
                 (int) $orderDetail->product_id,
@@ -115,6 +119,7 @@ class OrderProductRemover
                 false
             ),
         ];
+        $cartComparator->setKnownUpdates($knownUpdates);
 
         $cart->updateQty(
             $orderDetail->product_quantity,
@@ -128,8 +133,6 @@ class OrderProductRemover
             false,
             false // Do not preserve gift removal
         );
-
-        return $cartComparator->getModifiedProducts($knownUpdates);
     }
 
     /**
