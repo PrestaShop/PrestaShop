@@ -181,7 +181,7 @@
 {%- endblock choice_tree_widget %}
 
 {% block choice_tree_item_widget -%}
-  <li{% if defaultHidden is same as(true) %} class="more"{% endif %}>
+  <li{% if defaultHidden is defined and defaultHidden is same as(true) %} class="more"{% endif %}>
         {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
         {% if multiple -%}
             <div class="checkbox">
@@ -210,7 +210,7 @@
             </div>
         {%- endif %}
         {% if child.children is defined %}
-            <ul{% if defaultHidden is same as(true) %} style="display: none;"{% endif %}>
+            <ul{% if defaultHidden is defined and defaultHidden is same as(true) %} style="display: none;"{% endif %}>
                 {% for item in child.children %}
                     {% set child = item %}
                     {{ block('choice_tree_item_widget') }}
