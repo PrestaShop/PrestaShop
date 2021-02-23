@@ -14,7 +14,7 @@ admin_security_general_save:
         _legacy_controller: AdminSecurity
         _legacy_link: AdminSecurity
 
-admin_security_sessions_customer:
+admin_security_sessions_customer_list:
     path: /session/customer
     methods: [GET]
     defaults:
@@ -32,7 +32,7 @@ admin_security_sessions_customer_delete:
     requirements:
         sessionId: \d+
 
-admin_security_sessions_employee:
+admin_security_sessions_employee_list:
     path: /session/employee
     methods: [GET]
     defaults:
