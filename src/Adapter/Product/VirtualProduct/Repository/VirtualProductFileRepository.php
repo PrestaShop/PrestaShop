@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Validate\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotAddVirtualProductFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotDeleteVirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -75,6 +76,17 @@ class VirtualProductFileRepository extends AbstractObjectModelRepository
         );
 
         return $virtualProductFile;
+    }
+
+    /**
+     * @param VirtualProductFileId $virtualProductFileId
+     */
+    public function delete(VirtualProductFileId $virtualProductFileId): void
+    {
+        $this->deleteObjectModel(
+            $this->get($virtualProductFileId),
+            CannotDeleteVirtualProductFileException::class
+        );
     }
 
     /**
