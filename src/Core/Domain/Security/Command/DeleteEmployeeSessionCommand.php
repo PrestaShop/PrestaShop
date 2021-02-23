@@ -51,7 +51,7 @@ class DeleteEmployeeSessionCommand
     /**
      * @return EmployeeSessionId
      */
-    public function getEmployeeSessionId()
+    public function getEmployeeSessionId(): EmployeeSessionId
     {
         return $this->sessionId;
     }
