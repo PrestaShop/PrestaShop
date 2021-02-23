@@ -654,6 +654,8 @@ class XmlLoader
             $position[$data['id_parent']] = 0;
         }
         $data['position'] = $position[$data['id_parent']]++;
+        $data['route_name'] = $data['route_name'] ?? '';
+        $data['icon'] = $data['icon'] ?? '';
 
         // Generate primary key manually
         if (!$xml->fields['primary']) {
