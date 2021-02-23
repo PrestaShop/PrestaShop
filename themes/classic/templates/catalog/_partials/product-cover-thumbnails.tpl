@@ -35,7 +35,6 @@
           {else}
             alt="{$product.name}"
           {/if}
-          style="width:100%;"
           itemprop="image"
           loading="lazy"
           width="452"
@@ -47,7 +46,6 @@
       {else}
         <img 
           src="{$urls.no_picture_image.bySize.large_default.url}"
-          style="width:100%;"
           loading="lazy"
           width="452"
           height="452"
