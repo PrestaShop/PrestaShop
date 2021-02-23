@@ -56,6 +56,6 @@ final class RemoveAllAssociatedProductSuppliersHandler implements RemoveAllAssoc
      */
     public function handle(RemoveAllAssociatedProductSuppliersCommand $command): void
     {
-        $this->productSupplierUpdater->removeAll($command->getProductId());
+        $this->productSupplierUpdater->removeAllForProduct($command->getProductId());
     }
 }

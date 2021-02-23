@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Removes product suppliers associated to a certain combination using legacy object model
@@ -65,9 +64,6 @@ final class RemoveAllAssociatedCombinationSuppliersHandler implements RemoveAllA
      */
     public function handle(RemoveAllAssociatedCombinationSuppliersCommand $command): void
     {
-        $combination = $this->combinationRepository->get($command->getCombinationId());
-        $productId = new ProductId((int) $combination->id_product);
-
-        $this->productSupplierUpdater->removeAll($productId, $command->getCombinationId());
+        $this->productSupplierUpdater->removeAllForCombination($command->getCombinationId());
     }
 }

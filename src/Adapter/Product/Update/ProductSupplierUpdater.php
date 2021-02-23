@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use Product;
 use ProductSupplier;
+use RuntimeException;
 
 /**
  * Updates product supplier relation
@@ -49,6 +51,11 @@ class ProductSupplierUpdater
      * @var ProductRepository
      */
     private $productRepository;
+
+    /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
 
     /**
      * @var SupplierRepository
@@ -62,17 +69,20 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductRepository $productRepository
+     * @param CombinationRepository $combinationRepository
      * @param SupplierRepository $supplierRepository
      * @param ProductSupplierRepository $productSupplierRepository
      */
     public function __construct(
         ProductRepository $productRepository,
+        CombinationRepository $combinationRepository,
         SupplierRepository $supplierRepository,
         ProductSupplierRepository $productSupplierRepository
     ) {
         $this->productRepository = $productRepository;
         $this->supplierRepository = $supplierRepository;
         $this->productSupplierRepository = $productSupplierRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -87,6 +97,17 @@ class ProductSupplierUpdater
         SupplierId $defaultSupplierId,
         array $productSuppliers
     ): array {
+        $product = $this->productRepository->get($productId);
+
+        if ($product->cache_default_attribute) {
+            throw new RuntimeException(sprintf(
+                'Product #%d has combinations. Use %s::%s to set product suppliers for specified combination',
+                $productId->getValue(),
+                self::class,
+                'setCombinationSuppliers()'
+            ));
+        }
+
         $this->persistProductSuppliers($productId, $productSuppliers);
         $this->updateDefaultSupplier($productId, $defaultSupplierId);
 
@@ -111,45 +132,40 @@ class ProductSupplierUpdater
     }
 
     /**
-     * Removes associated product suppliers
-     * If combinationId is provided, then it only removes product suppliers associated to that combination
-     * If combinationId is null, then it only removes product suppliers that are not associated to any combination
+     * Removes all product suppliers associated to specified product without combinations
      *
      * @param ProductId $productId
-     * @param CombinationId|null $combinationId
      */
-    public function removeAll(ProductId $productId, ?CombinationId $combinationId = null): void
+    public function removeAllForProduct(ProductId $productId): void
     {
         $product = $this->productRepository->get($productId);
-        $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
 
-        $productSupplierIds = [];
-        foreach ($productSuppliersInfo as $productSupplier) {
-            $productSupplierIds[] = new ProductSupplierId((int) $productSupplier['id_product_supplier']);
+        if ($product->cache_default_attribute) {
+            throw new RuntimeException(sprintf(
+                'Product #%d has combinations. Use %s::%s to remove product suppliers for specific combination',
+                $productId->getValue(),
+                self::class,
+                'removeAllForCombination()'
+            ));
         }
 
+        $productSupplierIds = $this->getCurrentProductSupplierIds($productId);
         $this->productSupplierRepository->bulkDelete($productSupplierIds);
         $this->resetDefaultSupplier($product);
     }
 
     /**
-     * @param ProductId $productId
-     * @param ProductSupplier[] $productSuppliers
-     * @param CombinationId|null $combinationId
+     * Removes all product suppliers associated to specified combination
+     *
+     * @param CombinationId $combinationId
      */
-    private function persistProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
+    public function removeAllForCombination(CombinationId $combinationId): void
     {
-        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers, $combinationId);
+        $combination = $this->combinationRepository->get($combinationId);
+        $productId = new ProductId((int) $combination->id_product);
 
-        foreach ($productSuppliers as $productSupplier) {
-            if ($productSupplier->id) {
-                $this->productSupplierRepository->update($productSupplier);
-            } else {
-                $this->productSupplierRepository->add($productSupplier);
-            }
-        }
-
-        $this->productSupplierRepository->bulkDelete($deletableProductSupplierIds);
+        $productSupplierIds = $this->getCurrentProductSupplierIds($productId, $combinationId);
+        $this->productSupplierRepository->bulkDelete($productSupplierIds);
     }
 
     /**
@@ -206,6 +222,26 @@ class ProductSupplierUpdater
             ['supplier_reference', 'wholesale_price', 'id_supplier'],
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ProductSupplier[] $productSuppliers
+     * @param CombinationId|null $combinationId
+     */
+    private function persistProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
+    {
+        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers, $combinationId);
+
+        foreach ($productSuppliers as $productSupplier) {
+            if ($productSupplier->id) {
+                $this->productSupplierRepository->update($productSupplier);
+            } else {
+                $this->productSupplierRepository->add($productSupplier);
+            }
+        }
+
+        $this->productSupplierRepository->bulkDelete($deletableProductSupplierIds);
     }
 
     /**
