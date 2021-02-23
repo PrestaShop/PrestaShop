@@ -673,6 +673,7 @@
                         <class_name>AdminSecuritySessionEmployee</class_name>
                     </tab>
                     <tab id="CustomerSessions" id_parent="Security" active="1" enabled="1" route_name="admin_security_sessions_customer_list">
+
                         <class_name>AdminSecuritySessionCustomer</class_name>
                     </tab>
 
