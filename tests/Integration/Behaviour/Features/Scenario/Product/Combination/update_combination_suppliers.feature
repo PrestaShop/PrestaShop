@@ -97,7 +97,7 @@ Feature: Update product combination suppliers in Back Office (BO)
   Scenario: Remove all associated suppliers for standard product while it has combinations
     Given product product1 type should be combination
     And product product1 should not have any suppliers assigned
-    But combination "product1SWhite" should have following suppliers:
+    And combination "product1SWhite" should have following suppliers:
       | combination supplier reference | currency | price tax excluded |
       | sup white shirt S 1            | USD      | 10                 |
       | sup S2                         | USD      | 0                  |
@@ -108,7 +108,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
     Then I should get error that this action is forbidden for this type of product
     And product product1 should not have any suppliers assigned
-    But combination "product1SWhite" should have following suppliers:
+    And combination "product1SWhite" should have following suppliers:
       | combination supplier reference | currency | price tax excluded |
       | sup white shirt S 1            | USD      | 10                 |
       | sup S2                         | USD      | 0                  |

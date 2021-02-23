@@ -119,7 +119,7 @@ class ProductSupplierUpdater
      * @param CombinationId $combinationId
      * @param array<int, ProductSupplier> $productSuppliers
      *
-     * @return <int, ProductSupplierId>
+     * @return array<int, ProductSupplierId>
      */
     public function setCombinationSuppliers(
         ProductId $productId,
@@ -127,6 +127,10 @@ class ProductSupplierUpdater
         array $productSuppliers
     ): array {
         $this->persistProductSuppliers($productId, $productSuppliers, $combinationId);
+
+        // make sure all non-combination suppliers are deleted
+        $existingNonCombinationSuppliers = $this->getCurrentProductSupplierIds($productId);
+        $this->productSupplierRepository->bulkDelete($existingNonCombinationSuppliers);
 
         return $this->getCurrentProductSupplierIds($productId, $combinationId);
     }
