@@ -37,13 +37,7 @@
           </h3>
           <div class="card-block row">
             <div class="card-text">
-              <div class="form-group row">
-                {{ form_label(generalForm.token) }}
-                <div class="col-sm">
-                  {{ form_errors(generalForm.token) }}
-                  {{ form_widget(generalForm.token, {'attr' : {'class': 'custom-select'} }) }}
-                </div>
-              </div>
+              {{ form_row(generalForm.token) }}
               {{ form_rest(generalForm) }}
             </div>
           </div>
