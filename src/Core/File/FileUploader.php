@@ -135,9 +135,9 @@ class FileUploader implements FileUploaderInterface
     /**
      * Upload file from Http Post
      *
-     * @param array $file the $_FILES content
+     * @param array{tmp_name: string, type: string, name: string} $file the $_FILES content
      *
-     * @return array<id: string, file_name: string, mime_type: string>
+     * @return array{id: string, file_name: string, mime_type: string}
      *
      * @throws FileUploadException
      */
@@ -163,7 +163,7 @@ class FileUploader implements FileUploaderInterface
      *
      * @param string $content The binary string
      *
-     * @return array<id: string, file_name: string, mime_type: string|bool>
+     * @return array{id: string, file_name: string, mime_type: string}
      *
      * @throws FileUploadException
      */
