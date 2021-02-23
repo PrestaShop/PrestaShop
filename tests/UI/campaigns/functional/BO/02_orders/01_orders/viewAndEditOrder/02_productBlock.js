@@ -290,8 +290,6 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-
-        await viewOrderPage.closeGrowlMessage(page);
       });
 
       it('should add the same product and check the error message', async function () {
@@ -301,8 +299,6 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.errorAddSameProduct);
-
-        await viewOrderPage.closeGrowlMessage(page);
 
         await viewOrderPage.cancelAddProductToCart(page);
       });
@@ -337,8 +333,6 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-
-        await viewOrderPage.closeGrowlMessage(page);
       });
     });
 
@@ -355,8 +349,6 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.errorMinimumQuantityMessage);
-
-        await viewOrderPage.closeGrowlMessage(page);
       });
 
       it('should check ordered product details', async function () {
@@ -364,8 +356,6 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page, packOfProducts.minimumQuantity);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-
-        await viewOrderPage.closeGrowlMessage(page);
 
         const result = await viewOrderPage.getProductDetails(page, 1);
         await Promise.all([
@@ -396,7 +386,7 @@ describe('Check product block in view order page', async () => {
 
     describe('Add product \'Out of stock allowed\'', async () => {
       it(`should add the product '${productOutOfStockAllowed.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'orderproductOutOfStockAllowed', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'orderProductOutOfStockAllowed', baseContext);
 
         await viewOrderPage.SearchProduct(page, productOutOfStockAllowed.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
@@ -407,12 +397,10 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-
-        await viewOrderPage.closeGrowlMessage(page);
       });
 
       it('should check the ordered product details', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkproductOutOfStockAllowedDetails', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'checkProductOutOfStockAllowedDetails', baseContext);
         const result = await viewOrderPage.getProductDetails(page, 1);
         await Promise.all([
           expect(result.name).to.equal(productOutOfStockAllowed.name),
@@ -424,9 +412,9 @@ describe('Check product block in view order page', async () => {
       });
     });
 
-    describe('Add product \'Out of stock not allowed\'', async () => {
+    /*describe('Add product \'Out of stock not allowed\'', async () => {
       it(`should add the product '${productOutOfStockNotAllowed.name}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'orderproductOutOfStockNotAllowed', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'orderProductOutOfStockNotAllowed', baseContext);
 
         await viewOrderPage.SearchProduct(page, productOutOfStockNotAllowed.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
@@ -447,7 +435,7 @@ describe('Check product block in view order page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts3', baseContext);
 
         const productCount = await viewOrderPage.getProductsNumber(page);
-        await expect(productCount).to.equal(4);
+        await expect(productCount).to.equal(7);
       });
 
       it('should update the quantity of the ordered product', async function () {
@@ -468,10 +456,10 @@ describe('Check product block in view order page', async () => {
           expect(result.total, 'Total price was not updated').to.equal(newPrice * newQuantity),
         ]);
       });
-    });
+    });*/
   });
 
-  // 5 - Delete the created customer
+  /*// 5 - Delete the created customer
   describe('Delete the created customer', async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
@@ -540,5 +528,5 @@ describe('Check product block in view order page', async () => {
         await expect(numberOfProducts).to.be.above(0);
       });
     });
-  });
+  });*/
 });
