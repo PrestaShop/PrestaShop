@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Removes all product suppliers for specified product without combinations
  *
- * @see RemoveAllAssociatedProductAttachmentsHandlerInterface
+ * @see RemoveAllAssociatedProductSuppliersHandlerInterface
  */
 class RemoveAllAssociatedProductSuppliersCommand
 {
