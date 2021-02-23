@@ -54,7 +54,7 @@ class BulkToggleZoneStatusCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus()
+    public function getExpectedStatus(): bool
     {
         return $this->expectedStatus;
     }
@@ -62,7 +62,7 @@ class BulkToggleZoneStatusCommand
     /**
      * @return ZoneId[]
      */
-    public function getZoneIds()
+    public function getZoneIds(): array
     {
         return $this->zoneIds;
     }

@@ -40,11 +40,28 @@ final class ZoneFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var bool
      */
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    private $multistoreEnabled;
+
+    /**
+     * @var int[]
+     */
+    private $defaultShopAssociation;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     * @param bool $multistoreEnabled
+     * @param array $defaultShopAssociation
+     */
+    public function __construct(
+        CommandBusInterface $queryBus,
+        bool $multistoreEnabled,
+        array $defaultShopAssociation
+    ) {
         $this->queryBus = $queryBus;
+        $this->multistoreEnabled = $multistoreEnabled;
+        $this->defaultShopAssociation = $defaultShopAssociation;
     }
 
     /**
@@ -61,11 +78,17 @@ final class ZoneFormDataProvider implements FormDataProviderInterface
          */
         $result = $this->queryBus->handle(new GetZoneForEditing($id));
 
-        return [
+        $data = [
             'id' => $id,
             'name' => $result->getName(),
             'enabled' => $result->isEnabled(),
         ];
+
+        if ($this->multistoreEnabled) {
+            $data['shop_association'] = $result->getAssociatedShops();
+        }
+
+        return $data;
     }
 
     /**
@@ -73,9 +96,15 @@ final class ZoneFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [
+        $data = [
             'name' => '',
             'enabled' => true,
         ];
+
+        if ($this->multistoreEnabled) {
+            $data['shop_association'] = $this->defaultShopAssociation;
+        }
+
+        return $data;
     }
 }

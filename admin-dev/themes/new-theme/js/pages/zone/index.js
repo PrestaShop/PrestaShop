@@ -37,6 +37,7 @@ import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ChoiceExtension from '@components/grid/extension/choice-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import ChoiceTree from '@components/form/choice-tree';
 
 const {$} = window;
 
@@ -55,4 +56,6 @@ $(() => {
   grid.addExtension(new ChoiceExtension());
   grid.addExtension(new ColumnTogglingExtension());
   grid.addExtension(new SubmitRowActionExtension());
+
+  new ChoiceTree('#zone_shop_association').enableAutoCheckChildren();
 });
