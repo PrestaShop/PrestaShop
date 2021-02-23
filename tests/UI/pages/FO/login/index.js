@@ -13,6 +13,7 @@ class Login extends FOBasePage {
     this.passwordInput = `${this.loginForm} input[name='password']`;
     this.signInButton = `${this.loginForm} button#submit-login`;
     this.displayRegisterFormLink = 'div.no-account a[data-link-action=\'display-register-form\']';
+    this.passwordReminderLink = '.forgot-password a';
   }
 
   /*
@@ -38,6 +39,15 @@ class Login extends FOBasePage {
    */
   async goToCreateAccountPage(page) {
     await this.clickAndWaitForNavigation(page, this.displayRegisterFormLink);
+  }
+
+  /**
+   * Go to the password reminder page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToPasswordReminderPage(page) {
+    await this.clickAndWaitForNavigation(page, this.passwordReminderLink);
   }
 }
 
