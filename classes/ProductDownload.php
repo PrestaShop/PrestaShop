@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
+
 /**
  * Class ProductDownloadCore.
  */
@@ -66,12 +68,12 @@ class ProductDownloadCore extends ObjectModel
         'primary' => 'id_product_download',
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
-            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255],
+            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
+            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => VirtualProductFileSettings::MAX_FILENAME_LENGTH],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'nb_days_accessible' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
-            'nb_downloadable' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
+            'nb_days_accessible' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => VirtualProductFileSettings::MAX_ACCESSIBLE_DAYS_LIMIT_LENGTH],
+            'nb_downloadable' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => VirtualProductFileSettings::MAX_DOWNLOAD_TIMES_LIMIT_LENGTH],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'is_shareable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],

@@ -27,23 +27,44 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class VirtualProductFileType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //@todo: constraints (check ProductDownload)
         $builder
             ->add('file', FileType::class)
-            ->add('filename', TextType::class)
-            ->add('download_times_limit', NumberType::class)
-            ->add('access_days_limit', NumberType::class)
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                    new Length([
+                        'max' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH,
+                    ]),
+                ],
+            ])
+            ->add('download_times_limit', NumberType::class, [
+                'constraints' => [
+                    new Length([
+                        'max' => VirtualProductFileSettings::MAX_DOWNLOAD_TIMES_LIMIT_LENGTH,
+                    ]),
+                ],
+            ])
+            ->add('access_days_limit', NumberType::class, [
+                'constraints' => [
+                    new Length([
+                        'max' => VirtualProductFileSettings::MAX_ACCESSIBLE_DAYS_LIMIT_LENGTH,
+                    ]),
+                ],
+            ])
             ->add('expiration_date', DatePickerType::class)
         ;
     }
