@@ -57,7 +57,7 @@ class EmployeeSessionId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->sessionId;
     }
