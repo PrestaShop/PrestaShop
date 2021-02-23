@@ -33,6 +33,7 @@ import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import initDropzone from '@pages/product/components/dropzone';
+import ProductFormModel from '@pages/product/edit/product-form-model';
 
 const {$} = window;
 
@@ -48,6 +49,9 @@ $(() => {
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
   const productType = $productForm.data('productType');
+
+  // Init product model along wth input watching and syncing
+  new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
 
   // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
   // selected on load, but only when productId exists (edition mode)
