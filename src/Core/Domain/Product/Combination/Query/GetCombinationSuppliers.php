@@ -23,21 +23,39 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 /**
- * Defines contract to handle @see GetCombinationSupplierOptions query
+ * Retrieves data for product combination supplier
+ *
+ * @see GetCombinationSuppliersHandlerInterface
  */
-interface GetCombinationSupplierOptionsHandlerInterface
+class GetCombinationSuppliers
 {
     /**
-     * @param GetCombinationSupplierOptions $query
-     *
-     * @return CombinationSupplierOptions
+     * @var CombinationId
      */
-    public function handle(GetCombinationSupplierOptions $query): CombinationSupplierOptions;
+    private $combinationId;
+
+    /**
+     * @param int $combinationId
+     */
+    public function __construct(
+        int $combinationId
+    ) {
+        $this->combinationId = new CombinationId($combinationId);
+    }
+
+    /**
+     * @return CombinationId
+     */
+    public function getCombinationId(): CombinationId
+    {
+        return $this->combinationId;
+    }
 }

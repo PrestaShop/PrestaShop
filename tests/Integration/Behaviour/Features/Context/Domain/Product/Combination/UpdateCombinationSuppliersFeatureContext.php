@@ -33,7 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -158,7 +158,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
      */
     private function getCombinationSupplierOptions(string $combinationReference): CombinationSupplierOptions
     {
-        return $this->getQueryBus()->handle(new GetCombinationSupplierOptions(
+        return $this->getQueryBus()->handle(new GetCombinationSuppliers(
             $this->getSharedStorage()->get($combinationReference)
         ));
     }

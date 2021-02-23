@@ -31,12 +31,12 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\QueryHandler\AbstractSupplierOptionsHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSupplierOptionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-final class GetCombinationSupplierOptionsHandler extends AbstractSupplierOptionsHandler implements GetCombinationSupplierOptionsHandlerInterface
+final class GetCombinationSuppliersHandler extends AbstractSupplierOptionsHandler implements GetCombinationSuppliersHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -63,7 +63,7 @@ final class GetCombinationSupplierOptionsHandler extends AbstractSupplierOptions
         $this->productRepository = $productRepository;
     }
 
-    public function handle(GetCombinationSupplierOptions $query): CombinationSupplierOptions
+    public function handle(GetCombinationSuppliers $query): CombinationSupplierOptions
     {
         $combination = $this->combinationRepository->get($query->getCombinationId());
 
