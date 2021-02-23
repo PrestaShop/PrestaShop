@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Locations;
 
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ZoneType extends AbstractType
 {
@@ -42,13 +44,20 @@ class ZoneType extends AbstractType
     private $translator;
 
     /**
+     * @var bool
+     */
+    private $isMultistoreEnabled;
+
+    /**
      * ZoneType constructor.
      *
      * @param TranslatorInterface $translator
+     * @param bool $isMultistoreEnabled
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, bool $isMultistoreEnabled)
     {
         $this->translator = $translator;
+        $this->isMultistoreEnabled = $isMultistoreEnabled;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -62,5 +71,18 @@ class ZoneType extends AbstractType
                 'required' => false,
                 'help' => $this->translator->trans('Allow or disallow shipping to this zone.', [], 'Admin.International.Help'),
             ]);
+
+        if ($this->isMultistoreEnabled) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
+        }
     }
 }

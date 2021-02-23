@@ -1464,5 +1464,6 @@ services:
       public: true
       arguments:
         - '@translator'
+        - '@=service("prestashop.adapter.multistore_feature").isActive()'
       tags:
         - name: form.type

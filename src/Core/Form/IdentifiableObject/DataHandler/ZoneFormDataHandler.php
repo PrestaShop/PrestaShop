@@ -57,7 +57,11 @@ final class ZoneFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        $addZoneCommand = new AddZoneCommand($data['name'], $data['enabled']);
+        if (!isset($data['shop_association']) || !$data['shop_association']) {
+            $data['shop_association'] = [];
+        }
+
+        $addZoneCommand = new AddZoneCommand($data['name'], $data['enabled'], $data['shop_association']);
         $zoneId = $this->commandBus->handle($addZoneCommand);
 
         return $zoneId->getValue();
@@ -73,6 +77,13 @@ final class ZoneFormDataHandler implements FormDataHandlerInterface
         $command = (new EditZoneCommand($id))
             ->setName((string) $data['name'])
             ->setEnabled((bool) $data['enabled']);
+
+        if (isset($data['shop_association'])) {
+            $shopAssociation = $data['shop_association'] ?: [];
+            $shopAssociation = array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation);
+
+            $command->setShopAssociation($shopAssociation);
+        }
 
         $this->commandBus->handle($command);
     }

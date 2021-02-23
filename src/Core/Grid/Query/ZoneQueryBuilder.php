@@ -39,13 +39,20 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $searchCriteriaApplicator;
 
+    /**
+     * @var int[]
+     */
+    private $contextShopIds;
+
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
+        array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -74,7 +81,15 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->connection->createQueryBuilder()
-            ->from($this->dbPrefix . 'zone', 'z');
+            ->from($this->dbPrefix . 'zone', 'z')
+            ->innerJoin(
+                'z',
+                $this->dbPrefix . 'zone_shop',
+                'zs',
+                'z.id_zone = zs.id_zone'
+            )
+            ->where('zs.id_shop IN (:contextShopIds)')
+            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         $this->applyFilters($qb, $searchCriteria);
 
@@ -99,7 +114,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, ['id_zone', 'active'])) {
-                $builder->andWhere($filterName . ' = :' . $filterName);
+                $builder->andWhere('z.' . $filterName . ' = :' . $filterName);
                 $builder->setParameter($filterName, $filterValue);
                 continue;
             }
