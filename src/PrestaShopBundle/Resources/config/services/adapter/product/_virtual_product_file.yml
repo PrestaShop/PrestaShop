@@ -17,15 +17,10 @@ services:
             - '@prestashop.adapter.product.virtual_product_file.uploader.virtual_product_file_uploader'
             - '@prestashop.adapter.product.virtual_product_file.repository.product_download_repository'
 
-    prestashop.adapter.product.virtual_product_file.validator.virtual_product_file_validator:
-        class: PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validator\VirtualProductFileValidator
-        arguments:
-            - '@=service("prestashop.adapter.legacy.configuration").get("PS_ATTACHMENT_MAXIMUM_SIZE")'
-
     prestashop.adapter.product.virtual_product_file.uploader.virtual_product_file_uploader:
         class: PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Uploader\VirtualProductFileUploader
         arguments:
-            - '@prestashop.adapter.product.virtual_product_file.validator.virtual_product_file_validator'
+            - '@prestashop.adapter.file.validator.virtual_product_file_validator'
             - !php/const _PS_DOWNLOAD_DIR_
 
     prestashop.adapter.product.virtual_product_file.validate.product_download_validator:

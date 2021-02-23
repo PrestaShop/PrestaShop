@@ -132,3 +132,8 @@ services:
 
     prestashop.adapter.file.robots_text_file_generator:
         class: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
+
+    prestashop.adapter.file.validator.virtual_product_file_validator:
+        class: PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_ATTACHMENT_MAXIMUM_SIZE")'
