@@ -3,24 +3,32 @@ admin_security:
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:index'
+        _legacy_controller: AdminSecurity
+        _legacy_link: AdminSecurity
 
 admin_security_general_save:
     path: /general
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:processGeneralForm'
+        _legacy_controller: AdminSecurity
+        _legacy_link: AdminSecurity
 
 admin_security_sessions_customer_list:
     path: /session/customer
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:customerSession'
+        _legacy_controller: AdminSecuritySessionCustomer
+        _legacy_link: AdminSecuritySessionCustomer
 
 admin_security_sessions_customer_delete:
     path: /session/customer/{sessionId}
     methods: [DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:deleteCustomerSession'
+        _legacy_controller: AdminSecuritySessionCustomer
+        _legacy_link: AdminSecuritySessionCustomer
     requirements:
         sessionId: \d+
 
@@ -29,12 +37,16 @@ admin_security_sessions_employee_list:
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:employeeSession'
+        _legacy_controller: AdminSecuritySessionEmployee
+        _legacy_link: AdminSecuritySessionEmployee
 
 admin_security_sessions_employee_delete:
     path: /session/employee/{sessionId}
     methods: [DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:deleteEmployeeSession'
+        _legacy_controller: AdminSecuritySessionEmployee
+        _legacy_link: AdminSecuritySessionEmployee
     requirements:
         sessionId: \d+
 
@@ -43,12 +55,16 @@ admin_security_sessions_employee_bulk_delete:
     methods: [POST,DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteEmployeeSession'
+        _legacy_controller: AdminSecuritySessionEmployee
+        _legacy_link: AdminSecuritySessionEmployee:submitBulkdeleteemployees
 
 admin_security_sessions_customer_bulk_delete:
     path: /session/customer/delete/bulk
     methods: [POST,DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteCustomerSession'
+        _legacy_controller: AdminSecuritySessionCustomer
+        _legacy_link: AdminSecuritySessionCustomer:submitBulkdeleteemployees
 
 admin_security_sessions_customer_search:
   path: /session/customer
