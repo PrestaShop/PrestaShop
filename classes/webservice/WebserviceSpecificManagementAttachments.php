@@ -151,6 +151,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      * Otherwise default webservice operations are done (read/write Model information using XML/json).
      *
      * Examples:
+     * [GET] https://domain.tld/api/attachments/ give a response in XML/json with all attachments.
      * [POST] https://domain.tld/api/attachments/ only creates model information (similar to any other default api), no file information.
      * [POST] https://domain.tld/api/attachments/file creates an attachment AND uploads a file for it.
      *
