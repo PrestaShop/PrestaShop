@@ -41,17 +41,17 @@ class Home extends FOBasePage {
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
-    this.productName = `${this.blockCartModalDiv} .product-name`;
-    this.productPrice = `${this.blockCartModalDiv} .product-price`;
-    this.productSize = `${this.blockCartModalDiv} .size strong`;
-    this.productColor = `${this.blockCartModalDiv} .color strong`;
-    this.productQuantity = `${this.blockCartModalDiv} .product-quantity`;
-    this.cartContent = `${this.blockCartModalDiv} .cart-content`;
-    this.productsCount = `${this.cartContent} .cart-products-count`;
-    this.cartShipping = `${this.cartContent} .shipping.value`;
-    this.cartSubtotal = `${this.cartContent} .subtotal.value`;
-    this.productTaxIncl = `${this.cartContent} .product-total .value`;
-    this.blockCartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
+    this.cartModalProductNameBlock = `${this.blockCartModalDiv} .product-name`;
+    this.cartModalProductPriceBlock = `${this.blockCartModalDiv} .product-price`;
+    this.cartModalProductSizeBlock = `${this.blockCartModalDiv} .size strong`;
+    this.cartModalProductColorBlock = `${this.blockCartModalDiv} .color strong`;
+    this.cartModalProductQuantityBlock = `${this.blockCartModalDiv} .product-quantity`;
+    this.cartContentBlock = `${this.blockCartModalDiv} .cart-content`;
+    this.cartModalProductsCountBlock = `${this.cartContentBlock} .cart-products-count`;
+    this.cartModalShippingBlock = `${this.cartContentBlock} .shipping.value`;
+    this.cartModalSubtotalBlock = `${this.cartContentBlock} .subtotal.value`;
+    this.cartModalproductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
+    this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
   }
 
   /**
@@ -259,13 +259,13 @@ class Home extends FOBasePage {
    */
   async getProductDetailsFromBlockCartModal(page) {
     return {
-      name: await this.getTextContent(page, this.productName),
-      price: parseFloat((await this.getTextContent(page, this.productPrice)).replace('€', '')),
-      quantity: await this.getNumberFromText(page, this.productQuantity),
-      cartProductsCount: await this.getNumberFromText(page, this.productsCount),
-      cartSubtotal: parseFloat((await this.getTextContent(page, this.cartSubtotal)).replace('€', '')),
-      cartShipping: await this.getTextContent(page, this.cartShipping),
-      totalTaxIncl: parseFloat((await this.getTextContent(page, this.productTaxIncl)).replace('€', '')),
+      name: await this.getTextContent(page, this.cartModalProductNameBlock),
+      price: parseFloat((await this.getTextContent(page, this.cartModalProductPriceBlock)).replace('€', '')),
+      quantity: await this.getNumberFromText(page, this.cartModalProductQuantityBlock),
+      cartProductsCount: await this.getNumberFromText(page, this.cartModalProductsCountBlock),
+      cartSubtotal: parseFloat((await this.getTextContent(page, this.cartModalSubtotalBlock)).replace('€', '')),
+      cartShipping: await this.getTextContent(page, this.cartModalShippingBlock),
+      totalTaxIncl: parseFloat((await this.getTextContent(page, this.cartModalproductTaxInclBlock)).replace('€', '')),
     };
   }
 
@@ -276,8 +276,8 @@ class Home extends FOBasePage {
    */
   async getProductAttributesFromBlockCartModal(page) {
     return {
-      size: await this.getTextContent(page, this.productSize),
-      color: await this.getTextContent(page, this.productColor),
+      size: await this.getTextContent(page, this.cartModalProductSizeBlock),
+      color: await this.getTextContent(page, this.cartModalProductColorBlock),
     };
   }
 
@@ -287,7 +287,7 @@ class Home extends FOBasePage {
    * @return {Promise<void>}
    */
   async proceedToCheckout(page) {
-    await this.clickAndWaitForNavigation(page, this.blockCartModalCheckoutLink);
+    await this.clickAndWaitForNavigation(page, this.cartModalCheckoutLink);
     await page.waitForLoadState('domcontentloaded');
   }
 
