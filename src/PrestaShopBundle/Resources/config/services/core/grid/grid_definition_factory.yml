@@ -274,17 +274,11 @@ services:
       public: true
 
     prestashop.core.grid.definition.factory.security.session.employee:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory'
-        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'employeeSessions'})"
-            - "@=service('router').generate('admin_security_sessions_employee_search')"
-        public: true
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
 
     prestashop.core.grid.definition.factory.security.session.customer:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory'
-        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'customerSessions'})"
-            - "@=service('router').generate('admin_security_sessions_customer_search')"
-        public: true
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

@@ -63,32 +63,6 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     public const GRID_ID = 'security_session_employee';
 
     /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectionUrl;
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        string $resetActionUrl,
-        string $redirectionUrl
-    ) {
-        parent::__construct($hookDispatcher);
-
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getId(): string
@@ -252,10 +226,11 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_security_sessions_employee_search',
                     ])
                     ->setAssociatedColumn('actions')
             );
