@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
@@ -79,6 +80,18 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         } catch (VirtualProductFileException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I delete virtual product file ":fileReference"
+     *
+     * @param string $fileReference
+     */
+    public function deleteFile(string $fileReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteVirtualProductFileCommand(
+            $this->getSharedStorage()->get($fileReference)
+        ));
     }
 
     /**
@@ -172,7 +185,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         unset($dataRows['expiration date']);
 
         if (!empty($dataRows)) {
-            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_dump($dataRows)));
+            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_export($dataRows, true)));
         }
     }
 
