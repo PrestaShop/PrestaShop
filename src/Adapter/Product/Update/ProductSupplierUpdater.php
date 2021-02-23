@@ -34,13 +34,13 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use Product;
 use ProductSupplier;
-use RuntimeException;
 
 /**
  * Updates product supplier relation
@@ -100,7 +100,7 @@ class ProductSupplierUpdater
         $product = $this->productRepository->get($productId);
 
         if ($product->cache_default_attribute) {
-            throw new RuntimeException(sprintf(
+            throw new InvalidProductTypeException(sprintf(
                 'Product #%d has combinations. Use %s::%s to set product suppliers for specified combination',
                 $productId->getValue(),
                 self::class,
@@ -141,7 +141,7 @@ class ProductSupplierUpdater
         $product = $this->productRepository->get($productId);
 
         if ($product->cache_default_attribute) {
-            throw new RuntimeException(sprintf(
+            throw new InvalidProductTypeException(sprintf(
                 'Product #%d has combinations. Use %s::%s to remove product suppliers for specific combination',
                 $productId->getValue(),
                 self::class,
