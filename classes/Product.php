@@ -7137,38 +7137,34 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Webservice getter : Get product attachments ids of current product for association
+     * Webservice getter: Get product attachments ids of current product for association
      *
-     * @return array
+     * @return array<int, array{id: string}>
      */
-    public function getWsAttachments()
+    public function getWsAttachments(): array
     {
-        $result = Db::getInstance()->executeS('SELECT a.`id_attachment` AS id
-			FROM `' . _DB_PREFIX_ . 'product_attachment` pa
-			LEFT JOIN `' . _DB_PREFIX_ . 'attachment` a ON (pa.id_attachment = a.id_attachment)
-			' . Shop::addSqlAssociation('attachment', 'a') . '
-			WHERE pa.`id_product` = ' . (int) $this->id);
-
-        return $result;
+        return Db::getInstance()->executeS(
+            'SELECT a.`id_attachment` AS id ' .
+            'FROM `' . _DB_PREFIX_ . 'product_attachment` pa ' .
+            'INNER JOIN `' . _DB_PREFIX_ . 'attachment` a ON (pa.id_attachment = a.id_attachment) ' .
+            Shop::addSqlAssociation('attachment', 'a') . ' ' .
+            'WHERE pa.`id_product` = ' . (int) $this->id
+        );
     }
 
     /**
-     * Webservice setter : set product attachments ids of current product for association
+     * Webservice setter: set product attachments ids of current product for association
      *
-     * @param $attachments ids
+     * @param array<array{id: int|string}> $attachments ids
      */
-    public function setWsAttachments($attachments)
+    public function setWsAttachments(array $attachments): bool
     {
-        try {
-            $this->deleteAttachments(true);
-            foreach ($attachments as $attachment) {
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment`
+        $this->deleteAttachments(true);
+        foreach ($attachments as $attachment) {
+            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment`
     				(`id_product`, `id_attachment`) VALUES (' . (int) $this->id . ', ' . (int) $attachment['id'] . ')');
-            }
-            Product::updateCacheAttachment((int) $this->id);
-        } catch (Exception $e) {
-            return false;
         }
+        Product::updateCacheAttachment((int) $this->id);
 
         return true;
     }

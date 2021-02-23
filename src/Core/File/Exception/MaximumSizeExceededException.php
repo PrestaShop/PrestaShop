@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\File\Exception;
 
 /**
- * Thrown when maximum size exceeded
+ * Thrown when maximum file size exceeded
  */
 class MaximumSizeExceededException extends FileException
 {

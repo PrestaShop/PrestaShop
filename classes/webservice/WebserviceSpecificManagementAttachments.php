@@ -26,21 +26,19 @@
 
 declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\File\FileUploader;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * This class is responsible for managing Attachement through webservice
+ */
 class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificManagementInterface
 {
     /**
      * @var WebserviceOutputBuilder
      */
     protected $objOutput;
-
-    /**
-     * @var mixed
-     */
-    protected $output;
 
     /**
      * @var WebserviceRequest
@@ -55,12 +53,12 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     public $resourceConfiguration;
 
     /**
-     * @var mixed
+     * @var int
      */
-    protected $attachment_id;
+    protected $attachmentId;
 
     /**
-     * @var mixed
+     * @var array|null
      */
     protected $displayFile;
 
@@ -132,6 +130,11 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         return '';
     }
 
+    /**
+     * Manage attachements
+     *
+     * @return bool
+     */
     public function manage()
     {
         $this->manageAttachments();
@@ -168,9 +171,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         if ($this->getWsObject()->urlSegment[0] != '') {
-            /**
-             * @var ObjectModel
-             */
+            /** @var ObjectModel */
             $object = new Attachment();
             $this->getWsObject()->resourceConfiguration = $object->getWebserviceParameters();
         }
@@ -209,7 +210,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
 
                     // Emulate get/head to return output
                     $this->getWsObject()->method = 'GET';
-                    $this->getWsObject()->urlSegment[1] = $this->attachment_id;
+                    $this->getWsObject()->urlSegment[1] = $this->attachmentId;
                     $this->getWsObject()->urlSegment[2] = '';
                     $this->getWsObject()->executeEntityGetAndHead();
                     break;
@@ -309,7 +310,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         $attachment = new Attachment($attachmentId);
 
         $maximumSize = ((int) Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')) * 1024 * 1024;
-        $uploadedFile = new UploadedFile(
+        $uploader = new FileUploader(
             _PS_DOWNLOAD_DIR_,
             $maximumSize
         );
@@ -323,7 +324,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         try {
-            $file = $uploadedFile->upload($fileToUpload);
+            $file = $uploader->upload($fileToUpload);
             if (!empty($attachment->id)) {
                 unlink(PS_DOWNLOAD_DIR . $attachment->file);
             }
@@ -339,7 +340,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                 $attachment->add();
             }
             // Remember affected entity
-            $this->attachment_id = $attachment->id;
+            $this->attachmentId = $attachment->id;
         } catch (MaximumSizeExceeded $e) {
             $this->getWsObject()->errors[] = $this->trans(
                 'The file you are trying to upload is %2$d KB, which is larger than the maximum size allowed of %1$d KB.',

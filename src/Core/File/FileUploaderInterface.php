@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\File;
 
-interface UploadedFileInterface
+interface FileUploaderInterface
 {
     /**
      * Upload a file
      *
-     * @return array
+     * @return array<id: string, file_name: string, mime_type: string>
      */
     public function upload($file): array;
 }

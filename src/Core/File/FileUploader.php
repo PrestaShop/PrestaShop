@@ -34,7 +34,10 @@ use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
 use PrestaShop\PrestaShop\Core\File\Exception\MaximumSizeExceededException;
 
-class UploadedFile implements UploadedFileInterface
+/**
+ * Class is responsible to uploaded file through HTTP form or binary content
+ */
+class FileUploader implements FileUploaderInterface
 {
     /**
      * @var int
@@ -47,8 +50,8 @@ class UploadedFile implements UploadedFileInterface
     protected $downloadDirectory;
 
     /**
-     * @param string $downloadDirectory
-     * @param int $maximumSize
+     * @param string $downloadDirectory Server path where the file will be uploaded
+     * @param int $maximumSize Maximum accepted file size
      */
     public function __construct(
         string $downloadDirectory,
@@ -134,7 +137,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param array $file the $_FILES content
      *
-     * @return array<string, string>
+     * @return array<id: string, file_name: string, mime_type: string>
      *
      * @throws FileUploadException
      */
@@ -160,7 +163,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param string $content The binary string
      *
-     * @return array<string, string>
+     * @return array<id: string, file_name: string, mime_type: string|bool>
      *
      * @throws FileUploadException
      */
