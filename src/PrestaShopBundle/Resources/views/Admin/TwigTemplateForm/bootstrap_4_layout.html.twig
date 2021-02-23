@@ -187,7 +187,6 @@
             <div class="checkbox">
                 <label>
                   <input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}" class="category" {{ checked }}>
-      
                     {% if child.active is defined and child.active == 0 %}
                         <i>{{ child.name }}</i>
                     {%- else -%}
@@ -201,7 +200,7 @@
         {%- else -%}
             <div class="radio">
                 <label>
-                    <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category" {% if required %}required{% endif %}>
+                    <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category"{% if required %} required{% endif %}>
                     {{ child.name }}
                     {% if defaultCategory is defined %}
                         <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
