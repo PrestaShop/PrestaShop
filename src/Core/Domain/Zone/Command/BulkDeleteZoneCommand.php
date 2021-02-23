@@ -51,7 +51,7 @@ class BulkDeleteZoneCommand
     /**
      * @return ZoneId[]
      */
-    public function getZoneIds()
+    public function getZoneIds(): array
     {
         return $this->zoneIds;
     }

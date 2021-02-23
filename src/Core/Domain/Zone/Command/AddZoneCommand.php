@@ -44,19 +44,26 @@ class AddZoneCommand
     private $enabled;
 
     /**
+     * @var array
+     */
+    private $shopAssociation;
+
+    /**
      * @param string $name
      * @param bool $enabled
+     * @param array $shopAssociation
      */
-    public function __construct(string $name, bool $enabled)
+    public function __construct(string $name, bool $enabled, array $shopAssociation)
     {
         $this->name = $name;
         $this->enabled = $enabled;
+        $this->shopAssociation = $shopAssociation;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -64,8 +71,16 @@ class AddZoneCommand
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShopAssociation(): array
+    {
+        return $this->shopAssociation;
     }
 }

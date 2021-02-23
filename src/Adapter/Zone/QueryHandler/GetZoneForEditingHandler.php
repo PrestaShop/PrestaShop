@@ -53,6 +53,11 @@ final class GetZoneForEditingHandler implements GetZoneForEditingHandlerInterfac
             throw new ZoneNotFoundException(sprintf('Zone with id "%d" not found', $zoneId->getValue()));
         }
 
-        return new EditableZone($zoneId, (string) $zone->name, (bool) $zone->active);
+        return new EditableZone(
+            $zoneId,
+            (string) $zone->name,
+            (bool) $zone->active,
+            $zone->getAssociatedShops()
+        );
     }
 }

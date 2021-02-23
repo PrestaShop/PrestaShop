@@ -51,7 +51,7 @@ class DeleteZoneCommand
     /**
      * @return ZoneId
      */
-    public function getZoneId()
+    public function getZoneId(): ZoneId
     {
         return $this->zoneId;
     }

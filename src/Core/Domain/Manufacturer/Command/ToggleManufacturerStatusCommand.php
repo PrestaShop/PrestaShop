@@ -60,7 +60,7 @@ class ToggleManufacturerStatusCommand
     /**
      * @return ManufacturerId
      */
-    public function getManufacturerId()
+    public function getManufacturerId(): ManufacturerId
     {
         return $this->manufacturerId;
     }
@@ -68,7 +68,7 @@ class ToggleManufacturerStatusCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus()
+    public function getExpectedStatus(): bool
     {
         return $this->expectedStatus;
     }
