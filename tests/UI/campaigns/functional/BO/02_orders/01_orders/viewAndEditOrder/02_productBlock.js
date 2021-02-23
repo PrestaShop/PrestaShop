@@ -412,7 +412,7 @@ describe('Check product block in view order page', async () => {
       });
     });
 
-    /*describe('Add product \'Out of stock not allowed\'', async () => {
+    describe('Add product \'Out of stock not allowed\' and update quantity', async () => {
       it(`should add the product '${productOutOfStockNotAllowed.name}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderProductOutOfStockNotAllowed', baseContext);
 
@@ -422,6 +422,15 @@ describe('Check product block in view order page', async () => {
           expect(result.stockLocation).to.equal(productOutOfStockNotAllowed.stockLocation),
           expect(result.available).to.equal(productOutOfStockNotAllowed.quantity - 1),
         ]);
+
+        const isDisabled = await viewOrderPage.isAddButtonDisabled(page);
+        await expect(isDisabled).to.be.true;
+      });
+
+      it('update quantity of the product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityOutOfStockNotAllowed', baseContext);
+
+        await viewOrderPage.addQuantity(page, newQuantity);
 
         const isDisabled = await viewOrderPage.isAddButtonDisabled(page);
         await expect(isDisabled).to.be.true;
@@ -456,10 +465,10 @@ describe('Check product block in view order page', async () => {
           expect(result.total, 'Total price was not updated').to.equal(newPrice * newQuantity),
         ]);
       });
-    });*/
+    });
   });
 
-  /*// 5 - Delete the created customer
+  // 5 - Delete the created customer
   describe('Delete the created customer', async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
@@ -528,5 +537,5 @@ describe('Check product block in view order page', async () => {
         await expect(numberOfProducts).to.be.above(0);
       });
     });
-  });*/
+  });
 });

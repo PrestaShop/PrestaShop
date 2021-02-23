@@ -133,7 +133,6 @@ class AddOrder extends BOBasePage {
    * @return {Promise<void>}
    */
   async addProductToCart(page, product, quantity) {
-    await this.closeGrowlMessage(page);
     // Search product
     await this.setValue(page, this.productSearchInput, product.name);
     await this.waitForVisibleSelector(page, this.addProductToCartForm);

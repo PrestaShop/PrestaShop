@@ -438,11 +438,22 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async addProductToCart(page, quantity = 0) {
+    await this.closeGrowlMessage(page);
     if (quantity !== 0) {
-      await this.setValue(page, this.addProductRowQuantity, quantity);
+      await this.addQuantity(page, quantity);
     }
     await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
     return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * add product quantity
+   * @param page
+   * @param quantity
+   * @returns {Promise<void>}
+   */
+  async addQuantity(page, quantity) {
+    await this.setValue(page, this.addProductRowQuantity, quantity);
   }
 
   /**
@@ -460,7 +471,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isAddButtonDisabled(page) {
-    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 1000);
+    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 10000);
   }
 
   /**
