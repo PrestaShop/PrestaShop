@@ -34,6 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSession
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteCustomerSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteCustomerSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteEmployeeSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteEmployeeSessionException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session\CustomerFilters;
@@ -191,7 +195,7 @@ class SecurityController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_security_sessions_employee_list');
@@ -218,7 +222,7 @@ class SecurityController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_security_sessions_customer_list');
@@ -247,7 +251,7 @@ class SecurityController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_security_sessions_customer_list');
@@ -276,7 +280,7 @@ class SecurityController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (CoreException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_security_sessions_employee_list');
@@ -285,9 +289,11 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Get human readable error for exception.
      *
+     * @param Exception $e
+     *
      * @return array
      */
-    protected function getErrorMessages(): array
+    protected function getErrorMessages(Exception $e): array
     {
         return [
             SessionNotFoundException::class => $this->trans(
