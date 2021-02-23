@@ -81,7 +81,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(es.id_customer_session)')
+            ->select('COUNT(cs.id_customer_session)')
         ;
     }
 
