@@ -58,10 +58,15 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetails;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -1770,5 +1775,111 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function assertNoOrderError()
     {
         $this->assertLastErrorIsNull();
+    }
+
+    /**
+     * @Then /^the order "(.+)" has following (shipping|invoice) address$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param TableNode $table
+     */
+    public function orderCheckAddress(string $orderReference, string $addressType, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        switch ($addressType) {
+            case 'shipping':
+                /** @var OrderShippingAddressForViewing $address */
+                $address = $orderForViewing->getShippingAddress();
+                break;
+            case 'invoice':
+                /** @var OrderInvoiceAddressForViewing $address */
+                $address = $orderForViewing->getInvoiceAddress();
+                break;
+            default:
+                throw new RuntimeException('Adress Type is invalid');
+        }
+
+        $expectedDetails = $table->getRowsHash();
+        $arrayActual = [
+            'Address' => $address->getAddress1(),
+            'City' => $address->getCityName(),
+            'Country' => $address->getCountryName(),
+            'DNI' => $address->getDni(),
+            'Fullname' => $address->getFullName(),
+            'Postal code' => $address->getPostCode(),
+        ];
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            if (!array_key_exists($detailName, $arrayActual)) {
+                throw new RuntimeException(sprintf('Invalid check for address field %s', $detailName));
+            }
+
+            Assert::assertEquals(
+                $expectedDetailValue,
+                $arrayActual[$detailName],
+                sprintf(
+                    'Invalid address field %s for order %s, expected %s instead of %s',
+                    $detailName,
+                    $orderReference,
+                    $expectedDetailValue,
+                    $arrayActual[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^the preview order "(.+)" has following (shipping|invoice) address$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param TableNode $table
+     */
+    public function previewOrderCheckAddress(string $orderReference, string $addressType, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderPreview $orderPreview */
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+        switch ($addressType) {
+            case 'shipping':
+                /** @var OrderPreviewShippingDetails $address */
+                $address = $orderPreview->getShippingDetails();
+                break;
+            case 'invoice':
+                /** @var OrderPreviewInvoiceDetails $address */
+                $address = $orderPreview->getInvoiceDetails();
+                break;
+            default:
+                throw new RuntimeException('Adress Type is invalid');
+        }
+
+        $expectedDetails = $table->getRowsHash();
+        $arrayActual = [
+            'Address' => $address->getAddress1(),
+            'City' => $address->getCity(),
+            'Country' => $address->getCountry(),
+            'DNI' => $address->getDni(),
+            'Fullname' => $address->getFirstName() . ' ' . $address->getLastname(),
+            'Postal code' => $address->getPostalCode(),
+        ];
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            if (!array_key_exists($detailName, $arrayActual)) {
+                throw new RuntimeException(sprintf('Invalid check for address field %s', $detailName));
+            }
+
+            Assert::assertEquals(
+                $expectedDetailValue,
+                $arrayActual[$detailName],
+                sprintf(
+                    'Invalid address field %s for order %s, expected %s instead of %s',
+                    $detailName,
+                    $orderReference,
+                    $expectedDetailValue,
+                    $arrayActual[$detailName]
+                )
+            );
+        }
     }
 }
