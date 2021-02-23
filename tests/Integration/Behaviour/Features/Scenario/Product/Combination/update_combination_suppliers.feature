@@ -94,6 +94,26 @@ Feature: Update product combination suppliers in Back Office (BO)
     And combination "product1MBlack" should not have any suppliers assigned
     And combination "product1MBlue" should not have any suppliers assigned
 
+  Scenario: Remove all associated suppliers for standard product while it has combinations
+    Given product product1 type should be combination
+    And product product1 should not have any suppliers assigned
+    But combination "product1SWhite" should have following suppliers:
+      | combination supplier reference | currency | price tax excluded |
+      | sup white shirt S 1            | USD      | 10                 |
+      | sup S2                         | USD      | 0                  |
+      | sup S3                         | USD      | 5.5                |
+    When I set product product1 default supplier to supplier2 and following suppliers:
+      | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
+      | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
+      | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
+    Then I should get error that this action is forbidden for this type of product
+    And product product1 should not have any suppliers assigned
+    But combination "product1SWhite" should have following suppliers:
+      | combination supplier reference | currency | price tax excluded |
+      | sup white shirt S 1            | USD      | 10                 |
+      | sup S2                         | USD      | 0                  |
+      | sup S3                         | USD      | 5.5                |
+
   Scenario: Remove all associated combination suppliers
     Given product product1 type should be combination
     And combination "product1SWhite" should have following suppliers:
@@ -105,3 +125,13 @@ Feature: Update product combination suppliers in Back Office (BO)
     And combination "product1SWhite" should not have any suppliers assigned
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty
+
+  Scenario: Set suppliers for standard product while it has combinations
+    Given product product1 type should be combination
+    And product product1 should not have any suppliers assigned
+    When I set product product1 default supplier to supplier2 and following suppliers:
+      | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
+      | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
+      | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
+    Then I should get error that this action is forbidden for this type of product
+    And product product1 should not have any suppliers assigned
