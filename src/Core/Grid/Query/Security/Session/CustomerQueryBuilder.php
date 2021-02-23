@@ -65,7 +65,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('es.id_customer_session, e.id_customer, e.firstname, e.lastname, e.email')
+            ->select('cs.id_customer_session, c.id_customer, c.firstname, c.lastname, c.email')
         ;
 
         $this->searchCriteriaApplicator
@@ -96,8 +96,8 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'customer_session', 'es')
-            ->join('es', $this->dbPrefix . 'customer', 'e', 'e.id_customer = es.id_customer')
+            ->from($this->dbPrefix . 'customer_session', 'cs')
+            ->join('cs', $this->dbPrefix . 'customer', 'c', 'c.id_customer = cs.id_customer')
         ;
 
         $allowedFilters = [
@@ -114,14 +114,14 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_customer_session' === $name) {
-                $qb->andWhere('es.id_customer_session = :' . $name);
+                $qb->andWhere('cs.id_customer_session = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
             }
 
             if ('id_customer' === $name) {
-                $qb->andWhere('e.id_customer = :' . $name);
+                $qb->andWhere('c.id_customer = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
@@ -129,7 +129,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
 
             $qb->andWhere(
                 sprintf(
-                    'e.%s LIKE %s',
+                    'c.%s LIKE %s',
                     $name,
                     $name
                 )
