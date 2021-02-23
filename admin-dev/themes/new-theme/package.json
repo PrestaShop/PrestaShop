@@ -17,6 +17,7 @@
   "license": "OSL-3.0",
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "bootstrap-colorpicker": "^3.2.0",
     "bootstrap-slider": "^6.0.16",
     "bootstrap-tokenfield": "^0.12.0",
     "bourbon": "^4.2.6",
@@ -25,8 +26,8 @@
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "events": "^3.0.0",
     "fos-routing": "0.0.6",
-    "bootstrap-colorpicker": "^3.2.0",
     "jets": "0.11.0",
+    "jquery-serializejson": "^3.2.0",
     "jquery-ui-dist": "^1.12.1",
     "jwerty": "^0.3.2",
     "lodash": "^4.17.15",
@@ -44,9 +45,9 @@
     "typeahead.js": "^0.11.1",
     "url-polyfill": "^1.1.7",
     "vue": "^2.6.11",
+    "vue-i18n": "^8.15.1",
     "vue-resource": "^1.5.1",
     "vue-router": "^2.8.1",
-    "vue-i18n": "^8.15.1",
     "vue-template-compiler": "^2.6.11",
     "vuex": "^2.5.0"
   },
