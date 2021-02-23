@@ -28,29 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use ProductSupplier;
 
 /**
  * Handles @see SetProductSuppliersCommand using legacy object model
  */
-final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInterface
+final class SetProductSuppliersHandler extends AbstractProductSupplierHandler implements SetProductSuppliersHandlerInterface
 {
     /**
      * @var ProductSupplierUpdater
      */
     private $productSupplierUpdater;
-
-    /**
-     * @var ProductSupplierRepository
-     */
-    private $productSupplierRepository;
 
     /**
      * @param ProductSupplierUpdater $productSupplierUpdater
@@ -60,8 +52,8 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
         ProductSupplierUpdater $productSupplierUpdater,
         ProductSupplierRepository $productSupplierRepository
     ) {
+        parent::__construct($productSupplierRepository);
         $this->productSupplierUpdater = $productSupplierUpdater;
-        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
@@ -73,7 +65,7 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
         $productSuppliers = [];
 
         foreach ($command->getProductSuppliers() as $productSupplierDTO) {
-            $productSuppliers[] = $this->loadEntity($productId, $productSupplierDTO);
+            $productSuppliers[] = $this->loadEntityFromDTO($productId, $productSupplierDTO);
         }
 
         return $this->productSupplierUpdater->setProductSuppliers(
@@ -81,29 +73,5 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
             $command->getDefaultSupplierId(),
             $productSuppliers
         );
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param ProductSupplierDTO $productSupplierDTO
-     *
-     * @return ProductSupplier
-     */
-    private function loadEntity(ProductId $productId, ProductSupplierDTO $productSupplierDTO): ProductSupplier
-    {
-        if ($productSupplierDTO->getProductSupplierId()) {
-            $productSupplier = $this->productSupplierRepository->get($productSupplierDTO->getProductSupplierId());
-        } else {
-            $productSupplier = new ProductSupplier();
-        }
-
-        $productSupplier->id_product = $productId->getValue();
-        $productSupplier->id_product_attribute = CombinationId::NO_COMBINATION;
-        $productSupplier->id_supplier = $productSupplierDTO->getSupplierId()->getValue();
-        $productSupplier->id_currency = $productSupplierDTO->getCurrencyId()->getValue();
-        $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
-        $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
-
-        return $productSupplier;
     }
 }

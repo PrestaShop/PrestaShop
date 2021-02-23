@@ -28,15 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSupplierOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 
 /**
  * Handles @see GetProductSupplierOptions query
  */
-final class GetProductSupplierOptionsHandler extends AbstractSupplierOptionsHandler
+final class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler implements GetProductSupplierOptionsHandlerInterface
 {
     /**
      * @var ProductRepository

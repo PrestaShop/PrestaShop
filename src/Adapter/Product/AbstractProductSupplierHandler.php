@@ -25,24 +25,29 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use ProductSupplier;
 
 /**
- * Holds reusable methods for querying product supplier
+ * Holds reusable methods for ProductSupplier related query/command handlers
  */
-abstract class AbstractSupplierOptionsHandler
+abstract class AbstractProductSupplierHandler
 {
     /**
      * @var ProductSupplierRepository
      */
     protected $productSupplierRepository;
 
+    /**
+     * @param ProductSupplierRepository $productSupplierRepository
+     */
     public function __construct(
         ProductSupplierRepository $productSupplierRepository
     ) {
@@ -79,5 +84,32 @@ abstract class AbstractSupplierOptionsHandler
         }
 
         return $suppliersInfo;
+    }
+
+    /**
+     * Loads ProductSupplier object model with data from DTO.
+     *
+     * @param ProductId $productId
+     * @param ProductSupplierDTO $productSupplierDTO
+     * @param CombinationId|null $combinationId
+     *
+     * @return ProductSupplier
+     */
+    protected function loadEntityFromDTO(ProductId $productId, ProductSupplierDTO $productSupplierDTO, ?CombinationId $combinationId = null): ProductSupplier
+    {
+        if ($productSupplierDTO->getProductSupplierId()) {
+            $productSupplier = $this->productSupplierRepository->get($productSupplierDTO->getProductSupplierId());
+        } else {
+            $productSupplier = new ProductSupplier();
+        }
+
+        $productSupplier->id_product = $productId->getValue();
+        $productSupplier->id_product_attribute = $combinationId ? $combinationId->getValue() : CombinationId::NO_COMBINATION;
+        $productSupplier->id_supplier = $productSupplierDTO->getSupplierId()->getValue();
+        $productSupplier->id_currency = $productSupplierDTO->getCurrencyId()->getValue();
+        $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
+        $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
+
+        return $productSupplier;
     }
 }

@@ -27,27 +27,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use ProductSupplier;
 
-final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHandlerInterface
+final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements SetCombinationSuppliersHandlerInterface
 {
     /**
      * @var CombinationRepository
      */
     private $combinationRepository;
-
-    /**
-     * @var ProductSupplierRepository
-     */
-    private $productSupplierRepository;
 
     /**
      * @var ProductSupplierUpdater
@@ -64,8 +57,8 @@ final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHan
         ProductSupplierRepository $productSupplierRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
+        parent::__construct($productSupplierRepository);
         $this->combinationRepository = $combinationRepository;
-        $this->productSupplierRepository = $productSupplierRepository;
         $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
@@ -74,46 +67,19 @@ final class SetCombinationSuppliersHandler implements SetCombinationSuppliersHan
      */
     public function handle(SetCombinationSuppliersCommand $command): array
     {
-        $combination = $this->combinationRepository->get($command->getCombinationId());
+        $combinationId = $command->getCombinationId();
+        $combination = $this->combinationRepository->get($combinationId);
         $productId = new ProductId((int) $combination->id_product);
 
         $productSuppliers = [];
         foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
-            $productSuppliers[] = $this->loadEntity($productId, $command->getCombinationId(), $productSupplierDTO);
+            $productSuppliers[] = $this->loadEntityFromDTO($productId, $productSupplierDTO, $combinationId);
         }
 
         return $this->productSupplierUpdater->setCombinationSuppliers(
             $productId,
-            $command->getCombinationId(),
+            $combinationId,
             $productSuppliers
         );
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param CombinationId $combinationId
-     * @param ProductSupplierDTO $productSupplierDTO
-     *
-     * @return ProductSupplier
-     */
-    private function loadEntity(
-        ProductId $productId,
-        CombinationId $combinationId,
-        ProductSupplierDTO $productSupplierDTO
-    ): ProductSupplier {
-        if ($productSupplierDTO->getProductSupplierId()) {
-            $productSupplier = $this->productSupplierRepository->get($productSupplierDTO->getProductSupplierId());
-        } else {
-            $productSupplier = new ProductSupplier();
-        }
-
-        $productSupplier->id_product = $productId->getValue();
-        $productSupplier->id_product_attribute = $combinationId->getValue();
-        $productSupplier->id_supplier = $productSupplierDTO->getSupplierId()->getValue();
-        $productSupplier->id_currency = $productSupplierDTO->getCurrencyId()->getValue();
-        $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
-        $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
-
-        return $productSupplier;
     }
 }

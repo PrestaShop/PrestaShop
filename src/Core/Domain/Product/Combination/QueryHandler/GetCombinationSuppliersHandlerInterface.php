@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 
 /**
