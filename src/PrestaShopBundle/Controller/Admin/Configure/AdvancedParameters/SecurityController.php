@@ -138,7 +138,7 @@ class SecurityController extends FrameworkBundleAdminController
         $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.session.employee');
 
         return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employee.html.twig',
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
             [
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
@@ -161,7 +161,7 @@ class SecurityController extends FrameworkBundleAdminController
         $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.session.customer');
 
         return $this->render(
-            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customer.html.twig',
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customers.html.twig',
             [
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
@@ -194,7 +194,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_employee');
+        return $this->redirectToRoute('admin_security_sessions_employee_list');
     }
 
     /**
@@ -221,7 +221,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_customer');
+        return $this->redirectToRoute('admin_security_sessions_customer_list');
     }
 
     /**
@@ -250,7 +250,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_customer');
+        return $this->redirectToRoute('admin_security_sessions_customer_list');
     }
 
     /**
@@ -279,7 +279,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_employee');
+        return $this->redirectToRoute('admin_security_sessions_employee_list');
     }
 
     /**
@@ -293,6 +293,30 @@ class SecurityController extends FrameworkBundleAdminController
             SessionNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
+            ),
+            CannotDeleteCustomerSessionException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+            CannotBulkDeleteCustomerSessionException::class => $this->trans(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e->getMessage()
+            ),
+            CannotDeleteEmployeeSessionException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+            CannotBulkDeleteEmployeeSessionException::class => $this->trans(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e->getMessage()
             ),
         ];
     }
