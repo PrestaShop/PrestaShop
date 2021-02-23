@@ -654,8 +654,8 @@ class XmlLoader
             $position[$data['id_parent']] = 0;
         }
         $data['position'] = $position[$data['id_parent']]++;
-        $data['route_name'] = $data['route_name'] ?? '';
         $data['icon'] = $data['icon'] ?? '';
+        $data['route_name'] = $data['route_name'] ?? '';
 
         // Generate primary key manually
         if (!$xml->fields['primary']) {
@@ -672,6 +672,10 @@ class XmlLoader
         } else {
             $entity_id = 0;
         }
+
+        // Make sure data are correctly ordered because some attributes are optional
+        // and Db::insert needs to have all data keys in the same order when using multiple insert
+        ksort($data);
 
         // Store INSERT queries in order to optimize install with grouped inserts
         $this->delayed_inserts[$entity][] = array_map('pSQL', $data);
