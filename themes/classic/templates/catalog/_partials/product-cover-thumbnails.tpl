@@ -70,7 +70,6 @@
               {else}
                 alt="{$product.name}"
               {/if}
-              width="100"
               itemprop="image"
               loading="lazy"
               width="94"
