@@ -221,6 +221,9 @@ final class ContextStateManager
     }
 
     /**
+     * Return the stack of modified fields
+     * If it's null, no context field has been overridden
+     *
      * @return array|null
      */
     public function getContextFieldsStack(): ?array
@@ -266,6 +269,8 @@ final class ContextStateManager
     }
 
     /**
+     * Returns the index of the current stack
+     *
      * @return int
      */
     private function getCurrentStashIndex(): int
