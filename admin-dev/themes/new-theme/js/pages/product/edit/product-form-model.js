@@ -23,18 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updateSubmitButtonState: 'updateSubmitButtonState',
-  customizations: {
-    rowRemoved: 'customizationRowRemoved',
-    rowAdded: 'customizationRowAdded',
-  },
-  dropzone: {
-    addedFile: 'addedfile',
-    error: 'error',
-    success: 'success',
-    languageSelected: 'languageSelected',
-  },
-};
+import ObjectFormMapper from '@components/form/form-object-mapper';
+import ProductFormMapping from '@pages/product/edit/product-form-mapping';
+import ProductEventMap from '@pages/product/product-event-map';
+
+export default class ProductFormModel {
+  constructor($form, eventEmitter) {
+    this.mapper = new ObjectFormMapper(
+      $form,
+      ProductFormMapping,
+      eventEmitter,
+      {
+        modelUpdated: ProductEventMap.productModelUpdated,
+        updateModel: ProductEventMap.updatedProductModel,
+      },
+    );
+  }
+
+  getProduct() {
+    return this.mapper.getObject().product;
+  }
+}
