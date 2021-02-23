@@ -88,9 +88,9 @@ class ProductSupplierUpdater
     /**
      * @param ProductId $productId
      * @param SupplierId $defaultSupplierId
-     * @param ProductSupplier[] $productSuppliers
+     * @param array<int, ProductSupplier> $productSuppliers
      *
-     * @return ProductSupplierId[]
+     * @return array<int, ProductSupplierId>
      */
     public function setProductSuppliers(
         ProductId $productId,
@@ -119,7 +119,7 @@ class ProductSupplierUpdater
      * @param CombinationId $combinationId
      * @param array<int, ProductSupplier> $productSuppliers
      *
-     * @return ProductSupplierId[]
+     * @return <int, ProductSupplierId>
      */
     public function setCombinationSuppliers(
         ProductId $productId,
@@ -226,7 +226,7 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductId $productId
-     * @param ProductSupplier[] $productSuppliers
+     * @param array<int, ProductSupplier> $productSuppliers
      * @param CombinationId|null $combinationId
      */
     private function persistProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
@@ -246,7 +246,7 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductId $productId
-     * @param ProductSupplier[] $providedProductSuppliers
+     * @param array<int, ProductSupplier> $providedProductSuppliers
      * @param CombinationId|null $combinationId
      *
      * @return array<int, ProductSupplierId>
@@ -278,7 +278,7 @@ class ProductSupplierUpdater
      * @param ProductId $productId
      * @param CombinationId|null $combinationId
      *
-     * @return ProductSupplierId[]
+     * @return array<int, ProductSupplierId>
      */
     private function getCurrentProductSupplierIds(ProductId $productId, ?CombinationId $combinationId = null): array
     {
