@@ -24,11 +24,16 @@
  */
 
 export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updateSubmitButtonState: 'updateSubmitButtonState',
-  customizations: {
-    rowRemoved: 'customizationRowRemoved',
-    rowAdded: 'customizationRowAdded',
-  },
+  'product.stock.quantity': [
+    'product[stock][quantity]',
+    'product[shortcuts][stock][quantity]',
+  ],
+  'product.price.priceTaxExcluded': [
+    'product[price][price_tax_excluded]',
+    'product[shortcuts][price][price_tax_excluded]',
+  ],
+  'product.price.priceTaxIncluded': [
+    'product[price][price_tax_included]',
+    'product[shortcuts][price][price_tax_included]',
+  ],
 };

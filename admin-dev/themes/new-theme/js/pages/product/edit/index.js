@@ -31,6 +31,7 @@ import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import ProductMap from '@pages/product/product-map';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
+import ProductFormModel from '@pages/product/edit/product-form-model';
 
 const {$} = window;
 
@@ -46,6 +47,9 @@ $(() => {
   );
 
   const $productForm = $(ProductMap.productForm);
+
+  // Init product model along wth input watching and syncing
+  new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
 
   // Init Serp component to preview Search engine display
   const translatorInput = window.prestashop.instance.translatableInput;
