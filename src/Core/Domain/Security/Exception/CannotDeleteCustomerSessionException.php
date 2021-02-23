@@ -28,11 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
 /**
  * Class CannotDeleteCustomerSessionException is a base exception for security sessions context.
  */
-class CannotDeleteCustomerSessionException extends DomainException
+class CannotDeleteCustomerSessionException extends SessionException
 {
 }
