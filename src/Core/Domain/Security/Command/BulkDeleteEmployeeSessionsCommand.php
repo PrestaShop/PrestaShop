@@ -36,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\EmployeeSessionId;
 class BulkDeleteEmployeeSessionsCommand
 {
     /**
-     * @var EmployeeSessionId[]
+     * @var array<int, EmployeeSessionId>
      */
     private $sessionIds;
 
     /**
-     * @param int[] $sessionIds
+     * @param array<int, int> $sessionIds
      */
     public function __construct(array $sessionIds)
     {
@@ -49,17 +49,17 @@ class BulkDeleteEmployeeSessionsCommand
     }
 
     /**
-     * @return EmployeeSessionId[]
+     * @return array<int, EmployeeSessionId>
      */
-    public function getEmployeeSessionIds()
+    public function getEmployeeSessionIds(): array
     {
         return $this->sessionIds;
     }
 
     /**
-     * @param int[] $sessionIds
+     * @param array<int> $sessionIds
      */
-    private function setEmployeeSessionIds(array $sessionIds)
+    private function setEmployeeSessionIds(array $sessionIds): void
     {
         foreach ($sessionIds as $sessionId) {
             $this->sessionIds[] = new EmployeeSessionId((int) $sessionId);
