@@ -440,16 +440,16 @@
                 <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1" hide_host_mode="0">
                     <class_name>AdminShopUrl</class_name>
                 </tab>
-                <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" route_name="admin_security">
+                <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0">
                     <class_name>AdminParentSecurity</class_name>
                 </tab>
                     <tab id="Security_1" id_parent="Security" active="1" enabled="1" hide_host_mode="0" route_name="admin_security">
                         <class_name>AdminSecurity</class_name>
                     </tab>
-                    <tab id="EmployeeSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" route_name="admin_security_sessions_customer_list">
+                    <tab id="EmployeeSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" route_name="admin_security_sessions_employee_list">
                         <class_name>AdminSecuritySessionEmployee</class_name>
                     </tab>
-                    <tab id="CustomerSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" route_name="admin_security_sessions_employee_list">
+                    <tab id="CustomerSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" route_name="admin_security_sessions_customer_list">
                         <class_name>AdminSecuritySessionCustomer</class_name>
                     </tab>
 
