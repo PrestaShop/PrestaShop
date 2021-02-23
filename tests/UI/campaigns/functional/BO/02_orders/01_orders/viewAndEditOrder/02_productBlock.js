@@ -410,6 +410,13 @@ describe('Check product block in view order page', async () => {
           expect(result.total).to.equal(productOutOfStockAllowed.price),
         ]);
       });
+
+      it('should update quantity of the product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityOutOfStockAllowed', baseContext);
+
+        const quantity = await viewOrderPage.modifyProductQuantity(page, 1, newQuantity);
+        await expect(quantity, 'Quantity was not updated').to.equal(newQuantity);
+      });
     });
 
     describe('Add product \'Out of stock not allowed\' and update quantity', async () => {
@@ -427,7 +434,7 @@ describe('Check product block in view order page', async () => {
         await expect(isDisabled).to.be.true;
       });
 
-      it('update quantity of the product', async function () {
+      it('should update quantity of the product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityOutOfStockNotAllowed', baseContext);
 
         await viewOrderPage.addQuantity(page, newQuantity);
