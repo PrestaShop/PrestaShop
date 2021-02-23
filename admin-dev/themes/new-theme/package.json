@@ -27,6 +27,7 @@
     "events": "^3.0.0",
     "fos-routing": "0.0.6",
     "jets": "0.11.0",
+    "jquery-serializejson": "^3.2.0",
     "jquery-ui-dist": "^1.12.1",
     "jwerty": "^0.3.2",
     "lodash": "^4.17.15",
