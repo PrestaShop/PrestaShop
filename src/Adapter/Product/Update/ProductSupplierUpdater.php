@@ -87,7 +87,7 @@ class ProductSupplierUpdater
         SupplierId $defaultSupplierId,
         array $productSuppliers
     ): array {
-        $this->persist($productId, $productSuppliers);
+        $this->persistProductSuppliers($productId, $productSuppliers);
         $this->updateDefaultSupplier($productId, $defaultSupplierId);
 
         return $this->getCurrentProductSupplierIds($productId);
@@ -105,7 +105,7 @@ class ProductSupplierUpdater
         CombinationId $combinationId,
         array $productSuppliers
     ): array {
-        $this->persist($productId, $productSuppliers, $combinationId);
+        $this->persistProductSuppliers($productId, $productSuppliers, $combinationId);
 
         return $this->getCurrentProductSupplierIds($productId, $combinationId);
     }
@@ -137,7 +137,7 @@ class ProductSupplierUpdater
      * @param array<int, ProductSupplier> $productSuppliers
      * @param CombinationId|null $combinationId
      */
-    private function persist(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
+    private function persistProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
     {
         $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers, $combinationId);
 
