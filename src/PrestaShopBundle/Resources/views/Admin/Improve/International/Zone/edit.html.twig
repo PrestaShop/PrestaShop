@@ -34,3 +34,9 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/zone.bundle.js') }}"></script>
+{% endblock %}

@@ -50,21 +50,28 @@ class EditableZone
     private $enabled;
 
     /**
+     * @var array
+     */
+    private $associatedShops;
+
+    /**
      * @param ZoneId $zoneId
      * @param string $name
      * @param bool $enabled
+     * @param array $associatedShops
      */
-    public function __construct(ZoneId $zoneId, string $name, bool $enabled)
+    public function __construct(ZoneId $zoneId, string $name, bool $enabled, array $associatedShops)
     {
         $this->zoneId = $zoneId;
         $this->name = $name;
         $this->enabled = $enabled;
+        $this->associatedShops = $associatedShops;
     }
 
     /**
      * @return ZoneId
      */
-    public function getZoneId()
+    public function getZoneId(): ZoneId
     {
         return $this->zoneId;
     }
@@ -72,7 +79,7 @@ class EditableZone
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -80,8 +87,16 @@ class EditableZone
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssociatedShops(): array
+    {
+        return $this->associatedShops;
     }
 }

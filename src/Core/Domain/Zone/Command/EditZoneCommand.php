@@ -51,6 +51,11 @@ class EditZoneCommand
     private $enabled;
 
     /**
+     * @var array|null
+     */
+    private $shopAssociation;
+
+    /**
      * @param int $zoneId
      */
     public function __construct(int $zoneId)
@@ -61,7 +66,7 @@ class EditZoneCommand
     /**
      * @return ZoneId
      */
-    public function getZoneId()
+    public function getZoneId(): ZoneId
     {
         return $this->zoneId;
     }
@@ -69,7 +74,7 @@ class EditZoneCommand
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -79,7 +84,7 @@ class EditZoneCommand
      *
      * @return self
      */
-    public function setName(string $name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -89,7 +94,7 @@ class EditZoneCommand
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -99,9 +104,29 @@ class EditZoneCommand
      *
      * @return self
      */
-    public function setEnabled(bool $enabled)
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getShopAssociation(): ?array
+    {
+        return $this->shopAssociation;
+    }
+
+    /**
+     * @param array|null $shopAssociation
+     *
+     * @return self
+     */
+    public function setShopAssociation(?array $shopAssociation): self
+    {
+        $this->shopAssociation = $shopAssociation;
 
         return $this;
     }
