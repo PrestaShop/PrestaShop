@@ -602,11 +602,17 @@ class AdminStatusesControllerCore extends AdminController
             if (!$this->access('add')) {
                 return;
             }
-            $langIds = Language::getIDs(false);
 
+            $langIds = Language::getIDs(false);
+            $langDefault = (int) Configuration::get('PS_LANG_DEFAULT');
             foreach ($langIds as $id_lang) {
+                $name = (string) Tools::getValue('name_' . $id_lang);
+                if (empty($name)) {
+                    $name = (string) Tools::getValue('name_' . $langDefault);
+                }
+
                 $exists = OrderState::existsLocalizedNameInDatabase(
-                    (string) Tools::getValue('name_' . $id_lang),
+                    $name,
                     (int) $id_lang,
                     Tools::getIsset('id_order_state') ? (int) Tools::getValue('id_order_state') : null
                 );
