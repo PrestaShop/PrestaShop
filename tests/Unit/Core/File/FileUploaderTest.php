@@ -41,10 +41,10 @@ namespace Tests\Unit\Core\File;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\File\Exception;
-use PrestaShop\PrestaShop\Core\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\File\FileUploader;
 use Symfony\Component\Filesystem\Filesystem;
 
-class UploadedFileTest extends TestCase
+class FileUploaderTest extends TestCase
 {
     /**
      * @var string
@@ -66,7 +66,7 @@ class UploadedFileTest extends TestCase
         $this->downloadDirectory = sys_get_temp_dir() . '/' . uniqid();
         $this->filesystem = new Filesystem();
         $this->filesystem->mkdir($this->downloadDirectory);
-        $this->object = new UploadedFile(
+        $this->object = new FileUploader(
             $this->downloadDirectory,
             5
         );
@@ -102,7 +102,7 @@ class UploadedFileTest extends TestCase
 
     public function testUploadWithInvalidFilePutContents()
     {
-        $object = new UploadedFile(
+        $object = new FileUploader(
             '/path/to/unknow/directory',
             5
         );
