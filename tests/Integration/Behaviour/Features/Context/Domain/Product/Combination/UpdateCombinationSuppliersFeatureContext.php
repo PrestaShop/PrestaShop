@@ -34,8 +34,8 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
@@ -111,7 +111,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     public function assertSuppliers(string $combinationReference, TableNode $table): void
     {
         $expectedCombinationSuppliers = $table->getColumnsHash();
-        $actualCombinationSupplierOptions = $this->getCombinationSupplierOptions($combinationReference);
+        $actualCombinationSuppliersInfo = $this->getCombinationSuppliers($combinationReference);
 
         foreach ($expectedCombinationSuppliers as &$expectedCombinationSupplier) {
             $expectedCombinationSupplier['combination'] = $this->getSharedStorage()->get($combinationReference);
@@ -119,8 +119,8 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         }
 
         $actualCombinationSuppliers = [];
-        foreach ($actualCombinationSupplierOptions->getSuppliersInfo() as $actualProductSupplierOption) {
-            $productSupplierForEditing = $actualProductSupplierOption->getProductSupplierForEditing();
+        foreach ($actualCombinationSuppliersInfo as $productSupplierInfo) {
+            $productSupplierForEditing = $productSupplierInfo->getProductSupplierForEditing();
             $actualCombinationSuppliers[] = [
                 'combination supplier reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
@@ -143,10 +143,8 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
      */
     public function assertNoSuppliers(string $combinationReference): void
     {
-        $combinationSupplierOptions = $this->getCombinationSupplierOptions($combinationReference);
-
         Assert::assertEmpty(
-            $combinationSupplierOptions->getSuppliersInfo(),
+            $this->getCombinationSuppliers($combinationReference),
             sprintf('Combination "%s" should not have any suppliers assigned', $combinationReference)
         );
     }
@@ -154,9 +152,9 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     /**
      * @param string $combinationReference
      *
-     * @return CombinationSupplierOptions
+     * @return ProductSupplierInfo[]
      */
-    private function getCombinationSupplierOptions(string $combinationReference): CombinationSupplierOptions
+    private function getCombinationSuppliers(string $combinationReference): array
     {
         return $this->getQueryBus()->handle(new GetCombinationSuppliers(
             $this->getSharedStorage()->get($combinationReference)
