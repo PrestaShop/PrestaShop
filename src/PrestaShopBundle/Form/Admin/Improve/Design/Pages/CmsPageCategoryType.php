@@ -46,10 +46,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class CmsPageCategoryType extends TranslatorAwareType
 {
-    private const NAME_MAX_LENGTH = 64;
-    private const META_TITLE_MAX_LENGTH = 255;
-    private const META_KEYWORDS_MAX_LENGTH = 255;
-    private const META_DESCRIPTION_MAX_LENGTH = 512;
+    public const NAME_MAX_LENGTH = 64;
+    public const META_TITLE_MAX_LENGTH = 255;
+    public const META_KEYWORDS_MAX_LENGTH = 255;
+    public const META_DESCRIPTION_MAX_LENGTH = 512;
 
     /**
      * @var array

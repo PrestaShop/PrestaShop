@@ -49,10 +49,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class CmsPageType extends TranslatorAwareType
 {
-    private const TITLE_MAX_CHARS = 255;
-    private const META_DESCRIPTION_MAX_CHARS = 512;
-    private const META_KEYWORD_MAX_CHARS = 512;
-    private const FRIENDLY_URL_MAX_CHARS = 128;
+    public const TITLE_MAX_CHARS = 255;
+    public const META_DESCRIPTION_MAX_CHARS = 512;
+    public const META_KEYWORD_MAX_CHARS = 512;
+    public const FRIENDLY_URL_MAX_CHARS = 128;
 
     /**
      * @var array
