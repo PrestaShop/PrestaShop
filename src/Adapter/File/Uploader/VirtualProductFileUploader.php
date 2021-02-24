@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Uploader;
+namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
 use ErrorException;
-use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validator\VirtualProductFileValidator;
+use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
 use ProductDownload as VirtualProductFile;

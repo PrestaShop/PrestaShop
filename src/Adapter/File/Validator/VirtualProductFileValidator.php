@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validator;
+namespace PrestaShop\PrestaShop\Adapter\File\Validator;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
 
 /**
- * Validates virtual product file
+ * Validates virtual product file (the actual file itself & not the domain model)
  */
 class VirtualProductFileValidator
 {
