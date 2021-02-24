@@ -4170,10 +4170,10 @@ class ProductCore extends ObjectModel
      * Get available product quantities (this method already have decreased products in cart).
      *
      * @param int $idProduct Product identifier
-     * @param int|null $idProductAttribute Attribute identifier
+     * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param Cart|null $cart
-     * @param int|null $idCustomization Customization identifier
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
@@ -4279,7 +4279,7 @@ class ProductCore extends ObjectModel
      *                          - 1 Allow orders
      *                          - 2 Use global setting
      *
-     * @return int|true
+     * @return bool|int Returns false is Stock Management is disabled, or the (int) configuration if it's enabled
      */
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {

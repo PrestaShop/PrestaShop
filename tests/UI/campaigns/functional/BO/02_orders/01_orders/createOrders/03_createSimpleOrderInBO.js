@@ -14,7 +14,7 @@ const loginCommon = require('@commonTests/loginBO');
 // Import data
 
 // Customer
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Products
 const {Products} = require('@data/demo/products');
@@ -30,7 +30,7 @@ const addresses = require('@data/demo/address');
 
 // Order to make data
 const orderToMake = {
-  customer: DefaultAccount,
+  customer: DefaultCustomer,
   products: [
     {value: Products.demo_5, quantity: 4},
   ],
