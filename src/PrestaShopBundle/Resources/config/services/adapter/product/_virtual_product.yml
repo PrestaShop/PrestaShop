@@ -25,8 +25,6 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.file.uploader.virtual_product_file_uploader'
             - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
-            - '@filesystem'
-            - !php/const _PS_DOWNLOAD_DIR_
 
     prestashop.adapter.product.virtual_product.validate.virtual_product_file_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Validate\VirtualProductFileValidator

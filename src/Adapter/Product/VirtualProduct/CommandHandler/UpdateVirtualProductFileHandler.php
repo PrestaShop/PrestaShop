@@ -71,7 +71,7 @@ final class UpdateVirtualProductFileHandler implements UpdateVirtualProductFileH
 
         $this->virtualProductUpdater->updateFile(
             $virtualProductFile,
-            $command->getFilePath(),
+            $command->getFilePath()
         );
     }
 
