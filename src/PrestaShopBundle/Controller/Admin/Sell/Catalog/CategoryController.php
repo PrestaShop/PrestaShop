@@ -178,8 +178,9 @@ class CategoryController extends FrameworkBundleAdminController
          * Parent category can be root category only if you specifically click to add root category.
          * In all other cases it should be at least home category(Or one of it's children).
          */
-        if ($parentId === $this->configuration->getInt('PS_ROOT_CATEGORY')) {
-            $parentId = $this->configuration->getInt('PS_HOME_CATEGORY');
+        $configRootCategory = $this->configuration->getInt('PS_ROOT_CATEGORY');
+        if ($parentId === $configRootCategory) {
+            $parentId = $configRootCategory;
         }
 
         $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
