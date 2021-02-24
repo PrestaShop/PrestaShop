@@ -118,4 +118,15 @@ class VirtualProductUpdater
 
         return $this->virtualProductFileRepository->add($virtualProductFile);
     }
+
+    /**
+     * @param VirtualProductFileId $virtualProductFileId
+     */
+    public function deleteFile(VirtualProductFileId $virtualProductFileId): void
+    {
+        $virtualProductFile = $this->virtualProductFileRepository->get($virtualProductFileId);
+        $this->virtualProductFileUploader->remove($virtualProductFile->filename);
+
+        $this->virtualProductFileRepository->delete($virtualProductFileId);
+    }
 }
