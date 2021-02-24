@@ -4759,7 +4759,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_lang Language identifier
      * @param string $query Search query
-     * @param Context|null $context
+     * @param Context|null $context Deprecated, obsolete parameter not used anymore
      * @param int|null $limit
      *
      * @return array|false Matching products
