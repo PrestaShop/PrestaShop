@@ -99,9 +99,9 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
 
         $prefix = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX;
 
-        // If we are in multistore context and the multistore checkbox value is absent (it was unchecked),
+        // If we are in multistore context (not all shop) and the multistore checkbox value is absent (it was unchecked),
         // then the field multistore value must be removed from DB for current context
-        if ($this->multistoreFeature->isUsed() && !isset($input[$prefix . $fieldName])) {
+        if ($this->multistoreFeature->isUsed() && !$this->shopContext->isAllShopContext() && !isset($input[$prefix . $fieldName])) {
             $this->configuration->deleteFromContext($configurationKey, $shopConstraint);
         } else {
             $this->configuration->set($configurationKey, $input[$fieldName], $shopConstraint, $options);
