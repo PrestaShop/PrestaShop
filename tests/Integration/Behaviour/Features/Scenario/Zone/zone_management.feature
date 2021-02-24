@@ -40,7 +40,7 @@ Feature: Zones management
   Scenario: Deleting zone
     When I delete zone "sun"
     Then zone "sun" should be deleted
-    
+
   Scenario: Deleting multiple zones in bulk action
     When I delete zones: "mars, jupiter" using bulk action
     Then zones: "mars, jupiter" should be deleted
