@@ -14,10 +14,10 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\UpdateVirtualProductFileHandler
         arguments:
             - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
+            - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand
-
 
     prestashop.adapter.product.virtual_product.update.virtual_product_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater
@@ -25,6 +25,8 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.file.uploader.virtual_product_file_uploader'
             - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
+            - '@filesystem'
+            - !php/const _PS_DOWNLOAD_DIR_
 
     prestashop.adapter.product.virtual_product.validate.virtual_product_file_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Validate\VirtualProductFileValidator

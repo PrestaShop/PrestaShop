@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Validate\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotAddVirtualProductFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotUpdateVirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -116,5 +117,14 @@ class VirtualProductFileRepository extends AbstractObjectModelRepository
         $id = $this->addObjectModel($virtualProductFile, CannotAddVirtualProductFileException::class);
 
         return new VirtualProductFileId($id);
+    }
+
+    /**
+     * @param VirtualProductFile $virtualProductFile
+     */
+    public function update(VirtualProductFile $virtualProductFile): void
+    {
+        $this->virtualProductFileValidator->validate($virtualProductFile);
+        $this->updateObjectModel($virtualProductFile, CannotUpdateVirtualProductFileException::class);
     }
 }
