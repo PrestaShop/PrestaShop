@@ -603,6 +603,25 @@ class AdminStatusesControllerCore extends AdminController
                 return;
             }
 
+            $langIds = Language::getIDs(false);
+            $langDefault = (int) Configuration::get('PS_LANG_DEFAULT');
+            foreach ($langIds as $id_lang) {
+                $name = (string) Tools::getValue('name_' . $id_lang);
+                if (empty($name)) {
+                    $name = (string) Tools::getValue('name_' . $langDefault);
+                }
+
+                $exists = OrderState::existsLocalizedNameInDatabase(
+                    $name,
+                    (int) $id_lang,
+                    Tools::getIsset('id_order_state') ? (int) Tools::getValue('id_order_state') : null
+                );
+                if ($exists) {
+                    $this->errors[] = $this->trans('This name already exists.', [], 'Admin.Design.Notification');
+                    break;
+                }
+            }
+
             $this->deleted = false; // Disabling saving historisation
             $_POST['invoice'] = (int) Tools::getValue('invoice_on');
             $_POST['logable'] = (int) Tools::getValue('logable_on');
@@ -614,7 +633,7 @@ class AdminStatusesControllerCore extends AdminController
             $_POST['pdf_delivery'] = (int) Tools::getValue('pdf_delivery_on');
             $_POST['pdf_invoice'] = (int) Tools::getValue('pdf_invoice_on');
             if (!$_POST['send_email']) {
-                foreach (Language::getIDs(false) as $id_lang) {
+                foreach ($langIds as $id_lang) {
                     $_POST['template_' . $id_lang] = '';
                 }
             }
