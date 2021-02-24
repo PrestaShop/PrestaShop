@@ -75,7 +75,7 @@ export default class ProductRenderer {
           $template.find(createOrderMap.listedProductQtyStock),
           $template.find(createOrderMap.listedProductQtyInput),
           product.availableStock,
-          product.availableOutOfStock || (product.availableStock <= 0)
+          product.availableOutOfStock || (product.availableStock <= 0),
         );
         $template.find(createOrderMap.productTotalPriceField).text(product.price);
         $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
@@ -166,10 +166,10 @@ export default class ProductRenderer {
       $(createOrderMap.inStockCounter),
       $(createOrderMap.quantityInput),
       product.stock,
-      product.availableOutOfStock || (product.stock <= 0)
+      product.availableOutOfStock || (product.stock <= 0),
     );
-    this._renderCombinations(product.combinations);
-    this._renderCustomizations(product.customizationFields);
+    this.renderCombinations(product.combinations);
+    this.renderCustomizations(product.customizationFields);
   }
 
   /**
