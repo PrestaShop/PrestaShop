@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 
 /**
- * Updates order returns state. Order return is called merchandise return in user interface.
+ * Updates order returns state.
  */
 class UpdateOrderReturnStateCommand
 {
