@@ -100,6 +100,7 @@ const simpleProduct = new ProductFaker({
 const productQuantity = 0;
 const newQuantity = 2;
 const newPrice = 25;
+let productNumber = 0;
 
 /*
 Create order by guest in FO
@@ -181,6 +182,7 @@ describe('Check product block in view order page', async () => {
 
       // Check the confirmation message
       await expect(cardTitle).to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
+      productNumber += 1;
     });
   });
 
@@ -277,6 +279,16 @@ describe('Check product block in view order page', async () => {
 
   // 4 - Check product block
   describe('Check product block', async () => {
+    describe('Delete product', async () => {
+      it('should delete the ordered product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+
+        const textResult = await viewOrderPage.deleteProduct(page, 1);
+        await expect(textResult).to.contains(viewOrderPage.successfulDeleteProductMessage);
+        productNumber -= 1;
+      });
+    });
+
     describe('Add \'Simple product\' 2 times and check the error message', async () => {
       it(`should add the product '${simpleProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderSimpleProduct1', baseContext);
@@ -290,6 +302,7 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+        productNumber += 1;
       });
 
       it('should add the same product and check the error message', async function () {
@@ -317,6 +330,7 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+        productNumber += 1;
       });
     });
 
@@ -333,6 +347,7 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+        productNumber += 1;
       });
     });
 
@@ -349,6 +364,7 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.errorMinimumQuantityMessage);
+        productNumber += 1;
       });
 
       it('should check ordered product details', async function () {
@@ -381,6 +397,7 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+        productNumber += 1;
       });
     });
 
@@ -397,6 +414,7 @@ describe('Check product block in view order page', async () => {
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+        productNumber += 1;
       });
 
       it('should check the ordered product details', async function () {
@@ -451,7 +469,7 @@ describe('Check product block in view order page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts3', baseContext);
 
         const productCount = await viewOrderPage.getProductsNumber(page);
-        await expect(productCount).to.equal(7);
+        await expect(productCount).to.equal(productNumber);
       });
 
       it('should update the quantity of the ordered product', async function () {

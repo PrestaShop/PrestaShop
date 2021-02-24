@@ -8,6 +8,7 @@ class Order extends BOBasePage {
     this.pageTitle = 'Order';
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
     this.successfulAddProductMessage = 'The product was successfully added.';
+    this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
 
@@ -35,6 +36,7 @@ class Order extends BOBasePage {
      td.cellProductAvailableQuantity`;
     this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
     this.editProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Edit']`;
+    this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Delete']`;
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
@@ -143,6 +145,18 @@ class Order extends BOBasePage {
       this.waitForVisibleSelector(page, this.editProductPriceInput),
     ]);
     await this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row));
+  }
+
+  /**
+   * Delete product
+   * @param page
+   * @param row
+   * @returns {Promise<string>}
+   */
+  async deleteProduct(page, row) {
+    await this.dialogListener(page);
+    await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
+    return this.getGrowlMessageContent(page);
   }
 
   /**
