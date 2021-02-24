@@ -25,9 +25,9 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Repository\VirtualProductFileRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\DeleteVirtualProductFileHandlerInterface;
 
