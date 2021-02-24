@@ -118,6 +118,6 @@
 </script>
 <div id="{{ input_name }}_div">
     <input type="hidden" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />
-    <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" {% if disabled|default(false) %}disabled{% endif %} />
-    <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" {% if disabled|default(false) %}disabled{% endif %} />
+    <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" {% if disabled|default(false) %}disabled{% endif %} aria-label="{{ "%inputId% Minimum Input"|trans({'%inputId%': input_name}, 'Admin.Global') }}" />
+    <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" {% if disabled|default(false) %}disabled{% endif %} aria-label="{{ "%inputId% Maximum Input"|trans({'%inputId%': input_name}, 'Admin.Global') }}" />
 </div>

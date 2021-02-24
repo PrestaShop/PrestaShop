@@ -104,6 +104,7 @@
               placeholder="{{ "Search name"|trans({}, 'Admin.Catalog.Help') }}"
               name="filter_column_name"
               value="{{ filter_column_name }}"
+              aria-label="{{ "%inputId% input"|trans({'%inputId%': 'filter_column_name'}, 'Admin.Global') }}"
               {% if filters_disabled %}disabled{% endif %}
             />
           </th>
@@ -114,6 +115,7 @@
               placeholder="{{ "Search ref."|trans({}, 'Admin.Catalog.Help') }}"
               name="filter_column_reference"
               value="{{ filter_column_reference }}"
+              aria-label="{{ "%inputId% input"|trans({'%inputId%': 'filter_column_reference'}, 'Admin.Global') }}"
               {% if filters_disabled %}disabled{% endif %}
             />
           </th>
@@ -124,6 +126,7 @@
               placeholder="{{ "Search category"|trans({}, 'Admin.Catalog.Help') }}"
               name="filter_column_name_category"
               value="{{ filter_column_name_category }}"
+              aria-label="{{ "%inputId% input"|trans({'%inputId%': 'filter_column_name_category'}, 'Admin.Global') }}"
               {% if filters_disabled %}disabled{% endif %}
             />
           </th>
@@ -157,7 +160,8 @@
 
           <th id="product_filter_column_active" class="text-center">
             <div class="form-select">
-              <select class="custom-select"  name="filter_column_active" {% if filters_disabled %}disabled{% endif %}>
+              <select class="custom-select"  name="filter_column_active" {% if filters_disabled %}disabled{% endif %} aria-label="{{ "%inputId% select"|trans({'%inputId%': 'filter_column_active'}, 'Admin.Global') }}"
+                >
                 <option value=""></option>
                 <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
                 <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
