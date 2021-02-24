@@ -1267,6 +1267,7 @@ Feature: Order from Back Office (BO)
     And cart rule "cartRuleFreeGift" applies discount only when cart total is above 30.00
     # Make an order
     And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 3 products "Product 12345" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
@@ -1278,14 +1279,14 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 49.00 |
-      | total_products_wt        | 49.00 |
+      | total_products_wt        | 51.94 |
       | total_discounts_tax_excl | 13.00 |
-      | total_discounts_tax_incl | 13.00 |
-      | total_shipping_tax_excl  | 0.0   |
-      | total_shipping_tax_incl  | 0.0   |
-      | total_paid_tax_excl      | 36.00 |
-      | total_paid_tax_incl      | 36.00 |
-      | total_paid               | 36.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 43.00 |
+      | total_paid_tax_incl      | 45.58 |
+      | total_paid               | 45.58 |
       | total_paid_real          | 0.0   |
     When I edit product "Product 12345" to order "bo_order1" with following products details:
       | amount | 1     |
@@ -1295,14 +1296,14 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 12.00 |
-      | total_products_wt        | 12.00 |
+      | total_products_wt        | 12.72 |
       | total_discounts_tax_excl | 0.0   |
       | total_discounts_tax_incl | 0.0   |
-      | total_shipping_tax_excl  | 0.0   |
-      | total_shipping_tax_incl  | 0.0   |
-      | total_paid_tax_excl      | 12.00 |
-      | total_paid_tax_incl      | 12.00 |
-      | total_paid               | 12.00 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 19.00 |
+      | total_paid_tax_incl      | 20.14 |
+      | total_paid               | 20.14 |
       | total_paid_real          | 0.0   |
     When I edit product "Product 12345" to order "bo_order1" with following products details:
       | amount | 3 |
@@ -1312,12 +1313,12 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 49.00 |
-      | total_products_wt        | 49.00 |
+      | total_products_wt        | 51.94 |
       | total_discounts_tax_excl | 13.00 |
-      | total_discounts_tax_incl | 13.00 |
-      | total_shipping_tax_excl  | 0.0   |
-      | total_shipping_tax_incl  | 0.0   |
-      | total_paid_tax_excl      | 36.00 |
-      | total_paid_tax_incl      | 36.00 |
-      | total_paid               | 36.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 43.00 |
+      | total_paid_tax_incl      | 45.58 |
+      | total_paid               | 45.58 |
       | total_paid_real          | 0.0   |
