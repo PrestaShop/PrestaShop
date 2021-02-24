@@ -4764,12 +4764,8 @@ class ProductCore extends ObjectModel
      *
      * @return array|false Matching products
      */
-    public static function searchByName($id_lang, $query, Context $context = null, $limit = null)
+    public static function searchByName($id_lang, $query, $limit = null)
     {
-        if (!$context) {
-            $context = Context::getContext();
-        }
-
         $sql = new DbQuery();
         $sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
         $sql->from('product', 'p');
