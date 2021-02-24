@@ -16,7 +16,9 @@ class AddProduct extends BOBasePage {
 
     // Selectors
     this.productNameInput = '#form_step1_name_1';
+    this.productImageDropZoneDiv = '#product-images-dropzone';
     this.productTypeSelect = '#form_step1_type_product';
+    this.openFileManagerDiv = '.disabled.openfilemanager.dz-clickable';
     this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
@@ -93,6 +95,12 @@ class AddProduct extends BOBasePage {
    */
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
+    if (productData.coverImage !== null) {
+      await this.uploadFilePath(page, this.productImageDropZoneDiv, productData.coverImage);
+    }
+    if (productData.thumbImage !== null) {
+      await this.uploadFilePath(page, this.openFileManagerDiv, productData.thumbImage);
+    }
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(page, this.productTypeSelect, productData.type);

@@ -1,5 +1,5 @@
 module.exports = {
-  DefaultAccount: {
+  DefaultEmployee: {
     id: 1,
     firstName: 'Marc',
     lastName: 'Beier',

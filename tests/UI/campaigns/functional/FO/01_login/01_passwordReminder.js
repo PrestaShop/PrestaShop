@@ -17,7 +17,7 @@ const loginPage = require('@pages/FO/login');
 const passwordReminderPage = require('@pages/FO/passwordReminder');
 
 // Import datas
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 
 // Import test context
@@ -88,9 +88,10 @@ describe('Password reminder', async () => {
       const alertSuccessMessage = await emailPage.setupSmtpParameters(
         page,
         smtpServer,
-        DefaultAccount.email,
-        DefaultAccount.password,
-        smtpPort);
+        DefaultCustomer.email,
+        DefaultCustomer.password,
+        smtpPort,
+      );
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
 
@@ -141,10 +142,10 @@ describe('Password reminder', async () => {
     it('should send reset password link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordLink', baseContext);
 
-      await passwordReminderPage.sendResetPasswordLink(page, DefaultAccount.email);
+      await passwordReminderPage.sendResetPasswordLink(page, DefaultCustomer.email);
 
       const successAlertContent = await passwordReminderPage.checkResetLinkSuccess(page);
-      await expect(successAlertContent).to.contains(DefaultAccount.email);
+      await expect(successAlertContent).to.contains(DefaultCustomer.email);
     });
 
     it('should check if reset password mail is in mailbox', async function () {

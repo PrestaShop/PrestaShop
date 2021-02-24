@@ -13,7 +13,7 @@ const loginPage = require('@pages/FO/login');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const CartData = require('@data/FO/cart');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
@@ -54,7 +54,7 @@ describe('Order a product and check order confirmation', async () => {
   it('should sign In in FO With default account', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-    await loginPage.customerLogin(page, DefaultAccount);
+    await loginPage.customerLogin(page, DefaultCustomer);
     const connected = await homePage.isCustomerConnected(page);
     await expect(connected, 'Customer is not connected in FO').to.be.true;
   });
