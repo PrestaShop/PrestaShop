@@ -46,7 +46,7 @@ class GeneralType extends TranslatorAwareType
             [
                 'required' => true,
                 'label' => $this->trans('Back office token protection', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Back-Office pages require the use of a token. If needed, this protection can be disabled.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Back office pages require the use of a token. This protection can be disabled if needed.', 'Admin.Advparameters.Help'),
             ]
         );
     }
