@@ -39,5 +39,5 @@ class OrderConstraintException extends OrderException
     /**
      * @var int Is used when invalid (not string) internal note provided
      */
-    public const INVALID_INTERNAL_NOTE = 2;
+    public const INVALID_PAYMENT_METHOD = 2;
 }
