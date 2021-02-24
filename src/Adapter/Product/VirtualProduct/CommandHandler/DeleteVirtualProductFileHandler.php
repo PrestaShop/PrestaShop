@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\DeleteVirtualProductFileHandlerInterface;
 
@@ -37,17 +37,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\
 class DeleteVirtualProductFileHandler implements DeleteVirtualProductFileHandlerInterface
 {
     /**
-     * @var VirtualProductFileRepository
+     * @var VirtualProductUpdater
      */
-    private $virtualProductFileRepository;
+    private $virtualProductUpdater;
 
     /**
-     * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param VirtualProductUpdater $virtualProductUpdater
      */
     public function __construct(
-        VirtualProductFileRepository $virtualProductFileRepository
+        VirtualProductUpdater $virtualProductUpdater
     ) {
-        $this->virtualProductFileRepository = $virtualProductFileRepository;
+        $this->virtualProductUpdater = $virtualProductUpdater;
     }
 
     /**
@@ -55,6 +55,6 @@ class DeleteVirtualProductFileHandler implements DeleteVirtualProductFileHandler
      */
     public function handle(DeleteVirtualProductFileCommand $command): void
     {
-        $this->virtualProductFileRepository->delete($command->getVirtualProductFileId());
+        $this->virtualProductUpdater->deleteFile($command->getVirtualProductFileId());
     }
 }

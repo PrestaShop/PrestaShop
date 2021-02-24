@@ -78,7 +78,13 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         try {
             $virtualProductId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
-            $this->getSharedStorage()->set($this->buildSystemFileReference($productReference, $fileReference), $filePath);
+
+            // save Downloads filePath in shared storage for further assertions
+            $filename = $this->getProductForEditing($productReference)->getVirtualProductFile()->getFileName();
+            $this->getSharedStorage()->set(
+                $this->buildSystemFileReference($productReference, $fileReference),
+                _PS_DOWNLOAD_DIR_ . $filename
+            );
         } catch (VirtualProductFileException $e) {
             $this->setLastException($e);
         }
