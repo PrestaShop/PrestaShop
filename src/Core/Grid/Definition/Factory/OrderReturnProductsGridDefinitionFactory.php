@@ -54,7 +54,7 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'order_return_products';
+    public const GRID_ID = 'order_return_products';
 
     /**
      * @var int
