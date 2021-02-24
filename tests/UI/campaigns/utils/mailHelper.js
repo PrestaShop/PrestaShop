@@ -11,6 +11,7 @@ module.exports = {
   createMailListener(config = global.maildevConfig) {
     return new MailDev({
       smtp: config.smtpPort,
+      silent: true,
     });
   },
   /**
