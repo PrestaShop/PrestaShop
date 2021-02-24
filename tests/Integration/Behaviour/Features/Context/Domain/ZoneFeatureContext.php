@@ -72,7 +72,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
                 PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
                 [$this->defaultShopId]
             ));
-            $this->getSharedStorage()->set($zoneReference, $zoneId->getValue());
+            $this->getSharedStorage()->set($zoneReference, new Zone($zoneId->getValue()));
         } catch (ZoneException $e) {
             $this->setLastException($e);
         }
@@ -151,7 +151,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I (enable|disable) multiple zones: :zoneReferences using bulk action
+     * @When /^I (enable|disable) multiple zones: "(.+)" using bulk action$/
      *
      * @param string $action
      * @param string $zoneReferences
@@ -189,8 +189,8 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given zone :zoneReference is (enabled|disabled)
-     * @Then zone :zoneReference should be (enabled|disabled)
+     * @Given /^zone "(.*)" is (enabled|disabled)?$/
+     * @Then /^zone "(.*)" should be (enabled|disabled)?$/
      *
      * @param string $zoneReference
      * @param string $expectedStatus
@@ -209,7 +209,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then zones: :zoneReferences should be (enabled|disabled)
+     * @Then /^zones: "(.+)" should be (enabled|disabled)$/
      *
      * @param string $zoneReferences
      * @param string $expectedStatus
