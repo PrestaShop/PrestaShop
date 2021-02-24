@@ -625,10 +625,12 @@ class CartRuleCore extends ObjectModel
      * @param Context $context Context instance
      * @param bool $alreadyInCart Check if the voucher is already on the cart
      * @param bool $display_error Display error
+     * @param bool $check_carrier
+     * @param bool $useOrderPrices
      *
      * @return bool|mixed|string
      */
-    public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true, $check_carrier = true)
+    public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true, $check_carrier = true, $useOrderPrices = false)
     {
         if (!CartRule::isFeatureActive()) {
             return false;
@@ -772,9 +774,23 @@ class CartRuleCore extends ObjectModel
                 $minimum_amount = Tools::convertPriceFull($minimum_amount, new Currency($this->minimum_amount_currency), Context::getContext()->currency);
             }
 
-            $cartTotal = $cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
+            $cartTotal = $cart->getOrderTotal(
+                $this->minimum_amount_tax,
+                Cart::ONLY_PRODUCTS,
+                null,
+                null,
+                false,
+                $useOrderPrices
+            );
             if ($this->minimum_amount_shipping) {
-                $cartTotal += $cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
+                $cartTotal += $cart->getOrderTotal(
+                    $this->minimum_amount_tax,
+                    Cart::ONLY_SHIPPING,
+                    null,
+                    null,
+                    false,
+                    $useOrderPrices
+                );
             }
             $products = $cart->getProducts();
             $cart_rules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
@@ -1584,8 +1600,9 @@ class CartRuleCore extends ObjectModel
      * Automatically add this CartRule to the Cart.
      *
      * @param Context|null $context Context instance
+     * @param bool $useOrderPrices
      */
-    public static function autoAddToCart(Context $context = null)
+    public static function autoAddToCart(Context $context = null, bool $useOrderPrices = false)
     {
         if ($context === null) {
             $context = Context::getContext();
@@ -1646,7 +1663,7 @@ class CartRuleCore extends ObjectModel
             if ($cart_rules) {
                 foreach ($cart_rules as $cart_rule) {
                     /** @var CartRule $cart_rule */
-                    if ($cart_rule->checkValidity($context, false, false)) {
+                    if ($cart_rule->checkValidity($context, false, false, true, $useOrderPrices)) {
                         $context->cart->addCartRule($cart_rule->id);
                     }
                 }
@@ -1658,10 +1675,11 @@ class CartRuleCore extends ObjectModel
      * Automatically remove this CartRule from the Cart.
      *
      * @param Context|null $context Context instance
+     * @param bool $useOrderPrice
      *
      * @return array Error messages
      */
-    public static function autoRemoveFromCart(Context $context = null)
+    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1672,8 +1690,8 @@ class CartRuleCore extends ObjectModel
 
         static $errors = [];
         foreach ($context->cart->getCartRules() as $cart_rule) {
-            if ($error = $cart_rule['obj']->checkValidity($context, true)) {
-                $context->cart->removeCartRule($cart_rule['obj']->id);
+            if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice)) {
+                $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
                 $context->cart->update();
                 $errors[] = $error;
             }

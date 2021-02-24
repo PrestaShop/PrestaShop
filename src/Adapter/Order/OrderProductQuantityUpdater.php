@@ -48,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
 use Shop;
-use SpecificPrice;
 use StockAvailable;
 use StockManagerFactory;
 use StockMvt;
@@ -172,7 +171,6 @@ class OrderProductQuantityUpdater
 
             // Update quantity on the cart and stock
             if ($updateCart) {
-                $this->setSpecificPriceIfNeeded($cart, $orderDetail);
                 $cartComparator = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
                 $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
                 $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
@@ -185,42 +183,6 @@ class OrderProductQuantityUpdater
 
         // Update product stocks
         $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
-    }
-
-    /**
-     * @param Cart $cart
-     * @param OrderDetail $orderDetail
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function setSpecificPriceIfNeeded(Cart $cart, OrderDetail $orderDetail)
-    {
-        SpecificPrice::deleteByIdCart(
-            $cart->id,
-            (int) $orderDetail->product_id,
-            (int) $orderDetail->product_attribute_id
-        );
-        if ($orderDetail->unit_price_tax_excl === (float) $orderDetail->original_product_price) {
-            return;
-        }
-        $specificPrice = new SpecificPrice();
-        $specificPrice->id_product = (int) $orderDetail->product_id;
-        $specificPrice->id_product_attribute = (int) $orderDetail->product_attribute_id;
-        $specificPrice->id_cart = $cart->id;
-        $specificPrice->id_specific_price_rule = 0;
-        $specificPrice->id_shop = 0;
-        $specificPrice->id_currency = 0;
-        $specificPrice->id_country = 0;
-        $specificPrice->id_group = 0;
-        $specificPrice->price = $orderDetail->unit_price_tax_excl;
-        $specificPrice->id_customer = (int) $cart->id_customer;
-        $specificPrice->from_quantity = 1;
-        $specificPrice->reduction = 0;
-        $specificPrice->reduction_type = 'amount';
-        $specificPrice->from = '0000-00-00 00:00:00';
-        $specificPrice->to = '0000-00-00 00:00:00';
-        $specificPrice->add();
     }
 
     /**
