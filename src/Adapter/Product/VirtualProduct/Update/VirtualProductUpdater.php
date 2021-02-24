@@ -28,18 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update;
 
-use PrestaShop\Decimal\Exception\DivisionByZeroException;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
-use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
 use ProductDownload as VirtualProductFile;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Provides update methods specific to virtual product
@@ -63,18 +61,50 @@ class VirtualProductUpdater
     private $virtualProductFileRepository;
 
     /**
+     * @var string
+     */
+    private $virtualProductFileDir;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @param ProductRepository $productRepository
      * @param VirtualProductFileUploader $virtualProductFileUploader
      * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param Filesystem $filesystem
+     * @param string $virtualProductFileDir
      */
     public function __construct(
         ProductRepository $productRepository,
         VirtualProductFileUploader $virtualProductFileUploader,
-        VirtualProductFileRepository $virtualProductFileRepository
+        VirtualProductFileRepository $virtualProductFileRepository,
+        Filesystem $filesystem,
+        string $virtualProductFileDir
     ) {
         $this->productRepository = $productRepository;
         $this->virtualProductFileUploader = $virtualProductFileUploader;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
+        $this->virtualProductFileDir = $virtualProductFileDir;
+        $this->filesystem = $filesystem;
+    }
+
+    /**
+     * @param VirtualProductFile $virtualProductFile
+     * @param string|null $newFilePath
+     */
+    public function updateFile(VirtualProductFile $virtualProductFile, ?string $newFilePath): void
+    {
+        $oldFilepath = $this->virtualProductFileDir . $virtualProductFile->filename;
+
+        if ($newFilePath) {
+            $uploadedFilePath = $this->replaceSystemFile($newFilePath, $oldFilepath);
+            $virtualProductFile->filename = pathinfo($uploadedFilePath, PATHINFO_FILENAME);
+        }
+
+        $this->virtualProductFileRepository->update($virtualProductFile);
     }
 
     /**
@@ -86,13 +116,6 @@ class VirtualProductUpdater
      * @param VirtualProductFile $virtualProductFile
      *
      * @return VirtualProductFileId
-     *
-     * @throws VirtualProductFileConstraintException
-     * @throws DivisionByZeroException
-     * @throws VirtualProductFileNotFoundException
-     * @throws CoreException
-     * @throws CannotUnlinkFileException
-     * @throws FileUploadException
      */
     public function addFile(ProductId $productId, string $filePath, VirtualProductFile $virtualProductFile): VirtualProductFileId
     {
@@ -128,5 +151,22 @@ class VirtualProductUpdater
         $this->virtualProductFileUploader->remove($virtualProductFile->filename);
 
         $this->virtualProductFileRepository->delete($virtualProductFileId);
+    }
+
+    /**
+     * @param string $newFilepath
+     * @param string|null $oldFilename
+     */
+    private function replaceSystemFile(string $newFilepath, ?string $oldFilename): string
+    {
+        if ($oldFilename) {
+            try {
+                $this->filesystem->remove($this->virtualProductFileDir . $oldFilename);
+            } catch (IOException $e) {
+                throw new CannotUnlinkFileException($e->getMessage());
+            }
+        }
+
+        return $this->virtualProductFileUploader->upload($newFilepath);
     }
 }
