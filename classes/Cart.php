@@ -1448,6 +1448,7 @@ class CartCore extends ObjectModel
      * @param bool $auto_add_cart_rule
      * @param bool $skipAvailabilityCheckOutOfStock
      * @param bool $preserveGiftRemoval
+     * @param bool $useOrderPrices
      *
      * @return bool Whether the quantity has been successfully updated
      */
@@ -1461,7 +1462,8 @@ class CartCore extends ObjectModel
         Shop $shop = null,
         $auto_add_cart_rule = true,
         $skipAvailabilityCheckOutOfStock = false,
-        bool $preserveGiftRemoval = true
+        bool $preserveGiftRemoval = true,
+        bool $useOrderPrices = false
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1532,7 +1534,7 @@ class CartCore extends ObjectModel
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
-            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
+            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval, $useOrderPrices);
         }
 
         if (!$product->available_for_order
@@ -1575,7 +1577,7 @@ class CartCore extends ObjectModel
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
-                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval);
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization, (int) $id_address_delivery, $preserveGiftRemoval, $useOrderPrices);
                 }
             } else {
                 return false;
@@ -1804,10 +1806,11 @@ class CartCore extends ObjectModel
      * Remove the CartRule from the Cart.
      *
      * @param int $id_cart_rule CartRule ID
+     * @param bool $useOrderPrices
      *
      * @return bool Whether the Cart rule has been successfully removed
      */
-    public function removeCartRule($id_cart_rule)
+    public function removeCartRule($id_cart_rule, bool $useOrderPrices = false)
     {
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
         Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
@@ -1822,8 +1825,8 @@ class CartCore extends ObjectModel
         $result = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $id_cart_rule . ' AND `id_cart` = ' . (int) $this->id, 1);
 
         $cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
-        if ((int) $cart_rule->gift_product) {
-            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false);
+        if ((bool) $result && (int) $cart_rule->gift_product) {
+            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false, $useOrderPrices);
         }
 
         return $result;
@@ -1837,6 +1840,7 @@ class CartCore extends ObjectModel
      * @param int $id_customization Customization id
      * @param int $id_address_delivery Delivery Address id
      * @param bool $preserveGiftsRemoval If true gift are not removed so product is still in cart
+     * @param bool $useOrderPrices If true, will use order prices to re-calculate cartRules after the product is deleted
      *
      * @return bool Whether the product has been successfully deleted
      */
@@ -1845,7 +1849,8 @@ class CartCore extends ObjectModel
         $id_product_attribute = 0,
         $id_customization = 0,
         $id_address_delivery = 0,
-        bool $preserveGiftsRemoval = true
+        bool $preserveGiftsRemoval = true,
+        bool $useOrderPrices = false
     ) {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -1886,10 +1891,11 @@ class CartCore extends ObjectModel
             );
         }
 
+        $preservedGifts = [];
+        $giftKey = (int) $id_product . '-' . (int) $id_product_attribute;
         if ($preserveGiftsRemoval) {
             $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-            if (isset($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute])
-                && $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
+            if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
                 return Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                     SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
@@ -1913,8 +1919,10 @@ class CartCore extends ObjectModel
             $return = $this->update();
             // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
-            CartRule::autoRemoveFromCart();
-            CartRule::autoAddToCart();
+            if (!isset($preservedGifts[$giftKey])) {
+                CartRule::autoRemoveFromCart(null, $useOrderPrices);
+                CartRule::autoAddToCart(null, $useOrderPrices);
+            }
 
             return $return;
         }
@@ -2312,7 +2320,7 @@ class CartCore extends ObjectModel
     protected function getTotalCalculationCartRules($type, $withShipping)
     {
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL, false);
         } else {
             $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false);
             // Cart Rules array are merged manually in order to avoid doubles
