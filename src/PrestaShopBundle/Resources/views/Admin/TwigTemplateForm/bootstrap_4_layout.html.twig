@@ -122,6 +122,7 @@
 
 {% block choice_widget_collapsed -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}
+    {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     {{- parent() -}}
 {%- endblock %}
 
@@ -335,6 +336,7 @@
 {% block date_picker_widget %}
   {% spaceless %}
     {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     <div class="input-group datepicker">
       <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
@@ -828,6 +830,7 @@
 {% endblock %}
 
 {% block text_widget %}
+  {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
   {% if data_list is not null %}
     {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
   {% endif %}
