@@ -147,6 +147,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         $products = Product::searchByName(
             $this->contextLangId,
             $query->getPhrase(),
+            null,
             $query->getResultsLimit()
         );
 
