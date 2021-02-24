@@ -41,8 +41,8 @@ class Email extends BOBasePage {
     this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
     this.saveEmailFormButton = '#form-log-email-save-button';
     // Email form Radio buttons
-    this.sendMailParametersRadioButton = '#form_mail_method_0 + i';
-    this.smtpParametersRadioButton = '#form_mail_method_1 + i';
+    this.sendMailParametersRadioButton = '#form_mail_method_0';
+    this.smtpParametersRadioButton = '#form_mail_method_1';
     // Email form input fields
     this.smtpServerFormField = '#form_smtp_config_server';
     this.smtpUsernameFormField = '#form_smtp_config_username';
