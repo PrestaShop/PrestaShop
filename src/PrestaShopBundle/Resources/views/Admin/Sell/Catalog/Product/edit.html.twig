@@ -66,6 +66,7 @@
       {% block product_tab_stock %}
         <div role="tabpanel" class="form-contenttab tab-pane" id="stock-tab">
           {{ form_widget(productForm.stock) }}
+          {{ form_widget(productForm.virtual_product_file) }}
         </div>
       {% endblock %}
 

@@ -73,6 +73,7 @@ class ProductType extends TranslatorAwareType
             ->add('basic', BasicInformationType::class)
             ->add('features', FeaturesType::class)
             ->add('stock', StockType::class)
+            ->add('virtual_product_file', VirtualProductFileType::class)
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)
