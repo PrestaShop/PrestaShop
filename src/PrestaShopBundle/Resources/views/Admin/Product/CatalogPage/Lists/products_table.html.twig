@@ -160,7 +160,7 @@
 
           <th id="product_filter_column_active" class="text-center">
             <div class="form-select">
-              <select class="custom-select"  name="filter_column_active" {% if filters_disabled %}disabled{% endif %} aria-label="{{ "%inputId% select"|trans({'%inputId%': 'filter_column_active'}, 'Admin.Global') }}"
+              <select class="custom-select"  name="filter_column_active"{% if filters_disabled %} disabled{% endif %} aria-label="{{ "%inputId% select"|trans({'%inputId%': 'filter_column_active'}, 'Admin.Global') }}"
                 >
                 <option value=""></option>
                 <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
