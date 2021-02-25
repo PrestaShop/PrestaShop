@@ -39,7 +39,7 @@ class BulkDeleteCarrierCommand
     /**
      * @var CarrierId[]
      */
-    private $carrierIds;
+    private $carrierIds = [];
 
     /**
      * @param int[] $carrierIds

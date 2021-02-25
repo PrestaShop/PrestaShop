@@ -39,7 +39,7 @@ class BulkToggleCarrierStatusCommand
     /**
      * @var CarrierId[]
      */
-    private $carrierIds;
+    private $carrierIds = [];
 
     /**
      * @var bool
