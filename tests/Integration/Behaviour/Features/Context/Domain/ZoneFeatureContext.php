@@ -50,7 +50,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      */
     private $defaultShopId;
 
-    public function __construct(): void
+    public function __construct()
     {
         $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
         $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
