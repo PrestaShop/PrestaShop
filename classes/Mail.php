@@ -205,6 +205,10 @@ class MailCore extends ObjectModel
                 'PS_MAIL_SMTP_ENCRYPTION',
                 'PS_MAIL_SMTP_PORT',
                 'PS_MAIL_TYPE',
+                'PS_MAIL_DKIM_ENABLE',
+                'PS_MAIL_DKIM_DOMAIN',
+                'PS_MAIL_DKIM_SELECTOR',
+                'PS_MAIL_DKIM_KEY',
             ],
             null,
             null,
@@ -293,9 +297,22 @@ class MailCore extends ObjectModel
             return false;
         }
 
-        /* Construct multiple recipients list if needed */
-        $message = new Swift_Message();
+        /* Create new message and DKIM sign it, if enabled and all data for signature are provided */
+        if ($configuration['PS_MAIL_DKIM_ENABLE'] == 1 && !empty($configuration['PS_MAIL_DKIM_DOMAIN']) && 
+            !empty($configuration['PS_MAIL_DKIM_SELECTOR']) && !empty($configuration['PS_MAIL_DKIM_KEY'])) {
+            
+            $message = new Swift_SignedMessage();
+            $privateKey = $configuration['PS_MAIL_DKIM_KEY'];
+            $domainName = $configuration['PS_MAIL_DKIM_DOMAIN'];
+            $selector = $configuration['PS_MAIL_DKIM_SELECTOR'];
+            $signer = new Swift_Signers_DKIMSigner($privateKey, $domainName, $selector);
+            $message->attachSigner($signer);
+            
+        } else {
+            $message = new Swift_Message();
+        }
 
+        /* Construct multiple recipients list if needed */
         if (is_array($to) && isset($to)) {
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
