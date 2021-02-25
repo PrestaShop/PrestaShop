@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -101,6 +103,28 @@ class EmailConfigurationType extends TranslatorAwareType
             ])
             ->add('log_emails', SwitchType::class, [
                 'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
+            ])
+            ->add('dkim_enable', SwitchType::class, [
+                'label' => $this->trans('Enable DKIM', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Before enabling DKIM, fill the data below properly and test it.', 'Admin.Advparameters.Help'),
+            ])
+            ->add('dkim_domain', TextType::class, [
+                'label' => $this->trans('DKIM domain', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Where customers send messages from the order page.', 'Admin.Advparameters.Help'),
+                'required' => false,
+            ])
+            ->add('dkim_selector', TextType::class, [
+                'label' => $this->trans('DKIM selector', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Usually looks like 12345.domain, this selector must match the name of your DNS record.', 'Admin.Advparameters.Help'),
+                'required' => false,
+            ])
+            ->add('dkim_key', TextareaType::class, [
+                'label' => $this->trans('DKIM private key', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Enter your private key into this field. They key starts with -----BEGIN RSA PRIVATE KEY-----.', 'Admin.Advparameters.Help'),
+                'required' => false,
+                'attr' => [
+                    'rows' => 10,
+                ],
             ])
             ->add('smtp_config', SmtpConfigurationType::class, [
                 'label' => false,
