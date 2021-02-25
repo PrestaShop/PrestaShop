@@ -24,6 +24,7 @@ const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPaginati
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
+const {DefaultEmployee} = require('@data/demo/employees');
 
 let browserContext;
 let page;
@@ -254,7 +255,7 @@ describe('Filter, sort and pagination logs', async () => {
             testIdentifier: 'filterByEmployee',
             filterType: 'input',
             filterBy: 'employee',
-            filterValue: DefaultCustomer.firstName,
+            filterValue: DefaultEmployee.firstName,
           },
       },
       {
