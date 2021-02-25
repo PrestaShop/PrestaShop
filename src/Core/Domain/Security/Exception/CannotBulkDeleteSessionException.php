@@ -36,12 +36,12 @@ use Throwable;
 class CannotBulkDeleteSessionException extends SessionException
 {
     /**
-     * @var int[]
+     * @var array<int, int>
      */
     private $sessionIds;
 
     /**
-     * @param array $sessionIds
+     * @param array<int, int> $sessionIds
      * @param string $message
      * @param int $code
      * @param Throwable|null $previous
@@ -58,7 +58,7 @@ class CannotBulkDeleteSessionException extends SessionException
     }
 
     /**
-     * @return int[]
+     * @return array<int, int>
      */
     public function getSessionIds(): array
     {
