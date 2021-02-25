@@ -435,9 +435,6 @@ abstract class DbCore
         $first_loop = true;
         $duplicate_key_stringified = '';
 
-        // Make sure data have the same key order
-        ksort($data);
-
         foreach ($data as $row_data) {
             $values = [];
             foreach ($row_data as $key => $value) {
