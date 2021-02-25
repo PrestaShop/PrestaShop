@@ -45,7 +45,7 @@ class BulkToggleZoneStatusCommand
      */
     private $zoneIds;
 
-    public function __construct(bool $expectedStatus, array $zoneIds)
+    public function __construct(bool $expectedStatus, array $zoneIds): void
     {
         $this->setZoneIds($zoneIds);
         $this->expectedStatus = $expectedStatus;
@@ -70,7 +70,7 @@ class BulkToggleZoneStatusCommand
     /**
      * @param int[] $zoneIds
      */
-    private function setZoneIds(array $zoneIds)
+    private function setZoneIds(array $zoneIds): void
     {
         foreach ($zoneIds as $zoneId) {
             $this->zoneIds[] = new ZoneId((int) $zoneId);

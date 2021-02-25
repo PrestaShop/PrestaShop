@@ -44,7 +44,7 @@ final class GetZoneForEditingHandler implements GetZoneForEditingHandlerInterfac
     /**
      * {@inheritdoc}
      */
-    public function handle(GetZoneForEditing $query)
+    public function handle(GetZoneForEditing $query): EditableZone
     {
         $zoneId = $query->getZoneId();
         $zone = new Zone($zoneId->getValue());

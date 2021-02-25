@@ -43,7 +43,7 @@ class BulkDeleteZoneCommand
     /**
      * @param int[] $zoneIds
      */
-    public function __construct(array $zoneIds)
+    public function __construct(array $zoneIds): void
     {
         $this->setZoneIds($zoneIds);
     }
@@ -59,7 +59,7 @@ class BulkDeleteZoneCommand
     /**
      * @param int[] $zoneIds
      */
-    private function setZoneIds(array $zoneIds)
+    private function setZoneIds(array $zoneIds): void
     {
         foreach ($zoneIds as $zoneId) {
             $this->zoneIds[] = new ZoneId((int) $zoneId);
