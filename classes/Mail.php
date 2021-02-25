@@ -298,9 +298,11 @@ class MailCore extends ObjectModel
         }
 
         /* Create new message and DKIM sign it, if enabled and all data for signature are provided */
-        if ($configuration['PS_MAIL_DKIM_ENABLE'] == 1 && !empty($configuration['PS_MAIL_DKIM_DOMAIN']) && 
-            !empty($configuration['PS_MAIL_DKIM_SELECTOR']) && !empty($configuration['PS_MAIL_DKIM_KEY'])) {
-            
+        if ((bool) $configuration['PS_MAIL_DKIM_ENABLE'] === true
+            && !empty($configuration['PS_MAIL_DKIM_DOMAIN'])
+            && !empty($configuration['PS_MAIL_DKIM_SELECTOR'])
+            && !empty($configuration['PS_MAIL_DKIM_KEY'])
+        ) {
             $message = new Swift_SignedMessage();
             $privateKey = $configuration['PS_MAIL_DKIM_KEY'];
             $domainName = $configuration['PS_MAIL_DKIM_DOMAIN'];
