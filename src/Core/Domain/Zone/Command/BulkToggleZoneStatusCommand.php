@@ -45,7 +45,7 @@ class BulkToggleZoneStatusCommand
      */
     private $zoneIds;
 
-    public function __construct(bool $expectedStatus, array $zoneIds): void
+    public function __construct(bool $expectedStatus, array $zoneIds)
     {
         $this->setZoneIds($zoneIds);
         $this->expectedStatus = $expectedStatus;

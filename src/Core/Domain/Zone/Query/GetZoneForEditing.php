@@ -43,7 +43,7 @@ class GetZoneForEditing
     /**
      * @param int $zoneId
      */
-    public function __construct(int $zoneId): void
+    public function __construct(int $zoneId)
     {
         $this->zoneId = new ZoneId($zoneId);
     }
