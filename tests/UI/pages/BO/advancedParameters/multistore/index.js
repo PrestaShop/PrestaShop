@@ -32,6 +32,7 @@ class MultiStoreSettings extends BOBasePage {
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.listTableColumn = (row, column) => `${this.tableBodyColumn(row)}:nth-child(${column})`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -46,6 +47,18 @@ class MultiStoreSettings extends BOBasePage {
     // Multistore tree selectors
     this.multistoreTree = '#shops-tree';
     this.shopLink = id => `${this.multistoreTree} a[href*='shop_id=${id}']`;
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
   }
 
   /* Header methods */
@@ -160,6 +173,122 @@ class MultiStoreSettings extends BOBasePage {
    */
   async goToShopPage(page, id) {
     await this.clickAndWaitForNavigation(page, this.shopLink(id));
+  }
+
+  /**
+   * get text from a column from table
+   * @param page
+   * @param row
+   * @param column
+   * @returns {Promise<string>}
+   */
+  async getTextColumn(page, row, column) {
+    let columnSelector;
+
+    switch (column) {
+      case 'id_shop_group':
+        columnSelector = this.listTableColumn(row, 1);
+        break;
+
+      case 'a!name':
+        columnSelector = this.listTableColumn(row, 2);
+        break;
+
+      default:
+        throw new Error(`Column ${column} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_shop_group':
+        columnSelector = this.sortColumnDiv(1);
+        break;
+
+      case 'a!name':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 }
 

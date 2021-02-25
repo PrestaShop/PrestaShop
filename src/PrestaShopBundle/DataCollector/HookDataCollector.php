@@ -62,6 +62,15 @@ final class HookDataCollector extends DataCollector
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function unserialize($data)
+    {
+        // it seems that php 7.3 has a bug with unserialize: https://bugs.php.net/bug.php?id=77302
+        $this->data = is_array($data) ? $data : @unserialize($data);
+    }
+
+    /**
      * Return the list of every dispatched legacy hooks during one request.
      *
      * @return array

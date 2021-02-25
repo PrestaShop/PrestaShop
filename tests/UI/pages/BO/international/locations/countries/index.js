@@ -6,6 +6,7 @@ class Countries extends BOBasePage {
     super();
 
     this.pageTitle = 'Countries •';
+    this.settingsUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // Header selectors
@@ -62,6 +63,12 @@ class Countries extends BOBasePage {
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Country options selectors
+    this.countryForm = '#country_form';
+    this.enableRestrictCountriesToggleLabel = toggle => `${this.countryForm}
+     label[for='PS_RESTRICT_DELIVERED_COUNTRIES_${toggle}']`;
+    this.saveButton = `${this.countryForm} button[name='submitOptionscountry']`;
   }
 
   /*
@@ -372,6 +379,19 @@ class Countries extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  // Country options
+  /**
+   * Enable/disable restrict country
+   * @param page
+   * @param toEnable, true to enable and false to disable
+   * @returns {Promise<string>}
+   */
+  async setCountriesRestrictions(page, toEnable = true) {
+    await page.check(this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

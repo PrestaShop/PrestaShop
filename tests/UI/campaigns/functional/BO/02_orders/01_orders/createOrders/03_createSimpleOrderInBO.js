@@ -14,7 +14,7 @@ const loginCommon = require('@commonTests/loginBO');
 // Import data
 
 // Customer
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Products
 const {Products} = require('@data/demo/products');
@@ -30,7 +30,7 @@ const addresses = require('@data/demo/address');
 
 // Order to make data
 const orderToMake = {
-  customer: DefaultAccount,
+  customer: DefaultCustomer,
   products: [
     {value: Products.demo_5, quantity: 4},
   ],
@@ -105,7 +105,7 @@ describe('Create simple order in BO', async () => {
   });
 
   describe('Choose create order and check result', async () => {
-    it('should create te order', async function () {
+    it('should create an order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       await addOrderPage.createOrder(page, orderToMake);

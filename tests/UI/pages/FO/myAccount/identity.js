@@ -9,7 +9,6 @@ class AccountIdentity extends FOBasePage {
     this.successfulUpdateMessage = 'Information successfully updated.';
 
     // Selectors
-    this.alertSuccessBlock = '.alert-success ul li';
     this.createAccountForm = '#customer-form';
     this.genderRadioButton = id => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
     this.firstNameInput = `${this.createAccountForm} input[name='firstname']`;

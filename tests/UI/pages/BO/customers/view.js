@@ -192,6 +192,15 @@ class ViewCustomer extends BOBasePage {
     }
     return this.clickAndWaitForNavigation(page, selector(row));
   }
+
+  /**
+   * Get customer ID
+   * @param page
+   * @returns {Promise<number>}
+   */
+  async getCustomerID(page) {
+    return this.getNumberFromText(page, this.personnalInformationDiv);
+  }
 }
 
 module.exports = new ViewCustomer();

@@ -23,7 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{{
+  renderhook(
+    'displayAdminGridTableBefore',
+    {
+      'grid': grid,
+      'legacy_controller': app.request.attributes.get('_legacy_controller'),
+      'controller': app.request.attributes.get('_controller')
+    }
+  )
+}}
+
 {{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form', 'class': 'table-responsive'}}) }}
+
 <table class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
        id="{{ grid.id }}_grid_table"
        data-query="{{ grid.data.query }}"
@@ -54,3 +66,14 @@
   {% block grid_table_footer %}{% endblock %}
 </table>
 {{ form_end(grid.filter_form) }}
+
+{{
+  renderhook(
+    'displayAdminGridTableAfter',
+    {
+      'grid': grid,
+      'legacy_controller': app.request.attributes.get('_legacy_controller'),
+      'controller': app.request.attributes.get('_controller')
+    }
+  )
+}}

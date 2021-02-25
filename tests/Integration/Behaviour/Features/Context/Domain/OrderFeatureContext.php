@@ -1763,4 +1763,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             }
         }
     }
+
+    /**
+     * @Then I should get no order error
+     */
+    public function assertNoOrderError()
+    {
+        $this->assertLastErrorIsNull();
+    }
 }

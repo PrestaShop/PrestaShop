@@ -1,4 +1,4 @@
-const {DefaultAccount} = require('@data/demo/employees');
+const {DefaultEmployee} = require('@data/demo/employees');
 
 
 global.FO = {
@@ -7,10 +7,10 @@ global.FO = {
 
 global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
-  EMAIL: process.env.LOGIN || DefaultAccount.email,
-  PASSWD: process.env.PASSWD || DefaultAccount.password,
-  FIRSTNAME: process.env.FIRSTNAME || DefaultAccount.firstName,
-  LASTNAME: process.env.LASTNAME || DefaultAccount.lastName,
+  EMAIL: process.env.LOGIN || DefaultEmployee.email,
+  PASSWD: process.env.PASSWD || DefaultEmployee.password,
+  FIRSTNAME: process.env.FIRSTNAME || DefaultEmployee.firstName,
+  LASTNAME: process.env.LASTNAME || DefaultEmployee.lastName,
 };
 
 global.INSTALL = {

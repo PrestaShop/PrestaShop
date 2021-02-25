@@ -1068,7 +1068,7 @@ class CartCore extends ObjectModel
      * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
-     * @return float
+     * @return float|null
      */
     private function getCartPriceFromCatalog(
         int $productId,
@@ -1081,7 +1081,7 @@ class CartCore extends ObjectModel
         ?int $addressId,
         Context $shopContext,
         &$specificPriceOutput
-    ): float {
+    ): ?float {
         return Product::getPriceStatic(
             $productId,
             $withTaxes,
@@ -2113,11 +2113,19 @@ class CartCore extends ObjectModel
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
             foreach ($products as $key => $product) {
-                if ($product['is_virtual']) {
+                if (!empty($product['is_virtual'])) {
                     unset($products[$key]);
                 }
             }
             $type = Cart::ONLY_PRODUCTS;
+        }
+
+        if ($type == Cart::ONLY_PRODUCTS) {
+            foreach ($products as $key => $product) {
+                if (!empty($product['is_gift'])) {
+                    unset($products[$key]);
+                }
+            }
         }
 
         if (Tax::excludeTaxeOption()) {
@@ -5311,5 +5319,28 @@ class CartCore extends ObjectModel
         $summary['gift_products'] = $gift_products;
 
         return $summary;
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return float
+     */
+    public function getCartTotalPrice()
+    {
+        $summary = $this->getSummaryDetails();
+
+        $id_order = (int) Order::getIdByCartId($this->id);
+        $order = new Order($id_order);
+
+        if (Validate::isLoadedObject($order)) {
+            $taxCalculationMethod = $order->getTaxCalculationMethod();
+        } else {
+            $taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+        }
+
+        return $taxCalculationMethod == PS_TAX_EXC ?
+            $summary['total_price_without_tax'] :
+            $summary['total_price'];
     }
 }

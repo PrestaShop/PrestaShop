@@ -42,6 +42,12 @@ class Addresses extends BOBasePage {
     this.paginationLabel = `${this.addressGridPanel} .col-form-label`;
     this.paginationNextLink = `${this.addressGridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.addressGridPanel} [aria-label='Previous']`;
+
+    // Required field section
+    this.setRequiredFieldsButton = 'button[data-target=\'#addressRequiredFieldsContainer\']';
+    this.requiredFieldCheckBox = id => `#required_fields_address_required_fields_${id}`;
+    this.requiredFieldsForm = '#addressRequiredFieldsContainer';
+    this.saveButton = `${this.requiredFieldsForm} button`;
   }
 
   /*
@@ -252,6 +258,34 @@ class Addresses extends BOBasePage {
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
+  }
+
+  // Set required field
+  /**
+   * Set required fields
+   * @param page
+   * @param id
+   * @param valueWanted
+   * @returns {Promise<string>}
+   */
+  async setRequiredFields(page, id, valueWanted = true) {
+    // Check if form is open
+    if (await this.elementNotVisible(page, `${this.requiredFieldsForm}.show`, 1000)) {
+      await Promise.all([
+        this.waitForSelectorAndClick(page, this.setRequiredFieldsButton),
+        this.waitForVisibleSelector(page, `${this.requiredFieldsForm}.show`),
+      ]);
+    }
+
+    // Click on checkbox if not selected
+    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
+    if (valueWanted !== isCheckboxSelected) {
+      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
+    }
+
+    // Save setting
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

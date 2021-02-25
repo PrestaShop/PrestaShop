@@ -13,13 +13,18 @@ const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
+const productPage = require('@pages/FO/product');
+const cartPage = require('@pages/FO/cart');
+const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+const checkoutPage = require('@pages/FO/checkout');
 const myAccountPage = require('@pages/FO/myAccount');
 const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -30,6 +35,7 @@ let browserContext;
 let page;
 
 /*
+Create order in FO
 Activate/Deactivate merchandise return
 Change the first order status in the list to shipped
 Check the existence of the button return products
@@ -45,6 +51,76 @@ describe('Activate/Deactivate merchandise return', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+  });
+
+  it('should go to FO page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+
+    // Go to FO and change language
+    await homePage.goToFo(page);
+
+    await homePage.changeLanguage(page, 'en');
+
+    const isHomePage = await homePage.isHomePage(page);
+    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+  });
+
+  it('should go to login page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+
+    await homePage.goToLoginPage(page);
+    const pageTitle = await foLoginPage.getPageTitle(page);
+    await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+  });
+
+  it('should sign in with default customer', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+
+    await foLoginPage.customerLogin(page, DefaultCustomer);
+    const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+  });
+
+  it('should create an order', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+
+    // Go to home page
+    await foLoginPage.goToHomePage(page);
+
+    // Go to the first product page
+    await homePage.goToProductPage(page, 1);
+
+    // Add the created product to the cart
+    await productPage.addProductToTheCart(page);
+
+    // Edit the product quantity
+    await cartPage.editProductQuantity(page, 1, 5);
+
+    // Proceed to checkout the shopping cart
+    await cartPage.clickOnProceedToCheckout(page);
+
+    // Address step - Go to delivery step
+    const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+    await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+
+    // Delivery step - Go to payment step
+    const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+    await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+
+    // Payment step - Choose payment step
+    await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+
+    // Check the confirmation message
+    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+    await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+  });
+
+  it('should sign out from FO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
+
+    await orderConfirmationPage.logout(page);
+    const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+    await expect(isCustomerConnected, 'Customer is connected').to.be.false;
   });
 
   it('should login in BO', async function () {
@@ -95,10 +171,10 @@ describe('Activate/Deactivate merchandise return', async () => {
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultAccount.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultAccount.lastName);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
     });
 
     it('should go to the first order page', async function () {
@@ -118,7 +194,7 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
-    it('should check that the button \'Return products\' is visible', async function () {
+    it('should check if the button \'Return products\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkReturnProductsButton${index}`, baseContext);
 
       const result = await viewOrderPage.isReturnProductsButtonVisible(page);
@@ -144,7 +220,7 @@ describe('Activate/Deactivate merchandise return', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
 
         await homePage.goToLoginPage(page);
-        await foLoginPage.customerLogin(page, DefaultAccount);
+        await foLoginPage.customerLogin(page, DefaultCustomer);
 
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected).to.be.true;
@@ -179,8 +255,15 @@ describe('Activate/Deactivate merchandise return', async () => {
 
       const result = await orderDetailsPage.isOrderReturnFormVisible(page);
       await expect(result).to.equal(test.args.enable);
+    });
+
+    it('should close the FO page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `closeFoAndGoBackToBO${index}`, baseContext);
 
       page = await orderDetailsPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
   });
 });

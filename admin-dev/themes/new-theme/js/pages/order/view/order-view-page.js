@@ -31,6 +31,7 @@ import OrderDiscountsRefresher from '@pages/order/view/order-discounts-refresher
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import OrderPaymentsRefresher from '@pages/order/view/order-payments-refresher';
+import OrderShippingRefresher from '@pages/order/view/order-shipping-refresher';
 import Router from '@components/router';
 import OrderInvoicesRefresher from './order-invoices-refresher';
 import OrderProductCancel from './order-product-cancel';
@@ -45,6 +46,7 @@ export default class OrderViewPage {
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.orderPaymentsRefresher = new OrderPaymentsRefresher();
+    this.orderShippingRefresher = new OrderShippingRefresher();
     this.orderDocumentsRefresher = new OrderDocumentsRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
     this.orderProductCancel = new OrderProductCancel();
@@ -71,6 +73,7 @@ export default class OrderViewPage {
       this.refreshProductsList(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
+      this.orderShippingRefresher.refresh(event.orderId);
     });
 
     EventEmitter.on(OrderViewEventMap.productEditionCanceled, (event) => {
@@ -99,6 +102,7 @@ export default class OrderViewPage {
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
+      this.orderShippingRefresher.refresh(event.orderId);
       this.listenForProductDelete();
       this.listenForProductEdit();
       this.resetToolTips();
@@ -119,6 +123,7 @@ export default class OrderViewPage {
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
+      this.orderShippingRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
     });
   }

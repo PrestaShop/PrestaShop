@@ -211,7 +211,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'id' => $product['id_product'],
                 'name' => $product['name'],
                 'attributes' => isset($product['attributes']) ? $product['attributes'] : '',
-                'reference' => $product['name'],
+                'reference' => $product['reference'],
                 'supplier_reference' => $product['supplier_reference'],
                 'stock_quantity' => $product['qty_in_stock'],
                 'customization_quantity' => $product['customizationQuantityTotal'],

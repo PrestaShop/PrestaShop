@@ -11,6 +11,7 @@ class MyAccount extends FOBasePage {
     this.accountInformationLink = '#identity-link';
     this.accountHistoryLink = '#history-link';
     this.accountAddressesLink = '#addresses-link';
+    this.accountVouchersLink = '#discounts-link';
   }
 
   /*
@@ -42,6 +43,15 @@ class MyAccount extends FOBasePage {
    */
   async goToAddressesPage(page) {
     await this.clickAndWaitForNavigation(page, this.accountAddressesLink);
+  }
+
+  /**
+   * Go to vouchers page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToVouchersPage(page) {
+    await this.clickAndWaitForNavigation(page, this.accountVouchersLink);
   }
 }
 

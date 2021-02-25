@@ -1,8 +1,8 @@
 module.exports = {
   SampleFiles: {
-    customers: {
-      value: 'Customers',
-      name: 'customers_import',
+    combinations: {
+      value: 'Combinations',
+      name: 'combinations_import',
     },
   },
 };

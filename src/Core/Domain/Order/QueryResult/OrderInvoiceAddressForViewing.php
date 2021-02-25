@@ -47,6 +47,12 @@ class OrderInvoiceAddressForViewing
      * @var string
      */
     private $companyName;
+
+    /**
+     * @var string|null
+     */
+    private $vatNumber;
+
     /**
      * @var string
      */
@@ -100,6 +106,7 @@ class OrderInvoiceAddressForViewing
      * @param string $postCode
      * @param string $phone
      * @param string $phoneMobile
+     * @param string|null $vatNumber
      */
     public function __construct(
         int $addressId,
@@ -113,12 +120,14 @@ class OrderInvoiceAddressForViewing
         string $countryName,
         string $postCode,
         string $phone,
-        string $phoneMobile
+        string $phoneMobile,
+        ?string $vatNumber = null
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->companyName = $companyName;
+        $this->vatNumber = $vatNumber;
         $this->address1 = $address1;
         $this->address2 = $address2;
         $this->stateName = $stateName;
@@ -151,6 +160,14 @@ class OrderInvoiceAddressForViewing
     public function getCompanyName(): string
     {
         return $this->companyName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVatNumber(): ?string
+    {
+        return $this->vatNumber;
     }
 
     /**

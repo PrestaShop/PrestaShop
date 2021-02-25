@@ -1,5 +1,5 @@
 module.exports = {
-  DefaultAccount: {
+  DefaultCustomer: {
     id: '2',
     socialTitle: 'Mr.',
     firstName: 'John',
@@ -9,10 +9,5 @@ module.exports = {
     enabled: true,
     newsletter: true,
     partnerOffers: true,
-  },
-  ImportedCustomer: {
-    email: 'Tiger.Lily@prestashop.com',
-    firstName: 'Lily',
-    lastName: 'Tiger',
   },
 };
