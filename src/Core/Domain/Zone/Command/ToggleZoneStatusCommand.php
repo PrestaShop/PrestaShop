@@ -43,7 +43,7 @@ class ToggleZoneStatusCommand
     /**
      * @param int $zoneId
      */
-    public function __construct(int $zoneId)
+    public function __construct(int $zoneId): void
     {
         $this->zoneId = new ZoneId($zoneId);
     }
@@ -51,7 +51,7 @@ class ToggleZoneStatusCommand
     /**
      * @return ZoneId
      */
-    public function getZoneId()
+    public function getZoneId(): ZoneId
     {
         return $this->zoneId;
     }
