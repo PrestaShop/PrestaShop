@@ -53,7 +53,7 @@ class AddZoneCommand
      * @param bool $enabled
      * @param array $shopAssociation
      */
-    public function __construct(string $name, bool $enabled, array $shopAssociation)
+    public function __construct(string $name, bool $enabled, array $shopAssociation): void
     {
         $this->name = $name;
         $this->enabled = $enabled;

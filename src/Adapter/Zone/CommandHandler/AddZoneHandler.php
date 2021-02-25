@@ -44,7 +44,7 @@ final class AddZoneHandler extends AbstractObjectModelHandler implements AddZone
     /**
      * {@inheritdoc}
      */
-    public function handle(AddZoneCommand $command)
+    public function handle(AddZoneCommand $command): ZoneId
     {
         $zone = new Zone();
         $zone->name = $command->getName();
