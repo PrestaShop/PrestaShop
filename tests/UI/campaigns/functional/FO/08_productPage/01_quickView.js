@@ -384,6 +384,7 @@ describe('Product quick view', async () => {
       it('should delete product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
+        await boProductsPage.resetFilter(page);
         const testResult = await boProductsPage.deleteProduct(page, productData);
         await expect(testResult).to.equal(boProductsPage.productDeletedSuccessfulMessage);
       });
