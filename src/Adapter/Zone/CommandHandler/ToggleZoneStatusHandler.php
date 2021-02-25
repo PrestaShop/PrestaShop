@@ -43,7 +43,7 @@ final class ToggleZoneStatusHandler implements ToggleZoneStatusHandlerInterface
      *
      * @throws ZoneException
      */
-    public function handle(ToggleZoneStatusCommand $command)
+    public function handle(ToggleZoneStatusCommand $command): void
     {
         try {
             $zone = new Zone($command->getZoneId()->getValue());

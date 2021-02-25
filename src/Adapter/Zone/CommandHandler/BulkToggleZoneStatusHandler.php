@@ -44,7 +44,7 @@ final class BulkToggleZoneStatusHandler implements BulkToggleZoneStatusHandlerIn
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkToggleZoneStatusCommand $command)
+    public function handle(BulkToggleZoneStatusCommand $command): void
     {
         foreach ($command->getZoneIds() as $zoneId) {
             $zone = new Zone($zoneId->getValue());

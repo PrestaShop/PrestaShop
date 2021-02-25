@@ -44,7 +44,7 @@ final class EditZoneHandler extends AbstractObjectModelHandler implements EditZo
      *
      * @throws ZoneException
      */
-    public function handle(EditZoneCommand $command)
+    public function handle(EditZoneCommand $command): void
     {
         try {
             $zone = new Zone($command->getZoneId()->getValue());

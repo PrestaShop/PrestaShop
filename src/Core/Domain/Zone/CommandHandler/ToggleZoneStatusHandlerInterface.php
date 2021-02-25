@@ -38,5 +38,5 @@ interface ToggleZoneStatusHandlerInterface
     /**
      * @param ToggleZoneStatusCommand $command
      */
-    public function handle(ToggleZoneStatusCommand $command);
+    public function handle(ToggleZoneStatusCommand $command): void;
 }

@@ -38,5 +38,5 @@ interface BulkDeleteZoneHandlerInterface
     /**
      * @param BulkDeleteZoneCommand $command
      */
-    public function handle(BulkDeleteZoneCommand $command);
+    public function handle(BulkDeleteZoneCommand $command): void;
 }
