@@ -664,9 +664,10 @@ const form = (function () {
     const data = $('input, textarea, select', elem)
       .not(':input[type=button], :input[type=submit], :input[type=reset]')
       .serialize();
+    let openBlank;
 
     if (target === '_blank' && redirect) {
-      const openBlank = window.open('about:blank', target, '');
+      openBlank = window.open('about:blank', target, '');
       openBlank.document.write(
         `${'<p style="text-align: center;">'
         + '<img src="'}${document.location.origin}${baseAdminDir}/themes/default/img/spinner.gif">`
