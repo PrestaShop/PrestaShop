@@ -465,13 +465,6 @@ describe('Check product block in view order page', async () => {
     });
 
     describe('Update price and quantity of an ordered product', async () => {
-      it('should check number of products', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts3', baseContext);
-
-        const productCount = await viewOrderPage.getProductsNumber(page);
-        await expect(productCount).to.equal(productNumber);
-      });
-
       it('should update the quantity of the ordered product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateQuantity', baseContext);
 
@@ -489,6 +482,62 @@ describe('Check product block in view order page', async () => {
           expect(result.basePrice, 'Base price was not updated').to.equal(25),
           expect(result.total, 'Total price was not updated').to.equal(newPrice * newQuantity),
         ]);
+      });
+    });
+
+    describe('Check items per page', async () => {
+      describe('Add 3 products to the order to have 2 pages', async () => {
+        [Products.demo_1.name, Products.demo_3.name, Products.demo_5.name].forEach((product, index) => {
+          it('should add product to the order', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', `addProductsToTheCart${index}`, baseContext);
+
+            await viewOrderPage.SearchProduct(page, product);
+
+            const textResult = await viewOrderPage.addProductToCart(page);
+            await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+            productNumber = productNumber + index + 1;
+            console.log(productNumber);
+          });
+        });
+      });
+
+      describe('Check number of products', async () => {
+        it('should check number of products', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+          const productCount = await viewOrderPage.getProductsNumber(page);
+          await expect(productCount).to.equal(productNumber);
+        });
+      });
+
+      describe('Paginate between pages', async () => {
+        it('should click on next', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+          const paginationNumber = await viewOrderPage.paginationNext(page);
+          await expect(paginationNumber).to.equal('2');
+        });
+
+        it('should click on previous', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+          const paginationNumber = await viewOrderPage.paginationPrevious(page);
+          await expect(paginationNumber).to.equal('1');
+        });
+
+        it('should display 20 items', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'displayAllItems', baseContext);
+
+          const isNextLinkVisible = await viewOrderPage.selectPaginationLimit(page, '20');
+          await expect(isNextLinkVisible).to.be.false;
+        });
+
+        it('should display 8 items', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'displayDefaultItemsNumber', baseContext);
+
+          const isNextLinkVisible = await viewOrderPage.selectPaginationLimit(page, '8');
+          await expect(isNextLinkVisible).to.be.true;
+        });
       });
     });
   });

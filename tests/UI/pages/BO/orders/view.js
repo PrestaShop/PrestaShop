@@ -54,6 +54,12 @@ class Order extends BOBasePage {
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
 
+    // Pagination selectors
+    this.paginationLimitSelect = '#orderProductsTablePaginationNumberSelector';
+    this.paginationLabel = '#orderProductsNavPagination .page-item.active';
+    this.paginationNextLink = '#orderProductsTablePaginationNext';
+    this.paginationPreviousLink = '#orderProductsTablePaginationPrev';
+
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
@@ -485,7 +491,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isAddButtonDisabled(page) {
-    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 10000);
+    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 1000);
   }
 
   /**
@@ -505,6 +511,48 @@ class Order extends BOBasePage {
       available: parseInt(await this.getTextContent(page, this.orderProductsTableProductAvailable(row)), 10),
       total: parseFloat((await this.getTextContent(page, this.orderProductsTableProductPrice(row))).replace('€', '')),
     };
+  }
+
+  // Methods for product list pagination
+  /**
+   * Get pagination label
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.waitForSelectorAndClick(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.waitForSelectorAndClick(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<boolean>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.elementVisible(page, this.paginationPreviousLink);
   }
 }
 
