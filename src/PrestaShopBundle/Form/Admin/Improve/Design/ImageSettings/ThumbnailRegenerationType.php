@@ -50,6 +50,12 @@ class ThumbnailRegenerationType extends TranslatorAwareType
      */
     private $imageTypeFormatsChoiceProvider;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $imageTypeCategoryChoiceProvider
+     * @param FormChoiceProviderInterface $imageTypeFormatsChoiceProvider
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -62,6 +68,9 @@ class ThumbnailRegenerationType extends TranslatorAwareType
         $this->imageTypeFormatsChoiceProvider = $imageTypeFormatsChoiceProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $categoryChoices = $this->imageTypeCategoryChoiceProvider->getChoices();
