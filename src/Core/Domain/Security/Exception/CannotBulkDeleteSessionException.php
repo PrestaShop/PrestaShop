@@ -28,9 +28,40 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
 
+use Throwable;
+
 /**
- * Class CannotBulkDeleteEmployeeSessionException is a base exception for security sessions context.
+ * Class CannotBulkDeleteSessionException is a base exception for security sessions context.
  */
-class CannotBulkDeleteEmployeeSessionException extends CannotBulkDeleteSessionException
+class CannotBulkDeleteSessionException extends SessionException
 {
+    /**
+     * @var int[]
+     */
+    private $sessionIds;
+
+    /**
+     * @param array $sessionIds
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct(
+        array $sessionIds,
+        string $message = '',
+        int $code = 0,
+        Throwable $previous = null
+    ) {
+        parent::__construct($message, $code, $previous);
+
+        $this->sessionIds = $sessionIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getSessionIds(): array
+    {
+        return $this->sessionIds;
+    }
 }
