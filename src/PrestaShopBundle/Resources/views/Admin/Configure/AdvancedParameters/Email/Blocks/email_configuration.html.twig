@@ -38,6 +38,7 @@
           <div class="js-smtp-configuration{% if emailConfigurationForm.mail_method.vars.value != smtpMailMethod %} d-none{% endif %}">
             {{ form_widget(emailConfigurationForm.smtp_config) }}
           </div>
+          {{ form_rest(emailConfigurationForm) }}
           <div class="alert alert-info" role="alert">
             <p class="alert-text">
               {{ 'Settings below allow you to configure DKIM signing of your outgoing emails. This will greatly reduce the chance of your emails ending in SPAM folders.'|trans({}, 'Admin.Advparameters.Help') }}
@@ -49,7 +50,6 @@
               {{ 'Also, check if your server IP is specified in your SPF record as an allowed sender.'|trans({}, 'Admin.Payment.Help') }}
             </p>
           </div>
-          {{ form_rest(emailConfigurationForm) }}
         </div>
       </div>
       <div class="card-footer">
