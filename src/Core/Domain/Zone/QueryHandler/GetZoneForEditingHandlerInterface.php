@@ -41,5 +41,5 @@ interface GetZoneForEditingHandlerInterface
      *
      * @return EditableZone
      */
-    public function handle(GetZoneForEditing $query);
+    public function handle(GetZoneForEditing $query): EditableZone;
 }
