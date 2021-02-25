@@ -32,6 +32,7 @@ Feature: Zones management
     And I add new zone "jupiter" with following properties:
       | name    | in-space  |
       | enabled | false     |
+    Then zones: "mars, jupiter" should be disabled
     When I enable multiple zones: "mars, jupiter" using bulk action
     Then zones: "mars, jupiter" should be enabled
     When I disable multiple zones: "mars, jupiter" using bulk action
