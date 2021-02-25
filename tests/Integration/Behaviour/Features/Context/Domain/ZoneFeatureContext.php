@@ -50,7 +50,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      */
     private $defaultShopId;
 
-    public function __construct()
+    public function __construct(): void
     {
         $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
         $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
@@ -62,7 +62,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      * @param string $zoneReference
      * @param TableNode $table
      */
-    public function createZone(string $zoneReference, TableNode $table)
+    public function createZone(string $zoneReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
 
@@ -84,7 +84,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      * @param string $zoneReference
      * @param TableNode $table
      */
-    public function editZone(string $zoneReference, TableNode $table)
+    public function editZone(string $zoneReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
 
@@ -112,7 +112,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $zoneReference
      */
-    public function deleteZone(string $zoneReference)
+    public function deleteZone(string $zoneReference): void
     {
         /** @var Zone $zone */
         $zone = SharedStorage::getStorage()->get($zoneReference);
@@ -125,7 +125,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $zoneReferences
      */
-    public function bulkDeleteZones(string $zoneReferences)
+    public function bulkDeleteZones(string $zoneReferences): void
     {
         $zoneIds = [];
         foreach (PrimitiveUtils::castStringArrayIntoArray($zoneReferences) as $zoneReference) {
@@ -140,7 +140,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $zoneReference
      */
-    public function toggleStatus(string $zoneReference)
+    public function toggleStatus(string $zoneReference): void
     {
         /** @var Zone $zone */
         $zone = SharedStorage::getStorage()->get($zoneReference);
@@ -156,7 +156,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      * @param string $action
      * @param string $zoneReferences
      */
-    public function bulkToggleStatus(string $action, string $zoneReferences)
+    public function bulkToggleStatus(string $action, string $zoneReferences): void
     {
         $expectedStatus = 'enable' === $action;
         $zoneIds = [];
@@ -179,7 +179,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      * @param string $zoneReference
      * @param string $name
      */
-    public function assertZoneName(string $zoneReference, string $name)
+    public function assertZoneName(string $zoneReference, string $name): void
     {
         $zone = SharedStorage::getStorage()->get($zoneReference);
 
@@ -195,7 +195,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      * @param string $zoneReference
      * @param string $expectedStatus
      */
-    public function assertStatus(string $zoneReference, string $expectedStatus)
+    public function assertStatus(string $zoneReference, string $expectedStatus): void
     {
         /** @var Zone $zone */
         $zone = SharedStorage::getStorage()->get($zoneReference);
@@ -214,7 +214,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      * @param string $zoneReferences
      * @param string $expectedStatus
      */
-    public function assertMultipleZonesStatus(string $zoneReferences, string $expectedStatus)
+    public function assertMultipleZonesStatus(string $zoneReferences, string $expectedStatus): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($zoneReferences) as $zoneReference) {
             $this->assertStatus($zoneReference, $expectedStatus);
@@ -226,7 +226,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $zoneReference
      */
-    public function assertZoneIsDeleted(string $zoneReference)
+    public function assertZoneIsDeleted(string $zoneReference): void
     {
         /** @var Zone $zone */
         $zone = SharedStorage::getStorage()->get($zoneReference);
@@ -246,7 +246,7 @@ class ZoneFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $zoneReferences
      */
-    public function assertZonesAreDeleted(string $zoneReferences)
+    public function assertZonesAreDeleted(string $zoneReferences): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($zoneReferences) as $zoneReference) {
             $this->assertZoneIsDeleted($zoneReference);
