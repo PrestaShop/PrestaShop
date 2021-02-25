@@ -570,9 +570,9 @@ class AdminStoresControllerCore extends AdminController
     {
         if (!Shop::isFeatureActive() && !$this->errors && $value) {
             Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'shop` 
-                SET name = "' . pSQL($value) . '" 
-                WHERE id_shop = ' . (int) $this->context->shop->id
+                'UPDATE `' . _DB_PREFIX_ . 'shop` ' .
+                'SET name = "' . pSQL($value) . '" ' .
+                'WHERE id_shop = ' . (int) $this->context->shop->id
             );
         }
     }
