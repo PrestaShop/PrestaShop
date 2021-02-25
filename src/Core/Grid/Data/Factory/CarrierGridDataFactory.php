@@ -93,15 +93,17 @@ class CarrierGridDataFactory implements GridDataFactoryInterface
      */
     private function applyModifications(array $carriers): array
     {
+        $carrierDefaultName = str_replace(
+            ['#', ';'],
+            '',
+            $this->configuration->get('PS_SHOP_NAME')
+        );
+
         foreach ($carriers as $i => $carrier) {
             $carriers[$i]['logo'] = $this->carrierLogoProvider->getPath($carrier['id_carrier']);
 
             if ($carrier['name'] === '0') {
-                $carriers[$i]['name'] = str_replace(
-                    ['#', ';'],
-                    '',
-                    $this->configuration->get('PS_SHOP_NAME')
-                );
+                $carriers[$i]['name'] = $carrierDefaultName;
             }
         }
 
