@@ -106,13 +106,12 @@ class ImageGenerator implements ImageGeneratorInterface
         foreach (scandir($dir, SCANDIR_SORT_NONE) as $d) {
             foreach ($type as $imageType) {
                 if (
-                    preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '\.jpg$/', $d)
+                    (preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '\.jpg$/', $d)
                     || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
-                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '\.jpg$/', $d)
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '\.jpg$/', $d))
+                    && file_exists($dir . $d)
                 ) {
-                    if (file_exists($dir . $d)) {
-                        unlink($dir . $d);
-                    }
+                    unlink($dir . $d);
                 }
             }
         }
@@ -127,12 +126,11 @@ class ImageGenerator implements ImageGeneratorInterface
                     foreach (scandir($dir . $imageObj->getImgFolder(), SCANDIR_SORT_NONE) as $d) {
                         foreach ($type as $imageType) {
                             if (
-                                preg_match('/^[0-9]+\-' . $imageType['name'] . '\.jpg$/', $d)
-                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
+                                (preg_match('/^[0-9]+\-' . $imageType['name'] . '\.jpg$/', $d)
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d)))
+                                && file_exists($dir . $imageObj->getImgFolder() . $d)
                             ) {
-                                if (file_exists($dir . $imageObj->getImgFolder() . $d)) {
-                                    unlink($dir . $imageObj->getImgFolder() . $d);
-                                }
+                                unlink($dir . $imageObj->getImgFolder() . $d);
                             }
                         }
                     }
@@ -198,31 +196,32 @@ class ImageGenerator implements ImageGeneratorInterface
                 $existing_img = $dir . $imageObj->getExistingImgPath() . '.jpg';
                 if (file_exists($existing_img) && filesize($existing_img)) {
                     foreach ($type as $imageType) {
-                        if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.jpg')) {
-                            if (!ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.jpg', (int) $imageType['width'], (int) $imageType['height'])) {
-                                $errors[] = $this->translator->trans(
-                                    'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
-                                    [
-                                        '%filename%' => $existing_img,
-                                        '%id%' => (int) $imageObj->id_product,
-                                    ],
-                                    'Admin.Design.Notification'
-                                );
-                            }
+                        if (
+                            !file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.jpg')
+                            && !ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.jpg', (int) $imageType['width'], (int) $imageType['height'])
+                        ) {
+                            $errors[] = $this->translator->trans(
+                                'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
+                                [
+                                    '%filename%' => $existing_img,
+                                    '%id%' => (int) $imageObj->id_product,
+                                ],
+                                'Admin.Design.Notification'
+                            );
                         }
-                        if ($generateHightDpiImages) {
-                            if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg')) {
-                                if (!ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
-                                    $errors[] = $this->translator->trans(
-                                        'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
-                                        [
-                                            '%filename%' => $existing_img,
-                                            '%id%' => (int) $imageObj->id_product,
-                                        ],
-                                        'Admin.Design.Notification'
-                                    );
-                                }
-                            }
+                        if (
+                            $generateHightDpiImages
+                            && !file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg')
+                            && !ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)
+                        ) {
+                            $errors[] = $this->translator->trans(
+                                'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
+                                [
+                                    '%filename%' => $existing_img,
+                                    '%id%' => (int) $imageObj->id_product,
+                                ],
+                                'Admin.Design.Notification'
+                            );
                         }
                     }
                 } else {
@@ -263,10 +262,11 @@ class ImageGenerator implements ImageGeneratorInterface
                         $errors = true;
                     }
 
-                    if ($generate_hight_dpi_images) {
-                        if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
-                            $errors = true;
-                        }
+                    if (
+                        $generate_hight_dpi_images
+                        && !ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)
+                    ) {
+                        $errors = true;
                     }
                 }
             }
@@ -322,17 +322,17 @@ class ImageGenerator implements ImageGeneratorInterface
         $deleteOldImages = $data['erase_previous_images'];
 
         foreach ($this->process_dirs as $proc) {
-            if ($type != 'all' && $type != $proc['type']) {
+            if ($type !== 'all' && $type !== $proc['type']) {
                 continue;
             }
 
             // Getting format generation
             $formats = ImageType::getImagesTypes($proc['type']);
-            if ($type != 'all') {
+            if ($type !== 'all') {
                 $format = (string) $data['format_' . $type];
-                if ($format != 'all') {
+                if ($format !== 'all') {
                     foreach ($formats as $k => $form) {
-                        if ($form['id_image_type'] != $format) {
+                        if ($form['id_image_type'] !== $format) {
                             unset($formats[$k]);
                         }
                     }
@@ -349,15 +349,11 @@ class ImageGenerator implements ImageGeneratorInterface
             } elseif ($return == 'timeout') {
                 $errors[] = $this->translator->trans('Only part of the images have been regenerated. The server timed out before finishing.', [], 'Admin.Design.Notification');
             } else {
-                if ($proc['type'] == 'products') {
-                    if ($this->regenerateWatermark($proc['dir'], $formats) == 'timeout') {
-                        $errors[] = $this->translator->trans('Server timed out. The watermark may not have been applied to all images.', [], 'Admin.Design.Notification');
-                    }
+                if ($proc['type'] === 'products' && $this->regenerateWatermark($proc['dir'], $formats) === 'timeout') {
+                    $errors[] = $this->translator->trans('Server timed out. The watermark may not have been applied to all images.', [], 'Admin.Design.Notification');
                 }
-                if (!count($errors)) {
-                    if ($this->regenerateNoPictureImages($proc['dir'], $formats, $languages)) {
-                        $errors[] = $this->translator->trans('Cannot write "No picture" image to %s images folder. Please check the folder\'s writing permissions.', [$proc['type']], 'Admin.Design.Notification');
-                    }
+                if (!count($errors) && $this->regenerateNoPictureImages($proc['dir'], $formats, $languages)) {
+                    $errors[] = $this->translator->trans('Cannot write "No picture" image to %s images folder. Please check the folder\'s writing permissions.', [$proc['type']], 'Admin.Design.Notification');
                 }
             }
         }
