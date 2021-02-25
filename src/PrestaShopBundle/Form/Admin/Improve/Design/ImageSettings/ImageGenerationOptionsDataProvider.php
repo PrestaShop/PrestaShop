@@ -125,7 +125,7 @@ final class ImageGenerationOptionsDataProvider implements FormDataProviderInterf
         }
 
         $productPictureWidth = $data['product_picture_width'] ?? null;
-        if (!is_null($productPictureWidth) && (!is_numeric($productPictureWidth) || $productPictureWidth < 0)) {
+        if (null !== $productPictureWidth && (!is_numeric($productPictureWidth) || $productPictureWidth < 0)) {
             $fieldName = $this->translator->trans('Product picture width', [], 'Admin.Design.Feature');
 
             $errors[] = [
@@ -136,7 +136,7 @@ final class ImageGenerationOptionsDataProvider implements FormDataProviderInterf
         }
 
         $productPictureHeight = $data['product_picture_height'] ?? null;
-        if (!is_null($productPictureHeight) && (!is_numeric($productPictureHeight) || $productPictureHeight < 0)) {
+        if (null !== $productPictureHeight && (!is_numeric($productPictureHeight) || $productPictureHeight < 0)) {
             $fieldName = $this->translator->trans('Product picture height', [], 'Admin.Design.Feature');
 
             $errors[] = [
