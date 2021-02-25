@@ -104,7 +104,7 @@ class EmailConfigurationType extends TranslatorAwareType
             ])
             ->add('dkim_enable', SwitchType::class, [
                 'label' => $this->trans('Enable DKIM', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Before enabling DKIM, fill the data below properly and test it.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Before enabling DKIM, fill the data below and properly test it afterwards. If no email is sent, check logs.', 'Admin.Advparameters.Help'),
             ])
             ->add('dkim_domain', TextType::class, [
                 'label' => $this->trans('DKIM domain', 'Admin.Advparameters.Feature'),
