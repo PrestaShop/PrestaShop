@@ -54,6 +54,9 @@ class CookieCore
     /** @var array Website domain for setcookie() */
     protected $_domain;
 
+    /** @var string|bool SameSite for setcookie() */
+    protected $_sameSite;
+
     /** @var array Path for setcookie() */
     protected $_path;
 
@@ -89,6 +92,7 @@ class CookieCore
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace(['%2F', '%7E', '%2B', '%26'], ['/', '~', '+', '&'], $this->_path);
         $this->_domain = $this->getDomain($shared_urls);
+        $this->_sameSite = Configuration::get('PS_COOKIE_SAMESITE');
         $this->_name = 'PrestaShop-' . md5(($this->_standalone ? '' : _PS_VERSION_) . $name . $this->_domain);
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 32, md5('ps' . __FILE__)) : _COOKIE_IV_;
@@ -387,8 +391,6 @@ class CookieCore
             $time = 1;
         }
 
-        $sameSite = Configuration::get('PS_COOKIE_SAMESITE');
-
         /*
          * The alternative signature supporting an options array is only available since
          * PHP 7.3.0, before there is no support for SameSite attribute.
@@ -399,7 +401,7 @@ class CookieCore
                 $content,
                 $time,
                 $this->_path,
-                $this->_domain . '; SameSite=' . $sameSite,
+                $this->_domain . '; SameSite=' . $this->_sameSite,
                 $this->_secure,
                 true
             );
@@ -414,7 +416,7 @@ class CookieCore
                 'domain' => $this->_domain,
                 'secure' => $this->_secure,
                 'httponly' => true,
-                'samesite' => $sameSite,
+                'samesite' => $this->_sameSite,
             ]
         );
     }
