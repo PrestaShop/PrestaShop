@@ -41,5 +41,5 @@ interface AddZoneHandlerInterface
      *
      * @return ZoneId
      */
-    public function handle(AddZoneCommand $command);
+    public function handle(AddZoneCommand $command): ZoneId;
 }
