@@ -196,4 +196,11 @@ describe('Choose quantity discount based on', async () => {
     const numberOfProductsAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProductsAfterDelete).to.equal(numberOfProducts);
   });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfProducts).to.be.above(0);
+  });
 });
