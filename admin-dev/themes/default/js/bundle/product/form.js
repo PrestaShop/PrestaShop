@@ -1034,8 +1034,8 @@ const customFieldCollection = (function () {
   function add() {
     const newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
     maxCollectionChildren += 1;
-    
-    collectionHolder.append('<li>' + newForm + '</li>');
+
+    collectionHolder.append(`<li>${newForm}</li>`);
     window.prestaShopUiKit.init();
   }
 
