@@ -79,6 +79,14 @@ class VirtualProductFileUploader
     }
 
     /**
+     * @param string $filename
+     */
+    public function remove(string $filename): void
+    {
+        $this->removeFile($this->downloadDir . $filename);
+    }
+
+    /**
      * @param string $filePath
      * @param string $destination
      *
