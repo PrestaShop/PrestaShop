@@ -79,22 +79,24 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
                 [],
                 'Admin.Design.Notification'
             )];
-        } else {
-            ini_set('max_execution_time', (string) $this->max_execution_time);
-            $this->max_execution_time = (int) ini_get('max_execution_time');
-            $result = Image::moveToNewFileSystem($this->max_execution_time);
+        }
 
-            if ($result === 'timeout') {
-                return [$this->translator->trans(
+        ini_set('max_execution_time', (string) $this->max_execution_time);
+        $this->max_execution_time = (int) ini_get('max_execution_time');
+        $result = Image::moveToNewFileSystem($this->max_execution_time);
+
+        if ($result === 'timeout') {
+            return [
+                $this->translator->trans(
                     'Not all images have been moved. The server timed out before finishing. Click on "%move_images_label%" again to resume the moving process.',
-                    [
-                        '%move_images_label%' => $this->translator->trans('Move images', [], 'Admin.Design.Feature'),
-                    ],
+                    ['%move_images_label%' => $this->translator->trans('Move images', [], 'Admin.Design.Feature')],
                     'Admin.Design.Notification'
-                )];
-            } elseif ($result === false) {
-                return [$this->translator->trans('Error: Some -- or all -- images cannot be moved.', [], 'Admin.Design.Notification')];
-            }
+                ),
+            ];
+        }
+
+        if ($result === false) {
+            return [$this->translator->trans('Error: Some -- or all -- images cannot be moved.', [], 'Admin.Design.Notification')];
         }
 
         return [];
