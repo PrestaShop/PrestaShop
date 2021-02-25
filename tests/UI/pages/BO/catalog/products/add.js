@@ -194,17 +194,8 @@ class AddProduct extends BOBasePage {
       }
     }
     /* eslint-enable */
-    await this.scrollTo(page, this.generateCombinationsButton);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.productCombinationsBulkForm}:not(.inactive)`),
-      this.waitForVisibleSelector(
-        page,
-        `${this.productCombinationTableRow(1)}[style='display: table-row;']`,
-      ),
-      page.click(this.generateCombinationsButton),
-    ]);
+    await page.$eval(this.generateCombinationsButton, el => el.click());
     await this.closeGrowlMessage(page);
-    await this.closeCombinationsForm(page);
   }
 
   /**
@@ -220,35 +211,22 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * @override
-   * Select, unselect checkbox
-   * @param page
-   * @param checkboxSelector, selector of checkbox
-   * @param valueWanted, true if we want to select checkBox, false otherwise
-   * @return {Promise<void>}
-   */
-  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
-      await page.$eval(checkboxSelector, el => el.click());
-    }
-  }
-
-  /**
    * Set quantity for all combinations
    * @param page
    * @param quantity
    * @return {Promise<void>}
    */
   async setCombinationsQuantity(page, quantity) {
-    // Unselect all
-    await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, false);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.productCombinationsBulkFormTitle}[aria-expanded='true']`),
-      await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, true),
-    ]);
+    // Select all combinations
+    await page.check(this.productCombinationSelectAllCheckbox);
+
+    // Open combinations bulk form
+    if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
+      await page.click(this.productCombinationsBulkFormTitle);
+      await this.waitForVisibleSelector(page, this.productCombinationBulkQuantityInput, 5000);
+    }
+
     // Edit quantity
-    await this.waitForVisibleSelector(page, this.applyOnCombinationsButton);
-    await this.scrollTo(page, this.productCombinationBulkQuantityInput);
     await page.type(this.productCombinationBulkQuantityInput, quantity.toString());
     await this.scrollTo(page, this.applyOnCombinationsButton);
     await page.click(this.applyOnCombinationsButton);
@@ -314,14 +292,18 @@ class AddProduct extends BOBasePage {
    */
   async deleteAllCombinations(page) {
     if (await this.hasCombinations(page)) {
-      // Unselect all
-      await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, false);
-      // Select all and delete combinations
-      await Promise.all([
-        this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, true),
-        this.waitForVisibleSelector(page, `${this.bulkCombinationsContainer}.show`),
-      ]);
+      // Select all combinations
+      await page.check(this.productCombinationSelectAllCheckbox);
+
+      // Open combinations bulk form
+      if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
+        await page.click(this.productCombinationsBulkFormTitle);
+        await this.waitForVisibleSelector(page, this.productCombinationBulkQuantityInput, 5000);
+      }
+
+      // Scroll and click on delete combinations button
       await this.scrollTo(page, this.deleteCombinationsButton);
+
       await Promise.all([
         page.click(this.deleteCombinationsButton),
         this.waitForVisibleSelector(page, this.modalDialog),
@@ -330,23 +312,6 @@ class AddProduct extends BOBasePage {
       await Promise.all([
         page.click(this.modalDialogYesButton),
         this.waitForSelectorAndClick(page, this.growlCloseButton),
-      ]);
-      // Unselect all
-      await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, false);
-      await this.closeCombinationsForm(page);
-    }
-  }
-
-  /**
-   * Close combinations form if open
-   * @param page
-   * @return {Promise<void>}
-   */
-  async closeCombinationsForm(page) {
-    if (!(await this.elementVisible(page, `${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, 1000))) {
-      await Promise.all([
-        page.click(this.productCombinationsBulkFormTitle),
-        this.waitForVisibleSelector(page, `${this.productCombinationsBulkFormTitle}[aria-expanded='false']`),
       ]);
     }
   }
