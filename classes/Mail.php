@@ -304,10 +304,11 @@ class MailCore extends ObjectModel
             && !empty($configuration['PS_MAIL_DKIM_KEY'])
         ) {
             $message = new Swift_SignedMessage();
-            $privateKey = $configuration['PS_MAIL_DKIM_KEY'];
-            $domainName = $configuration['PS_MAIL_DKIM_DOMAIN'];
-            $selector = $configuration['PS_MAIL_DKIM_SELECTOR'];
-            $signer = new Swift_Signers_DKIMSigner($privateKey, $domainName, $selector);
+            $signer = new Swift_Signers_DKIMSigner(
+                $configuration['PS_MAIL_DKIM_KEY'],
+                $configuration['PS_MAIL_DKIM_DOMAIN'],
+                $configuration['PS_MAIL_DKIM_SELECTOR']
+            );            
             $message->attachSigner($signer);
             
         } else {
