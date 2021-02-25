@@ -63,7 +63,6 @@ describe('Password reminder', async () => {
 
   describe('Go to BO to setup the smtp parameters', async () => {
     it('should login in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginToBoForSetupSmtpParams', baseContext);
       await loginCommon.loginBO(this, page);
     });
 
@@ -92,6 +91,7 @@ describe('Password reminder', async () => {
         DefaultCustomer.password,
         smtpPort,
       );
+
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
 
@@ -109,7 +109,6 @@ describe('Password reminder', async () => {
     });
 
     it('should logout from BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'logOutFromBOAfterSmtpParamsSetup', baseContext);
       await loginCommon.logoutBO(this, page);
     });
   });
@@ -157,7 +156,6 @@ describe('Password reminder', async () => {
 
   describe('Go to BO and reset to default mail parameters', async () => {
     it('should login in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginToBoForResetSmtpParams', baseContext);
       await loginCommon.loginBO(this, page);
     });
 
@@ -184,7 +182,6 @@ describe('Password reminder', async () => {
     });
 
     it('should logout from BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'logOutFromBOAfterSmtpParamsReset', baseContext);
       await loginCommon.logoutBO(this, page);
     });
   });
