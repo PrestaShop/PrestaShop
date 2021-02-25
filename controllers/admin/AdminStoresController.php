@@ -569,7 +569,7 @@ class AdminStoresControllerCore extends AdminController
     public function updateOptionPsShopName($value)
     {
         if (!Shop::isFeatureActive() && !$this->errors && $value) {
-            Db::getInstance()->Execute(
+            Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'shop` 
                 SET name = "' . pSQL($value) . '" 
                 WHERE id_shop = ' . (int) $this->context->shop->id
