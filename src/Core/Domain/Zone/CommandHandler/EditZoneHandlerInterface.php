@@ -38,5 +38,5 @@ interface EditZoneHandlerInterface
     /**
      * @param EditZoneCommand $command
      */
-    public function handle(EditZoneCommand $command);
+    public function handle(EditZoneCommand $command): void;
 }

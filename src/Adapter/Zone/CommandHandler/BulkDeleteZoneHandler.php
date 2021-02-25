@@ -42,7 +42,7 @@ final class BulkDeleteZoneHandler implements BulkDeleteZoneHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkDeleteZoneCommand $command)
+    public function handle(BulkDeleteZoneCommand $command): void
     {
         foreach ($command->getZoneIds() as $zoneId) {
             $zone = new Zone($zoneId->getValue());

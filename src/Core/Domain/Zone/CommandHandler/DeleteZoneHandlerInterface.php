@@ -38,5 +38,5 @@ interface DeleteZoneHandlerInterface
     /**
      * @param DeleteZoneCommand $command
      */
-    public function handle(DeleteZoneCommand $command);
+    public function handle(DeleteZoneCommand $command): void;
 }

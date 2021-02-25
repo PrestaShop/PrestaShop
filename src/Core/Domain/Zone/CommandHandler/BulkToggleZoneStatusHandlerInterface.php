@@ -38,5 +38,5 @@ interface BulkToggleZoneStatusHandlerInterface
     /**
      * @param BulkToggleZoneStatusCommand $command
      */
-    public function handle(BulkToggleZoneStatusCommand $command);
+    public function handle(BulkToggleZoneStatusCommand $command): void;
 }

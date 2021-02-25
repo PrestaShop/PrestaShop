@@ -42,7 +42,7 @@ final class DeleteZoneHandler implements DeleteZoneHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteZoneCommand $command)
+    public function handle(DeleteZoneCommand $command): void
     {
         $zone = new Zone($command->getZoneId()->getValue());
 
