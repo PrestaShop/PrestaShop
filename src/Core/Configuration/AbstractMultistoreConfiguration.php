@@ -89,7 +89,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
      * @param string $fieldName
      * @param array $input an associative array where keys are field names and values are field values
      * @param ShopConstraint|null $shopConstraint
-     * @param array $options Options @deprecated Will be removed in next major
+     * @param array $options<int, string> Options @deprecated Will be removed in next major
      */
     public function updateConfigurationValue(string $configurationKey, string $fieldName, array $input, ?ShopConstraint $shopConstraint, array $options = []): void
     {
