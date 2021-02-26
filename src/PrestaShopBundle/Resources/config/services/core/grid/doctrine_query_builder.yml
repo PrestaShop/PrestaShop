@@ -340,3 +340,10 @@ services:
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
         public: true
+
+    prestashop.core.grid.query_builder.search_engine:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\SearchEngineQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        public: true
