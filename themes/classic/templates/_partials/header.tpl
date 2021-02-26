@@ -62,12 +62,12 @@
             {if $page.page_name == 'index'}
               <h1>
                 <a href="{$urls.pages.index}">
-                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy">
+                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy" width="100" height="28">
                 </a>
               </h1>
             {else}
                 <a href="{$urls.pages.index}">
-                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy">
+                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy" width="100" height="28">
                 </a>
             {/if}
         </div>
