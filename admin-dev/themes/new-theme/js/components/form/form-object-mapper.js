@@ -46,10 +46,15 @@ export default class FormObjectMapper {
 
     const inputConfig = config || {};
 
-    // This event is registered so when it is triggered it forces the object update
+    // This event is registered so when it is triggered it forces the form mapping and object update,
+    // it can be useful when some new inputs have been added in the DOM (or removed) so that the model
+    // acknowledges the update
     this.updateModelEventName = inputConfig.updateModel || 'updateModel';
+
     // This event is emitted each time the object is updated (from both input change and external event)
     this.modelUpdatedEventName = inputConfig.modelUpdated || 'modelUpdated';
+    // This event is emitted each time an object field is updated (from both input change and external event)
+    this.modelFieldUpdatedEventName = inputConfig.modelFieldUpdated || 'modelFieldUpdated';
 
     this.modelMapping = {};
     this.formMapping = {};
@@ -60,8 +65,60 @@ export default class FormObjectMapper {
     this.updateFullObject();
   }
 
+  /**
+   * Returns the object mapped to the form (current live state)
+   *
+   * @returns {*|{}}
+   */
   getObject() {
     return this.object;
+  }
+
+  /**
+   * Get a field from the object based on the model key
+   *
+   * @param modelKey (string)
+   *
+   * @returns {*|{}}
+   */
+  get(modelKey) {
+    const modelKeys = modelKey.split('.');
+
+    return $.serializeJSON.deepGet(this.object, modelKeys);
+  }
+
+  /**
+   * Returns the input associated to a model field (in case the field is mapped to
+   * several inputs the default one, first configured, is always used).
+   *
+   * @param modelKey {string}
+   * @returns {undefined|jQuery}
+   */
+  getInput(modelKey) {
+    if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey)) {
+      return undefined;
+    }
+
+    return $(`[name="${this.modelMapping[modelKey]}"]`);
+  }
+
+  /**
+   * Set a value to a field of the object based on the model key, the object itself is updated
+   * of course but the mapped inputs are also synced (all of them if multiple). Events are also
+   * triggered to indicate the object has been updated (the general and the individual field ones).
+   *
+   * @param modelKey {string}
+   * @param value {*|{}}
+   */
+  set(modelKey, value) {
+    if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey) || value === this.get(modelKey)) {
+      return;
+    }
+
+    // First update the inputs then the model, so that the event is sent at last
+    this.updateInputValue(modelKey, value);
+    this.updateObjectByKey(modelKey, value);
+    this.eventEmitter.emit(this.modelUpdatedEventName, this.object);
   }
 
   /**
@@ -86,20 +143,50 @@ export default class FormObjectMapper {
 
     const updatedValue = $(target).val();
     const updatedModelKey = this.formMapping[target.name];
-    const modelInputs = this.fullModelMapping[updatedModelKey];
 
-    // Update linked inputs
-    modelInputs.forEach((inputName) => {
-      if (inputName === target.name) {
-        return;
-      }
-
-      $(`[name="${inputName}"]`).val(updatedValue);
-    });
+    // Update the mapped input fields
+    this.updateInputValue(updatedModelKey, updatedValue);
 
     // Then update model and emit event
     this.updateObjectByKey(updatedModelKey, updatedValue);
     this.eventEmitter.emit(this.modelUpdatedEventName, this.object);
+  }
+
+  /**
+   * Update all the inputs mapped to a model key
+   *
+   * @param modelKey {string}
+   * @param value {*|{}}
+   */
+  updateInputValue(modelKey, value) {
+    const modelInputs = this.fullModelMapping[modelKey];
+
+    // Update linked inputs (when there is more than one input associated to the model field)
+    if (Array.isArray(modelInputs)) {
+      modelInputs.forEach((inputName) => {
+        this.updateInputByName(inputName, value);
+      });
+    } else {
+      this.updateInputByName(modelInputs, value);
+    }
+  }
+
+  /**
+   * Update individual input based on its name
+   *
+   * @param inputName {string}
+   * @param value {*|{}}
+   */
+  updateInputByName(inputName, value) {
+    const $input = $(`[name="${inputName}"]`);
+
+    // This check is important to avoid infinite loops, we don't use strict equality on purpose because it would result
+    // into a potential infinite loop if type don't match, which can easily happen with a number value and a text input.
+    // eslint-disable-next-line eqeqeq
+    if ($input.val() != value) {
+      $input.val(value);
+      $input.trigger('change');
+    }
   }
 
   /**
@@ -130,7 +217,23 @@ export default class FormObjectMapper {
    */
   updateObjectByKey(modelKey, value) {
     const modelKeys = modelKey.split('.');
+    const currentValue = $.serializeJSON.deepGet(this.object, modelKeys);
+
+    // This check has two interests, there is no point in modifying a value or emit an event for a value that did not
+    // change, and it avoids infinite loops when the object field are co-dependent and need to be updated dynamically
+    // (ex: update price tax included when price tax excluded is updated and vice versa, without this check an infinite
+    // loop would happen)
+    if (currentValue === value) {
+      return;
+    }
+
     $.serializeJSON.deepSet(this.object, modelKeys, value);
+
+    this.eventEmitter.emit(this.modelFieldUpdatedEventName, {
+      object: this.object,
+      modelKey,
+      value,
+    });
   }
 
   /**
