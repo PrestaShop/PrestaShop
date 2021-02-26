@@ -127,7 +127,6 @@ class ControllerTest extends TestCase
             array('AdminAttributesGroupsController'),
             array('AdminNotFoundController'),
             array('AdminFeaturesController'),
-            array('AdminSearchEnginesController'),
             array('AdminGendersController'),
             array('AdminTagsController'),
             array('AdminShopController'),
