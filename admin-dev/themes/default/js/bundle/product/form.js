@@ -24,7 +24,7 @@
  */
 
 $(document).ready(() => {
-  form.init();
+  window.form.init();
   nav.init();
   featuresCollection.init();
   displayFormCategory.init();
@@ -93,7 +93,7 @@ function resetEditor() {
 /**
  * Manage show or hide fields
  */
-const displayFieldsManager = (function () {
+window.displayFieldsManager = (function () {
   const typeProduct = $('#form_step1_type_product');
   const showVariationsSelector = $('#show_variations_selector');
   const combinationsBlock = $('#combinations');
@@ -504,7 +504,7 @@ const supplier = (function () {
 /**
  * Supplier combination collection management
  */
-const supplierCombinations = (function () {
+window.supplierCombinations = (function () {
   const idProduct = $('#form_id_product').val();
   const collectionHolder = $('#supplier_combination_collection');
 
@@ -532,7 +532,7 @@ const supplierCombinations = (function () {
 /**
  * Quantities management
  */
-const stock = (function () {
+window.stock = (function () {
   return {
     init() {
       /** Update qty_0 and shortcut qty_0 field on change */
@@ -568,7 +568,7 @@ const stock = (function () {
 /**
  * Navigation management
  */
-const nav = (function () {
+window.nav = (function () {
   return {
     init() {
       /** Manage tabls hash routes */
@@ -592,7 +592,7 @@ const nav = (function () {
 /**
  * Warehouse combination collection management (ASM only)
  */
-const warehouseCombinations = (function () {
+window.warehouseCombinations = (function () {
   const idProduct = $('#form_id_product').val();
   const collectionHolder = $('#warehouse_combination_collection');
 
@@ -649,7 +649,7 @@ const warehouseCombinations = (function () {
 /**
  * Form management
  */
-const form = (function () {
+window.form = (function () {
   const elem = $('#form');
 
   function send(redirect, target, callBack) {
@@ -1027,7 +1027,7 @@ const form = (function () {
 /**
  * Custom field collection management
  */
-const customFieldCollection = (function () {
+window.customFieldCollection = (function () {
   const collectionHolder = $('ul.customFieldCollection');
   let maxCollectionChildren = collectionHolder.children().length;
 
@@ -1066,7 +1066,7 @@ const customFieldCollection = (function () {
 /**
  * virtual product management
  */
-const virtualProduct = (function () {
+window.virtualProduct = (function () {
   const idProduct = $('#form_id_product').val();
 
   const getOnDeleteVirtualProductFileHandler = function ($deleteButton) {
@@ -1214,7 +1214,7 @@ const virtualProduct = (function () {
 /**
  * attachment product management
  */
-const attachmentProduct = (function () {
+window.attachmentProduct = (function () {
   const idProduct = $('#form_id_product').val();
 
   return {
@@ -1300,7 +1300,7 @@ const attachmentProduct = (function () {
 /**
  * images product management
  */
-const imagesProduct = (function () {
+window.imagesProduct = (function () {
   const dropZoneElem = $('#product-images-dropzone');
   const expanderElem = $('#product-images-container .dropzone-expander');
 
@@ -1504,7 +1504,7 @@ const imagesProduct = (function () {
   };
 }());
 
-const formImagesProduct = (function () {
+window.formImagesProduct = (function () {
   const dropZoneElem = $('#product-images-dropzone');
   const formZoneElem = $('#product-images-form-container');
 
@@ -1615,7 +1615,7 @@ const formImagesProduct = (function () {
 /**
  * Price calculation
  */
-const priceCalculation = (function () {
+window.priceCalculation = (function () {
   const priceHTElem = $('#form_step2_price');
   const priceHTShortcutElem = $('#form_step1_price_shortcut');
   const priceTTCElem = $('#form_step2_price_ttc');
@@ -1929,7 +1929,7 @@ const priceCalculation = (function () {
 /**
  * Manage seo
  */
-const seo = (function () {
+window.seo = (function () {
   const redirectTypeElem = $('#form_step5_redirect_type');
   const productRedirect = $('#id-product-redirected');
 
@@ -2012,7 +2012,7 @@ const seo = (function () {
 /**
  * Tags management
  */
-const tags = (function () {
+window.tags = (function () {
   return {
     init() {
       $('#form_step6_tags .tokenfield').tokenfield({
@@ -2022,7 +2022,7 @@ const tags = (function () {
   };
 }());
 
-const recommendedModules = (function () {
+window.recommendedModules = (function () {
   return {
     init() {
       this.moduleActionMenuLinkSelectors = 'button.module_action_menu_install, button.module_action_menu_enable, '
