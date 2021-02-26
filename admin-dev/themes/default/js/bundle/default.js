@@ -79,7 +79,7 @@ const BOEvent = {
   emitEvent(eventName, eventType) {
     const event = document.createEvent(eventType);
     // true values stand for: can bubble, and is cancellable
-    _event.initEvent(eventName, true, true);
+    event.initEvent(eventName, true, true);
     document.dispatchEvent(event);
   },
 };
