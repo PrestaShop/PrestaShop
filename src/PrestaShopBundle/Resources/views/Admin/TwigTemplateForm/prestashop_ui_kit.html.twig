@@ -36,12 +36,11 @@
 
 {% block form_label -%}
   {% spaceless %}
-    {% if label is same as(null) or label_attr.title is defined %}
-      {# nothing #}
-    {% elseif label is same as(false) %}
+    {% if label is same as(null) %}
       <div class="{{ block('form_label_class') }}"></div>
+    {% elseif label is same as(false) %}
+      {# Use false as label is you don't want an empty column #}
     {% else %}
-      {% dump(label_attr) %}
       {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ block('form_label_class'))|trim}) %}
       {{- parent() -}}
     {% endif %}
@@ -62,7 +61,9 @@
       </{{ label_attr.title }}>
     {% endif %}
     <div class="{{ block('form_row_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}"{% if (attr.visible is defined and not attr.visible) %} style="display: none;"{% endif %}>
+      {% if label_attr.title is not defined %}
       {{ form_label(form) }}
+      {% endif %}
       <div class="{{ block('form_group_class') }}">
         {{ form_widget(form) }}
         {{ form_errors(form) }}
