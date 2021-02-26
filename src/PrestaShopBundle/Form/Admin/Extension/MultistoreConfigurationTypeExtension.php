@@ -48,6 +48,10 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
         $this->multistoreCheckboxEnabler = $multistoreCheckboxEnabler;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if (!$this->multistoreCheckboxEnabler->shouldAddCheckboxes()) {
