@@ -144,7 +144,7 @@ CREATE TABLE `PREFIX_module_access` (
 
 /* PHP:add_quick_access_tab(); */;
 
-INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
+INSERT IGNORE INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
   ('actionValidateCustomerAddressForm', 'Customer address form validation', 'This hook is called when a customer submit its address form', '1'),
   ('displayAfterCarrier', 'After carriers list', 'This hook is displayed after the carrier list in Front Office', '1'),
   ('displayCarrierExtraContent', 'Display additional content for a carrier (e.g pickup points)', 'This hook calls only the module related to the carrier, in order to add options when needed.', '1'),
