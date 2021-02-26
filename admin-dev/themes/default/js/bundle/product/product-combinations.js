@@ -297,7 +297,7 @@ BOEvent.on('Product Combinations Management started', () => {
  * @param {number} sign
  * @param {number} number
  */
-const refreshTotalCombinations = function (sign, number) {
+window.refreshTotalCombinations = function (sign, number) {
   const $bulkCombinationsTotal = $('#js-bulk-combinations-total');
   const currentnumber = parseInt($bulkCombinationsTotal.text(), 10) + (sign * number);
   $bulkCombinationsTotal.text(currentnumber);
