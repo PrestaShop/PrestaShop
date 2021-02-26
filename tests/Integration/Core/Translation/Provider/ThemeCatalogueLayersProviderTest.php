@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Translation\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
@@ -51,11 +52,11 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
      */
     private $translationsDir;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|LegacyModuleExtractorInterface
+     * @var MockObject|LegacyModuleExtractorInterface
      */
     private $themeExtractor;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|LoaderInterface
+     * @var MockObject|LoaderInterface
      */
     private $themeRepository;
     /**
@@ -106,28 +107,8 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
-        $databaseTranslationLoader = new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class));
-        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
-        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
-        $coreFrontProvider = new CoreCatalogueLayersProvider(
-            $databaseTranslationLoader,
-            $this->translationsDir,
-            $coreFrontProviderDefinition->getFilenameFilters(),
-            $coreFrontProviderDefinition->getTranslationDomains()
-        );
-
-        $provider = new ThemeCatalogueLayersProvider(
-            $coreFrontProvider,
-            $databaseTranslationLoader,
-            $this->themeExtractor,
-            $this->themeRepository,
-            $this->filesystem,
-            $this->themesDir,
-            $providerDefinition->getThemeName()
-        );
-
         // load catalogue from translations/fr-FR
-        $catalogue = $provider->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -247,28 +228,8 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $databaseTranslationLoader = new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class));
-        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
-        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
-        $coreFrontProvider = new CoreCatalogueLayersProvider(
-            $databaseTranslationLoader,
-            $this->translationsDir,
-            $coreFrontProviderDefinition->getFilenameFilters(),
-            $coreFrontProviderDefinition->getTranslationDomains()
-        );
-
-        $provider = new ThemeCatalogueLayersProvider(
-            $coreFrontProvider,
-            $databaseTranslationLoader,
-            $this->themeExtractor,
-            $this->themeRepository,
-            $this->filesystem,
-            $this->themesDir,
-            $providerDefinition->getThemeName()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -301,28 +262,8 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $databaseTranslationLoader = new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class));
-        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
-        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
-        $coreFrontProvider = new CoreCatalogueLayersProvider(
-            $databaseTranslationLoader,
-            $this->translationsDir,
-            $coreFrontProviderDefinition->getFilenameFilters(),
-            $coreFrontProviderDefinition->getTranslationDomains()
-        );
-
-        $provider = new ThemeCatalogueLayersProvider(
-            $coreFrontProvider,
-            $databaseTranslationLoader,
-            $this->themeExtractor,
-            $this->themeRepository,
-            $this->filesystem,
-            $this->themesDir,
-            $providerDefinition->getThemeName()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -339,5 +280,33 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
 
         $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ShopThemeActions'));
         $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'ShopThemeCart'));
+    }
+
+    /**
+     * @param array $databaseContent
+     *
+     * @return ThemeCatalogueLayersProvider
+     */
+    private function getProvider(array $databaseContent = []): ThemeCatalogueLayersProvider
+    {
+        $databaseTranslationLoader = new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class));
+        $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
+        $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+        $coreFrontProvider = new CoreCatalogueLayersProvider(
+            $databaseTranslationLoader,
+            $this->translationsDir,
+            $coreFrontProviderDefinition->getFilenameFilters(),
+            $coreFrontProviderDefinition->getTranslationDomains()
+        );
+
+        return new ThemeCatalogueLayersProvider(
+            $coreFrontProvider,
+            $databaseTranslationLoader,
+            $this->themeExtractor,
+            $this->themeRepository,
+            $this->filesystem,
+            $this->themesDir,
+            $providerDefinition->getThemeName()
+        );
     }
 }

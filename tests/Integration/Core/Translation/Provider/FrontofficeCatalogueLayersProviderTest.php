@@ -66,16 +66,8 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
-        $providerDefinition = new FrontofficeProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/fr-FR
-        $catalogue = $provider->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -102,16 +94,8 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
-        $providerDefinition = new FrontofficeProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/default
-        $catalogue = $provider->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -152,16 +136,8 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $providerDefinition = new FrontofficeProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -214,16 +190,8 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $providerDefinition = new FrontofficeProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -235,5 +203,20 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
         // If the theme name is null, the translations which have theme = 'classic' are taken
         $this->assertEmpty($domains);
         $this->assertEmpty($messages);
+    }
+
+    /**
+     * @param array $databaseContent
+     */
+    private function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
+    {
+        $providerDefinition = new FrontofficeProviderDefinition();
+
+        return new CoreCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            $this->translationsDir,
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains()
+        );
     }
 }

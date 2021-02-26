@@ -54,16 +54,8 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
-        $providerDefinition = new BackofficeProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/fr-FR
-        $catalogue = $provider->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -89,16 +81,8 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
-        $providerDefinition = new BackofficeProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/default
-        $catalogue = $provider->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -136,16 +120,8 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $providerDefinition = new BackofficeProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -162,5 +138,22 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
 
         $this->assertSame('Save and stay', $catalogue->get('Save and stay', 'AdminActions'));
         $this->assertSame('Traduction customisée', $catalogue->get('Uninstall', 'AdminActions'));
+    }
+
+    /**
+     * @param array $databaseContent
+     *
+     * @return CoreCatalogueLayersProvider
+     */
+    private function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
+    {
+        $providerDefinition = new BackofficeProviderDefinition();
+
+        return new CoreCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            $this->translationsDir,
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains()
+        );
     }
 }

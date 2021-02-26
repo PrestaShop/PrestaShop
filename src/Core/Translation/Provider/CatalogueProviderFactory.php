@@ -50,38 +50,47 @@ class CatalogueProviderFactory
      * @var CatalogueLayersProviderInterface[]
      */
     private $providers = [];
+
     /**
      * @var DatabaseTranslationLoader
      */
     private $databaseTranslationLoader;
+
     /**
      * @var LegacyModuleExtractorInterface
      */
     private $legacyModuleExtractor;
+
     /**
      * @var LoaderInterface
      */
     private $legacyFileLoader;
+
     /**
      * @var string
      */
     private $modulesDirectory;
+
     /**
      * @var string
      */
     private $translationsDirectory;
+
     /**
      * @var ThemeExtractor
      */
     private $themeExtractor;
+
     /**
      * @var ThemeRepository
      */
     private $themeRepository;
+
     /**
      * @var Filesystem
      */
     private $filesystem;
+
     /**
      * @var string
      */
@@ -140,6 +149,11 @@ class CatalogueProviderFactory
         throw new UnexpectedTranslationTypeException(sprintf('Unexpected type %s', $type));
     }
 
+    /**
+     * @param ProviderDefinitionInterface $providerDefinition
+     *
+     * @return CatalogueLayersProviderInterface
+     */
     private function getCoreCatalogueProvider(ProviderDefinitionInterface $providerDefinition): CatalogueLayersProviderInterface
     {
         if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
@@ -154,6 +168,11 @@ class CatalogueProviderFactory
         return $this->providers[$providerDefinition->getType()];
     }
 
+    /**
+     * @param ModuleProviderDefinition $providerDefinition
+     *
+     * @return CatalogueLayersProviderInterface
+     */
     private function getModuleCatalogueProvider(ModuleProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
     {
         if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
@@ -172,6 +191,11 @@ class CatalogueProviderFactory
         return $this->providers[$providerDefinition->getType()];
     }
 
+    /**
+     * @param ThemeProviderDefinition $providerDefinition
+     *
+     * @return CatalogueLayersProviderInterface
+     */
     private function getThemeCatalogueProvider(ThemeProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
     {
         if (!array_key_exists($providerDefinition->getType(), $this->providers)) {

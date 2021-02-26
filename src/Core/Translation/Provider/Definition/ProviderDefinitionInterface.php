@@ -56,7 +56,7 @@ interface ProviderDefinitionInterface
      * Returns a list of patterns to filter catalogue files.
      * Depends on the translation type.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getFilenameFilters(): array;
 
@@ -64,7 +64,7 @@ interface ProviderDefinitionInterface
      * Returns a list of patterns to filter translation domains.
      * Depends on the translation type.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getTranslationDomains(): array;
 }

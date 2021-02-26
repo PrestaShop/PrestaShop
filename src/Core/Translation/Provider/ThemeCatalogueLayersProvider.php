@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopException;
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -52,30 +53,37 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @var DatabaseTranslationLoader
      */
     private $databaseTranslationLoader;
+
     /**
      * @var string
      */
     private $themeName;
+
     /**
      * @var CatalogueLayersProviderInterface
      */
     private $coreFrontProvider;
+
     /**
      * @var ThemeExtractor
      */
     private $themeExtractor;
+
     /**
      * @var ThemeRepository
      */
     private $themeRepository;
+
     /**
      * @var Filesystem
      */
     private $filesystem;
+
     /**
      * @var string
      */
     private $themeResourcesDir;
+
     /**
      * @var \PrestaShop\PrestaShop\Core\Addon\Theme\Theme
      */
@@ -179,7 +187,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
             }
             $this->theme = $theme;
         } catch (PrestaShopException $e) {
-            throw new \RuntimeException(sprintf('The theme "%s" doesn\'t exist', $this->themeName), 0, $e);
+            throw new RuntimeException(sprintf('The theme "%s" doesn\'t exist', $this->themeName), 0, $e);
         }
     }
 
