@@ -153,3 +153,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider'
       arguments:
           - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.search_engine_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SearchEngineFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
