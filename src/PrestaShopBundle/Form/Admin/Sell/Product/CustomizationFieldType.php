@@ -83,7 +83,6 @@ class CustomizationFieldType extends TranslatorAwareType
                 'label' => $this->trans('Required', 'Admin.Global'),
             ])
             ->add('remove', IconButtonType::class, [
-                'label' => false,
                 'icon' => 'delete',
                 'attr' => [
                     'class' => 'text-secondary remove-customization-btn',

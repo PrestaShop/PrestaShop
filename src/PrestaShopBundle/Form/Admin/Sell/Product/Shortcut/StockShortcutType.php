@@ -43,7 +43,7 @@ class StockShortcutType extends ShortcutType
         $builder
             ->add('quantity', NumberType::class, [
                 'required' => false,
-                'label' => null,
+                'label' => false,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'numeric']),
