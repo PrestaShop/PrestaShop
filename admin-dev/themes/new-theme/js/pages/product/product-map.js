@@ -30,6 +30,9 @@ export default {
   productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
+  price: {
+    priceTaxExcludedInput: '#product_price_price_tax_excluded',
+  },
   suppliers: {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',

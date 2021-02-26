@@ -23,13 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Decimal} from 'decimal.js';
 import ObjectFormMapper from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
+import ProductMap from '@pages/product/product-map';
 
 export default class ProductModel {
   constructor($form, eventEmitter) {
     this.eventEmitter = eventEmitter;
+
+    // For now we get precision only in the component, but maybe it would deserve a more global configuration
+    // Decimal.set({precision: someConfig}) But where can we define/inject this global config?
+    this.precision = $(ProductMap.price.priceTaxExcludedInput).data('displayPricePrecision');
+
+    // Init form mapper
     this.mapper = new ObjectFormMapper(
       $form,
       ProductFormMapping,
@@ -96,23 +104,29 @@ export default class ProductModel {
 
     const $taxRulesGroupIdInput = this.mapper.getInput('product.price.taxRulesGroupId');
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
-    let taxRate = parseFloat($selectedTaxOption.data('taxRate'));
-
-    if (isNaN(taxRate)) {
-      taxRate = 0;
+    let taxRate;
+    try {
+      taxRate = new Decimal($selectedTaxOption.data('taxRate'));
+    } catch (error) {
+      taxRate = new Decimal(0);
     }
 
-    const taxRatio = 1 + (taxRate / 100);
-    const priceTaxIncluded = this.mapper.get('product.price.priceTaxIncluded');
-    const priceTaxExcluded = this.mapper.get('product.price.priceTaxExcluded');
+    const taxRatio = taxRate.dividedBy(100).plus(1);
 
     switch (event.modelKey) {
-      case 'product.price.priceTaxIncluded':
-        this.mapper.set('product.price.priceTaxExcluded', priceTaxIncluded / taxRatio);
+      case 'product.price.priceTaxIncluded': {
+        const priceTaxIncluded = new Decimal(this.mapper.get('product.price.priceTaxIncluded'));
+        this.mapper.set(
+          'product.price.priceTaxExcluded',
+          priceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision),
+        );
         break;
-      default:
-        this.mapper.set('product.price.priceTaxIncluded', priceTaxExcluded * taxRatio);
+      }
+      default: {
+        const priceTaxExcluded = new Decimal(this.mapper.get('product.price.priceTaxExcluded'));
+        this.mapper.set('product.price.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
         break;
+      }
     }
   }
 }
