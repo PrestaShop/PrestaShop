@@ -285,3 +285,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+
+    prestashop.core.grid.definition.factory.search_engines:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SearchEngineGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

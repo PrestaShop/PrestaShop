@@ -437,3 +437,11 @@ services:
             - '@prestashop.core.grid.data.factory.carrier'
             - '@prestashop.adapter.carrier.carrier_thumbnail_logo_provider'
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.grid.data_provider.search_engines:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.search_engine'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'search_engines'
