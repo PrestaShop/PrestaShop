@@ -28,7 +28,7 @@
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
   <div class="row">
     <div class="col-md-9 left-column">
-      {{ form_row(productForm.basic) }}
+      {{ form_widget(productForm.basic) }}
 
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
         'productForm': productForm,
