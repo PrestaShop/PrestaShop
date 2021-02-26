@@ -1661,6 +1661,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.configure.search_engine_type:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\SearchEngines\SearchEngineType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.improve.international.locations.zone_type:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType'
       public: true
