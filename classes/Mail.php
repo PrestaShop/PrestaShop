@@ -308,9 +308,8 @@ class MailCore extends ObjectModel
                 $configuration['PS_MAIL_DKIM_KEY'],
                 $configuration['PS_MAIL_DKIM_DOMAIN'],
                 $configuration['PS_MAIL_DKIM_SELECTOR']
-            );            
+            );
             $message->attachSigner($signer);
-            
         } else {
             $message = new Swift_Message();
         }
