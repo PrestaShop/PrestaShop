@@ -154,18 +154,34 @@ INSERT IGNORE INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VA
   ('displayAfterBodyOpeningTag', 'Very top of pages', 'Use this hook for advertisement or modals you want to load first.', '1'),
   ('displayBeforeBodyClosingTag', 'Very bottom of pages', 'Use this hook for your modals or any content you want to load at the very end.', '1');
 
-/* PHP:delete_hook(displayProductTab); */;
-/* PHP:delete_hook(displayProductTabContent); */;
-/* PHP:delete_hook(displayBeforePayment); */;
-/* PHP:delete_hook(actionBeforeAuthentication); */;
-/* PHP:delete_hook(actionOrderDetail); */;
-/* PHP:delete_hook(actionProductListOverride); */;
-/* PHP:delete_hook(actionSearch); */;
-/* PHP:delete_hook(displayCustomerIdentityForm); */;
-/* PHP:delete_hook(displayHomeTab); */;
-/* PHP:delete_hook(displayHomeTabContent); */;
-/* PHP:delete_hook(displayPayment); */;
-/* PHP:delete_hook(displayProductComparison); */;
+DELETE FROM `PREFIX_hook_module` LEFT JOIN `PREFIX_hook` USING (id_hook) WHERE `name` IN (
+  'displayProductTab',
+  'displayProductTabContent',
+  'displayBeforePayment',
+  'actionBeforeAuthentication',
+  'actionOrderDetail',
+  'actionProductListOverride',
+  'actionSearch',
+  'displayCustomerIdentityForm',
+  'displayHomeTab',
+  'displayHomeTabContent',
+  'displayPayment',
+  'displayProductComparison');
+
+
+DELETE FROM `PREFIX_hook` WHERE `name` IN (
+  'displayProductTab',
+  'displayProductTabContent',
+  'displayBeforePayment',
+  'actionBeforeAuthentication',
+  'actionOrderDetail',
+  'actionProductListOverride',
+  'actionSearch',
+  'displayCustomerIdentityForm',
+  'displayHomeTab',
+  'displayHomeTabContent',
+  'displayPayment',
+  'displayProductComparison');
 
 DELETE FROM `PREFIX_hook_alias` WHERE `name` IN (
   'beforeAuthentication',
