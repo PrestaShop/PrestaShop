@@ -45,7 +45,7 @@ class FileTranslatedCatalogueProvider extends AbstractCatalogueProvider
     private $translatedCatalogueDirectory;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $filenameFilters;
 

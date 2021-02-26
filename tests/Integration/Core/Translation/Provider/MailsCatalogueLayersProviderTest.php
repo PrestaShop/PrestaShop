@@ -66,16 +66,8 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
-        $providerDefinition = new MailsProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/fr-FR
-        $catalogue = $provider->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -98,16 +90,8 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
-        $providerDefinition = new MailsProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/default
-        $catalogue = $provider->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -144,16 +128,8 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $providerDefinition = new MailsProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -200,16 +176,8 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $providerDefinition = new MailsProviderDefinition();
-        $provider = new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->translationsDir,
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -225,5 +193,22 @@ class MailsCatalogueLayersProviderTest extends KernelTestCase
 
         $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'EmailsSubject'));
         $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'EmailsSubject'));
+    }
+
+    /**
+     * @param array $databaseContent
+     *
+     * @return CoreCatalogueLayersProvider
+     */
+    private function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
+    {
+        $providerDefinition = new MailsProviderDefinition();
+
+        return new CoreCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            $this->translationsDir,
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains()
+        );
     }
 }

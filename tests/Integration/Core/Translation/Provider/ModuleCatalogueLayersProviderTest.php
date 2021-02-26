@@ -87,20 +87,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
-            $this->translationsDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/fr-FR
-        $catalogue = $provider->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider('Checkpayment')->getFileTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -183,20 +171,9 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
      */
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
-            $this->translationsDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from translations/default
-        $catalogue = $provider->getDefaultCatalogue('fr-FR');
+        // even if module exists with translations built in
+        $catalogue = $this->getProvider('Checkpayment')->getDefaultCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -287,20 +264,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
-            $this->translationsDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider('Checkpayment', $databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -347,20 +312,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $providerDefinition = new ModuleProviderDefinition('Checkpayment');
-        $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
-            $this->legacyModuleExtractor,
-            $this->legacyFileLoader,
-            $this->modulesDir,
-            $this->translationsDir,
-            $providerDefinition->getModuleName(),
-            $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
-        );
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider('Checkpayment', $databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -377,5 +330,27 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
 
         $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'ModulesCheckpaymentAdmin'));
         $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ModulesCheckpaymentShop'));
+    }
+
+    /**
+     * @param string $moduleName
+     * @param array $databaseContent
+     *
+     * @return ModuleCatalogueLayersProvider
+     */
+    private function getProvider(string $moduleName, array $databaseContent = []): ModuleCatalogueLayersProvider
+    {
+        $providerDefinition = new ModuleProviderDefinition($moduleName);
+
+        return new ModuleCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            $this->legacyModuleExtractor,
+            $this->legacyFileLoader,
+            $this->modulesDir,
+            $this->translationsDir,
+            $providerDefinition->getModuleName(),
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains()
+        );
     }
 }

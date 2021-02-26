@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -71,10 +72,12 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @var UserTranslatedCatalogueProvider
      */
     private $userTranslatedCatalogueProvider;
+
     /**
      * @var array
      */
     private $filenameFilters;
+
     /**
      * @var array
      */
@@ -83,8 +86,8 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
     /**
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param string $resourceDirectory
-     * @param string[] $filenameFilters
-     * @param string[] $translationDomains
+     * @param array<int, string> $filenameFilters
+     * @param array<int, string> $translationDomains
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
@@ -122,6 +125,11 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
         return $this->getUserTranslatedCatalogueProvider()->getCatalogue($locale);
     }
 
+    /**
+     * @return DefaultCatalogueProvider
+     *
+     * @throws FileNotFoundException
+     */
     private function getDefaultCatalogueProvider(): DefaultCatalogueProvider
     {
         if (null === $this->defaultCatalogueProvider) {
@@ -134,6 +142,11 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
         return $this->defaultCatalogueProvider;
     }
 
+    /**
+     * @return FileTranslatedCatalogueProvider
+     *
+     * @throws FileNotFoundException
+     */
     private function getFileTranslatedCatalogueProvider(): FileTranslatedCatalogueProvider
     {
         if (null === $this->fileTranslatedCatalogueProvider) {
@@ -146,6 +159,9 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
         return $this->fileTranslatedCatalogueProvider;
     }
 
+    /**
+     * @return UserTranslatedCatalogueProvider
+     */
     private function getUserTranslatedCatalogueProvider(): UserTranslatedCatalogueProvider
     {
         if (null === $this->userTranslatedCatalogueProvider) {

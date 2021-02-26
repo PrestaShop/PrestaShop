@@ -66,14 +66,17 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @var UserTranslatedCatalogueProvider
      */
     private $userTranslatedCatalogueProvider;
+
     /**
      * @var string
      */
     private $moduleName;
+
     /**
      * @var string
      */
     private $modulesDirectory;
+
     /**
      * @var string
      */
@@ -83,20 +86,24 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @var MessageCatalogue[]
      */
     private $defaultCatalogueCache;
+
     /**
      * @var LegacyModuleExtractorInterface
      */
     private $legacyModuleExtractor;
+
     /**
      * @var LoaderInterface
      */
     private $legacyFileLoader;
+
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $filenameFilters;
+
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $translationDomains;
 
@@ -107,8 +114,8 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @param string $modulesDirectory
      * @param string $translationsDirectory
      * @param string $moduleName
-     * @param array $filenameFilters
-     * @param array $translationDomains
+     * @param array<int, string> $filenameFilters
+     * @param array<int, string> $translationDomains
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
@@ -166,6 +173,13 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         return $this->getUserTranslatedCatalogueProvider()->getCatalogue($locale);
     }
 
+    /**
+     * @param string $locale
+     *
+     * @return DefaultCatalogueProvider
+     *
+     * @throws FileNotFoundException
+     */
     private function getDefaultCatalogueProvider(string $locale): DefaultCatalogueProvider
     {
         if (null === $this->defaultCatalogueProvider) {
@@ -178,6 +192,11 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         return $this->defaultCatalogueProvider;
     }
 
+    /**
+     * @return FileTranslatedCatalogueProvider
+     *
+     * @throws FileNotFoundException
+     */
     private function getFileTranslatedCatalogueProvider(): FileTranslatedCatalogueProvider
     {
         if (null === $this->fileTranslatedCatalogueProvider) {
@@ -190,6 +209,9 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         return $this->fileTranslatedCatalogueProvider;
     }
 
+    /**
+     * @return UserTranslatedCatalogueProvider
+     */
     private function getUserTranslatedCatalogueProvider(): UserTranslatedCatalogueProvider
     {
         if (null === $this->userTranslatedCatalogueProvider) {
@@ -208,6 +230,8 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @param string $locale
      *
      * @return MessageCatalogue
+     *
+     * @throws FileNotFoundException
      */
     private function buildTranslationCatalogueFromLegacyFiles(string $locale): MessageCatalogue
     {
@@ -248,6 +272,8 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     }
 
     /**
+     * Returns the translations directory within the module files
+     *
      * @return string
      */
     private function getBuiltInModuleDirectory(): string
@@ -286,6 +312,8 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     private function buildFreshDefaultCatalogue(string $locale): MessageCatalogue
     {
+        // For Native modules, translations are in the default core translations directory
+        // For non native modules, the catalogue is built from templates
         $defaultCatalogue = new MessageCatalogue($locale);
 
         try {
@@ -297,15 +325,14 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
                 ->getCatalogue($locale);
         } catch (FileNotFoundException $exception) {
             // there are no xliff files for this module in the core
-        }
-
-        try {
-            // analyze files and extract wordings
-            /** @var MessageCatalogue $additionalDefaultCatalogue */
-            $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
-            $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException $exception) {
-            // Do nothing as support of legacy files is deprecated
+            try {
+                // analyze template files and extract wordings
+                /** @var MessageCatalogue $additionalDefaultCatalogue */
+                $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
+                $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
+            } catch (UnsupportedLocaleException $exception) {
+                // Do nothing as support of legacy files is deprecated
+            }
         }
 
         return $defaultCatalogue;

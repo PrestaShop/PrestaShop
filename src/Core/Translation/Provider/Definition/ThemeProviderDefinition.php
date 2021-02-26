@@ -39,10 +39,13 @@ class ThemeProviderDefinition implements ProviderDefinitionInterface
      */
     private $themeName;
 
+    /**
+     * @param string|null $themeName
+     */
     public function __construct(?string $themeName = null)
     {
         if (null === $themeName) {
-            $themeName = self::DEFAULT_THEME_NAME;
+            $themeName = static::DEFAULT_THEME_NAME;
         }
 
         $this->themeName = $themeName;

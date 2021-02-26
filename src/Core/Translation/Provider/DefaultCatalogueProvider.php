@@ -43,7 +43,7 @@ class DefaultCatalogueProvider extends AbstractCatalogueProvider
     private $defaultCatalogueDirectory;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $filenameFilters;
 
