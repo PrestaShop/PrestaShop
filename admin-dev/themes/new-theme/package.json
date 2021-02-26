@@ -22,6 +22,7 @@
     "bootstrap-tokenfield": "^0.12.0",
     "bourbon": "^4.2.6",
     "compass": "^0.1.1",
+    "decimal.js": "^10.2.1",
     "dropzone": "^5.5.1",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "events": "^3.0.0",
