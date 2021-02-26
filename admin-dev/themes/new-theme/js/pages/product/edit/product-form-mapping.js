@@ -36,4 +36,8 @@ export default {
     'product[price][price_tax_included]',
     'product[shortcuts][price][price_tax_included]',
   ],
+  'product.price.taxRulesGroupId': [
+    'product[price][tax_rules_group_id]',
+    'product[shortcuts][price][tax_rules_group_id]',
+  ],
 };

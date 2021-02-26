@@ -26,6 +26,7 @@
 export default {
   productModelUpdated: 'productModelUpdated',
   updatedProductModel: 'updatedProductModel',
+  updatedProductField: 'updatedProductField',
   updateSubmitButtonState: 'updateSubmitButtonState',
   customizations: {
     rowRemoved: 'customizationRowRemoved',
