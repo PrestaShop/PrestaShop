@@ -96,22 +96,22 @@ export default class ProductModel {
 
     const $taxRulesGroupIdInput = this.mapper.getInput('product.price.taxRulesGroupId');
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
-    const taxRateValue = $selectedTaxOption.data('taxRate');
+    let taxRate = parseFloat($selectedTaxOption.data('taxRate'));
 
-    if (taxRateValue === undefined) {
-      return;
+    if (isNaN(taxRate)) {
+      taxRate = 0;
     }
 
-    const taxRate = 1 + (parseFloat(taxRateValue) / 100);
+    const taxRatio = 1 + (taxRate / 100);
     const priceTaxIncluded = this.mapper.get('product.price.priceTaxIncluded');
     const priceTaxExcluded = this.mapper.get('product.price.priceTaxExcluded');
 
     switch (event.modelKey) {
       case 'product.price.priceTaxIncluded':
-        this.mapper.set('product.price.priceTaxExcluded', priceTaxIncluded / taxRate);
+        this.mapper.set('product.price.priceTaxExcluded', priceTaxIncluded / taxRatio);
         break;
       default:
-        this.mapper.set('product.price.priceTaxIncluded', priceTaxExcluded * taxRate);
+        this.mapper.set('product.price.priceTaxIncluded', priceTaxExcluded * taxRatio);
         break;
     }
   }
