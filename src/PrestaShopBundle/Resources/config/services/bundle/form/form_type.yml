@@ -1475,6 +1475,9 @@ services:
 
     form.type.sell.product.image_dropzone_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType'
+
+    form.type.configure.search_engine_type:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\SearchEngines\SearchEngineType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
