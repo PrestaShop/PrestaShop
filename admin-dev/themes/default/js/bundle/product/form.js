@@ -494,7 +494,7 @@ const supplier = (function () {
       });
 
       // default display
-      $('#form_step6_suppliers input[name="form[step6][suppliers][]"]').forEach(function () {
+      $('#form_step6_suppliers input[name="form[step6][suppliers][]"]').each(function () {
         supplierInputManage($(this));
       });
     },
