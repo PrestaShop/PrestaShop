@@ -110,7 +110,6 @@ class EmailConfigurationType extends TranslatorAwareType
             ])
             ->add('dkim_domain', TextType::class, [
                 'label' => $this->trans('DKIM domain', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Where customers send messages from the order page.', 'Admin.Advparameters.Help'),
                 'required' => false,
             ])
             ->add('dkim_selector', TextType::class, [
