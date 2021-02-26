@@ -283,6 +283,20 @@ input[type="color"]:hover,
       }
     }
   }
+
+  .input-group {
+    &-btn {
+      > .btn {
+        height: $input-height-base;
+      }
+    }
+  }
+
+  .translatable-field {
+    .btn.dropdown-toggle {
+      height: $input-height-base;
+    }
+  }
 }
 
 input[type="text"],

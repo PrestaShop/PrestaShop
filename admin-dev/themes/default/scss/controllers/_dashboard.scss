@@ -355,6 +355,17 @@
     .data_trend {
       display: none;
     }
+
+    .btn-group {
+      > .btn {
+        display: flex;
+        align-items: center;
+
+        > i {
+          height: auto;
+        }
+      }
+    }
   }
 
   .tooltip-panel {
