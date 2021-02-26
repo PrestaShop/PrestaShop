@@ -227,7 +227,10 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         foreach ($langIds as $langId) {
             if (ConfigurationLegacy::hasKey($key, $langId, $shopGroupId, $shopId)) {
                 return true;
-            } elseif ($isStrict) {
+            }
+
+            // If strict mode is enable, only rely on the first check
+            if ($isStrict) {
                 continue;
             }
 
