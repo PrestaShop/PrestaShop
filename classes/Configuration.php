@@ -587,8 +587,8 @@ class ConfigurationCore extends ObjectModel
      * Delete configuration key from current context
      *
      * @param string $key
-     * @param int|null $idShopGroup
-     * @param int|null $idShop
+     * @param int $idShopGroup
+     * @param int $idShop
      */
     public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
     {
