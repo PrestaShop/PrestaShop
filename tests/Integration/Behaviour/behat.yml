@@ -289,3 +289,9 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ZoneFeatureContext
+        search_engine:
+            paths:
+                - %paths.base%/Features/Scenario/SearchEngine
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\SearchEngineFeatureContext
