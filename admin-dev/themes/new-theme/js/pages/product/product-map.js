@@ -38,6 +38,9 @@ export default {
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '#product_images',
+  price: {
+    priceTaxExcludedInput: '#product_price_price_tax_excluded',
+  },
   suppliers: {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',
