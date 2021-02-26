@@ -359,3 +359,11 @@ services:
           - '@prestashop.core.grid.data.factory.zone'
           - '@prestashop.core.grid.filter.form_factory'
           - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.search_engines:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+          - '@prestashop.core.grid.definition.factory.search_engines'
+          - '@prestashop.core.grid.data_provider.search_engines'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'
