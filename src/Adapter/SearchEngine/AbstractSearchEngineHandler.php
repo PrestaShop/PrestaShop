@@ -42,6 +42,7 @@ abstract class AbstractSearchEngineHandler
      * @param SearchEngineId $searchEngineId
      *
      * @return SearchEngine
+     *
      * @throws SearchEngineException
      */
     protected function getSearchEngine(SearchEngineId $searchEngineId): SearchEngine
