@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import _ from 'lodash';
+
 const {$} = window;
 
 /**
@@ -125,7 +127,11 @@ export default class FormObjectMapper {
    * Watches if changes happens from the form or via an event.
    */
   watchUpdates() {
-    this.$form.on('keyup change dp.change', ':input', (event) => this.inputUpdated(event));
+    this.$form.on('keyup change dp.change', ':input', _.debounce(
+      (event) => this.inputUpdated(event),
+      200,
+      {maxWait: 1000},
+    ));
     this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject());
   }
 
