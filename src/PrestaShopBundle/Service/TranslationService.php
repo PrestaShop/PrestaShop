@@ -263,7 +263,7 @@ class TranslationService
         if (empty($theme)) {
             $theme = null;
         }
-        
+
         $translation = null;
 
         try {
