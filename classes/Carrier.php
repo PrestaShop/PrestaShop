@@ -113,7 +113,7 @@ class CarrierCore extends ObjectModel
     /** @var int maximum package deep managed by the transporter */
     public $max_depth;
 
-    /** @var int maximum package weight managed by the transporter */
+    /** @var float maximum package weight managed by the transporter */
     public $max_weight;
 
     /** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
