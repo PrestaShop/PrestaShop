@@ -103,7 +103,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
   // 3 : Create 20 shop urls
   Array(20).fill(0, 0, 20).forEach((test, index) => {
     describe(`Create shop Url n°${index + 1}`, async () => {
-      const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}`});
+      const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}_`});
       it('should go to add shop URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAddURL', baseContext);
 
@@ -249,6 +249,21 @@ describe('Filter, sort and pagination shop Urls', async () => {
       });
     });
   });
+
+  // 7 : Delete all shops created
+  describe('delete all shops created', async () => {
+    new Array(20).fill(0, 0, 20).forEach((test, index) => {
+      it(`should delete the shop 'ToDelete${index}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `deleteShopUrl${index}_`, baseContext);
+
+        await shopUrlPage.filterTable(page, 'input', 'url', `ToDelete${index + 1}`);
+
+        const textResult = await shopUrlPage.deleteShopURL(page, 1);
+        await expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
+      });
+    });
+  });
+
 
   // 8 : Disable multi store
   describe('Disable multistore', async () => {
