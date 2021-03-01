@@ -224,9 +224,9 @@ class ShopUrl
     /**
      * Get shopGroup.
      *
-     * @return \PrestaShopBundle\Entity\Shop
+     * @return Shop
      */
-    public function getShop()
+    public function getShop(): Shop
     {
         return $this->shop;
     }
