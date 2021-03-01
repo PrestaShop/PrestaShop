@@ -48,6 +48,11 @@ class ShopURLSettings extends BOBasePage {
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Methods */
@@ -243,6 +248,37 @@ class ShopURLSettings extends BOBasePage {
 
     // Get successful message
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_shop_url':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 's!name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'url':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 }
 

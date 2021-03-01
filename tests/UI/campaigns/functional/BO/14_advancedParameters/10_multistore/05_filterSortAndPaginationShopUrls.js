@@ -188,6 +188,68 @@ describe('Filter, sort and pagination shop Urls', async () => {
     });
   });
 
+  // 6 : Sort
+  describe('Sort shop Urls table', async () => {
+    [
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdDesc', sortBy: 'id_shop_url', sortDirection: 'down', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopNameAsc', sortBy: 's!name', sortDirection: 'up',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByShopNameDesc', sortBy: 's!name', sortDirection: 'down',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByUrlAsc', sortBy: 'url', sortDirection: 'up',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByUrlDesc', sortBy: 'url', sortDirection: 'down',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdAsc', sortBy: 'id_shop_url', sortDirection: 'up', isFloat: true,
+          },
+      },
+    ].forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await shopUrlPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await shopUrlPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await shopUrlPage.getAllRowsColumnContent(page, test.args.sortBy);
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await shopUrlPage.sortArray(nonSortedTable, test.args.isFloat);
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
   // 8 : Disable multi store
   describe('Disable multistore', async () => {
     it('should go to "Shop parameters > General" page', async function () {
