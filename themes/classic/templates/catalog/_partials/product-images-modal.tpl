@@ -67,11 +67,7 @@
                         alt="{$product.name}"
                       {/if}
                       width="{$image.medium.width}"
-<<<<<<< HEAD
-=======
-                      itemprop="image"
                       height="148"
->>>>>>> fa6f2d0a1fcb02917fd789ee30b10cf848969ee0
                     >
                   </li>
                 {/foreach}

@@ -69,11 +69,6 @@
               {else}
                 alt="{$product.name}"
               {/if}
-<<<<<<< HEAD
-              width="100"
-=======
-              itemprop="image"
->>>>>>> fa6f2d0a1fcb02917fd789ee30b10cf848969ee0
               loading="lazy"
               width="94"
               height="94"
