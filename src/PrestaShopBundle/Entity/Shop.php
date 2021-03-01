@@ -26,9 +26,8 @@
 
 namespace PrestaShopBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Boolean;
-use phpDocumentor\Reflection\Types\Collection;
 
 /**
  * Shop.
@@ -278,9 +277,9 @@ class Shop
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getShopUrls(): \Doctrine\Common\Collections\Collection
+    public function getShopUrls(): Collection
     {
         return $this->shopUrls;
     }
