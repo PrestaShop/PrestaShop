@@ -44,6 +44,9 @@ final class BulkDeleteEmployeeSessionsHandler implements BulkDeleteEmployeeSessi
      */
     private $repository;
 
+    /**
+     * @param EmployeeSessionRepository $repository
+     */
     public function __construct(EmployeeSessionRepository $repository)
     {
         $this->repository = $repository;
