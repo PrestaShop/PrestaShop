@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Customization;
 use DateTime;
 use Pack;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -62,7 +62,7 @@ use Tag;
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-final class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+final class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor
@@ -80,18 +80,26 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $virtualProductFileRepository;
 
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      */
     public function __construct(
         NumberExtractor $numberExtractor,
+        ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -99,7 +107,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->getProduct($query->getProductId());
+        $product = $this->productRepository->get($query->getProductId());
 
         return new ProductForEditing(
             (int) $product->id,
