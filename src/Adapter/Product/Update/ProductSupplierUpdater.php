@@ -99,7 +99,7 @@ class ProductSupplierUpdater
     ): array {
         $product = $this->productRepository->get($productId);
 
-        if ($product->cache_default_attribute) {
+        if ($product->hasCombinations()) {
             throw new InvalidProductTypeException(sprintf(
                 'Product #%d has combinations. Use %s::%s to set product suppliers for specified combination',
                 $productId->getValue(),
@@ -144,7 +144,7 @@ class ProductSupplierUpdater
     {
         $product = $this->productRepository->get($productId);
 
-        if ($product->cache_default_attribute) {
+        if ($product->hasCombinations()) {
             throw new InvalidProductTypeException(sprintf(
                 'Product #%d has combinations. Use %s::%s to remove product suppliers for specific combination',
                 $productId->getValue(),
