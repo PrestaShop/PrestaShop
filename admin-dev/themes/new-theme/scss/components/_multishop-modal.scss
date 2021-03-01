@@ -117,26 +117,6 @@ $component-name: multishop-modal;
     font-weight: 600;
   }
 
-  &-all {
-    margin-bottom: 2rem;
-
-    &-name {
-      text-decoration: none;
-
-      i {
-        margin-right: 0.6rem;
-      }
-
-      &:hover {
-        text-decoration: none;
-      }
-
-      span {
-        text-decoration: underline;
-      }
-    }
-  }
-
   &-group-item {
     &.#{$component-name}-item {
       justify-content: flex-start;
@@ -168,12 +148,38 @@ $component-name: multishop-modal;
     justify-content: space-between;
     width: 100%;
 
+    > .material-icons {
+      margin-right: 0.7rem;
+      font-size: 1.25rem;
+    }
+
     &-left {
       display: flex;
       align-items: center;
 
       @include media-breakpoint-down(sm) {
         max-width: 80%;
+      }
+    }
+  }
+
+  &-all {
+    justify-content: flex-start;
+    margin-bottom: 2rem;
+
+    &-name {
+      text-decoration: none;
+
+      i {
+        margin-right: 0.6rem;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      span {
+        text-decoration: underline;
       }
     }
   }
