@@ -580,6 +580,7 @@ class AdminControllerCore extends Controller
 
     /**
      * Gets the multistore header and assigns its html content to a smarty variable
+     *
      * @see PrestaShopBundle\Controller\Admin\MultistoreController
      *
      * (the decision to display it or not is taken by the MultistoreController)
@@ -588,7 +589,7 @@ class AdminControllerCore extends Controller
     {
         $multistoreController = $this->get('prestashop.core.admin.multistore');
         $this->context->smarty->assign([
-            'multistore_header' => $multistoreController->header()->getContent()
+            'multistore_header' => $multistoreController->header()->getContent(),
         ]);
     }
 
@@ -1873,7 +1874,6 @@ class AdminControllerCore extends Controller
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
         $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
         $tpl_action = $this->tpl_folder . $this->display . '.tpl';
-
 
         // Check if action template has been overridden
         foreach ($template_dirs as $template_dir) {
