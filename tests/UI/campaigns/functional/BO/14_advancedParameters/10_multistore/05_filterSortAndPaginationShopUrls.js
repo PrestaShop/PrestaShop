@@ -105,7 +105,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
     describe(`Create shop Url n°${index + 1}`, async () => {
       const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}_`});
       it('should go to add shop URL', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToAddURL', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddURL${index}`, baseContext);
 
         await shopUrlPage.goToAddNewUrl(page);
 
@@ -114,7 +114,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
       });
 
       it('should set shop URL', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `addURL${index}`, baseContext);
 
         const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
         await expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
