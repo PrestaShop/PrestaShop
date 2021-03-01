@@ -7,6 +7,9 @@ class ShopURLSettings extends BOBasePage {
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
+    // Header selectors
+    this.addNewUrlButton = '#page-header-desc-shop_url-new';
+
     // Form selectors
     this.gridForm = '#sql_form_shop_url';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
@@ -33,6 +36,15 @@ class ShopURLSettings extends BOBasePage {
   }
 
   /* Methods */
+
+  /**
+   * Go to add new url page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToAddNewUrl(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewUrlButton);
+  }
 
   /**
    * Delete shop URL
