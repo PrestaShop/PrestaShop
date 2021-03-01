@@ -77,7 +77,7 @@ First-time users will be particularly interested in the following guides:
 * [User Guide][user-guide]: All there is to know to put PrestaShop to good use.
 * [Updating Guide][updating-guide]: Switching to the newest version is not trivial. Make sure you do it right.
 * [Merchant's Guide][merchant-guide]: Tips and tricks for first-time online sellers.
-* The [FAQ][faq-17] and the [Troubleshooting][troubleshooting] pages should also be of tremendous help to you.
+* The [Troubleshooting][troubleshooting] page should also be of tremendous help to you.
 
 
 Contributing
@@ -124,13 +124,14 @@ Themes and modules can be obtained (and sold!) on [PrestaShop Addons][addons], t
 Community forums
 --------
 
-You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums].
+You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums] or on the [PrestaShop Slack channel][chat].
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
+[chat]: https://github.com/PrestaShop/open-source/blob/master/slack/readme.md
 [user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
 [contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
@@ -139,7 +140,6 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [user-guide]: https://doc.prestashop.com/display/PS17/User+Guide
 [updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
 [merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
-[faq-17]: https://build.prestashop.com/news/prestashop-1-7-faq/
 [troubleshooting]: https://doc.prestashop.com/display/PS16/Troubleshooting
 [sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [addons]: https://addons.prestashop.com/
