@@ -55,7 +55,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I add virtual product file :fileReference to :productReference with following details:
+     * @When I add virtual product file :fileReference to product :productReference with following details:
      *
      * @param string $fileReference
      * @param string $productReference
