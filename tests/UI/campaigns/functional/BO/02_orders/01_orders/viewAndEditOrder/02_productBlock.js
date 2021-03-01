@@ -112,6 +112,8 @@ Check product block content:
 - Add and check product out of stock not allowed
 - Add and check product out of stock allowed
 - Add all types of products
+- Pagination next and previous
+- Delete product
 */
 describe('Check product block in view order page', async () => {
   // before and after functions
