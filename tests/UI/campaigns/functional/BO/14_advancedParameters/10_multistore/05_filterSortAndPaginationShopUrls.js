@@ -27,10 +27,10 @@ let page;
 /*
 Enable multistore
 Create 20 shop urls
-Filter by: Id, shop name, shop group, root category and URL
+Filter by: Id, shop name, URL, is the main URL, Enabled
 Pagination between pages
-Sort table by: Id, shop name, shop group, root category and URL
-Delete the created shop
+Sort table by: Id, shop name, URL
+Delete the created shop urls
 Disable multistore
  */
 describe('Filter, sort and pagination shop Urls', async () => {
@@ -253,7 +253,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
   // 7 : Delete all shops created
   describe('delete all shops created', async () => {
     new Array(20).fill(0, 0, 20).forEach((test, index) => {
-      it(`should delete the shop 'ToDelete${index}'`, async function () {
+      it(`should delete the shop url contains 'ToDelete${index}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteShopUrl${index}_`, baseContext);
 
         await shopUrlPage.filterTable(page, 'input', 'url', `ToDelete${index + 1}`);
