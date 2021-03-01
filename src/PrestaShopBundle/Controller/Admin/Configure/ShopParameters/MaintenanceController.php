@@ -65,7 +65,6 @@ class MaintenanceController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminMaintenance'),
             'requireFilterStatus' => false,
             'generalForm' => $form->createView(),
-            'currentIp' => $request->getClientIp(),
         ]);
     }
 
