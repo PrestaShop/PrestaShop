@@ -71,8 +71,13 @@
 
           <ul class="multishop-modal-group-list js-multishop-scrollbar">
               <li class="multishop-modal-all multishop-modal-item">
+                {% if isAllShopContext %}
+                  <i class="material-icons">check</i>
+                {% else %}
+                  <span class="multishop-modal-color" style="background-color:#25b9d7;"></span>
+                {% endif %}
                 <a class="multishop-modal-all-name" href="{{ app.request.requestURI ~ '&setShopContext=' }}">
-                  {% if isAllShopContext %}<i class="material-icons">check</i>{% endif %} <span>{{ "All Shops"|trans({}, 'Admin.Shop') }}</span>
+                  <span>{{ "All Shops"|trans({}, 'Admin.Shop') }}</span>
                 </a>
               </li>
 
