@@ -226,7 +226,7 @@ class OrderDetailUpdater
             ->saveCurrentContext()
             ->setCart(new Cart($order->id_cart))
             ->setCustomer(new Customer($order->id_customer))
-            ->setLanguage($order->getLanguage())
+            ->setLanguage($order->getAssociatedLanguage())
             ->setCurrency($currency)
             ->setCountry($country)
             ->setShop($shop)

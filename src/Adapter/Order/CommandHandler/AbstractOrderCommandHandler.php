@@ -188,7 +188,7 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage($cart->getLanguage())
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($this->getCartTaxCountry($cart))
             ->setShop(new Shop($cart->id_shop))
         ;

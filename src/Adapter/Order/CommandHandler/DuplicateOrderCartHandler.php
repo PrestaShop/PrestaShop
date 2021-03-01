@@ -65,7 +65,7 @@ final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterf
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage($cart->getLanguage())
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setShop(new Shop($cart->id_shop))
         ;
         $result = $cart->duplicate();
