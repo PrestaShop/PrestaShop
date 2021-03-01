@@ -47,7 +47,7 @@ class EmployeeSessionId
      */
     public function __construct(int $sessionId)
     {
-        if (0 > $sessionId) {
+        if (0 >= $sessionId) {
             throw new SessionException('Session id must be greater than zero.');
         }
 
