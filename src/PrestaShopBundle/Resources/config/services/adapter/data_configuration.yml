@@ -82,7 +82,10 @@ services:
 
     prestashop.adapter.maintenance.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'
-        arguments: ['@prestashop.adapter.legacy.configuration']
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.multistore_feature'
 
     prestashop.adapter.preferences.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'

@@ -53,18 +53,30 @@
 
 {% block form_row -%}
   {% spaceless %}
+    {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+    {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
+    {% set disabledField = false %}
+    {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
+      {% set disabledField = true %}
+    {% endif %}
+
     <div class="{{ block('form_row_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}"{% if (attr.visible is defined and not attr.visible) %} style="display: none;"{% endif %}>
+      {% if attribute(form.parent, multistoreCheckboxName) is defined %}
+        {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
+        {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
+      {% endif %}
       {{ form_label(form) }}
-      <div class="{{ block('form_group_class') }}">
+      <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
         {{ form_widget(form) }}
         {{ form_errors(form) }}
       </div>
     </div>
+
   {% endspaceless %}
 {%- endblock form_row %}
 
 {% block form_group_class -%}
-  col-sm
+  col-sm input-container
 {%- endblock form_group_class %}
 
 {% block form_row_class -%}
@@ -92,6 +104,7 @@
       <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Admin.Actions') }}
     </button>
   </div>
+  {{ block('form_help') }}
 
 {% endblock ip_address_text_widget %}
 

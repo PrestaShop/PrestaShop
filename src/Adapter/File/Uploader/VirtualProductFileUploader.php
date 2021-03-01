@@ -48,7 +48,7 @@ class VirtualProductFileUploader
     /**
      * @var string
      */
-    private $downloadDir;
+    private $virtualProductFileDir;
 
     /**
      * @param VirtualProductFileValidator $virtualProductFileValidator
@@ -59,7 +59,7 @@ class VirtualProductFileUploader
         string $downloadDir
     ) {
         $this->virtualProductFileValidator = $virtualProductFileValidator;
-        $this->downloadDir = $downloadDir;
+        $this->virtualProductFileDir = $downloadDir;
     }
 
     /**
@@ -70,7 +70,7 @@ class VirtualProductFileUploader
     public function upload(string $filePath): string
     {
         $this->virtualProductFileValidator->validate($filePath);
-        $destination = $this->downloadDir . VirtualProductFile::getNewFilename();
+        $destination = $this->virtualProductFileDir . VirtualProductFile::getNewFilename();
 
         $this->copyFile($filePath, $destination);
         $this->removeFile($filePath);
@@ -83,7 +83,22 @@ class VirtualProductFileUploader
      */
     public function remove(string $filename): void
     {
-        $this->removeFile($this->downloadDir . $filename);
+        $this->removeFile($this->virtualProductFileDir . $filename);
+    }
+
+    /**
+     * @param string $newFilepath
+     * @param string|null $oldFilename
+     *
+     * @return string
+     */
+    public function replace(string $newFilepath, ?string $oldFilename): string
+    {
+        if ($oldFilename) {
+            $this->removeFile($this->virtualProductFileDir . $oldFilename);
+        }
+
+        return $this->upload($newFilepath);
     }
 
     /**
