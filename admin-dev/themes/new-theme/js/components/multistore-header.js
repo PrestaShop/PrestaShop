@@ -35,7 +35,9 @@ const initMultistoreHeader = () => {
   const modalMultishop = document.querySelector('.js-multishop-modal');
   const $searchInput = $('.js-multishop-modal-search');
   const router = new Router();
-  const route = router.generate('admin_shops_search', {searchTerm: '__QUERY__'});
+  const route = router.generate('admin_shops_search', {
+    searchTerm: '__QUERY__',
+  });
 
   new PerfectScrollbar('.js-multishop-scrollbar');
 
@@ -59,16 +61,13 @@ const initMultistoreHeader = () => {
     display: 'name',
     value: 'id',
     source,
-    /* eslint-disable-next-line no-unused-vars */
-    onSelect(selectedItem, event) {
+    onSelect(selectedItem) {
       const contextUrlLetter = typeof selectedItem.groupName !== 'undefined' ? 's' : 'g';
       const setContextUrl = `${window.location.href}&setShopContext=${contextUrlLetter}-${selectedItem.id}`;
       window.location.href = setContextUrl;
 
       return true;
     },
-    /* eslint-disable-next-line no-unused-vars */
-    onClose(event) {},
   };
 
   const defaultTemplates = {
@@ -101,10 +100,7 @@ const initMultistoreHeader = () => {
 
   $searchInput
     .typeahead(config, dataSetConfig)
-    .bind('typeahead:select', (e, selectedItem) => dataSetConfig.onSelect(selectedItem, e))
-    .bind('typeahead:close', (e) => {
-      dataSetConfig.onClose(e);
-    });
+    .bind('typeahead:select', (e, selectedItem) => dataSetConfig.onSelect(selectedItem, e));
 
   headerButton.addEventListener('click', () => {
     modalMultishop.classList.toggle('multishop-modal-hidden');
