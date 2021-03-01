@@ -1,7 +1,7 @@
 /**
  * Related product management
  */
-const relatedProduct = (function () {
+window.relatedProduct = (function () {
   return {
     init() {
       const addButton = $('#add-related-product-button');

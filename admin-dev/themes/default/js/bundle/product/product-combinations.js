@@ -9,7 +9,7 @@ function replaceBadLocaleCharacters() {
 /**
  * Combination management
  */
-const combinations = (function () {
+window.combinations = (function () {
   /**
    * Remove a combination
    * @param {object} elem - The clicked link

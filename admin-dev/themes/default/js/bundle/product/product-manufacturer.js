@@ -1,7 +1,7 @@
 /**
  * Manufacturer management
  */
-const manufacturer = (function () {
+window.manufacturer = (function () {
   return {
     init() {
       const addButton = $('#add_brand_button');
