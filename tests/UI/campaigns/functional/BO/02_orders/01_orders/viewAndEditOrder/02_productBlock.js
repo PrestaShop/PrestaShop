@@ -62,7 +62,7 @@ const productOutOfStockNotAllowed = new ProductFaker({
 const packOfProducts = new ProductFaker({
   name: 'Pack of products',
   type: 'Pack of products',
-  pack: {demo_13: 10, demo_7: 5},
+  pack: {demo_13: 1, demo_7: 1},
   taxRule: 'No tax',
   quantity: 197,
   minimumQuantity: 3,
@@ -252,7 +252,7 @@ describe('Check product block in view order page', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrders).to.be.above(0);
@@ -268,7 +268,7 @@ describe('Check product block in view order page', async () => {
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -336,7 +336,7 @@ describe('Check product block in view order page', async () => {
 
     describe('Add \'Virtual product\'', async () => {
       it(`should add the product '${virtualProduct.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'ordervirtualProduct', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'orderVirtualProduct', baseContext);
 
         await viewOrderPage.SearchProduct(page, virtualProduct.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
@@ -359,7 +359,7 @@ describe('Check product block in view order page', async () => {
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(packOfProducts.stockLocation),
-          expect(result.available).to.equal(packOfProducts.quantity - 1),
+          expect(result.available).to.be.above(0),
         ]);
 
         const textResult = await viewOrderPage.addProductToCart(page);
@@ -487,16 +487,14 @@ describe('Check product block in view order page', async () => {
 
     describe('Check items per page', async () => {
       describe('Add 3 products to the order to have 2 pages', async () => {
-        [Products.demo_1.name, Products.demo_3.name, Products.demo_5.name].forEach((product, index) => {
+        [Products.demo_6.name, Products.demo_5.name, Products.demo_18.name].forEach((product, index) => {
           it('should add product to the order', async function () {
-            await testContext.addContextItem(this, 'testIdentifier', `addProductsToTheCart${index}`, baseContext);
+            await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart${index}`, baseContext);
 
             await viewOrderPage.SearchProduct(page, product);
 
             const textResult = await viewOrderPage.addProductToCart(page);
             await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-            productNumber = productNumber + index + 1;
-            console.log(productNumber);
           });
         });
       });
@@ -506,11 +504,18 @@ describe('Check product block in view order page', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
           const productCount = await viewOrderPage.getProductsNumber(page);
-          await expect(productCount).to.equal(productNumber);
+          await expect(productCount).to.equal(productNumber + 3);
         });
       });
 
       describe('Paginate between pages', async () => {
+        it('should display 8 items', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'displayDefaultItemsNumber', baseContext);
+
+          const isNextLinkVisible = await viewOrderPage.selectPaginationLimit(page, '8');
+          await expect(isNextLinkVisible).to.be.true;
+        });
+
         it('should click on next', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
@@ -533,7 +538,7 @@ describe('Check product block in view order page', async () => {
         });
 
         it('should display 8 items', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'displayDefaultItemsNumber', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', 'redisplayDefaultItemsNumber', baseContext);
 
           const isNextLinkVisible = await viewOrderPage.selectPaginationLimit(page, '8');
           await expect(isNextLinkVisible).to.be.true;

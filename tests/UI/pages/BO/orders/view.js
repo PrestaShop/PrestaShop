@@ -519,7 +519,7 @@ class Order extends BOBasePage {
    * @param page
    * @returns {Promise<string>}
    */
-  getPaginationLabel(page) {
+  async getPaginationLabel(page) {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -540,7 +540,9 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
+    await this.scrollTo(page, this.productsCountSpan);
     await this.waitForSelectorAndClick(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 
@@ -552,7 +554,9 @@ class Order extends BOBasePage {
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
-    return this.elementVisible(page, this.paginationPreviousLink);
+    await this.waitForVisibleSelector(page, this.orderProductsTableProductName(1));
+
+    return this.elementVisible(page, this.paginationNextLink, 1000);
   }
 }
 
