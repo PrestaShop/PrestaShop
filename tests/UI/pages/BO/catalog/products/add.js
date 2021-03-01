@@ -62,6 +62,14 @@ class AddProduct extends BOBasePage {
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
     this.bulkCombinationsContainer = '#bulk-combinations-container';
+    // Selector of step 3 : Quantities
+    this.quantityInput = '#form_step3_qty_0';
+    this.minimumQuantityInput = '#form_step3_minimal_quantity';
+    this.stockLocationInput = '#form_step3_location';
+    this.lowStockLevelInput = '#form_step3_low_stock_threshold';
+    this.behaviourOutOfStockInput = id => `#form_step3_out_of_stock_${id}`;
+    this.labelWhenInStockInput = '#form_step3_available_now_1';
+    this.labelWhenOutOfStock = '#form_step3_available_later_1';
     // Selector of Step 5 : SEO
     this.resetUrlButton = '#seo-url-regenerate';
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
@@ -483,6 +491,64 @@ class AddProduct extends BOBasePage {
    */
   getProductName(page) {
     return this.getAttributeContent(page, this.productNameInput, 'value');
+  }
+
+  /**
+   * Set quantities settings
+   * @param page
+   * @param product
+   * @returns {Promise<void>}
+   */
+  async setQuantitiesSettings(page, product) {
+    let columnSelector;
+    // Go to Quantities tab
+    await this.goToFormStep(page, 3);
+    // Set Quantities form
+    await this.setValue(page, this.quantityInput, product.quantity);
+    await this.setValue(page, this.minimumQuantityInput, product.minimumQuantity);
+    // Set Stock form
+    await this.setValue(page, this.stockLocationInput, product.stockLocation);
+    await this.setValue(page, this.lowStockLevelInput, product.lowStockLevel);
+    // Set Availability preferences form
+    switch (product.behaviourOutOfStock) {
+      case 'Deny orders':
+        columnSelector = this.behaviourOutOfStockInput(0);
+        break;
+
+      case 'Allow orders':
+        columnSelector = this.behaviourOutOfStockInput(1);
+        break;
+
+      case 'Default behavior':
+        columnSelector = this.behaviourOutOfStockInput(2);
+        break;
+
+      default:
+        throw new Error(`Column ${product.behaviourOutOfStock} was not found`);
+    }
+    await this.waitForSelectorAndClick(page, columnSelector);
+    await this.scrollTo(page, this.labelWhenInStockInput);
+    await this.setValue(page, this.labelWhenInStockInput, product.labelWhenInStock);
+    await this.setValue(page, this.labelWhenOutOfStock, product.LabelWhenOutOfStock);
+  }
+
+  /**
+   * Set product
+   * @param page
+   * @param productData
+   * @returns {Promise<string>}
+   */
+  async setProduct(page, productData) {
+    await this.setBasicSetting(page, productData);
+    if (productData.type === 'Pack of products') {
+      await this.addPackOfProducts(page, productData.pack);
+    }
+    if (productData.productHasCombinations) {
+      await this.setCombinationsInProduct(page, productData);
+    }
+    await this.setProductStatus(page, productData.status);
+    await this.setQuantitiesSettings(page, productData);
+    return this.saveProduct(page);
   }
 }
 
