@@ -1,7 +1,7 @@
 /**
  * modal confirmation management
  */
-const modalConfirmation = (function () {
+window.modalConfirmation = (function () {
   const modal = $('#confirmation_modal');
 
   if (!modal) {

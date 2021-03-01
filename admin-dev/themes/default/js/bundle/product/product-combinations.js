@@ -18,7 +18,7 @@ const combinations = (function () {
     const combinationElem = $(`#attribute_${elem.attr('data')}`);
 
     // eslint-disable-next-line
-    modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
+    window.modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
       onContinue() {
         const attributeId = elem.attr('data');
         $.ajax({
@@ -181,7 +181,7 @@ const combinations = (function () {
           if ($(this).val() === '0') {
             // if combination(s) exists, alert user for deleting it
             if (combinationsList.length > 0) {
-              modalConfirmation.create(
+              window.modalConfirmation.create(
                 translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
                   onCancel() {
                     $('#show_variations_selector input[value="1"]').prop('checked', true);
