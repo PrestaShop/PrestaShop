@@ -30,9 +30,9 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administratio
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
-use PrestaShopBundle\Form\Exception\DataProviderException;
 
 /**
  * This class is responsible of managing the data manipulated using Upload Quota form
@@ -99,7 +99,6 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
             }
         }
-
 
         if (!$errors->isEmpty()) {
             throw new DataProviderException('Upload quota data is invalid', 0, null, $errors);

@@ -34,9 +34,9 @@ use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\Form
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
+use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
-use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -242,6 +242,7 @@ class AdministrationController extends FrameworkBundleAdminController
                     'Admin.Advparameters.Notification'
                 );
         }
+
         return $this->trans(
             '%s is invalid.',
             'Admin.Notifications.Error',

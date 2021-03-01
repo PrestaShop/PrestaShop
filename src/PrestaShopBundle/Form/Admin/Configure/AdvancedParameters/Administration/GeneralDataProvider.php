@@ -31,9 +31,9 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administratio
 use Cookie;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
-use PrestaShopBundle\Form\Exception\DataProviderException;
 
 /**
  * This class is responsible of managing the data manipulated using general form
@@ -127,7 +127,6 @@ final class GeneralDataProvider implements FormDataProviderInterface
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_COOKIE_SAMESITE_NONE, GeneralType::FIELD_COOKIE_SAMESITE));
             }
         }
-
 
         if (!$errors->isEmpty()) {
             throw new DataProviderException('Administration general data is invalid', 0, null, $errors);
