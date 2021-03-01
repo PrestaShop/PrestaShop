@@ -172,7 +172,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         unset($dataRows['expiration date']);
 
         if (!empty($dataRows)) {
-            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_dump($dataRows)));
+            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_export($dataRows, true)));
         }
     }
 
