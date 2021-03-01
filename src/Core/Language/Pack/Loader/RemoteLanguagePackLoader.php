@@ -36,7 +36,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
     /**
      * The link from which available languages are retrieved.
      */
-    const PACK_LINK = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
+    public const PACK_LINK = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
 
     /**
      * @var Version

@@ -40,6 +40,15 @@ class Email extends BOBasePage {
     // Email form
     this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
     this.saveEmailFormButton = '#form-log-email-save-button';
+    // Email form Radio buttons
+    this.sendMailParametersRadioButton = '#form_mail_method_0';
+    this.smtpParametersRadioButton = '#form_mail_method_1';
+    // Email form input fields
+    this.smtpServerFormField = '#form_smtp_config_server';
+    this.smtpUsernameFormField = '#form_smtp_config_username';
+    this.smtpPasswordFormField = '#form_smtp_config_password';
+    this.smtpPortFormField = '#form_smtp_config_port';
+    this.smtpEncryptionFormField = '#form_smtp_config_encryption';
 
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
@@ -191,6 +200,39 @@ class Email extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /** setup the smtp parameters
+   *
+   * @returns {Promise<void>}
+   */
+  async setupSmtpParameters(page, server, username, pass, port, encryption = 'None') {
+    // Click on smtp radio button
+    await page.click(this.smtpParametersRadioButton);
+    await this.waitForVisibleSelector(page, this.smtpServerFormField);
+    // fill the form field
+    await this.setValue(page, this.smtpServerFormField, server);
+    await this.setValue(page, this.smtpUsernameFormField, username);
+    await this.setValue(page, this.smtpPasswordFormField, pass);
+    await this.setValue(page, this.smtpPortFormField, port);
+    await this.selectByVisibleText(page, this.smtpEncryptionFormField, encryption);
+    // Click on Save button
+    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Reset the mail parameters to default config
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async resetDefaultParameters(page) {
+    // Click on smtp radio button
+    await page.click(this.sendMailParametersRadioButton);
+    await page.waitForSelector(this.smtpServerFormField, {state: 'hidden'});
+    // Click on Save button
+    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

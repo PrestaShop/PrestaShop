@@ -27,17 +27,17 @@ import $ from 'jquery';
 
 prestashop.themeSelectors = {
   product: {
-    activeTabs: '.tabs .nav-link.active',
+    activeTabs: '.tabs .nav-link.active, .js-product-nav-active',
     imagesModal: '.js-product-images-modal',
     thumb: '.js-thumb',
-    thumbContainer: '.thumb-container',
+    thumbContainer: '.thumb-container, .js-thumb-container',
     arrows: '.js-arrows',
-    selected: '.selected',
+    selected: '.selected, .js-thumb-selected',
     modalProductCover: '.js-modal-product-cover',
     cover: '.js-qv-product-cover',
   },
   listing: {
-    searchFilterToggler: '#search_filter_toggler',
+    searchFilterToggler: '#search_filter_toggler, .js-search-toggler',
     searchFiltersWrapper: '#search_filters_wrapper',
     searchFilterControls: '#search_filter_controls',
     searchFilters: '#search_filters',
@@ -50,21 +50,21 @@ prestashop.themeSelectors = {
     searchLink: '.js-search-link',
   },
   order: {
-    returnForm: '#order-return-form',
+    returnForm: '#order-return-form, .js-order-return-form',
   },
-  arrowDown: '.arrow-down',
-  arrowUp: '.arrow-up',
+  arrowDown: '.arrow-down, .js-arrow-down',
+  arrowUp: '.arrow-up, .js-arrow-down',
   clear: '.clear',
   fileInput: '.js-file-input',
-  contentWrapper: '#content-wrapper',
-  footer: '#footer',
+  contentWrapper: '#content-wrapper, .js-content-wrapper',
+  footer: '#footer, .js-footer',
   modalContent: '.js-modal-content',
-  modal: '#modal',
+  modal: '#modal, .js-checkout-modal',
   checkout: {
     termsLink: '.js-terms a',
     giftCheckbox: '.js-gift-checkbox',
-    imagesLink: '.card-block .cart-summary-products p a',
-    carrierExtraContent: '.carrier-extra-content',
+    imagesLink: '.card-block .cart-summary-products p a, .js-show-details',
+    carrierExtraContent: '.carrier-extra-content, .js-carrier-extra-content',
   },
 };
 

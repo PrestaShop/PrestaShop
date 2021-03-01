@@ -34,22 +34,22 @@ final class ImportSettings
     /**
      * Default value separator.
      */
-    const DEFAULT_SEPARATOR = ';';
+    public const DEFAULT_SEPARATOR = ';';
 
     /**
      * Default multiple value separator.
      */
-    const DEFAULT_MULTIVALUE_SEPARATOR = ',';
+    public const DEFAULT_MULTIVALUE_SEPARATOR = ',';
 
     /**
      * Maximum number of columns that are visible in the import matches configuration page.
      */
-    const MAX_VISIBLE_COLUMNS = 6;
+    public const MAX_VISIBLE_COLUMNS = 6;
 
     /**
      * Maximum number of rows that are visible in the import matces configuration page.
      */
-    const MAX_VISIBLE_ROWS = 10;
+    public const MAX_VISIBLE_ROWS = 10;
 
     /**
      * This class cannot be instantiated.

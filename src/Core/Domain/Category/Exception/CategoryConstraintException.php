@@ -34,40 +34,40 @@ class CategoryConstraintException extends CategoryException
     /**
      * Code is used when category does not have name.
      */
-    const EMPTY_NAME = 1;
+    public const EMPTY_NAME = 1;
 
     /**
      * Code is used when category does not have link rewrite.
      */
-    const EMPTY_LINK_REWRITE = 2;
+    public const EMPTY_LINK_REWRITE = 2;
 
     /**
      * Code is used when invalid status is set to category.
      */
-    const INVALID_STATUS = 4;
+    public const INVALID_STATUS = 4;
 
     /**
      * Code is used when invalid delete mode is used to delete a category.
      */
-    const INVALID_DELETE_MODE = 5;
+    public const INVALID_DELETE_MODE = 5;
 
     /**
      * Code is used when invalid parent id is supplied.
      */
-    const INVALID_PARENT_ID = 6;
+    public const INVALID_PARENT_ID = 6;
 
     /**
      * Code is used when too many menu thumbnails is being set for category.
      */
-    const TOO_MANY_MENU_THUMBNAILS = 8;
+    public const TOO_MANY_MENU_THUMBNAILS = 8;
 
     /**
      * Code is used when invalid id is supplied.
      */
-    const INVALID_ID = 10;
+    public const INVALID_ID = 10;
 
     /**
      * Code is used when performing bulk delete of categories with empty data.
      */
-    const EMPTY_BULK_DELETE_DATA = 12;
+    public const EMPTY_BULK_DELETE_DATA = 12;
 }

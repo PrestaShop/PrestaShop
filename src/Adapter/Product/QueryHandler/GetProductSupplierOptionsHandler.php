@@ -29,12 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOption;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSupplierOptionsHandlerInterface;
-use Supplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 
 /**
  * Handles @see GetProductSupplierOptions query
@@ -42,16 +43,25 @@ use Supplier;
 final class GetProductSupplierOptionsHandler extends AbstractProductHandler implements GetProductSupplierOptionsHandlerInterface
 {
     /**
-     * @var GetProductSuppliersForEditingHandler
+     * @var ProductSupplierRepository
      */
-    private $getProductSuppliersForEditingHandler;
+    private $productSupplierRepository;
 
     /**
-     * @param GetProductSuppliersForEditingHandler $getProductSuppliersForEditingHandler
+     * @var ProductRepository
      */
-    public function __construct(GetProductSuppliersForEditingHandler $getProductSuppliersForEditingHandler)
-    {
-        $this->getProductSuppliersForEditingHandler = $getProductSuppliersForEditingHandler;
+    private $productRepository;
+
+    /**
+     * @param ProductSupplierRepository $productSupplierRepository
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(
+        ProductSupplierRepository $productSupplierRepository,
+        ProductRepository $productRepository
+    ) {
+        $this->productSupplierRepository = $productSupplierRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -61,31 +71,31 @@ final class GetProductSupplierOptionsHandler extends AbstractProductHandler impl
      */
     public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
     {
-        $product = $this->getProduct($query->getProductId());
-        $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(new GetProductSuppliersForEditing((int) $product->id));
+        $product = $this->productRepository->get($query->getProductId());
+        $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($query->getProductId());
+
         $supplierOptions = [];
 
-        $processedSuppliers = [];
-        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
-            $supplierId = $productSupplierForEditing->getSupplierId();
+        foreach ($productSuppliersInfo as $productSupplierInfo) {
+            $supplierId = (int) $productSupplierInfo['id_supplier'];
 
-            if (in_array($supplierId, $processedSuppliers)) {
-                continue;
-            }
-
-            $supplierOptions[] = new ProductSupplierOption(
-                Supplier::getNameById($supplierId),
+            $supplierOptions[] = new ProductSupplierInfo(
+                $productSupplierInfo['name'],
                 $supplierId,
-                array_filter($productSuppliersForEditing, function ($value) use ($supplierId): bool {
-                    return $value->getSupplierId() === $supplierId;
-                })
+                new ProductSupplierForEditing(
+                    (int) $productSupplierInfo['id_product_supplier'],
+                    (int) $productSupplierInfo['id_product'],
+                    (int) $productSupplierInfo['id_supplier'],
+                    $productSupplierInfo['product_supplier_reference'],
+                    $productSupplierInfo['product_supplier_price_te'],
+                    (int) $productSupplierInfo['id_currency'],
+                    (int) $productSupplierInfo['id_product_attribute']
+                )
             );
-            $processedSuppliers[] = $supplierId;
         }
 
         return new ProductSupplierOptions(
             (int) $product->id_supplier,
-            $product->supplier_reference,
             $supplierOptions
         );
     }

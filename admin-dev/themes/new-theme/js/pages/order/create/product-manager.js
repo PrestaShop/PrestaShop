@@ -147,16 +147,20 @@ export default class ProductManager {
     };
 
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (data) => {
+    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this.updateStockOnQtyChange(data.product);
-      EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
+      this.updateStockOnQtyChange(cartInfo.product);
+
+      $(createOrderMap.createOrderButton).prop('disabled', false);
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+
       enableQtyInputs();
     });
 
     // on failure
     EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
       this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
+      $(createOrderMap.createOrderButton).prop('disabled', true);
       enableQtyInputs();
     });
   }
@@ -292,6 +296,8 @@ export default class ProductManager {
 
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(
+      $(createOrderMap.inStockCounter),
+      $(createOrderMap.quantityInput),
       combination.stock,
       this.selectedProduct.availableOutOfStock || combination.stock <= 0,
     );

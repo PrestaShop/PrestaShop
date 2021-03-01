@@ -126,7 +126,7 @@
           <button type="submit" class="btn btn-primary continue float-xs-right" name="confirm-addresses" value="1">
             {l s='Continue' d='Shop.Theme.Actions'}
           </button>
-          <input type="hidden" id="not-valid-addresses" value="{$not_valid_addresses}">
+          <input type="hidden" id="not-valid-addresses" class="js-not-valid-addresses" value="{$not_valid_addresses}">
         </div>
       {/if}
 

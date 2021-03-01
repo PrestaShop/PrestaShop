@@ -31,10 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query\Filter;
  */
 final class SqlFilters
 {
-    const WHERE_STRICT = 1;
-    const WHERE_LIKE = 2;
-    const HAVING_LIKE = 3;
-    const WHERE_DATE = 4;
+    public const WHERE_STRICT = 1;
+    public const WHERE_LIKE = 2;
+    public const HAVING_LIKE = 3;
+    public const WHERE_DATE = 4;
 
     /** @var array */
     private $filters = [];

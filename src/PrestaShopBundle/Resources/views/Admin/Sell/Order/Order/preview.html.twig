@@ -78,6 +78,9 @@
                   {{ orderPreview.shippingDetails.postalCode }}
                 </p>
                 <p class="mb-0">{{ orderPreview.shippingDetails.country }}</p>
+                {% if orderPreview.shippingDetails.dni is not empty %}
+                  <p class="mb-0">{{ orderPreview.shippingDetails.dni }}</p>
+                {% endif %}
                 <p>{{ orderPreview.shippingDetails.phone }}</p>
               {% endif %}
             </div>
@@ -104,7 +107,6 @@
               {% endif %}
               <p class="mb-0">{{ orderPreview.invoiceDetails.address1 }}</p>
               <p class="mb-0">{{ orderPreview.invoiceDetails.address2 }}</p>
-              <p class="mb-0">{{ orderPreview.invoiceDetails.country }}</p>
               <p class="mb-0">
                 {{ orderPreview.invoiceDetails.city }},
                 {% if orderPreview.invoiceDetails.stateName %}
@@ -112,6 +114,10 @@
                 {% endif %}
                 {{ orderPreview.invoiceDetails.postalCode }}
               </p>
+              <p class="mb-0">{{ orderPreview.invoiceDetails.country }}</p>
+              {% if orderPreview.invoiceDetails.dni is not empty %}
+                <p class="mb-0">{{ orderPreview.invoiceDetails.dni }}</p>
+              {% endif %}
               <p class="mb-0">{{ orderPreview.invoiceDetails.phone }}</p>
               <p>{{ orderPreview.invoiceDetails.email }}</p>
             </div>

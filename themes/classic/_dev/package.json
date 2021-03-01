@@ -31,7 +31,7 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
     "flexibility": "^1.0.5",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.1",
     "jquery-touchswipe": "^1.6",
     "jquery.browser": "^0.1.0",
     "manrope": "^2.0.0",

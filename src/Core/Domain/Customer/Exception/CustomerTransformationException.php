@@ -34,10 +34,10 @@ class CustomerTransformationException extends CustomerException
     /**
      * @var int Code is used when customer which is not guest is being transformed into customer
      */
-    const CUSTOMER_IS_NOT_GUEST = 1;
+    public const CUSTOMER_IS_NOT_GUEST = 1;
 
     /**
      * @var int Code is used when guest transformation into customer has failed
      */
-    const TRANSFORMATION_FAILED = 2;
+    public const TRANSFORMATION_FAILED = 2;
 }

@@ -38,28 +38,28 @@ class ProductType
     /**
      * Standard product
      */
-    const TYPE_STANDARD = 'standard';
+    public const TYPE_STANDARD = 'standard';
 
     /**
      * A pack consists multiple units of product.
      */
-    const TYPE_PACK = 'pack';
+    public const TYPE_PACK = 'pack';
 
     /**
      * Items that are not in physical form and can be sold without requiring any shipping
      * E.g. downloadable photos, videos, software, services etc.
      */
-    const TYPE_VIRTUAL = 'virtual';
+    public const TYPE_VIRTUAL = 'virtual';
 
     /**
      * Product containing combinations of different attributes
      */
-    const TYPE_COMBINATION = 'combination';
+    public const TYPE_COMBINATION = 'combination';
 
     /**
      * A list of available types
      */
-    const AVAILABLE_TYPES = [
+    public const AVAILABLE_TYPES = [
         self::TYPE_STANDARD,
         self::TYPE_PACK,
         self::TYPE_VIRTUAL,

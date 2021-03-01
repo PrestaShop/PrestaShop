@@ -358,6 +358,8 @@ services:
     form.type.maintenance.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
         parent: 'form.type.translatable.aware'
+        arguments:
+            - '@=service("request_stack").getCurrentRequest().getClientIp()'
         public: true
         tags:
             - { name: form.type }
@@ -541,6 +543,20 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.mail_method'
             - '@prestashop.core.form.choice_provider.contact_by_id'
+        tags:
+            - { name: form.type }
+
+    form.type.email.smtp_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.email.test_email_sending:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
@@ -1299,15 +1315,74 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.stock_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
+    form.type.sell.product.customizations_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationsType'
         parent: 'form.type.translatable.aware'
-        arguments:
-            - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
-            - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
         public: true
         tags:
             - { name: form.type }
+
+    form.type.sell.product.customization_field_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationFieldType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.customization_field_type_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.stock_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+            - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.suppliers_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SuppliersType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.product.product_supplier_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductSupplierType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.currency_by_id'
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.features_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\FeaturesType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.feature_value_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\FeatureValueType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.features_choice_provider'
+            - '@form.type.sell.product.event_listener.feature_value_listener'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.event_listener.feature_value_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
+            - '@form.form_cloner'
+        public: true
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'

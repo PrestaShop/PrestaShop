@@ -35,14 +35,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
  */
 class ProductCondition
 {
-    const NEW = 'new';
-    const USED = 'used';
-    const REFURBISHED = 'refurbished';
+    public const NEW = 'new';
+    public const USED = 'used';
+    public const REFURBISHED = 'refurbished';
 
     /**
      * A list of available values
      */
-    const AVAILABLE_CONDITIONS = [
+    public const AVAILABLE_CONDITIONS = [
         self::NEW,
         self::USED,
         self::REFURBISHED,

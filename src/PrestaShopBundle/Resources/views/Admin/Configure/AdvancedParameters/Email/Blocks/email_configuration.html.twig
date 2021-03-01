@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
+{% form_theme emailConfigurationForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block email_configuration %}
   <div class="col-12">
@@ -32,47 +33,12 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
-          <div class="form-group row">
-            <label class="form-control-label">{{ 'Send emails to'|trans }}</label>
-            <div class="col-sm">
-              {{ form_errors(emailConfigurationForm.send_emails_to) }}
-              {{ form_widget(emailConfigurationForm.send_emails_to) }}
-              <small class="form-text">
-                {{ 'Where customers send messages from the order page.'|trans({}, 'Admin.Advparameters.Help') }}
-              </small>
-            </div>
+          {{ form_row(emailConfigurationForm.send_emails_to) }}
+          {{ form_row(emailConfigurationForm.mail_method) }}
+          <div class="js-smtp-configuration{% if emailConfigurationForm.mail_method.vars.value != smtpMailMethod %} d-none{% endif %}">
+            {{ form_widget(emailConfigurationForm.smtp_config) }}
           </div>
-
-          <div class="form-group row js-email-method" data-smtp-mail-method="{{ smtpMailMethod }}">
-            <label class="form-control-label"></label>
-            <div class="col-sm">
-              {{ form_errors(emailConfigurationForm.mail_method) }}
-              {{ form_widget(emailConfigurationForm.mail_method) }}
-            </div>
-          </div>
-
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig' %}
-
-          <div class="form-group row">
-            <label class="form-control-label"></label>
-            <div class="col-sm">
-              {{ form_errors(emailConfigurationForm.mail_type) }}
-              {{ form_widget(emailConfigurationForm.mail_type) }}
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="form-control-label">{{ 'Log Emails'|trans }}</label>
-            <div class="col-sm">
-              {{ form_errors(emailConfigurationForm.log_emails) }}
-              {{ form_widget(emailConfigurationForm.log_emails) }}
-            </div>
-          </div>
-
-
-          {% block email_configuration_form_rest %}
-            {{ form_rest(emailConfigurationForm) }}
-          {% endblock %}
+          {{ form_rest(emailConfigurationForm) }}
         </div>
       </div>
       <div class="card-footer">

@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
  */
 final class SlipOptionsConfiguration implements DataConfigurationInterface
 {
-    const PREFIX = 'PS_DELIVERY_PREFIX';
-    const NUMBER = 'PS_DELIVERY_NUMBER';
-    const ENABLE_PRODUCT_IMAGE = 'PS_PDF_IMG_DELIVERY';
+    public const PREFIX = 'PS_DELIVERY_PREFIX';
+    public const NUMBER = 'PS_DELIVERY_NUMBER';
+    public const ENABLE_PRODUCT_IMAGE = 'PS_PDF_IMG_DELIVERY';
 
     /**
      * @var Configuration

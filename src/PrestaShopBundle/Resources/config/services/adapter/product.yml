@@ -74,7 +74,7 @@ services:
         arguments:
             - '@prestashop.core.util.number.number_extractor'
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
-            - '@prestashop.adapter.product.virtual_product_file.repository.product_download_repository'
+            - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
@@ -166,16 +166,11 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
 
-    prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSuppliersForEditingHandler
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing
-
     prestashop.adapter.product.query_handler.get_product_supplier_options_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSupplierOptionsHandler
         arguments:
-            - '@prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler'
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
@@ -221,9 +216,6 @@ services:
 
     prestashop.adapter.product.validate.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
-        arguments:
-            - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ADVANCED_STOCK_MANAGEMENT")'
-            - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
 
     prestashop.adapter.product.repository.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
@@ -280,15 +272,6 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand
 
-    prestashop.adapter.product.command_handler.update_product_stock_information_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockInformationHandler
-        arguments:
-            - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.update.product_stock_updater'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand
-
     prestashop.adapter.product.validate.product_supplier_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator
         arguments:
@@ -299,6 +282,8 @@ services:
     prestashop.adapter.product.repository.product_supplier_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
         arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
             - '@prestashop.adapter.product.validate.product_supplier_validator'
 
     prestashop.adapter.product.update.product_supplier_updater:
@@ -367,11 +352,3 @@ services:
             - '@prestashop.adapter.shop.context'
             - '@translator'
             - '@prestashop.core.util.string.string_modifier'
-
-    prestashop.adapter.product.update.product_stock_updater:
-        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater
-        arguments:
-            - '@prestashop.core.stock.stock_manager'
-            - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
-            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"

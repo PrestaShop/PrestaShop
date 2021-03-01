@@ -36,21 +36,21 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class PageVoter extends Voter
 {
-    const CREATE = 'create';
+    public const CREATE = 'create';
 
-    const UPDATE = 'update';
+    public const UPDATE = 'update';
 
-    const DELETE = 'delete';
+    public const DELETE = 'delete';
 
-    const READ = 'read';
+    public const READ = 'read';
 
-    const LEVEL_DELETE = 4;
+    public const LEVEL_DELETE = 4;
 
-    const LEVEL_UPDATE = 2;
+    public const LEVEL_UPDATE = 2;
 
-    const LEVEL_CREATE = 3;
+    public const LEVEL_CREATE = 3;
 
-    const LEVEL_READ = 1;
+    public const LEVEL_READ = 1;
 
     /**
      * Indicates if this voter should pronounce on this attribute and subject.

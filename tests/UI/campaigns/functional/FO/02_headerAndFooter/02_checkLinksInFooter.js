@@ -24,7 +24,7 @@ const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
 const addressesPage = require('@pages/FO/myAccount/addresses');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -169,7 +169,7 @@ describe('Check links in footer page', async () => {
 
     // Login FO
     await homePage.goToLoginPage(page);
-    await loginPage.customerLogin(page, DefaultAccount);
+    await loginPage.customerLogin(page, DefaultCustomer);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

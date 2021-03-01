@@ -108,7 +108,6 @@
 {% block textarea_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
   {{- parent() -}}
-
   {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
@@ -191,6 +190,24 @@
 {% block button_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
   {{- parent() -}}
+{%- endblock %}
+
+{% block icon_button_widget -%}
+  {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
+  {%- if label is empty and label != false -%}
+    {%- if label_format is not empty -%}
+      {% set label = label_format|replace({
+        '%name%': name,
+        '%id%': id,
+      }) %}
+    {%- else -%}
+      {% set label = name|humanize %}
+    {%- endif -%}
+  {%- endif -%}
+  <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+    <i class="material-icons">{{ icon }}</i>
+    {{ label }}
+  </button>
 {%- endblock %}
 
 {# {% block checkbox_widget -%}
@@ -731,7 +748,8 @@
 {% endblock %}
 
 {% block translatable_default -%}
-    <div class="input-group locale-input-group js-locale-input-group d-flex">
+    {% set formClass = (form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex')|trim %}
+    <div class="{{ formClass }}">
       {% for translateField in form %}
         {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
         {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}

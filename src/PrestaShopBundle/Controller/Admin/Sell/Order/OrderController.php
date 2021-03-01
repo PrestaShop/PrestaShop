@@ -119,12 +119,12 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Default number of products per page (in case invalid value is used)
      */
-    const DEFAULT_PRODUCTS_NUMBER = 8;
+    public const DEFAULT_PRODUCTS_NUMBER = 8;
 
     /**
      * Options used for the number of products per page
      */
-    const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+    public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
     /**
      * Shows list of orders
@@ -1980,6 +1980,20 @@ class OrderController extends FrameworkBundleAdminController
                 'Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
+            OrderConstraintException::class => [
+                OrderConstraintException::INVALID_PAYMENT_METHOD => sprintf(
+                    '%s %s %s',
+                    $this->trans(
+                        'The selected payment method is invalid.',
+                        'Admin.Orderscustomers.Notification'
+                    ),
+                    $this->trans(
+                        'Invalid characters:',
+                        'Admin.Notifications.Info'
+                    ),
+                    AddPaymentCommand::INVALID_CHARACTERS_NAME
+                ),
+            ],
         ]);
     }
 

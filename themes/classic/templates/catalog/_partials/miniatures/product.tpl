@@ -34,11 +34,18 @@
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               loading="lazy"
               data-full-size-image-url="{$product.cover.large.url}"
-              />
+              width="250"
+              height="250"
+            />
           </a>
         {else}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
-            <img src="{$urls.no_picture_image.bySize.home_default.url}" loading="lazy" />
+            <img 
+              src="{$urls.no_picture_image.bySize.home_default.url}"
+              loading="lazy"
+              width="250"
+              height="250"
+            />
           </a>
         {/if}
       {/block}
@@ -93,7 +100,7 @@
 
       <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
         {block name='quick_view'}
-          <a class="quick-view" href="#" data-link-action="quickview">
+          <a class="quick-view js-quick-view" href="#" data-link-action="quickview">
             <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
           </a>
         {/block}

@@ -55,6 +55,10 @@
       {% block product_tab_basic %}
         <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
           {{ form_widget(productForm.basic) }}
+
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
+            'productForm': productForm,
+          }) }}
         </div>
       {% endblock %}
 
@@ -85,6 +89,14 @@
       {% block product_tab_options %}
         <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="options-tab">
           {{ form_widget(productForm.options) }}
+
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/customizations.html.twig', {
+            'productForm': productForm,
+          }) }}
+
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/suppliers.html.twig', {
+            'productForm': productForm,
+          }) }}
         </div>
       {% endblock %}
 

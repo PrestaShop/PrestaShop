@@ -134,3 +134,26 @@ Feature: Update product details from Back Office (BO)
     When I remove all feature values from product "lightMagicBook"
     Then product "lightMagicBook" should have no feature values
     And feature value "light" should not exist
+
+  Scenario: I can not set the same feature twice
+    Given I add product "lightMagicBook" with following information:
+      | name[en-US] | Light Magic Book |
+      | is_virtual  | false           |
+    Then product "lightMagicBook" should have no feature values
+    When I set to product "lightMagicBook" the following feature values:
+      | feature | feature_value |
+      | emotion | joy           |
+      | emotion | joy           |
+    Then I should get an error that a feature can only be associated once
+    And product "lightMagicBook" should have no feature values
+
+  Scenario: I can not set a value to another feature
+    Given I add product "lightMagicBook" with following information:
+      | name[en-US] | Light Magic Book |
+      | is_virtual  | false           |
+    Then product "lightMagicBook" should have no feature values
+    When I set to product "lightMagicBook" the following feature values:
+      | feature | feature_value |
+      | element | joy           |
+    Then I should get an error that a feature value cannot be associated to another feature
+    And product "lightMagicBook" should have no feature values

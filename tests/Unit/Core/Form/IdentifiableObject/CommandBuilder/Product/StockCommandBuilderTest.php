@@ -29,8 +29,8 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use DateTime;
 use Generator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandBuilder;
 

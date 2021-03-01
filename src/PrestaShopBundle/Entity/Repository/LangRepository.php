@@ -32,8 +32,8 @@ use PrestaShopBundle\Entity\Lang;
 
 class LangRepository extends EntityRepository implements LanguageRepositoryInterface
 {
-    const ISO_CODE = 'isoCode';
-    const LOCALE = 'locale';
+    public const ISO_CODE = 'isoCode';
+    public const LOCALE = 'locale';
 
     /**
      * Stores language instances in different arrays to match them quickly

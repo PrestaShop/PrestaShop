@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use DateTime;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**

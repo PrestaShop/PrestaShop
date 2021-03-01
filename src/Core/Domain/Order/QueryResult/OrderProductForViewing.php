@@ -30,9 +30,9 @@ use JsonSerializable;
 
 class OrderProductForViewing implements JsonSerializable
 {
-    const TYPE_PACK = 'pack';
-    const TYPE_PRODUCT_WITH_COMBINATIONS = 'product_with_combinations';
-    const TYPE_PRODUCT_WITHOUT_COMBINATIONS = 'product_without_combinations';
+    public const TYPE_PACK = 'pack';
+    public const TYPE_PRODUCT_WITH_COMBINATIONS = 'product_with_combinations';
+    public const TYPE_PRODUCT_WITHOUT_COMBINATIONS = 'product_without_combinations';
 
     /**
      * @var int

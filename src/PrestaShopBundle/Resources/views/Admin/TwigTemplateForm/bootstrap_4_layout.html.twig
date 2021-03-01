@@ -181,7 +181,7 @@
 {%- endblock choice_tree_widget %}
 
 {% block choice_tree_item_widget -%}
-    <li>
+  <li{% if defaultHidden %} class="more"{% endif %}>
         {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
         {% if multiple -%}
             <div class="checkbox">
@@ -209,7 +209,7 @@
             </div>
         {%- endif %}
         {% if child.children is defined %}
-            <ul>
+            <ul{% if defaultHidden %} style="display: none;"{% endif %}>
                 {% for item in child.children %}
                     {% set child = item %}
                     {{ block('choice_tree_item_widget') }}
@@ -652,7 +652,8 @@
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}
-  <div class="input-group locale-input-group js-locale-input-group d-flex">
+  {% set formClass = form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex'|trim %}
+  <div class="{{ formClass }}">
     {% for translateField in form %}
       {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
       {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}

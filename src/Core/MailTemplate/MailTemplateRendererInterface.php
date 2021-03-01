@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterfa
  */
 interface MailTemplateRendererInterface
 {
-    const GET_MAIL_LAYOUT_TRANSFORMATIONS = 'actionGetMailLayoutTransformations';
+    public const GET_MAIL_LAYOUT_TRANSFORMATIONS = 'actionGetMailLayoutTransformations';
 
     /**
      * @param LayoutInterface $layout

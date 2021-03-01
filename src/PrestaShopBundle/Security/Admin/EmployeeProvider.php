@@ -39,7 +39,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class EmployeeProvider implements UserProviderInterface
 {
-    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
+    public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
 
     private $legacyContext;
 

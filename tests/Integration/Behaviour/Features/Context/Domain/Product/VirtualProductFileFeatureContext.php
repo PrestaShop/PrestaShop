@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
@@ -58,6 +59,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $fileReference
      * @param string $productReference
+     * @param string $filePathReference
      * @param TableNode $dataTable
      */
     public function addFile(string $fileReference, string $productReference, TableNode $dataTable): void
@@ -76,9 +78,51 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         try {
             $virtualProductId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
+
+            // save Downloads filePath in shared storage for further assertions
+            $filename = $this->getProductForEditing($productReference)->getVirtualProductFile()->getFileName();
+            $this->getSharedStorage()->set(
+                $this->buildSystemFileReference($productReference, $fileReference),
+                _PS_DOWNLOAD_DIR_ . $filename
+            );
         } catch (VirtualProductFileException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I delete virtual product file ":fileReference"
+     *
+     * @param string $fileReference
+     */
+    public function deleteFile(string $fileReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteVirtualProductFileCommand(
+            $this->getSharedStorage()->get($fileReference)
+        ));
+    }
+
+    /**
+     * @Then file ":fileReference" for product ":productReference" should not exist in system
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     */
+    public function assertFileDoesNotExistInSystem(string $productReference, string $fileReference): void
+    {
+        $this->assertSystemFileExistence($productReference, $fileReference, false);
+    }
+
+    /**
+     * @Given file ":fileReference" for product ":productReference" exists in system
+     * @Given file ":fileReference" for product ":productReference" should exist in system
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     */
+    public function assertFileExistsInSystem(string $productReference, string $fileReference): void
+    {
+        $this->assertSystemFileExistence($productReference, $fileReference, true);
     }
 
     /**
@@ -140,11 +184,6 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
             throw new RuntimeException('Expected virtual product to have a file');
         }
 
-        $fileDestination = _PS_DOWNLOAD_DIR_ . $actualFile->getFileName();
-        if (!is_file($fileDestination)) {
-            throw new RuntimeException(sprintf('Virtual product file "%s" not found in "%s"', $fileReference, $fileDestination));
-        }
-
         Assert::assertEquals(
             $this->getSharedStorage()->get($fileReference),
             $actualFile->getId(),
@@ -172,7 +211,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         unset($dataRows['expiration date']);
 
         if (!empty($dataRows)) {
-            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_dump($dataRows)));
+            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_export($dataRows, true)));
         }
     }
 
@@ -188,5 +227,47 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
             null
         ;
         Assert::assertEquals($expectedExpiration, $actualExpiration, 'Unexpected file expiration date');
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $fileReference
+     * @param bool $expectedToExist
+     */
+    private function assertSystemFileExistence(string $productReference, string $fileReference, bool $expectedToExist): void
+    {
+        $reference = $this->buildSystemFileReference($productReference, $fileReference);
+
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException('No file reference stored in shared storage');
+        }
+
+        $path = $this->getSharedStorage()->get($reference);
+        $exists = file_exists($path);
+
+        if ($expectedToExist) {
+            Assert::assertTrue(
+                $exists,
+                sprintf('File referenced as "%s" does not exist in system (path "%s")', $reference, $path)
+            );
+        } else {
+            Assert::assertFalse(
+                $exists,
+                sprintf('File referenced as "%s" exists in system (path "%s")', $reference, $path)
+            );
+        }
+    }
+
+    /**
+     * System file name is generated, so we want to save it in shared storage after upload to assert later
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     *
+     * @return string
+     */
+    private function buildSystemFileReference(string $productReference, string $fileReference): string
+    {
+        return sprintf('%s-%s', $productReference, $fileReference);
     }
 }

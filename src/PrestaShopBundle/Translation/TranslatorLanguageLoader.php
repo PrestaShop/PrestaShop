@@ -36,7 +36,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslatorLanguageLoader
 {
-    const TRANSLATION_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+    public const TRANSLATION_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
     /**
      * @var bool
      */

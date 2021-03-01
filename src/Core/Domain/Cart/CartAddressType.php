@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart;
  */
 class CartAddressType
 {
-    const DELIVERY_ADDRESS_TYPE = 'delivery_address';
+    public const DELIVERY_ADDRESS_TYPE = 'delivery_address';
 
-    const INVOICE_ADDRESS_TYPE = 'invoice_address';
+    public const INVOICE_ADDRESS_TYPE = 'invoice_address';
 }

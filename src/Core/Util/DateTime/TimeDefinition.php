@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Util\DateTime;
  */
 final class TimeDefinition
 {
-    const HOUR_IN_SECONDS = 3600;
-    const DAY_IN_SECONDS = 86400;
+    public const HOUR_IN_SECONDS = 3600;
+    public const DAY_IN_SECONDS = 86400;
 
     /**
      * Object is not suppose to be initialized as it's responsibility is to define time constants.

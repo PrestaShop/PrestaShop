@@ -33,11 +33,11 @@ namespace PrestaShop\PrestaShop\Core\MailTemplate;
  */
 interface MailTemplateInterface
 {
-    const CORE_CATEGORY = 'core';
-    const MODULES_CATEGORY = 'modules';
+    public const CORE_CATEGORY = 'core';
+    public const MODULES_CATEGORY = 'modules';
 
-    const HTML_TYPE = 'html';
-    const TXT_TYPE = 'txt';
+    public const HTML_TYPE = 'html';
+    public const TXT_TYPE = 'txt';
 
     /**
      * Whether the template is used by the core or modules

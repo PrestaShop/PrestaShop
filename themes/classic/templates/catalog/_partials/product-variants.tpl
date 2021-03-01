@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<div class="product-variants">
+<div class="product-variants js-product-variants">
   {foreach from=$groups key=id_attribute_group item=group}
     {if !empty($group.attributes)}
     <div class="clearfix product-variants-item">
@@ -35,6 +35,7 @@
         <select
           class="form-control form-control-select"
           id="group_{$id_attribute_group}"
+          aria-label="{$group.name}"
           data-product-attribute="{$id_attribute_group}"
           name="group[{$id_attribute_group}]">
           {foreach from=$group.attributes key=id_attribute item=group_attribute}

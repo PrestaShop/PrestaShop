@@ -92,7 +92,6 @@ class CombinationCreator
         $this->disableSpecificPriceRulesApplication();
 
         $combinationIds = $this->addCombinations($product, $generatedCombinations);
-        $this->updateProductDefaultCombination($productId);
 
         // apply all specific price rules at once after all the combinations are generated
         $this->applySpecificPriceRules($productId);
@@ -128,8 +127,8 @@ class CombinationCreator
     private function addCombinations(Product $product, Traversable $generatedCombinations): array
     {
         $product->setAvailableDate();
-        $productId = (int) $product->id;
-        $hasDefault = (bool) $this->getDefaultCombinationId($productId);
+        $productId = new ProductId((int) $product->id);
+        $hasDefault = (bool) $this->combinationRepository->findDefaultCombination($productId);
 
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
@@ -141,7 +140,7 @@ class CombinationCreator
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      * @param int[] $generatedCombination
      * @param bool $isDefault
      *
@@ -149,9 +148,9 @@ class CombinationCreator
      *
      * @throws CoreException
      */
-    private function persistCombination(int $productId, array $generatedCombination, bool $isDefault): CombinationId
+    private function persistCombination(ProductId $productId, array $generatedCombination, bool $isDefault): CombinationId
     {
-        $combination = $this->combinationRepository->create(new ProductId($productId), $isDefault);
+        $combination = $this->combinationRepository->create($productId, $isDefault);
         $combinationId = new CombinationId((int) $combination->id);
 
         //@todo: Use DB transaction instead if they are accepted (PR #21740)
@@ -163,36 +162,6 @@ class CombinationCreator
         }
 
         return $combinationId;
-    }
-
-    /**
-     * @param int $productId
-     *
-     * @return int
-     *
-     * @throws CoreException
-     */
-    private function getDefaultCombinationId(int $productId): int
-    {
-        try {
-            return (int) Product::getDefaultAttribute($productId, 0, true);
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
-        }
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @throws CoreException
-     */
-    private function updateProductDefaultCombination(ProductId $productId): void
-    {
-        try {
-            Product::updateDefaultAttribute($productId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to update product default combination', 0, $e);
-        }
     }
 
     /**

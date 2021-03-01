@@ -55,9 +55,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ModuleController extends ModuleAbstractController
 {
-    const CONTROLLER_NAME = 'ADMINMODULESSF';
+    public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
-    const MAX_MODULES_DISPLAYED = 6;
+    public const MAX_MODULES_DISPLAYED = 6;
 
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")

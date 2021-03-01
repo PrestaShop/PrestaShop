@@ -34,5 +34,5 @@ class FileWritingException extends ExportException
     /**
      * When file cannot be opened for writing
      */
-    const CANNOT_OPEN_FILE_FOR_WRITING = 10;
+    public const CANNOT_OPEN_FILE_FOR_WRITING = 10;
 }

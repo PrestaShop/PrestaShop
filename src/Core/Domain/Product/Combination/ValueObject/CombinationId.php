@@ -37,7 +37,7 @@ class CombinationId
     /**
      * Indicates that no combination is provided/selected
      */
-    const NO_COMBINATION = 0;
+    public const NO_COMBINATION = 0;
 
     /**
      * @var int

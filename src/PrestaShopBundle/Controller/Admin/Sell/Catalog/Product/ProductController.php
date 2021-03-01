@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -182,6 +184,14 @@ class ProductController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            DuplicateFeatureValueAssociationException::class => $this->trans(
+                'You cannot associate the same feature value more than once.',
+                'Admin.Notifications.Error'
+            ),
+            InvalidAssociatedFeatureException::class => $this->trans(
+                'The selected value belongs to another feature.',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }

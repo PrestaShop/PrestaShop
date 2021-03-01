@@ -14,7 +14,7 @@ const homePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
 
 // Importing data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -94,7 +94,7 @@ describe('Enable re-display cart at login', async () => {
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, DefaultAccount);
+      await loginFOPage.customerLogin(page, DefaultCustomer);
 
       const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;
@@ -122,7 +122,7 @@ describe('Enable re-display cart at login', async () => {
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, DefaultAccount);
+      await loginFOPage.customerLogin(page, DefaultCustomer);
 
       const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;

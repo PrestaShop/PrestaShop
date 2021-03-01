@@ -34,10 +34,10 @@ class DeleteManufacturerException extends ManufacturerException
     /**
      * When fails to delete single manufacturer
      */
-    const FAILED_DELETE = 10;
+    public const FAILED_DELETE = 10;
 
     /**
      * When fails to delete manufacturers in bulk action
      */
-    const FAILED_BULK_DELETE = 20;
+    public const FAILED_BULK_DELETE = 20;
 }

@@ -43,7 +43,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
 {
     use DeleteActionTrait;
 
-    const GRID_ID = 'customer_address';
+    public const GRID_ID = 'customer_address';
 
     /**
      * @var string

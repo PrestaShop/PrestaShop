@@ -237,6 +237,16 @@
   .product-feature {
     align-items: flex-end;
     margin-bottom: 1rem;
+
+    @media screen and (max-width: 1300px) {
+      &::after {
+        display: inline-block;
+        width: 100%;
+        margin: 0.5rem 0.9375rem;
+        content: "";
+        border-top: 1px solid $primary;
+      }
+    }
   }
 
   // Combination details form
@@ -680,7 +690,7 @@
         vertical-align: middle;
       }
 
-      #categories-tree-expand {
+      #categories-tree-reduce {
         display: none;
       }
 

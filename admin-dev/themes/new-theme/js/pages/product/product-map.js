@@ -23,11 +23,48 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+const productSuppliersId = '#product_suppliers_product_suppliers';
+const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliersId}_${supplierIndex}_${inputName}`;
+
 export default {
   productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
+  suppliers: {
+    productSuppliersCollection: `${productSuppliersId}`,
+    supplierIdsInput: '#product_suppliers_supplier_ids',
+    defaultSupplierInput: '#product_suppliers_default_supplier_id',
+    productsTable: `${productSuppliersId} table`,
+    productsTableBody: `${productSuppliersId} table tbody`,
+    productSupplierRow: {
+      supplierNameCell: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name`,
+      supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
+      supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
+      productSupplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'product_supplier_id'),
+      referenceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'reference'),
+      priceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
+      currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
+    },
+  },
   redirectOption: {
     typeInput: '#product_redirect_option_type',
     targetInput: '#product_redirect_option_target',
+  },
+  featureValues: {
+    collectionContainer: '#product_features_feature_values',
+    collectionRowsContainer: '#product_features_feature_values > .col-sm',
+    collectionRow: 'div.row.product-feature',
+    featureSelect: 'select.feature-selector',
+    featureValueSelect: 'select.feature-value-selector',
+    customValueInput: '.custom-values input',
+    customFeatureIdInput: 'input.custom-value-id',
+    deleteFeatureValue: 'button.delete-feature-value',
+    addFeatureValue: '#product_features_add_feature',
+  },
+  customizations: {
+    customizationsContainer: '#product_customizations',
+    customizationFieldsList: '#product_customizations ul',
+    addCustomizationBtn: '#product_customizations_add_customization_field',
+    removeCustomizationBtn: '.remove-customization-btn',
+    customizationFieldRow: '.customization-field-row',
   },
 };

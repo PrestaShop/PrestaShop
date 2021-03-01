@@ -81,7 +81,12 @@ class ProductCore extends ObjectModel
     /** @var string|array Short description or array of short description by id_lang */
     public $description_short;
 
-    /** @var int Quantity available */
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$quantity instead
+     *
+     * @var int Quantity available
+     */
     public $quantity = 0;
 
     /** @var int Minimal quantity for add to cart */
@@ -273,13 +278,17 @@ class ProductCore extends ObjectModel
     public $id_color_default = 0;
 
     /**
-     * @since 1.5.0
+     * @deprecated since 1.7.8
+     * The advanced stock management feature is not maintained anymore
      *
      * @var bool Tells if the product uses the advanced stock management
      */
     public $advanced_stock_management = 0;
 
     /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$out_of_stock instead
+     *
      * @var int
      *          - O Deny orders
      *          - 1 Allow orders
@@ -288,6 +297,9 @@ class ProductCore extends ObjectModel
     public $out_of_stock = OutOfStockType::OUT_OF_STOCK_DEFAULT;
 
     /**
+     * @deprecated since 1.7.8
+     * This property was only relevant to advanced stock management and that feature is not maintained anymore
+     *
      * @var bool
      */
     public $depends_on_stock;
@@ -4158,10 +4170,10 @@ class ProductCore extends ObjectModel
      * Get available product quantities (this method already have decreased products in cart).
      *
      * @param int $idProduct Product identifier
-     * @param int|null $idProductAttribute Attribute identifier
+     * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
      * @param Cart|null $cart
-     * @param int|null $idCustomization Customization identifier
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
      */
@@ -4267,7 +4279,7 @@ class ProductCore extends ObjectModel
      *                          - 1 Allow orders
      *                          - 2 Use global setting
      *
-     * @return int|true
+     * @return bool|int Returns false is Stock Management is disabled, or the (int) configuration if it's enabled
      */
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
@@ -4422,7 +4434,7 @@ class ProductCore extends ObjectModel
         $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
                     a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
                     IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
-                    product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, product_attribute_shop.`unit_price_impact`,
+                    product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, pa.`upc`, pa.`isbn`, product_attribute_shop.`unit_price_impact`,
                     product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`
                 FROM `' . _DB_PREFIX_ . 'product_attribute` pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
@@ -4747,17 +4759,16 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_lang Language identifier
      * @param string $query Search query
-     * @param Context|null $context
+     * @param Context|null $context Deprecated, obsolete parameter not used anymore
      * @param int|null $limit
      *
      * @return array|false Matching products
      */
     public static function searchByName($id_lang, $query, Context $context = null, $limit = null)
     {
-        if (!$context) {
-            $context = Context::getContext();
+        if ($context !== null) {
+            Tools::displayParameterAsDeprecated('context');
         }
-
         $sql = new DbQuery();
         $sql->select('p.`id_product`, pl.`name`, p.`ean13`, p.`isbn`, p.`upc`, p.`mpn`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
         $sql->from('product', 'p');

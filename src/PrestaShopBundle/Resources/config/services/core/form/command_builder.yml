@@ -11,7 +11,10 @@ services:
                 - '@prestashop.core.form.command_builder.product.seo'
                 - '@prestashop.core.form.command_builder.product.shipping'
                 - '@prestashop.core.form.command_builder.product.options_command_builder'
+                - '@prestashop.core.form.command_builder.product.product_suppliers_command_builder'
                 - '@prestashop.core.form.command_builder.product.stock_command_builder'
+                - '@prestashop.core.form.command_builder.product.feature_values_command_builder'
+                - '@prestashop.core.form.command_builder.product.customization_fields_command_builder'
 
     prestashop.core.form.command_builder.product.basic_information:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandBuilder
@@ -30,3 +33,12 @@ services:
 
     prestashop.core.form.command_builder.product.stock_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandBuilder
+
+    prestashop.core.form.command_builder.product.product_suppliers_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandBuilder
+
+    prestashop.core.form.command_builder.product.feature_values_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandBuilder
+
+    prestashop.core.form.command_builder.product.customization_fields_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder

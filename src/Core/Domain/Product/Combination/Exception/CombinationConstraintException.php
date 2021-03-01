@@ -36,5 +36,5 @@ class CombinationConstraintException extends CombinationException
     /**
      * When combination id is invalid
      */
-    const INVALID_ID = 1;
+    public const INVALID_ID = 1;
 }

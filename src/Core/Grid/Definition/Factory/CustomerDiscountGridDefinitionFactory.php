@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
  */
 final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'customer_discount';
+    public const GRID_ID = 'customer_discount';
 
     /**
      * {@inheritdoc}

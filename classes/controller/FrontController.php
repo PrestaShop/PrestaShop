@@ -1576,7 +1576,7 @@ class FrontControllerCore extends Controller
     public function getTemplateVarCurrency()
     {
         $curr = [];
-        $fields = ['name', 'iso_code', 'iso_code_num', 'sign'];
+        $fields = ['id', 'name', 'iso_code', 'iso_code_num', 'sign'];
         foreach ($fields as $field_name) {
             $curr[$field_name] = $this->context->currency->{$field_name};
         }
@@ -1600,6 +1600,7 @@ class FrontControllerCore extends Controller
             $cust['id_lang']
         );
 
+        $cust['id'] = $this->context->customer->id;
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
@@ -1625,6 +1626,7 @@ class FrontControllerCore extends Controller
         $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
 
         $shop = [
+            'id' => $this->context->shop->id,
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),

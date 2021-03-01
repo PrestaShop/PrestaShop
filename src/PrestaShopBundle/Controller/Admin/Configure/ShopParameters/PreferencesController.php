@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PreferencesController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminPreferences';
+    public const CONTROLLER_NAME = 'AdminPreferences';
 
     /**
      * @param Request $request

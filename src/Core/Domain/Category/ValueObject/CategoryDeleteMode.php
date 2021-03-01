@@ -36,22 +36,22 @@ class CategoryDeleteMode
     /**
      * Associate products with parent category and disable them.
      */
-    const ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE = 'associate_and_disable';
+    public const ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE = 'associate_and_disable';
 
     /**
      * Associate products with parent and do not change their status.
      */
-    const ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY = 'associate_only';
+    public const ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY = 'associate_only';
 
     /**
      * Remove products that are associated only with category that is being deleted.
      */
-    const REMOVE_ASSOCIATED_PRODUCTS = 'remove_associated';
+    public const REMOVE_ASSOCIATED_PRODUCTS = 'remove_associated';
 
     /**
      * @internal
      */
-    const AVAILABLE_MODES = [
+    public const AVAILABLE_MODES = [
         self::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
         self::ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY,
         self::REMOVE_ASSOCIATED_PRODUCTS,

@@ -57,7 +57,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
     use DeleteActionTrait;
     use BulkDeleteActionTrait;
 
-    const GRID_ID = 'default';
+    public const GRID_ID = 'default';
 
     /**
      * {@inheritdoc}

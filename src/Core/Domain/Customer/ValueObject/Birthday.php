@@ -39,7 +39,7 @@ class Birthday
      *
      * It is used as a placeholder value when real birthday is not provided
      */
-    const EMPTY_BIRTHDAY = '0000-00-00';
+    public const EMPTY_BIRTHDAY = '0000-00-00';
 
     /**
      * @var string Date in format of Y-m-d or empty string for non defined birthday

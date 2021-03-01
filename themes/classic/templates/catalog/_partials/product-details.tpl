@@ -1,4 +1,4 @@
-<div class="tab-pane fade{if !$product.description} in active{/if}"
+<div class="js-product-details tab-pane fade{if !$product.description} in active{/if}"
      id="product-details"
      data-product="{$product.embedded_attributes|json_encode}"
      role="tabpanel"
@@ -8,7 +8,7 @@
       <div class="product-manufacturer">
         {if isset($manufacturer_image_url)}
           <a href="{$product_brand_url}">
-            <img src="{$manufacturer_image_url}" class="img img-thumbnail manufacturer-logo" alt="{$product_manufacturer->name}" loading="lazy">
+            <img src="{$manufacturer_image_url}" class="img img-thumbnail manufacturer-logo" alt="{$product_manufacturer->name}" loading="lazy" width="98" height="50">
           </a>
         {else}
           <label class="label">{l s='Brand' d='Shop.Theme.Catalog'}</label>

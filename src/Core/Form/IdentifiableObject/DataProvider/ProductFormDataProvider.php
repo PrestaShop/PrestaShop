@@ -29,10 +29,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
+use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -48,8 +54,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    public function __construct(
+        CommandBusInterface $queryBus
+    ) {
         $this->queryBus = $queryBus;
     }
 
@@ -64,12 +71,15 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $id,
             'basic' => $this->extractBasicData($productForEditing),
+            'features' => $this->extractFeatureValues((int) $id),
             'stock' => $this->extractStockData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
+            'suppliers' => $this->extractSuppliersData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
 
@@ -109,6 +119,38 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'type' => $productForEditing->getBasicInformation()->getType()->getValue(),
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
+        ];
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array
+     */
+    private function extractFeatureValues(int $productId): array
+    {
+        /** @var ProductFeatureValue[] $featureValues */
+        $featureValues = $this->queryBus->handle(new GetProductFeatureValues($productId));
+        if (empty($featureValues)) {
+            return [];
+        }
+
+        $productFeatureValues = [];
+        foreach ($featureValues as $featureValue) {
+            $productFeatureValue = [
+                'feature_id' => $featureValue->getFeatureId(),
+                'feature_value_id' => $featureValue->getFeatureValueId(),
+            ];
+            if ($featureValue->isCustom()) {
+                $productFeatureValue['custom_value'] = $featureValue->getLocalizedValues();
+                $productFeatureValue['custom_value_id'] = $featureValue->getFeatureValueId();
+            }
+
+            $productFeatureValues[] = $productFeatureValue;
+        }
+
+        return [
+            'feature_values' => $productFeatureValues,
         ];
     }
 
@@ -232,6 +274,37 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     }
 
     /**
+     * * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractCustomizationsData(ProductForEditing $productForEditing): array
+    {
+        /** @var CustomizationField[] $customizationFields */
+        $customizationFields = $this->queryBus->handle(
+            new GetProductCustomizationFields($productForEditing->getProductId())
+        );
+
+        if (empty($customizationFields)) {
+            return [];
+        }
+
+        $fields = [];
+        foreach ($customizationFields as $customizationField) {
+            $fields[] = [
+                'id' => $customizationField->getCustomizationFieldId(),
+                'name' => $customizationField->getLocalizedNames(),
+                'type' => $customizationField->getType(),
+                'required' => $customizationField->isRequired(),
+            ];
+        }
+
+        return [
+            'customization_fields' => $fields,
+        ];
+    }
+
+    /**
      * @param LocalizedTags[] $localizedTagsList
      *
      * @return array<int, string>
@@ -244,5 +317,43 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $tags;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractSuppliersData(ProductForEditing $productForEditing): array
+    {
+        /** @var ProductSupplierOptions $productSupplierOptions */
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
+
+        if (empty($productSupplierOptions->getSuppliersInfo())) {
+            return [];
+        }
+
+        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
+        $suppliersData = [
+            'default_supplier_id' => $defaultSupplierId,
+        ];
+
+        foreach ($productSupplierOptions->getSuppliersInfo() as $supplierOption) {
+            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
+            $supplierId = $supplierOption->getSupplierId();
+
+            $suppliersData['supplier_ids'][] = $supplierId;
+            $suppliersData['product_suppliers'][] = [
+                'supplier_id' => $supplierId,
+                'supplier_name' => $supplierOption->getSupplierName(),
+                'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                'reference' => $supplierForEditing->getReference(),
+                'currency_id' => $supplierForEditing->getCurrencyId(),
+                'combination_id' => $supplierForEditing->getCombinationId(),
+            ];
+        }
+
+        return $suppliersData;
     }
 }

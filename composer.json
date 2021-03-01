@@ -42,7 +42,7 @@
     "mrclay/minify": "~2.3.0",
     "nikic/php-parser": "^4.0",
     "paragonie/random_compat": "^2.0",
-    "pear/archive_tar": "^1.4.11",
+    "pear/archive_tar": "^1.4.12",
     "pelago/emogrifier": "^2.1",
     "phpoffice/phpspreadsheet": "~1.5",
     "prestashop/blockreassurance": "^5",
@@ -74,7 +74,7 @@
     "prestashop/ps_featuredproducts": "^2",
     "prestashop/ps_imageslider": "^3",
     "prestashop/ps_languageselector": "^2",
-    "prestashop/ps_linklist": "^3",
+    "prestashop/ps_linklist": "^4",
     "prestashop/ps_mainmenu": "^2",
     "prestashop/ps_searchbar": "^2",
     "prestashop/ps_sharebuttons": "^2",
@@ -95,7 +95,6 @@
     "prestashop/statsdata": "^2",
     "prestashop/statsequipment": "^2",
     "prestashop/statsforecast": "^2",
-    "prestashop/statslive": "^2",
     "prestashop/statsnewsletter": "^2",
     "prestashop/statsorigin": "^2",
     "prestashop/statspersonalinfos": "^2",
@@ -110,7 +109,7 @@
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "^5.1",
     "shudrum/array-finder": "^1.1.0",
-    "smarty/smarty": "^3.1.31",
+    "smarty/smarty": "^3.1.39",
     "soundasleep/html2text": "^0.5.0",
     "swiftmailer/swiftmailer": "~6.2",
     "symfony/monolog-bundle": "^3.1.0",
@@ -192,6 +191,7 @@
       "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
     ],
     "phpunit-endpoints": [
+      "@composer create-test-db",
       "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
     ],
     "unit-tests": [

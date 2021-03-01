@@ -34,7 +34,7 @@ final class AttachmentConstraint
     /**
      * Maximum length for name (value is constrained by database)
      */
-    const MAX_NAME_LENGTH = 32;
+    public const MAX_NAME_LENGTH = 32;
 
     /**
      * Prevents class to be instantiated

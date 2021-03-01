@@ -25,8 +25,11 @@
 
 import Serp from '@app/utils/serp';
 import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
-import ProductMap from '../product-map';
-import ProductPartialUpdater from './product-partial-updater';
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
+import CustomizationsManager from '@pages/product/edit/customizations-manager';
+import ProductMap from '@pages/product/product-map';
+import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 
 const {$} = window;
 
@@ -72,4 +75,7 @@ $(() => {
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
+  new ProductSuppliersManager();
+  new FeatureValuesManager(window.prestashop.instance.eventEmitter);
+  new CustomizationsManager();
 });

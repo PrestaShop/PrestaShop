@@ -165,6 +165,7 @@ export default {
   listedProductReferenceField: '.js-product-ref',
   listedProductUnitPriceInput: '.js-product-unit-input',
   listedProductQtyInput: '.js-product-qty-input',
+  listedProductQtyStock: '.js-product-qty-stock',
   listedProductGiftQty: '.js-product-gift-qty',
   productTotalPriceField: '.js-product-total-price',
   listedProductCustomizedTextTemplate: '#js-table-product-customized-text-template',
@@ -179,4 +180,5 @@ export default {
   productAddForm: '#js-add-product-form',
   cartErrorAlertBlock: '#js-cart-error-block',
   cartErrorAlertText: '#js-cart-error-block .alert-text',
+  createOrderButton: '#create-order-button',
 };

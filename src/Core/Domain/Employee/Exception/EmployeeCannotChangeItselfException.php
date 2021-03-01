@@ -34,5 +34,5 @@ class EmployeeCannotChangeItselfException extends EmployeeException
     /**
      * Code is used when employee which is logged in tries to change its status.
      */
-    const CANNOT_CHANGE_STATUS = 1;
+    public const CANNOT_CHANGE_STATUS = 1;
 }

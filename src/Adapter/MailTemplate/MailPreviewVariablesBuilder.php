@@ -46,13 +46,13 @@ use Tools;
  */
 final class MailPreviewVariablesBuilder
 {
-    const ORDER_CONFIRMATION = 'order_conf';
+    public const ORDER_CONFIRMATION = 'order_conf';
 
-    const DOWNLOAD_PRODUCT = 'download_product';
+    public const DOWNLOAD_PRODUCT = 'download_product';
 
-    const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
-    const NEW_ORDER = 'new_order';
-    const RETURN_SLIP = 'return_slip';
+    public const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
+    public const NEW_ORDER = 'new_order';
+    public const RETURN_SLIP = 'return_slip';
 
     /** @var ConfigurationInterface */
     private $configuration;

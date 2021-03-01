@@ -39,7 +39,7 @@ class FilterSearchCriteriaEvent extends Event
     /**
      * Name of event.
      */
-    const NAME = 'prestashop.search_criteria.filter';
+    public const NAME = 'prestashop.search_criteria.filter';
 
     /**
      * @var SearchCriteriaInterface

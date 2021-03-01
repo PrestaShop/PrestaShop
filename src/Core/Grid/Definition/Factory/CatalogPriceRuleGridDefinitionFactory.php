@@ -51,7 +51,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'catalog_price_rule';
+    public const GRID_ID = 'catalog_price_rule';
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher

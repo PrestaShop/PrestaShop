@@ -41,6 +41,9 @@ services:
 
   prestashop.adapter.feature.repository.feature_repository:
       class: PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository
+      arguments:
+          - '@doctrine.dbal.default_connection'
+          - '%database_prefix%'
 
   prestashop.adapter.feature.validate.feature_value_validator:
       class: PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator

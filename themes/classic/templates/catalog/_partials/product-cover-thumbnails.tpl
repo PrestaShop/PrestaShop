@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<div class="images-container">
+<div class="images-container js-images-container">
   {block name='product_cover'}
     <div class="product-cover">
       {if $product.default_image}
@@ -35,14 +35,20 @@
           {else}
             alt="{$product.name}"
           {/if}
-          style="width:100%;"
           loading="lazy"
+          width="452"
+          height="452"
         >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
           <i class="material-icons zoom-in">search</i>
         </div>
       {else}
-        <img src="{$urls.no_picture_image.bySize.large_default.url}" style="width:100%;" loading="lazy">
+        <img 
+          src="{$urls.no_picture_image.bySize.large_default.url}"
+          loading="lazy"
+          width="452"
+          height="452"
+        >
       {/if}
     </div>
   {/block}
@@ -51,9 +57,9 @@
     <div class="js-qv-mask mask">
       <ul class="product-images js-qv-product-images">
         {foreach from=$product.images item=image}
-          <li class="thumb-container">
+          <li class="thumb-container js-thumb-container">
             <img
-              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected {/if}"
+              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected js-thumb-selected {/if}"
               data-image-medium-src="{$image.bySize.medium_default.url}"
               data-image-large-src="{$image.bySize.large_default.url}"
               src="{$image.bySize.home_default.url}"
@@ -63,8 +69,14 @@
               {else}
                 alt="{$product.name}"
               {/if}
+<<<<<<< HEAD
               width="100"
+=======
+              itemprop="image"
+>>>>>>> fa6f2d0a1fcb02917fd789ee30b10cf848969ee0
               loading="lazy"
+              width="94"
+              height="94"
             >
           </li>
         {/foreach}

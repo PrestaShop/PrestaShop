@@ -46,7 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'order_return_states';
+    public const GRID_ID = 'order_return_states';
 
     /**
      * {@inheritdoc}

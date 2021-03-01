@@ -7,6 +7,7 @@ class Product extends FOBasePage {
 
     // Selectors for product page
     this.productName = '#main h1';
+    this.productCoverImg = '#content .product-cover img';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
     this.colorInput = color => `#group_2 li input[title=${color}]`;
@@ -46,6 +47,7 @@ class Product extends FOBasePage {
       name: await this.getTextContent(page, this.productName),
       price: parseFloat(await this.getAttributeContent(page, this.productPrice, 'content')),
       description: await this.getTextContent(page, this.productDescription),
+      coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
     };
   }
 

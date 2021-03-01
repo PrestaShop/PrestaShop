@@ -51,7 +51,7 @@
   <section id="main">
     <meta content="{$product.url}">
 
-    <div class="row product-container">
+    <div class="row product-container js-product-container">
       <div class="col-md-6">
         {block name='page_content_container'}
           <section class="page-content" id="content">
@@ -91,12 +91,12 @@
               {/block}
             {/if}
 
-            <div class="product-actions">
+            <div class="product-actions js-product-actions">
               {block name='product_buy'}
                 <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
                   <input type="hidden" name="token" value="{$static_token}">
                   <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id">
-                  <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id">
+                  <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id" class="js-product-customization-id">
 
                   {block name='product_variants'}
                     {include file='catalog/_partials/product-variants.tpl'}
@@ -144,7 +144,7 @@
                   {if $product.description}
                     <li class="nav-item">
                        <a
-                         class="nav-link{if $product.description} active{/if}"
+                         class="nav-link{if $product.description} active js-product-nav-active{/if}"
                          data-toggle="tab"
                          href="#description"
                          role="tab"
@@ -154,7 +154,7 @@
                   {/if}
                   <li class="nav-item">
                     <a
-                      class="nav-link{if !$product.description} active{/if}"
+                      class="nav-link{if !$product.description} active js-product-nav-active{/if}"
                       data-toggle="tab"
                       href="#product-details"
                       role="tab"
@@ -184,7 +184,7 @@
                 </ul>
 
                 <div class="tab-content" id="tab-content">
-                 <div class="tab-pane fade in{if $product.description} active{/if}" id="description" role="tabpanel">
+                 <div class="tab-pane fade in{if $product.description} active js-product-tab-active{/if}" id="description" role="tabpanel">
                    {block name='product_description'}
                      <div class="product-description">{$product.description nofilter}</div>
                    {/block}

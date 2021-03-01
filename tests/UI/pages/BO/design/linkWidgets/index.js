@@ -5,7 +5,7 @@ class LinkWidgets extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Link Widget •';
+    this.pageTitle = 'Link List •';
 
     // Header Selectors
     this.newBlockLink = '#page-header-desc-configuration-add';

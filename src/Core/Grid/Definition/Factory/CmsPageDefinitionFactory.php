@@ -58,7 +58,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'cms_page';
+    public const GRID_ID = 'cms_page';
 
     /**
      * @var int

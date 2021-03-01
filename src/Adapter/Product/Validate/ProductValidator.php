@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
-use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -42,28 +41,6 @@ use Product;
  */
 class ProductValidator extends AbstractObjectModelValidator
 {
-    /**
-     * @var bool
-     */
-    private $advancedStockEnabled;
-
-    /**
-     * @var int
-     */
-    private $defaultPackStockType;
-
-    /**
-     * @param bool $advancedStockEnabled
-     * @param int $defaultPackStockType
-     */
-    public function __construct(
-        bool $advancedStockEnabled,
-        int $defaultPackStockType
-    ) {
-        $this->advancedStockEnabled = $advancedStockEnabled;
-        $this->defaultPackStockType = $defaultPackStockType;
-    }
-
     /**
      * This method is specific for product creation only.
      *
@@ -205,12 +182,6 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateStock(Product $product): void
     {
-        if ($this->advancedStockEnabled) {
-            $this->validateAdvancedStock($product);
-        } else {
-            $this->validateClassicStock($product);
-        }
-        //@todo: quantity validation missing. product->quantity is not defined in Product.php $definition so its always 0 & cannot be validated by legacy
         $this->validateProductProperty($product, 'low_stock_threshold', ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD);
         $this->validateProductProperty($product, 'low_stock_alert', ProductConstraintException::INVALID_LOW_STOCK_ALERT);
         $this->validateProductProperty($product, 'available_date', ProductConstraintException::INVALID_AVAILABLE_DATE);
@@ -222,76 +193,6 @@ class ProductValidator extends AbstractObjectModelValidator
             'location',
             ProductStockConstraintException::class,
             ProductStockConstraintException::INVALID_LOCATION
-        );
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws ProductStockConstraintException
-     */
-    private function validateClassicStock(Product $product): void
-    {
-        // Depends on stock is only available in advanced mode
-        if ((bool) $product->depends_on_stock) {
-            throw new ProductStockConstraintException(
-                'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
-                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
-            );
-        }
-
-        if ((bool) $product->advanced_stock_management) {
-            throw new ProductStockConstraintException(
-                'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
-                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
-            );
-        }
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws ProductPackConstraintException
-     * @throws ProductStockConstraintException
-     */
-    private function validateAdvancedStock(Product $product): void
-    {
-        if ((bool) $product->depends_on_stock && !(bool) $product->advanced_stock_management) {
-            throw new ProductStockConstraintException(
-                'You cannot perform this action when advanced_stock_management is disabled on the product',
-                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
-            );
-        }
-
-        $this->checkPackStockType($product);
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws ProductPackConstraintException
-     */
-    private function checkPackStockType(Product $product): void
-    {
-        // If the product doesn't depend on stock or is not a Pack no problem
-        if (!$product->depends_on_stock || !Pack::isPack($product->id)) {
-            return;
-        }
-
-        // Get pack stock type (or default configuration if needed)
-        $packStockType = $product->pack_stock_type;
-        if ($packStockType === Pack::STOCK_TYPE_DEFAULT) {
-            $packStockType = $this->defaultPackStockType;
-        }
-
-        // Either the pack has its own stock, or else ALL products from the pack must depend on the stock as well
-        if ($packStockType === Pack::STOCK_TYPE_PACK_ONLY || Pack::allUsesAdvancedStockManagement($product->id)) {
-            return;
-        }
-
-        throw new ProductPackConstraintException(
-            'You cannot link your pack to product stock because one of them has no advanced stock enabled',
-            ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
         );
     }
 

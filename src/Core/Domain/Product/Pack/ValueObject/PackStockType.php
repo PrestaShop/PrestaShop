@@ -38,24 +38,24 @@ class PackStockType
     /**
      * Stock type: only based on pack quantity
      */
-    const STOCK_TYPE_PACK_ONLY = 0;
+    public const STOCK_TYPE_PACK_ONLY = 0;
 
     /**
      * Stock type: only based on products quantity
      */
-    const STOCK_TYPE_PRODUCTS_ONLY = 1;
+    public const STOCK_TYPE_PRODUCTS_ONLY = 1;
 
     /**
      * Stock type: based on products and pack quantity
      */
-    const STOCK_TYPE_BOTH = 2;
+    public const STOCK_TYPE_BOTH = 2;
 
     /**
      * Stock type: based on configuration default value
      */
-    const STOCK_TYPE_DEFAULT = 3;
+    public const STOCK_TYPE_DEFAULT = 3;
 
-    const ALLOWED_PACK_STOCK_TYPES = [
+    public const ALLOWED_PACK_STOCK_TYPES = [
         self::STOCK_TYPE_PACK_ONLY,
         self::STOCK_TYPE_PRODUCTS_ONLY,
         self::STOCK_TYPE_BOTH,

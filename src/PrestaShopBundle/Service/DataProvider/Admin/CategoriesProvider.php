@@ -35,11 +35,11 @@ use stdClass;
  */
 class CategoriesProvider
 {
-    const CATEGORY_OTHER = 'other';
-    const CATEGORY_OTHER_NAME = 'Other';
+    public const CATEGORY_OTHER = 'other';
+    public const CATEGORY_OTHER_NAME = 'Other';
 
-    const CATEGORY_THEME = 'theme_modules';
-    const CATEGORY_THEME_NAME = 'Theme modules';
+    public const CATEGORY_THEME = 'theme_modules';
+    public const CATEGORY_THEME_NAME = 'Theme modules';
 
     /**
      * @var array

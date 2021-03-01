@@ -188,6 +188,7 @@ $(document).ready(() => {
 
   $('.nav-bar').on('click', '.menu-collapse', function() {
     $('body').toggleClass('page-sidebar-closed');
+    $('.main-menu').toggleClass('sidebar-closed');
 
     if ($('body').hasClass('page-sidebar-closed')) {
       $('nav.nav-bar ul.main-menu > li')

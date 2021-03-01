@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.International.Feature' %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme copyLanguageForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block copy_language %}
   {{ form_start(copyLanguageForm, {action: path('admin_international_translations_copy_language')}) }}
@@ -47,10 +47,9 @@
             </div>
           </div>
         </div>
-
         <div class="form-group row">
           <label class="form-control-label">
-            {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification')) }}
+            {{ form_label(copyLanguageForm.from_language) }}
           </label>
           <div class="col-sm">
             <div class="input-group">
@@ -60,12 +59,15 @@
               {{ form_errors(copyLanguageForm.from_theme) }}
               {{ form_widget(copyLanguageForm.from_theme) }}
             </div>
+            <small class="form-text">
+              {{ 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification') }}
+            </small>
           </div>
         </div>
 
         <div class="form-group row">
           <label class="form-control-label">
-            {{ 'To'|trans({}, 'Admin.Global') }}
+            {{ form_label(copyLanguageForm.to_language) }}
           </label>
           <div class="col-sm">
             <div class="input-group">
@@ -80,7 +82,6 @@
         {{ form_rest(copyLanguageForm) }}
       </div>
     </div>
-
     <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">

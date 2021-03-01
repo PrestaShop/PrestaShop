@@ -32,13 +32,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class QueryParamsCollection
 {
-    const SQL_PARAM_FIRST_RESULT = 'first_result';
+    public const SQL_PARAM_FIRST_RESULT = 'first_result';
 
-    const SQL_PARAM_MAX_RESULTS = 'max_results';
+    public const SQL_PARAM_MAX_RESULTS = 'max_results';
 
-    const SQL_CLAUSE_WHERE = 'where';
+    public const SQL_CLAUSE_WHERE = 'where';
 
-    const SQL_CLAUSE_HAVING = 'having';
+    public const SQL_CLAUSE_HAVING = 'having';
 
     /**
      * @var array

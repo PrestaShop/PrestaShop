@@ -39,9 +39,10 @@
               {else}
                 alt="{$product.name}"
               {/if}
+              height="{$product.default_image.bySize.large_default.height}"
             >
           {else}
-            <img src="{$urls.no_picture_image.bySize.large_default.url}" loading="lazy" />
+            <img src="{$urls.no_picture_image.bySize.large_default.url}" loading="lazy" width="{$urls.no_picture_image.bySize.large_default.width}" height="{$urls.no_picture_image.bySize.large_default.height}" />
           {/if}
           <figcaption class="image-caption">
           {block name='product_description_short'}
@@ -54,7 +55,7 @@
             <div class="js-modal-mask mask {if $imagesCount <= 5} nomargin {/if}">
               <ul class="product-images js-modal-product-images">
                 {foreach from=$product.images item=image}
-                  <li class="thumb-container">
+                  <li class="thumb-container js-thumb-container">
                     <img
                       data-image-large-src="{$image.large.url}"
                       class="thumb js-modal-thumb"
@@ -66,6 +67,11 @@
                         alt="{$product.name}"
                       {/if}
                       width="{$image.medium.width}"
+<<<<<<< HEAD
+=======
+                      itemprop="image"
+                      height="148"
+>>>>>>> fa6f2d0a1fcb02917fd789ee30b10cf848969ee0
                     >
                   </li>
                 {/foreach}

@@ -35,12 +35,12 @@ class Reference
     /**
      * Valid ean regex pattern
      */
-    const VALID_PATTERN = '/^[^<>;={}]*$/u';
+    public const VALID_PATTERN = '/^[^<>;={}]*$/u';
 
     /**
      * Maximum allowed symbols
      */
-    const MAX_LENGTH = 64;
+    public const MAX_LENGTH = 64;
 
     /**
      * @var string

@@ -41,27 +41,27 @@ class InvalidCancelProductException extends OrderException
     /**
      * Used when the quantity refunded is not strictly positive
      */
-    const INVALID_QUANTITY = 1;
+    public const INVALID_QUANTITY = 1;
 
     /**
      * Used when the quantity refunded is higher than the remaining quantity
      */
-    const QUANTITY_TOO_HIGH = 2;
+    public const QUANTITY_TOO_HIGH = 2;
 
     /**
      * Used when the amount refunded is not strictly positive
      */
-    const INVALID_AMOUNT = 3;
+    public const INVALID_AMOUNT = 3;
 
     /**
      * Used when no refund details have been supplied (nor products nor shipping refund)
      */
-    const NO_REFUNDS = 4;
+    public const NO_REFUNDS = 4;
 
     /**
      * Used when no generation is set (no credit slip and no voucher generation)
      */
-    const NO_GENERATION = 5;
+    public const NO_GENERATION = 5;
 
     /**
      * @param int $code
