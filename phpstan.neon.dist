@@ -27,4 +27,4 @@ services:
 	strictTypesForNewClassesRuleConfigurationFileLoader:
 		class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
 		arguments:
-			- .github/workflows/phpstan/strict-types-for-new-classes-rule-exclusion-list.php.php
+			- .github/workflows/phpstan/strict-types-for-new-classes-rule-exclusion-list.php
