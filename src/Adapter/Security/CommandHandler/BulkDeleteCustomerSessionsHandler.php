@@ -44,6 +44,9 @@ final class BulkDeleteCustomerSessionsHandler implements BulkDeleteCustomerSessi
      */
     private $repository;
 
+    /**
+     * @param CustomerSessionRepository $repository
+     */
     public function __construct(CustomerSessionRepository $repository)
     {
         $this->repository = $repository;
