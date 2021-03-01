@@ -295,7 +295,7 @@ describe('Check product block in view order page', async () => {
       it(`should add the product '${simpleProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderSimpleProduct1', baseContext);
 
-        await viewOrderPage.SearchProduct(page, simpleProduct.name);
+        await viewOrderPage.searchProduct(page, simpleProduct.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(simpleProduct.stockLocation),
@@ -310,7 +310,7 @@ describe('Check product block in view order page', async () => {
       it('should add the same product and check the error message', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderSimpleProduct2', baseContext);
 
-        await viewOrderPage.SearchProduct(page, simpleProduct.name);
+        await viewOrderPage.searchProduct(page, simpleProduct.name);
 
         const textResult = await viewOrderPage.addProductToCart(page);
         await expect(textResult).to.contains(viewOrderPage.errorAddSameProduct);
@@ -323,7 +323,7 @@ describe('Check product block in view order page', async () => {
       it(`should add the product '${combinationProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderCombinationProduct', baseContext);
 
-        await viewOrderPage.SearchProduct(page, combinationProduct.name);
+        await viewOrderPage.searchProduct(page, combinationProduct.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(combinationProduct.stockLocation),
@@ -340,7 +340,7 @@ describe('Check product block in view order page', async () => {
       it(`should add the product '${virtualProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderVirtualProduct', baseContext);
 
-        await viewOrderPage.SearchProduct(page, virtualProduct.name);
+        await viewOrderPage.searchProduct(page, virtualProduct.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(''),
@@ -357,7 +357,7 @@ describe('Check product block in view order page', async () => {
       it(`should add the product '${packOfProducts.name}' and test minimal quantity`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderPackOfProducts', baseContext);
 
-        await viewOrderPage.SearchProduct(page, packOfProducts.name);
+        await viewOrderPage.searchProduct(page, packOfProducts.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(packOfProducts.stockLocation),
@@ -390,7 +390,7 @@ describe('Check product block in view order page', async () => {
       it(`should add the product '${Products.demo_14.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderCustomizedProduct', baseContext);
 
-        await viewOrderPage.SearchProduct(page, Products.demo_14.name);
+        await viewOrderPage.searchProduct(page, Products.demo_14.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(''),
@@ -407,7 +407,7 @@ describe('Check product block in view order page', async () => {
       it(`should add the product '${productOutOfStockAllowed.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderProductOutOfStockAllowed', baseContext);
 
-        await viewOrderPage.SearchProduct(page, productOutOfStockAllowed.name);
+        await viewOrderPage.searchProduct(page, productOutOfStockAllowed.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(productOutOfStockAllowed.stockLocation),
@@ -443,7 +443,7 @@ describe('Check product block in view order page', async () => {
       it(`should add the product '${productOutOfStockNotAllowed.name}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'orderProductOutOfStockNotAllowed', baseContext);
 
-        await viewOrderPage.SearchProduct(page, productOutOfStockNotAllowed.name);
+        await viewOrderPage.searchProduct(page, productOutOfStockNotAllowed.name);
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(productOutOfStockNotAllowed.stockLocation),
@@ -493,7 +493,7 @@ describe('Check product block in view order page', async () => {
           it('should add product to the order', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart${index}`, baseContext);
 
-            await viewOrderPage.SearchProduct(page, product);
+            await viewOrderPage.searchProduct(page, product);
 
             const textResult = await viewOrderPage.addProductToCart(page);
             await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);

@@ -433,7 +433,7 @@ class Order extends BOBasePage {
    * @param name
    * @returns {Promise<void>}
    */
-  async SearchProduct(page, name) {
+  async searchProduct(page, name) {
     await this.waitForSelectorAndClick(page, this.addProductButton);
     await this.setValue(page, this.addProductRowSearch, name);
     await this.waitForSelectorAndClick(page, `${this.addProductTableRow} a`);
