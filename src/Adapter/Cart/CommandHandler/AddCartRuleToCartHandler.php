@@ -79,7 +79,7 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
         $this->contextStateManager
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage($cart->getLanguage())
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCustomer(new Customer($cart->id_customer))
             ->setShop(new Shop($cart->id_shop))
         ;

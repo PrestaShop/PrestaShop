@@ -116,7 +116,7 @@ class OrderAmountUpdater
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage($cart->getLanguage())
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($cart->getTaxCountry())
             ->setShop(new Shop($cart->id_shop))
         ;

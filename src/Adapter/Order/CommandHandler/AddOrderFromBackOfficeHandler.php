@@ -89,7 +89,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage($cart->getLanguage())
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($this->getTaxCountry($cart))
             ->setShop(new Shop($cart->id_shop))
         ;

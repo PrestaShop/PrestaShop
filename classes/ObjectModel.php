@@ -365,6 +365,24 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * Returns the language related to the object or the default one if it doesn't exists
+     *
+     * @return Language
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function getAssociatedLanguage(): Language
+    {
+        $language = new Language($this->id_lang);
+        if (null === $language->id) {
+            $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+        }
+
+        return $language;
+    }
+
+    /**
      * Formats values of each fields.
      *
      * @since 1.5.0.1

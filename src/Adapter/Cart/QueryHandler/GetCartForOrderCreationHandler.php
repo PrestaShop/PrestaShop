@@ -121,7 +121,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     {
         $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
-        $language = $cart->getLanguage();
+        $language = $cart->getAssociatedLanguage();
 
         $this->contextStateManager
             ->setCart($cart)
