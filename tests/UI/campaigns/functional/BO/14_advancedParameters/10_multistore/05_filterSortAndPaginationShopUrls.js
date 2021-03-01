@@ -122,6 +122,72 @@ describe('Filter, sort and pagination shop Urls', async () => {
     });
   });
 
+  // 4 : Filter shop urls
+  describe('Filter shop table', async () => {
+    [
+      {args: {filterBy: 'id_shop_url', filterValue: 10, filterType: 'input'}},
+      {args: {filterBy: 's!name', filterValue: 'PrestaShop', filterType: 'input'}},
+      {args: {filterBy: 'url', filterValue: 'ToDelete10', filterType: 'input'}},
+      {args: {filterBy: 'main', filterValue: 'Yes', filterType: 'select'}, expected: 'Enabled'},
+      {args: {filterBy: 'active', filterValue: 'Yes', filterType: 'select'}, expected: 'Enabled'},
+    ].forEach((test, index) => {
+      it(`should filter list by ${test.args.filterBy}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.filterBy}`, baseContext);
+
+        await shopUrlPage.filterTable(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
+
+        const numberOfElementAfterFilter = await shopUrlPage.getNumberOfElementInGrid(page);
+
+        for (let i = 1; i <= numberOfElementAfterFilter; i++) {
+          const textColumn = await shopUrlPage.getTextColumn(page, i, test.args.filterBy);
+          if (test.expected !== undefined) {
+            await expect(textColumn).to.contains(test.expected);
+          } else {
+            await expect(textColumn).to.contains(test.args.filterValue);
+          }
+        }
+      });
+
+      it('should reset filter and check the number of shops', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
+
+        const numberOfElement = await shopUrlPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfElement).to.be.above(20);
+      });
+    });
+  });
+
+  // 5 : Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await shopUrlPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await shopUrlPage.paginationNext(page);
+      expect(paginationNumber).to.equal('2');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await shopUrlPage.paginationPrevious(page);
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await shopUrlPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.equal('1');
+    });
+  });
+
   // 8 : Disable multi store
   describe('Disable multistore', async () => {
     it('should go to "Shop parameters > General" page', async function () {
