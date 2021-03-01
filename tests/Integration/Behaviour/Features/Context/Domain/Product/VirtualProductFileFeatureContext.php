@@ -30,13 +30,14 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
+use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Tests\Resources\DummyFileUploader;
 
@@ -88,6 +89,60 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         } catch (VirtualProductFileException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I update file ":fileReference" with following details:
+     *
+     * @param string $fileReference
+     * @param TableNode $tableNode
+     */
+    public function updateFile(string $fileReference, TableNode $tableNode): void
+    {
+        $command = $this->buildUpdateVirtualProductFileCommand(
+            $this->getSharedStorage()->get($fileReference),
+            $tableNode->getRowsHash(),
+            null
+        );
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (VirtualProductFileConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I replace product ":productReference" file ":fileReference" with a new file ":newFileReference" named ":newFileName" and following details:
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     * @param string $newFileReference
+     * @param string $newFileName
+     * @param TableNode $tableNode
+     */
+    public function replaceFileWithDetails(
+        string $productReference,
+        string $fileReference,
+        string $newFileReference,
+        string $newFileName,
+        TableNode $tableNode
+    ): void {
+        $virtualProductFileId = $this->getSharedStorage()->get($fileReference);
+        $command = $this->buildUpdateVirtualProductFileCommand(
+            $virtualProductFileId,
+            $tableNode->getRowsHash(),
+            $newFileName
+        );
+
+        $this->getCommandBus()->handle($command);
+        $uploadedFilename = $this->getProductForEditing($productReference)->getVirtualProductFile()->getFileName();
+
+        $this->getSharedStorage()->set($newFileReference, $virtualProductFileId);
+        $this->getSharedStorage()->set(
+            $this->buildSystemFileReference($productReference, $newFileReference),
+            _PS_DOWNLOAD_DIR_ . $uploadedFilename
+        );
     }
 
     /**
@@ -221,12 +276,8 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
      */
     private function assertExpirationDate(array $dataRows, VirtualProductFileForEditing $actualFile): void
     {
-        $expectedExpiration = $dataRows['expiration date'] !== '' ? $dataRows['expiration date'] : null;
-        $actualExpiration = $actualFile->getExpirationDate() ?
-            $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) :
-            null
-        ;
-        Assert::assertEquals($expectedExpiration, $actualExpiration, 'Unexpected file expiration date');
+        $expectedExpiration = $dataRows['expiration date'] === '' ? null : new DateTimeImmutable($dataRows['expiration date']);
+        Assert::assertEquals($expectedExpiration, $actualFile->getExpirationDate(), 'Unexpected file expiration date');
     }
 
     /**
@@ -269,5 +320,48 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     private function buildSystemFileReference(string $productReference, string $fileReference): string
     {
         return sprintf('%s-%s', $productReference, $fileReference);
+    }
+
+    /**
+     * @param int $virtualProductFileId
+     * @param array<string, string> $data
+     * @param string|null $newFileName provide new file name to replace old file with new one from dummy files
+     *
+     * @return UpdateVirtualProductFileCommand
+     *
+     * @throws \Exception
+     */
+    private function buildUpdateVirtualProductFileCommand(int $virtualProductFileId, array $data, ?string $newFileName): UpdateVirtualProductFileCommand
+    {
+        $command = new UpdateVirtualProductFileCommand($virtualProductFileId);
+
+        if (isset($data['display name'])) {
+            $command->setDisplayName($data['display name']);
+            unset($data['display name']);
+        }
+        if (isset($data['access days'])) {
+            $command->setAccessDays((int) $data['access days']);
+            unset($data['access days']);
+        }
+        if (isset($data['download times limit'])) {
+            $command->setDownloadTimesLimit((int) $data['download times limit']);
+            unset($data['download times limit']);
+        }
+        if (isset($data['expiration date'])) {
+            $command->setExpirationDate(new DateTimeImmutable($data['expiration date']));
+            unset($data['expiration date']);
+        }
+
+        Assert::assertEmpty(
+            $data,
+            sprintf('Not all provided fields were handled during virtual product file testing. [%s]', var_export($data, true))
+        );
+
+        if (isset($newFileName)) {
+            $newFilePath = DummyFileUploader::upload($newFileName);
+            $command->setFilePath($newFilePath);
+        }
+
+        return $command;
     }
 }
