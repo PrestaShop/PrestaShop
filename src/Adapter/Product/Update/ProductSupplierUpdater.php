@@ -111,7 +111,7 @@ class ProductSupplierUpdater
         $this->persistProductSuppliers($productId, $productSuppliers);
         $this->updateDefaultSupplier($productId, $defaultSupplierId);
 
-        return $this->getCurrentProductSupplierIds($productId);
+        return $this->getProductSupplierIds($productId);
     }
 
     /**
@@ -129,10 +129,10 @@ class ProductSupplierUpdater
         $this->persistProductSuppliers($productId, $productSuppliers, $combinationId);
 
         // make sure all non-combination suppliers are deleted
-        $existingNonCombinationSuppliers = $this->getCurrentProductSupplierIds($productId);
+        $existingNonCombinationSuppliers = $this->getProductSupplierIds($productId);
         $this->productSupplierRepository->bulkDelete($existingNonCombinationSuppliers);
 
-        return $this->getCurrentProductSupplierIds($productId, $combinationId);
+        return $this->getProductSupplierIds($productId, $combinationId);
     }
 
     /**
@@ -153,7 +153,7 @@ class ProductSupplierUpdater
             ));
         }
 
-        $productSupplierIds = $this->getCurrentProductSupplierIds($productId);
+        $productSupplierIds = $this->getProductSupplierIds($productId);
         $this->productSupplierRepository->bulkDelete($productSupplierIds);
         $this->resetDefaultSupplier($product);
     }
@@ -168,7 +168,7 @@ class ProductSupplierUpdater
         $combination = $this->combinationRepository->get($combinationId);
         $productId = new ProductId((int) $combination->id_product);
 
-        $productSupplierIds = $this->getCurrentProductSupplierIds($productId, $combinationId);
+        $productSupplierIds = $this->getProductSupplierIds($productId, $combinationId);
         $this->productSupplierRepository->bulkDelete($productSupplierIds);
     }
 
@@ -260,7 +260,7 @@ class ProductSupplierUpdater
         array $providedProductSuppliers,
         ?CombinationId $combinationId
     ): array {
-        $existingIds = $this->getCurrentProductSupplierIds($productId, $combinationId);
+        $existingIds = $this->getProductSupplierIds($productId, $combinationId);
         $idsForDeletion = [];
 
         foreach ($existingIds as $productSupplierId) {
@@ -284,7 +284,7 @@ class ProductSupplierUpdater
      *
      * @return array<int, ProductSupplierId>
      */
-    private function getCurrentProductSupplierIds(ProductId $productId, ?CombinationId $combinationId = null): array
+    private function getProductSupplierIds(ProductId $productId, ?CombinationId $combinationId = null): array
     {
         return array_map(function (array $currentSupplier): ProductSupplierId {
             return new ProductSupplierId((int) $currentSupplier['id_product_supplier']);

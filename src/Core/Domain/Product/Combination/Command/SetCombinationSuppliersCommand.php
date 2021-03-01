@@ -45,7 +45,7 @@ class SetCombinationSuppliersCommand
     private $combinationId;
 
     /**
-     * @var array
+     * @var array<int, ProductSupplier>
      */
     private $combinationSuppliers;
 
@@ -70,7 +70,7 @@ class SetCombinationSuppliersCommand
     }
 
     /**
-     * @return array
+     * @return array<int, ProductSupplier>
      */
     public function getCombinationSuppliers(): array
     {

@@ -232,7 +232,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     /**
      * @Then I should get error that this action is forbidden for this type of product
      */
-    public function assertLastErrorInvalidProductType()
+    public function assertLastErrorInvalidProductType(): void
     {
         $this->assertLastErrorIs(InvalidProductTypeException::class);
     }
