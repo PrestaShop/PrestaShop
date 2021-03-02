@@ -171,6 +171,7 @@
         // Check if we can check TYPE_ALL checkbox
         if (type === this.TYPE_ALL) {
           let canBeChecked = true;
+
           // eslint-disable-next-line no-restricted-syntax
           for (const t of this.types) {
             if (this.employeePermissions[this.permissionId][t] === '0') {
@@ -204,6 +205,7 @@
        */
       hasPermission(type) {
         const permission = this.getPermission();
+
         return permission !== undefined && parseInt(permission[type], 10) === 1;
       },
       /**
