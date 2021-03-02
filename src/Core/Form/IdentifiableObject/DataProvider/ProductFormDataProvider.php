@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
@@ -52,12 +54,20 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param int $contextLangId
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        int $contextLangId
     ) {
         $this->queryBus = $queryBus;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -65,11 +75,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
+        $productId = (int) $id;
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing((int) $id));
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId));
 
         return [
-            'id' => $id,
+            'id' => $productId,
             'basic' => $this->extractBasicData($productForEditing),
             'features' => $this->extractFeatureValues((int) $id),
             'stock' => $this->extractStockData($productForEditing),
@@ -80,6 +91,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
             'customizations' => $this->extractCustomizationsData($productForEditing),
+            'combinations' => $this->getCombinationsData($productId),
         ];
     }
 
@@ -301,6 +313,37 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'customization_fields' => $fields,
+        ];
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getCombinationsData(int $productId): array
+    {
+        /** @var CombinationListForEditing $combinationsList */
+        $combinationsList = $this->queryBus->handle(new GetEditableCombinationsList(
+            $productId,
+            $this->contextLangId
+        ));
+
+        $combinationsForForm = [];
+        foreach ($combinationsList->getCombinations() as $combinationForListing) {
+            $combinationsForForm[] = [
+                'is_selected' => false,
+                'name' => $combinationForListing->getCombinationName(),
+                'impact_on_price' => (string) $combinationForListing->getImpactOnPrice(),
+                //@todo
+                'final_price_te' => 0,
+                'quantity' => $combinationForListing->getQuantity(),
+                'is_default' => $combinationForListing->isDefault(),
+            ];
+        }
+
+        return [
+            'combinations_list' => $combinationsForForm,
         ];
     }
 
