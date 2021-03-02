@@ -84,8 +84,6 @@ describe('Filter, sort and pagination shop Urls', async () => {
         dashboardPage.multistoreLink,
       );
 
-      await multiStorePage.closeSfToolBar(page);
-
       const pageTitle = await multiStorePage.getPageTitle(page);
       await expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
