@@ -56,9 +56,10 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-md-3 form-control-label">{l s='Email address' d='Shop.Forms.Labels'}</label>
+          <label class="col-md-3 form-control-label" for="email">{l s='Email address' d='Shop.Forms.Labels'}</label>
           <div class="col-md-6">
             <input
+              id="email"
               class="form-control"
               name="from"
               type="email"
@@ -70,9 +71,9 @@
 
         {if $contact.orders}
           <div class="form-group row">
-            <label class="col-md-3 form-control-label">{l s='Order reference' d='Shop.Forms.Labels'}</label>
+            <label class="col-md-3 form-control-label" for="id-order">{l s='Order reference' d='Shop.Forms.Labels'}</label>
             <div class="col-md-6">
-              <select name="id_order" class="form-control form-control-select">
+              <select id="id-order" name="id_order" class="form-control form-control-select">
                 <option value="">{l s='Select reference' d='Shop.Forms.Help'}</option>
                 {foreach from=$contact.orders item=order}
                   <option value="{$order.id_order}">{$order.reference}</option>
@@ -87,9 +88,9 @@
 
         {if $contact.allow_file_upload}
           <div class="form-group row">
-            <label class="col-md-3 form-control-label">{l s='Attachment' d='Shop.Forms.Labels'}</label>
+            <label class="col-md-3 form-control-label" for="file-upload">{l s='Attachment' d='Shop.Forms.Labels'}</label>
             <div class="col-md-6">
-              <input type="file" name="fileUpload" class="filestyle" data-buttonText="{l s='Choose file' d='Shop.Theme.Actions'}">
+              <input id="file-upload" type="file" name="fileUpload" class="filestyle" data-buttonText="{l s='Choose file' d='Shop.Theme.Actions'}">
             </div>
             <span class="col-md-3 form-control-comment">
               {l s='optional' d='Shop.Forms.Help'}
@@ -98,9 +99,10 @@
         {/if}
 
         <div class="form-group row">
-          <label class="col-md-3 form-control-label">{l s='Message' d='Shop.Forms.Labels'}</label>
+          <label class="col-md-3 form-control-label" for="message">{l s='Message' d='Shop.Forms.Labels'}</label>
           <div class="col-md-9">
             <textarea
+              id="message"
               class="form-control"
               name="message"
               placeholder="{l s='How can we help?' d='Shop.Forms.Help'}"
