@@ -102,8 +102,13 @@ Tree.prototype = {
             $.get(
               'ajax-tab.php',
               {
-                // eslint-disable-next-line
-                controller: 'AdminProducts', token: currentToken, action: 'getCategoryTree', type: idTree, category, inputName: name, useCheckBox,
+                controller: 'AdminProducts',
+                token: currentToken,
+                action: 'getCategoryTree',
+                type: idTree,
+                category,
+                inputName: name,
+                useCheckBox,
               },
               (content) => {
                 thatOne.parent().closest('.tree-folder').find('ul.tree').html(content);
@@ -205,8 +210,14 @@ Tree.prototype = {
       $.get(
         'ajax-tab.php',
         {
-          // eslint-disable-next-line
-          controller: 'AdminProducts', token: currentToken, action: 'getCategoryTree', type: idTree, fullTree: 1, selected, inputName: name, useCheckBox,
+          controller: 'AdminProducts',
+          token: currentToken,
+          action: 'getCategoryTree',
+          type: idTree,
+          fullTree: 1,
+          selected,
+          inputName: name,
+          useCheckBox,
         },
         (content) => {
           $(`#${idTree}`).html(content);

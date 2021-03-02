@@ -122,8 +122,8 @@
   };
 
   $(document).on('click.bs.sidebar.data-api', '[data-toggle="sidebar"]', function (e) {
-    const $this = $(this); let
-      href;
+    const $this = $(this);
+    let href;
     // eslint-disable-next-line
     const target = $this.attr('data-target') || e.preventDefault() || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '');
     const $target = $(target);

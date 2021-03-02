@@ -6,7 +6,7 @@ const defaultCategory = (function () {
 
   return {
     init() {
-      /** Populate category tree with the default category * */
+      // Populate category tree with the default category
       const defaultCategoryId = defaultCategoryForm.find('input:checked').val();
       productCategoriesTags.checkDefaultCategory(defaultCategoryId);
 

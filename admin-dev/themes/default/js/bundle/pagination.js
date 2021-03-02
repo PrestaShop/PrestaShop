@@ -57,7 +57,7 @@ $(document).ready(() => {
 
       if (e.which === 13) { // ENTER
         e.preventDefault();
-        if (parseInt(val, 10) > 0) {
+        if (val > 0) {
           const limit = $(e.target).attr('pslimit');
           const url = $(this).attr('psurl').replace(/999999/, (val - 1) * limit);
           window.location.href = url;

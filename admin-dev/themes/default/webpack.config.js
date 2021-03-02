@@ -40,7 +40,6 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, 'public'),
       filename: 'bundle.js',
     },
-    // devtool: 'source-map', // uncomment me to build source maps (really slow)
     module: {
       rules: [{
         test: path.join(__dirname, 'js'),
@@ -58,21 +57,12 @@ module.exports = (env, argv) => {
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
-            options: {
-              // sourceMap: true, // uncomment me to generate source maps
-            },
           },
           {
             loader: 'postcss-loader',
-            options: {
-              // sourceMap: true, // uncomment me to generate source maps
-            },
           },
           {
             loader: 'sass-loader',
-            options: {
-              // sourceMap: true, // uncomment me to generate source maps
-            },
           },
         ],
       }, {

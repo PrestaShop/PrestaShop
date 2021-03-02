@@ -40,14 +40,10 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
   };
 
   this.getFormValues = function () {
-    const serverIpInput = document.getElementById('memcache_ip');
-    const serverPortInput = document.getElementById('memcache_port');
-    const serverWeightInput = document.getElementById('memcache_weight');
-
     return {
-      server_ip: serverIpInput.value,
-      server_port: serverPortInput.value,
-      server_weight: serverWeightInput.value,
+      server_ip: document.getElementById('memcache_ip').value,
+      server_port: document.getElementById('memcache_port').value,
+      server_weight: document.getElementById('memcache_weight').value,
     };
   };
 

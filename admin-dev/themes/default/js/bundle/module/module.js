@@ -118,6 +118,12 @@ const AdminModuleController = function () {
     this.getNotificationsCount();
   };
 
+  function currentCompare(a, b) {
+    if (a[key] < b[key]) return -1;
+    if (a[key] > b[key]) return 1;
+    return 0;
+  }
+
   this.initFilterStatusDropdown = function () {
     const self = this;
     const body = $('body');
@@ -273,13 +279,6 @@ const AdminModuleController = function () {
       }
       if (self.currentSorting.indexOf('-desc') !== -1) {
         order = 'desc';
-      }
-
-      // eslint-disable-next-line
-      function currentCompare(a, b) {
-        if (a[key] < b[key]) return -1;
-        if (a[key] > b[key]) return 1;
-        return 0;
       }
 
       self.modulesList.sort(currentCompare);
