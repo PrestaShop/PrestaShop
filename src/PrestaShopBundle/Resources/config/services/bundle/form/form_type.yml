@@ -1409,8 +1409,8 @@ services:
             - '@form.form_cloner'
         public: true
 
-    form.type.sell.product.combination_list_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CombinationListType'
+    form.type.sell.product.combinations_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CombinationsType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
