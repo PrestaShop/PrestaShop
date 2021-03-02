@@ -81,11 +81,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
+        $productId = (int) $id;
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing((int) $id));
+        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId));
 
         $productData = [
-            'id' => $id,
+            'id' => $productId,
             'basic' => $this->extractBasicData($productForEditing),
             'features' => $this->extractFeatureValues((int) $id),
             'stock' => $this->extractStockData($productForEditing),
