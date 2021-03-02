@@ -60,7 +60,7 @@ describe('View customer service messages', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
     // Go to contact us page
-    await homePage.goToContactUsPage(page);
+    await homePage.goToFooterLink(page, 'Contact us');
 
     const pageTitle = await contactUsPage.getPageTitle(page);
     await expect(pageTitle).to.equal(contactUsPage.pageTitle);
