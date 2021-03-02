@@ -80,7 +80,7 @@ class ProductType extends TranslatorAwareType
             ->add('seo', SEOType::class)
             ->add('redirect_option', RedirectOptionType::class)
             ->add('suppliers', SuppliersType::class)
-            ->add('combinations', CombinationListType::class)
+            ->add('combinations', CombinationsType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [

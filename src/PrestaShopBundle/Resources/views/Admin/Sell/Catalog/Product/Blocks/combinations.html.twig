@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,23 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
-declare(strict_types=1);
+ *#}
+{% form_theme productForm.combinations '@PrestaShop/Admin/Sell/Catalog/Product/Form/combinations_form_theme.html.twig' %}
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
-
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class CombinationListType extends TranslatorAwareType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('combinations_list', CollectionType::class, [
-            'entry_type' => ListedCombinationType::class,
-            'allow_add' => true,
-            'allow_delete' => true,
-        ]);
-    }
-}
+{% block form_product_combinations %}
+  {{ form_row(productForm.combinations) }}
+{% endblock form_product_combinations %}
