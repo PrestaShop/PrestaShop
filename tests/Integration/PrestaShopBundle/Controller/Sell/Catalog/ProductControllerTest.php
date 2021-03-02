@@ -76,6 +76,7 @@ class ProductControllerTest extends GridControllerTestCase
      */
     protected function getTestFilters(): array
     {
+        /** @todo add rest of the tests, need for product form to be complete */
         return [
             ['product[name]' => 'stProd'],
             [
@@ -131,6 +132,8 @@ class ProductControllerTest extends GridControllerTestCase
      */
     protected function getCreateEntityFormModifications(): array
     {
+        /** @todo add rest of the tests, need for product form to be complete */
+
         $testEntity = $this->getTestEntity();
 
         return [
