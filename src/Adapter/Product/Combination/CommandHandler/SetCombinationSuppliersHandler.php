@@ -23,54 +23,62 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-/**
- * Handles @see SetProductSuppliersCommand using legacy object model
- */
-final class SetProductSuppliersHandler extends AbstractProductSupplierHandler implements SetProductSuppliersHandlerInterface
+final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements SetCombinationSuppliersHandlerInterface
 {
+    /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
     /**
      * @var ProductSupplierUpdater
      */
     private $productSupplierUpdater;
 
     /**
-     * @param ProductSupplierUpdater $productSupplierUpdater
+     * @param CombinationRepository $combinationRepository
      * @param ProductSupplierRepository $productSupplierRepository
+     * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        ProductSupplierUpdater $productSupplierUpdater,
-        ProductSupplierRepository $productSupplierRepository
+        CombinationRepository $combinationRepository,
+        ProductSupplierRepository $productSupplierRepository,
+        ProductSupplierUpdater $productSupplierUpdater
     ) {
         parent::__construct($productSupplierRepository);
+        $this->combinationRepository = $combinationRepository;
         $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(SetProductSuppliersCommand $command): array
+    public function handle(SetCombinationSuppliersCommand $command): array
     {
-        $productId = $command->getProductId();
-        $productSuppliers = [];
+        $combinationId = $command->getCombinationId();
+        $combination = $this->combinationRepository->get($combinationId);
+        $productId = new ProductId((int) $combination->id_product);
 
-        foreach ($command->getProductSuppliers() as $productSupplierDTO) {
-            $productSuppliers[] = $this->loadEntityFromDTO($productId, $productSupplierDTO);
+        $productSuppliers = [];
+        foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
+            $productSuppliers[] = $this->loadEntityFromDTO($productId, $productSupplierDTO, $combinationId);
         }
 
-        return $this->productSupplierUpdater->setProductSuppliers(
+        return $this->productSupplierUpdater->setCombinationSuppliers(
             $productId,
-            $command->getDefaultSupplierId(),
+            $combinationId,
             $productSuppliers
         );
     }

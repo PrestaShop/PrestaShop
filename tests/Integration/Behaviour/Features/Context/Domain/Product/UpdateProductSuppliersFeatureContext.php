@@ -33,6 +33,7 @@ use Currency;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
@@ -226,6 +227,14 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         }
 
         Assert::assertEmpty($data, sprintf('Some provided product supplier fields haven\'t been asserted: %s', var_export($data, true)));
+    }
+
+    /**
+     * @Then I should get error that this action is forbidden for this type of product
+     */
+    public function assertLastErrorInvalidProductType(): void
+    {
+        $this->assertLastErrorIs(InvalidProductTypeException::class);
     }
 
     /**

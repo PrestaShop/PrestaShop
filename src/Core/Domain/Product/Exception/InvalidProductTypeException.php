@@ -23,39 +23,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 /**
- * Removes all product suppliers for specified product without combinations
- *
- * @see RemoveAllAssociatedProductSuppliersHandlerInterface
+ * Is thrown when product type is not suitable for certain operation
+ * e.g. if product with combination is expected but got standard or pack product
  */
-class RemoveAllAssociatedProductSuppliersCommand
+class InvalidProductTypeException extends ProductException
 {
-    /**
-     * @var ProductId
-     */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
 }

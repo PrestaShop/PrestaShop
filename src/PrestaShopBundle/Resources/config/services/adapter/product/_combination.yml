@@ -93,3 +93,32 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand
+
+    prestashop.adapter.product.combination.command_handler.set_combination_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
+            - '@prestashop.adapter.product.update.product_supplier_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand
+
+    prestashop.adapter.product.combination.query_handler.get_combination_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_supplier_repository'
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers
+
+    prestashop.adapter.product.combination.command_handler.remove_all_associated_combination_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.update.product_supplier_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand
