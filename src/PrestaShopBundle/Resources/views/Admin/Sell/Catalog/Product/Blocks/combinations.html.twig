@@ -26,5 +26,7 @@
 
 {% block form_product_combinations %}
   {{ form_row(productForm.combinations) }}
-
+  {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations_pagination.html.twig', {
+    'totalCombinations': productForm.combinations.total_combinations_count.vars.value
+  }) }}
 {% endblock form_product_combinations %}
