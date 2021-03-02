@@ -49,6 +49,13 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 final class ProductFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * How many combinations to show in list per one page
+     *
+     * @todo; this thing could be configurable
+     */
+    public const COMBINATIONS_PER_PAGE = 10;
+
+    /**
      * @var CommandBusInterface
      */
     private $queryBus;
@@ -326,8 +333,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         /** @var CombinationListForEditing $combinationsList */
         $combinationsList = $this->queryBus->handle(new GetEditableCombinationsList(
             $productId,
-            $this->contextLangId
-            //@todo: add initial pagination values
+            $this->contextLangId,
+            self::COMBINATIONS_PER_PAGE
         ));
 
         $combinationsForForm = [];
@@ -346,6 +353,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'combinations_list' => $combinationsForForm,
+            'total_combinations_count' => $combinationsList->getTotalCombinationsCount(),
         ];
     }
 
