@@ -60,6 +60,9 @@ class ZoneType extends AbstractType
         $this->isMultistoreEnabled = $isMultistoreEnabled;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
