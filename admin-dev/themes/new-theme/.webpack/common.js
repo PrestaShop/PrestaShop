@@ -92,6 +92,7 @@ module.exports = {
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_edit: './js/pages/product/edit',
+    product_index: './js/pages/product/index',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
