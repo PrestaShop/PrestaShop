@@ -67,10 +67,10 @@ class MultistoreController extends FrameworkBundleAdminController
         $isShopContext = $this->multistoreContext->isShopContext();
 
         if ($isShopContext) {
-            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneById($this->multistoreContext->getContextShopID());
+            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->multistoreContext->getContextShopID()]);
         } elseif (!$isAllShopContext) {
             $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
-            $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneById($shopGroupLegacy->id);
+            $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneBy(['id' => $shopGroupLegacy->id]);
         } else {
             // use ShopGroup object as a the container for "all shops" context so that it can be used transparently in twig
             $currentContext = new ShopGroup();
