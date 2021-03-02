@@ -792,12 +792,6 @@ var form = (function() {
     }
   }
   
-  function replaceBadLocaleCharacters() {
-    $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
-        $(this).val($(this).val().replace("−", "-"));
-    });
-  }
-
   return {
     'init': function() {
       /** prevent form submit on ENTER keypress */
