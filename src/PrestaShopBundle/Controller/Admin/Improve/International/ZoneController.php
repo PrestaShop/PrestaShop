@@ -62,8 +62,10 @@ class ZoneController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param ZoneFilters $zoneFilters
+     *
+     * @return Response
      */
-    public function indexAction(Request $request, ZoneFilters $zoneFilters)
+    public function indexAction(Request $request, ZoneFilters $zoneFilters): Response
     {
         $zoneGridFactory = $this->get('prestashop.core.grid.factory.zone');
         $zoneGrid = $zoneGridFactory->getGrid($zoneFilters);
@@ -85,7 +87,7 @@ class ZoneController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): RedirectResponse
     {
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
@@ -107,8 +109,10 @@ class ZoneController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
+     *
+     * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         $zoneFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.zone_form_builder');
         $zoneFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.zone_form_handler');
@@ -149,7 +153,7 @@ class ZoneController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction(int $zoneId, Request $request)
+    public function editAction(int $zoneId, Request $request): Response
     {
         try {
             /** @var EditableZone $editableZone */
@@ -203,7 +207,7 @@ class ZoneController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction(int $zoneId)
+    public function deleteAction(int $zoneId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteZoneCommand($zoneId));
@@ -231,8 +235,10 @@ class ZoneController extends FrameworkBundleAdminController
      * )
      *
      * @param int $zoneId
+     *
+     * @return RedirectResponse
      */
-    public function toggleStatusAction(int $zoneId)
+    public function toggleStatusAction(int $zoneId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new ToggleZoneStatusCommand($zoneId));
@@ -257,7 +263,7 @@ class ZoneController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteAction(Request $request)
+    public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $zoneIds = $this->getBulkZonesFromRequest($request);
 
@@ -289,7 +295,7 @@ class ZoneController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkToggleStatus(string $status, Request $request)
+    public function bulkToggleStatus(string $status, Request $request): RedirectResponse
     {
         $status = $status === 'enable';
         $zoneIds = $this->getBulkZonesFromRequest($request);
@@ -307,7 +313,14 @@ class ZoneController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_zones_index');
     }
 
-    private function getErrorMessages(Exception $e)
+    /**
+     * Returns zone error messages mapping.
+     *
+     * @param Exception $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e): array
     {
         return [
             CannotEditZoneException::class => $this->trans(
@@ -345,7 +358,14 @@ class ZoneController extends FrameworkBundleAdminController
         ];
     }
 
-    private function getBulkZonesFromRequest(Request $request)
+    /**
+     * Collects zone IDs from request.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkZonesFromRequest(Request $request): array
     {
         $zoneIds = $request->request->get('zone_bulk');
 
@@ -359,7 +379,7 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * @return array
      */
-    private function getZoneToolbarButtons()
+    private function getZoneToolbarButtons(): array
     {
         return [
             'add' => [
