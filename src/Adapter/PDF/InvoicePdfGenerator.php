@@ -24,44 +24,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Adapter\PDF;
+
+use Context;
+use Hook;
+use OrderInvoice;
+use PDF;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
+use RuntimeException;
+use Validate;
 
 /**
- * Class BadgeColumn displays column with badge.
+ * Generates invoice by invoice ID.
  */
-final class BadgeColumn extends AbstractColumn
+final class InvoicePdfGenerator implements PDFGeneratorInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function generatePDF(array $invoiceId): void
     {
-        return 'badge';
-    }
+        if (count($invoiceId) !== 1) {
+            throw new CoreException(sprintf('"%s" supports generating PDF for single invoice only.', get_class($this)));
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
+        $invoiceId = reset($invoiceId);
+        $orderInvoice = new OrderInvoice((int) $invoiceId);
+        if (!Validate::isLoadedObject($orderInvoice)) {
+            throw new RuntimeException('The invoice cannot be found within your database.');
+        }
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'badge_type' => 'success',
-                'empty_value' => '',
-                'clickable' => true,
-                'color_field' => '',
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('empty_value', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning', '']);
+        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [$orderInvoice]]);
+
+        $pdf = new PDF($orderInvoice, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
+        $pdf->render();
     }
 }

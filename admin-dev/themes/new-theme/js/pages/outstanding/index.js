@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +21,23 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div class="text-right">
-{% if record[column.options.field] is not empty and column.options.badge_type is not empty %}
-  <span class="badge rounded badge-{{ column.options.badge_type }}">
-    {{ record[column.options.field] }}
-  </span>
-{% elseif record[column.options.field] is not empty and column.options.color_field in record|keys and record[column.options.color_field] is not empty %}
-  {% set textColor = is_color_bright(record[column.options.color_field]) ? '#383838' : 'white' %}
-  <span class="badge rounded" style="background-color: {{ record[column.options.color_field] }}; color: {{ textColor }}">
-    {{ record[column.options.field] }}
-  </span>
-{% elseif record[column.options.field] is not empty %}
-  {{ record[column.options.field] }}
-{% else %}
-  {{ column.options.empty_value }}
-{% endif %}
-</div>
+import Grid from '@components/grid/grid';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import FiltersSubmitButtonEnablerExtension
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+
+const {$} = window;
+
+$(() => {
+  const outstandingGrid = new Grid('outstanding');
+  outstandingGrid.addExtension(new FiltersResetExtension());
+  outstandingGrid.addExtension(new ReloadListActionExtension());
+  outstandingGrid.addExtension(new SortingExtension());
+  outstandingGrid.addExtension(new LinkRowActionExtension());
+  outstandingGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+});
