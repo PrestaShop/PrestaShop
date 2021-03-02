@@ -47,6 +47,7 @@ class MultiStoreSettings extends BOBasePage {
     // Multistore tree selectors
     this.multistoreTree = '#shops-tree';
     this.shopLink = id => `${this.multistoreTree} a[href*='shop_id=${id}']`;
+    this.shopUrlLink = id => `${this.multistoreTree} a[href*='shop_url=${id}']`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
@@ -173,6 +174,16 @@ class MultiStoreSettings extends BOBasePage {
    */
   async goToShopPage(page, id) {
     await this.clickAndWaitForNavigation(page, this.shopLink(id));
+  }
+
+  /**
+   * Go to shop url link
+   * @param page
+   * @param id
+   * @returns {Promise<void>}
+   */
+  async goToShopURLPage(page, id = 1) {
+    await this.clickAndWaitForNavigation(page, this.shopUrlLink(id));
   }
 
   /**
