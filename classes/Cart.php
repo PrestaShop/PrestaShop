@@ -694,14 +694,14 @@ class CartCore extends ObjectModel
             'product_lang',
             'pl',
             'p.`id_product` = pl.`id_product`
-            AND pl.`id_lang` = ' . (int) $this->id_lang . Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
+            AND pl.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId() . Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
         );
 
         $sql->leftJoin(
             'category_lang',
             'cl',
             'product_shop.`id_category_default` = cl.`id_category`
-            AND cl.`id_lang` = ' . (int) $this->id_lang . Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
+            AND cl.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId() . Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
         );
 
         $sql->leftJoin('product_supplier', 'ps', 'ps.`id_product` = cp.`id_product` AND ps.`id_product_attribute` = cp.`id_product_attribute` AND ps.`id_supplier` = p.`id_supplier`');
@@ -756,7 +756,7 @@ class CartCore extends ObjectModel
 
         $sql->select('image_shop.`id_image` id_image, il.`legend`');
         $sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop);
-        $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->id_lang);
+        $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId());
 
         $result = Db::getInstance()->executeS($sql);
 
@@ -779,7 +779,7 @@ class CartCore extends ObjectModel
         }
         // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
         Product::cacheProductsFeatures($products_ids);
-        Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
+        Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
 
         if (empty($result)) {
             $this->_products = [];
@@ -965,7 +965,7 @@ class CartCore extends ObjectModel
 
         // check if a image associated with the attribute exists
         if ($row['id_product_attribute']) {
-            $row2 = Image::getBestImageAttribute($row['id_shop'], $this->id_lang, $row['id_product'], $row['id_product_attribute']);
+            $row2 = Image::getBestImageAttribute($row['id_shop'], $this->getAssociatedLanguage()->getId(), $row['id_product'], $row['id_product_attribute']);
             if ($row2) {
                 $row = array_merge($row, $row2);
             }
@@ -973,12 +973,13 @@ class CartCore extends ObjectModel
 
         $row['reduction_applies'] = ($specific_price_output && (float) $specific_price_output['reduction']);
         $row['quantity_discount_applies'] = ($specific_price_output && $productQuantity >= (int) $specific_price_output['from_quantity']);
-        $row['id_image'] = Product::defineProductImage($row, $this->id_lang);
+        $row['id_image'] = Product::defineProductImage($row, $this->getAssociatedLanguage()->getId());
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
         $row['features'] = Product::getFeaturesStatic((int) $row['id_product']);
 
-        if (array_key_exists($row['id_product_attribute'] . '-' . $this->id_lang, self::$_attributesLists)) {
-            $row = array_merge($row, self::$_attributesLists[$row['id_product_attribute'] . '-' . $this->id_lang]);
+        $productAttributeKey = $row['id_product_attribute'] . '-' . $this->getAssociatedLanguage()->getId();
+        if (array_key_exists($productAttributeKey, self::$_attributesLists)) {
+            $row = array_merge($row, self::$_attributesLists[$productAttributeKey]);
         }
 
         return Product::getTaxesInformations($row, $shopContext);
