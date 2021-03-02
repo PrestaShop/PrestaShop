@@ -281,7 +281,7 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         public: true
 
-    prestashop.core.grid.definition.product:
+    prestashop.core.grid.definition.factory.product:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
