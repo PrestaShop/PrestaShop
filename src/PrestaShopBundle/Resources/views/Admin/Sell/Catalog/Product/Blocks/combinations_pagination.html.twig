@@ -1,10 +1,10 @@
-{% set totalCombinations = productForm.combinations.total_combinations_count.vars.value %}
 <div class="col-md-6 text-left combinations-pagination">
-  {#    todo: 10 hardcoded as pagination num. Check ProductFormDataProvider related#}
-  {% set paginationNum = 10 %}
-  {% set numPages = max(totalCombinations / paginationNum, 1)|round(0, 'ceil') %}
-  <nav{% if totalCombinations <= paginationNum %} class="d-none"{% endif %} id="combinationsNavPagination">
-    <ul class="pagination" id="combinationsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
+  {# todo: 10 hardcoded as per page limit. Check ProductFormDataProvider related #}
+  {% set limit = 10 %}
+  {% set numPages = max(totalCombinations / limit, 1)|round(0, 'ceil') %}
+  <nav{% if totalCombinations <= limit %} class="d-none"{% endif %} id="combinationsNavPagination">
+    <ul class="pagination" id="combinationsTablePagination" data-num-per-page="{{ limit }}"
+        data-num-pages="{{ numPages }}">
       <li class="page-item disabled" id="combinationsTablePaginationPrev">
         <a class="page-link" href="javascript:void(0);" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
@@ -12,7 +12,9 @@
         </a>
       </li>
       {% for numPage in 1..numPages %}
-        <li class="page-item{% if numPage==1 %} active{% endif %}"><span class="page-link" data-page="{{ numPage }}">{{ numPage }}</span></li>
+        <li class="page-item{% if numPage==1 %} active{% endif %}">
+          <span class="page-link" data-limit="{{ limit }}" data-page="{{ numPage }}">{{ numPage }}</span>
+        </li>
       {% endfor %}
       <li class="page-item"><span class="page-link" data-page=""></span></li>
       <li class="page-item" id="combinationsTablePaginationNext">
