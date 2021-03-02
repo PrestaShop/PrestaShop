@@ -28,6 +28,7 @@
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid  and productForm.suppliers.vars.valid %}
 {% set isStockTabValid = productForm.stock.vars.valid %}
+{% set isCombinationsTabValid = productForm.combinations.vars.valid %}
 
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">
@@ -43,6 +44,11 @@
     <li id="stock-tab-nav" class="nav-item{% if not isStockTabValid %} has-error{% endif %}">
       <a href="#stock-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+    <li id="combinations-tab-nav" class="nav-item{% if not isCombinationsTabValid %} has-error{% endif %}">
+      <a href="#combinations-tab" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
     <li id="pricing-tab-nav" class="nav-item{% if not isPriceTabValid %} has-error{% endif %}">
