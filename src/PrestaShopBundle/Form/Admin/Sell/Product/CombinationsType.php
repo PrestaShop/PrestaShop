@@ -27,30 +27,18 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ListedCombinationType extends AbstractType
+class CombinationsType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('is_selected', CheckboxType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextType::class)
-            ->add('impact_on_price', MoneyType::class)
-            ->add('final_price_te', TextType::class)
-            ->add('quantity', NumberType::class)
-            ->add('is_default', SwitchType::class)
-            ->add('edit', ButtonType::class)
-            ->add('delete', ButtonType::class)
-        ;
+        $builder->add('combinations_list', CollectionType::class, [
+            'entry_type' => ListedCombinationType::class,
+            'allow_add' => true,
+            'allow_delete' => true,
+        ]);
     }
 }

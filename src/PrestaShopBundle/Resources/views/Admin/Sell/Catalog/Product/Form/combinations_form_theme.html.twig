@@ -1,0 +1,81 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{%- block combinations_row -%}
+{#  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' col-md-12')|trim }) -%}#}
+  <div {{ block('widget_attributes') }}>
+    {{- block('form_rows') -}}
+  </div>
+{%- endblock combinations_row -%}
+
+{%- block listed_combination_row -%}
+  <tr>
+    <td>
+      {{ form_widget(form.is_selected) }}
+    </td>
+    <td>
+      {{ form.name.vars.value }}
+    </td>
+    <td>
+      {{ form_widget(form.impact_on_price) }}
+    </td>
+    <td>
+      {{ form.final_price_te.vars.value }}
+    </td>
+    <td>
+      {{ form_widget(form.quantity) }}
+      {{ form_errors(form.quantity) }}
+    </td>
+    <td>
+      {{ form_widget(form.is_default) }}
+      {{ form_errors(form.is_default) }}
+    </td>
+    <td>
+      {{ form_widget(form.edit) }}
+      {{ form_widget(form.delete) }}
+    </td>
+  </tr>
+{%- endblock listed_combination_row -%}
+
+{%- block collection_row -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+{#  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' list-unstyled')|trim }) -%}#}
+  <table {{ block('widget_attributes') }}>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Combination</th>
+        <th>Impact on price (tax excl.)</th>
+        <th>Final price (tax excl.)</th>
+        <th>Quantity</th>
+        <th>Default combination</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{- block('form_rows') -}}
+    </tbody>
+  </table>
+{%- endblock collection_row -%}

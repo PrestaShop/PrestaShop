@@ -327,6 +327,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $combinationsList = $this->queryBus->handle(new GetEditableCombinationsList(
             $productId,
             $this->contextLangId
+            //@todo: add initial pagination values
         ));
 
         $combinationsForForm = [];
@@ -334,8 +335,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $combinationsForForm[] = [
                 'is_selected' => false,
                 'name' => $combinationForListing->getCombinationName(),
+                //@todo: do I need to get image link here or in QueryResult?
                 'impact_on_price' => (string) $combinationForListing->getImpactOnPrice(),
-                //@todo
+                //@todo: calculate final price
                 'final_price_te' => 0,
                 'quantity' => $combinationForListing->getQuantity(),
                 'is_default' => $combinationForListing->isDefault(),
