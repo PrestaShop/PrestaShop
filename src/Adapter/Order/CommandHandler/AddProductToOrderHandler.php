@@ -43,6 +43,7 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -207,7 +208,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $command->getProductId()->getValue(),
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
                 $command->getProductPriceTaxExcluded(),
-                $command->getProductPriceTaxIncluded()
+                $command->getProductPriceTaxIncluded(),
+                new Number($product->ecotax)
             );
             StockAvailable::synchronize($product->id);
 

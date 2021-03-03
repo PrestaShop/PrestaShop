@@ -34,6 +34,7 @@ use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
@@ -100,7 +101,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $orderDetail,
                 $order,
                 $command->getPriceTaxExcluded(),
-                $command->getPriceTaxIncluded()
+                $command->getPriceTaxIncluded(),
+                new Number($orderDetail->ecotax)
             );
 
             // We also need to update all identical OrderDetails to be sure that Cart will get the correct price
@@ -109,7 +111,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
                 $command->getPriceTaxExcluded(),
-                $command->getPriceTaxIncluded()
+                $command->getPriceTaxIncluded(),
+                new Number($orderDetail->ecotax)
             );
 
             // Update invoice, quantity and amounts
