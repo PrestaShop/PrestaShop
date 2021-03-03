@@ -69,10 +69,9 @@
 
         {block name='form_field_item_radio'}
           {foreach from=$field.availableValues item="label" key="value"}
-            <label class="radio-inline" for="{$field.name}">
+            <label class="radio-inline">
               <span class="custom-radio">
                 <input
-                  id="{$field.name}"
                   name="{$field.name}"
                   type="radio"
                   value="{$value}"
@@ -90,8 +89,8 @@
 
         {block name='form_field_item_checkbox'}
           <span class="custom-checkbox">
-            <label for="{$field.name}">
-              <input id="{$field.name}" name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
+            <label>
+              <input name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
               <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
               {$field.label nofilter}
             </label>
@@ -140,7 +139,6 @@
               class="form-control js-child-focus js-visible-password"
               name="{$field.name}"
               title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
-              id="{$field.name}"
               type="password"
               {if $field.autocomplete}autocomplete="{$field.autocomplete}"{/if}
               value=""
