@@ -29,20 +29,15 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
-use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,28 +88,6 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Provides filters functionality
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.product'),
-            $request,
-            ProductGridDefinitionFactory::GRID_ID,
-            'admin_products_v2_index'
-        );
-    }
-
-    /**
      * Redirects to step where product price can be edited.
      *
      * @AdminSecurity(
@@ -135,30 +108,6 @@ class ProductController extends FrameworkBundleAdminController
 
         return $response->setTargetUrl(
             $response->getTargetUrl() . '#tab-step2'
-        );
-    }
-
-    /**
-     * Redirects to step where product price can be edited.
-     *
-     * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_products_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
-     * @param int $productId
-     *
-     * @return RedirectResponse
-     */
-    public function editQuantityAction(int $productId): RedirectResponse
-    {
-        $response = $this->redirectToRoute('admin_product_form', [
-            'id' => $productId,
-        ]);
-
-        return $response->setTargetUrl(
-            $response->getTargetUrl() . '#tab-step3'
         );
     }
 
@@ -225,27 +174,6 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     * @param int $productId
-     *
-     * @return Response
-     */
-    public function deleteAction(Request $request, int $productId): Response
-    {
-        try {
-            $this->getCommandBus()->handle(new DeleteProductCommand($productId));
-            $this->addFlash(
-                'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-            );
-        } catch (CannotDeleteProductException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-        }
-
-        return $this->redirectToRoute('admin_products_v2_index');
-    }
-
-    /**
      * @param FormInterface $productForm
      * @param int|null $productId
      *
@@ -301,16 +229,6 @@ class ProductController extends FrameworkBundleAdminController
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(
                     'Product price is invalid',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-            CannotDeleteProductException::class => [
-                CannotDeleteProductException::FAILED_DELETE => $this->trans(
-                    'An error occurred while deleting the object.',
-                    'Admin.Notifications.Error'
-                ),
-                CannotDeleteProductException::FAILED_BULK_DELETE => $this->trans(
-                    'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
             ],

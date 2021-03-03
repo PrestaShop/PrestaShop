@@ -177,7 +177,7 @@ class ProductDataProvider
             $productId,
             true,
             null,
-            Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+            (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
             null,
             false,
             true,
