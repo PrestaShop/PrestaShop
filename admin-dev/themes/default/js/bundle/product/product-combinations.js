@@ -3,7 +3,7 @@
  */
 function replaceBadLocaleCharacters() {
     $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
-        $(this).val($(this).val().replace("−", "-"));
+        $(this).val($(this).val().replace("−", "-")); // replace U+002D with U+2212
     });
 }
 /**
