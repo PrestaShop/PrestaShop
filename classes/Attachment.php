@@ -86,7 +86,9 @@ class AttachmentCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
-        $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
+            $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        }
 
         return parent::add($autoDate, $nullValues);
     }
@@ -96,7 +98,9 @@ class AttachmentCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
-        $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
+            $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        }
 
         return parent::update($nullValues);
     }
@@ -106,7 +110,9 @@ class AttachmentCore extends ObjectModel
      */
     public function delete()
     {
-        @unlink(_PS_DOWNLOAD_DIR_ . $this->file);
+        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
+            @unlink(_PS_DOWNLOAD_DIR_ . $this->file);
+        }
 
         $sql = new DbQuery();
         $sql->select('pa.`id_product`');
