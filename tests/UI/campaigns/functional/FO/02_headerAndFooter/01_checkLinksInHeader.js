@@ -14,6 +14,7 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const {Categories} = require('@data/demo/categories');
 const {Products} = require('@data/demo/products');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -29,6 +30,8 @@ Check header links:
 - Contact us
 - Language (English, Français)
 - Sign in
+- My account
+- Sign out
 - Cart
 - Logo
 - Categories and subcategories
@@ -84,6 +87,22 @@ describe('Check links in header page', async () => {
 
     // Check sign in link
     await homePage.goToHeaderLink(page, 'Sign in');
+
+    const pageTitle = await loginPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(loginPage.pageTitle);
+
+    // Sign in
+    await loginPage.customerLogin(page, DefaultCustomer);
+
+    const isCustomerConnected = await loginPage.isCustomerConnected(page);
+    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+  });
+
+  it('should check sign out link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSignOutLink', baseContext);
+
+    // Sign out
+    await loginPage.logout(page);
 
     const pageTitle = await loginPage.getPageTitle(page);
     await expect(pageTitle).to.equal(loginPage.pageTitle);
