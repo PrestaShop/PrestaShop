@@ -27,7 +27,11 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
 ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
-    ('PS_COOKIE_SAMESITE', 'Lax', NOW(), NOW())
+    ('PS_COOKIE_SAMESITE', 'Lax', NOW(), NOW()),
+    ('PS_MAIL_DKIM_ENABLE', '0', NOW(), NOW()),
+    ('PS_MAIL_DKIM_DOMAIN', '', NOW(), NOW()),
+    ('PS_MAIL_DKIM_SELECTOR', '', NOW(), NOW()),
+    ('PS_MAIL_DKIM_KEY', '', NOW(), NOW())
 ;
 
 ALTER TABLE `PREFIX_hook` ADD `active` TINYINT(1) UNSIGNED DEFAULT 1 NOT NULL AFTER `description`;
