@@ -41,6 +41,7 @@ class CombinationsType extends TranslatorAwareType
                 'entry_type' => ListedCombinationType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'prototype_name' => '__COMBINATION_INDEX__',
             ])
             ->add('total_combinations_count', HiddenType::class)
         ;

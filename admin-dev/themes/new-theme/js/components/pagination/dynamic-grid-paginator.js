@@ -43,53 +43,6 @@ export default class DynamicGridPaginator {
     this.init();
   }
 
-  setRoutingOptions(options) {
-    this.routing = {};
-    if (options.route === 'undefined') {
-      console.log('route is missing in dynamic paginator routing options');
-      return;
-    }
-
-    this.routing.route = options.route;
-
-    if (typeof options.paramsToKeep !== 'undefined') {
-      this.routing.paramsToKeep = options.paramsToKeep;
-    }
-
-    if (typeof options.pageKey !== 'undefined') {
-      this.routing.pageKey = options.pageKey;
-    } else {
-      this.routing.pageKey = 'page';
-    }
-
-    if (typeof options.limitKey !== 'undefined') {
-      this.routing.limitKey = options.limitKey;
-    } else {
-      this.routing.limitKey = 'limit';
-    }
-  }
-
-  setSelectorsMap(selectorsMap) {
-    if (selectorsMap) {
-      this.selectorsMap = selectorsMap;
-
-      return;
-    }
-
-    this.selectorsMap = {
-      jumpToPageInput: 'input[name="paginator_jump_page"]',
-      firstPageBtn: 'button.page-link.first',
-      firstPageItem: 'li.page-item.first',
-      nextPageBtn: 'button.page-link.next',
-      nextPageItem: 'li.page-item.next',
-      previousPageBtn: 'button.page-link.previous',
-      previousPageItem: 'li.page-item.previous',
-      lastPageItem: 'li.page-item.last',
-      lastPageBtn: 'button.page-link.last',
-      pageLink: 'button.page-link',
-    };
-  }
-
   init() {
     this.$paginationContainer.on('click', this.selectorsMap.pageLink, (e) => {
       const page = this.extractPageFromDataset(e.currentTarget);
@@ -240,5 +193,53 @@ export default class DynamicGridPaginator {
     });
 
     return finalParams;
+  }
+
+
+  setRoutingOptions(options) {
+    this.routing = {};
+    if (options.route === 'undefined') {
+      console.log('route is missing in dynamic paginator routing options');
+      return;
+    }
+
+    this.routing.route = options.route;
+
+    if (typeof options.paramsToKeep !== 'undefined') {
+      this.routing.paramsToKeep = options.paramsToKeep;
+    }
+
+    if (typeof options.pageKey !== 'undefined') {
+      this.routing.pageKey = options.pageKey;
+    } else {
+      this.routing.pageKey = 'page';
+    }
+
+    if (typeof options.limitKey !== 'undefined') {
+      this.routing.limitKey = options.limitKey;
+    } else {
+      this.routing.limitKey = 'limit';
+    }
+  }
+
+  setSelectorsMap(selectorsMap) {
+    if (selectorsMap) {
+      this.selectorsMap = selectorsMap;
+
+      return;
+    }
+
+    this.selectorsMap = {
+      jumpToPageInput: 'input[name="paginator_jump_page"]',
+      firstPageBtn: 'button.page-link.first',
+      firstPageItem: 'li.page-item.first',
+      nextPageBtn: 'button.page-link.next',
+      nextPageItem: 'li.page-item.next',
+      previousPageBtn: 'button.page-link.previous',
+      previousPageItem: 'li.page-item.previous',
+      lastPageItem: 'li.page-item.last',
+      lastPageBtn: 'button.page-link.last',
+      pageLink: 'button.page-link',
+    };
   }
 }
