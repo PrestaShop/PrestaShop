@@ -48,12 +48,12 @@ class ProductControllerTest extends GridControllerTestCase
 
     protected function getIndexRoute(Router $router): string
     {
-        /** Asserts amount of entities in the list increased by one and test entity exists */
+        /* Asserts amount of entities in the list increased by one and test entity exists */
         return $router->generate('admin_products_v2_index',
             [
                 '_route' => 0,
                 'product[offset]' => 0,
-                'product[limit]' => 100
+                'product[limit]' => 100,
             ]
         );
     }
@@ -76,12 +76,12 @@ class ProductControllerTest extends GridControllerTestCase
      */
     protected function getTestFilters(): array
     {
-        /** @todo add rest of the tests, need for product form to be complete */
+        /* @todo add rest of the tests, need for product form to be complete */
         return [
             ['product[name]' => 'stProd'],
             [
                 'product[id_product][min_field]' => $this->getTestEntity()->getId(),
-                'product[id_product][max_field]' => $this->getTestEntity()->getId()
+                'product[id_product][max_field]' => $this->getTestEntity()->getId(),
             ],
             [
                 'product[quantity][min_field]' => $this->getTestEntity()->quantity,
@@ -89,8 +89,8 @@ class ProductControllerTest extends GridControllerTestCase
             ],
             [
                 'product[price_tax_excluded][min_field]' => $this->getTestEntity()->price,
-                'product[price_tax_excluded][max_field]' => $this->getTestEntity()->price
-            ]
+                'product[price_tax_excluded][max_field]' => $this->getTestEntity()->price,
+            ],
         ];
     }
 
@@ -104,7 +104,7 @@ class ProductControllerTest extends GridControllerTestCase
             [
                 'name' => 'testProductName',
                 'quantity' => 987,
-                'price' => '87,7'
+                'price' => '87,7',
             ]
         );
     }
@@ -120,7 +120,6 @@ class ProductControllerTest extends GridControllerTestCase
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
            [
-
            ]
         );
     }
@@ -133,7 +132,6 @@ class ProductControllerTest extends GridControllerTestCase
     protected function getCreateEntityFormModifications(): array
     {
         /** @todo add rest of the tests, need for product form to be complete */
-
         $testEntity = $this->getTestEntity();
 
         return [
@@ -141,7 +139,7 @@ class ProductControllerTest extends GridControllerTestCase
             'product[stock][quantity]' => $testEntity->quantity,
             'product[stock][minimal_quantity]' => 0,
             'product[shipping][additional_shipping_cost]' => 0,
-            'product[price][price_tax_excluded]' => $testEntity->price
+            'product[price][price_tax_excluded]' => $testEntity->price,
         ];
     }
 }
