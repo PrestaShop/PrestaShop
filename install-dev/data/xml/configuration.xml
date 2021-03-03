@@ -751,6 +751,14 @@ Country</value>
   <configuration id="PS_MAIL_COLOR" name="PS_MAIL_COLOR">
     <value>#db3484</value>
   </configuration>
+  <configuration id="PS_MAIL_DKIM_ENABLE" name="PS_MAIL_DKIM_ENABLE">
+    <value>0</value>
+  <configuration id="PS_MAIL_DKIM_DOMAIN" name="PS_MAIL_DKIM_DOMAIN">
+    <value/>
+  <configuration id="PS_MAIL_DKIM_SELECTOR" name="PS_MAIL_DKIM_SELECTOR">
+    <value/>
+  <configuration id="PS_MAIL_DKIM_KEY" name="PS_MAIL_DKIM_KEY">
+    <value/>
   <configuration id="NW_SALT" name="NW_SALT">
     <value>nK4KJP7jOsnzWMpo</value>
   </configuration>
