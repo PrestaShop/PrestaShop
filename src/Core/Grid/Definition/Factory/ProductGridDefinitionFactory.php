@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -184,8 +185,22 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
                     ])
+                    )
+                    ->add((new SubmitRowAction('delete'))
+                        ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->setIcon('delete')
+                        ->setOptions([
+                            'method' => 'DELETE',
+                            'route' => 'admin_products_v2_delete',
+                            'route_param_name' => 'productId',
+                            'route_param_field' => 'id_product',
+                            'confirm_message' => $this->trans(
+                                'Delete selected item?',
+                                [],
+                                'Admin.Notifications.Warning'
+                            ),
+                        ])
                     ),
-
                 //    @todo Implement remaining actions
                 //    ->add((new PreviewProductRowAction('preview_product'))
                 //        ->setName($this->trans('Preview', [], 'Admin.Actions'))
@@ -205,21 +220,6 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 //            'route_param_field' => 'id_product',
                 //        ])
                 //    )
-                //    ->add((new SubmitRowAction('delete'))
-                //        ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                //        ->setIcon('delete')
-                //        ->setOptions([
-                //            'method' => 'DELETE',
-                //            'route' => 'admin_products_delete',
-                //            'route_param_name' => 'productId',
-                //            'route_param_field' => 'id_product',
-                //            'confirm_message' => $this->trans(
-                //                'Delete selected item?',
-                //                [],
-                //                'Admin.Notifications.Warning'
-                //            ),
-                //        ])
-                //    ),
             ])
             );
         if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
