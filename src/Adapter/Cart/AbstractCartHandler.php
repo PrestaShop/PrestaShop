@@ -26,10 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
-use Address;
 use Cart;
-use Configuration;
-use Country;
 use Currency;
 use Customer;
 use Language;
@@ -82,25 +79,8 @@ abstract class AbstractCartHandler
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
             ->setLanguage(new Language($cart->id_lang))
-            ->setCountry($this->getCartTaxCountry($cart))
+            ->setCountry($cart->getTaxCountry())
             ->setShop(new Shop($cart->id_shop))
         ;
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return Country
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    protected function getCartTaxCountry(Cart $cart): Country
-    {
-        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = $cart->{$taxAddressType} ?? $cart->id_address_delivery;
-        $taxAddress = new Address($taxAddressId);
-
-        return new Country($taxAddress->id_country);
     }
 }
