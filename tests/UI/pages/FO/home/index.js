@@ -41,6 +41,7 @@ class Home extends FOBasePage {
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
+    this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.close`;
     this.cartModalProductNameBlock = `${this.blockCartModalDiv} .product-name`;
     this.cartModalProductPriceBlock = `${this.blockCartModalDiv} .product-price`;
     this.cartModalProductSizeBlock = `${this.blockCartModalDiv} .size strong`;
@@ -221,6 +222,17 @@ class Home extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
 
     return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
+  }
+
+  /**
+   * Close block cart modal
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async closeBlockCartModal(page) {
+    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
+
+    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
 
   /**

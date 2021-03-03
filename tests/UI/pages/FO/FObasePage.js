@@ -69,6 +69,29 @@ module.exports = class FOBasePage extends CommonPage {
     await this.goTo(page, global.FO.URL);
   }
 
+  // Header methods
+  async goToHeaderLink(page, link) {
+    let selector;
+
+    switch (link) {
+      case 'Contact us':
+        selector = this.contactLink;
+        break;
+
+      case 'Sign in':
+        selector = this.userInfoLink;
+        break;
+
+      case 'Cart':
+        selector = this.cartLink;
+        break;
+
+      default:
+        throw new Error(`The page ${link} was not found`);
+    }
+    return this.clickAndWaitForNavigation(page, selector);
+  }
+
   /**
    * Go to the home page
    * @param page
@@ -79,14 +102,13 @@ module.exports = class FOBasePage extends CommonPage {
     await this.clickAndWaitForNavigation(page, this.desktopLogoLink);
   }
 
-  // Header methods
   /**
    * Go to login Page
    * @param page
    * @return {Promise<void>}
    */
   async goToLoginPage(page) {
-    await this.clickAndWaitForNavigation(page, this.userInfoLink);
+    await this.goToHeaderLink(page, 'Sign in');
   }
 
   /**
@@ -209,7 +231,7 @@ module.exports = class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCartPage(page) {
-    await this.clickAndWaitForNavigation(page, this.cartLink);
+    await this.goToHeaderLink(page, 'Cart');
   }
 
   // Footer methods
@@ -243,28 +265,6 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async getStoreInformation(page) {
     return this.getTextContent(page, this.wrapperContactBlockDiv);
-  }
-
-  async goToHeaderLink(page, link) {
-    let selector;
-
-    switch (link) {
-      case 'Contact us':
-        selector = this.contactLink;
-        break;
-
-      case 'Sign in':
-        selector = this.pricesDropLink;
-        break;
-
-      case 'Cart':
-        selector = this.pricesDropLink;
-        break;
-
-      default:
-        throw new Error(`The page ${link} was not found`);
-    }
-    return this.clickAndWaitForNavigation(page, selector);
   }
 
   /**

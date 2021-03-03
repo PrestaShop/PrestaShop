@@ -8,14 +8,12 @@ const helper = require('@utils/helpers');
 const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const contactUsPage = require('@pages/FO/contactUs');
-
-// Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+const cartPage = require('@pages/FO/cart');
 
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_FO_headerAndFooter_checkLinksInFooter';
+const baseContext = 'functional_FO_headerAndFooter_checkLinksInHeader';
 
 let browserContext;
 let page;
@@ -55,16 +53,6 @@ describe('Check links in header page', async () => {
     await expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
   });
 
-  it('should check sign in link', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkSignInLink', baseContext);
-
-    // Check prices drop link
-    await homePage.goToLoginPage(page);
-
-    const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
-  });
-
   it('check languages link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
 
@@ -77,5 +65,34 @@ describe('Check links in header page', async () => {
 
     language = await homePage.getShopLanguage(page);
     expect(language).to.equal('English');
+  });
+
+  it('should check sign in link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSignInLink', baseContext);
+
+    // Check sign in link
+    await homePage.goToHeaderLink(page, 'Sign in');
+
+    const pageTitle = await loginPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(loginPage.pageTitle);
+  });
+
+  it('should check shopping cart link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkShoppingCartLink', baseContext);
+
+    await loginPage.goToHomePage(page);
+
+    // Add product to cart by quick view
+    await homePage.addProductToCartByQuickView(page, 1, 1);
+
+    // Close block cart modal
+    const isQuickViewModalClosed = await homePage.closeBlockCartModal(page);
+    await expect(isQuickViewModalClosed).to.be.true;
+
+    // Check cart link
+    await homePage.goToHeaderLink(page, 'Cart');
+
+    const pageTitle = await cartPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(cartPage.pageTitle);
   });
 });
