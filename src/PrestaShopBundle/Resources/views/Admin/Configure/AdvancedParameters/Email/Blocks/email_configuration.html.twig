@@ -38,18 +38,19 @@
           <div class="js-smtp-configuration{% if emailConfigurationForm.mail_method.vars.value != smtpMailMethod %} d-none{% endif %}">
             {{ form_widget(emailConfigurationForm.smtp_config) }}
           </div>
-          {{ form_rest(emailConfigurationForm) }}
+          {{ form_row(emailConfigurationForm.log_emails) }}
           <div class="alert alert-info" role="alert">
             <p class="alert-text">
-              {{ 'Settings below allow you to configure DKIM signing of your outgoing emails. This will greatly reduce the chance of your emails ending in SPAM folders.'|trans({}, 'Admin.Advparameters.Help') }}
+              {{ 'Settings below allow you to configure DKIM signing of outgoing emails. This will greatly reduce the chance of your emails ending in SPAM folders.'|trans({}, 'Admin.Advparameters.Help') }}
             </p>
             <p class="alert-text">
-              {{ 'You can get the data below from your hosting administrator or generate it yourself by using one of freely available tools like dkimcore.org.'|trans({}, 'Admin.Advparameters.Help') }}
+              {{ 'You can get the data below from your server administrator or generate it yourself by using one of freely available tools, like dkimcore.org.'|trans({}, 'Admin.Advparameters.Help') }}
             </p>
             <p class="alert-text">
-              {{ 'Also, check if your server IP is specified in your SPF record as an allowed sender.'|trans({}, 'Admin.Advparameters.Help') }}
+              {{ 'Also, check if your server is specified in your SPF record as an allowed sender.'|trans({}, 'Admin.Advparameters.Help') }}
             </p>
           </div>
+          {{ form_rest(emailConfigurationForm) }}
         </div>
       </div>
       <div class="card-footer">
