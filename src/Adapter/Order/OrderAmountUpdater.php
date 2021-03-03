@@ -183,15 +183,15 @@ class OrderAmountUpdater
 
         // We should always use Cart::BOTH for the order total since it contains all products, shipping fees and cart rules
         $order->total_paid = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices, false),
             $computingPrecision
         );
         $order->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
+            (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices, false),
             $computingPrecision
         );
         $order->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices, false),
             $computingPrecision
         );
 
@@ -264,7 +264,7 @@ class OrderAmountUpdater
     private function updateOrderDetails(Order $order, Cart $cart): void
     {
         // Get cart products with prices kept from order
-        $cartProducts = $cart->getProducts(true, false, null, true, $this->keepOrderPrices);
+        $cartProducts = $cart->getProducts(true, false, null, true, $this->keepOrderPrices, false);
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
