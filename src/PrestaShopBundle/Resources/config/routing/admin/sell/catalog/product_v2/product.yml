@@ -1,3 +1,7 @@
+_combinations:
+    resource: 'combination.yml'
+    prefix: /products/
+
 admin_products_v2_create:
   path: /create
   methods: [GET, POST]
