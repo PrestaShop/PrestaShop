@@ -14,7 +14,7 @@ parameters:
 		- '#^Call to an undefined static method Attribute\:\:getAttributeMinimalQty\(\)\.$#'
 		- '#^Call to an undefined static method Attribute\:\:getAttributes\(\)\.$#'
 	universalObjectCratesClasses:
-		- Cookie
+		- CookiePHPConfigurationFileLoader
 		- ObjectModel
 		- Order
 		- OrderInvoice
@@ -24,7 +24,17 @@ includes:
     - vendor/prestashop/phpstan-prestashop/extension.neon
 
 services:
-	strictTypesForNewClassesRuleConfigurationFileLoader:
-		class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
-		arguments:
-			- .github/workflows/phpstan/strict-types-for-new-classes-rule-exclusion-list.php
+  strictTypesForNewClassesRuleConfigurationFileLoader:
+    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
+    arguments:
+      - .github/workflows/phpstan/strict-types-for-new-classes-rule-exclusion-list.php
+
+  returnTypesForNewMethodsRuleConfigurationFileLoader:
+    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
+    arguments:
+      - .github/workflows/phpstan/return-types-for-new-class-methods-rule-exclusion-list.php
+
+  typeHintsForNewMethodsRuleConfigurationFileLoader:
+    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
+    arguments:
+      - .github/workflows/phpstan/type-hint-for-new-class-methods-rule-exclusion-list.php
