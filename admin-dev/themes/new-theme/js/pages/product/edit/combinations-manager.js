@@ -32,24 +32,24 @@ const {$} = window;
 
 export default class CombinationsManager {
   constructor() {
-    this.$paginationContainer = $(ProductMap.combinations.paginationContainer);
-    this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
+    this.$productForm = $(ProductMap.productForm);
     this.router = new Router();
     this.init();
   }
 
   init() {
+    const productId = this.getProductId();
     new DynamicGridPaginator(
       ProductMap.combinations.paginationContainer,
-      new CombinationsGridRenderer(),
+      new CombinationsGridRenderer(productId),
       {
         route: 'admin_products_combinations',
-        paramsToKeep: {productId: this.getProductId()},
+        paramsToKeep: {productId},
       },
     );
   }
 
   getProductId() {
-    return Number(this.$paginationContainer.data('productId'));
+    return Number(this.$productForm.data('productId'));
   }
 }
