@@ -67,4 +67,18 @@ export default {
     removeCustomizationBtn: '.remove-customization-btn',
     customizationFieldRow: '.customization-field-row',
   },
+  combinations: {
+    combinationsContainer: '#product_combinations',
+    paginationContainer: '#combinations-pagination',
+    jumpToPageInput: 'input[name="paginator_jump_page"]',
+    firstPageBtn: 'button.page-link.first',
+    firstPageItem: 'li.page-item.first',
+    nextPageBtn: 'button.page-link.next',
+    nextPageItem: 'li.page-item.next',
+    previousPageBtn: 'button.page-link.previous',
+    previousPageItem: 'li.page-item.previous',
+    lastPageItem: 'li.page-item.last',
+    lastPageBtn: 'button.page-link.last',
+    pageLink: 'button.page-link',
+  },
 };
