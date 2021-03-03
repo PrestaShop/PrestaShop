@@ -55,6 +55,8 @@ export default class ProductPartialUpdater {
    * ex: new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
    */
   watch() {
+    // Avoid submitting form when pressing Enter
+    this.$productForm.keypress((e) => e.which !== 13);
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit(() => this.updatePartialForm());
