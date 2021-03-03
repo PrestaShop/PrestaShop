@@ -61,3 +61,16 @@ admin_products_v2_edit:
       id_product: productId
   requirements:
     productId: \d+
+
+admin_products_v2_delete:
+    path: /{productId}/delete
+    methods: [POST, DELETE]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:delete
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:delete
+        _legacy_parameters:
+            id_product: productId
+    requirements:
+        productId: \d+
