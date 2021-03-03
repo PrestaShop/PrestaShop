@@ -45,13 +45,23 @@ describe('Check links in header page', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  it('should check \'Contact us\' footer links', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductsFooterLinks', baseContext);
+  it('should check \'Contact us\' header links', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkContactUsHeaderLink', baseContext);
 
-    // Check prices drop link
+    // Check Contact us
     await homePage.goToHeaderLink(page, 'Contact us');
 
     const pageTitle = await contactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(contactUsPage.pageTitle);
+    await expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
+  });
+
+  it('should check sign in link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSignInLink', baseContext);
+
+    // Check prices drop link
+    await homePage.goToLoginPage(page);
+
+    const pageTitle = await loginPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(loginPage.pageTitle);
   });
 });
