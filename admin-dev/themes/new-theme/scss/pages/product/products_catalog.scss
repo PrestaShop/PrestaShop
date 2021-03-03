@@ -6,6 +6,9 @@
 /* stylelint-enable */
 
 .products-catalog {
+  @include border-radius(5px);
+  @include box-shadow(0 0 4px 0 rgba(0,0,0,0.06));
+
   > .content {
     margin-bottom: 20px;
     background: #fff;

@@ -28,7 +28,7 @@
 
 {% block content %}
   <div class="row justify-content-center">
-    {{ form_start(generalForm, {attr : {class: 'form col-xl-10'}, action: path('admin_administration_general_save') }) }}
+    {{ form_start(generalForm, {attr : {class: 'form col'}, action: path('admin_administration_general_save') }) }}
       {% block administration_form_general %}
         <div class="card" id="configuration_fieldset_general">
           <h3 class="card-header">
@@ -85,7 +85,7 @@
   </div>
 
   <div class="row justify-content-center">
-    {{ form_start(uploadQuotaForm, {attr : {class: 'form col-xl-10'}, action: path('admin_administration_upload_quota_save') }) }}
+    {{ form_start(uploadQuotaForm, {attr : {class: 'form col'}, action: path('admin_administration_upload_quota_save') }) }}
       {% block administration_form_upload_quota %}
         <div class="card" id="configuration_fieldset_upload">
           <h3 class="card-header">
@@ -128,7 +128,7 @@
   </div>
 
   <div class="row justify-content-center">
-    {{ form_start(notificationsForm, {attr : {class: 'form col-xl-10'}, action: path('admin_administration_notifications_save') }) }}
+    {{ form_start(notificationsForm, {attr : {class: 'form col'}, action: path('admin_administration_notifications_save') }) }}
       {% block administration_form_notifications %}
         <div class="card" id="configuration_fieldset_notifications">
           <h3 class="card-header">
