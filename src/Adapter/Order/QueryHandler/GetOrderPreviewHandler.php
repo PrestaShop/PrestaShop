@@ -31,7 +31,6 @@ use Country;
 use Currency;
 use Customer;
 use Group;
-use Language;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\Number;
@@ -65,23 +64,15 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     private $locale;
 
     /**
-     * @var int|false|null
-     */
-    private $contextLanguageId;
-
-    /**
      * @param LocaleRepository $localeRepository
      * @param string $locale
-     * @param int|null $contextLanguageId
      */
     public function __construct(
         LocaleRepository $localeRepository,
-        string $locale,
-        ?int $contextLanguageId = null
+        string $locale
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;
-        $this->contextLanguageId = $contextLanguageId ?? Language::getIdByLocale($this->locale);
     }
 
     /**
@@ -141,7 +132,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->city,
             $address->postcode,
             $stateName,
-            $country->name[$order->id_lang] ?? $country->name[$this->contextLanguageId],
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
             $customer ? $customer->email : null,
             $address->phone
         );
@@ -177,7 +168,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->city,
             $address->postcode,
             $stateName,
-            $country->name[$order->id_lang] ?? $country->name[$this->contextLanguageId],
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
             $address->phone,
             $carrierName,
             $orderCarrier->tracking_number ?: null
