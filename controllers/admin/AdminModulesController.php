@@ -951,6 +951,8 @@ class AdminModulesControllerCore extends AdminController
                                     'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
                                     'add_permission' => $this->access('add'),
                                     'is_reset_ready' => $is_reset_ready,
+                                    'module_version' => $module->version,
+                                    'module_author' => $module->author,
                                 ]
                             );
 
