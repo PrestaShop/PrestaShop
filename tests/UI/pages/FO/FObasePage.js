@@ -6,6 +6,7 @@ module.exports = class FOBasePage extends CommonPage {
     super();
 
     // Selectors for home page
+    // Header links
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
@@ -242,6 +243,28 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async getStoreInformation(page) {
     return this.getTextContent(page, this.wrapperContactBlockDiv);
+  }
+
+  async goToHeaderLink(page, link) {
+    let selector;
+
+    switch (link) {
+      case 'Contact us':
+        selector = this.contactLink;
+        break;
+
+      case 'Sign in':
+        selector = this.pricesDropLink;
+        break;
+
+      case 'Cart':
+        selector = this.pricesDropLink;
+        break;
+
+      default:
+        throw new Error(`The page ${link} was not found`);
+    }
+    return this.clickAndWaitForNavigation(page, selector);
   }
 
   /**
