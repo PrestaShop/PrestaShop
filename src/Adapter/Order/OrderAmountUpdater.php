@@ -180,22 +180,25 @@ class OrderAmountUpdater
         $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
         $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
 
+        // We set $useEcotax to false because
+        //    $cart->getOrderTotal will fetch from order details which have already ecotax in their prices
+        $useEcotax = false;
         // We should always use Cart::BOTH for the order total since it contains all products, shipping fees and cart rules
         $order->total_paid = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices, $useEcotax),
             $computingPrecision
         );
         $order->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
+            (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices, $useEcotax),
             $computingPrecision
         );
         $order->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices, $useEcotax),
             $computingPrecision
         );
 
-        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId, false, $this->keepOrderPrices);
-        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId, false, $this->keepOrderPrices);
+        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId, false, $this->keepOrderPrices, $useEcotax);
+        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId, false, $this->keepOrderPrices, $useEcotax);
 
         $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts, $carrierId, false, $this->keepOrderPrices));
         $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts, $carrierId, false, $this->keepOrderPrices));
@@ -262,8 +265,10 @@ class OrderAmountUpdater
      */
     private function updateOrderDetails(Order $order, Cart $cart): void
     {
+        // We set $useEcotax to false else $cart->getProducts apply a second time ecotax on price
+        $useEcotax = false;
         // Get cart products with prices kept from order
-        $cartProducts = $cart->getProducts(true, false, null, true, $this->keepOrderPrices);
+        $cartProducts = $cart->getProducts(true, false, null, true, $this->keepOrderPrices, $useEcotax);
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
@@ -272,7 +277,8 @@ class OrderAmountUpdater
                 $orderDetail,
                 $order,
                 new Number((string) $cartProduct['price_with_reduction_without_tax']),
-                new Number((string) $cartProduct['price_with_reduction'])
+                new Number((string) $cartProduct['price_with_reduction']),
+                new Number((string) $cartProduct['ecotax'])
             );
         }
     }

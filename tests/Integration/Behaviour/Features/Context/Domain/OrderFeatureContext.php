@@ -39,6 +39,7 @@ use Order;
 use OrderInvoice;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
@@ -183,17 +184,21 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
-
         $productId = $product->getProductId();
-        if (isset($data['combination'])) {
-            $combinationId = $this->getProductCombinationId($product, $data['combination']);
-        } else {
-            $combinationId = 0;
-        }
+        $productCore = new Product((int) $productId);
+        $ecotax = new Number($productCore->ecotax);
+
+        $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, (int) $productId);
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $productId);
+            $data['price'] = new Number($data['price']);
+            $data['price'] = $data['price']->minus($ecotax);
+
+            $data['price_tax_incl'] = !empty($taxCalculator) ? new Number((string) $taxCalculator->addTaxes((float) (string) $data['price'])) : $data['price'];
+
+            $data['price_tax_incl'] = (string) $data['price_tax_incl']->plus($ecotax);
+            $data['price'] = (string) $data['price']->plus($ecotax);
         }
 
         $this->lastException = null;
@@ -651,10 +656,26 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
         $this->lastException = null;
 
-        // if tax included price is not given, it is calculated
+        $productCore = new Product((int) $productOrderDetail['product_id']);
+
+        // If tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
+            $ecotax = !is_null($productCore->ecotax) ? new Number((string) $productCore->ecotax) : null;
             $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+
+            $data['price'] = new Number($data['price']);
+            if (!empty($ecotax)) {
+                $data['price'] = $data['price']->minus($ecotax);
+            }
+
+            $data['price_tax_incl'] = !empty($taxCalculator) ? new Number((string) $taxCalculator->addTaxes((float) (string) $data['price'])) : $data['price'];
+
+            if (!empty($ecotax)) {
+                $data['price_tax_incl'] = $data['price_tax_incl']->plus($ecotax);
+                $data['price'] = $data['price']->plus($ecotax);
+            }
+            $data['price_tax_incl'] = (string) $data['price_tax_incl'];
+            $data['price'] = (string) $data['price'];
         }
 
         try {
