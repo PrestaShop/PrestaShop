@@ -13,7 +13,7 @@ jobs:
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
-                    extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+                    extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, mysql
             -   name: Setup MySQL
                 uses: mirromutth/mysql-action@v1.1
                 with:
