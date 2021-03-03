@@ -54,7 +54,7 @@
         </label>
 
         <div class="col-sm form-control-value">
-          <p>#{{ editableOrderReturn.orderId }} {{ 'from'|trans({}, 'Admin.Global') }} {{ editableOrderReturn.orderDate.format('d/m/y') }}</p>
+          <p>#{{ editableOrderReturn.orderId }} {{ 'from'|trans({}, 'Admin.Global') }} {{ editableOrderReturn.orderDate.format(dateFormat) }}</p>
 
           <a href="{{ path('admin_orders_view', {'orderId': editableOrderReturn.orderId }) }}" class="btn btn-outline-secondary">
             {{ 'View order details'|trans({}, 'Admin.Actions') }}

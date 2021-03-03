@@ -142,6 +142,10 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
 
         $allowPrintingOrderReturnPdf = $editableOrderReturn->getOrderReturnStateId() === self::ORDER_RETURN_STATE_WAITING_FOR_PACKAGE_ID;
 
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+
+        $legacyContext->getLanguage()->date_format_lite;
+
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
@@ -150,6 +154,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'editableOrderReturn' => $editableOrderReturn,
             'orderReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'allowPrintingOrderReturnPdf' => $allowPrintingOrderReturnPdf,
+            'dateFormat' => $legacyContext->getLanguage()->date_format_lite,
         ]);
     }
 
