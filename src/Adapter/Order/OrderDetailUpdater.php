@@ -80,6 +80,7 @@ class OrderDetailUpdater
      * @param Order $order
      * @param Number $priceTaxExcluded
      * @param Number $priceTaxIncluded
+     * @param Number $ecotax
      *
      * @throws OrderException
      */
@@ -87,13 +88,20 @@ class OrderDetailUpdater
         OrderDetail $orderDetail,
         Order $order,
         Number $priceTaxExcluded,
-        Number $priceTaxIncluded
+        Number $priceTaxIncluded,
+        Number $ecotax
     ): void {
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
+            $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
+            $priceTaxIncluded = $priceTaxIncluded->minus($ecotax);
+
             $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
             $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+
+            $precisePriceTaxExcluded = $precisePriceTaxExcluded->plus($ecotax);
+            $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotax);
 
             $this->applyOrderDetailPriceUpdate(
                 $orderDetail,
@@ -113,6 +121,7 @@ class OrderDetailUpdater
      * @param int $combinationId
      * @param Number $priceTaxExcluded
      * @param Number $priceTaxIncluded
+     * @param Number $ecotax
      *
      * @throws OrderException
      */
@@ -121,7 +130,8 @@ class OrderDetailUpdater
         int $productId,
         int $combinationId,
         Number $priceTaxExcluded,
-        Number $priceTaxIncluded
+        Number $priceTaxIncluded,
+        Number $ecotax
     ): void {
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
@@ -134,7 +144,8 @@ class OrderDetailUpdater
                 $priceTaxIncluded,
                 $roundType,
                 $computingPrecision,
-                $taxAddress
+                $taxAddress,
+                $ecotax
             );
         } finally {
             $this->contextStateManager->restorePreviousContext();
@@ -304,7 +315,8 @@ class OrderDetailUpdater
         Number $priceTaxIncluded,
         int $roundType,
         int $computingPrecision,
-        Address $taxAddress
+        Address $taxAddress,
+        Number $ecotax
     ): void {
         $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId);
         if (empty($identicalOrderDetails)) {
@@ -313,8 +325,13 @@ class OrderDetailUpdater
 
         // Get precise prices thanks to first OrderDetail (they all have the same price anyway)
         $orderDetail = $identicalOrderDetails[0];
+        $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
+        $priceTaxIncluded = $priceTaxIncluded->minus($ecotax);
         $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
         $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+
+        $precisePriceTaxExcluded = $precisePriceTaxExcluded->plus($ecotax);
+        $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotax);
 
         foreach ($identicalOrderDetails as $identicalOrderDetail) {
             $this->applyOrderDetailPriceUpdate(
