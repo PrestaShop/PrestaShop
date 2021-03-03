@@ -336,6 +336,14 @@ services:
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
 
+    prestashop.core.grid.factory.outstanding:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.outstanding'
+            - '@prestashop.core.grid.data.factory.outstanding_decorator'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
     prestashop.core.grid.factory.product:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
