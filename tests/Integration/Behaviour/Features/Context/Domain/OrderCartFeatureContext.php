@@ -44,7 +44,7 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
      * @param string $orderReference
      * @param string $customerReference
      */
-    public function orderHasCustomer(string $orderReference, string $customerReference)
+    public function orderHasCustomer(string $orderReference, string $customerReference): void
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $customerId = SharedStorage::getStorage()->get($customerReference);
