@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Controller\Exception\ErrorMessageNotFoundException;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
@@ -215,7 +214,6 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @return string
      *
-     * @throws ErrorMessageNotFoundException
      * @throws FieldNotFoundException
      */
     private function getErrorMessage(InvalidConfigurationDataError $error): string
