@@ -18,8 +18,8 @@ module.exports = {
     women: {
       id: 5,
       name: 'Women',
-      description: 'T-shirts, sweaters, hoodies and women\'s accessories. From basics to original creations, ' +
-        'for every style.',
+      description: 'T-shirts, sweaters, hoodies and women\'s accessories. From basics to original creations, '
+        + 'for every style.',
       position: 2,
       displayed: true,
     },
