@@ -5,6 +5,8 @@ class Home extends FOBasePage {
   constructor() {
     super();
 
+    this.pageTitle = global.INSTALL.SHOP_NAME;
+
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
     this.popularProductTitle = '#content section h2';

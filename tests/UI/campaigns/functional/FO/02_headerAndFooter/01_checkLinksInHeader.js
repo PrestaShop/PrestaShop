@@ -95,4 +95,13 @@ describe('Check links in header page', async () => {
     const pageTitle = await cartPage.getPageTitle(page);
     await expect(pageTitle).to.equal(cartPage.pageTitle);
   });
+
+  it('should check logo link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
+
+    await homePage.goToHeaderLink(page, 'Logo');
+
+    const pageTitle = await homePage.getPageTitle(page);
+    await expect(pageTitle).to.equal(homePage.pageTitle);
+  });
 });

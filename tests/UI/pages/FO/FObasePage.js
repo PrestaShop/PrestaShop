@@ -86,6 +86,10 @@ module.exports = class FOBasePage extends CommonPage {
         selector = this.cartLink;
         break;
 
+      case 'Logo':
+        selector = this.desktopLogo;
+        break;
+
       default:
         throw new Error(`The page ${link} was not found`);
     }
@@ -99,7 +103,7 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToHomePage(page) {
     await this.waitForVisibleSelector(page, this.desktopLogo);
-    await this.clickAndWaitForNavigation(page, this.desktopLogoLink);
+    await this.goToHeaderLink(page, 'Logo');
   }
 
   /**
