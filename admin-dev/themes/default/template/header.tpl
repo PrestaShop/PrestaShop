@@ -288,13 +288,13 @@
                   {$active = "active"}
                   {if $show_new_orders}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Latest orders' d='Admin.Navigation.Header'}<span id="orders_notif_value" class="notif-counter"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders' d='Admin.Navigation.Header'}<span id="orders_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
                   {if $show_new_customers}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='New customers' d='Admin.Navigation.Header'}<span id="customers_notif_value" class="notif-counter"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers' d='Admin.Navigation.Header'}<span id="customers_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
