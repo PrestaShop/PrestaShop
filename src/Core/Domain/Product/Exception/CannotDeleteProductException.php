@@ -33,4 +33,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
  */
 class CannotDeleteProductException extends ProductException
 {
+    /**
+     * When fails to delete single product
+     */
+    public const FAILED_DELETE = 10;
+
+    /**
+     * When fails to delete products in bulk action
+     */
+    public const FAILED_BULK_DELETE = 20;
 }
