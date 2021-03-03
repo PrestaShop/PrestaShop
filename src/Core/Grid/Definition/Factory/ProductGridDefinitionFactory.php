@@ -187,19 +187,19 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     )
                     ->add((new SubmitRowAction('delete'))
-                        ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                        ->setIcon('delete')
-                        ->setOptions([
-                            'method' => 'DELETE',
-                            'route' => 'admin_products_v2_delete',
-                            'route_param_name' => 'productId',
-                            'route_param_field' => 'id_product',
-                            'confirm_message' => $this->trans(
-                                'Delete selected item?',
-                                [],
-                                'Admin.Notifications.Warning'
-                            ),
-                        ])
+                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                    ->setIcon('delete')
+                    ->setOptions([
+                        'method' => 'DELETE',
+                        'route' => 'admin_products_v2_delete',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
+                        'confirm_message' => $this->trans(
+                            'Delete selected item?',
+                            [],
+                            'Admin.Notifications.Warning'
+                        ),
+                    ])
                     ),
                 //    @todo Implement remaining actions
                 //    ->add((new PreviewProductRowAction('preview_product'))
