@@ -10,6 +10,7 @@ const loginPage = require('@pages/FO/login');
 const contactUsPage = require('@pages/FO/contactUs');
 const cartPage = require('@pages/FO/cart');
 const searchResultsPage = require('@pages/FO/searchResults');
+const myAccountPage = require('@pages/FO/myAccount');
 
 // Import data
 const {Categories} = require('@data/demo/categories');
@@ -28,9 +29,9 @@ let page;
 Go to FO
 Check header links:
 - Contact us
-- Language (English, Français)
+- Language( English, Français)
 - Sign in
-- My account
+- My account( Customer name)
 - Sign out
 - Cart
 - Logo
@@ -98,11 +99,20 @@ describe('Check links in header page', async () => {
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
 
+  it('should check my account link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkMyAccountLink', baseContext);
+
+    await loginPage.goToMyAccountPage(page);
+
+    const pageTitle = await myAccountPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+  });
+
   it('should check sign out link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSignOutLink', baseContext);
 
     // Sign out
-    await loginPage.logout(page);
+    await myAccountPage.logout(page);
 
     const pageTitle = await loginPage.getPageTitle(page);
     await expect(pageTitle).to.equal(loginPage.pageTitle);
