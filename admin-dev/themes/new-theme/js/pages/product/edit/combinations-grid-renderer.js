@@ -24,32 +24,23 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import Router from '@components/router';
-import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
-import DynamicGridPaginator from '@components/pagination/dynamic-grid-paginator';
 
 const {$} = window;
 
-export default class CombinationsManager {
+export default class CombinationsGridRenderer {
   constructor() {
-    this.$paginationContainer = $(ProductMap.combinations.paginationContainer);
     this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
-    this.router = new Router();
-    this.init();
   }
 
-  init() {
-    new DynamicGridPaginator(
-      ProductMap.combinations.paginationContainer,
-      new CombinationsGridRenderer(),
-      {
-        route: 'admin_products_combinations',
-        paramsToKeep: {productId: this.getProductId()},
-      },
-    );
+  render(page, limit) {
+    this.cleanTable();
+    //@todo:
+    // fetch api(page, limit)
+    // remove old list
+    // render new list by inserting api data to prototype
   }
 
-  getProductId() {
-    return Number(this.$paginationContainer.data('productId'));
+  cleanTable() {
+    this.$combinationsContainer.find('table').empty();
   }
 }
