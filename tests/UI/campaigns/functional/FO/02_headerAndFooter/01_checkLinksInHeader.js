@@ -9,9 +9,11 @@ const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const contactUsPage = require('@pages/FO/contactUs');
 const cartPage = require('@pages/FO/cart');
+const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import data
 const {Categories} = require('@data/demo/categories');
+const {Products} = require('@data/demo/products');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -23,7 +25,14 @@ let page;
 
 /*
 Go to FO
-Check header links
+Check header links:
+- Contact us
+- Language (English, Français)
+- Sign in
+- Cart
+- Logo
+- Categories and subcategories
+- Search
  */
 
 describe('Check links in header page', async () => {
@@ -133,5 +142,14 @@ describe('Check links in header page', async () => {
       const pageTitle = await homePage.getPageTitle(page);
       await expect(pageTitle).to.equal(test.args.subcategory.name);
     });
+  });
+
+  it('should check search link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSearchLink', baseContext);
+
+    await homePage.searchProduct(page, Products.demo_8.name);
+
+    const pageTitle = await searchResultsPage.getPageTitle(page);
+    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
   });
 });

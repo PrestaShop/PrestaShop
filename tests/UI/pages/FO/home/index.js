@@ -19,7 +19,6 @@ class Home extends FOBasePage {
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
     this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
-    this.searchInput = '#search_widget input.ui-autocomplete-input';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -94,18 +93,6 @@ class Home extends FOBasePage {
    */
   async isNewFlagVisible(page, id = 1) {
     return this.elementVisible(page, this.newFlag(id), 1000);
-  }
-
-  /**
-   * Search product
-   * @param page
-   * @param productName
-   * @returns {Promise<void>}
-   */
-  async searchProduct(page, productName) {
-    await this.setValue(page, this.searchInput, productName);
-    await page.keyboard.press('Enter');
-    await page.waitForNavigation();
   }
 
   /**

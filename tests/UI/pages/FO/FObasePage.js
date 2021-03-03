@@ -24,6 +24,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.currencySelectorDiv = '#_desktop_currency_selector';
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
+    this.searchInput = '#search_widget input.ui-autocomplete-input';
 
     // Footer links
     // Products links selectors
@@ -70,6 +71,12 @@ module.exports = class FOBasePage extends CommonPage {
   }
 
   // Header methods
+  /**
+   * Go to header link
+   * @param page
+   * @param link
+   * @returns {Promise<void>}
+   */
   async goToHeaderLink(page, link) {
     let selector;
 
@@ -236,6 +243,18 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToCartPage(page) {
     await this.goToHeaderLink(page, 'Cart');
+  }
+
+  /**
+   * Search product
+   * @param page
+   * @param productName
+   * @returns {Promise<void>}
+   */
+  async searchProduct(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    await page.keyboard.press('Enter');
+    await page.waitForNavigation();
   }
 
   // Footer methods

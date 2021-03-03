@@ -4,6 +4,7 @@ const FOBasePage = require('@pages/FO/FObasePage');
 class SearchResults extends FOBasePage {
   constructor() {
     super();
+    this.pageTitle = 'Search';
 
     // Selectors for search Results page
     this.productArticle = number => `#js-product-list .products div:nth-child(${number}) article`;
