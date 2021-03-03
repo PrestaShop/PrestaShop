@@ -71,7 +71,7 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
     }
 
     /**
-     * Gets legacy OrderReturn
+     * Gets legacy OrderReturnState
      *
      * @param OrderReturnStateId $orderReturnStateId
      *
