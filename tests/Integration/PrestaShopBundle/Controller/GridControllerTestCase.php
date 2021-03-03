@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
