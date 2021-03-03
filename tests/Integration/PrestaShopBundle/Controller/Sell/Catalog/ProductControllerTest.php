@@ -78,7 +78,9 @@ class ProductControllerTest extends GridControllerTestCase
     {
         /** @todo add rest of the tests, need for product form to be complete */
         return [
-            ['product[name]' => 'stProd'],
+            [
+                'product[name]' => 'stProd'
+            ],
             [
                 'product[id_product][min_field]' => $this->getTestEntity()->getId(),
                 'product[id_product][max_field]' => $this->getTestEntity()->getId()
@@ -118,10 +120,7 @@ class ProductControllerTest extends GridControllerTestCase
     protected function getEntity($tr, $i): TestEntityDTO
     {
         return new TestEntityDTO(
-            (int) trim($tr->filter('.column-id_product')->text()),
-           [
-
-           ]
+            (int) trim($tr->filter('.column-id_product')->text())
         );
     }
 
@@ -132,8 +131,7 @@ class ProductControllerTest extends GridControllerTestCase
      */
     protected function getCreateEntityFormModifications(): array
     {
-        /** @todo add rest of the tests, need for product form to be complete */
-
+        /** @todo add rest of the tests, needs for product form to be complete */
         $testEntity = $this->getTestEntity();
 
         return [
