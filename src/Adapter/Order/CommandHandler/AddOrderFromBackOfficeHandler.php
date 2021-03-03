@@ -88,7 +88,6 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
             ->setShop(new Shop($cart->id_shop))
         ;
         $this->setCartContext($this->contextStateManager, $cart);
-        $this->contextStateManager->saveCurrentContext();
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());

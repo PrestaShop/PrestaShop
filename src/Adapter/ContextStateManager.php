@@ -182,8 +182,8 @@ final class ContextStateManager
      */
     public function restorePreviousContext(): self
     {
-        $currentStashIndex = $this->getCurrentStashIndex();
-        foreach (array_keys($this->contextFieldsStack[$currentStashIndex]) as $fieldName) {
+        $stackFields = array_keys($this->contextFieldsStack[$this->getCurrentStashIndex()]);
+        foreach ($stackFields as $fieldName) {
             $this->restoreContextField($fieldName);
         }
         $this->removeLastSavedContext();
