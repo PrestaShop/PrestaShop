@@ -374,7 +374,6 @@ services:
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
-
     prestashop.core.grid.query_builder.security.session.employee:
       class: 'PrestaShop\PrestaShop\Core\Grid\Query\Security\Session\EmployeeQueryBuilder'
       parent: 'prestashop.core.grid.abstract_query_builder'
