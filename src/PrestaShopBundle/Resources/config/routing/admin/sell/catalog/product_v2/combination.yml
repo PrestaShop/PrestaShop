@@ -1,7 +1,10 @@
+
 # @todo: what should be proper naming for this? can it be indexAction even though it returns only json?
 admin_products_combinations:
     path: /{productId}/combinations
     methods: [GET]
+    options:
+        expose: true
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getList
         _legacy_controller: AdminProducts
