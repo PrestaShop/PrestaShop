@@ -10,7 +10,7 @@ class AddZone extends BOBasePage {
 
     // Selectors
     this.nameInput = '#name';
-    this.statusToggle = toggle => `label[for='active_${toggle}']`;
+    this.statusToggle = toggle => `#active_${toggle}`;
     this.saveZoneButton = '#zone_form_submit_btn';
   }
 
@@ -25,7 +25,7 @@ class AddZone extends BOBasePage {
    */
   async createEditZone(page, zoneData) {
     await this.setValue(page, this.nameInput, zoneData.name);
-    await page.click(this.statusToggle(zoneData.status ? 'on' : 'off'));
+    await page.check(this.statusToggle(zoneData.status ? 'on' : 'off'));
 
     // Save zone
     await this.clickAndWaitForNavigation(page, this.saveZoneButton);

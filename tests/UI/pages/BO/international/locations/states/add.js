@@ -13,7 +13,7 @@ class AddState extends BOBasePage {
     this.isoCodeInput = '#iso_code';
     this.countrySelect = '#id_country';
     this.zoneSelect = '#id_zone';
-    this.statusToggle = toggle => `label[for='active_${toggle}']`;
+    this.statusToggle = toggle => `#active_${toggle}`;
     this.saveStateButton = '#state_form_submit_btn';
   }
 
@@ -32,7 +32,7 @@ class AddState extends BOBasePage {
     await this.setValue(page, this.isoCodeInput, stateData.isoCode);
     await this.selectByVisibleText(page, this.countrySelect, stateData.country);
     await this.selectByVisibleText(page, this.zoneSelect, stateData.zone);
-    await page.click(this.statusToggle(stateData.status ? 'on' : 'off'));
+    await page.check(this.statusToggle(stateData.status ? 'on' : 'off'));
 
     // Save zone
     await this.clickAndWaitForNavigation(page, this.saveStateButton);
