@@ -361,17 +361,17 @@ services:
 
 
     prestashop.core.grid.query_builder.security.session.employee:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\Security\Session\EmployeeQueryBuilder'
-        parent: 'prestashop.core.grid.abstract_query_builder'
-        arguments:
-            - '@prestashop.core.query.doctrine_search_criteria_applicator'
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-        public: true
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Security\Session\EmployeeQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      public: true
 
     prestashop.core.grid.query_builder.security.session.customer:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\Security\Session\CustomerQueryBuilder'
-        parent: 'prestashop.core.grid.abstract_query_builder'
-        arguments:
-            - '@prestashop.core.query.doctrine_search_criteria_applicator'
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-        public: true
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Security\Session\CustomerQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      public: true
