@@ -48,7 +48,7 @@ class TestEntityDTO
      */
     public function __construct(
         ?int $id,
-        array $variables
+        array $variables = []
     ) {
         $this->id = $id;
         $this->variables = $variables;

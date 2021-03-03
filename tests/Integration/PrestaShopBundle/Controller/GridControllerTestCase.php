@@ -272,7 +272,7 @@ abstract class GridControllerTestCase extends WebTestCase
     }
 
     /**
-     * Can be overridden if you need to manipulate route in in any way
+     * Can be overridden if you need to manipulate route in any way
      *
      * @param Router $router
      *
