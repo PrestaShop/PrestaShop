@@ -318,6 +318,36 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^the product "(.+)" ecotax is (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param float $ecotax
+     */
+    public function setProductEcotax(string $productName, float $ecotax): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->ecotax = $ecotax;
+        $this->products[$productName]->save();
+
+        Product::flushPriceCache();
+        Product::resetStaticCache();
+    }
+
+    /**
+     * @Then /^the ecotax of the product "(.+)" should be (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param float $ecotax
+     */
+    public function productCheckEcotax(string $productName, float $ecotax): void
+    {
+        $this->checkProductWithNameExists($productName);
+        if ($this->products[$productName]->ecotax !== $ecotax) {
+            throw new RuntimeException(sprintf('Expects %f, got %f instead', $ecotax, $this->products[$productName]->ecotax));
+        }
+    }
+
+    /**
      * @Given /^the product "(.+)" minimal quantity is (\d+)$/
      *
      * @param string $productName
