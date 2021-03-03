@@ -64,4 +64,18 @@ describe('Check links in header page', async () => {
     const pageTitle = await loginPage.getPageTitle(page);
     await expect(pageTitle).to.equal(loginPage.pageTitle);
   });
+
+  it('check languages link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
+
+    await homePage.changeLanguage(page, 'fr');
+
+    let language = await homePage.getShopLanguage(page);
+    expect(language).to.equal('Français');
+
+    await homePage.changeLanguage(page, 'en');
+
+    language = await homePage.getShopLanguage(page);
+    expect(language).to.equal('English');
+  });
 });
