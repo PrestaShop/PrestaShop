@@ -753,12 +753,16 @@ Country</value>
   </configuration>
   <configuration id="PS_MAIL_DKIM_ENABLE" name="PS_MAIL_DKIM_ENABLE">
     <value>0</value>
+  </configuration>
   <configuration id="PS_MAIL_DKIM_DOMAIN" name="PS_MAIL_DKIM_DOMAIN">
     <value/>
+  </configuration>
   <configuration id="PS_MAIL_DKIM_SELECTOR" name="PS_MAIL_DKIM_SELECTOR">
     <value/>
+  </configuration>
   <configuration id="PS_MAIL_DKIM_KEY" name="PS_MAIL_DKIM_KEY">
     <value/>
+  </configuration>
   <configuration id="NW_SALT" name="NW_SALT">
     <value>nK4KJP7jOsnzWMpo</value>
   </configuration>
