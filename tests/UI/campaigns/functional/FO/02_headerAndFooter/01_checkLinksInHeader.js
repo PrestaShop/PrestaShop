@@ -164,7 +164,7 @@ describe('Check links in header page', async () => {
     {args: {category: Categories.accessories, subcategory: Categories.homeAccessories}},
   ].forEach((test) => {
     it(`should check subcategory '${test.args.subcategory.name}' link`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `check${test.args.category.name}Link`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `check${test.args.subcategory.name}Link`, baseContext);
 
       await homePage.goToSubCategory(page, test.args.category.id, test.args.subcategory.id);
 
