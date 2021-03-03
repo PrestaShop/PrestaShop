@@ -31,6 +31,7 @@ import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import ProductMap from '@pages/product/product-map';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
+import CombinationsManager from '@pages/product/edit/combinations-manager';
 
 const {$} = window;
 
@@ -81,4 +82,5 @@ $(() => {
   new ProductSuppliersManager();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
+  new CombinationsManager();
 });
