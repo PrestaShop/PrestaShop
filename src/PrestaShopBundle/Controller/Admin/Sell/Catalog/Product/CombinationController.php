@@ -45,14 +45,14 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function getListAction(int $productId, Request $request): JsonResponse
     {
-        $limit = $request->request->get('limit');
-        $page = $request->request->get('page');
+        $limit = (int) $request->query->get('limit');
+        $page = (int) $request->query->get('page');
 
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
-            $limit,
-            $page
+            $limit ?? null,
+            $page ?? null
         ));
 
         return $this->json($this->formatResponse($combinationsList));
@@ -71,14 +71,15 @@ class CombinationController extends FrameworkBundleAdminController
         ];
         foreach ($combinationListForEditing->getCombinations() as $combination) {
             $data['combinations'][] = [
-                'is_selected' => false,
+                'id' => $combination->getCombinationId(),
+                'isSelected' => false,
                 'name' => $combination->getCombinationName(),
                 //@todo: do I need to get image link here or in QueryResult?
-                'impact_on_price' => (string) $combination->getImpactOnPrice(),
+                'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 //@todo: calculate final price. Need a service to be used in formData provider and here
-                'final_price_te' => 0,
+                'finalPriceTe' => 0,
                 'quantity' => $combination->getQuantity(),
-                'is_default' => $combination->isDefault(),
+                'isDefault' => $combination->isDefault(),
             ];
         }
 

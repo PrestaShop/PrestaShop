@@ -33,6 +33,7 @@ export default {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',
     defaultSupplierInput: '#product_suppliers_default_supplier_id',
+    //@todo: why its called productsTable and not productSuppliers|suppliers table? is it a mistake?
     productsTable: `${productSuppliersId} table`,
     productsTableBody: `${productSuppliersId} table tbody`,
     productSupplierRow: {
@@ -68,7 +69,8 @@ export default {
     customizationFieldRow: '.customization-field-row',
   },
   combinations: {
-    combinationsContainer: '#product_combinations',
+    combinationsTable: '#product_combinations table',
+    combinationsTableBody: '#product_combinations table tbody',
     paginationContainer: '#combinations-pagination',
     jumpToPageInput: 'input[name="paginator_jump_page"]',
     firstPageBtn: 'button.page-link.first',
@@ -80,5 +82,16 @@ export default {
     lastPageItem: 'li.page-item.last',
     lastPageBtn: 'button.page-link.last',
     pageLink: 'button.page-link',
+    tableRow: {
+      combinationNameCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_name`,
+      impactOnPriceCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_impact_on_price`,
+      finalPriceTeCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_final_price_te`,
+      quantityCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_quantity`,
+      isDefaultCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_is_default`,
+      editButton: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_edit`,
+      deleteButton: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_delete`,
+      //@todo: we could do something as follows to allow extending easily, but that would require coupling the response and js.
+      cell: (rowIndex, cellName) => `#product_combinations_combinations_list_${rowIndex}_${cellName}`,
+    },
   },
 };

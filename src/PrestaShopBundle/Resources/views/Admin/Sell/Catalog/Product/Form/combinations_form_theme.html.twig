@@ -35,13 +35,15 @@
       {{ form_widget(form.is_selected) }}
     </td>
     <td>
-      {{ form.name.vars.value }}
+{#      todo: modify widget rendering to look like simple text (not input)#}
+      {{ form_widget(form.name) }}
     </td>
     <td>
       {{ form_widget(form.impact_on_price) }}
     </td>
     <td>
-      {{ form.final_price_te.vars.value }}
+      {#      todo: modify widget rendering to look like simple text (not input)#}
+      {{ form_widget(form.final_price_te) }}
     </td>
     <td>
       {{ form_widget(form.quantity) }}
@@ -60,23 +62,22 @@
 
 {%- block collection_row -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  <div {{ block('widget_attributes') }}>
-    <table>
-      <thead>
-      <tr>
-        <th></th>
-        <th>Combination</th>
-        <th>Impact on price (tax excl.)</th>
-        <th>Final price (tax excl.)</th>
-        <th>Quantity</th>
-        <th>Default combination</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{- block('form_rows') -}}
-      </tbody>
-    </table>
-  </div>
+  <table {{ block('widget_attributes') }}>
+    <thead>
+    <tr>
+      <th></th>
+{#        @todo: translate#}
+      <th>Combination</th>
+      <th>Impact on price (tax excl.)</th>
+      <th>Final price (tax excl.)</th>
+      <th>Quantity</th>
+      <th>Default combination</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{- block('form_rows') -}}
+    </tbody>
+  </table>
 
 {%- endblock collection_row -%}
