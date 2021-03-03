@@ -1,50 +1,3 @@
-{#{% set route_params = {} %}#}
-
-{#{% for param_name, param_value in app.request.attributes.get('_route_params') %}#}
-{#  {% set route_params = route_params|merge({ (param_name) : (param_value) }) %}#}
-{#{% endfor %}#}
-
-{#<div id="combinations-pagination">#}
-{#  {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {#}
-{#    'limit': 10,#}
-{#    'offset': 0,#}
-{#    'total': totalCombinations,#}
-{#    'prefix': '',#}
-{#    'view': 'dynamic',#}
-{#    'caller_route': 'admin_products_combinations',#}
-{#    'caller_parameters': route_params,#}
-{#  })) }}#}
-{#</div>#}
-
-{# <div class="col-md-6 text-left combinations-pagination">#}
-{#  #}{# todo: 10 hardcoded as per page limit. Check ProductFormDataProvider related #}
-{#  {% set limit = 10 %}#}
-{#  {% set numPages = max(totalCombinations / limit, 1)|round(0, 'ceil') %}#}
-{#  <nav{% if totalCombinations <= limit %} class="d-none"{% endif %} id="combinationsNavPagination">#}
-{#    <ul class="pagination" id="combinationsTablePagination" data-num-per-page="{{ limit }}"#}
-{#        data-num-pages="{{ numPages }}">#}
-{#      <li class="page-item disabled" id="combinationsTablePaginationPrev">#}
-{#        <a class="page-link" href="javascript:void(0);" aria-label="Previous">#}
-{#          <span aria-hidden="true">&laquo;</span>#}
-{#          <span class="sr-only">Previous</span>#}
-{#        </a>#}
-{#      </li>#}
-{#      {% for numPage in 1..numPages %}#}
-{#        <li class="page-item{% if numPage==1 %} active{% endif %}">#}
-{#          <span class="page-link" data-limit="{{ limit }}" data-page="{{ numPage }}">{{ numPage }}</span>#}
-{#        </li>#}
-{#      {% endfor %}#}
-{#      <li class="page-item"><span class="page-link" data-page=""></span></li>#}
-{#      <li class="page-item" id="combinationsTablePaginationNext">#}
-{#        <a class="page-link" href="javascript:void(0);" aria-label="Next">#}
-{#          <span aria-hidden="true">&raquo;</span>#}
-{#          <span class="sr-only">Next</span>#}
-{#        </a>#}
-{#      </li>#}
-{#    </ul>#}
-{#  </nav>#}
-{#</div>#}
-
 {#todo: limit should be modifyable#}
 {% set limit = 10 %}
 {% set pageCount = (totalCombinations/limit)|round(0, 'ceil') %}
@@ -55,7 +8,7 @@
 <div
   class="row justify-content-center"
   id="combinations-pagination"
-  data-total-combinations="{{ totalCombinations }}"
+  data-total="{{ totalCombinations }}"
   data-limit="{{ limit }}"
   data-product-id="{{ productId }}"
 >
