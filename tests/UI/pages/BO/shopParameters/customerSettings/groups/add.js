@@ -13,7 +13,7 @@ class AddGroup extends BOBasePage {
     this.nameInput = idLang => `#name_${idLang}`;
     this.discountInput = '#reduction';
     this.priceDisplayMethodSelect = '#price_display_method';
-    this.showPricesToggle = toggle => `${this.groupForm} label[for='show_prices_${toggle}']`;
+    this.showPricesToggle = toggle => `${this.groupForm} #show_prices_${toggle}`;
     this.saveButton = '#group_form_submit_btn';
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -62,7 +62,7 @@ class AddGroup extends BOBasePage {
 
     await this.selectByVisibleText(page, this.priceDisplayMethodSelect, groupData.priceDisplayMethod);
 
-    await page.click(this.showPricesToggle(groupData ? 'on' : 'off'));
+    await page.check(this.showPricesToggle(groupData ? 'on' : 'off'));
 
     // Save group
     await this.clickAndWaitForNavigation(page, this.saveButton);
