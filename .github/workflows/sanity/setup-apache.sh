@@ -6,7 +6,9 @@ WORKSPACE=$1
 PHP_VERSION=$2
 
 # Install apache
-apt update && apt install -y apache2 libapache2-mod-php$PHP_VERSION
+apt-get update
+add-apt-repository ppa:ondrej/php
+apt-get install -y apache2 libapache2-mod-php$PHP_VERSION
 
 # Enable rewrite mode
 a2enmod rewrite actions alias
