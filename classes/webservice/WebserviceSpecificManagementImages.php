@@ -91,7 +91,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * ------------------------------------------------ */
 
     /**
-     * @param WebserviceOutputBuilderCore $obj
+     * @param WebserviceOutputBuilder $obj
      *
      * @return WebserviceSpecificManagementInterface
      */
