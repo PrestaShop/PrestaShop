@@ -791,7 +791,6 @@ var form = (function() {
       target.html(`<div class="alert alert-danger">${content}</div>`);
     }
   }
-  
   return {
     'init': function() {
       /** prevent form submit on ENTER keypress */
