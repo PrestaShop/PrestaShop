@@ -30,6 +30,7 @@ import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import ProductMap from '@pages/product/product-map';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
+import CombinationsManager from '@pages/product/edit/combinations-manager';
 
 const {$} = window;
 
@@ -78,4 +79,5 @@ $(() => {
   new ProductSuppliersManager();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
+  new CombinationsManager();
 });

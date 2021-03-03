@@ -1,28 +1,95 @@
-<div class="col-md-6 text-left combinations-pagination">
-  {# todo: 10 hardcoded as per page limit. Check ProductFormDataProvider related #}
-  {% set limit = 10 %}
-  {% set numPages = max(totalCombinations / limit, 1)|round(0, 'ceil') %}
-  <nav{% if totalCombinations <= limit %} class="d-none"{% endif %} id="combinationsNavPagination">
-    <ul class="pagination" id="combinationsTablePagination" data-num-per-page="{{ limit }}"
-        data-num-pages="{{ numPages }}">
-      <li class="page-item disabled" id="combinationsTablePaginationPrev">
-        <a class="page-link" href="javascript:void(0);" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-          <span class="sr-only">Previous</span>
-        </a>
-      </li>
-      {% for numPage in 1..numPages %}
-        <li class="page-item{% if numPage==1 %} active{% endif %}">
-          <span class="page-link" data-limit="{{ limit }}" data-page="{{ numPage }}">{{ numPage }}</span>
-        </li>
-      {% endfor %}
-      <li class="page-item"><span class="page-link" data-page=""></span></li>
-      <li class="page-item" id="combinationsTablePaginationNext">
-        <a class="page-link" href="javascript:void(0);" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-          <span class="sr-only">Next</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+{#{% set route_params = {} %}#}
+
+{#{% for param_name, param_value in app.request.attributes.get('_route_params') %}#}
+{#  {% set route_params = route_params|merge({ (param_name) : (param_value) }) %}#}
+{#{% endfor %}#}
+
+{#<div id="combinations-pagination">#}
+{#  {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {#}
+{#    'limit': 10,#}
+{#    'offset': 0,#}
+{#    'total': totalCombinations,#}
+{#    'prefix': '',#}
+{#    'view': 'dynamic',#}
+{#    'caller_route': 'admin_products_combinations',#}
+{#    'caller_parameters': route_params,#}
+{#  })) }}#}
+{#</div>#}
+
+{# <div class="col-md-6 text-left combinations-pagination">#}
+{#  #}{# todo: 10 hardcoded as per page limit. Check ProductFormDataProvider related #}
+{#  {% set limit = 10 %}#}
+{#  {% set numPages = max(totalCombinations / limit, 1)|round(0, 'ceil') %}#}
+{#  <nav{% if totalCombinations <= limit %} class="d-none"{% endif %} id="combinationsNavPagination">#}
+{#    <ul class="pagination" id="combinationsTablePagination" data-num-per-page="{{ limit }}"#}
+{#        data-num-pages="{{ numPages }}">#}
+{#      <li class="page-item disabled" id="combinationsTablePaginationPrev">#}
+{#        <a class="page-link" href="javascript:void(0);" aria-label="Previous">#}
+{#          <span aria-hidden="true">&laquo;</span>#}
+{#          <span class="sr-only">Previous</span>#}
+{#        </a>#}
+{#      </li>#}
+{#      {% for numPage in 1..numPages %}#}
+{#        <li class="page-item{% if numPage==1 %} active{% endif %}">#}
+{#          <span class="page-link" data-limit="{{ limit }}" data-page="{{ numPage }}">{{ numPage }}</span>#}
+{#        </li>#}
+{#      {% endfor %}#}
+{#      <li class="page-item"><span class="page-link" data-page=""></span></li>#}
+{#      <li class="page-item" id="combinationsTablePaginationNext">#}
+{#        <a class="page-link" href="javascript:void(0);" aria-label="Next">#}
+{#          <span aria-hidden="true">&raquo;</span>#}
+{#          <span class="sr-only">Next</span>#}
+{#        </a>#}
+{#      </li>#}
+{#    </ul>#}
+{#  </nav>#}
+{#</div>#}
+
+{#todo: limit should be modifyable#}
+{% set limit = 10 %}
+{% set pageCount = (totalCombinations/limit)|round(0, 'ceil') %}
+{% set firstUrl = url('admin_products_combinations', {'productId': productId,'page': 1, 'limit': limit}) %}
+{% set nextUrl = url('admin_products_combinations', {'productId': productId,'page': 2, 'limit': limit}) %}
+{% set lastUrl = url('admin_products_combinations', {'productId': productId,'page': pageCount, 'limit': limit}) %}
+
+<div
+  class="row justify-content-center"
+  id="combinations-pagination"
+  data-total-combinations="{{ totalCombinations }}"
+  data-limit="{{ limit }}"
+  data-product-id="{{ productId }}"
+>
+  <ul class="pagination mb-0">
+    <li class="page-item first disabled">
+      <button type="button" class="page-link" data-page="1" data-url="{{ firstUrl }}">1</button>
+    </li>
+    <li class="page-item previous disabled">
+      <button type="button" class="page-link previous" aria-label="Previous"><span class="sr-only">Previous</span></button>
+    </li>
+    <li class="page-item current active">
+      <label>
+        <input
+          name="paginator_jump_page"
+          class="jump-to-page"
+          type="text"
+          value="1"
+          data-url="{{ firstUrl }}"
+          max="{{ pageCount }}"
+        />
+      </label>
+    </li>
+    <li class="page-item next">
+      <button
+        type="button"
+        class="page-link next"
+        aria-label="Next"
+        data-page="2"
+        data-url="{{ nextUrl }}">
+        <span class="sr-only">Next</span>
+      </button>
+    </li>
+    <li class="page-item last">
+      <button type="button" class="page-link last" data-page="{{ pageCount }}" data-url="{{ lastUrl }}">{{ pageCount }}</button>
+    </li>
+  </ul>
 </div>
