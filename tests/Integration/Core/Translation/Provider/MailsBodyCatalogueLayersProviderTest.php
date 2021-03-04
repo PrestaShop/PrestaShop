@@ -30,59 +30,32 @@ namespace Tests\Integration\Core\Translation\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\MailsBodyProviderDefinition;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Test the provider of frontOffice translations
  */
-class MailsBodyCatalogueLayersProviderTest extends KernelTestCase
+class MailsBodyCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
 {
-    /**
-     * @var string
-     */
-    private $translationsDir;
-
-    public function setUp()
-    {
-        self::bootKernel();
-        /*
-         * The translation directory actually contains these files for locale = fr-FR
-         * - AdminActions.fr-FR.xlf
-         * - EmailsBody.fr-FR.xlf
-         * - EmailsSubject.fr-FR.xlf
-         * - messages.fr-FR.xlf
-         * - ModulesCheckpaymentAdmin.fr-FR.xlf
-         * - ModulesCheckpaymentShop.fr-FR.xlf
-         * - ModulesWirepaymentAdmin.fr-FR.xlf
-         * - ModulesWirepaymentShop.fr-FR.xlf
-         * - ShopNotificationsWarning.fr-FR.xlf
-         */
-        $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
-    }
-
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'EmailsBody' => [
+                'count' => 349,
+                'translations' => [
+                    'Here is your login email address:' => 'Voici votre adresse e-mail de connexion :',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['EmailsBody'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(349, $messages['EmailsBody']);
-
-        $this->assertSame('Voici votre adresse e-mail de connexion :', $catalogue->get('Here is your login email address:', 'EmailsBody'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -91,22 +64,19 @@ class MailsBodyCatalogueLayersProviderTest extends KernelTestCase
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         // load catalogue from translations/default
-        $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getDefaultCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'EmailsBody' => [
+                'count' => 353,
+                'translations' => [
+                    'Here is your login email address:' => '',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['EmailsBody'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(353, $messages['EmailsBody']);
-
-        $this->assertSame('Here is your login email address:', $catalogue->get('Here is your login email address:', 'ShopNotificationsWarning'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
@@ -129,7 +99,7 @@ class MailsBodyCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -176,25 +146,21 @@ class MailsBodyCatalogueLayersProviderTest extends KernelTestCase
             ],
         ];
 
-        $provider = $this->getProvider($databaseContent);
-
         // load catalogue from database translations
-        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+        $expected = [
+            'EmailsBody' => [
+                'count' => 2,
+                'translations' => [
+                    'Uninstall' => 'Uninstall Traduction customisée',
+                    'Install' => 'Install Traduction customisée',
+                ],
+            ],
+        ];
 
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        $this->assertSame(['EmailsBody'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(2, $messages['EmailsBody']);
-
-        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'EmailsBody'));
-        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'EmailsBody'));
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -202,7 +168,7 @@ class MailsBodyCatalogueLayersProviderTest extends KernelTestCase
      *
      * @return CoreCatalogueLayersProvider
      */
-    private function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
+    protected function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
     {
         $providerDefinition = new MailsBodyProviderDefinition();
 

@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ThemeProviderDefi
 use PrestaShop\PrestaShop\Core\Translation\Provider\ThemeCatalogueLayersProvider;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -45,28 +44,23 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * Test the provider of frontOffice translations
  */
-class ThemeCatalogueLayersProviderTest extends KernelTestCase
+class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
 {
-    /**
-     * @var string
-     */
-    private $translationsDir;
     /**
      * @var MockObject|LegacyModuleExtractorInterface
      */
     private $themeExtractor;
+
     /**
      * @var MockObject|LoaderInterface
      */
     private $themeRepository;
-    /**
-     * @var mixed
-     */
-    private $modulesDir;
+
     /**
      * @var Filesystem
      */
     private $filesystem;
+
     /**
      * @var mixed
      */
@@ -74,21 +68,8 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
 
     public function setUp()
     {
-        self::bootKernel();
-        /*
-         * The translation directory actually contains these files for locale = fr-FR
-         * - AdminActions.fr-FR.xlf
-         * - EmailsBody.fr-FR.xlf
-         * - EmailsSubject.fr-FR.xlf
-         * - messages.fr-FR.xlf
-         * - ModulesCheckpaymentAdmin.fr-FR.xlf
-         * - ModulesCheckpaymentShop.fr-FR.xlf
-         * - ModulesWirepaymentAdmin.fr-FR.xlf
-         * - ModulesWirepaymentShop.fr-FR.xlf
-         * - ShopNotificationsWarning.fr-FR.xlf
-         */
-        $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
-        $this->modulesDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
+        parent::setUp();
+
         $this->themesDir = self::$kernel->getContainer()->getParameter('translations_theme_dir');
         $this->themeExtractor = self::$kernel->getContainer()->get('prestashop.translation.theme_extractor');
 
@@ -98,7 +79,7 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
             ->willReturn(new Theme([
                 'name' => 'fakeThemeForTranslations',
                 'directory' => rtrim($this->themesDir, '/') . '/fakeThemeForTranslations',
-            ])); //doesn't really matter
+            ])); // doesn't really matter
         $this->filesystem = new Filesystem();
     }
 
@@ -108,34 +89,37 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'ModulesCheckpaymentShop' => [
+                'count' => 19,
+                'translations' => [
+                    'Send your check to this address' => 'Envoyez votre chèque à cette adresse',
+                ],
+            ],
+            'ModulesWirepaymentShop' => [
+                'count' => 15,
+                'translations' => [],
+            ],
+            'ShopNotificationsWarning' => [
+                'count' => 8,
+                'translations' => [],
+            ],
+            'ShopTheme' => [
+                'count' => 64,
+                'translations' => [
+                    'The page you are looking for was not found.' => 'La page que vous cherchez n\'a pas été trouvée.',
+                ],
+            ],
+            'ShopThemeCustomeraccount' => [
+                'count' => 83,
+                'translations' => [],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        // this is a merge of core Shop domains and Theme's domains
-        $this->assertSame([
-            'ModulesCheckpaymentShop',
-            'ModulesWirepaymentShop',
-            'ShopNotificationsWarning',
-            'ShopTheme',
-            'ShopThemeCustomeraccount',
-        ], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(19, $messages['ModulesCheckpaymentShop']);
-        $this->assertCount(15, $messages['ModulesWirepaymentShop']);
-        $this->assertCount(8, $messages['ShopNotificationsWarning']);
-        $this->assertCount(64, $messages['ShopTheme']);
-        $this->assertCount(83, $messages['ShopThemeCustomeraccount']);
-
-        $this->assertSame('Envoyez votre chèque à cette adresse', $catalogue->get('Send your check to this address', 'ModulesCheckpaymentShop'));
-        $this->assertSame('La page que vous cherchez n\'a pas été trouvée.', $catalogue->get('The page you are looking for was not found.', 'ShopTheme'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -182,31 +166,34 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
         // load catalogue from translations/default
         $catalogue = $provider->getDefaultCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        // The domains are from smarty templates in tests/Resources/themes/fakeThemeForTranslations
+        $expected = [
+            'ShopFooBar' => [
+                'count' => 1,
+                'translations' => [],
+            ],
+            'ShopThemeActions' => [
+                'count' => 1,
+                'translations' => [
+                    'Refresh' => 'Refresh',
+                ],
+            ],
+            'ShopThemeCart' => [
+                'count' => 1,
+                'translations' => [
+                    'Apply cart' => 'Apply cart',
+                ],
+            ],
+            'ShopThemeProduct' => [
+                'count' => 1,
+                'translations' => [
+                    'Show product' => 'Show product',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        // The domains from smarty templates in tests/Resources/themes/fakeThemeForTranslations
-        $this->assertSame([
-            'ShopFooBar',
-            'ShopThemeActions',
-            'ShopThemeCart',
-            'ShopThemeProduct',
-        ], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(1, $messages['ShopFooBar']);
-        $this->assertCount(1, $messages['ShopThemeActions']);
-        $this->assertCount(1, $messages['ShopThemeCart']);
-        $this->assertCount(1, $messages['ShopThemeProduct']);
-
-        $this->assertSame('Refresh', $catalogue->get('Refresh', 'ShopThemeActions'));
-        $this->assertSame('Apply cart', $catalogue->get('Apply cart', 'ShopThemeCart'));
-        $this->assertSame('Show product', $catalogue->get('Show product', 'ShopThemeProduct'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     public function testItDoesntLoadsCustomizedTranslationsWithThemeNotDefinedOrDifferentFromDatabase(): void
@@ -229,7 +216,7 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -263,23 +250,25 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+        $expected = [
+            'ShopThemeActions' => [
+                'count' => 1,
+                'translations' => [
+                    'Install' => 'Install Traduction customisée',
+                ],
+            ],
+            'ShopThemeCart' => [
+                'count' => 1,
+                'translations' => [
+                    'Uninstall' => 'Uninstall Traduction customisée',
+                ],
+            ],
+        ];
 
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        // If the theme name is null, the translations which have theme = 'classic' are taken
-        $this->assertSame([
-            'ShopThemeActions',
-            'ShopThemeCart',
-        ], $domains);
-
-        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ShopThemeActions'));
-        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'ShopThemeCart'));
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -287,7 +276,7 @@ class ThemeCatalogueLayersProviderTest extends KernelTestCase
      *
      * @return ThemeCatalogueLayersProvider
      */
-    private function getProvider(array $databaseContent = []): ThemeCatalogueLayersProvider
+    protected function getProvider(array $databaseContent = []): ThemeCatalogueLayersProvider
     {
         $databaseTranslationLoader = new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class));
         $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');

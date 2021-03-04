@@ -30,50 +30,32 @@ namespace Tests\Integration\Core\Translation\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\BackofficeProviderDefinition;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Test the provider of backOffice translations
  */
-class BackofficeCatalogueLayersProviderTest extends KernelTestCase
+class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
 {
-    /**
-     * @var string
-     */
-    private $translationsDir;
-
-    public function setUp()
-    {
-        self::bootKernel();
-        $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
-    }
-
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        $this->assertSame('AdminActions', array_keys($messages)[0]);
+        $expected = [
+            'AdminActions' => [
+                'count' => 90,
+                'translations' => [
+                    'Save and stay' => 'Enregistrer et rester',
+                    'Uninstall' => 'Désinstaller',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['AdminActions'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(90, $messages['AdminActions']);
-
-        $this->assertSame('Enregistrer et rester', $catalogue->get('Save and stay', 'AdminActions'));
-        $this->assertSame('Désinstaller', $catalogue->get('Uninstall', 'AdminActions'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -82,23 +64,20 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         // load catalogue from translations/default
-        $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getDefaultCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'AdminActions' => [
+                'count' => 91,
+                'translations' => [
+                    'Save and stay' => '',
+                    'Uninstall' => '',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['AdminActions'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(91, $messages['AdminActions']);
-
-        $this->assertSame('', $catalogue->get('Save and stay', 'AdminActions'));
-        $this->assertSame('', $catalogue->get('Uninstall', 'AdminActions'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     public function testItLoadsCustomizedTranslationsFromDatabase(): void
@@ -121,23 +100,20 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'AdminActions' => [
+                'count' => 1,
+                'translations' => [
+                    'Save and stay' => 'Save and stay',
+                    'Uninstall' => 'Traduction customisée',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['AdminActions'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(1, $messages['AdminActions']);
-
-        $this->assertSame('Save and stay', $catalogue->get('Save and stay', 'AdminActions'));
-        $this->assertSame('Traduction customisée', $catalogue->get('Uninstall', 'AdminActions'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -145,7 +121,7 @@ class BackofficeCatalogueLayersProviderTest extends KernelTestCase
      *
      * @return CoreCatalogueLayersProvider
      */
-    private function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
+    protected function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
     {
         $providerDefinition = new BackofficeProviderDefinition();
 

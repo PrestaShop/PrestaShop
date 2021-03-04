@@ -36,10 +36,12 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Returns the 3 layers of translation catalogues related to the Backoffice interface translations.
- * The default catalogue is in app/Resources/translations/default, in any file starting with "Admin"
- * The file catalogue is in app/Resources/translations/LOCALE, in any file starting with "Admin"
- * The user catalogue is stored in DB, domain starting with Admin and theme is NULL.
+ * Returns the 3 layers of translation catalogues related to the Module translations.
+ * The default catalogue is searched in app/Resources/translations/default, in any file starting with "ModulesMODULENAME"
+ * If not found, default catalogue is extracted for module's templates
+ * The file catalogue is searched in app/Resources/translations/LOCALE, in any file starting with "ModulesMODULENAME"
+ * If not found, we scan the directory modules/MODULENAME/translations/LOCALE
+ * The user catalogue is stored in DB, domain starting with ModulesMODULENAME and theme is NULL.
  *
  * @see CatalogueLayersProviderInterface to understand the 3 layers.
  */
@@ -230,8 +232,6 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @param string $locale
      *
      * @return MessageCatalogue
-     *
-     * @throws FileNotFoundException
      */
     private function buildTranslationCatalogueFromLegacyFiles(string $locale): MessageCatalogue
     {
@@ -312,8 +312,12 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     private function buildFreshDefaultCatalogue(string $locale): MessageCatalogue
     {
+        // There are 2 kind of modules : Native (built with core) and Non-Native (the modules installed by user himself)
         // For Native modules, translations are in the default core translations directory
         // For non native modules, the catalogue is built from templates
+
+        // First we search in translation directory in case the module is native
+        // If no translation file is found, we extract the catalogue from the module's templates
         $defaultCatalogue = new MessageCatalogue($locale);
 
         try {
@@ -341,6 +345,9 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     /**
      * Replaces dots in the catalogue's domain names
      * and filters out domains not corresponding to the one from this module
+     *
+     * When extracted from templates, the domain names are in format Modules.MODULENAME.DOMAIN.DOMAIN
+     * The required catalogue domains format is something like ModulesModulenameDomain... : Camelcased with max 3 levels
      *
      * @param MessageCatalogue $catalogue
      *

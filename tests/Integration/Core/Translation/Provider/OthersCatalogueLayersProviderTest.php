@@ -30,59 +30,32 @@ namespace Tests\Integration\Core\Translation\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\OthersProviderDefinition;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Test the provider of frontOffice translations
  */
-class OthersCatalogueLayersProviderTest extends KernelTestCase
+class OthersCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
 {
-    /**
-     * @var string
-     */
-    private $translationsDir;
-
-    public function setUp()
-    {
-        self::bootKernel();
-        /*
-         * The translation directory actually contains these files for locale = fr-FR
-         * - AdminActions.fr-FR.xlf
-         * - EmailsBody.fr-FR.xlf
-         * - EmailsSubject.fr-FR.xlf
-         * - messages.fr-FR.xlf
-         * - ModulesCheckpaymentAdmin.fr-FR.xlf
-         * - ModulesCheckpaymentShop.fr-FR.xlf
-         * - ModulesWirepaymentAdmin.fr-FR.xlf
-         * - ModulesWirepaymentShop.fr-FR.xlf
-         * - ShopNotificationsWarning.fr-FR.xlf
-         */
-        $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
-    }
-
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'messages' => [
+                'count' => 522,
+                'translations' => [
+                    'Attributes generator' => 'Générateur de déclinaisons de produits',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['messages'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(522, $messages['messages']);
-
-        $this->assertSame('Générateur de déclinaisons de produits', $catalogue->get('Attributes generator', 'messages'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -91,22 +64,19 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         // load catalogue from translations/default
-        $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getDefaultCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'messages' => [
+                'count' => 522,
+                'translations' => [
+                    'Attributes generator' => '',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['messages'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(522, $messages['messages']);
-
-        $this->assertSame('Attributes generator', $catalogue->get('Attributes generator', 'ShopNotificationsWarning'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
@@ -129,7 +99,7 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -177,22 +147,20 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+        $expected = [
+            'messages' => [
+                'count' => 2,
+                'translations' => [
+                    'Uninstall' => 'Uninstall Traduction customisée',
+                    'Install' => 'Install Traduction customisée',
+                ],
+            ],
+        ];
 
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        $this->assertSame(['messages'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(2, $messages['messages']);
-
-        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'messages'));
-        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'messages'));
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -200,7 +168,7 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
      *
      * @return CoreCatalogueLayersProvider
      */
-    private function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
+    protected function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
     {
         $providerDefinition = new OthersProviderDefinition();
 
