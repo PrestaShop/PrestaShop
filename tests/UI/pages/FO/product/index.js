@@ -59,7 +59,6 @@ class Product extends FOBasePage {
    * @returns {Promise<void>}
    */
   async selectCombination(page, quantity, combination) {
-    await page.waitForTimeout(1000);
     if (combination.color !== null) {
       await Promise.all([
         this.waitForVisibleSelector(page, this.productColorInput(combination.color)),
@@ -82,7 +81,7 @@ class Product extends FOBasePage {
    * @param proceedToCheckout
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page, quantity = 1, combination, proceedToCheckout = true) {
+  async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
     await this.selectCombination(page, quantity, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity);
