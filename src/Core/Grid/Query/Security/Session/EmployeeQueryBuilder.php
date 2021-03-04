@@ -129,7 +129,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
 
             $qb->andWhere(
                 sprintf(
-                    'e.%s LIKE %s',
+                    'e.%s LIKE :%s',
                     $name,
                     $name
                 )
