@@ -24,9 +24,9 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import Router from '@components/router';
 import ConfirmModal from '@components/modal';
 import ProductEventMap from '@pages/product/product-event-map';
+import {getFeatureValues} from '@pages/product/edit/services/feature';
 
 const {$} = window;
 
@@ -35,7 +35,6 @@ export default class FeatureValuesManager {
    * @param eventEmitter {EventEmitter}
    */
   constructor(eventEmitter) {
-    this.router = new Router();
     this.eventEmitter = eventEmitter;
     this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
     this.$collectionRowsContainer = $(ProductMap.featureValues.collectionRowsContainer);
@@ -103,7 +102,7 @@ export default class FeatureValuesManager {
   }
 
   watchFeatureSelectors() {
-    $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, (event) => {
+    $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, async (event) => {
       const $selector = $(event.target);
       const idFeature = $selector.val();
       const $collectionRow = $selector.closest(ProductMap.featureValues.collectionRow);
@@ -116,22 +115,23 @@ export default class FeatureValuesManager {
       $featureValueSelector.val('');
       $customFeatureIdInput.val('');
 
-      $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
-        .then((featureValuesData) => {
-          $featureValueSelector.prop('disabled', featureValuesData.length === 0);
-          $featureValueSelector.empty();
-          $.each(featureValuesData, (index, featureValue) => {
-            // The placeholder shouldn't be posted.
-            if (featureValue.id === '0') {
-              featureValue.id = '';
-            }
+      const featureValuesData = await getFeatureValues(idFeature);
+      console.log(featureValuesData);
 
-            $featureValueSelector
-              .append($('<option></option>')
-                .attr('value', featureValue.id)
-                .text(featureValue.value));
-          });
-        });
+      $featureValueSelector.prop('disabled', featureValuesData.length === 0);
+      $featureValueSelector.empty();
+      $.each(featureValuesData, (index, featureValue) => {
+        // The placeholder shouldn't be posted.
+        if (featureValue.id === '0') {
+          featureValue.id = '';
+        }
+
+        $featureValueSelector.append(
+          $('<option></option>')
+            .attr('value', featureValue.id)
+            .text(featureValue.value),
+        );
+      });
     });
   }
 }
