@@ -108,7 +108,6 @@ abstract class GridControllerTestCase extends WebTestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->saveButtonId = 'save-button';
 
         $this->formFiller = new FormFiller();
     }
