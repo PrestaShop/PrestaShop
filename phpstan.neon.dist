@@ -14,12 +14,11 @@ parameters:
 		- '#^Call to an undefined static method Attribute\:\:getAttributeMinimalQty\(\)\.$#'
 		- '#^Call to an undefined static method Attribute\:\:getAttributes\(\)\.$#'
 	universalObjectCratesClasses:
-		- CookiePHPConfigurationFileLoader
+		- Cookie
 		- ObjectModel
 		- Order
 		- OrderInvoice
 		- Product
-		- Cookie
 
 includes:
     - vendor/prestashop/phpstan-prestashop/extension.neon
