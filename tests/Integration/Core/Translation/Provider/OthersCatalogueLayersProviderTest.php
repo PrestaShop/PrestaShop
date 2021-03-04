@@ -69,20 +69,17 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
         // load catalogue from translations/fr-FR
         $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'messages' => [
+                'count' => 522,
+                'translations' => [
+                    'Attributes generator' => 'Générateur de déclinaisons de produits',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['messages'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(522, $messages['messages']);
-
-        $this->assertSame('Générateur de déclinaisons de produits', $catalogue->get('Attributes generator', 'messages'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -93,20 +90,17 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
         // load catalogue from translations/default
         $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
-
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
+        $expected = [
+            'messages' => [
+                'count' => 522,
+                'translations' => [
+                    'Attributes generator' => '',
+                ],
+            ],
+        ];
 
         // verify all catalogues are loaded
-        $this->assertSame(['messages'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(522, $messages['messages']);
-
-        $this->assertSame('Attributes generator', $catalogue->get('Attributes generator', 'ShopNotificationsWarning'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
@@ -179,20 +173,18 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
         // load catalogue from database translations
         $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+        $expected = [
+            'messages' => [
+                'count' => 2,
+                'translations' => [
+                    'Uninstall' => 'Uninstall Traduction customisée',
+                    'Install' => 'Install Traduction customisée',
+                ],
+            ],
+        ];
 
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        $this->assertSame(['messages'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(2, $messages['messages']);
-
-        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'messages'));
-        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'messages'));
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -210,5 +202,30 @@ class OthersCatalogueLayersProviderTest extends KernelTestCase
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()
         );
+    }
+
+    /**
+     * @param array $expected
+     * @param MessageCatalogue $catalogue
+     */
+    private function assertResultIsAsExpected(array $expected, MessageCatalogue $catalogue): void
+    {
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        $this->assertSame(array_keys($expected), $domains);
+
+        // verify that the catalogues are complete
+        foreach ($expected as $expectedDomain => $expectedValues) {
+            $this->assertCount($expectedValues['count'], $messages[$expectedDomain]);
+
+            foreach ($expectedValues['translations'] as $translationKey => $translationValue) {
+                $this->assertSame($translationValue, $catalogue->get($translationKey, $expectedDomain));
+            }
+        }
     }
 }

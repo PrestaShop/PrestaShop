@@ -38,10 +38,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Returns the 3 layers of translation catalogues related to the Backoffice interface translations.
- * The default catalogue is in app/Resources/translations/default, in any file starting with "Admin"
- * The file catalogue is in app/Resources/translations/LOCALE, in any file starting with "Admin"
- * The user catalogue is stored in DB, domain starting with Admin and theme is NULL.
+ * Returns the 3 layers of translation catalogues related to the Theme translations.
+ * The default catalogue is extracted from Theme's templates
+ * The file catalogue is extracted from Core's file (in any file starting with "Shop") and from theme directory themes/THEMENAME/translations
+ * The user catalogue is stored in DB, domain starting with Shop and theme is equal to the desired theme.
  *
  * @see CatalogueLayersProviderInterface to understand the 3 layers.
  */
@@ -85,7 +85,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
     private $themeResourcesDir;
 
     /**
-     * @var \PrestaShop\PrestaShop\Core\Addon\Theme\Theme
+     * @var Theme
      */
     private $theme;
 

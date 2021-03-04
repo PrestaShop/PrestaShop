@@ -32,10 +32,11 @@ use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Returns the 3 layers of translation catalogues related to the Backoffice interface translations.
- * The default catalogue is in app/Resources/translations/default, in any file starting with "Admin"
- * The file catalogue is in app/Resources/translations/LOCALE, in any file starting with "Admin"
- * The user catalogue is stored in DB, domain starting with Admin and theme is NULL.
+ * Returns the 3 layers of translation catalogues related to the Core interface translations.
+ * The files pattern depends on the desired Type
+ * The default catalogue is in app/Resources/translations/default, in any file starting with "files pattern"
+ * The file catalogue is in app/Resources/translations/LOCALE, in any file starting with "files pattern"
+ * The user catalogue is stored in DB, domain starting with "files pattern" and theme is NULL.
  *
  * @see CatalogueLayersProviderInterface to understand the 3 layers.
  */
@@ -50,7 +51,6 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
 
     /**
      * This is the directory where Default and FileTranslated translations are stored.
-     * For the Backoffice catalogue,
      *   - Default catalogue is within resourceDirectory/default
      *   - FileTranslated catalogue is in resourceDirectory/locale
      *
@@ -103,6 +103,8 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
      */
     public function getDefaultCatalogue(string $locale): MessageCatalogue
     {

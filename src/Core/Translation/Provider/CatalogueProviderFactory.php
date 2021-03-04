@@ -146,7 +146,7 @@ class CatalogueProviderFactory
         }
 
         // This should never be thrown if every Type has his Provider defined in constructor
-        throw new UnexpectedTranslationTypeException(sprintf('Unexpected type %s', $type));
+        throw new UnexpectedTranslationTypeException(sprintf('Could not fetch provider for given definition type "%s"', $type));
     }
 
     /**
@@ -156,7 +156,7 @@ class CatalogueProviderFactory
      */
     private function getCoreCatalogueProvider(ProviderDefinitionInterface $providerDefinition): CatalogueLayersProviderInterface
     {
-        if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
+        if (!isset($this->providers[$providerDefinition->getType()])) {
             $this->providers[$providerDefinition->getType()] = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
                 $this->translationsDirectory,
@@ -175,7 +175,7 @@ class CatalogueProviderFactory
      */
     private function getModuleCatalogueProvider(ModuleProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
     {
-        if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
+        if (!isset($this->providers[$providerDefinition->getType()])) {
             $this->providers[$providerDefinition->getType()] = new ModuleCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
                 $this->legacyModuleExtractor,
@@ -198,7 +198,7 @@ class CatalogueProviderFactory
      */
     private function getThemeCatalogueProvider(ThemeProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
     {
-        if (!array_key_exists($providerDefinition->getType(), $this->providers)) {
+        if (!isset($this->providers[$providerDefinition->getType()])) {
             $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
             $coreFrontProvider = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
