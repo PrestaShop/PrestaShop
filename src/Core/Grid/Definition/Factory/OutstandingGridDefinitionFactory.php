@@ -49,7 +49,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'outstanding';
+    public const GRID_ID = 'outstanding';
 
     /**
      * @var ConfigurationInterface
