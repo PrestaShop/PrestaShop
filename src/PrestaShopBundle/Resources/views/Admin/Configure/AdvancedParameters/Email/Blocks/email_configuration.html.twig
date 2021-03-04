@@ -38,6 +38,7 @@
           <div class="js-smtp-configuration{% if emailConfigurationForm.mail_method.vars.value != smtpMailMethod %} d-none{% endif %}">
             {{ form_widget(emailConfigurationForm.smtp_config) }}
           </div>
+          {{ form_row(emailConfigurationForm.mail_type) }}
           {{ form_row(emailConfigurationForm.log_emails) }}
           <div class="alert alert-info" role="alert">
             <p class="alert-text">
