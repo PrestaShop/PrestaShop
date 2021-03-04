@@ -30,63 +30,42 @@ namespace Tests\Integration\Core\Translation\Provider;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\FrontofficeProviderDefinition;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Test the provider of frontOffice translations
  */
-class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
+class FrontofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
 {
-    /**
-     * @var string
-     */
-    private $translationsDir;
-
-    public function setUp()
-    {
-        self::bootKernel();
-        /*
-         * The translation directory actually contains these files for locale = fr-FR
-         * - AdminActions.fr-FR.xlf
-         * - EmailsBody.fr-FR.xlf
-         * - EmailsSubject.fr-FR.xlf
-         * - messages.fr-FR.xlf
-         * - ModulesCheckpaymentAdmin.fr-FR.xlf
-         * - ModulesCheckpaymentShop.fr-FR.xlf
-         * - ModulesWirepaymentAdmin.fr-FR.xlf
-         * - ModulesWirepaymentShop.fr-FR.xlf
-         * - ShopNotificationsWarning.fr-FR.xlf
-         */
-        $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
-    }
-
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
      */
     public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getProvider()->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+        $expected = [
+            'ModulesCheckpaymentShop' => [
+                'count' => 19,
+                'translations' => [],
+            ],
+            'ModulesWirepaymentShop' => [
+                'count' => 15,
+                'translations' => [
+                    '(order processing will be longer)' => '(le traitement de la commande sera plus long)',
+                ],
+            ],
+            'ShopNotificationsWarning' => [
+                'count' => 8,
+                'translations' => [
+                    'You do not have any vouchers.' => 'Vous ne possédez pas de bon de réduction.',
+                    'You cannot place a new order from your country (%s).' => 'Vous ne pouvez pas créer de nouvelle commande depuis votre pays (%s).',
+                ],
+            ],
+        ];
 
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        // verify all catalogues are loaded
-        $this->assertSame(['ModulesCheckpaymentShop', 'ModulesWirepaymentShop', 'ShopNotificationsWarning'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(19, $messages['ModulesCheckpaymentShop']);
-        $this->assertCount(15, $messages['ModulesWirepaymentShop']);
-        $this->assertCount(8, $messages['ShopNotificationsWarning']);
-
-        $this->assertSame('Vous ne possédez pas de bon de réduction.', $catalogue->get('You do not have any vouchers.', 'ShopNotificationsWarning'));
-        $this->assertSame('Vous ne pouvez pas créer de nouvelle commande depuis votre pays (%s).', $catalogue->get('You cannot place a new order from your country (%s).', 'ShopNotificationsWarning'));
-        $this->assertSame('(le traitement de la commande sera plus long)', $catalogue->get('(order processing will be longer)', 'ModulesWirepaymentShop'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
@@ -95,26 +74,29 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
     public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
     {
         // load catalogue from translations/default
-        $catalogue = $this->getProvider()->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getDefaultCatalogue('fr-FR');
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+        $expected = [
+            'ModulesCheckpaymentShop' => [
+                'count' => 19,
+                'translations' => [],
+            ],
+            'ModulesWirepaymentShop' => [
+                'count' => 20,
+                'translations' => [
+                    '(order processing will be longer)' => '',
+                ],
+            ],
+            'ShopNotificationsWarning' => [
+                'count' => 8,
+                'translations' => [
+                    'You do not have any vouchers.' => '',
+                    'You cannot place a new order from your country (%s).' => '',
+                ],
+            ],
+        ];
 
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        // verify all catalogues are loaded
-        $this->assertSame(['ModulesCheckpaymentShop', 'ModulesWirepaymentShop', 'ShopNotificationsWarning'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(19, $messages['ModulesCheckpaymentShop']);
-        $this->assertCount(20, $messages['ModulesWirepaymentShop']);
-        $this->assertCount(8, $messages['ShopNotificationsWarning']);
-
-        $this->assertSame('', $catalogue->get('You do not have any vouchers.', 'ShopNotificationsWarning'));
-        $this->assertSame('', $catalogue->get('You cannot place a new order from your country (%s).', 'ShopNotificationsWarning'));
-        $this->assertSame('', $catalogue->get('(order processing will be longer)', 'ModulesWirepaymentShop'));
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase(): void
@@ -137,24 +119,26 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+        $expected = [
+            'ModulesWirepaymentShop' => [
+                'count' => 1,
+                'translations' => [
+                    'Install' => 'Install Traduction customisée',
+                ],
+            ],
+            'ShopNotificationsWarning' => [
+                'count' => 1,
+                'translations' => [
+                    'You do not have any vouchers.' => 'You do not have any vouchers.',
+                    'Uninstall' => 'Uninstall Traduction customisée',
+                ],
+            ],
+        ];
 
-        // Check integrity of translations
-        $messages = $catalogue->all();
-        $domains = $catalogue->getDomains();
-        sort($domains);
-
-        $this->assertSame(['ModulesWirepaymentShop', 'ShopNotificationsWarning'], $domains);
-
-        // verify that the catalogues are complete
-        $this->assertCount(1, $messages['ModulesWirepaymentShop']);
-        $this->assertCount(1, $messages['ShopNotificationsWarning']);
-
-        $this->assertSame('You do not have any vouchers.', $catalogue->get('You do not have any vouchers.', 'ShopNotificationsWarning'));
-        $this->assertSame('Uninstall Traduction customisée', $catalogue->get('Uninstall', 'ShopNotificationsWarning'));
-        $this->assertSame('Install Traduction customisée', $catalogue->get('Install', 'ModulesWirepaymentShop'));
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
@@ -191,7 +175,7 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getProvider($databaseContent)->getUserTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -208,7 +192,7 @@ class FrontofficeCatalogueLayersProviderTest extends KernelTestCase
     /**
      * @param array $databaseContent
      */
-    private function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
+    protected function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
     {
         $providerDefinition = new FrontofficeProviderDefinition();
 
