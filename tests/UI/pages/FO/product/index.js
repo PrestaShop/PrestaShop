@@ -2,11 +2,11 @@ require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
 class Product extends FOBasePage {
-  constructor() {
+  constructor() {d
     super();
 
     // Selectors for product page
-    this.productName = '#main h1';
+    this.productName = '#product-title';
     this.productCoverImg = '#content .product-cover img';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
