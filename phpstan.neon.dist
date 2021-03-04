@@ -19,6 +19,7 @@ parameters:
 		- Order
 		- OrderInvoice
 		- Product
+		- Cookie
 
 includes:
     - vendor/prestashop/phpstan-prestashop/extension.neon
