@@ -26,13 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Data\Factory\AbstractCategoryDataFactory;
-
 /**
  * Modifies records from database for empty_category grid
  */
-
 class EmptyCategoryGridDataFactory extends AbstractCategoryDataFactory
 {
-
 }

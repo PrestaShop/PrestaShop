@@ -153,11 +153,11 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
             )
             ->add(
                 (new DataColumn('products_count'))
-                ->setName($this->trans('Products', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'products_count',
-                    'sortable' => false,
-                ])
+                    ->setName($this->trans('Products', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'products_count',
+                        'sortable' => false,
+                    ])
             )
             ->add(
                 (new ToggleColumn('active'))
