@@ -566,12 +566,19 @@ class AdminStoresControllerCore extends AdminController
         }
     }
 
-    public function updateOptionPsShopName($value)
+    /**
+     * Update the shop name in the table "shop" if we are not in multishop context
+     *
+     * @param string $name
+     *
+     * @return void
+     */
+    public function updateOptionPsShopName(string $name): void
     {
-        if (!Shop::isFeatureActive() && !$this->errors && $value) {
+        if (!Shop::isFeatureActive() && !$this->errors && $name) {
             Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'shop` ' .
-                'SET name = "' . pSQL($value) . '" ' .
+                'SET name = "' . pSQL($name) . '" ' .
                 'WHERE id_shop = ' . (int) $this->context->shop->id
             );
         }
