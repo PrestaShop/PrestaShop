@@ -1215,7 +1215,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
         foreach ($categoryDefault->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {) {
+            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
                 $breadcrumb['links'][] = $this->getCategoryPath($category);
             }
         }
