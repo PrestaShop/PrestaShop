@@ -25,10 +25,11 @@
 
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
+import EventHOC from '@components/event-hoc';
 
 const {$} = window;
 
-export default class CustomizationsManager {
+class CustomizationsManager {
   constructor() {
     this.$customizationsContainer = $(ProductMap.customizations.customizationsContainer);
     this.$customizationFieldsList = $(ProductMap.customizations.customizationFieldsList);
@@ -57,7 +58,9 @@ export default class CustomizationsManager {
   }
 
   removeCustomizationField(event) {
-    $(event.currentTarget).closest(ProductMap.customizations.customizationFieldRow).remove();
+    $(event.currentTarget)
+      .closest(ProductMap.customizations.customizationFieldRow)
+      .remove();
     this.eventEmitter.emit(ProductEventMap.customizations.rowRemoved);
   }
 
@@ -65,3 +68,5 @@ export default class CustomizationsManager {
     return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldRow).length;
   }
 }
+
+export default EventHOC(CustomizationsManager);
