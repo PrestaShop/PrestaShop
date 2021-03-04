@@ -306,11 +306,14 @@ class SecurityController extends FrameworkBundleAdminController
             ),
             CannotBulkDeleteCustomerSessionException::class => $this->trans(
                 '%s: %s',
-                $this->trans(
-                    'An error occurred while deleting this selection.',
-                    'Admin.Notifications.Error'
-                ),
-                $e instanceof CannotBulkDeleteCustomerSessionException ? implode(', ', $e->getSessionIds()) : ''
+                'Admin.Global',
+                [
+                    $this->trans(
+                        'An error occurred while deleting this selection.',
+                        'Admin.Notifications.Error'
+                    ),
+                    $e instanceof CannotBulkDeleteCustomerSessionException ? implode(', ', $e->getSessionIds()) : '',
+                ]
             ),
             CannotDeleteEmployeeSessionException::class => $this->trans(
                 'An error occurred while deleting the object.',
@@ -318,11 +321,14 @@ class SecurityController extends FrameworkBundleAdminController
             ),
             CannotBulkDeleteEmployeeSessionException::class => $this->trans(
                 '%s: %s',
-                $this->trans(
-                    'An error occurred while deleting this selection.',
-                    'Admin.Notifications.Error'
-                ),
-                $e instanceof CannotBulkDeleteCustomerSessionException ? implode(', ', $e->getSessionIds()) : ''
+                'Admin.Global',
+                [
+                    $this->trans(
+                        'An error occurred while deleting this selection.',
+                        'Admin.Notifications.Error'
+                    ),
+                    $e instanceof CannotBulkDeleteEmployeeSessionException ? implode(', ', $e->getSessionIds()) : '',
+                ]
             ),
         ];
     }
