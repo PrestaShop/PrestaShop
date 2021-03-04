@@ -471,10 +471,6 @@ $search-border-color: #bbcdd2;
   flex-grow: 1;
   margin: 4px 0 0;
 
-  .form-group {
-    width: 250px;
-  }
-
   #bo_query {
     @include border-radius(0, 55px, 55px, 0);
     height: 35px;
@@ -496,23 +492,29 @@ $search-border-color: #bbcdd2;
     margin: 0 !important;
   }
 
-  .input-group-btn {
-    @include border-radius(55px, 0, 0, 55px);
-    border: 1px solid $search-border-color;
-    border-right: none;
+  .form-group {
+    width: 250px;
 
-    .btn {
+    .input-group-btn {
       @include border-radius(55px, 0, 0, 55px);
-      @include box-shadow(none);
-      height: 29px;
-      padding: 6px 8px;
-      padding-right: 0;
-      outline: none;
-    }
+      border: 1px solid $search-border-color;
+      border-right: none;
 
-    .btn-default {
-      @include box-shadow(none);
-      border: 1px solid transparent !important;
+      @at-root .bootstrap & {
+        > .btn {
+          @include border-radius(55px, 0, 0, 55px);
+          @include box-shadow(none);
+          height: 33px;
+          padding: 8px 0 6px 8px;
+          padding-right: 0;
+          outline: none;
+        }
+      }
+
+      .btn-default {
+        @include box-shadow(none);
+        border: 1px solid transparent !important;
+      }
     }
   }
 
