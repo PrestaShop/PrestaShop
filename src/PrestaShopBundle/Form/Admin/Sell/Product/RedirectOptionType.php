@@ -145,17 +145,21 @@ class RedirectOptionType extends TranslatorAwareType
             $form = $event->getForm();
             $targetField = $form->get('target');
             $targetOptions = $targetField->getConfig()->getOptions();
-            switch ($data['type']) {
-                case RedirectType::TYPE_CATEGORY_PERMANENT:
-                case RedirectType::TYPE_CATEGORY_TEMPORARY:
-                    $dataEntity = 'category';
-                    break;
-                case RedirectType::TYPE_PRODUCT_PERMANENT:
-                case RedirectType::TYPE_PRODUCT_TEMPORARY:
-                default:
-                    $dataEntity = 'product';
-                    break;
+            $dataEntity = 'product';
+            if (isset($data['type'])) {
+                switch ($data['type']) {
+                    case RedirectType::TYPE_CATEGORY_PERMANENT:
+                    case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                        $dataEntity = 'category';
+                        break;
+                    case RedirectType::TYPE_PRODUCT_PERMANENT:
+                    case RedirectType::TYPE_PRODUCT_TEMPORARY:
+                    default:
+                        $dataEntity = 'product';
+                        break;
+                }
             }
+
 
             // Adapt target options
             $targetOptions['mapping_type'] = $dataEntity;
