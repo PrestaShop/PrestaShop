@@ -129,11 +129,12 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
 
             $qb->andWhere(
                 sprintf(
-                    'c.%s LIKE %s',
+                    'c.%s LIKE :%s',
                     $name,
                     $name
                 )
             );
+
             $qb->setParameter($name, '%' . $value . '%');
         }
 
