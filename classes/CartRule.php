@@ -417,7 +417,7 @@ class CartRuleCore extends ObjectModel
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
 			LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
-        $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = ""))) OR cr.`group_restriction` = 1';
+        $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
 
         if ($includeGeneric && (int) $id_customer !== 0) {
             $sql_where .= ' OR cr.`id_customer` = 0)';
