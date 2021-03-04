@@ -1149,7 +1149,7 @@ class CustomerCore extends ObjectModel
         }
         $ids = Address::getCountryAndState($idAddress);
 
-        return (int) ($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
+        return (int) ($ids['id_country'] ?? Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 
     /**
