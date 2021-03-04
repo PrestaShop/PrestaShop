@@ -116,7 +116,6 @@ export default class FeatureValuesManager {
       $customFeatureIdInput.val('');
 
       const featureValuesData = await getFeatureValues(idFeature);
-      console.log(featureValuesData);
 
       $featureValueSelector.prop('disabled', featureValuesData.length === 0);
       $featureValueSelector.empty();
