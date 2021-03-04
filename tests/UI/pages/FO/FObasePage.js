@@ -77,7 +77,7 @@ module.exports = class FOBasePage extends CommonPage {
    * @param link
    * @returns {Promise<void>}
    */
-  async goToHeaderLink(page, link) {
+  async clickOnHeaderLink(page, link) {
     let selector;
 
     switch (link) {
@@ -100,6 +100,7 @@ module.exports = class FOBasePage extends CommonPage {
       default:
         throw new Error(`The page ${link} was not found`);
     }
+
     return this.clickAndWaitForNavigation(page, selector);
   }
 
@@ -110,7 +111,7 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToHomePage(page) {
     await this.waitForVisibleSelector(page, this.desktopLogo);
-    await this.goToHeaderLink(page, 'Logo');
+    await this.clickOnHeaderLink(page, 'Logo');
   }
 
   /**
@@ -119,7 +120,7 @@ module.exports = class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async goToLoginPage(page) {
-    await this.goToHeaderLink(page, 'Sign in');
+    await this.clickOnHeaderLink(page, 'Sign in');
   }
 
   /**
@@ -242,7 +243,7 @@ module.exports = class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCartPage(page) {
-    await this.goToHeaderLink(page, 'Cart');
+    await this.clickOnHeaderLink(page, 'Cart');
   }
 
   /**
@@ -254,7 +255,7 @@ module.exports = class FOBasePage extends CommonPage {
   async searchProduct(page, productName) {
     await this.setValue(page, this.searchInput, productName);
     await page.keyboard.press('Enter');
-    await page.waitForNavigation();
+    await page.waitForNavigation('networkidle');
   }
 
   // Footer methods

@@ -63,13 +63,13 @@ describe('Check links in header page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkContactUsHeaderLink', baseContext);
 
     // Check Contact us
-    await homePage.goToHeaderLink(page, 'Contact us');
+    await homePage.clickOnHeaderLink(page, 'Contact us');
 
     const pageTitle = await contactUsPage.getPageTitle(page);
     await expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
   });
 
-  it('check languages link', async function () {
+  it('should check languages link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
 
     await homePage.changeLanguage(page, 'fr');
@@ -87,7 +87,7 @@ describe('Check links in header page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSignInLink', baseContext);
 
     // Check sign in link
-    await homePage.goToHeaderLink(page, 'Sign in');
+    await homePage.clickOnHeaderLink(page, 'Sign in');
 
     const pageTitle = await loginPage.getPageTitle(page);
     await expect(pageTitle).to.equal(loginPage.pageTitle);
@@ -131,7 +131,7 @@ describe('Check links in header page', async () => {
     await expect(isQuickViewModalClosed).to.be.true;
 
     // Check cart link
-    await homePage.goToHeaderLink(page, 'Cart');
+    await homePage.clickOnHeaderLink(page, 'Cart');
 
     const pageTitle = await cartPage.getPageTitle(page);
     await expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -140,7 +140,7 @@ describe('Check links in header page', async () => {
   it('should check logo link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
-    await homePage.goToHeaderLink(page, 'Logo');
+    await homePage.clickOnHeaderLink(page, 'Logo');
 
     const pageTitle = await homePage.getPageTitle(page);
     await expect(pageTitle).to.equal(homePage.pageTitle);
