@@ -6,14 +6,9 @@ const helper = require('@utils/helpers');
 
 // Import pages
 const homePage = require('@pages/FO/home');
-const loginPage = require('@pages/FO/login');
-const contactUsPage = require('@pages/FO/contactUs');
-const cartPage = require('@pages/FO/cart');
-const myAccountPage = require('@pages/FO/myAccount');
 
 // Import data
 const {Categories} = require('@data/demo/categories');
-const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -37,6 +32,15 @@ describe('Check categories and subcategories links in header', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+  });
+
+  it('should go to FO home page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+
+    await homePage.goToFo(page);
+
+    const isHomePage = await homePage.isHomePage(page);
+    await expect(isHomePage).to.be.true;
   });
 
   [Categories.clothes, Categories.accessories, Categories.art].forEach((test) => {
