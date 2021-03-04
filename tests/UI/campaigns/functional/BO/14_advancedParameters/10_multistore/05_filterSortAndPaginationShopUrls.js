@@ -101,7 +101,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
   // 3 : Create 20 shop urls
   Array(20).fill(0, 0, 20).forEach((test, index) => {
     describe(`Create shop Url n°${index + 1}`, async () => {
-      const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}_`});
+      const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}Shop`});
       it('should go to add shop URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddURL${index}`, baseContext);
 
@@ -251,10 +251,10 @@ describe('Filter, sort and pagination shop Urls', async () => {
   // 7 : Delete all shops created
   describe('delete all shops created', async () => {
     new Array(20).fill(0, 0, 20).forEach((test, index) => {
-      it(`should delete the shop url contains 'ToDelete${index}'`, async function () {
+      it(`should delete the shop url contains 'ToDelete${index + 1}Shop'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteShopUrl${index}_`, baseContext);
 
-        await shopUrlPage.filterTable(page, 'input', 'url', `ToDelete${index + 1}`);
+        await shopUrlPage.filterTable(page, 'input', 'url', `ToDelete${index + 1}Shop`);
 
         const textResult = await shopUrlPage.deleteShopURL(page, 1);
         await expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
