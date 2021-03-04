@@ -103,7 +103,7 @@ abstract class GridControllerTestCase extends WebTestCase
      *
      * @var string
      */
-    protected $saveButtonId;
+    protected $saveButtonId = 'save-button';
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
