@@ -6,7 +6,7 @@ class Product extends FOBasePage {
     super();
 
     // Selectors for product page
-    this.productName = '#product-title';
+    this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
