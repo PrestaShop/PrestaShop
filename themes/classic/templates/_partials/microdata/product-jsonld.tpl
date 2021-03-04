@@ -50,7 +50,6 @@
         "unitCode": "{$product.weight_unit}"
       },{/if}
       {if $product.show_price}
-        {if $product.id_product_attribute == 0}
           "offers": {
             "@type": "Offer",
             "priceCurrency": "{$currency.iso_code}",
@@ -79,36 +78,6 @@
               "name": "{$shop.name}"
             }
           }
-        {else}
-          "offers": [
-              {foreach key=id_product_combination item=combination from=$combinations}
-                {
-                  "@type": "Offer",
-                  "priceCurrency": "{$currency.iso_code}",
-                  "name": "{$product.name|strip_tags:false} - {foreach item=attr from=$combination.attributes_values}{$attr|strip_tags:false}
-                    {if !$attr@last} 
-                    {/if}
-                  {/foreach}",
-                  "price": "{Product::getPriceStatic($product->id, true, $id_product_combination)|round:'2'}",
-                  "url": "{$product.url}",
-                  "priceValidUntil": "{($smarty.now + (int) (60*60*24*15))|date_format:"%Y-%m-%d"}",
-                  "image": "{if $combination.id_image > 0}{$link->getImageLink($product->link_rewrite, $combination.id_image, 'home_default')|escape:'html':'UTF-8'}{else}{if !empty($product.cover)}{$product.cover.bySize.home_default.url}{/if}{/if}",
-                  "sku": "{$combination.reference}",
-                  "mpn": "{if $combination.mpn}{$combination.mpn}{else}{$combination.reference}{/if}",
-                  {if $combination.ean13}"gtin13": "{$combination.ean13}",{else if $combination.upc}"gtin13": "0{$combination.upc}",{/if}
-                  {if $product.condition == 'new'}"itemCondition": "https://schema.org/NewCondition",{/if}
-                  {if $product.show_condition > 0}
-                    {if $product.condition == 'used'}"itemCondition": "https://schema.org/UsedCondition",{/if}
-                    {if $product.condition == 'refurbished'}"itemCondition": "https://schema.org/RefurbishedCondition",{/if}
-                  {/if}
-                  "availability": "{if $combination.quantity > 0 || $product.allow_oosp > 0}https://schema.org/InStock{else}https://schema.org/OutOfStock{/if}",
-                  "seller": {
-                    "@type": "Organization",
-                    "name": "{$shop.name}"}
-                    } {if !$combination@last},{/if}
-                  {/foreach}
-                ]
-              {/if}
-            {/if}
+      {/if}
           }
 </script>
