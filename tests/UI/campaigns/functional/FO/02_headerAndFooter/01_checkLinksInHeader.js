@@ -12,7 +12,6 @@ const cartPage = require('@pages/FO/cart');
 const myAccountPage = require('@pages/FO/myAccount');
 
 // Import data
-const {Categories} = require('@data/demo/categories');
 const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
@@ -33,7 +32,6 @@ Check header links:
 - Sign out
 - Cart
 - Logo
-- Categories and subcategories
  */
 
 describe('Check links in header page', async () => {
@@ -141,32 +139,5 @@ describe('Check links in header page', async () => {
 
     const pageTitle = await homePage.getPageTitle(page);
     await expect(pageTitle).to.equal(homePage.pageTitle);
-  });
-
-  [Categories.clothes, Categories.accessories, Categories.art].forEach((test) => {
-    it(`should check category '${test.name}' link`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `check${test.name}Link`, baseContext);
-
-      await homePage.goToCategory(page, test.id);
-
-      const pageTitle = await homePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(test.name);
-    });
-  });
-
-  [
-    {args: {category: Categories.clothes, subcategory: Categories.men}},
-    {args: {category: Categories.clothes, subcategory: Categories.women}},
-    {args: {category: Categories.accessories, subcategory: Categories.stationery}},
-    {args: {category: Categories.accessories, subcategory: Categories.homeAccessories}},
-  ].forEach((test) => {
-    it(`should check subcategory '${test.args.subcategory.name}' link`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `check${test.args.subcategory.name}Link`, baseContext);
-
-      await homePage.goToSubCategory(page, test.args.category.id, test.args.subcategory.id);
-
-      const pageTitle = await homePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(test.args.subcategory.name);
-    });
   });
 });
