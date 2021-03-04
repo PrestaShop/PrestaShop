@@ -24,17 +24,14 @@
  *}
 <section id="content" class="page-content page-not-found">
   {block name='page_content'}
-    {if isset($title)}
-      <h4>{block name="searchTitle"}{$title}{/block}</h4>
-    {else}
-      <h4>{block name="searchTitle"}{l s='No matches were found for your search' d='Shop.Theme.Catalog'}{/block}</h4>
-    {/if}
-
-    {if isset($subtitle)}
-      <p>{block name="searchSubtitle"}{$subtitle}{/block}</p>
-    {else}
-      <p>{block name="searchSubtitle"}{l s='Please try other keywords to describe what you are looking for.' d='Shop.Theme.Catalog'}{/block}</p>
-    {/if}
+    {block name="errorContent"}
+      {if isset($errorContent)}
+        {$errorContent nofilter}
+      {else}
+        <h4>{l s='This page could not be found' d='Shop.Theme.Catalog'}</h4>
+        <p>{l s='Try to search our catalog, you may find what you are looking for!' d='Shop.Theme.Catalog'}</p>
+      {/if}
+    {/block}
 
     {block name='search'}
       {hook h='displaySearch'}
@@ -43,6 +40,5 @@
     {block name='hook_not_found'}
       {hook h='displayNotFound'}
     {/block}
-
   {/block}
 </section>
