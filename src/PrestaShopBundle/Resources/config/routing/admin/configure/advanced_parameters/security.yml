@@ -71,13 +71,15 @@ admin_security_sessions_customer_search:
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _legacy_controller: AdminSecuritySessionCustomer
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.session.customer
-    redirectRoute: admin_security_sessions_customer
+    redirectRoute: admin_security_sessions_customer_list
 
 admin_security_sessions_employee_search:
   path: /session/employee
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _legacy_controller: AdminSecuritySessionEmployee
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.session.employee
-    redirectRoute: admin_security_sessions_employee
+    redirectRoute: admin_security_sessions_employee_list
