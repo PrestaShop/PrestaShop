@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,7 +71,7 @@ class WebserviceController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
             [
                 'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
-                'form' => $form->createView(),
+                'webserviceConfigurationForm' => $form->createView(),
                 'grid' => $presentedGrid,
                 'configurationWarnings' => $configurationWarnings,
             ]
@@ -102,7 +103,7 @@ class WebserviceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_webservice_keys_index');
             }
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -135,12 +136,12 @@ class WebserviceController extends FrameworkBundleAdminController
         try {
             $result = $formHandler->handleFor((int) $webserviceKeyId, $form);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_webservice_keys_index');
             }
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -153,6 +154,8 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Searches for specific records.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -250,7 +253,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->setStatus($webserviceToEnable, 1);
+        $statusModifier->setStatus($webserviceToEnable, true);
 
         return $this->redirectToRoute('admin_webservice_keys_index');
     }
@@ -270,7 +273,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->setStatus($webserviceToEnable, 0);
+        $statusModifier->setStatus($webserviceToEnable, false);
 
         return $this->redirectToRoute('admin_webservice_keys_index');
     }
@@ -309,17 +312,18 @@ class WebserviceController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
+     * @param WebserviceKeyFilters $filters
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function saveSettingsAction(Request $request)
+    public function saveSettingsAction(Request $request, WebserviceKeyFilters $filters)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $this->getFormHandler()->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $saveErrors = $this->getFormHandler()->save($form->getData());
 
             if (0 === count($saveErrors)) {
@@ -329,13 +333,43 @@ class WebserviceController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_webservice_keys_index');
+        $form = $this->getFormHandler()->getForm();
+
+        return $this->renderPage($request, $filters, $form);
+    }
+
+    /**
+     * @param Request $request
+     * @param WebserviceKeyFilters $filters
+     * @param FormInterface $form
+     *
+     * @return Response
+     */
+    protected function renderPage(Request $request, WebserviceKeyFilters $filters, FormInterface $form): Response
+    {
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
+        $grid = $gridWebserviceFactory->getGrid($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+        $configurationWarnings = $this->lookForWarnings();
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
+            [
+                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
+                'webserviceConfigurationForm' => $form->createView(),
+                'grid' => $presentedGrid,
+                'configurationWarnings' => $configurationWarnings,
+            ]
+        );
     }
 
     /**
      * @return FormHandlerInterface
      */
-    private function getFormHandler()
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.webservice.form_handler');
     }

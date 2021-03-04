@@ -19,15 +19,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
-        <source>Invalid characters:</source>
-        <target>Invalid characters:</target>
-        <note>Line: 280</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
@@ -43,7 +34,7 @@
       <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
-        <note>Line: 703</note>
+        <note>Line: 709</note>
       </trans-unit>
     </body>
   </file>
@@ -80,6 +71,24 @@
         <source>Empty recordset returned</source>
         <target>Empty recordset returned</target>
         <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Tax/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
+        <source>Password should be at least %length% characters long.</source>
+        <target>Password should be at least %length% characters long.</target>
+        <note>Line: 62</note>
       </trans-unit>
     </body>
   </file>

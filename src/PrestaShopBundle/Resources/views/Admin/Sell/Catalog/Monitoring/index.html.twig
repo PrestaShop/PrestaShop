@@ -1,0 +1,120 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+  {% block monitoring_showcase_card %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Catalog/Monitoring/Blocks/showcase_card.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block empty_categories_listing %}
+    <div class="row">
+      <div class="col">
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': emptyCategoryGrid} %}
+
+          {% block grid_panel_body %}
+            <div class="card-body">
+              <div class="alert alert-info">
+                <div class="alert-text">
+                  {{ 'An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.'|trans({}, 'Admin.Catalog.Help') }}
+                </div>
+              </div>
+              {% block grid_view_block %}
+                {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': emptyCategoryGrid }) }}
+              {% endblock %}
+            </div>
+          {% endblock %}
+
+          {% block grid_panel_extra_content %}
+            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig'
+              with {'deleteCategoriesForm': deleteCategoryForm }
+            %}
+          {% endblock %}
+        {% endembed %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block no_qty_product_with_combinations_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': noQtyProductWithCombinationGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block no_qty_product_without_combinations_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': noQtyProductWithoutCombinationGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block disabled_product_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': disabledProductGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block product_without_image_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutImageGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block product_without_description_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutDescriptionGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block product_without_price_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': productWithoutPriceGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/monitoring.bundle.js') }}"></script>
+{% endblock %}

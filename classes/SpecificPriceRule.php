@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class SpecificPriceRuleCore extends ObjectModel
 {
@@ -43,42 +43,47 @@ class SpecificPriceRuleCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'specific_price_rule',
         'primary' => 'id_specific_price_rule',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
-            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'from_quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'price' => array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
-            'reduction' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'reduction_tax' => array('type' => self::TYPE_INT, 'validate' => 'isBool', 'required' => true),
-            'reduction_type' => array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
-            'from' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
-            'to' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true],
+            'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'from_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true],
+            'reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'reduction_tax' => ['type' => self::TYPE_INT, 'validate' => 'isBool', 'required' => true],
+            'reduction_type' => ['type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true],
+            'from' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false],
+            'to' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'specific_price_rules',
         'objectNodeName' => 'specific_price_rule',
-        'fields' => array(
-            'id_shop' => array('xlink_resource' => 'shops', 'required' => true),
-            'id_country' => array('xlink_resource' => 'countries', 'required' => true),
-            'id_currency' => array('xlink_resource' => 'currencies', 'required' => true),
-            'id_group' => array('xlink_resource' => 'groups', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_shop' => ['xlink_resource' => 'shops', 'required' => true],
+            'id_country' => ['xlink_resource' => 'countries', 'required' => true],
+            'id_currency' => ['xlink_resource' => 'currencies', 'required' => true],
+            'id_group' => ['xlink_resource' => 'groups', 'required' => true],
+        ],
+    ];
 
+    /**
+     * @return bool
+     *
+     * @throws PrestaShopException
+     */
     public function delete()
     {
         $this->deleteConditions();
         Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_specific_price_rule=' . (int) $this->id);
 
-        return parent::delete();
+        return (bool) parent::delete();
     }
 
     public function deleteConditions()
@@ -110,19 +115,19 @@ class SpecificPriceRuleCore extends ObjectModel
             return;
         }
 
-        $result = Db::getInstance()->insert('specific_price_rule_condition_group', array(
+        $result = Db::getInstance()->insert('specific_price_rule_condition_group', [
             'id_specific_price_rule' => (int) $this->id,
-        ));
+        ]);
         if (!$result) {
             return false;
         }
         $id_specific_price_rule_condition_group = (int) Db::getInstance()->Insert_ID();
         foreach ($conditions as $condition) {
-            $result = Db::getInstance()->insert('specific_price_rule_condition', array(
+            $result = Db::getInstance()->insert('specific_price_rule_condition', [
                 'id_specific_price_rule_condition_group' => (int) $id_specific_price_rule_condition_group,
                 'type' => pSQL($condition['type']),
                 'value' => (float) $condition['value'],
-            ));
+            ]);
             if (!$result) {
                 return false;
             }
@@ -180,7 +185,7 @@ class SpecificPriceRuleCore extends ObjectModel
 				ON (c.id_specific_price_rule_condition_group = g.id_specific_price_rule_condition_group)
 			WHERE g.id_specific_price_rule=' . (int) $this->id
         );
-        $conditions_group = array();
+        $conditions_group = [];
         if ($conditions) {
             foreach ($conditions as &$condition) {
                 if ($condition['type'] == 'attribute') {
@@ -213,7 +218,7 @@ class SpecificPriceRuleCore extends ObjectModel
         $conditions_group = $this->getConditions();
         $current_shop_id = Context::getContext()->shop->id;
 
-        $result = array();
+        $result = [];
 
         if ($conditions_group) {
             foreach ($conditions_group as $id_condition_group => $condition_group) {
@@ -275,16 +280,18 @@ class SpecificPriceRuleCore extends ObjectModel
         } else {
             // All products without conditions
             if ($products && count($products)) {
-                $query = new DbQuery();
-                $query->select('p.`id_product`')
-                    ->select('NULL as `id_product_attribute`')
-                    ->from('product', 'p')
-                    ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                    ->where('ps.id_shop = ' . (int) $current_shop_id);
-                $query->where('p.`id_product` IN (' . implode(', ', array_map('intval', $products)) . ')');
-                $result = Db::getInstance()->executeS($query);
+                if (!SpecificPrice::getByProductId(0, false, false, (int) $this->id)) {
+                    $query = new DbQuery();
+                    $query->select('p.`id_product`')
+                        ->select('NULL as `id_product_attribute`')
+                        ->from('product', 'p')
+                        ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
+                        ->where('ps.id_shop = ' . (int) $current_shop_id);
+                    $query->where('p.`id_product` IN (' . implode(', ', array_map('intval', $products)) . ')');
+                    $result = Db::getInstance()->executeS($query);
+                }
             } else {
-                $result = array(array('id_product' => 0, 'id_product_attribute' => null));
+                $result = [['id_product' => 0, 'id_product_attribute' => null]];
             }
         }
 

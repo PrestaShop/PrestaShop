@@ -97,18 +97,24 @@
   <ol>
     <?php if (!extension_loaded('SimpleXML')): ?>
     <li>
-        PrestaShop installation requires the <b>SimpleXML extension</b> to be enabled.
+        PrestaShop installation requires the <b>SimpleXML PHP extension</b> to be enabled.
     </li>
     <?php endif; ?>
     <?php if (!extension_loaded('zip')): ?>
       <li>
-          PrestaShop installation requires the <b>zip extension</b> to be enabled.
+          PrestaShop installation requires the <b>Zip PHP extension</b> to be enabled.
       </li>
     <?php endif; ?>
     <?php if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_): ?>
       <li>
-          PrestaShop requires at least PHP <?php echo _PS_INSTALL_MINIMUM_PHP_VERSION_ ?> or newer versions.
-          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to update your version of PHP.</i>
+          Your server is running PHP <?php echo PHP_VERSION ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MINIMUM_PHP_VERSION_ ?> or newer.
+          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to update your server's PHP version.</i>
+      </li>
+    <?php endif; ?>
+    <?php if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_): ?>
+      <li>
+          Your server is running PHP <?php echo PHP_VERSION ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MAXIMUM_PHP_VERSION_ ?> or lower.
+          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to downgrade your server's PHP version.</i>
       </li>
     <?php endif; ?>
         <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')): ?>
@@ -119,7 +125,7 @@
     <?php endif; ?>
   </ol>
 
-  <p>You can contact your web host provider to fix theses requirements.</p>
+  <p>You can contact your web host provider to fix the above requirements.</p>
 </div>
 </body>
 </html>

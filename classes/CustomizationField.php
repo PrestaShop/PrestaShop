@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldSettings;
 
 /**
  * Class CustomizationFieldCore.
@@ -37,7 +39,7 @@ class CustomizationFieldCore extends ObjectModel
     public $required;
     /** @var bool Field was added by a module */
     public $is_module;
-    /** @var string Label for customized field */
+    /** @var string[] Label for customized field */
     public $name;
     /** @var bool Soft delete */
     public $is_deleted;
@@ -45,32 +47,32 @@ class CustomizationFieldCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'customization_field',
         'primary' => 'id_customization_field',
         'multilang' => true,
         'multilang_shop' => true,
-        'fields' => array(
+        'fields' => [
             /* Classic fields */
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'required' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'is_module' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false),
-            'is_deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false),
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'type' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'required' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+            'is_module' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false],
+            'is_deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 255),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => CustomizationFieldSettings::MAX_NAME_LENGTH],
+        ],
+    ];
 
-    /** @var array $webserviceParameters */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_product' => array(
-                'xlink_resource' => array(
+    /** @var array */
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_product' => [
+                'xlink_resource' => [
                     'resourceName' => 'products',
-                ),
-            ),
-        ),
-    );
+                ],
+            ],
+        ],
+    ];
 }

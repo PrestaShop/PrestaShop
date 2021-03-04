@@ -1,0 +1,182 @@
+// PrestaShop Admin Theme Colors
+$main-color: #363a41 !default;
+$primary-color: #25b9d7 !default;
+$primary-light-color: #7cd5e7 !default;
+$secondary-color: $greenPrestashop !default;
+$bg-content-color: #eff1f2 !default;
+
+$contrasted-dark-default: #333;
+$contrasted-light-default: #fff;
+$contrasted-lightness-threshold: 10%;
+
+$bg-page-head-color: $secondary-color;
+$bg-panel-heading-color: hsl(hue($secondary-color), 10, 90);
+
+$badge-notif-color: $greenPrestashop;
+$brand-addons: $pinkPrestashop;
+
+$font-family-mono: "Open Sans", helvetica, arial, sans-serif;
+
+// FontAwesome icons
+$icon-font-family: "FontAwesome";
+$fa-css-prefix: icon;
+$icon-size-base: 14px;
+
+// Tooltips
+$tooltip-opacity: 1;
+$tooltip-bg: #555;
+$tooltip-max-width: 250px;
+
+// Bootstrap variables
+$gray-darker: lighten(#000, 13.5%);
+$gray-dark: lighten(#000, 20%);
+$gray: lighten(#000, 33.5%);
+$gray-light: lighten(#000, 60%);
+$gray-lighter: lighten(#000, 93.5%);
+$gray-background: #eaebec;
+
+// Cards
+$card-border-color: #dbe6e9;
+$card-icon-color: #6c868e;
+
+// Brand colors
+$brand-primary: $primary-color !default;
+
+$brand-success: #72c279 !default;
+$brand-warning: #fbbb22 !default;
+$brand-danger: #e08f95 !default;
+$brand-info: #25b9d7 !default;
+
+$alert-success-bg: #cbf2d4 !default;
+$alert-success-text: #363a41 !default;
+$alert-success-border: #53d572 !default;
+
+$alert-info-bg: #beeaf3 !default;
+$alert-info-text: #363a41 !default;
+$alert-info-border: #25b9d7 !default;
+
+$alert-warning-bg: #fffbd3 !default;
+$alert-warning-text: #363a41 !default;
+$alert-warning-border: #fab000 !default;
+
+$alert-danger-bg: #fbc6c3 !default;
+$alert-danger-text: #363a41 !default;
+$alert-danger-border: #f44336 !default;
+
+// Sidebar
+$sidebar-menu-color: #bebebe !default;
+$sidebar-menu-active-color: #fff !default;
+$sidebar-menu-hover-color: #fff !default;
+$sidebar-menu-bg-hover-color: #282b30;
+
+// Toolbar
+$toolbar-buttons-color: #2eacce;
+$toolbar-buttons-hover-color: #40c9ed;
+
+// Scaffolding
+$body-bg: $bg-content-color;
+$text-color: $gray;
+
+// Typography
+$FontPathOpenSans: "../node_modules/open-sans-fonts/open-sans";
+$url-font-content-name: "Open Sans" !default;
+$url-font-headings-name: "Open Sans" !default;
+$font-family-sans-serif: $url-font-content-name, helvetica, arial, sans-serif;
+$headings-font-family: $url-font-headings-name, helvetica, arial, sans-serif;
+$font-size-base: 12px;
+$line-height-base: 1.428571429;
+$line-height-computed: floor($font-size-base * $line-height-base);
+$headings-font-weight: 400;
+
+// Components
+$padding-base-vertical: 8px;
+$padding-base-horizontal: 16px;
+$border-radius-base: 4px;
+
+// Tables
+
+// $table-bg: transparent  overall background-color
+$table-bg-accent: #f9f9f9;
+$table-bg-hover: #edf7fb;
+
+// Buttons
+$btn-default-color: $main-color;
+$btn-default-bg: #fff;
+$btn-default-border: #bbcdd2;
+$btn-primary-color: #fff;
+$btn-primary-bg: $primary-color;
+$btn-primary-border: $primary-color;
+$btn-primary-active-bg: #21a6c1;
+
+$btn-secondary-hover: #889da2;
+$btn-secondary-active-color: #889da2;
+$btn-secondary-color: #fff;
+
+// Forms
+$input-bg: #fff;
+$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 6);
+$input-group-addon-bg: #f5f8f9;
+$input-border: #bbcdd2;
+$input-focus-background: #f4fcfd;
+$input-focus-border: $primary-color;
+// Dropdowns
+$dropdown-link-hover-color: #fff;
+$dropdown-link-hover-bg: $brand-primary;
+
+// Grid system
+$grid-gutter-width: 10px;
+
+// Basics of a navbar
+$navbar-height: 40px;
+$well-bg: #fcfdfe;
+
+// Media queries breakpoints
+// Tiny screen / phone
+$screen-tiny: 480px;
+$screen-phone: $screen-tiny;
+
+// Small screen / tablet
+$screen-small: 768px;
+$screen-tablet: $screen-small;
+
+// Medium screen / desktop
+$screen-medium: 992px;
+$screen-desktop: $screen-medium;
+
+// So media queries don't overlap when required, provide a maximum
+$screen-small-max: ($screen-medium - 1);
+$screen-tablet-max: $screen-small-max;
+
+// Large screen / wide desktop
+$screen-large: 1200px;
+$screen-large-desktop: $screen-large;
+
+// Container sizes
+// Small screen / tablet
+$container-tablet: 728px;
+
+// Medium screen / desktop
+$container-desktop: 940px;
+
+// Large screen / wide desktop
+$container-large-desktop: 1170px;
+
+// Menu
+$gray-dark-menu: #363a41;
+$widthSidebarNav: 210px;
+$paddingLeftPageClosed: 4.0625rem;
+$paddingLeftMobile: 0.625rem;
+$widthSidebarSubmenu: 200px;
+$menu-item-size: 34px;
+$min-height: 950px;
+$gray-dark-text: #bebebe;
+$gray-dark-text-hover: #fff;
+$size-navbar-width: 13.13rem;
+$size-navbar-width-mini: 3.125rem;
+$size-header-height: 2.5rem;
+$header-mobile-padding-y: 0.625rem;
+$medium-gray: #6c868e;
+$gray-medium: $medium-gray;
+
+// use rems to ensure homogeneity on all zoom scales
+$grid-breakpoints: (xs: 0, sm: 34em, md: 48em, lg: 64em, xl: 81.25em);

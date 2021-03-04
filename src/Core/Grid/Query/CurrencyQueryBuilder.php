@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,19 +17,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
-use PDO;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -53,7 +53,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param array $contextShopIds
      */
@@ -79,7 +79,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`, cl.`name`, cl.`symbol`')
+            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`, c.`modified`, c.`unofficial`, cl.`name`, cl.`symbol`')
             ->groupBy('c.`id_currency`')
         ;
 
@@ -113,6 +113,9 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getQueryBuilder(array $filters)
     {
         $allowedFilters = [
+            'id_currency',
+            'name',
+            'symbol',
             'iso_code',
             'active',
         ];
@@ -148,6 +151,13 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('active' === $filterName) {
                 $qb->andWhere('c.`active` = :active');
                 $qb->setParameter('active', $value);
+
+                continue;
+            }
+
+            if ('name' === $filterName || 'symbol' === $filterName) {
+                $qb->andWhere('cl.`' . $filterName . '` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $value . '%');
 
                 continue;
             }

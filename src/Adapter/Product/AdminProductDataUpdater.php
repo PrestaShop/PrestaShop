@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
@@ -54,7 +54,7 @@ class AdminProductDataUpdater implements ProductInterface
     /**
      * Constructor. HookDispatcher is injected by Sf container.
      *
-     * @param HookDispatcher $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(HookDispatcherInterface $hookDispatcher)
     {
@@ -70,7 +70,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->activateProductIdList() should always receive at least one ID. Zero given.', 5003);
         }
 
-        $failedIdList = array();
+        $failedIdList = [];
         foreach ($productListId as $productId) {
             $product = new Product($productId);
             if (!Validate::isLoadedObject($product)
@@ -80,9 +80,12 @@ class AdminProductDataUpdater implements ProductInterface
 
                 continue;
             }
-            $product->active = ($activate ? 1 : 0);
+            $product->active = (bool) $activate;
             $product->update();
-            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
+            if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $product->id);
+            }
+            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', ['id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate]);
         }
 
         if (count($failedIdList) > 0) {
@@ -121,7 +124,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->duplicateProductIdList() should always receive at least one ID. Zero given.', 5005);
         }
 
-        $failedIdList = array();
+        $failedIdList = [];
         foreach ($productIdList as $productId) {
             try {
                 $this->duplicateProduct($productId);
@@ -192,8 +195,8 @@ class AdminProductDataUpdater implements ProductInterface
             $product->id_product
         );
 
-        $product->indexed = 0;
-        $product->active = 0;
+        $product->indexed = false;
+        $product->active = false;
 
         // change product name to prefix it
         foreach ($product->name as $langKey => $oldName) {
@@ -215,7 +218,9 @@ class AdminProductDataUpdater implements ProductInterface
             && Product::duplicateSpecificPrices($id_product_old, $product->id)
             && Pack::duplicate($id_product_old, $product->id)
             && Product::duplicateCustomizationFields($id_product_old, $product->id)
+            && Product::duplicatePrices($id_product_old, $product->id)
             && Product::duplicateTags($id_product_old, $product->id)
+            && Product::duplicateTaxes($id_product_old, $product->id)
             && Product::duplicateDownload($id_product_old, $product->id)) {
             if ($product->hasAttributes()) {
                 Product::updateDefaultAttribute($product->id);
@@ -224,14 +229,17 @@ class AdminProductDataUpdater implements ProductInterface
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
-                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product));
-                if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', ['id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product]);
+                if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
 
                 return $product->id;
             }
         } else {
+            if ($product->id !== null) {
+                $product->delete();
+            }
             throw new \Exception('An error occurred while creating an object.', 5009);
         }
     }
@@ -261,64 +269,30 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         $categoryId = $filterParams['filter_category'];
+        $minPosition = min(array_values($productList));
+        $productsIds = implode(',', array_map('intval', array_keys($productList)));
 
-        /* Sorting items on one page only, with ONE SQL UPDATE query,
-         * then fixing bugs (duplicates and 0 values) on next pages with more queries, if needed.
-         *
-         * Most complicated case example:
-         * We have to sort items from offset 5, limit 5, on total object count: 14
-         * The previous AND the next pages MUST NOT be impacted but fixed if needed.
-         * legend:  #<id>|P<position>
-         *
-         * Before sort:
-         * #1|P2 #2|P4 #3|P5 #7|P8 #6|P9   #5|P10 #8|P11 #10|P13 #12|P14 #11|P15   #9|P16 #12|P18 #14|P19 #22|P24
-         * (there is holes in positions)
-         *
-         * Sort request:
-         *                                 #5|P?? #10|P?? #12|P?? #8|P?? #11|P??
-         *
-         * After sort:
-         * (previous page unchanged)       (page to sort: sort and no duplicates) (the next pages MUST be shifted to avoid duplicates if any)
-         *
-         * Request input:
-         *                               [#5]P10 [#10]P13 [#12]P14 [#8]P11 [#11]P15
+        /*
+         * First request to update position on category_product
          */
-        $maxPosition = max(array_values($productList));
-        $sortedPositions = array_values($productList);
-        sort($sortedPositions); // new positions to update
+        Db::getInstance()->query('SET @i := ' . (((int) $minPosition) - 1));
+        $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp ' .
+            'SET cp.`position` = (SELECT @i := @i + 1) ' .
+            'WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . $productsIds . ') ' .
+            'ORDER BY FIELD(cp.`id_product`, ' . $productsIds . ')';
+        Db::getInstance()->query($updatePositions);
 
-        // avoid '0', starts with '1', so shift right (+1)
-        if ($sortedPositions[1] === 0) {
-            foreach ($sortedPositions as $k => $v) {
-                $sortedPositions[$k] = $v + 1;
-            }
-        }
-
-        // combine old positions with new position in an array
-        $combinedOldNewPositions = array_combine(array_values($productList), $sortedPositions);
-        ksort($combinedOldNewPositions); // (keys: old positions starting at '1', values: new positions)
-        $positionsMatcher = array_replace(array_pad(array(), $maxPosition, 0), $combinedOldNewPositions); // pad holes with 0
-        array_shift($positionsMatcher); // shift because [0] is not used in MySQL FIELD()
-        $fields = implode(',', $positionsMatcher);
-
-        // update current pages.
-        $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp
-            INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
-            ' . Shop::addSqlAssociation('product', 'p') . '
-            SET cp.`position` = ELT(cp.`position`, ' . $fields . '),
-                p.`date_upd` = "' . date('Y-m-d H:i:s') . '",
-                product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-            WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . implode(',', array_map('intval', array_keys($productList))) . ')';
-
-        Db::getInstance()->execute($updatePositions);
-
-        // Fixes duplicates on all pages
-        Db::getInstance()->query('SET @i := 0');
-        $selectPositions = 'UPDATE`' . _DB_PREFIX_ . 'category_product` cp
-            SET cp.`position` = (SELECT @i := @i + 1)
-            WHERE cp.`id_category` = ' . (int) $categoryId . '
-            ORDER BY cp.`id_product` NOT IN (' . implode(',', array_map('intval', array_keys($productList))) . '), cp.`position` ASC';
-        Db::getInstance()->execute($selectPositions);
+        /**
+         * Second request to update date_upd because
+         * ORDER BY is not working on multi-tables update
+         */
+        $updateProducts = 'UPDATE `' . _DB_PREFIX_ . 'product` p ' .
+            '' . Shop::addSqlAssociation('product', 'p') . ' ' .
+            'SET ' .
+            '    p.`date_upd` = "' . date('Y-m-d H:i:s') . '", ' .
+            '    product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '" ' .
+            'WHERE p.`id_product` IN (' . $productsIds . ') ';
+        Db::getInstance()->query($updateProducts);
 
         return true;
     }

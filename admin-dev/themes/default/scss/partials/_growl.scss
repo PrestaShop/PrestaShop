@@ -1,0 +1,110 @@
+/*
+ * jQuery Growl
+ * Copyright 2013 Kevin Sylvestre
+ * 1.1.4
+ */
+
+$namespace: "growl";
+$duration: 0.4s;
+
+#growls {
+  position: fixed;
+  z-index: 50000;
+
+  &.default {
+    top: 100px;
+    @include right(10px);
+  }
+
+  &.tl {
+    top: 10px;
+    @include left(10px);
+  }
+
+  &.tr {
+    top: 10px;
+    @include right(10px);
+  }
+
+  &.bl {
+    bottom: 10px;
+    @include left(10px);
+  }
+
+  &.br {
+    bottom: 10px;
+    @include right(10px);
+  }
+}
+
+.growl {
+  position: relative;
+  opacity: 1;
+  @include border-radius(4px);
+  @include transition(all $duration ease-in-out);
+
+  &.#{$namespace}-incoming {
+    opacity: 0;
+  }
+
+  &.#{$namespace}-outgoing {
+    opacity: 0;
+  }
+
+  &.#{$namespace}-small {
+    width: 200px;
+    padding: 5px;
+    margin: 5px;
+  }
+
+  &.#{$namespace}-medium {
+    width: 250px;
+    padding: 10px;
+    margin: 10px;
+  }
+
+  &.#{$namespace}-large {
+    width: 300px;
+    padding: 15px;
+    margin: 15px;
+  }
+
+  &.#{$namespace}-default {
+    color: #fff;
+    background: #808080;
+  }
+
+  &.#{$namespace}-error {
+    color: #fff;
+    background: rgba($brand-danger, 0.8);
+  }
+
+  &.#{$namespace}-notice {
+    color: #fff;
+    background: rgba($brand-success, 0.8);
+  }
+
+  &.#{$namespace}-warning {
+    color: #fff;
+    background: rgba($brand-warning, 0.8);
+  }
+
+  .#{$namespace}-close {
+    font-family: helvetica, verdana, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    cursor: pointer;
+    @include float(right);
+  }
+
+  .#{$namespace}-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .#{$namespace}-message {
+    font-size: 14px;
+    line-height: 18px;
+  }
+}

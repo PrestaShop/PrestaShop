@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -31,13 +31,35 @@ class PDFGeneratorCore extends TCPDF
 {
     const DEFAULT_FONT = 'helvetica';
 
+    /**
+     * @var string
+     */
     public $header;
+
+    /**
+     * @var string
+     */
     public $footer;
+
+    /**
+     * @var string
+     */
     public $pagination;
+
+    /**
+     * @var string
+     */
     public $content;
+
+    /**
+     * @var string
+     */
     public $font;
 
-    public $font_by_lang = array(
+    /**
+     * @var array
+     */
+    public $font_by_lang = [
         'ja' => 'cid0jp',
         'bg' => 'freeserif',
         'ru' => 'freeserif',
@@ -68,7 +90,7 @@ class PDFGeneratorCore extends TCPDF
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
         'th' => 'freeserif',
-    );
+    ];
 
     /**
      * @param bool $use_cache
@@ -143,8 +165,8 @@ class PDFGeneratorCore extends TCPDF
             $this->font = self::DEFAULT_FONT;
         }
 
-        $this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
-        $this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
+        $this->setHeaderFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
+        $this->setFooterFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
 
         $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', false);
     }
@@ -199,7 +221,7 @@ class PDFGeneratorCore extends TCPDF
             $output = 'I';
         }
 
-        return $this->output($filename, $output);
+        return $this->Output($filename, $output);
     }
 
     /**
@@ -216,6 +238,10 @@ class PDFGeneratorCore extends TCPDF
 
     /**
      * Override of TCPDF::getRandomSeed() - getmypid() is blocked on several hosting.
+     *
+     * @param string $seed
+     *
+     * @return string
      */
     protected function getRandomSeed($seed = '')
     {

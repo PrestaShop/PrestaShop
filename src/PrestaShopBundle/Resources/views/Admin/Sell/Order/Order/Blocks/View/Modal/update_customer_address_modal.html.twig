@@ -1,0 +1,61 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="modal fade" id="updateCustomerAddressModal">
+  {{ form_start(changeOrderAddressForm,
+    {'action': path('admin_orders_change_customer_address', {'orderId': orderForViewing.id, 'customerId': orderForViewing.customer.id})}) }}
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {{ 'Select another address'|trans({}, 'Admin.Actions') }}
+          </h5>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+        <div class="form-group m-0">
+            {{ form_widget(changeOrderAddressForm.new_address_id) }}
+          </div>
+        </div>
+
+        {{ form_widget(changeOrderAddressForm.address_type) }}
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+          </button>
+
+          <button type="submit" class="btn btn-primary">
+            {{ 'Select'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {{ form_end(changeOrderAddressForm) }}
+</div>

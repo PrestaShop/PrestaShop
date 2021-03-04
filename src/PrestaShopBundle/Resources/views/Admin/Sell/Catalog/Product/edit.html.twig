@@ -1,0 +1,120 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% form_theme productForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+{% endblock %}
+
+{# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
+{% block content %}
+  {{ form_start(productForm, {'attr': {'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+
+  {% block product_header %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
+      'productForm': productForm,
+      'isMultiShopContext': isMultiShopContext,
+      'helpLink': helpLink,
+      'statsLink': statsLink
+    })
+    }}
+  {% endblock %}
+
+  <div class="col-xxl-10">
+    {% block product_tabs_container %}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
+        'productForm': productForm
+      }) }}
+    {% endblock %}
+
+    <div id="form_content" class="tab-content">
+      {% block product_tab_basic %}
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
+          {{ form_widget(productForm.basic) }}
+
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
+            'productForm': productForm,
+          }) }}
+        </div>
+      {% endblock %}
+
+      {% block product_tab_stock %}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="stock-tab">
+          {{ form_widget(productForm.stock) }}
+        </div>
+      {% endblock %}
+
+      {% block product_tab_pricing %}
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="pricing-tab">
+          {{ form_widget(productForm.price) }}
+        </div>
+      {% endblock %}
+
+      {% block product_tab_shipping %}
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="shipping-tab">
+          {{ form_widget(productForm.shipping) }}
+        </div>
+      {% endblock %}
+
+      {% block product_tab_seo %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/seo.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
+      {% block product_tab_options %}
+        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="options-tab">
+          {{ form_widget(productForm.options) }}
+
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/customizations.html.twig', {
+            'productForm': productForm,
+          }) }}
+
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/suppliers.html.twig', {
+            'productForm': productForm,
+          }) }}
+        </div>
+      {% endblock %}
+
+      {% block product_extra_tabs %}
+      {% endblock %}
+    </div>
+  </div>
+
+  {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
+    'productForm': productForm,
+    'editable': editable
+  }) }}
+
+  {{ form_end(productForm) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/product_edit.bundle.js') }}"></script>
+{% endblock %}

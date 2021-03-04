@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_checkpayment/controllers/front/validation.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156" approved="yes">
+        <source>This payment method is not available.</source>
+        <target xml:lang="fr" state="translated">Ce moyen de paiement n'est pas disponible.</target>
+        <note>Context:
+File: modules/ps_checkpayment/controllers/front/validation.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/front/payment_infos.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="84a25ff3edb86f9b9fd4f6238cd54e51" approved="yes">
+        <source>Please send us your check following these rules:</source>
+        <target xml:lang="fr" state="translated">Veuillez nous envoyer votre chèque en suivant ces indications :</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/front/payment_infos.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="b2f40690858b404ed10e62bdf422c704" approved="yes">
+        <source>Amount</source>
+        <target xml:lang="fr" state="translated">Montant</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/front/payment_infos.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="961c4d5afb146e7ad1dba22951450e3c" approved="yes">
+        <source>Payee</source>
+        <target xml:lang="fr" state="translated">Bénéficiaire</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/front/payment_infos.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="a0335a127854df8e1138f1a42151f484" approved="yes">
+        <source>Send your check to this address</source>
+        <target xml:lang="fr" state="translated">Envoyez votre chèque à cette adresse</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/front/payment_infos.tpl:33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/hook/payment_return.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="88526efe38fd18179a127024aba8c1d7" approved="yes">
+        <source>Your order on %s is complete.</source>
+        <target xml:lang="fr" state="translated">Votre commande sur %s a bien été enregistrée.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="61da27a5dd1f8ced46c77b0feaa9e159" approved="yes">
+        <source>Your check must include:</source>
+        <target xml:lang="fr" state="translated">Veuillez nous envoyer un chèque avec :</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="621455d95c5de701e05900a98aaa9c66" approved="yes">
+        <source>Payment amount.</source>
+        <target xml:lang="fr" state="translated">Montant du règlement.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="9b8f932b1412d130ece5045ecafd1b42" approved="yes">
+        <source>Payable to the order of</source>
+        <target xml:lang="fr" state="translated">payable à l'ordre de</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="9a94f1d749a3de5d299674d6c685e416" approved="yes">
+        <source>Mail to</source>
+        <target xml:lang="fr" state="translated">à envoyer à</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="e1c54fdba2544646684f41ace03b5fda" approved="yes">
+        <source>Do not forget to insert your order number #%d.</source>
+        <target xml:lang="fr" state="translated">N'oubliez pas d'indiquer votre numéro de commande n°%d.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="4761b03b53bc2b3bd948bb7443a26f31" approved="yes">
+        <source>Do not forget to insert your order reference %s.</source>
+        <target xml:lang="fr" state="translated">N'oubliez pas d'indiquer votre référence de commande %s.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="610abe74e72f00210e3dcb91a0a3f717" approved="yes">
+        <source>An email has been sent to you with this information.</source>
+        <target xml:lang="fr" state="translated">Un e-mail contenant ces informations vous a été envoyé.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="ffd2478830ca2f519f7fe7ee259d4b96" approved="yes">
+        <source>Your order will be sent as soon as we receive your payment.</source>
+        <target xml:lang="fr" state="translated">Votre commande vous sera envoyée dès réception du paiement.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="0db71da7150c27142eef9d22b843b4a9" approved="yes">
+        <source>For any questions or for further information, please contact our</source>
+        <target xml:lang="fr" state="translated">Pour toute question ou information complémentaire merci de contacter notre</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="decce112a9e64363c997b04aa71b7cb8" approved="yes">
+        <source>customer service department.</source>
+        <target xml:lang="fr" state="translated">support client</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="9bdf695c5a30784327137011da6ef568" approved="yes">
+        <source>We have noticed that there is a problem with your order. If you think this is an error, you can contact our</source>
+        <target xml:lang="fr" state="translated">Nous avons rencontré un problème avec votre commande, veuillez contacter notre support client</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:44</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/hook/payment.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="4b80fae2153218ed763bdadc418e8589" approved="yes">
+        <source>Pay by check</source>
+        <target xml:lang="fr" state="translated">Payer par chèque</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="4e1fb9f4b46556d64db55d50629ee301" approved="yes">
+        <source>(order processing will be longer)</source>
+        <target xml:lang="fr" state="translated">(le traitement de la commande sera plus long)</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

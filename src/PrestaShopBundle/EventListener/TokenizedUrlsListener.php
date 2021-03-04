@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\EventListener;
@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -67,7 +68,7 @@ class TokenizedUrlsListener
         }
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(KernelEvent $event)
     {
         $request = $event->getRequest();
 
@@ -101,15 +102,20 @@ class TokenizedUrlsListener
             }
         }
 
-        $token = urldecode($request->query->get('_token', false));
+        $token = false;
+        if ($request->query->has('_token')) {
+            $token = new CsrfToken($this->username, $request->query->get('_token'));
+        } elseif (isset($request->query->get('form')['_token'])) {
+            $token = new CsrfToken('form', $request->query->get('form')['_token']);
+        }
 
-        if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken($this->username, $token))) {
+        if ((false === $token || !$this->tokenManager->isTokenValid($token)) && $event instanceof GetResponseEvent) {
             // remove token if any
             if (false !== strpos($uri, '_token=')) {
                 $uri = substr($uri, 0, strpos($uri, '_token='));
             }
 
-            $response = new RedirectResponse($this->router->generate('admin_security_compromised', array('uri' => urlencode($uri))));
+            $response = new RedirectResponse($this->router->generate('admin_security_compromised', ['uri' => urlencode($uri)]));
             $event->setResponse($response);
         }
     }

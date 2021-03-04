@@ -1,0 +1,43 @@
+.adminpayment {
+  .card {
+    .module-item-list {
+      .module-item-wrapper-list {
+        @include media-breakpoint-down(sm) {
+          position: relative;
+          padding-left: 5rem;
+
+          ul {
+            padding-left: 0;
+          }
+        }
+
+        > div {
+          &:first-of-type {
+            @include media-breakpoint-down(sm) {
+              position: absolute;
+              top: 1rem;
+              left: 0.5rem;
+              width: auto;
+            }
+          }
+
+          &:last-of-type {
+            @include media-breakpoint-down(sm) {
+              // stylelint-disable-next-line
+              margin-top: 1rem !important;
+            }
+          }
+        }
+      }
+    }
+
+    #modules_list_container_content {
+      .tab-pane {
+        @include media-breakpoint-down(sm) {
+          // stylelint-disable-next-line
+          overflow: scroll;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% if not isShowcaseCardClosed %}
+  <div id="attributesShowcaseCard" class="helper-card card">
+    <div class="helper-card__left helper-card__attribute shape-one">
+      <img src="{{ asset('themes/new-theme/scss/img/helper-card/attributes@3x.png') }}" class="img-fluid img-rtl">
+    </div>
+    <div class="helper-card__right">
+      <h2>{{ 'Create attributes'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+      <p>{{ 'Color, dimension, size, disk space... think about attributes as properties that change from one product to another. As a consequence, attributes allow you to build product combinations.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+      <a class="btn btn-outline-secondary"
+         href="{{ documentation_link('attribute') }}"
+         target="_blank"
+      >
+        {{ 'Learn more'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <i class="showcase-card__close material-icons js-remove-helper-block"
+       data-card-name="{{ showcaseCardName }}"
+       data-close-url="{{ path('admin_close_showcase_card') }}"
+    >
+      close
+    </i>
+  </div>
+{% endif %}

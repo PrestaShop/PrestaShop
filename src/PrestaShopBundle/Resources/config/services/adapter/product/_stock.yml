@@ -1,0 +1,29 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.product.stock.validate.stock_available_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator
+
+    prestashop.adapter.product.stock.repository.stock_available_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.adapter.product.stock.validate.stock_available_validator'
+
+    prestashop.adapter.product.stock.command_handler.update_product_stock_information_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockInformationHandler
+        arguments:
+            - '@prestashop.adapter.product.stock.update.product_stock_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand
+
+    prestashop.adapter.product.stock.update.product_stock_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater
+        arguments:
+            - '@prestashop.core.stock.stock_manager'
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"

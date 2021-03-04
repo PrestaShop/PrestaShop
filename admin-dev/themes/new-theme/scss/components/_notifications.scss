@@ -1,9 +1,9 @@
 .notification-center {
   > .notification {
     padding: 9px 5px;
-    border: none;
     color: $medium-gray;
     background: transparent;
+    border: none;
 
     > .material-icons {
       font-size: 1.375rem;
@@ -13,6 +13,11 @@
 
     > .count {
       @include notification_counter();
+
+      @include media-breakpoint-down("sm") {
+        top: 0.7rem;
+        right: 0.2rem;
+      }
 
       &.hide {
         display: none;
@@ -25,60 +30,64 @@
   }
 
   .dropdown-menu {
-    margin: 0;
-    padding: 0;
-    border-radius: 0;
     min-width: 25rem;
+    padding: 0;
+    margin: 0;
+    @include border-radius(0);
   }
 
   .notifications {
-    font-size: $font-size-base;
-    margin: 0;
-    padding: 0;
-    border-radius: 0;
-    min-width: 25rem;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
     top: 42px;
-    right: 5px !important;
-    &:before, &:after {
-      bottom: 100%;
-      right: 9px;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
+    right: 5px;
+    min-width: 25rem;
+    padding: 0;
+    margin: 0;
+    font-size: $font-size-base;
+    @include border-radius(0);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+
+    &::before,
+    &::after {
       position: absolute;
+      right: 9px;
+      bottom: 100%;
+      width: 0;
+      height: 0;
       pointer-events: none;
+      content: " ";
+      border: solid transparent;
     }
-    &:after {
-      border-color: transparent;
-      border-bottom-color: white;
-      border-width: 7px;
+
+    &::after {
       margin-right: 1px;
-    }
-    &:before {
       border-color: transparent;
-      border-bottom-color: #bbcdd2;
-      border-width: 8px;
+      border-width: 7px;
+      border-bottom-color: #fff;
+    }
+
+    &::before {
       margin-left: -8px;
+      border-color: transparent;
+      border-width: 8px;
+      border-bottom-color: #bbcdd2;
     }
 
     .nav {
       .nav-item {
-        margin-left: 0;
         width: 33%;
+        margin-left: 0;
         text-align: center;
       }
 
       .nav-link {
-        color: $gray-medium;
+        padding: 0.9375rem 0.9375rem 0.625rem;
         font-weight: $font-weight-normal;
-        padding: 0.9375rem 0.9375rem 0.625rem 0.9375rem;
+        color: $gray-medium;
 
         &.active {
+          color: $gray-dark;
           border-top: 0;
           border-bottom: 2px solid $nav-tabs-active-link-hover-border-color;
-          color: $gray-dark;
         }
 
         &:hover {
@@ -88,9 +97,9 @@
     }
 
     .tab-content {
-      border-top: 0.125rem solid $gray-light;
       padding: 0;
       margin-top: -0.0625rem;
+      border-top: 0.125rem solid $gray-light;
 
       > .tab-pane {
         height: 11.88rem;
@@ -105,21 +114,36 @@
           text-align: center;
 
           &::after {
-            content: "\E7F5";
-            font-family: "Material Icons";
-            opacity: 0.7;
+            font-family: "Material Icons", Arial, Helvetica, sans-serif;
             font-size: 5.625rem;
             color: $gray-light;
+            content: "\E7F5";
+            opacity: 0.7;
+
+            @include media-breakpoint-down("sm") {
+              display: block;
+              margin-top: 1rem;
+              font-size: 1.625rem;
+              // To be changed to var when UIKit sources are imported
+              color: #363a41;
+              opacity: 1;
+            }
           }
 
           > .no-notification {
             position: absolute;
             bottom: 0;
-            width: 100%;
             display: block;
+            width: 100%;
+
             .mobile & {
               bottom: 3.125rem;
             }
+          }
+
+          @include media-breakpoint-down("sm") {
+            // To be changed to var when UIKit sources are imported
+            color: #363a41;
           }
         }
       }
@@ -142,7 +166,8 @@
             color: $brand-danger;
           }
 
-          &.pending1, &.pending2 {
+          &.pending1,
+          &.pending2 {
             color: $brand-secondary;
           }
         }
@@ -152,9 +177,9 @@
         }
 
         &:hover {
-          background-color: $dropdown-link-hover-bg;
           color: $dropdown-link-hover-color;
           text-decoration: none;
+          background-color: $dropdown-link-hover-bg;
 
           strong {
             color: $dropdown-link-hover-color;
@@ -163,24 +188,35 @@
       }
     }
   }
+
   .mobile & {
     .nav-link::before {
-      font-family: 'Material Icons';
-      display: block;
+      display: none;
+      font-family: "Material Icons", Arial, Helvetica, sans-serif;
       font-size: 30px;
       color: $gray-dark;
     }
+
     #orders-tab::before {
       content: "\E8CB";
     }
+
     #customers-tab::before {
       content: "\E7FE";
     }
+
     #messages-tab::before {
       content: "\E0BE";
     }
+
     .no-notification {
-      top: 13.75rem;
+      top: 7.75rem;
+    }
+
+    &.show {
+      .dropdown-toggle {
+        color: $primary;
+      }
     }
   }
 }

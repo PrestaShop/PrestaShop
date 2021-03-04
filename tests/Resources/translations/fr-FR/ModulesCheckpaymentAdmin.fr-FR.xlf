@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_checkpayment/ps_checkpayment.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="7b4cc4f79be9aae43efd53b4ae5cba4d" approved="yes">
+        <source>Payments by check</source>
+        <target xml:lang="fr" state="translated">Chèque</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:64</note>
+      </trans-unit>
+      <trans-unit id="e09484ba6c16bc20236b63cc0d87ee95" approved="yes">
+        <source>Are you sure you want to delete these details?</source>
+        <target xml:lang="fr" state="translated">Êtes-vous sûr de vouloir supprimer vos paramètres ?</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:66</note>
+      </trans-unit>
+      <trans-unit id="eb7ee09497f2bb2a5c766c4e5ef0cc4b" approved="yes">
+        <source>The "Payee" and "Address" fields must be configured before using this module.</source>
+        <target xml:lang="fr" state="translated">Les champs "Nom du bénéficiaire" et "Adresse" doivent être configurés avant d'utiliser ce module.</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:70</note>
+      </trans-unit>
+      <trans-unit id="a02758d758e8bec77a33d7f392eb3f8a" approved="yes">
+        <source>No currency has been set for this module.</source>
+        <target xml:lang="fr" state="translated">Aucune devise disponible pour ce module</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:73</note>
+      </trans-unit>
+      <trans-unit id="a6911ad28a15bf35c506e46c3a613c68" approved="yes">
+        <source>The "Payee" field is required.</source>
+        <target xml:lang="fr" state="translated">Le champ "Bénéficiaire" est requis.</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:103</note>
+      </trans-unit>
+      <trans-unit id="00a369029140cfd18857425d49b472f8" approved="yes">
+        <source>The "Address" field is required.</source>
+        <target xml:lang="fr" state="translated">Le champ "Adresse" est requis.</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:105</note>
+      </trans-unit>
+      <trans-unit id="a60468657881aa431a0a5fccc76258e2" approved="yes">
+        <source>Pay by Check</source>
+        <target xml:lang="fr" state="translated">Payer par chèque</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:160</note>
+      </trans-unit>
+      <trans-unit id="5dd532f0a63d89c5af0243b74732f63c" approved="yes">
+        <source>Contact details</source>
+        <target xml:lang="fr" state="translated">Coordonnées</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:216</note>
+      </trans-unit>
+      <trans-unit id="84649906133e37fefda33a301de8cd4f" approved="yes">
+        <source>Payee (name)</source>
+        <target xml:lang="fr" state="translated">Nom du bénéficiaire</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:222</note>
+      </trans-unit>
+      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27" approved="yes">
+        <source>Address</source>
+        <target xml:lang="fr" state="translated">Adresse</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:228</note>
+      </trans-unit>
+      <trans-unit id="0fe62049ad5246bc188ec1bae347269e" approved="yes">
+        <source>Address where the check should be sent to.</source>
+        <target xml:lang="fr" state="translated">Adresse à laquelle le chèque doit être envoyé.</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:229</note>
+      </trans-unit>
+      <trans-unit id="bb56f3a51352fe2ddce129260770c440" approved="yes">
+        <source>%amount% (tax incl.)</source>
+        <target xml:lang="fr" state="translated">%amount% TTC</target>
+        <note>Context:
+File: modules/ps_checkpayment/ps_checkpayment.php:268</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/hook/infos.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="14e41f4cfd99b10766cc15676d8cda66" approved="yes">
+        <source>This module allows you to accept payments by check.</source>
+        <target xml:lang="fr" state="translated">Ce module vous permet d'accepter des paiements par chèque.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/infos.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="22df5428ca8a4d0f5ec081d4815c86f6" approved="yes">
+        <source>If the client chooses this payment method, the order status will change to 'Waiting for payment'.</source>
+        <target xml:lang="fr" state="translated">Si le client choisit ce moyen de paiement, la commande passera à l'état "Paiement en attente".</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/infos.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="8c88bbf5712292b26e2a6bbeb0a7b5c4" approved="yes">
+        <source>You will need to manually confirm the order as soon as you receive a check.</source>
+        <target xml:lang="fr" state="translated">Par conséquent, vous devez valider manuellement la commande dès réception du chèque.</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/infos.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Upload;
@@ -50,11 +50,11 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'max_size_attached_files' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE'),
             'max_size_downloadable_product' => $this->configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE'),
             'max_size_product_image' => $this->configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE'),
-        );
+        ];
     }
 
     /**
@@ -62,7 +62,7 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             $errors = $this->updateFileUploadConfiguration($configuration);
@@ -87,15 +87,15 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
             'max_size_product_image' => $uploadMaxSize,
         ];
 
-        $errors = array();
+        $errors = [];
         foreach ($configuration as $configurationKey => $configurationValue) {
             if (array_key_exists($configurationKey, $this->getConfiguration())) {
                 if ((int) $configurationValue > $sizes[$configurationKey]) {
-                    $errors[] = array(
+                    $errors[] = [
                         'key' => 'The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array(),
-                    );
+                        'parameters' => [],
+                    ];
                 }
 
                 $this->configuration->set(
@@ -111,17 +111,17 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
     /**
      * Map array key to the related configuration property.
      *
-     * @param string the array key
+     * @param string $key
      *
      * @return string the related configuration key
      */
     private function getConfigurationKey($key)
     {
-        $properties = array(
+        $properties = [
             'max_size_attached_files' => 'PS_ATTACHMENT_MAXIMUM_SIZE',
             'max_size_downloadable_product' => 'PS_LIMIT_UPLOAD_FILE_VALUE',
             'max_size_product_image' => 'PS_LIMIT_UPLOAD_IMAGE_VALUE',
-        );
+        ];
 
         return $properties[$key];
     }

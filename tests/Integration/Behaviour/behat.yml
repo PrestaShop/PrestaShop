@@ -2,13 +2,36 @@ default:
     suites:
         database:
             paths:
-                features: Features/Scenario/Database
+                - %paths.base%/Features/Scenario/Database
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
+        contact:
+            paths:
+                - %paths.base%/Features/Scenario/Contact
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ContactFeatureContext
+        customer:
+            paths:
+                - %paths.base%/Features/Scenario/Customer
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        category:
+            paths:
+                - %paths.base%/Features/Scenario/Category
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
         cart:
             paths:
-                features: Features/Scenario/Cart
+                - %paths.base%/Features/Scenario/Cart
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
@@ -26,4 +49,230 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\SpecificPriceRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        order:
+            paths:
+                - %paths.base%/Features/Scenario/Order
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\RoundingTypeConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderPaymentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderShippingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderCartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderCustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderRefundFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\PriceDisplayMethodConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        currency:
+            paths:
+                - %paths.base%/Features/Scenario/Currency
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+        cldr:
+            paths:
+                - %paths.base%/Features/Scenario/CLDR
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CLDRFeatureContext
+        webservice:
+            paths:
+                - %paths.base%/Features/Scenario/Webservice
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext
+        tax:
+            paths:
+                - %paths.base%/Features/Scenario/Tax
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        manufacturer:
+            paths:
+                - %paths.base%/Features/Scenario/Manufacturer
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+        cms_page:
+            paths:
+                - %paths.base%/Features/Scenario/CmsPage
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CmsPageFeatureContext
+        cart_rule:
+            paths:
+                - %paths.base%/Features/Scenario/CartRule
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        meta:
+            paths:
+                - %paths.base%/Features/Scenario/Meta
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\MetaFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\MetaFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        feature:
+            paths:
+                - %paths.base%/Features/Scenario/Feature
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
+        order_message:
+            paths:
+                - %paths.base%/Features/Scenario/OrderMessage
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
+                - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
+        misc:
+            paths:
+              - %paths.base%/Features/Scenario/Misc
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\EmployeeFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
+        address:
+            paths:
+              - %paths.base%/Features/Scenario/Address
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+        supplier:
+            paths:
+                - %paths.base%/Features/Scenario/Supplier
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        attachment:
+            paths:
+                - %paths.base%/Features/Scenario/Attachment
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+        product:
+            paths:
+                - %paths.base%/Features/Scenario/Product
+                - %paths.base%/Features/Scenario/Product/Combination
+                - %paths.base%/Features/Scenario/Product/SpecificPrice
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateBasicInformationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateOptionsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateSeoFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPricePrioritiesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\RelatedProductsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\DuplicateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductImageFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationListingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationPricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationSuppliersFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPriceContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
+        shop:
+            paths:
+                - %paths.base%/Features/Scenario/Shop
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext

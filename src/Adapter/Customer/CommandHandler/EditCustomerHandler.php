@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandle
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
@@ -77,13 +78,32 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         $this->updateCustomerWithCommandData($customer, $command);
 
+        // validateFieldsRequiredDatabase() below is using $_POST
+        // to check if required fields are set
+        if ($command->isPartnerOffersSubscribed() !== null) {
+            $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
+        } elseif ($command->isNewsletterSubscribed() !== null) {
+            $_POST[RequiredField::NEWSLETTER] = $command->isNewsletterSubscribed();
+        }
+
+        // before validation, we need to get the list of customer mandatory fields from the database
+        // and set their current values (only if it is not being modified: if it is not in $_POST)
+        $requiredFields = $customer->getFieldsRequiredDatabase();
+        foreach ($requiredFields as $field) {
+            if (!array_key_exists($field['field_name'], $_POST)) {
+                $_POST[$field['field_name']] = $customer->{$field['field_name']};
+            }
+        }
+
+        $this->assertRequiredFieldsAreNotMissing($customer);
+
         if (false === $customer->validateFields(false)) {
             throw new CustomerException('Customer contains invalid field values');
         }
 
-        $customer->update();
-
-        return $customerId;
+        if (false === $customer->update()) {
+            throw new CustomerException('Failed to update customer');
+        }
     }
 
     /**
@@ -199,10 +219,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         $customerByEmail->getByEmail($command->getEmail()->getValue());
 
         if ($customerByEmail->id) {
-            throw new DuplicateCustomerEmailException(
-                $command->getEmail(),
-                sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue())
-            );
+            throw new DuplicateCustomerEmailException($command->getEmail(), sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue()));
         }
     }
 
@@ -221,19 +238,8 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             return;
         }
 
-        $defaultGroupId = null !== $command->getDefaultGroupId() ?
-            $command->getDefaultGroupId() :
-            $customer->id_default_group
-        ;
-        $groupIds = null !== $command->getGroupIds() ?
-            $command->getGroupIds() :
-            $customer->getGroups()
-         ;
-
-        if (!in_array($defaultGroupId, $groupIds)) {
-            throw new CustomerDefaultGroupAccessException(
-                sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
-            );
+        if (!in_array($command->getDefaultGroupId(), $command->getGroupIds())) {
+            throw new CustomerDefaultGroupAccessException(sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId()));
         }
     }
 }

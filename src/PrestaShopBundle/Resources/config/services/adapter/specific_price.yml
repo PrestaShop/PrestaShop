@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.specific_price.command_handler.add_specific_price:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\AddSpecificPriceHandler
+        deprecated: The "%service_id%" service is deprecated. You should use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand instead.
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand
+
+    prestashop.adapter.specific_price.command_handler.delete_specific_price_by_cart_product:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand

@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="quicknav-container">
     <div class="quicknav-header">
@@ -40,7 +40,7 @@
                     <th class="hidden-xs hidden-sm">
                         {{ "Price"|trans({}, 'Admin.Global') }}
                     </th>
-                    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                    {% if configuration('PS_STOCK_MANAGEMENT') %}
                         <th class="hidden-xs">
                             {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                         </th>
@@ -59,7 +59,7 @@
                         <td class="hidden-xs hidden-sm">
                             <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
                         </td>
-                        {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                        {% if configuration('PS_STOCK_MANAGEMENT') %}
                             <td class="hidden-xs product-sav-quantity"
                                 productquantityvalue="{{ product.sav_quantity|default('') }}">
                                 <a href="{{ product.url|default('') }}#tab-step3">
@@ -82,8 +82,18 @@
         </table>
     </div>
     <div class="quicknav-fixed-bottom navbar-form-footer">
-        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
-            {'limit': limit, 'offset': offset, 'total': total, 'caller_parameters': {'_route': 'admin_product_list', 'view': 'quicknav'}, 'view': 'quicknav'}))
-        }}
+      {{ render(
+          controller(
+            'PrestaShopBundle:Admin\\Common:pagination',
+            {
+              'limit': limit,
+              'offset': offset,
+              'total': total,
+              'caller_parameters': {'view': 'quicknav'},
+              'caller_route': 'admin_product_list',
+              'view': 'quicknav'
+            }
+          )
+        ) }}
     </div>
 </div>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use ReflectionClass;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -38,6 +46,24 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
+    public const CATALOG_CHARS = '<>;=#{}';
+    public const GENERIC_NAME_CHARS = '<>={}';
+    public const MESSAGE_CHARS = '<>{}';
+    public const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
+
+    /**
+     * @var CharacterCleaner
+     */
+    private $characterCleaner;
+
+    /**
+     * @param CharacterCleaner $characterCleaner
+     */
+    public function __construct(CharacterCleaner $characterCleaner)
+    {
+        $this->characterCleaner = $characterCleaner;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -76,45 +102,45 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function getPattern($type)
     {
-        $typePatterns = [
-            'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
-            'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
-            'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
-            'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
-            'post_code' => '/^[a-zA-Z 0-9-]+$/',
-            'phone_number' => '/^[+0-9. ()\/-]*$/',
-            'message' => '/[<>{}]/i',
-            'language_iso_code' => IsoCode::PATTERN,
-            'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
-        ];
-
-        if (isset($typePatterns[$type])) {
-            return $typePatterns[$type];
+        switch ($type) {
+            case TypedRegex::TYPE_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u');
+            case TypedRegex::TYPE_CATALOG_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u');
+            case TypedRegex::TYPE_GENERIC_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>={}]*$/u');
+            case TypedRegex::TYPE_CITY_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u');
+            case TypedRegex::TYPE_ADDRESS:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u');
+            case TypedRegex::TYPE_POST_CODE:
+                return '/^[a-zA-Z 0-9-]+$/';
+            case TypedRegex::TYPE_PHONE_NUMBER:
+                return '/^[+0-9. ()\/-]*$/';
+            case TypedRegex::TYPE_MESSAGE:
+                return '/[<>{}]/i';
+            case TypedRegex::TYPE_LANGUAGE_ISO_CODE:
+                return IsoCode::PATTERN;
+            case TypedRegex::TYPE_LANGUAGE_CODE:
+                return '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/';
+            case TypedRegex::TYPE_CURRENCY_ISO_CODE:
+                return AlphaIsoCode::PATTERN;
+            case TypedRegex::TYPE_FILE_NAME:
+                return '/^[a-zA-Z0-9_.-]+$/';
+            case TypedRegex::TYPE_DNI_LITE:
+                return AddressConstraint::DNI_LITE_PATTERN;
+            case TypedRegex::TYPE_UPC:
+                return Upc::VALID_PATTERN;
+            case TypedRegex::TYPE_EAN_13:
+                return Ean13::VALID_PATTERN;
+            case TypedRegex::TYPE_ISBN:
+                return Isbn::VALID_PATTERN;
+            case TypedRegex::TYPE_REFERENCE:
+                return Reference::VALID_PATTERN;
+            default:
+                $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
+                throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));
         }
-
-        throw new InvalidArgumentException(sprintf(
-            'Type "%s" is not defined. Defined types are: %s',
-            $type,
-            implode(',', array_keys($typePatterns))
-        ));
-    }
-
-    /**
-     * Delete unicode class from regular expression patterns.
-     * Cleaning non unicode is optional. Refer to legacy Validate to see if it's needed.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     */
-    private function cleanNonUnicodeSupport($pattern)
-    {
-        if (!defined('PREG_BAD_UTF8_OFFSET')) {
-            return $pattern;
-        }
-
-        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
     }
 
     /**
@@ -127,7 +153,7 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function sanitize($value, $type)
     {
-        if ($type === 'name') {
+        if ($type === TypedRegex::TYPE_NAME) {
             $value = stripslashes($value);
         }
 
@@ -140,20 +166,21 @@ class TypedRegexValidator extends ConstraintValidator
      * matches given subject, 0 if it does not, or FALSE
      * if an error occurred.
      *
-     * @param $pattern
-     * @param $type
-     * @param $value
+     * @param string $pattern
+     * @param string $type
+     * @param string $value
      *
-     * @return false|int
+     * @return bool|int
      */
     private function match($pattern, $type, $value)
     {
-        $typesToInverseMatching = ['message'];
+        $match = preg_match($pattern, $value);
 
+        $typesToInverseMatching = [TypedRegex::TYPE_MESSAGE];
         if (in_array($type, $typesToInverseMatching, true)) {
-            return !preg_match($pattern, $value);
+            return !$match;
         }
 
-        return preg_match($pattern, $value);
+        return $match;
     }
 }

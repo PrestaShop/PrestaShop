@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+
+<div class="card customer-personal-informations-card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
     {{ customerInformation.personalInformation.firstName }}
@@ -35,7 +36,7 @@
     </a>
 
     <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1, 'back': app.request.uri}) }}"
-       class="tooltip-link float-right"
+       class="tooltip-link float-right edit-link"
        data-toggle="pstooltip"
        title=""
        data-placement="top"
@@ -49,7 +50,7 @@
       <div class="col-4 text-right">
         {{ 'Social Title'|trans({}, 'Admin.Global') }}
       </div>
-      <div class="col-8">
+      <div class="customer-social-title col-8">
         {{ customerInformation.personalInformation.socialTitle }}
       </div>
     </div>
@@ -58,7 +59,7 @@
       <div class="col-4 text-right">
         {{ 'Age'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8">
+      <div class="col-8 customer-birthday">
         {{ customerInformation.personalInformation.birthday }}
       </div>
     </div>
@@ -67,7 +68,7 @@
       <div class="col-4 text-right">
         {{ 'Registration Date'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8">
+      <div class="col-8 customer-registration-date">
         {{ customerInformation.personalInformation.registrationDate }}
       </div>
     </div>
@@ -76,7 +77,7 @@
       <div class="col-4 text-right">
         {{ 'Last Visit'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8">
+      <div class="col-8 customer-last-visit-date">
         {{ customerInformation.personalInformation.lastVisitDate }}
       </div>
     </div>
@@ -86,7 +87,7 @@
         <div class="col-4 text-right">
           {{ 'Best Customer Rank'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
-        <div class="col-8">
+        <div class="col-8 customer-sales-rank">
           {{ customerInformation.personalInformation.rankBySales }}
         </div>
       </div>
@@ -97,7 +98,7 @@
         <div class="col-4 text-right">
           {{ 'Shop'|trans({}, 'Admin.Global') }}
         </div>
-        <div class="col-8">
+        <div class="customer-shop-name col-8">
           {{ customerInformation.personalInformation.shopName }}
         </div>
       </div>
@@ -107,7 +108,7 @@
       <div class="col-4 text-right">
         {{ 'Language'|trans({}, 'Admin.Global') }}
       </div>
-      <div class="col-8">
+      <div class="col-8 customer-language-name">
         {{ customerInformation.personalInformation.languageName }}
       </div>
     </div>
@@ -120,12 +121,12 @@
         {% set isNewsletterSubscribed = customerInformation.personalInformation.subscriptions.newsletterSubscribed %}
         {% set isPartnerOffersSubscribed = customerInformation.personalInformation.subscriptions.partnerOffersSubscribed %}
 
-        <span class="badge badge-{% if isNewsletterSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-newsletter-subscription-status badge badge-{% if isNewsletterSubscribed %}success{% else %}danger{% endif %} rounded">
           <i class="material-icons">{% if isNewsletterSubscribed %}check{% else %}cancel{% endif %}</i>
           {{ 'Newsletter'|trans({}, 'Admin.Global') }}
         </span>
 
-        <span class="badge badge-{% if isPartnerOffersSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-partner-offers-status badge badge-{% if isPartnerOffersSubscribed %}success{% else %}danger{% endif %} rounded">
           <i class="material-icons">{% if isPartnerOffersSubscribed %}check{% else %}cancel{% endif %}</i>
           {{ 'Partner offers'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </span>
@@ -136,7 +137,7 @@
       <div class="col-4 text-right">
         {{ 'Latest Update'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
-      <div class="col-8">
+      <div class="customer-latest-update col-8">
         {{ customerInformation.personalInformation.lastUpdateDate }}
       </div>
     </div>
@@ -148,7 +149,7 @@
       <div class="col-8">
         {% set isCustomerActive = customerInformation.personalInformation.active %}
 
-        <span class="badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-status badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded">
           {% if isCustomerActive %}
             <i class="material-icons">check</i>
             {{ 'Active'|trans({}, 'Admin.Global') }}
@@ -161,7 +162,9 @@
     </div>
 
     {% if customerInformation.personalInformation.guest %}
-      <div class="row mb-1">
+      {% form_theme transferGuestAccountForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+
+      <div class="customer-guest-status row mb-1">
         <div class="col-4 text-right">
           {{ 'This customer is registered as a Guest.'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
@@ -170,11 +173,11 @@
             <p>{{ 'A registered customer account using the defined email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
           {% else %}
             {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}
-              <button class="btn btn-primary btn-sm">
-                {{ 'Transform to a customer account'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </button>
+            {{ form_widget(transferGuestAccountForm.transfer_guest_account) }}
 
-              <p class="small-text">{{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}</p>
+            <p class="small-text">
+              {{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}
+            </p>
             {{ form_end(transferGuestAccountForm) }}
           {% endif %}
         </div>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
@@ -64,8 +64,8 @@ class CachingConfiguration implements DataConfigurationInterface
      * @param MemcacheServerManager $memcacheServerManager
      * @param PhpParameters $phpParameters
      * @param CacheClearerInterface $symfonyCacheClearer
-     * @param $isCachingEnabled
-     * @param $cachingSystem
+     * @param bool $isCachingEnabled
+     * @param string $cachingSystem
      */
     public function __construct(
         MemcacheServerManager $memcacheServerManager,
@@ -86,11 +86,11 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'use_cache' => $this->isCachingEnabled,
             'caching_system' => $this->cachingSystem,
             'servers' => $this->memcacheServerManager->getServers(),
-        );
+        ];
     }
 
     /**
@@ -98,7 +98,7 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             $errors = $this->updatePhpCacheConfiguration($configuration);
@@ -126,7 +126,7 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     private function updatePhpCacheConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if (
             $configuration['use_cache'] !== $this->isCachingEnabled
@@ -143,11 +143,11 @@ class CachingConfiguration implements DataConfigurationInterface
         }
 
         if (false === $this->phpParameters->saveConfiguration()) {
-            $errors[] = array(
+            $errors[] = [
                 'key' => 'The settings file cannot be overwritten.',
                 'domain' => 'Admin.Advparameters.Notification',
-                'parameters' => array(),
-            );
+                'parameters' => [],
+            ];
         }
 
         $this->symfonyCacheClearer->clear();

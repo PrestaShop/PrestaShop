@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
@@ -338,7 +338,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
         $category->id_shop_default = $this->isMultistoreEnabled ? (int) $this->currentContextShopId : 1;
         $category->name = $this->dataFormatter->createMultiLangField(trim($categoryName));
-        $category->active = 1;
+        $category->active = true;
         $category->id_parent = (int) ($parentCategoryId ? $parentCategoryId : $homeCategoryId);
         $category->link_rewrite = $this->dataFormatter->createMultiLangField(
             $this->dataFormatter->createFriendlyUrl($category->name[$defaultLanguageId])
@@ -629,7 +629,7 @@ final class ProductImportHandler extends AbstractImportHandler
             if ($product->tax_rate) {
                 $product->price = (float) number_format($product->price / (1 + $product->tax_rate / 100), 6, '.', '');
             }
-        } elseif (isset($product->price_tin) && isset($product->price_tex)) {
+        } elseif (isset($product->price_tin, $product->price_tex)) {
             $product->price = $product->price_tex;
         }
     }
@@ -638,7 +638,7 @@ final class ProductImportHandler extends AbstractImportHandler
      * Load category data into product object.
      *
      * @param Product $product
-     * @param $validateOnly
+     * @param bool $validateOnly
      */
     private function loadCategory(Product $product, $validateOnly)
     {
@@ -656,7 +656,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $category = new Category();
                         $category->id = (int) $value;
                         $category->name = $this->dataFormatter->createMultiLangField($value);
-                        $category->active = 1;
+                        $category->active = true;
                         $category->id_parent = $homeCategoryId;
                         $category->link_rewrite = $this->dataFormatter->createMultiLangField(
                             $this->dataFormatter->createFriendlyUrl($category->name[$defaultLanguageId])
@@ -758,7 +758,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 'Rewrite link for %1$s (ID %2$s): re-written as %3$s.',
                 [
                     '%1$s' => $product->name[$this->languageId],
-                    '%2$s' => !empty($info['id']) ? $info['id'] : 'null',
+                    '%2$s' => 'null',
                     '%3$s' => $linkRewrite,
                 ],
                 'Admin.Advparameters.Notification'
@@ -932,12 +932,12 @@ final class ProductImportHandler extends AbstractImportHandler
      * Save specific price for a product.
      *
      * @param Product $product
-     * @param $reductionPrice
-     * @param $reductionPercent
-     * @param $reductionFrom
-     * @param $reductionTo
-     * @param $validateOnly
-     * @param $productName
+     * @param string $reductionPrice
+     * @param string $reductionPercent
+     * @param string $reductionFrom
+     * @param string $reductionTo
+     * @param bool $validateOnly
+     * @param string $productName
      */
     private function saveSpecificPrice(
         Product $product,
@@ -1137,7 +1137,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $this->translator->trans(
                             'Product #%id%: the picture (%url%) cannot be saved.',
                             [
-                                '%id%' => $image->id_product,
+                                '%id%' => isset($image) ? $image->id_product : '',
                                 '%url%' => $url,
                             ],
                             'Admin.Advparameters.Notification'
@@ -1229,7 +1229,7 @@ final class ProductImportHandler extends AbstractImportHandler
             if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management has incorrect value. Not set for product %name% ',
+                        'Advanced stock management has incorrect value. Not set for product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1237,7 +1237,7 @@ final class ProductImportHandler extends AbstractImportHandler
             } elseif (!$asmEnabled && $product->advanced_stock_management == 1) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management is not enabled, cannot enable on product %name% ',
+                        'Advanced stock management is not enabled, cannot enable on product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1256,7 +1256,7 @@ final class ProductImportHandler extends AbstractImportHandler
             if (!$asmEnabled) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management is not enabled, warehouse not set on product %name% ',
+                        'Advanced stock management is not enabled, warehouse not set on product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1278,7 +1278,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 } else {
                     $this->warning(
                         $this->translator->trans(
-                            'Warehouse did not exist, cannot set on product  %name% ',
+                            'Warehouse did not exist, cannot set on product %name%',
                             ['%name%' => $product->name[$this->languageId]],
                             'Admin.Advparameters.Notification'
                         )
@@ -1300,7 +1300,7 @@ final class ProductImportHandler extends AbstractImportHandler
             if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
                 $this->warning(
                     $this->translator->trans(
-                        'Incorrect value for "Depends on stock" for product %name% ',
+                        'Incorrect value for "Depends on stock" for product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1308,7 +1308,7 @@ final class ProductImportHandler extends AbstractImportHandler
             } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )

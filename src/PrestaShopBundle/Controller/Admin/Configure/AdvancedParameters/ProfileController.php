@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,22 +17,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
@@ -69,7 +72,7 @@ class ProfileController extends FrameworkBundleAdminController
                         'href' => $this->generateUrl('admin_profiles_create'),
                         'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
                         'icon' => 'add_circle_outline',
-                  ],
+                    ],
                 ],
                 'help_link' => $this->generateSidebarLink('AdminProfiles'),
                 'enableSidebar' => true,
@@ -81,6 +84,8 @@ class ProfileController extends FrameworkBundleAdminController
 
     /**
      * Used for applying filtering actions.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -128,7 +133,7 @@ class ProfileController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
-        } catch (ProfileException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -161,16 +166,25 @@ class ProfileController extends FrameworkBundleAdminController
 
         try {
             $form = $formBuilder->getFormFor((int) $profileId);
-            $form->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
 
+            return $this->redirectToRoute('admin_profiles_index');
+        }
+
+        try {
+            $form->handleRequest($request);
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
-        } catch (ProfileException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof ProfileNotFoundException) {
@@ -178,8 +192,8 @@ class ProfileController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var EditableProfile $editableProfiler */
-        $editableProfiler = $this->getQueryBus()->handle(new GetProfileForEditing((int) $profileId));
+        /** @var EditableProfile $editableProfile */
+        $editableProfile = $this->getQueryBus()->handle(new GetProfileForEditing((int) $profileId));
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/edit.html.twig', [
             'profileForm' => $form->createView(),
@@ -187,11 +201,12 @@ class ProfileController extends FrameworkBundleAdminController
                 'Edit: %value%',
                 'Admin.Catalog.Feature',
                 [
-                    '%value%' => $editableProfiler->getLocalizedNames()[$this->getContextLangId()],
+                    '%value%' => $editableProfile->getLocalizedNames()[$this->getContextLangId()],
                 ]
             ),
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
+            'editableProfile' => $editableProfile,
         ]);
     }
 
@@ -261,6 +276,13 @@ class ProfileController extends FrameworkBundleAdminController
     protected function getErrorMessages()
     {
         return [
+            ProfileConstraintException::class => [
+                ProfileConstraintException::INVALID_NAME => $this->trans(
+                    'This field cannot be longer than %limit% characters (incl. HTML tags)',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => ProfileSettings::NAME_MAX_LENGTH]
+                ),
+            ],
             ProfileNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
@@ -269,10 +291,20 @@ class ProfileController extends FrameworkBundleAdminController
                 'For security reasons, you cannot delete the Administrator\'s profile.',
                 'Admin.Advparameters.Notification'
             ),
-            FailedToDeleteProfileException::class => $this->trans(
-                'An error occurred while deleting the object.',
-                'Admin.Notifications.Error'
-            ),
+            FailedToDeleteProfileException::class => [
+                FailedToDeleteProfileException::UNEXPECTED_ERROR => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE => $this->trans(
+                    'Profile(s) assigned to employee cannot be deleted',
+                    'Admin.Notifications.Error'
+                ),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE => $this->trans(
+                    'You cannot delete your own profile',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }

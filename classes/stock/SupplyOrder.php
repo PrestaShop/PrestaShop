@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -122,58 +122,58 @@ class SupplyOrderCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'supply_order',
         'primary' => 'id_supply_order',
-        'fields' => array(
-            'id_supplier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'supplier_name' => array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => false),
-            'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_warehouse' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_supply_order_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_ref_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
-            'date_delivery_expected' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-            'total_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_with_discount_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_ti' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_tax' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'discount_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => false),
-            'discount_value_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'is_template' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'supplier_name' => ['type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => false],
+            'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_supply_order_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_ref_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
+            'date_delivery_expected' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+            'total_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_with_discount_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_ti' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_tax' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'discount_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => false],
+            'discount_value_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'is_template' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_supplier' => array('xlink_resource' => 'suppliers'),
-            'id_lang' => array('xlink_resource' => 'languages'),
-            'id_warehouse' => array('xlink_resource' => 'warehouses'),
-            'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
-            'id_currency' => array('xlink_resource' => 'currencies'),
-        ),
-        'hidden_fields' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_supplier' => ['xlink_resource' => 'suppliers'],
+            'id_lang' => ['xlink_resource' => 'languages'],
+            'id_warehouse' => ['xlink_resource' => 'warehouses'],
+            'id_supply_order_state' => ['xlink_resource' => 'supply_order_states'],
+            'id_currency' => ['xlink_resource' => 'currencies'],
+        ],
+        'hidden_fields' => [
             'id_ref_currency',
-        ),
-        'associations' => array(
-            'supply_order_details' => array(
+        ],
+        'associations' => [
+            'supply_order_details' => [
                 'resource' => 'supply_order_detail',
-                'fields' => array(
-                    'id' => array(),
-                    'id_product' => array(),
-                    'id_product_attribute' => array(),
-                    'supplier_reference' => array(),
-                    'product_name' => array(),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id' => [],
+                    'id_product' => [],
+                    'id_product_attribute' => [],
+                    'supplier_reference' => [],
+                    'product_name' => [],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * @see ObjectModel::update()
@@ -495,7 +495,7 @@ class SupplyOrderCore extends ObjectModel
             $this->id = $data[$this->def['primary']];
         }
         foreach ($data as $key => $value) {
-            if (array_key_exists($key, $this)) {
+            if (array_key_exists($key, get_object_vars($this))) {
                 // formats prices and floats
                 if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
                     $this->def['fields'][$key]['validate'] == 'isPrice') {

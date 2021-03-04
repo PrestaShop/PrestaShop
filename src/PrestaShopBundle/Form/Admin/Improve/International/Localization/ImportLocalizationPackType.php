@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
@@ -66,10 +66,22 @@ class ImportLocalizationPackType extends TranslatorAwareType
     {
         $builder
             ->add('iso_localization_pack', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Localization pack you want to import',
+                    'Admin.International.Feature'
+                ),
                 'choices' => $this->localizationPackChoices,
                 'choice_translation_domain' => false,
+                'attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => 'select2',
+                ],
             ])
             ->add('content_to_import', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Content to import',
+                    'Admin.International.Feature'
+                ),
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->getContentToImportChoices(),
@@ -83,6 +95,14 @@ class ImportLocalizationPackType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('download_pack_data', SwitchType::class, [
+                'label' => $this->trans(
+                    'Download pack data',
+                    'Admin.International.Feature'
+                ),
+                'help' => $this->trans(
+                    'If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.',
+                    'Admin.International.Help'
+                ),
                 'data' => 1,
             ]);
     }

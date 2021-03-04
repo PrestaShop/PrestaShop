@@ -1,0 +1,65 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set choices = column.options.choice_provider.getChoices(record) %}
+{% set selectedChoice = record[column.options.field] %}
+{% set selectedChoiceName = '' %}
+{% set routeParams = record|array_pluck(column.options.record_route_params) %}
+
+{% for name,value in choices %}
+  {% if value == selectedChoice %}
+    {% set selectedChoiceName = name %}
+  {% endif %}
+{% endfor %}
+
+{% set classes = 'btn btn-secondary dropdown-toggle dropdown-toggle-split rounded' %}
+
+{% if choices is not empty %}
+  <div class="dropdown">
+    <button
+      {% if column.options.color_field %}
+        {% set textColor = is_color_bright(record[column.options.color_field]) ? '#383838' : 'white' %}
+        style="background-color: {{ record[column.options.color_field] }}; color: {{ textColor }};"
+        {% set classes = classes ~ ' coloured' %}
+      {% endif %}
+      class="{{ classes }}"
+      type="button"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+      data-flip="false"
+    >
+      {{ selectedChoiceName }}
+    </button>
+    <div
+      class="dropdown-menu js-choice-options"
+      data-url="{{ url(column.options.route, routeParams) }}"
+    >
+      {% for name,value in choices if value != selectedChoice %}
+        <button class="js-dropdown-item dropdown-item" data-value="{{ value }}">{{ name }}</button>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

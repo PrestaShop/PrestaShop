@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Unit\PrestaShopBundle\Api;
@@ -281,13 +281,13 @@ class QueryParamsCollectionTest extends TestCase
             ),
             array(
                 array('category_id' => 1),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
         WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
                 $categoryFilterMessage,
             ),
             array(
                 array('category_id' => array(1, 2)),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
         WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
                 $categoryFilterMessage,
             ),
@@ -349,8 +349,8 @@ class QueryParamsCollectionTest extends TestCase
                     FROM {table_prefix}product_attribute_combination pac
                         LEFT JOIN {table_prefix}attribute a ON (
                             pac.id_attribute = a.id_attribute
-                        )                   
-                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                        )
+                    WHERE pac.id_product_attribute=pa.id_product_attribute
                     AND a.id_attribute=:attribute_id_0
                     AND a.id_attribute_group=:attribute_group_id_0)',
                 ),
@@ -363,16 +363,16 @@ class QueryParamsCollectionTest extends TestCase
                     FROM {table_prefix}product_attribute_combination pac
                         LEFT JOIN {table_prefix}attribute a ON (
                             pac.id_attribute = a.id_attribute
-                        )                   
-                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                        )
+                    WHERE pac.id_product_attribute=pa.id_product_attribute
                     AND a.id_attribute=:attribute_id_0
                     AND a.id_attribute_group=:attribute_group_id_0)
 AND EXISTS(SELECT 1
                     FROM {table_prefix}product_attribute_combination pac
                         LEFT JOIN {table_prefix}attribute a ON (
                             pac.id_attribute = a.id_attribute
-                        )                   
-                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                        )
+                    WHERE pac.id_product_attribute=pa.id_product_attribute
                     AND a.id_attribute=:attribute_id_1
                     AND a.id_attribute_group=:attribute_group_id_1)',
                 ),
@@ -395,7 +395,7 @@ AND EXISTS(SELECT 1
                             fp.id_feature_value = fv.id_feature_value
                         )
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
-                    AND fp.id_feature=:feature_id_0 
+                    AND fp.id_feature=:feature_id_0
                     AND fp.id_feature_value=:feature_value_id_0)',
                 ),
                 $featuresFilterMessage,
@@ -417,7 +417,7 @@ AND EXISTS(SELECT 1
                             fp.id_feature_value = fv.id_feature_value
                         )
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
-                    AND fp.id_feature=:feature_id_0 
+                    AND fp.id_feature=:feature_id_0
                     AND fp.id_feature_value=:feature_value_id_0)
 AND EXISTS(SELECT 1
                     FROM {table_prefix}feature_product fp
@@ -433,7 +433,7 @@ AND EXISTS(SELECT 1
                             fp.id_feature_value = fv.id_feature_value
                         )
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
-                    AND fp.id_feature=:feature_id_1 
+                    AND fp.id_feature=:feature_id_1
                     AND fp.id_feature_value=:feature_value_id_1)',
                 ),
                 $featuresFilterMessage,

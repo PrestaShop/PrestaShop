@@ -5,7 +5,7 @@ prestashop.cart = prestashop.cart || {};
 
 prestashop.cart.active_inputs = null;
 
-let spinnerSelector = 'input[name="product-quantity-spin"]';
+const spinnerSelector = 'input[name="product-quantity-spin"]';
 let hasError = false;
 let isUpdateOperation = false;
 let errorMsg = '';
@@ -13,9 +13,8 @@ let errorMsg = '';
 /**
  * Attach Bootstrap TouchSpin event handlers
  */
-function createSpin()
-{
-  $.each($(spinnerSelector), function (index, spinner) {
+function createSpin() {
+  $.each($(spinnerSelector), (index, spinner) => {
     $(spinner).TouchSpin({
       verticalbuttons: true,
       verticalupclass: 'material-icons touchspin-up',
@@ -23,13 +22,12 @@ function createSpin()
       buttondown_class: 'btn btn-touchspin js-touchspin js-increase-product-quantity',
       buttonup_class: 'btn btn-touchspin js-touchspin js-decrease-product-quantity',
       min: parseInt($(spinner).attr('min'), 10),
-      max: 1000000
+      max: 1000000,
     });
   });
 
   CheckUpdateQuantityOperations.switchErrorStat();
 }
-
 
 $(document).ready(() => {
   const productLineInCartSelector = '.js-cart-line-product-quantity';
@@ -56,7 +54,7 @@ $(document).ready(() => {
   }
 
   function findCartLineProductQuantityInput($target) {
-    var $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
+    const $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
 
     if ($input.is(':focus')) {
       return null;
@@ -66,19 +64,19 @@ $(document).ready(() => {
   }
 
   function camelize(subject) {
-    let actionTypeParts = subject.split('-');
+    const actionTypeParts = subject.split('-');
     let i;
     let part;
     let camelizedSubject = '';
 
-    for (i = 0; i < actionTypeParts.length; i++) {
+    for (i = 0; i < actionTypeParts.length; i += 1) {
       part = actionTypeParts[i];
 
-      if (0 !== i) {
+      if (i !== 0) {
         part = part.substring(0, 1).toUpperCase() + part.substring(1);
       }
 
-      camelizedSubject = camelizedSubject + part;
+      camelizedSubject += part;
     }
 
     return camelizedSubject;
@@ -88,56 +86,55 @@ $(document).ready(() => {
     if (!isTouchSpin(namespace)) {
       return {
         url: $target.attr('href'),
-        type: camelize($target.data('link-action'))
-      }
+        type: camelize($target.data('link-action')),
+      };
     }
 
-    let $input = findCartLineProductQuantityInput($target);
+    const $input = findCartLineProductQuantityInput($target);
+
     if (!$input) {
-      return;
+      return false;
     }
 
     let cartAction = {};
+
     if (shouldIncreaseProductQuantity(namespace)) {
       cartAction = {
         url: $input.data('up-url'),
-        type: 'increaseProductQuantity'
+        type: 'increaseProductQuantity',
       };
     } else {
       cartAction = {
         url: $input.data('down-url'),
-        type: 'decreaseProductQuantity'
-      }
+        type: 'decreaseProductQuantity',
+      };
     }
 
     return cartAction;
   }
 
-  let abortPreviousRequests = () => {
-    var promise;
+  const abortPreviousRequests = () => {
+    let promise;
     while (promises.length > 0) {
       promise = promises.pop();
       promise.abort();
     }
   };
 
-  var getTouchSpinInput = ($button) => {
-    return $($button.parents('.bootstrap-touchspin').find('input'));
-  };
+  const getTouchSpinInput = ($button) => $($button.parents('.bootstrap-touchspin').find('input'));
 
-  var handleCartAction = (event) => {
+  const handleCartAction = (event) => {
     event.preventDefault();
 
-    let $target = $(event.currentTarget);
-    let dataset = event.currentTarget.dataset;
-
-    let cartAction = parseCartAction($target, event.namespace);
-    let requestData = {
+    const $target = $(event.currentTarget);
+    const {dataset} = event.currentTarget;
+    const cartAction = parseCartAction($target, event.namespace);
+    const requestData = {
       ajax: '1',
-      action: 'update'
+      action: 'update',
     };
 
-    if (typeof cartAction === 'undefined') {
+    if (!cartAction) {
       return;
     }
 
@@ -147,32 +144,31 @@ $(document).ready(() => {
       method: 'POST',
       data: requestData,
       dataType: 'json',
-      beforeSend: function (jqXHR) {
+      beforeSend(jqXHR) {
         promises.push(jqXHR);
-      }
-    }).then(function (resp) {
-      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
-      var $quantityInput = getTouchSpinInput($target);
-      $quantityInput.val(resp.quantity);
+      },
+    })
+      .then((resp) => {
+        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
+        const $quantityInput = getTouchSpinInput($target);
+        $quantityInput.val(resp.quantity);
 
-      // Refresh cart preview
-      prestashop.emit('updateCart', {
-        reason: dataset
+        // Refresh cart preview
+        prestashop.emit('updateCart', {
+          reason: dataset,
+          resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.emit('handleError', {
+          eventType: 'updateProductInCart',
+          resp,
+          cartAction: cartAction.type,
+        });
       });
-    }).fail((resp) => {
-      prestashop.emit('handleError', {
-        eventType: 'updateProductInCart',
-        resp: resp,
-        cartAction: cartAction.type
-      });
-    });
   };
 
-  $body.on(
-    'click',
-    '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]',
-    handleCartAction
-  );
+  $body.on('click', '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', handleCartAction);
 
   $body.on('touchspin.on.startdownspin', spinnerSelector, handleCartAction);
   $body.on('touchspin.on.startupspin', spinnerSelector, handleCartAction);
@@ -185,28 +181,35 @@ $(document).ready(() => {
       method: 'POST',
       data: requestData,
       dataType: 'json',
-      beforeSend: function (jqXHR) {
+      beforeSend(jqXHR) {
         promises.push(jqXHR);
-      }
-    }).then(function (resp) {
-      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
-      $target.val(resp.quantity);
+      },
+    })
+      .then((resp) => {
+        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
+        $target.val(resp.quantity);
 
-      var dataset;
-      if ($target && $target.dataset) {
-        dataset = $target.dataset;
-      } else {
-        dataset = resp;
-      }
+        let dataset;
 
+        if ($target && $target.dataset) {
+          // eslint-disable-next-line
+          dataset = $target.dataset;
+        } else {
+          dataset = resp;
+        }
 
-      // Refresh cart preview
-      prestashop.emit('updateCart', {
-        reason: dataset
+        // Refresh cart preview
+        prestashop.emit('updateCart', {
+          reason: dataset,
+          resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.emit('handleError', {
+          eventType: 'updateProductQuantityInCart',
+          resp,
+        });
       });
-    }).fail((resp) => {
-      prestashop.emit('handleError', {eventType: 'updateProductQuantityInCart', resp: resp})
-    });
   }
 
   function getRequestData(quantity) {
@@ -214,29 +217,30 @@ $(document).ready(() => {
       ajax: '1',
       qty: Math.abs(quantity),
       action: 'update',
-      op: getQuantityChangeType(quantity)
-    }
+      op: getQuantityChangeType(quantity),
+    };
   }
 
   function getQuantityChangeType($quantity) {
-    return ($quantity > 0) ? 'up' : 'down';
+    return $quantity > 0 ? 'up' : 'down';
   }
 
-  function updateProductQuantityInCart(event)
-  {
+  function updateProductQuantityInCart(event) {
     const $target = $(event.currentTarget);
     const updateQuantityInCartUrl = $target.data('update-url');
     const baseValue = $target.attr('value');
 
     // There should be a valid product quantity in cart
     const targetValue = $target.val();
-    if (targetValue != parseInt(targetValue) || targetValue < 0 || isNaN(targetValue)) {
+    /* eslint-disable */
+    if (targetValue != parseInt(targetValue, 10) || targetValue < 0 || isNaN(targetValue)) {
       $target.val(baseValue);
       return;
     }
-
+    /* eslint-enable */
     // There should be a new product quantity in cart
     const qty = targetValue - baseValue;
+
     if (qty === 0) {
       return;
     }
@@ -245,50 +249,65 @@ $(document).ready(() => {
     sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
   }
 
-  $body.on(
-    'focusout keyup',
-    productLineInCartSelector,
-    (event) => {
-      if (event.type === 'keyup') {
-        if (event.keyCode === 13) {
-          updateProductQuantityInCart(event);
-        }
-        return false;
+  $body.on('focusout keyup', productLineInCartSelector, (event) => {
+    if (event.type === 'keyup') {
+      if (event.keyCode === 13) {
+        updateProductQuantityInCart(event);
       }
-
-      updateProductQuantityInCart(event);
-    }
-  );
-
-  $body.on(
-    'click',
-    '.js-discount .code',
-    (event) => {
-      event.stopPropagation();
-
-      const $code = $(event.currentTarget);
-      const $discountInput = $('[name=discount_name]');
-
-      $discountInput.val($code.text());
-
       return false;
     }
-  )
+
+    updateProductQuantityInCart(event);
+
+    return false;
+  });
+
+  const $timeoutEffect = 400;
+
+  $body.on('hidden.bs.collapse', '#promo-code', () => {
+    $('.display-promo').show($timeoutEffect);
+  });
+
+  $body.on('click', '.promo-code-button', (event) => {
+    event.preventDefault();
+
+    $('#promo-code').collapse('toggle');
+  });
+
+  $body.on('click', '.display-promo', (event) => {
+    $(event.currentTarget).hide($timeoutEffect);
+  });
+
+  $body.on('click', '.js-discount .code', (event) => {
+    event.stopPropagation();
+
+    const $code = $(event.currentTarget);
+    const $discountInput = $('[name=discount_name]');
+
+    $discountInput.val($code.text());
+    // Show promo code field
+    $('#promo-code').collapse('show');
+    $('.display-promo').hide($timeoutEffect);
+
+    return false;
+  });
 });
 
 const CheckUpdateQuantityOperations = {
-  'switchErrorStat': () => {
+  switchErrorStat: () => {
     /**
      * if errorMsg is not empty or if notifications are shown, we have error to display
      * if hasError is true, quantity was not updated : we don't disable checkout button
      */
     const $checkoutBtn = $('.checkout a');
-    if ($("#notifications article.alert-danger").length || ('' !== errorMsg && !hasError)) {
+
+    if ($('#notifications article.alert-danger').length || (errorMsg !== '' && !hasError)) {
       $checkoutBtn.addClass('disabled');
     }
 
-    if ('' !== errorMsg) {
-      let strError = ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' + errorMsg + '</li></ul></article>';
+    if (errorMsg !== '') {
+      // eslint-disable-next-line
+      const strError = ` <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>${errorMsg}</li></ul></article>`;
       $('#notifications .container').html(strError);
       errorMsg = '';
       isUpdateOperation = false;
@@ -303,20 +322,22 @@ const CheckUpdateQuantityOperations = {
       $checkoutBtn.removeClass('disabled');
     }
   },
-  'checkUpdateOpertation': (resp) => {
+  checkUpdateOpertation: (resp) => {
     /**
      * resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
      * when resp.hasError=true, quantity is not updated
      */
+    // eslint-disable-next-line
     hasError = resp.hasOwnProperty('hasError');
-    let errors = resp.errors || "";
+    const errors = resp.errors || '';
+
     // 1.7.2.x returns errors as string, 1.7.3.x returns array
     if (errors instanceof Array) {
-      errorMsg = errors.join(" ");
+      errorMsg = errors.join(' ');
     } else {
       errorMsg = errors;
     }
 
     isUpdateOperation = true;
-  }
+  },
 };

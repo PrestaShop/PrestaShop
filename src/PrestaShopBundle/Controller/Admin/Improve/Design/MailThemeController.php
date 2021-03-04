@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,32 +17,36 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Mail;
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
+use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,6 +73,7 @@ class MailThemeController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         $mailThemes = $themeCatalog->listThemes();
@@ -79,6 +85,7 @@ class MailThemeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailThemeConfigurationForm' => $this->getMailThemeFormHandler()->getForm()->createView(),
             'generateMailsForm' => $generateThemeMailsForm->createView(),
+            'translateMailsBodyForm' => $translateMailsBodyForm->createView(),
             'mailThemes' => $mailThemes,
         ]);
     }
@@ -111,8 +118,12 @@ class MailThemeController extends FrameworkBundleAdminController
                 //Overwrite theme folder if selected
                 if (!empty($data['theme'])) {
                     $themeFolder = $this->getParameter('themes_dir') . '/' . $data['theme'];
-                    $coreMailsFolder = $themeFolder . '/mails';
-                    $modulesMailFolder = $themeFolder . '/modules';
+                    if (is_dir($themeFolder . '/mails')) {
+                        $coreMailsFolder = $themeFolder . '/mails';
+                    }
+                    if (is_dir($themeFolder . '/modules')) {
+                        $modulesMailFolder = $themeFolder . '/modules';
+                    }
                 }
 
                 $generateCommand = new GenerateThemeMailTemplatesCommand(
@@ -218,20 +229,20 @@ class MailThemeController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
-     * @param string $themeName
+     * @param string $theme
      *
      * @return Response
      *
      * @throws InvalidArgumentException
      */
-    public function previewThemeAction(Request $request, $themeName)
+    public function previewThemeAction(Request $request, $theme)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         /** @var ThemeInterface $mailTheme */
-        $mailTheme = $themeCatalog->getByName($themeName);
+        $mailTheme = $themeCatalog->getByName($theme);
 
         return $this->render('@PrestaShop/Admin/Improve/Design/MailTheme/preview.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -239,6 +250,148 @@ class MailThemeController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailTheme' => $mailTheme,
+        ]);
+    }
+
+    /**
+     * This action allows to send a test mail of a specific email template, however the Mail
+     * class used to send emails is not modular enough to allow sending templates on the fly.
+     * This would require either:
+     *  - a little modification of the Mail class to add an easy way to send a template content (rather than its name)
+     *  - a full refacto of the Mail class which wouldn't be coupled to static files any more
+     *
+     * These modifications will be performed in a future release so for now we can only send test emails
+     * with the current email theme using generated static files.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param string $theme
+     * @param string $layout
+     * @param string $locale
+     * @param string $module
+     *
+     * @return Response
+     *
+     * @throws InvalidArgumentException
+     */
+    public function sendTestMailAction($theme, $layout, $locale, $module = '')
+    {
+        if ($this->configuration->get('PS_MAIL_THEME') !== $theme) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot send test email for theme %theme% because it is not your current theme',
+                    'Admin.Notifications.Error',
+                    [
+                        '%theme%' => $theme,
+                    ]
+                )
+            );
+
+            return $this->redirectToRoute('admin_mail_theme_preview', ['theme' => $theme]);
+        }
+
+        /** @var ContextEmployeeProviderInterface $employeeProvider */
+        $employeeProvider = $this->get('prestashop.adapter.data_provider.employee');
+        $employeeData = $employeeProvider->getData();
+
+        /** @var LanguageRepositoryInterface $languageRepository */
+        $languageRepository = $this->get('prestashop.core.admin.lang.repository');
+        $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
+        if (null === $language) {
+            throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
+        }
+
+        if (empty($module)) {
+            $templatePath = _PS_MAIL_DIR_;
+        } else {
+            $templatePath = _PS_MODULE_DIR_ . $module . '/mails/';
+        }
+
+        /** @var MailPreviewVariablesBuilder $variablesBuilder */
+        $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
+        $mailLayout = $this->getMailLayout($theme, $layout, $module);
+        $mailVariables = $variablesBuilder->buildTemplateVariables($mailLayout);
+
+        $mailSent = Mail::send(
+            $language->getId(),
+            $layout,
+            $this->trans('Test email %template%', 'Admin.Design.Feature', ['%template%' => $layout]),
+            $mailVariables,
+            $employeeData['email'],
+            $employeeData['firstname'] . ' ' . $employeeData['lastname'],
+            $employeeData['email'],
+            $employeeData['firstname'] . ' ' . $employeeData['lastname'],
+            null,
+            null,
+            $templatePath
+        );
+
+        if ($mailSent) {
+            $this->addFlash(
+                'success',
+                $this->trans(
+                    'Test email for layout %layout% was successfully sent to %email%',
+                    'Admin.Notifications.Success',
+                    [
+                        '%layout%' => $layout,
+                        '%email%' => $employeeData['email'],
+                    ]
+                )
+            );
+        } else {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot send test email for layout %layout%',
+                    'Admin.Notifications.Error',
+                    [
+                        '%layout%' => $layout,
+                    ]
+                )
+            );
+        }
+
+        return $this->redirectToRoute('admin_mail_theme_preview', ['theme' => $theme]);
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function translateBodyAction(Request $request)
+    {
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
+        $translateMailsBodyForm->handleRequest($request);
+
+        if (!$translateMailsBodyForm->isSubmitted() || !$translateMailsBodyForm->isValid()) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot translate emails body content',
+                    'Admin.Notifications.Error'
+                )
+            );
+
+            return $this->redirectToRoute('admin_mail_theme_index');
+        }
+
+        $translateData = $translateMailsBodyForm->getData();
+        $language = $translateData['language'];
+        /** @var TranslationService $translationService */
+        $translationService = $this->get('prestashop.service.translation');
+        $locale = $translationService->langToLocale($language);
+
+        return $this->redirectToRoute('admin_international_translation_overview', [
+            'lang' => $language,
+            'locale' => $locale,
+            'type' => 'mails_body',
         ]);
     }
 
@@ -309,6 +462,54 @@ class MailThemeController extends FrameworkBundleAdminController
      */
     private function renderLayout($themeName, $layoutName, $type, $locale = '', $module = '')
     {
+        $layout = $this->getMailLayout($themeName, $layoutName, $module);
+
+        /** @var LanguageRepositoryInterface $languageRepository */
+        $languageRepository = $this->get('prestashop.core.admin.lang.repository');
+        if (empty($locale)) {
+            $locale = $this->getContext()->language->locale;
+        }
+        $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
+        if (null === $language) {
+            throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
+        }
+
+        /** @var MailPreviewVariablesBuilder $variablesBuilder */
+        $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
+        $mailLayoutVariables = $variablesBuilder->buildTemplateVariables($layout);
+
+        /** @var MailTemplateRendererInterface $renderer */
+        $renderer = $this->get('prestashop.core.mail_template.mail_template_renderer');
+        //Special case for preview, we fill the mail variables
+        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::HTML_TYPE, $mailLayoutVariables));
+        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::TXT_TYPE, $mailLayoutVariables));
+
+        switch ($type) {
+            case MailTemplateInterface::HTML_TYPE:
+                $renderedLayout = $renderer->renderHtml($layout, $language);
+                break;
+            case MailTemplateInterface::TXT_TYPE:
+                $renderedLayout = $renderer->renderTxt($layout, $language);
+                break;
+            default:
+                throw new NotFoundHttpException(sprintf('Requested type %s is not managed, please use one of these: %s', $type, implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])));
+        }
+
+        return $renderedLayout;
+    }
+
+    /**
+     * @param string $themeName
+     * @param string $layoutName
+     * @param string $module
+     *
+     * @return LayoutInterface
+     *
+     * @throws FileNotFoundException
+     * @throws InvalidArgumentException
+     */
+    private function getMailLayout($themeName, $layoutName, $module)
+    {
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         /** @var ThemeInterface $theme */
@@ -327,53 +528,16 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         if (null === $layout) {
-            throw new FileNotFoundException(sprintf(
-                'Cannot find layout %s%s in theme %s',
-                empty($module) ? '' : $module . ':',
-                $layoutName,
-                $themeName
-            ));
+            throw new FileNotFoundException(sprintf('Cannot find layout %s%s in theme %s', empty($module) ? '' : $module . ':', $layoutName, $themeName));
         }
 
-        /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = $this->get('prestashop.core.admin.lang.repository');
-        if (empty($locale)) {
-            $locale = $this->getContext()->language->locale;
-        }
-        /** @var LanguageInterface $language */
-        $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
-        if (null === $language) {
-            throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
-        }
-
-        /** @var MailTemplateRendererInterface $renderer */
-        $renderer = $this->get('prestashop.core.mail_template.mail_template_renderer');
-        //Special case for preview, we fill the mail variables
-        $renderer->addTransformation($this->get('prestashop.core.mail_template.transformation.mail_variables'));
-
-        switch ($type) {
-            case MailTemplateInterface::HTML_TYPE:
-                $renderedLayout = $renderer->renderHtml($layout, $language);
-                break;
-            case MailTemplateInterface::TXT_TYPE:
-                $renderedLayout = $renderer->renderTxt($layout, $language);
-                break;
-            default:
-                throw new NotFoundHttpException(sprintf(
-                    'Requested type %s is not managed, please use one of these: %s',
-                    $type,
-                    implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])
-                ));
-                break;
-        }
-
-        return $renderedLayout;
+        return $layout;
     }
 
     /**
      * @return FormHandlerInterface
      */
-    private function getMailThemeFormHandler()
+    private function getMailThemeFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.mail_theme.form_handler');
     }

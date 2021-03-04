@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter;
 
@@ -67,11 +67,11 @@ class OrderFollowControllerCore extends FrontController
             $orderReturn->question = htmlspecialchars(Tools::getValue('returnText'));
             if (empty($orderReturn->question)) {
                 Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorMsg&' .
-                    http_build_query(array(
+                    http_build_query([
                         'ids_order_detail' => $ids_order_detail,
                         'order_qte_input' => $order_qte_input,
                         'id_order' => Tools::getValue('id_order'),
-                    )));
+                    ]));
             }
 
             if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput)) {
@@ -81,7 +81,7 @@ class OrderFollowControllerCore extends FrontController
             $orderReturn->state = 1;
             $orderReturn->add();
             $orderReturn->addReturnDetail($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput);
-            Hook::exec('actionOrderReturn', array('orderReturn' => $orderReturn));
+            Hook::exec('actionOrderReturn', ['orderReturn' => $orderReturn]);
             Tools::redirect('index.php?controller=order-follow');
         }
     }
@@ -93,6 +93,11 @@ class OrderFollowControllerCore extends FrontController
      */
     public function initContent()
     {
+        if ((bool) Configuration::get('PS_ORDER_RETURN') === false) {
+            $this->redirect_after = '404';
+            $this->redirect();
+        }
+
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
         }
@@ -101,7 +106,7 @@ class OrderFollowControllerCore extends FrontController
         if (count($ordersReturn) <= 0) {
             $this->warning[] = $this->trans(
                 'You have no merchandise return authorizations.',
-                array(),
+                [],
                 'Shop.Notifications.Error'
             );
         }
@@ -114,7 +119,7 @@ class OrderFollowControllerCore extends FrontController
 
     public function getTemplateVarOrdersReturns()
     {
-        $orders_returns = array();
+        $orders_returns = [];
         $orders_return = OrderReturn::getOrdersReturn($this->context->customer->id);
 
         $orderReturnPresenter = new OrderReturnPresenter(
@@ -134,6 +139,10 @@ class OrderFollowControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Merchandise returns', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('order-follow'),
+        ];
 
         return $breadcrumb;
     }

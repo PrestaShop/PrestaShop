@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <div class="alert alert-danger">
@@ -40,7 +40,7 @@
             </h3>
             <div class="alert alert-warning">
                 <p>{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.' d='Admin.Design.Notification'}</p>
-                <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.' d='Admin.Design.Notification'}</p>
+                <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "%move_images_label%" button below. Please be patient. This can take several minutes.' d='Admin.Design.Notification' sprintf=['%move_images_label%' => {l s='Move images' d='Admin.Design.Feature'}]}</p>
             </div>
             <div class="alert alert-info">&nbsp;
                 {l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.' d='Admin.Design.Notification'}
@@ -63,10 +63,9 @@
                 {l s='Regenerate thumbnails' d='Admin.Design.Feature'}
             </h3>
 
-			<div class="alert alert-info">
-				{l s='Regenerates thumbnails for all existing images' d='Admin.Design.Help'}<br />
-				{l s='Please be patient. This can take several minutes.' d='Admin.Design.Help'}<br />
-				{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.' d='Admin.Design.Help'}
+			<div class="alert alert-warning">
+				{l s='Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.' d='Admin.Design.Notification'}<br />
+				{l s='Also, regenerating thumbnails for all existing images can take several minutes, please be patient.' d='Admin.Design.Notification'}
 			</div>
 
 			<div class="form-group">
@@ -108,11 +107,11 @@
 				</label>
 				<div class="col-lg-9">
 					<span class="switch prestashop-switch fixed-width-lg">
-						<input type="radio" name="erase" id="erase_on" value="1" checked="checked">
+						<input type="radio" name="erase" id="erase_on" value="1">
 						<label for="erase_on" class="radioCheck">
 							{l s='Yes' d='Admin.Global'}
 						</label>
-						<input type="radio" name="erase" id="erase_off" value="0">
+						<input type="radio" name="erase" id="erase_off" value="0" checked="checked">
 						<label for="erase_off" class="radioCheck">
 							{l s='No' d='Admin.Global'}
 						</label>

@@ -4,6 +4,9 @@
 *.log
 npm-debug.log.*
 .sass-cache/
+*.swp
+*.swo
+.cache/
 
 # Cache
 /cache/*
@@ -31,6 +34,7 @@ npm-debug.log.*
 !/img/.htaccess
 !/img/index.php
 !/img/404.gif
+!/img/app_icon.png
 !/img/bg_500.png
 !/img/bg_loader.png
 !/img/favicon.ico
@@ -51,11 +55,14 @@ npm-debug.log.*
 !/img/c/index.php
 !/img/cms/index.php
 !/img/co/index.php
+!/img/e/index.php
 !/img/jquery-ui
 !/img/l/index.php
 !/img/m/index.php
 !/img/os/index.php
 !/img/p/index.php
+!/img/pr/index.php
+!/img/pr/default.jpg
 !/img/s/index.php
 !/img/scenes
 !/img/st/index.php
@@ -65,17 +72,54 @@ npm-debug.log.*
 
 # Upload
 /upload/*
+!/upload/index.php
 !/upload/.htaccess
 
 /vendor/*
 /docs/phpdoc-sf/
-/composer.lock
-/tests/Selenium/errorShots/
-!/tests/Selenium/errorShots/.gitkeep
-/tests/Selenium/errorDumps/
-!/tests/Selenium/errorDumps/.gitkeep
 *.hot-update.js
 *.hot-update.json
+
+tests-legacy/resources/modules/followup/
+tests-legacy/resources/modules/ps_emailalerts/
+tests-legacy/resources/modules/ps_emailsubscription/mails/
+tests-legacy/resources/modules/referralprogram/
+
+# themes listed in the modules_to_hook section of the theme.yml
+tests-legacy/resources/modules/blockreassurance
+tests-legacy/resources/modules/ps_contactinfo
+tests-legacy/resources/modules/ps_languageselector
+tests-legacy/resources/modules/ps_currencyselector
+tests-legacy/resources/modules/ps_customersignin
+tests-legacy/resources/modules/ps_shoppingcart
+tests-legacy/resources/modules/ps_mainmenu
+tests-legacy/resources/modules/ps_searchbar
+tests-legacy/resources/modules/ps_imageslider
+tests-legacy/resources/modules/ps_customtext
+tests-legacy/resources/modules/ps_socialfollow
+tests-legacy/resources/modules/ps_linklist
+tests-legacy/resources/modules/ps_customeraccountlinks
+tests-legacy/resources/modules/ps_categorytree
+tests-legacy/resources/modules/ps_facetedsearch
+tests-legacy/resources/modules/ps_sharebuttons
+
+# Installed with test data maybe via API push
+tests-legacy/resources/modules/ps_reminder
+
+tests/Resources/img/l/*
+!tests/Resources/img/l/.gitkeep
+tests/Resources/img/p/*
+!tests/Resources/img/p/.gitkeep
+tests/Resources/img/os/*
+!tests/Resources/img/os/.gitkeep
+tests/Resources/img/genders/*
+!tests/Resources/img/genders/.gitkeep
+tests/Resources/img/c/*
+!tests/Resources/img/c/.gitkeep
+tests/Resources/img/tmp/*
+tests/Resources/img/tmp/.gitkeep
+!tests/Resources/download/.gitkeep
+tests/Resources/download/*
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
@@ -92,16 +136,35 @@ npm-debug.log.*
 !/admin-dev/export/.htaccess
 !/admin-dev/export/index.php
 
+# Downloaded RTL files
+/admin-dev/themes/default/css/bundle/default_rtl.css
+/admin-dev/themes/default/css/bundle/shared_rtl.css
+/admin-dev/themes/default/css/font_rtl.css
+/admin-dev/themes/default/css/overrides_rtl.css
+/admin-dev/themes/default/css/vendor/font-awesome/font-awesome_rtl.css
+/admin-dev/themes/default/css/vendor/nv.d3_rtl.css
+/admin-dev/themes/default/css/vendor/titatoggle-min_rtl.css
+/admin-dev/themes/default/public/theme_rtl.css
+/admin-dev/themes/default/public/*
+/admin-dev/themes/new-theme/css/module/drop_rtl.css
+/admin-dev/themes/new-theme/css/right-sidebar_rtl.css
+/admin-dev/themes/new-theme/public/*
+!/admin-dev/themes/new-theme/public/theme.rtlfix
+!/admin-dev/themes/default/public/theme.rtlfix
+
 themes/*/cache/*
+themes/core.js.map
+themes/core.js
+
 
 # Config
 
+config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
 config/themes/*
 !config/xml/themes/default.xml
-tests/Selenium/settings.js
 themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php
@@ -112,8 +175,10 @@ modules/*
 override/*
 themes/*/
 !themes/classic
+themes/classic/assets
 !themes/_core
 !themes/_libraries
+themes/classic/assets/css/*_rtl.css
 
 # Vendors and dependencies
 
@@ -127,8 +192,8 @@ php-cs-fixer
 
 translations/*
 mails/*
-!mails/en/
 !mails/themes/
+!mails/_partials/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
 themes/default-bootstrap/mails/*
@@ -274,8 +339,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 ### NetBeans ###
-nbproject/private/
-/build/
+nbproject/
 nbbuild/
 dist/
 nbdist/
@@ -292,3 +356,6 @@ nb-configuration.xml
 ### Release creation ###
 tools/build/releases/*
 !tools/build/releases/.gitkeep
+
+## Docker configuration
+install.lock

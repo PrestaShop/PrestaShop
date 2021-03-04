@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -36,6 +36,14 @@ class ImageManagerCore
     const ERROR_FILE_NOT_EXIST = 1;
     const ERROR_FILE_WIDTH = 2;
     const ERROR_MEMORY_LIMIT = 3;
+    const MIME_TYPE_SUPPORTED = [
+        'image/gif',
+        'image/jpg',
+        'image/jpeg',
+        'image/pjpeg',
+        'image/png',
+        'image/x-png',
+    ];
 
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
@@ -100,7 +108,7 @@ class ImageManagerCore
         $cacheParam = $disableCache ? '?time=' . time() : '';
 
         if (Context::getContext()->controller->controller_type == 'admin') {
-            return '../img/tmp/' . $cacheImage . $cacheParam;
+            return __PS_BASE_URI__ . 'img/tmp/' . $cacheImage . $cacheParam;
         }
 
         return _PS_TMP_IMG_ . $cacheImage . $cacheParam;
@@ -109,7 +117,7 @@ class ImageManagerCore
     /**
      * Check if memory limit is too long or not.
      *
-     * @param mixed $image
+     * @param string $image
      *
      * @return bool
      */
@@ -286,7 +294,7 @@ class ImageManagerCore
             ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
         }
         $writeFile = ImageManager::write($fileType, $destImage, $destinationFile);
-        Hook::exec('actionOnImageResizeAfter', array('dst_file' => $destinationFile, 'file_type' => $fileType));
+        Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $fileType]);
         @imagedestroy($srcImage);
 
         file_put_contents(
@@ -354,39 +362,32 @@ class ImageManagerCore
     }
 
     /**
-     * Check if file is a real image.
+     * @param string $filename
      *
-     * @param string $filename File path to check
-     * @param string $fileMimeType File known mime type (generally from $_FILES)
-     * @param array $mimeTypeList Allowed MIME types
-     *
-     * @return bool
+     * @return string|bool
      */
-    public static function isRealImage($filename, $fileMimeType = null, $mimeTypeList = null)
+    public static function getMimeType(string $filename)
     {
-        // Detect mime content type
         $mimeType = false;
-        if (!$mimeTypeList) {
-            $mimeTypeList = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
-        }
-
-        // Try 4 different methods to determine the mime type
+        // Try with GD
         if (function_exists('getimagesize')) {
             $imageInfo = @getimagesize($filename);
-
             if ($imageInfo) {
                 $mimeType = $imageInfo['mime'];
-            } else {
-                $fileMimeType = false;
             }
-        } elseif (function_exists('finfo_open')) {
-            $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
-            $finfo = finfo_open($const);
+        }
+        // Try with FileInfo
+        if (!$mimeType && function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_file($finfo, $filename);
             finfo_close($finfo);
-        } elseif (function_exists('mime_content_type')) {
+        }
+        // Try with Mime
+        if (!$mimeType && function_exists('mime_content_type')) {
             $mimeType = mime_content_type($filename);
-        } elseif (function_exists('exec')) {
+        }
+        // Try with exec command and file binary
+        if (!$mimeType && function_exists('exec')) {
             $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
             if (!$mimeType) {
                 $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
@@ -395,6 +396,26 @@ class ImageManagerCore
                 $mimeType = trim(exec('file -bi ' . escapeshellarg($filename)));
             }
         }
+
+        return $mimeType;
+    }
+
+    /**
+     * Check if file is a real image.
+     *
+     * @param string $filename File path to check
+     * @param string $fileMimeType File known mime type (generally from $_FILES)
+     * @param array<string>|null $mimeTypeList Allowed MIME types
+     *
+     * @return bool
+     */
+    public static function isRealImage($filename, $fileMimeType = null, $mimeTypeList = null)
+    {
+        if (!$mimeTypeList) {
+            $mimeTypeList = static::MIME_TYPE_SUPPORTED;
+        }
+
+        $mimeType = static::getMimeType($filename);
 
         if ($fileMimeType && (empty($mimeType) || $mimeType == 'regular file' || $mimeType == 'text/plain')) {
             $mimeType = $fileMimeType;
@@ -422,7 +443,7 @@ class ImageManagerCore
     {
         // Filter on file extension
         if ($authorizedExtensions === null) {
-            $authorizedExtensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
+            $authorizedExtensions = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
         }
         $nameExplode = explode('.', $filename);
         if (count($nameExplode) >= 2) {
@@ -442,19 +463,21 @@ class ImageManagerCore
      *
      * @param array $file Upload $_FILE value
      * @param int $maxFileSize Maximum upload size
+     * @param array<string>|null $types Authorized extensions
+     * @param array<string>|null $mimeTypeList Authorized mimetypes
      *
      * @return bool|string Return false if no error encountered
      */
-    public static function validateUpload($file, $maxFileSize = 0, $types = null)
+    public static function validateUpload($file, $maxFileSize = 0, $types = null, $mimeTypeList = null)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > (int) $maxFileSize) {
-            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', [$file['size'] / 1024, $maxFileSize / 1024], 'Admin.Notifications.Error');
         }
-        if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
+        if (!ImageManager::isRealImage($file['tmp_name'], $file['type'], $mimeTypeList) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', [], 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', array($file['error']), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', [$file['error']], 'Admin.Notifications.Error');
         }
 
         return false;
@@ -471,13 +494,13 @@ class ImageManagerCore
     public static function validateIconUpload($file, $maxFileSize = 0)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > $maxFileSize) {
-            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1000, $maxFileSize / 1000), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', [$file['size'] / 1000, $maxFileSize / 1000], 'Admin.Notifications.Error');
         }
         if (substr($file['name'], -4) != '.ico') {
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', array(), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', [], 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', array(), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', [], 'Admin.Notifications.Error');
         }
 
         return false;
@@ -504,14 +527,14 @@ class ImageManagerCore
 
         // Source information
         $srcInfo = getimagesize($srcFile);
-        $src = array(
+        $src = [
             'width' => $srcInfo[0],
             'height' => $srcInfo[1],
             'ressource' => ImageManager::create($srcInfo[2], $srcFile),
-        );
+        ];
 
         // Destination information
-        $dest = array();
+        $dest = [];
         $dest['x'] = $dstX;
         $dest['y'] = $dstY;
         $dest['width'] = null !== $dstWidth ? $dstWidth : $src['width'];
@@ -522,7 +545,7 @@ class ImageManagerCore
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
         imagecolortransparent($dest['ressource'], $white);
         $return = ImageManager::write($fileType, $dest['ressource'], $dstFile);
-        Hook::exec('actionOnImageCutAfter', array('dst_file' => $dstFile, 'file_type' => $fileType));
+        Hook::exec('actionOnImageCutAfter', ['dst_file' => $dstFile, 'file_type' => $fileType]);
         @imagedestroy($src['ressource']);
 
         return $return;
@@ -632,11 +655,11 @@ class ImageManagerCore
      */
     public static function getMimeTypeByExtension($fileName)
     {
-        $types = array(
-            'image/gif' => array('gif'),
-            'image/jpeg' => array('jpg', 'jpeg'),
-            'image/png' => array('png'),
-        );
+        $types = [
+            'image/gif' => ['gif'],
+            'image/jpeg' => ['jpg', 'jpeg'],
+            'image/png' => ['png'],
+        ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 
         $mimeType = null;

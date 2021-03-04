@@ -1,0 +1,85 @@
+# @todo: add legacy links after page is fully migrated
+admin_attributes_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
+    _legacy_controller: AdminAttributesGroups
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+#    _legacy_link: AdminAttributesGroups:viewattribute_group
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+    requirements:
+      attributeGroupId: \d+
+
+admin_attributes_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminAttributesGroups
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attribute
+    redirectRoute: admin_attributes_index
+#    _legacy_link: AdminAttributesGroups:submitFilterattribute_values
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+
+admin_attributes_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:create'
+    _legacy_controller: AdminAttributesGroups
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+#    _legacy_link: AdminAttributesGroups:addattribute_group
+
+admin_attributes_edit:
+  path: /{attributeId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:edit'
+    _legacy_controller: AdminAttributesGroups
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+#    _legacy_link: AdminAttributesGroups:updateattribute
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+      id_attribute: attributeId
+  requirements:
+    attributeId: \d+
+
+admin_attributes_delete:
+  path: /{attributeId}/delete
+  methods: [POST, DELETE]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:delete'
+    _legacy_controller: AdminAttributesGroups
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+#    _legacy_link: AdminAttributesGroups:deleteattribute
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+      id_attribute: attributeId
+
+admin_attributes_bulk_delete:
+  path: /delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:bulkDelete'
+    _legacy_controller: AdminAttributesGroups
+    redirectQueryParamsToKeep:
+      - 'attributeGroupId'
+#    _legacy_link: AdminAttributesGroups:bulkdeleteattribute
+    _legacy_parameters:
+      id_attribute_group: attributeGroupId
+      id_attribute: attributeId
+
+admin_attributes_update_position:
+  path: /update-position
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:updatePosition'
+    _legacy_controller: AdminAttributesGroups
+#    _legacy_link: AdminAttributesGroups:updateAttributesPositions

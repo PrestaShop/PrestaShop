@@ -9,12 +9,14 @@
 }
 
 table.grid-ordering-column tr {
-  transition-property: all;
-  transition-duration: 0.2s;
   transition-timing-function: ease-out;
+  transition-duration: 0.2s;
+  transition-property: all;
+
   &.hover {
     background-color: $gray-soft;
   }
+
   &:hover {
     .position-drag-handle {
       visibility: visible;
@@ -23,22 +25,29 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
-  color: white;
-  transform: translate(5px,10px);
+  color: #fff;
   background: none;
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  transform: translate(5px, 10px);
+
   td {
     background-color: $medium-gray;
   }
-  td:first-child { border-top-left-radius: 3px; }
-  td:first-child { border-bottom-left-radius: 3px; }
-  td:last-child { border-top-right-radius: 3px; }
-  td:last-child { border-bottom-right-radius: 3px; }
+
+  td:first-child {
+    @include border-left-radius(3px);
+  }
+
+  td:last-child {
+    @include border-right-radius(3px);
+  }
 
   .position-drag-handle,
   .position-drag-handle:hover,
-  .btn, .btn:after, .btn .material-icons {
-    color: white;
+  .btn,
+  .btn::after,
+  .btn .material-icons {
+    color: #fff;
   }
 }
 
@@ -60,13 +69,19 @@ table.grid-ordering-column tr.position-row-while-drag {
   button.dropdown-toggle,
   .dropdown-toggle {
     color: $gray-medium;
-    &:after {
+
+    &::after {
       content: "more_vert";
     }
 
     &:hover {
       color: $primary;
     }
+  }
+
+  .btn.tooltip-link {
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -85,6 +100,30 @@ table .column-filters td:last-child .grid-reset-button {
 
 .grid {
   table.grid-table {
+    thead {
+      tr {
+        td {
+          .min-field,
+          .max-field {
+            display: inline-block;
+            width: 60px;
+          }
+
+          .md-checkbox {
+            &:not(:last-child) {
+              display: inline-block;
+            }
+
+            & ~ .form-control {
+              display: inline-block;
+              /* stylelint-disable-next-line */
+              width: calc(100% - 32px);
+            }
+          }
+        }
+      }
+    }
+
     tbody {
       tr {
         $tr: &;
@@ -93,15 +132,23 @@ table .column-filters td:last-child .grid-reset-button {
           background: #fafbfc;
         }
 
+        &.preview-row,
+        &.empty_row {
+          background: inherit;
+        }
+
+        &.preview-open {
+          background-color: #e9f8fb;
+        }
+
         // styling for row that is being dragged
         &.dragging-row {
-          background: #fafbfc;
           cursor: move;
+          background: #fafbfc;
 
           td {
+            color: #fff;
             background: #67868e;
-            color: white;
-            -webkit-transform: translate(5px, 10px);
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -109,8 +156,8 @@ table .column-filters td:last-child .grid-reset-button {
             i.grid-toggler-icon-not-valid,
             i.material-icons,
             a,
-            a:after {
-              color: white;
+            a::after {
+              color: #fff;
             }
           }
         }
@@ -119,6 +166,8 @@ table .column-filters td:last-child .grid-reset-button {
         // Styling for specific column types
         // ---------------------------------
         td {
+          word-break: break-word;
+
           &.draggable-type {
             .draggable-column {
               color: transparent;
@@ -127,12 +176,73 @@ table .column-filters td:last-child .grid-reset-button {
 
             @at-root {
               #{$tr}:hover .draggable-column {
+                /* stylelint-disable declaration-no-important */
                 color: #15b7d7 !important;
+                /* stylelint-enable declaration-no-important */
+              }
+            }
+          }
+
+          &.choice-type {
+            @mixin display-dropdown-arrow() {
+              &::after {
+                width: 20px;
+                visibility: visible;
+              }
+            }
+
+            .dropdown {
+              .dropdown-toggle {
+                padding: 0 5px;
+                margin-right: 20px;
+                @include transition(0.2s ease-out);
+
+                &:hover {
+                  margin-right: 0;
+                  @include display-dropdown-arrow();
+                }
+
+                &.coloured {
+                  border: 0;
+                }
+
+                &::after {
+                  width: 0;
+                  visibility: hidden;
+                  @include transition(0.2s ease-out);
+                }
+              }
+
+              &.show {
+                .dropdown-toggle {
+                  margin-right: 20px;
+                  @include transition(0.2s ease-out);
+
+                  &:hover {
+                    margin-right: 0;
+                  }
+
+                  @include display-dropdown-arrow();
+                }
+              }
+
+              .dropdown-menu {
+                .dropdown-item {
+                  cursor: pointer;
+                }
               }
             }
           }
 
           &.action-type {
+            .inline-dropdown-item {
+              &:only-child {
+                flex: 0 0 auto;
+              }
+
+              width: inherit;
+            }
+
             .btn-group > .dropdown-item {
               &:hover,
               &:focus {
@@ -140,9 +250,43 @@ table .column-filters td:last-child .grid-reset-button {
               }
             }
           }
+
+          &.order_price-type {
+            .badge {
+              padding: 5px;
+              font-size: 100%;
+              font-weight: 600;
+            }
+          }
+
+          &.date_time-type {
+            word-break: normal;
+          }
+        }
+      }
+    }
+  }
+
+  .table-responsive .row {
+    margin: 0;
+  }
+
+  .preview-toggle {
+    i:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+table {
+  tr {
+    &.column-filters {
+      @include media-breakpoint-down(md) {
+        input,
+        select {
+          min-width: 6rem;
         }
       }
     }
   }
 }
-

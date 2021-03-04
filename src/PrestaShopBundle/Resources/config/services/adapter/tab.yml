@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.tab.command_handler.update_tab_status_by_class_name_command_handler:
+        class: PrestaShop\PrestaShop\Adapter\Tab\CommandHandler\UpdateTabStatusByClassNameHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        tags:
+            -  { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand'}

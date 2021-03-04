@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException;
 
 /**
@@ -57,7 +58,7 @@ class SortOrder
      * @param string $field the SortOrder field
      * @param string $direction the SortOrder direction
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public function __construct($entity, $field, $direction = 'asc')
     {
@@ -72,7 +73,7 @@ class SortOrder
      *
      * @return SortOrder
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public static function random()
     {
@@ -116,11 +117,17 @@ class SortOrder
      *
      * @return SortOrder
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public static function newFromString($sortOrderConfiguration)
     {
-        list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
+        $sortParams = explode('.', $sortOrderConfiguration);
+
+        if (count($sortParams) < 3) {
+            throw new CoreException('Invalid argument');
+        }
+
+        list($entity, $field, $direction) = $sortParams;
 
         return new static($entity, $field, $direction);
     }
@@ -190,7 +197,7 @@ class SortOrder
      *
      * @return string
      *
-     * @throws Exception
+     * @throws InvalidSortOrderDirectionException
      */
     public function setDirection($direction)
     {
@@ -213,7 +220,7 @@ class SortOrder
     }
 
     /**
-     * @return string returns the order way using legacy prefix
+     * @return string Returns the order way using legacy prefix
      */
     private function getLegacyPrefix()
     {
@@ -226,12 +233,15 @@ class SortOrder
                 $this->setField('name');
 
                 return 'm.';
-            } else {
-                return 'p.';
             }
-        } elseif ($this->entity === 'manufacturer') {
+
+            return 'p.';
+        }
+        if ($this->entity === 'manufacturer') {
             return 'm.';
         }
+
+        return '';
     }
 
     /**

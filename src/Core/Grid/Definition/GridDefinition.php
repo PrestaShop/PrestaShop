@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidDataException;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
@@ -49,7 +51,7 @@ final class GridDefinition implements GridDefinitionInterface
     private $name;
 
     /**
-     * @var ColumnInterface[]
+     * @var ColumnCollectionInterface
      */
     private $columns;
 
@@ -64,6 +66,11 @@ final class GridDefinition implements GridDefinitionInterface
     private $bulkActions;
 
     /**
+     * @var ViewOptionsCollectionInterface
+     */
+    private $viewOptions;
+
+    /**
      * @var FilterCollectionInterface
      */
     private $filters;
@@ -75,6 +82,7 @@ final class GridDefinition implements GridDefinitionInterface
      * @param FilterCollectionInterface $filters
      * @param GridActionCollectionInterface $gridActions
      * @param BulkActionCollectionInterface $bulkActions
+     * @param ViewOptionsCollectionInterface $viewOptions
      */
     public function __construct(
         $id,
@@ -82,7 +90,8 @@ final class GridDefinition implements GridDefinitionInterface
         ColumnCollectionInterface $columns,
         FilterCollectionInterface $filters,
         GridActionCollectionInterface $gridActions,
-        BulkActionCollectionInterface $bulkActions
+        BulkActionCollectionInterface $bulkActions,
+        ViewOptionsCollectionInterface $viewOptions
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -90,6 +99,7 @@ final class GridDefinition implements GridDefinitionInterface
         $this->filters = $filters;
         $this->gridActions = $gridActions;
         $this->bulkActions = $bulkActions;
+        $this->viewOptions = $viewOptions;
     }
 
     /**
@@ -119,6 +129,21 @@ final class GridDefinition implements GridDefinitionInterface
     /**
      * {@inheritdoc}
      */
+    public function getColumnById(string $id): ColumnInterface
+    {
+        /** @var ColumnInterface $column */
+        foreach ($this->columns as $column) {
+            if ($id === $column->getId()) {
+                return $column;
+            }
+        }
+
+        throw new ColumnNotFoundException(sprintf('Column with id "%s" not found', $id));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getBulkActions()
     {
         return $this->bulkActions;
@@ -130,6 +155,14 @@ final class GridDefinition implements GridDefinitionInterface
     public function getGridActions()
     {
         return $this->gridActions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewOptions()
+    {
+        return $this->viewOptions;
     }
 
     /**

@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='header_banner'}
   <div class="header-banner">
@@ -61,19 +61,18 @@
         <div class="col-md-2 hidden-sm-down" id="_desktop_logo">
             {if $page.page_name == 'index'}
               <h1>
-                <a href="{$urls.base_url}">
-                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
+                <a href="{$urls.pages.index}">
+                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy" width="100" height="28">
                 </a>
               </h1>
             {else}
-                <a href="{$urls.base_url}">
-                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
+                <a href="{$urls.pages.index}">
+                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}" loading="lazy" width="100" height="28">
                 </a>
             {/if}
         </div>
-        <div class="col-md-10 col-sm-12 position-static">
+        <div class="header-top-right col-md-10 col-sm-12 position-static">
           {hook h='displayTop'}
-          <div class="clearfix"></div>
         </div>
       </div>
       <div id="mobile_top_menu_wrapper" class="row hidden-md-up" style="display:none;">

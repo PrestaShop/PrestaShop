@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -44,8 +44,8 @@ class Factory
     /**
      * Build a Number specification from a CLDR Locale object.
      *
-     * @param CldrLocale $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
+     * @param CldrLocaleInterface $cldrLocale
+     *                                        This CldrLocale object is a low level data object extracted from CLDR data source
      * @param int $maxFractionDigits
      *                               Max number of digits to display in a number's decimal part
      * @param bool $numberGroupingUsed
@@ -55,39 +55,35 @@ class Factory
      *
      * @throws LocalizationException
      */
-    public function buildNumberSpecification(CldrLocale $cldrLocale, $maxFractionDigits, $numberGroupingUsed)
+    public function buildNumberSpecification(CldrLocaleInterface $cldrLocale, $maxFractionDigits, $numberGroupingUsed)
     {
         $decimalPattern = $cldrLocale->getDecimalPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
+        // Use positive pattern to retrieve information
+        $positivePattern = $this->getPositivePattern($decimalPattern);
 
         return new NumberSpecification(
-            $this->getPositivePattern($decimalPattern),
+            $positivePattern,
             $this->getNegativePattern($decimalPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
             $maxFractionDigits,
-            $this->getMinFractionDigits($decimalPattern),
+            $this->getMinFractionDigits($positivePattern),
             $numberGroupingUsed,
-            $this->getPrimaryGroupSize($decimalPattern),
-            $this->getSecondaryGroupSize($decimalPattern)
+            $this->getPrimaryGroupSize($positivePattern),
+            $this->getSecondaryGroupSize($positivePattern)
         );
     }
 
     /**
      * Build a Price specification from a CLDR Locale object and a Currency object.
      *
-     * @param string $localeCode
-     *                           The concerned locale
-     * @param cldrLocale $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
-     *                               It contains data about the concerned locale
-     * @param Currency $currency
-     *                           This Currency object brings missing specification to format a number as a price
-     * @param bool $numberGroupingUsed
-     *                                 Should we group digits when formatting prices ?
-     * @param $currencyDisplayType
-     *  Type of display for currency symbol (symbol or ISO code)
-     * @param int $maxFractionDigits|null
-     *                                    The decimal precision of the price
+     * @param string $localeCode The concerned locale
+     * @param CldrLocaleInterface $cldrLocale his CldrLocale object is a low level data object extracted from CLDR data source
+     *                                        It contains data about the concerned locale
+     * @param Currency $currency This Currency object brings missing specification to format a number as a price
+     * @param bool $numberGroupingUsed Should we group digits when formatting prices ?
+     * @param string $currencyDisplayType Type of display for currency symbol (symbol or ISO code)
+     * @param int $maxFractionDigits|null The decimal precision of the price
      *
      * @return PriceSpecification
      *
@@ -95,23 +91,26 @@ class Factory
      */
     public function buildPriceSpecification(
         $localeCode,
-        CldrLocale $cldrLocale,
+        CldrLocaleInterface $cldrLocale,
         Currency $currency,
         $numberGroupingUsed,
-        $currencyDisplayType
+        $currencyDisplayType,
+        ?int $maxFractionDigits = null
     ) {
-        $currencyPattern = $cldrLocale->getCurrencyPattern();
+        $currencyPattern = $currency->getPattern($localeCode) ?: $cldrLocale->getCurrencyPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
+        // Use positive pattern to retrieve information
+        $positivePattern = $this->getPositivePattern($currencyPattern);
 
         return new PriceSpecification(
-            $this->getPositivePattern($currencyPattern),
+            $positivePattern,
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
-            $this->getMaxFractionDigits($currencyPattern),
-            $this->getMinFractionDigits($currencyPattern),
-            $numberGroupingUsed && $this->getPrimaryGroupSize($currencyPattern) > 1,
-            $this->getPrimaryGroupSize($currencyPattern),
-            $this->getSecondaryGroupSize($currencyPattern),
+            $maxFractionDigits ?? $this->getMaxFractionDigits($positivePattern),
+            $this->getMinFractionDigits($positivePattern),
+            $numberGroupingUsed && $this->getPrimaryGroupSize($positivePattern) > 1,
+            $this->getPrimaryGroupSize($positivePattern),
+            $this->getSecondaryGroupSize($positivePattern),
             $currencyDisplayType,
             $currency->getSymbol($localeCode),
             $currency->getIsoCode()

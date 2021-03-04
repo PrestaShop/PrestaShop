@@ -25,12 +25,21 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    # Priority 40 to be called before the RouterListener
     prestashop.legacy_url_listener:
         class: PrestaShopBundle\EventListener\LegacyUrlListener
         arguments:
         - "@prestashop.bundle.routing.converter.legacy_url_converter"
         tags:
         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
+
+    # Priority 30 to be called after the RouterListener
+    prestashop.legacy_parameters_listener:
+        class: PrestaShopBundle\EventListener\LegacyParametersListener
+        arguments:
+            - "@prestashop.bundle.routing.converter.legacy_parameters_converter"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
 
     prestashop.multishop_command_listener:
         class: PrestaShopBundle\EventListener\MultishopCommandListener
@@ -84,3 +93,20 @@ services:
             - '@request_stack'
         tags:
             - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+
+    prestashop.bundle.event_listener.back_url_redirect_response_listener:
+        class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
+        arguments:
+          - '@prestashop.core.uti.back_url_provider'
+          - "@prestashop.adapter.legacy.context"
+        tags:
+          - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    prestashop.bundle.event_listener.module_guard_listener:
+        class: PrestaShopBundle\EventListener\ModuleGuardListener
+        arguments:
+          - '@prestashop.core.security.folder_guard.vendor'
+          - '%modules_dir%'
+          - '@logger'
+        tags:
+          - { name: kernel.event_subscriber }

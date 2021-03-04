@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,60 +16,56 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <div class="block-contact col-md-3 links wrapper">
-  <div class="hidden-sm-down">
-    <p class="h4 text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme.Global'}</p>
-      {$contact_infos.address.formatted nofilter}
-      {if $contact_infos.phone}
-        <br>
-        {* [1][/1] is for a HTML tag. *}
-        {l s='Call us: [1]%phone%[/1]'
-          sprintf=[
+  <div class="title clearfix hidden-md-up" data-target="#contact-infos" data-toggle="collapse">
+    <span class="h3">{l s='Store information' d='Shop.Theme.Global'}</span>
+    <span class="float-xs-right">
+      <span class="navbar-toggler collapse-icons">
+        <i class="material-icons add">keyboard_arrow_down</i>
+        <i class="material-icons remove">keyboard_arrow_up</i>
+      </span>
+    </span>
+  </div>
+
+  <p class="h4 text-uppercase block-contact-title hidden-sm-down">{l s='Store information' d='Shop.Theme.Global'}</p>
+  <div id="contact-infos" class="collapse">
+    {$contact_infos.address.formatted nofilter}
+    {if $contact_infos.phone}
+      <br>
+      {* [1][/1] is for a HTML tag. *}
+      {l s='Call us: [1]%phone%[/1]'
+        sprintf=[
+        '[1]' => '<span>',
+        '[/1]' => '</span>',
+        '%phone%' => $contact_infos.phone
+        ]
+        d='Shop.Theme.Global'
+      }
+    {/if}
+    {if $contact_infos.fax}
+      <br>
+      {* [1][/1] is for a HTML tag. *}
+      {l
+        s='Fax: [1]%fax%[/1]'
+        sprintf=[
           '[1]' => '<span>',
           '[/1]' => '</span>',
-          '%phone%' => $contact_infos.phone
-          ]
-          d='Shop.Theme.Global'
-        }
-      {/if}
-      {if $contact_infos.fax}
-        <br>
-        {* [1][/1] is for a HTML tag. *}
-        {l
-          s='Fax: [1]%fax%[/1]'
-          sprintf=[
-            '[1]' => '<span>',
-            '[/1]' => '</span>',
-            '%fax%' => $contact_infos.fax
-          ]
-          d='Shop.Theme.Global'
-        }
-      {/if}
-      {if $contact_infos.email}
-        <br>
-        {* [1][/1] is for a HTML tag. *}
-        {l
-          s='Email us: [1]%email%[/1]'
-          sprintf=[
-            '[1]' => '<a href="mailto:'|cat:$contact_infos.email|cat:'" class="dropdown">',
-            '[/1]' => '</a>',
-            '%email%' => $contact_infos.email
-          ]
-          d='Shop.Theme.Global'
-        }
-      {/if}
-  </div>
-  <div class="hidden-md-up">
-    <div class="title">
-      <a class="h3" href="{$urls.pages.stores}">{l s='Store information' d='Shop.Theme.Global'}</a>
-    </div>
+          '%fax%' => $contact_infos.fax
+        ]
+        d='Shop.Theme.Global'
+      }
+    {/if}
+    {if $contact_infos.email && $display_email}
+      <br>
+        {l s='Email us:' d='Shop.Theme.Global'}
+        {mailto address=$contact_infos.email encode="javascript"}
+    {/if}
   </div>
 </div>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
@@ -118,10 +118,7 @@ class AddCategoryCommand
     public function setParentCategoryId($parentCategoryId)
     {
         if (!is_int($parentCategoryId) || 0 >= $parentCategoryId) {
-            throw new CategoryConstraintException(
-                sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)),
-                CategoryConstraintException::INVALID_PARENT_ID
-            );
+            throw new CategoryConstraintException(sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)), CategoryConstraintException::INVALID_PARENT_ID);
         }
 
         $this->parentCategoryId = $parentCategoryId;
@@ -147,10 +144,7 @@ class AddCategoryCommand
     public function setLocalizedNames(array $localizedNames)
     {
         if (empty($localizedNames)) {
-            throw new CategoryConstraintException(
-                'Category name cannot be empty',
-                CategoryConstraintException::EMPTY_NAME
-            );
+            throw new CategoryConstraintException('Category name cannot be empty', CategoryConstraintException::EMPTY_NAME);
         }
 
         $this->localizedNames = $localizedNames;
@@ -176,10 +170,7 @@ class AddCategoryCommand
     public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
     {
         if (empty($localizedLinkRewrites)) {
-            throw new CategoryConstraintException(
-                'Category link rewrite cannot be empty',
-                CategoryConstraintException::EMPTY_LINK_REWRITE
-            );
+            throw new CategoryConstraintException('Category link rewrite cannot be empty', CategoryConstraintException::EMPTY_LINK_REWRITE);
         }
 
         $this->localizedLinkRewrites = $localizedLinkRewrites;
@@ -225,10 +216,7 @@ class AddCategoryCommand
     public function setIsActive($isActive)
     {
         if (!is_bool($isActive)) {
-            throw new CategoryConstraintException(
-                'Invalid Category status supplied',
-                CategoryConstraintException::INVALID_STATUS
-            );
+            throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
         }
 
         $this->isActive = $isActive;

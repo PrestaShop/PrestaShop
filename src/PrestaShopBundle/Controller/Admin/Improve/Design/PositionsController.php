@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,7 +58,7 @@ class PositionsController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
+     * @return array<string, mixed>
      */
     public function indexAction(Request $request)
     {
@@ -230,5 +236,49 @@ class PositionsController extends FrameworkBundleAdminController
                 $messages[$messageId]
             );
         }
+    }
+
+    /**
+     * Toggle hook status
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusAction(Request $request)
+    {
+        $hookId = (int) $request->request->get('hookId');
+        $hookStatus = false;
+
+        try {
+            $hookStatus = $this->getQueryBus()->handle(new GetHookStatus($hookId));
+            $this->getCommandBus()->handle(new UpdateHookStatusCommand($hookId, (bool) $hookStatus));
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (HookException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ];
+        }
+
+        $response['hook_status'] = !$hookStatus;
+
+        return $this->json($response);
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            HookNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            HookUpdateHookException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+        ];
     }
 }

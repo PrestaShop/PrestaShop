@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Pages;
@@ -30,14 +30,17 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShopBundle\Form\Admin\Type\CustomContentType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -45,13 +48,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Defines Improve > Design > Pages cms page form
  */
-class CmsPageType extends AbstractType
+class CmsPageType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     /**
      * @var array
      */
@@ -64,12 +62,18 @@ class CmsPageType extends AbstractType
 
     /**
      * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $allCmsCategories
-     * @param $isMultiShopEnabled
+     * @param bool $isMultiShopEnabled
      */
-    public function __construct(TranslatorInterface $translator, array $allCmsCategories, $isMultiShopEnabled)
-    {
-        $this->translator = $translator;
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        array $allCmsCategories,
+        $isMultiShopEnabled
+    ) {
+        parent::__construct($translator, $locales);
+
         $this->allCmsCategories = $allCmsCategories;
         $this->isMultiShopEnabled = $isMultiShopEnabled;
     }
@@ -79,24 +83,33 @@ class CmsPageType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $invalidCharsText = sprintf('%s <>={}', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
+
         $builder
             ->add('page_category_id', MaterialChoiceTreeType::class, [
+                'label' => $this->trans('Page category', 'Admin.Design.Feature'),
                 'required' => false,
                 'choices_tree' => $this->allCmsCategories,
                 'choice_value' => 'id_cms_category',
             ])
             ->add('title', TranslatableType::class, [
+                'label' => $this->trans('Title', 'Admin.Global'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('Used in the h1 page tag, and as the default title tag value.', 'Admin.Design.Help'),
+                    $invalidCharsText
+                ),
                 'constraints' => [
                     new DefaultLanguage([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The field %field_name% is required at least in your default language.',
+                            'Admin.Notifications.Error',
                             [
                                 '%field_name%' => sprintf(
                                     '"%s"',
-                                    $this->translator->trans('Title', [], 'Admin.Global')
+                                    $this->trans('Title', 'Admin.Global')
                                 ),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],
@@ -110,16 +123,29 @@ class CmsPageType extends AbstractType
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
                             ),
                         ]),
                     ],
                 ],
             ])
+            ->add('seo_preview', CustomContentType::class, [
+                'label' => $this->trans('SEO preview', 'Admin.Global'),
+                'help' => $this->trans('Here is a preview of how your page will appear in search engine results.', 'Admin.Global'),
+                'template' => '@PrestaShop/Admin/Improve/Design/Cms/Blocks/seo_preview.html.twig',
+                'data' => [
+                    'cms_url' => $options['cms_preview_url'],
+                ],
+            ])
             ->add('meta_title', TranslatableType::class, [
+                'label' => $this->trans('Meta title', 'Admin.Global'),
+                'help' => sprintf('%s %s',
+                    $this->trans('Used to override the title tag value. If left blank, the default title value is used.', 'Admin.Design.Help'),
+                    $invalidCharsText
+                ),
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -128,16 +154,18 @@ class CmsPageType extends AbstractType
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
                             ),
                         ]),
                     ],
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'label' => $this->trans('Meta description', 'Admin.Global'),
+                'help' => $invalidCharsText,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -148,12 +176,18 @@ class CmsPageType extends AbstractType
                 ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
+                'label' => $this->trans('Meta keywords', 'Admin.Global'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help'),
+                    $invalidCharsText
+                ),
                 'type' => TextType::class,
                 'required' => false,
                 'options' => [
                     'attr' => [
                         'class' => 'js-taggable-field',
-                        'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
                     'constraints' => [
                         new TypedRegex([
@@ -161,27 +195,29 @@ class CmsPageType extends AbstractType
                         ]),
                         new Length([
                             'max' => 512,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 512],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 512]
                             ),
                         ]),
                     ],
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [
+                'label' => $this->trans('Friendly URL', 'Admin.Global'),
+                'help' => $this->trans('Only letters and the hyphen (-) character are allowed.', 'Admin.Design.Feature'),
                 'constraints' => [
                     new DefaultLanguage([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The field %field_name% is required at least in your default language.',
+                            'Admin.Notifications.Error',
                             [
                                 '%field_name%' => sprintf(
                                     '"%s"',
-                                    $this->translator->trans('Friendly URL', [], 'Admin.Global')
+                                    $this->trans('Friendly URL', 'Admin.Global')
                                 ),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],
@@ -193,24 +229,26 @@ class CmsPageType extends AbstractType
                         new IsUrlRewrite(),
                         new Length([
                             'max' => 128,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 128],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 128]
                             ),
                         ]),
                     ],
                 ],
             ])
-            ->add('content', TranslatableType::class, [
-                'type' => TextareaType::class,
+            ->add('content', TranslateType::class, [
+                'label' => $this->trans('Page content', 'Admin.Design.Feature'),
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
                         new CleanHtml([
-                            'message' => $this->translator->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
-                                [],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -218,27 +256,46 @@ class CmsPageType extends AbstractType
                 ],
             ])
             ->add('is_indexed_for_search', SwitchType::class, [
+                'label' => $this->trans('Indexation by search engines', 'Admin.Design.Feature'),
                 'required' => false,
             ])
             ->add('is_displayed', SwitchType::class, [
+                'label' => $this->trans('Displayed', 'Admin.Global'),
                 'required' => false,
-            ])
-        ;
+            ]);
 
         if ($this->isMultiShopEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
+                'required' => false,
+                'attr' => [
+                    'class' => 'js-shop-assoc-tree',
+                ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->translator->trans('Shop association', [], 'Admin.Global')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Shop association', 'Admin.Global')),
+                            ]
                         ),
                     ]),
                 ],
             ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'cms_preview_url' => '',
+            ])
+            ->setAllowedTypes('cms_preview_url', 'string')
+        ;
     }
 }

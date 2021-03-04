@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -46,31 +46,31 @@ class CMSCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'cms',
         'primary' => 'id_cms',
         'multilang' => true,
         'multilang_shop' => true,
-        'fields' => array(
-            'id_cms_category' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'position' => array('type' => self::TYPE_INT),
-            'indexation' => array('type' => self::TYPE_BOOL),
-            'active' => array('type' => self::TYPE_BOOL),
+        'fields' => [
+            'id_cms_category' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'position' => ['type' => self::TYPE_INT],
+            'indexation' => ['type' => self::TYPE_BOOL],
+            'active' => ['type' => self::TYPE_BOOL],
 
             /* Lang fields */
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
-            'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
-            'head_seo_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
-            'content' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 3999999999999),
-        ),
-    );
+            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
+            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'head_seo_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'link_rewrite' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128],
+            'content' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 3999999999999],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectNodeName' => 'content',
         'objectsNodeName' => 'content_management_system',
-    );
+    ];
 
     /**
      * Adds current CMS as a new Object to the database.
@@ -143,7 +143,7 @@ class CMSCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
 		FROM ' . _DB_PREFIX_ . 'cms c
-		LEFT JOIN ' . _DB_PREFIX_ . 'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = ' . (int) $idLang . ')
+		LEFT JOIN ' . _DB_PREFIX_ . 'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = ' . (int) $idLang . ' AND cl.id_shop = ' . (int) Context::getContext()->shop->id . ')
 		' . Shop::addSqlAssociation('cms', 'c') . '
 		WHERE 1
 		' . (($selection !== null) ? ' AND c.id_cms IN (' . implode(',', array_map('intval', $selection)) . ')' : '') .
@@ -151,7 +151,7 @@ class CMSCore extends ObjectModel
         'GROUP BY c.id_cms
 		ORDER BY c.`position`');
 
-        $links = array();
+        $links = [];
         if ($result) {
             foreach ($result as $row) {
                 $row['link'] = $link->getCMSLink((int) $row['id_cms'], $row['link_rewrite']);

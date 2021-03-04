@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Cart;
@@ -44,22 +44,22 @@ class CartRow
     /**
      * row round mode by item.
      */
-    const ROUND_MODE_ITEM = 'item';
+    public const ROUND_MODE_ITEM = 'item';
 
     /**
      * row round mode by line.
      */
-    const ROUND_MODE_LINE = 'line';
+    public const ROUND_MODE_LINE = 'line';
 
     /**
      * row round mode by all lines.
      */
-    const ROUND_MODE_TOTAL = 'total';
+    public const ROUND_MODE_TOTAL = 'total';
 
     /**
      * static cache key pattern.
      */
-    const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
+    public const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
 
     /**
      * @var PriceCalculator adapter to calculate price
@@ -107,6 +107,11 @@ class CartRow
     protected $roundType;
 
     /**
+     * @var int|null
+     */
+    protected $orderId;
+
+    /**
      * @var array previous data for product: array given by Cart::getProducts()
      */
     protected $rowData = [];
@@ -115,6 +120,11 @@ class CartRow
      * @var AmountImmutable
      */
     protected $initialUnitPrice;
+
+    /**
+     * @var AmountImmutable
+     */
+    protected $initialTotalPrice;
 
     /**
      * @var AmountImmutable
@@ -142,6 +152,7 @@ class CartRow
      * @param bool $useEcotax
      * @param int $precision
      * @param string $roundType see self::ROUND_MODE_*
+     * @param int|null $orderId If order ID is specified the product price is fetched from associated OrderDetail value
      */
     public function __construct(
         $rowData,
@@ -153,7 +164,8 @@ class CartRow
         Database $databaseAdapter,
         $useEcotax,
         $precision,
-        $roundType
+        $roundType,
+        $orderId = null
     ) {
         $this->setRowData($rowData);
         $this->priceCalculator = $priceCalculator;
@@ -165,6 +177,7 @@ class CartRow
         $this->useEcotax = $useEcotax;
         $this->precision = $precision;
         $this->roundType = $roundType;
+        $this->orderId = $orderId;
     }
 
     /**
@@ -201,6 +214,22 @@ class CartRow
         }
 
         return $this->initialUnitPrice;
+    }
+
+    /**
+     * Returns the initial total price (ie without applying cart rules).
+     *
+     * @return AmountImmutable
+     *
+     * @throws \Exception
+     */
+    public function getInitialTotalPrice()
+    {
+        if (!$this->isProcessed) {
+            throw new \Exception('Row must be processed before getting its total');
+        }
+
+        return $this->initialTotalPrice;
     }
 
     /**
@@ -247,11 +276,22 @@ class CartRow
         $rowData = $this->getRowData();
         $quantity = (int) $rowData['cart_quantity'];
         $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
-        // store not rounded values
-        $this->finalTotalPrice = new AmountImmutable(
-            $this->initialUnitPrice->getTaxIncluded() * $quantity,
-            $this->initialUnitPrice->getTaxExcluded() * $quantity
-        );
+
+        // store not rounded values, except in round_mode_item, we still need to round individual items
+        if ($this->roundType == self::ROUND_MODE_ITEM) {
+            $tools = new Tools();
+            $this->initialTotalPrice = new AmountImmutable(
+                $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision) * $quantity,
+                $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision) * $quantity
+            );
+        } else {
+            $this->initialTotalPrice = new AmountImmutable(
+                $this->initialUnitPrice->getTaxIncluded() * $quantity,
+                $this->initialUnitPrice->getTaxExcluded() * $quantity
+            );
+        }
+
+        $this->finalTotalPrice = clone $this->initialTotalPrice;
         $this->applyRound();
         // store state
         $this->isProcessed = true;
@@ -304,54 +344,57 @@ class CartRow
         // it expects a reference.
         $specificPriceOutput = null;
 
-        $priceTaxIncl = $this->priceCalculator->priceCalculation(
-            $shopId,
-            (int) $productId,
-            (int) $rowData['id_product_attribute'],
-            $countryId,
-            $stateId,
-            $zipCode,
-            $currencyId,
-            $groupId,
-            $quantity,
-            true,
-            6,
-            false,
-            true,
-            $this->useEcotax,
-            $specificPriceOutput,
-            true,
-            (int) $cart->id_customer ? (int) $cart->id_customer : null,
-            true,
-            (int) $cart->id,
-            $cartQuantity,
-            (int) $rowData['id_customization']
-        );
-        $priceTaxExcl = $this->priceCalculator->priceCalculation(
-            $shopId,
-            (int) $productId,
-            (int) $rowData['id_product_attribute'],
-            $countryId,
-            $stateId,
-            $zipCode,
-            $currencyId,
-            $groupId,
-            $quantity,
-            false,
-            6,
-            false,
-            true,
-            $this->useEcotax,
-            $specificPriceOutput,
-            true,
-            (int) $cart->id_customer ? (int) $cart->id_customer : null,
-            true,
-            (int) $cart->id,
-            $cartQuantity,
-            (int) $rowData['id_customization']
-        );
+        $productPrices = [
+            'price_tax_included' => [
+                'withTaxes' => true,
+            ],
+            'price_tax_excluded' => [
+                'withTaxes' => false,
+            ],
+        ];
+        foreach ($productPrices as $productPrice => $computationParameters) {
+            $productPrices[$productPrice]['value'] = null;
+            if (null !== $this->orderId) {
+                $productPrices[$productPrice]['value'] = $this->priceCalculator->getOrderPrice(
+                    $this->orderId,
+                    (int) $productId,
+                    (int) $rowData['id_product_attribute'],
+                    $computationParameters['withTaxes'],
+                    true,
+                    $this->useEcotax
+                );
+            }
+            if (null === $productPrices[$productPrice]['value']) {
+                $productPrices[$productPrice]['value'] = $this->priceCalculator->priceCalculation(
+                    $shopId,
+                    (int) $productId,
+                    (int) $rowData['id_product_attribute'],
+                    $countryId,
+                    $stateId,
+                    $zipCode,
+                    $currencyId,
+                    $groupId,
+                    $quantity,
+                    $computationParameters['withTaxes'],
+                    6,
+                    false,
+                    true,
+                    $this->useEcotax,
+                    $specificPriceOutput,
+                    true,
+                    (int) $cart->id_customer ? (int) $cart->id_customer : null,
+                    true,
+                    (int) $cart->id,
+                    $cartQuantity,
+                    (int) $rowData['id_customization']
+                );
+            }
+        }
 
-        return new AmountImmutable($priceTaxIncl, $priceTaxExcl);
+        return new AmountImmutable(
+            $productPrices['price_tax_included']['value'],
+            $productPrices['price_tax_excluded']['value']
+        );
     }
 
     /**
@@ -394,7 +437,6 @@ class CartRow
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
                     $this->initialUnitPrice->getTaxExcluded() * $quantity
                 );
-
                 break;
         }
     }
@@ -451,9 +493,22 @@ class CartRow
         $quantity = (int) $rowData['cart_quantity'];
         $taxIncluded = $this->finalTotalPrice->getTaxIncluded();
         $taxExcluded = $this->finalTotalPrice->getTaxExcluded();
-        $this->finalUnitPrice = new AmountImmutable(
-            $taxIncluded / $quantity,
-            $taxExcluded / $quantity
-        );
+        // Avoid division by zero
+        if (0 === $quantity) {
+            $this->finalUnitPrice = new AmountImmutable(0, 0);
+        } else {
+            $this->finalUnitPrice = new AmountImmutable(
+                $taxIncluded / $quantity,
+                $taxExcluded / $quantity
+            );
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoundType()
+    {
+        return $this->roundType;
     }
 }

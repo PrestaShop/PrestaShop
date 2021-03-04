@@ -18,12 +18,16 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Message from a customer'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Message from a customer'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ 'You have received a new message regarding order with the reference'|trans({}, 'Emails.Body', locale)|raw }} <span><strong>{order_name}</strong></span>.<br /><br />
-              <span><strong>{{ 'Customer:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {firstname} {lastname} ({email})<br /><br />
+              {{ 'You have received a new message regarding order with the reference'|trans({}, 'Emails.Body', locale)|raw }} <span><strong>{order_name}</strong></span>.<br/><br/>
+              <span><strong>{{ 'Customer:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {firstname} {lastname} ({email})<br/><br/>
               {message}
             </span>
           </font>

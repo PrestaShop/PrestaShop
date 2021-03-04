@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -75,6 +75,11 @@ class SupplyOrderDetailCore extends ObjectModel
      * @var string UPC
      */
     public $upc;
+
+    /**
+     * @var string MPN
+     */
+    public $mpn;
 
     /**
      * @var int Currency used to buy this particular product
@@ -151,51 +156,52 @@ class SupplyOrderDetailCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'supply_order_detail',
         'primary' => 'id_supply_order_detail',
-        'fields' => array(
-            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
-            'supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
-            'ean13' => array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
-            'isbn' => array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
-            'upc' => array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'exchange_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'unit_price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'quantity_expected' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'quantity_received' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'discount_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'discount_value_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'price_with_discount_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'tax_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'tax_value' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'price_ti' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'tax_value_with_order_discount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'price_with_order_discount_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_supply_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
+            'supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
+            'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13'],
+            'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn'],
+            'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc'],
+            'mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn'],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'exchange_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'unit_price_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'quantity_expected' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'quantity_received' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'price_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'discount_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'discount_value_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'price_with_discount_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'tax_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'tax_value' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'price_ti' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'tax_value_with_order_discount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'price_with_order_discount_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'supply_order_details',
         'objectNodeName' => 'supply_order_detail',
-        'fields' => array(
-            'id_supply_order' => array('xlink_resource' => 'supply_orders'),
-            'id_product' => array('xlink_resource' => 'products'),
-            'id_product_attribute' => array('xlink_resource' => 'combinations'),
-        ),
-        'hidden_fields' => array(
+        'fields' => [
+            'id_supply_order' => ['xlink_resource' => 'supply_orders'],
+            'id_product' => ['xlink_resource' => 'products'],
+            'id_product_attribute' => ['xlink_resource' => 'combinations'],
+        ],
+        'hidden_fields' => [
             'id_currency',
-        ),
-    );
+        ],
+    ];
 
     /**
      * @see ObjectModel::update()
@@ -274,7 +280,7 @@ class SupplyOrderDetailCore extends ObjectModel
      */
     public function validateController($htmlentities = true)
     {
-        $errors = array();
+        $errors = [];
 
         /* required fields */
         $fields_required = $this->fieldsRequired;
@@ -292,9 +298,9 @@ class SupplyOrderDetailCore extends ObjectModel
                 if (!$this->id || $field != 'passwd') {
                     $errors[] = $this->trans(
                         '%s is required.',
-                        array(
+                        [
                             '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
-                        ),
+                        ],
                         'Shop.Notifications.Error'
                     );
                 }
@@ -306,7 +312,7 @@ class SupplyOrderDetailCore extends ObjectModel
             if ($value = $this->{$field} && Tools::strlen($value) > $max_length) {
                 $errors[] = $this->trans(
                     'The %1$s field is too long (%2$d chars max).',
-                    array(SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities), $max_length),
+                    [SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities), $max_length],
                     'Shop.Notifications.Error'
                 );
             }
@@ -316,7 +322,7 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
                 if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
-                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
                 } elseif ($field == 'passwd') {
                     if ($value = Tools::getValue($field)) {
                         $this->{$field} = Tools::hash($value);
@@ -328,15 +334,15 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
         }
 
         if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
         }
 
         if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
         }
 
         return $errors;
@@ -352,7 +358,7 @@ class SupplyOrderDetailCore extends ObjectModel
             $this->id = $data[$this->def['primary']];
         }
         foreach ($data as $key => $value) {
-            if (array_key_exists($key, $this)) {
+            if (array_key_exists($key, get_object_vars($this))) {
                 // formats prices and floats
                 if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
                     $this->def['fields'][$key]['validate'] == 'isPrice') {

@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.product.feature_value.command_handler.set_product_feature_values_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\FeatureValue\CommandHandler\SetProductFeatureValuesHandler
+        arguments:
+            - '@prestashop.adapter.product.feature_value.update.product_feature_value_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand
+
+    prestashop.adapter.product.feature_value.command_handler.remove_all_feature_values_from_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\FeatureValue\CommandHandler\RemoveAllFeatureValuesFromProductHandler
+        arguments:
+            - '@prestashop.adapter.product.feature_value.update.product_feature_value_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeatureValuesFromProductCommand
+
+    prestashop.adapter.product.feature_value.query_handler.get_product_feature_values_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\FeatureValue\QueryHandler\GetProductFeatureValuesHandler
+        arguments:
+            - '@prestashop.adapter.feature.repository.feature_value_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues
+
+    prestashop.adapter.product.feature_value.update.product_feature_value_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update\ProductFeatureValueUpdater
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.feature.repository.feature_repository'
+            - '@prestashop.adapter.feature.repository.feature_value_repository'

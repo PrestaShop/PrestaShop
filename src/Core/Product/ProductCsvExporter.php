@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductDataProviderInterface;
+use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -62,7 +63,7 @@ final class ProductCsvExporter implements ProductExporterInterface
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function export(array $products = array())
+    public function export(array $products = [])
     {
         $productProvider = $this->productProvider;
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
@@ -71,10 +72,10 @@ final class ProductCsvExporter implements ProductExporterInterface
 
         // prepare callback to fetch data from DB
         $dataCallback = function ($offset, $limit) use ($productProvider, $orderBy, $sortOrder) {
-            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
+            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, [], true, false);
         };
 
-        $headersData = array(
+        $headersData = [
             'id_product' => 'Product ID',
             'image_link' => $this->trans('Image', 'Admin.Global'),
             'name' => $this->trans('Name', 'Admin.Global'),
@@ -85,7 +86,7 @@ final class ProductCsvExporter implements ProductExporterInterface
             'sav_quantity' => $this->trans('Quantity', 'Admin.Global'),
             'badge_danger' => $this->trans('Status', 'Admin.Global'),
             'position' => $this->trans('Position', 'Admin.Global'),
-        );
+        ];
 
         return (new CsvResponse())
             ->setData($dataCallback)
@@ -98,15 +99,15 @@ final class ProductCsvExporter implements ProductExporterInterface
     /**
      * Translator helper.
      *
-     * @param $key
-     * @param $domain
+     * @param string $key
+     * @param string $domain
      *
      * @return string
      *
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function trans($key, $domain)
     {
-        return $this->translator->trans($key, array(), $domain);
+        return $this->translator->trans($key, [], $domain);
     }
 }

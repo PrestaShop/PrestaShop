@@ -12,6 +12,10 @@ services:
             - '@router'
             - '@prestashop.bundle.routing.converter.cache_provider'
 
+    prestashop.bundle.routing.converter.legacy_parameters_converter:
+        class: 'PrestaShopBundle\Routing\Converter\LegacyParametersConverter'
+        public: true
+
     prestashop.bundle.routing.converter.router_provider:
         class: 'PrestaShopBundle\Routing\Converter\RouterProvider'
         arguments:
@@ -34,3 +38,22 @@ services:
             - ["%kernel.project_dir%/src/PrestaShopBundle/Resources/config/routing/admin"]
             - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
             - '%kernel.environment%'
+
+    prestashop.bundle.routing.linter.security_annotation_linter:
+        class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
+        arguments:
+          - '@annotation_reader'
+          - '@controller_name_converter'
+
+    prestashop.bundle.routing.linter.naming_convention_linter:
+        class: 'PrestaShopBundle\Routing\Linter\NamingConventionLinter'
+        arguments:
+            - '@controller_name_converter'
+
+    prestashop.bundle.routing.linter.legacy_link_linter:
+      class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'
+
+    prestashop.bundle.routing.linter.admin_route_provider:
+        class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'
+        arguments:
+            - '@router'

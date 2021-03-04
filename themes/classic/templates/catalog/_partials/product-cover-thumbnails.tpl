@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,23 +16,40 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="images-container">
+<div class="images-container js-images-container">
   {block name='product_cover'}
     <div class="product-cover">
-      {if $product.cover}
-        <img class="js-qv-product-cover" src="{$product.cover.bySize.large_default.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" style="width:100%;" itemprop="image">
+      {if $product.default_image}
+        <img
+          class="js-qv-product-cover"
+          src="{$product.default_image.bySize.large_default.url}"
+          {if !empty($product.default_image.legend)}
+            alt="{$product.default_image.legend}"
+            title="{$product.default_image.legend}"
+          {else}
+            alt="{$product.name}"
+          {/if}
+          itemprop="image"
+          loading="lazy"
+          width="452"
+          height="452"
+        >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
-          <i class="material-icons zoom-in">&#xE8FF;</i>
+          <i class="material-icons zoom-in">search</i>
         </div>
       {else}
-        <img src="{$urls.no_picture_image.bySize.large_default.url}" style="width:100%;">
+        <img 
+          src="{$urls.no_picture_image.bySize.large_default.url}"
+          loading="lazy"
+          width="452"
+          height="452"
+        >
       {/if}
     </div>
   {/block}
@@ -40,21 +58,27 @@
     <div class="js-qv-mask mask">
       <ul class="product-images js-qv-product-images">
         {foreach from=$product.images item=image}
-          <li class="thumb-container">
+          <li class="thumb-container js-thumb-container">
             <img
-              class="thumb js-thumb {if $image.id_image == $product.cover.id_image} selected {/if}"
+              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected js-thumb-selected {/if}"
               data-image-medium-src="{$image.bySize.medium_default.url}"
               data-image-large-src="{$image.bySize.large_default.url}"
               src="{$image.bySize.home_default.url}"
-              alt="{$image.legend}"
-              title="{$image.legend}"
-              width="100"
+              {if !empty($image.legend)}
+                alt="{$image.legend}"
+                title="{$image.legend}"
+              {else}
+                alt="{$product.name}"
+              {/if}
               itemprop="image"
+              loading="lazy"
+              width="94"
+              height="94"
             >
           </li>
         {/foreach}
       </ul>
     </div>
   {/block}
+{hook h='displayAfterProductThumbs' product=$product}
 </div>
-{hook h='displayAfterProductThumbs'}

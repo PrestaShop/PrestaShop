@@ -10,7 +10,9 @@ admin_metas_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:search'
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.meta
+    redirectRoute: admin_metas_index
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:submitFiltermeta
 
@@ -50,13 +52,34 @@ admin_metas_delete_bulk:
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:submitBulkdeletemeta
 
-admin_metas_save_options:
-  path: /options
+admin_metas_set_up_urls_save:
+  path: /set-up-urls
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:saveOptions'
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processSetUpUrlsForm'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:submitOptionsmeta
+
+admin_metas_shop_urls_save:
+  path: /shop-urls
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processShopUrlsForm'
+    _legacy_controller: AdminMeta
+
+admin_metas_url_schema_save:
+  path: /url-schema
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processUrlSchemaForm'
+    _legacy_controller: AdminMeta
+
+admin_metas_seo_options_save:
+  path: /seo-options
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processSeoOptionsForm'
+    _legacy_controller: AdminMeta
 
 admin_metas_generate_robots_text_file:
   path: /generate/robots

@@ -15,6 +15,8 @@ admin_product_form:
         _legacy_param_mapper_method: mapLegacyParametersProductForm
     requirements:
         id: \d+
+    options:
+      expose: true
 
 admin_product_virtual_save_action:
     path:     /virtual/save/{idProduct}
@@ -29,6 +31,14 @@ admin_product_virtual_remove_file_action:
     path:     /virtual/remove-file/{idProduct}
     defaults:
         _controller: PrestaShopBundle:Admin/VirtualProduct:removeFile
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_virtual_download_file_action:
+    path:     /virtual/download-file/{idProduct}
+    defaults:
+        _controller: PrestaShopBundle:Admin/VirtualProduct:downloadFile
         idProduct: 0
     requirements:
         idProduct: \d+
@@ -80,3 +90,13 @@ admin_product_image_delete:
         idImage: 0
     requirements:
         idImage: \d+
+
+admin_product_toggle_status:
+  path:     /{productId}/toggle-status
+  methods:  [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Product:toggleStatus
+    _legacy_controller: AdminTracking
+    _legacy_link: AdminTracking:statusproduct
+    _legacy_parameters:
+      id_product: productId

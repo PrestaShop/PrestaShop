@@ -1,0 +1,45 @@
+admin_credit_slips_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:index'
+    _legacy_controller: AdminSlip
+    _legacy_link: AdminSlip
+
+admin_credit_slips_search:
+  path: /search
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminSlip
+    _legacy_link: AdminSlip:submitFilterorder_slip
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.credit_slip
+    redirectRoute: admin_credit_slips_index
+
+admin_credit_slips_generate_pdf:
+  path: /{creditSlipId}/pdf
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:generatePdf'
+    _legacy_controller: AdminSlip
+    _legacy_link: AdminSlip:submitgenerateOrderSlipPdf
+    _legacy_parameters:
+      id_order_slip: creditSlipId
+  requirements:
+    creditSlipId: \d+
+
+_admin_credit_slips_pdf_by_date:
+  path: /pdf-by-date
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:generatePdfByDate'
+    _legacy_link: AdminSlip:submitAddorder_slip
+    _legacy_controller: AdminSlip
+
+admin_credit_slips_process_options:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:index'
+    _legacy_controller: AdminSlip
+    _legacy_link: AdminSlip:submitOptionsorder_slip

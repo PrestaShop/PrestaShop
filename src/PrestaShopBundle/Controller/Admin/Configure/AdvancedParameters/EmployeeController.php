@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,35 +17,36 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
-use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
+use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -82,12 +84,18 @@ class EmployeeController extends FrameworkBundleAdminController
         $helperCardDocumentationLinkProvider =
             $this->get('prestashop.core.util.helper_card.documentation_link_provider');
 
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::EMPLOYEES_CARD)
+        );
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
             'employeeOptionsForm' => $employeeOptionsForm->createView(),
             'canOptionsBeChanged' => $employeeOptionsChecker->canBeChanged(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeGrid' => $this->presentGrid($employeeGrid),
             'helperCardDocumentationLink' => $helperCardDocumentationLinkProvider->getLink('team'),
+            'showcaseCardName' => ShowcaseCard::EMPLOYEES_CARD,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
     }
 
@@ -149,24 +157,52 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update status for employees in bulk action.
+     * Bulk enables employee status action.
      *
      * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
-     * @param string $newStatus
      *
      * @return RedirectResponse
      */
-    public function bulkStatusUpdateAction(Request $request, $newStatus)
+    public function bulkStatusEnableAction(Request $request)
     {
         $employeeIds = $request->request->get('employee_employee_bulk');
-        $isEnabled = $newStatus === 'enabled';
 
         try {
             $this->getCommandBus()->handle(
-                new BulkUpdateEmployeeStatusCommand($employeeIds, $isEnabled)
+                new BulkUpdateEmployeeStatusCommand($employeeIds, true)
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
+     * Bulk disables employee status action.
+     *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkStatusDisableAction(Request $request)
+    {
+        $employeeIds = $request->request->get('employee_employee_bulk');
+
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateEmployeeStatusCommand($employeeIds, false)
             );
 
             $this->addFlash(
@@ -254,13 +290,14 @@ class EmployeeController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_employees_index');
             }
-        } catch (EmployeeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'showAddonsConnectButton' => false,
+            'enableSidebar' => true,
         ];
 
         return $this->render(
@@ -318,18 +355,24 @@ class EmployeeController extends FrameworkBundleAdminController
                 'is_for_editing' => true,
                 'show_addons_connect_button' => $canAccessAddonsConnect,
             ]);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
+            return $this->redirectToRoute('admin_employees_index');
+        }
+
+        try {
             $employeeForm->handleRequest($request);
             $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_employees_edit', [
                     'employeeId' => $result->getIdentifiableObjectId(),
                 ]);
             }
-        } catch (EmployeeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -428,11 +471,11 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Get human readable error messages.
      *
-     * @param EmployeeException $e
+     * @param Exception $e
      *
      * @return array
      */
-    protected function getErrorMessages($e)
+    protected function getErrorMessages(Exception $e)
     {
         return [
             InvalidEmployeeIdException::class => $this->trans(

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,43 +29,43 @@
  */
 class ConnectionCore extends ObjectModel
 {
-    /** @var int $id_guest */
+    /** @var int */
     public $id_guest;
 
-    /** @var int $id_page */
+    /** @var int */
     public $id_page;
 
-    /** @var string $ip_address */
+    /** @var string */
     public $ip_address;
 
-    /** @var string $http_referer */
+    /** @var string */
     public $http_referer;
 
-    /** @var int $id_shop */
+    /** @var int */
     public $id_shop;
 
-    /** @var int $id_shop_group */
+    /** @var int */
     public $id_shop_group;
 
-    /** @var string $date_add */
+    /** @var string */
     public $date_add;
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'connections',
         'primary' => 'id_connections',
-        'fields' => array(
-            'id_guest' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_page' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'ip_address' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'http_referer' => array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
-            'id_shop' => array('type' => self::TYPE_INT, 'required' => true),
-            'id_shop_group' => array('type' => self::TYPE_INT, 'required' => true),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'id_guest' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_page' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'ip_address' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
+            'id_shop' => ['type' => self::TYPE_INT, 'required' => true],
+            'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::getFields()
@@ -93,41 +93,41 @@ class ConnectionCore extends ObjectModel
     {
         $idPage = false;
         // The connection is created if it does not exist yet and we get the current page id
-        if (!isset($cookie->id_connections) || !strstr(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', Tools::getHttpHost(false, false))) {
+        if (!isset($cookie->id_connections) || !isset($_SERVER['HTTP_REFERER']) || strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost(false, false) . '/') === false) {
             $idPage = Connection::setNewConnection($cookie);
         }
         // If we do not track the pages, no need to get the page id
         if (!Configuration::get('PS_STATSDATA_PAGESVIEWS') && !Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
-            return array();
+            return [];
         }
         if (!$idPage) {
             $idPage = Page::getCurrentId();
         }
         // If we do not track the page views by customer, the id_page is the only information needed
         if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
-            return array('id_page' => $idPage);
+            return ['id_page' => $idPage];
         }
 
         // The ending time will be updated by an ajax request when the guest will close the page
         $timeStart = date('Y-m-d H:i:s');
         Db::getInstance()->insert(
             'connections_page',
-            array(
+            [
                 'id_connections' => (int) $cookie->id_connections,
                 'id_page' => (int) $idPage,
                 'time_start' => $timeStart,
-            ),
+            ],
             false,
             true,
             Db::INSERT_IGNORE
         );
 
         // This array is serialized and used by the ajax request to identify the page
-        return array(
+        return [
             'id_connections' => (int) $cookie->id_connections,
             'id_page' => (int) $idPage,
             'time_start' => $timeStart,
-        );
+        ];
     }
 
     /**
@@ -140,17 +140,8 @@ class ConnectionCore extends ObjectModel
     {
         if (isset($_SERVER['HTTP_USER_AGENT'])
             && preg_match('/BotLink|ahoy|AlkalineBOT|anthill|appie|arale|araneo|AraybOt|ariadne|arks|ATN_Worldwide|Atomz|bbot|Bjaaland|Ukonline|borg\-bot\/0\.9|boxseabot|bspider|calif|christcrawler|CMC\/0\.01|combine|confuzzledbot|CoolBot|cosmos|Internet Cruiser Robot|cusco|cyberspyder|cydralspider|desertrealm, desert realm|digger|DIIbot|grabber|downloadexpress|DragonBot|dwcp|ecollector|ebiness|elfinbot|esculapio|esther|fastcrawler|FDSE|FELIX IDE|ESI|fido|H�m�h�kki|KIT\-Fireball|fouineur|Freecrawl|gammaSpider|gazz|gcreep|golem|googlebot|griffon|Gromit|gulliver|gulper|hambot|havIndex|hotwired|htdig|iajabot|INGRID\/0\.1|Informant|InfoSpiders|inspectorwww|irobot|Iron33|JBot|jcrawler|Teoma|Jeeves|jobo|image\.kapsi\.net|KDD\-Explorer|ko_yappo_robot|label\-grabber|larbin|legs|Linkidator|linkwalker|Lockon|logo_gif_crawler|marvin|mattie|mediafox|MerzScope|NEC\-MeshExplorer|MindCrawler|udmsearch|moget|Motor|msnbot|muncher|muninn|MuscatFerret|MwdSearch|sharp\-info\-agent|WebMechanic|NetScoop|newscan\-online|ObjectsSearch|Occam|Orbsearch\/1\.0|packrat|pageboy|ParaSite|patric|pegasus|perlcrawler|phpdig|piltdownman|Pimptrain|pjspider|PlumtreeWebAccessor|PortalBSpider|psbot|Getterrobo\-Plus|Raven|RHCS|RixBot|roadrunner|Robbie|robi|RoboCrawl|robofox|Scooter|Search\-AU|searchprocess|Senrigan|Shagseeker|sift|SimBot|Site Valet|skymob|SLCrawler\/2\.0|slurp|ESI|snooper|solbot|speedy|spider_monkey|SpiderBot\/1\.0|spiderline|nil|suke|http:\/\/www\.sygol\.com|tach_bw|TechBOT|templeton|titin|topiclink|UdmSearch|urlck|Valkyrie libwww\-perl|verticrawl|Victoria|void\-bot|Voyager|VWbot_K|crawlpaper|wapspider|WebBandit\/1\.0|webcatcher|T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E|WebMoose|webquest|webreaper|webs|webspider|WebWalker|wget|winona|whowhere|wlm|WOLP|WWWC|none|XGET|Nederland\.zoek|AISearchBot|woriobot|NetSeer|Nutch|YandexBot/i', $_SERVER['HTTP_USER_AGENT'])) {
-            // This is a bot and we have to retrieve its connection ID
-            $sql = 'SELECT SQL_NO_CACHE `id_connections` FROM `' . _DB_PREFIX_ . 'connections`
-					WHERE ip_address = ' . (int) ip2long(Tools::getRemoteAddr()) . '
-						AND `date_add` > \'' . pSQL(date('Y-m-d H:i:00', time() - 1800)) . '\'
-						' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
-					ORDER BY `date_add` DESC';
-            if ($idConnections = Db::getInstance()->getValue($sql, false)) {
-                $cookie->id_connections = (int) $idConnections;
-
-                return Page::getCurrentId();
-            }
+            // This is a bot : don't log connection
+            return false;
         }
 
         // A new connection is created if the guest made no actions during 30 minutes
@@ -161,7 +152,7 @@ class ConnectionCore extends ObjectModel
 					' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
 				ORDER BY `date_add` DESC';
         $result = Db::getInstance()->getRow($sql, false);
-        if (!$result['id_guest'] && (int) $cookie->id_guest) {
+        if (empty($result['id_guest']) && (int) $cookie->id_guest) {
             // The old connections details are removed from the database in order to spare some memory
             Connection::cleanConnectionsPages();
 

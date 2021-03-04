@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.util.file_size.size_converter:
+    class: 'PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter'

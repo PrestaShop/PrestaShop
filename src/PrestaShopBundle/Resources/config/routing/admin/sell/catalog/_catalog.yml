@@ -2,6 +2,10 @@ _products:
     resource: "products/products.yml"
     prefix: /products/
 
+_products_v2:
+    resource: "product_v2/product.yml"
+    prefix: /products-v2/
+
 _categories:
     resource: "categories.yml"
     prefix: /categories/
@@ -13,3 +17,29 @@ _suppliers:
 _manufacturers:
     resource: "manufacturer.yml"
     prefix: /brands
+
+_monitoring:
+    resource: "monitoring.yml"
+    prefix: /monitoring
+
+_catalog_price_rules:
+    resource: "catalog_price_rule.yml"
+    prefix: /catalog-price-rules
+
+_features:
+    resource: "features.yml"
+    prefix: /features
+
+_attributes:
+    resource: "attribute.yml"
+    prefix: /attribute-groups/{attributeGroupId}/attributes/
+    requirements:
+        attributeGroupId: \d+
+
+_attribute_group:
+    resource: "attribute_group.yml"
+    prefix: /attribute-groups/
+
+_cart_rule:
+    resource: "cart_rule.yml"
+    prefix: /cart-rules

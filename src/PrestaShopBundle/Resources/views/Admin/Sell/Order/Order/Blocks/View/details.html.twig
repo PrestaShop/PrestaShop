@@ -1,0 +1,136 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set statusTitle %}
+  {{ 'Status'|trans({}, 'Admin.Global') }} ({{ orderForViewing.history.statuses|length }})
+{% endset %}
+
+{% set documentsTitle %}
+  {{ 'Documents'|trans({}, 'Admin.Orderscustomers.Feature') }} (<span class="count">{{ orderForViewing.documents.documents|length }}</span>)
+{% endset %}
+
+{% set carriersTitle %}
+  {{ 'Carriers'|trans({}, 'Admin.Shipping.Feature') }} (<span class="count">{{ orderForViewing.shipping.carriers|length }}</span>)
+{% endset %}
+
+{% set merchantReturnsTitle %}
+  {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
+{% endset %}
+
+<div class="mt-2">
+  <ul class="nav nav nav-tabs d-print-none" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active show" id="historyTab" data-toggle="tab" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">history</i>
+        {{ statusTitle }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderDocumentsTab" data-toggle="tab" href="#orderDocumentsTabContent" role="tab" aria-controls="orderDocumentsTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">note</i>
+        {{ documentsTitle }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">local_shipping</i>
+        {{ carriersTitle }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">replay</i>
+        {{ merchantReturnsTitle }}
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane d-print-block fade show active" id="historyTabContent" role="tabpanel" aria-labelledby="historyTab">
+      {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
+        {% block header %}
+          {{ statusTitle }}
+        {% endblock %}
+        {% block body %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/history.html.twig' %}
+        {% endblock %}
+      {% endembed %}
+    </div>
+    <div class="tab-pane d-print-block fade" id="orderDocumentsTabContent" role="tabpanel" aria-labelledby="orderDocumentsTab">
+      {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
+        {% block header %}
+          {{ documentsTitle }}
+        {% endblock %}
+        {% block body %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig' %}
+        {% endblock %}
+      {% endembed %}
+    </div>
+    <div class="tab-pane d-print-block fade" id="orderShippingTabContent" role="tabpanel" aria-labelledby="orderShippingTab">
+      {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
+        {% block header %}
+          {{ carriersTitle }}
+        {% endblock %}
+        {% block body %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig' %}
+        {% endblock %}
+      {% endembed %}
+    </div>
+    <div class="tab-pane d-print-block fade" id="orderReturnsTabContent" role="tabpanel" aria-labelledby="orderReturnsTab">
+      {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
+        {% block header %}
+          {{ merchantReturnsTitle }}
+        {% endblock %}
+        {% block body %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
+        {% endblock %}
+      {% endembed %}
+    </div>
+
+    {% if orderForViewing.shipping.recycledPackaging %}
+      <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+    {% endif %}
+
+    {% if orderForViewing.shipping.giftWrapping %}
+      <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+    {% endif %}
+  </div>
+</div>
+
+{% set displayAdminOrderTabLink = renderhook('displayAdminOrderTabLink', {'id_order': orderForViewing.id}) %}
+{% set displayAdminOrderTabContent = renderhook('displayAdminOrderTabContent', {'id_order': orderForViewing.id}) %}
+{% if displayAdminOrderTabLink is not empty or displayAdminOrderTabContent is not empty%}
+  <div class="mt-2" id="order_hook_tabs">
+    <ul class="nav nav nav-tabs" role="tablist">
+      {# Rendering of hook displayAdminOrderTabLink, we expect tab links #}
+      {{ displayAdminOrderTabLink|raw }}
+    </ul>
+
+    <div class="tab-content">
+      {# Rendering of hook displayAdminOrderTabContent, we expect tab contents #}
+      {{ displayAdminOrderTabContent|raw }}
+    </div>
+  </div>
+{% endif %}

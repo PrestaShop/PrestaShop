@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,12 +18,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
@@ -39,7 +39,7 @@ class LocaleData
      * The locale code for this data (either language code or IETF tag).
      * e.G.: 'fr', 'fr-FR'...
      *
-     * @var string
+     * @var string|null
      */
     protected $localeCode;
 
@@ -47,14 +47,14 @@ class LocaleData
      * List of available numbering systems
      * Array of strings (codes).
      *
-     * @var string[]
+     * @var string[]|null
      */
     protected $numberingSystems;
 
     /**
      * Default numbering system.
      *
-     * @var string
+     * @var string|null
      */
     protected $defaultNumberingSystem;
 
@@ -64,14 +64,14 @@ class LocaleData
      * 1 -> grouping starts at 4 figures integers (1,000 and more)
      * 2 -> grouping starts at 5 figures integers (10,000 and more)
      *
-     * @var int
+     * @var int|null
      */
     protected $minimumGroupingDigits;
 
     /**
      * Collection of all available symbols list (by numbering system).
      *
-     * @var NumberSymbolsData[]
+     * @var NumberSymbolsData[]|null
      */
     protected $numberSymbols;
 
@@ -79,7 +79,7 @@ class LocaleData
      * Collection of all available decimal patterns (by numbering system)
      * Array of strings (patterns).
      *
-     * @var string[]
+     * @var string[]|null
      */
     protected $decimalPatterns;
 
@@ -87,7 +87,7 @@ class LocaleData
      * Collection of all available percent patterns (by numbering system)
      * Array of strings (patterns).
      *
-     * @var string[]
+     * @var string[]|null
      */
     protected $percentPatterns;
 
@@ -95,14 +95,14 @@ class LocaleData
      * Collection of all available currency patterns (by numbering system)
      * Array of strings (patterns).
      *
-     * @var string[]
+     * @var string[]|null
      */
     protected $currencyPatterns;
 
     /**
      * All currencies, by ISO code.
      *
-     * @var CurrencyData[]
+     * @var CurrencyData[]|null
      */
     protected $currencies;
 
@@ -123,7 +123,7 @@ class LocaleData
             if (null === $this->numberingSystems) {
                 $this->numberingSystems = [];
             }
-            $this->numberingSystems = array_merge($this->numberingSystems, $localeData->getNumberingSystems());
+            $this->setNumberingSystems(array_merge($this->numberingSystems, $localeData->getNumberingSystems()));
         }
 
         if (null !== $localeData->getDefaultNumberingSystem()) {
@@ -146,18 +146,24 @@ class LocaleData
         }
 
         if (null !== $localeData->getDecimalPatterns()) {
-            $this->setDecimalPatterns($localeData->getDecimalPatterns());
+            if (null === $this->decimalPatterns) {
+                $this->decimalPatterns = [];
+            }
+            $this->setDecimalPatterns(array_merge($this->decimalPatterns, $localeData->getDecimalPatterns()));
         }
 
         if (null !== $localeData->getPercentPatterns()) {
-            $this->setPercentPatterns($localeData->getPercentPatterns());
+            if (null === $this->percentPatterns) {
+                $this->percentPatterns = [];
+            }
+            $this->setPercentPatterns(array_merge($this->numberingSystems, $localeData->getPercentPatterns()));
         }
 
         if (null !== $localeData->getCurrencyPatterns()) {
             if (null === $this->currencyPatterns) {
                 $this->currencyPatterns = [];
             }
-            $this->currencyPatterns = array_merge($this->currencyPatterns, $localeData->getCurrencyPatterns());
+            $this->setCurrencyPatterns(array_merge($this->currencyPatterns, $localeData->getCurrencyPatterns()));
         }
 
         if (null !== $localeData->getCurrencies()) {
@@ -174,7 +180,7 @@ class LocaleData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLocaleCode()
     {
@@ -194,7 +200,7 @@ class LocaleData
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getNumberingSystems()
     {
@@ -214,7 +220,7 @@ class LocaleData
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDefaultNumberingSystem()
     {
@@ -234,7 +240,7 @@ class LocaleData
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getMinimumGroupingDigits()
     {
@@ -254,7 +260,7 @@ class LocaleData
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData[]
+     * @return NumberSymbolsData[]|null
      */
     public function getNumberSymbols()
     {
@@ -262,7 +268,7 @@ class LocaleData
     }
 
     /**
-     * @param \PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData[] $numberSymbols
+     * @param NumberSymbolsData[] $numberSymbols
      *
      * @return LocaleData
      */
@@ -274,7 +280,7 @@ class LocaleData
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getDecimalPatterns()
     {
@@ -294,7 +300,7 @@ class LocaleData
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getPercentPatterns()
     {
@@ -314,7 +320,7 @@ class LocaleData
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getCurrencyPatterns()
     {
@@ -334,7 +340,7 @@ class LocaleData
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[]
+     * @return CurrencyData[]|null
      */
     public function getCurrencies()
     {
@@ -342,7 +348,23 @@ class LocaleData
     }
 
     /**
-     * @param \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[] $currencies
+     * @param string $currencyIsoCode
+     *
+     * @return CurrencyData|null
+     */
+    public function getCurrencyByIsoCode($currencyIsoCode)
+    {
+        foreach ($this->getCurrencies() as $currencyData) {
+            if ($currencyData->getIsoCode() == $currencyIsoCode) {
+                return $currencyData;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param CurrencyData[] $currencies
      *
      * @return LocaleData
      */

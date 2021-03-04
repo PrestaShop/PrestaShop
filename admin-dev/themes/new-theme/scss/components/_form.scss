@@ -1,5 +1,5 @@
 /*!
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *
  */
 
 .form-horizontal {
-
   .card-block {
     justify-content: center;
     padding: 1.875rem $card-spacer-x;
+
     &.row {
       margin: 0; // used to override negative margins brought by .row
     }
@@ -42,20 +42,44 @@
     margin-bottom: 1.2rem;
 
     // label column in forms
-    > .form-control-label:first-of-type {
+    > .form-control-label:first-of-type:not(.label-on-top) {
       @extend .col-sm-4;
       @extend .col-form-label;
+      display: inline;
 
-      @include media-breakpoint-up('sm') {
-        text-align: right;
+      .text-danger {
+        margin-right: 0.5rem;
+      }
+
+      @include media-breakpoint-up("sm") {
+        justify-content: flex-end;
         padding-right: 25px;
+        text-align: right;
+      }
+
+      @include media-breakpoint-down("sm") {
+        padding-left: 0;
       }
     }
+
+    &.type-hidden {
+      display: none;
+    }
+
+    .form-control-label.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+
+  .col-sm.disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
   }
 
   // make ps-switch align with label
   .ps-switch:not(.ps-switch-lg) {
-    @include media-breakpoint-up('sm') {
+    @include media-breakpoint-up("sm") {
       margin-top: 5px;
     }
   }
@@ -68,6 +92,20 @@
   .custom-file {
     input {
       outline: none;
+    }
+  }
+}
+
+.invalid-feedback-container {
+  padding-top: 8px;
+}
+
+.modal {
+  > form {
+    display: initial;
+
+    .modal-dialog {
+      top: 45%;
     }
   }
 }

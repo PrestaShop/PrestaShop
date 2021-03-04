@@ -1,0 +1,267 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="card d-none" id="cart-block">
+  <h3 class="card-header">{{ 'Cart'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
+  <div class="card-body">
+    <div class="alert alert-danger d-none" id="js-cart-error-block">
+      <div class="alert-text"></div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <span class="float-right">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      </div>
+      <div class="col-4">
+        <input id="product-search" type="text" class="form-control">
+        <small class="form-text">
+          {{ 'Search for an existing product by typing the first letters of its name.'|trans({}, 'Admin.Orderscustomers.Help') }}
+        </small>
+      </div>
+    </div>
+
+    <div class="row js-no-products-found d-none">
+      <div class="col">
+        <div class="alert alert-danger" role="alert">
+          <p class="alert-text">{{ 'No products found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row js-searching-products d-none">
+      <div class="col">
+        <div class="alert alert-info" role="alert">
+          <p class="alert-text">{{ 'Searching for products'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="mt-3 mb-3">
+
+    <div class="row">
+      <div class="col">
+        <div id="product-search-results" class="d-none">
+          <form id="js-add-product-form">
+
+            <div class="row js-product-select-row">
+              <div class="col-3">
+                <span class="float-right">{{ 'Product'|trans({}, 'Admin.Global') }}</span>
+              </div>
+              <div class="col-4">
+                <select name="product_id" id="product-select" class="form-control custom-select" data-customization-label="{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}"></select>
+              </div>
+            </div>
+
+            <div class="row mt-3 js-combinations-row d-none">
+              <div class="col-3">
+                <span class="float-right">{{ 'Combination'|trans({}, 'Admin.Global') }}</span>
+              </div>
+              <div class="col-4">
+                <select name="combination_id" id="combination-select" class="form-control custom-select"></select>
+              </div>
+            </div>
+
+            <div class="row mt-3 d-none" id="js-customization-container">
+              <div class="col-3">
+                <span class="float-right">
+                  {{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}
+                </span>
+              </div>
+              <div class="col-4 custom-fields-container" id="js-custom-fields-container"></div>
+            </div>
+
+            <div class="row mt-3 js-quantity-row">
+              <div class="col-3">
+                <span class="float-right">{{ 'Quantity'|trans({}, 'Admin.Global') }}</span>
+              </div>
+              <div class="col-2">
+                <input name="product_quantity" id="quantity-input" type="number" min="1" value="1" class="form-control">
+                <small class="form-text">
+                  {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  <span class="js-in-stock-counter"></span>
+                </small>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-1 offset-sm-3">
+                <button id="add-product-to-cart-btn" type="button" class="btn btn-primary">
+                  {{ 'Add to cart'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                </button>
+              </div>
+            </div>
+
+          </form>
+          <div class="row">
+            <div class="col">
+              <hr>
+            </div>
+          </div>
+        </div>
+        <div class="js-no-records-found"></div>
+        <div class="row">
+          <div class="col">
+            <table id="products-table" class="table d-none">
+              <thead>
+              <tr>
+                <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Price per unit'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Price'|trans({}, 'Admin.Global') }}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row js-tax-warning d-none">
+          <div class="col-4 offset-sm-3">
+            <div class="alert alert-warning">
+              <div class="alert-text">
+                {{ 'The prices are without taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <span class="float-right">
+              {{ 'Currency'|trans({}, 'Admin.Global') }}
+            </span>
+          </div>
+          <div class="col-4">
+            <select class="form-control custom-select" id="js-cart-currency-select">
+              {% for name, id in currencies %}
+                <option value="{{ id }}">{{ name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-3">
+            <span class="float-right">
+              {{ 'Language'|trans({}, 'Admin.Global') }}
+            </span>
+          </div>
+          <div class="col-4">
+            <select class="form-control custom-select" id="js-cart-language-select">
+              {% for name, id in languages %}
+                <option value="{{ id }}">{{ name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% set requiredFieldMarkTemplate %}
+  <span class="js-required-field-mark text-danger d-none">*</span>
+{% endset %}
+
+<script id="js-product-custom-text-template" type="text/template">
+  <div class="row">
+    <div class="col">
+      {{ requiredFieldMarkTemplate }}
+      <label for="" class="js-product-custom-input-label"></label>
+      <input name="" type="text" class="form-control js-product-custom-input">
+    </div>
+  </div>
+</script>
+
+<script id="js-product-custom-file-template" type="text/template">
+  <div class="row mt-3">
+    <div class="col">
+      {{ requiredFieldMarkTemplate }}
+      <label for="" class="js-product-custom-input-label"></label>
+      <div class="custom-file">
+        <input name="" type="file" class="custom-file-input js-product-custom-input">
+        <label class="custom-file-label">
+          {{ 'Choose file(s)'|trans({}, 'Admin.Actions') }}
+        </label>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script id="products-table-row-template" type="text/template">
+  <tr>
+    <td><img class="js-product-image" src="" alt=""></td>
+    <td class="js-product-definition-td">
+      <p class="mb-0 js-product-name"></p>
+      <p class="js-product-attr"></p>
+    </td>
+    <td class="js-product-ref"></td>
+    <td><input class="form-control js-product-unit-input" type="text"></td>
+    <td>
+      <input type="number" min="1" class="form-control js-product-qty-input" style="max-width: 100px;">
+      <small class="form-text">
+        {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        <span class="js-product-qty-stock"></span>
+      </small>
+    </td>
+    <td class="js-product-total-price"></td>
+    <td class="text-right">
+      <button class="btn btn-outline-danger js-product-remove-btn">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
+    </td>
+  </tr>
+</script>
+
+<script id="products-table-gift-row-template" type="text/template">
+  <tr>
+    <td><img class="js-product-image" src="" alt=""></td>
+    <td class="js-product-definition-td">
+      <p class="mb-0 js-product-name"></p>
+      <p class="js-product-attr"></p>
+    </td>
+    <td class="js-product-ref"></td>
+    <td>{{ 'Gift'|trans({}, 'Admin.Orderscustomers.Feature') }}</td>
+    <td class="js-product-gift-qty"></td>
+    <td class="js-product-total-price">{{ 'Gift'|trans({}, 'Admin.Orderscustomers.Feature') }}</td>
+    <td></td>
+  </tr>
+</script>
+
+<script type="text/template" id="js-table-product-customized-text-template">
+  <div class="row">
+    <small class="col d-inline">
+      <span class="js-customization-name"></span>
+      <span>: </span>
+      <span class="js-customization-value"></span>
+    </small>
+  </div>
+</script>
+
+<script type="text/template" id="js-table-product-customized-file-template">
+  <div class="row">
+    <small class="col d-inline">
+      <span class="js-customization-name"></span>
+      <span>: </span>
+      <span class="js-customization-value"> <img src="" alt=""></span>
+    </small>
+  </div>
+</script>

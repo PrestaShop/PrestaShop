@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,25 +17,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Twig;
 
+use Currency;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Twig\Extension\GlobalsInterface;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template.
  */
-class LayoutExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class LayoutExtension extends \Twig_Extension implements GlobalsInterface
 {
     /** @var LegacyContext */
     private $context;
@@ -93,12 +96,13 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
             $rootUrl = null;
         }
 
-        return array(
+        return [
             'theme' => $this->context->getContext()->shop->theme,
             'default_currency' => $defaultCurrency,
+            'default_currency_symbol' => $defaultCurrency instanceof Currency ? $defaultCurrency->getSymbol() : null,
             'root_url' => $rootUrl,
-            'js_translatable' => array(),
-        );
+            'js_translatable' => [],
+        ];
     }
 
     /**
@@ -108,9 +112,9 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('configuration', array($this, 'getConfiguration')),
-        );
+        return [
+            new \Twig_SimpleFilter('configuration', [$this, 'getConfiguration'], ['deprecated' => true]),
+        ];
     }
 
     /**
@@ -120,23 +124,26 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('getLegacyLayout', array($this, 'getLegacyLayout')),
-            new \Twig_SimpleFunction('getAdminLink', array($this, 'getAdminLink')),
-            new \Twig_SimpleFunction('youtube_link', array($this, 'getYoutubeLink')),
-        );
+        return [
+            new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
+            new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
+            new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
+            new \Twig_SimpleFunction('configuration', [$this, 'getConfiguration']),
+        ];
     }
 
     /**
      * Returns a legacy configuration key.
      *
      * @param string $key
+     * @param mixed $default Default value is null
+     * @param ShopConstraint $shopConstraint Default value is null
      *
-     * @return array An array of functions
+     * @return mixed
      */
-    public function getConfiguration($key)
+    public function getConfiguration($key, $default = null, ShopConstraint $shopConstraint = null)
     {
-        return $this->configuration->get($key);
+        return $this->configuration->get($key, $default, $shopConstraint);
     }
 
     /**
@@ -153,6 +160,8 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * @param array|string $headerTabContent Tabs labels
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string $metaTitle
+     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
      * @throws Exception if legacy layout has no $content var replacement
      *
@@ -161,12 +170,15 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     public function getLegacyLayout(
         $controllerName = '',
         $title = '',
-        $headerToolbarBtn = array(),
+        $headerToolbarBtn = [],
         $displayType = '',
         $showContentHeader = true,
         $headerTabContent = '',
         $enableSidebar = false,
-        $helpLink = ''
+        $helpLink = '',
+        $jsRouterMetadata = [],
+        $metaTitle = '',
+        $useRegularH1Structure = true
     ) {
         if ($this->environment == 'test') {
             return <<<'EOF'
@@ -195,7 +207,10 @@ EOF;
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $jsRouterMetadata,
+            $metaTitle,
+            $useRegularH1Structure
         );
 
         //test if legacy template from "content.tpl" has '{$content}'
@@ -204,13 +219,13 @@ EOF;
         }
 
         $content = str_replace(
-            array(
+            [
                 '{$content}',
                 'var currentIndex = \'index.php\';',
                 '</head>',
                 '</body>',
-            ),
-            array(
+            ],
+            [
                 '{% block content_header %}{% endblock %}
                  {% block content %}{% endblock %}
                  {% block content_footer %}{% endblock %}
@@ -218,7 +233,7 @@ EOF;
                 'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';',
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
-            ),
+            ],
             $layout
         );
 
@@ -228,13 +243,13 @@ EOF;
     /**
      * This is a Twig port of the Smarty {$link->getAdminLink()} function.
      *
-     * @param string $controller the controller name
+     * @param string $controllerName
      * @param bool $withToken
-     * @param array[string] $extraParams
+     * @param array<string> $extraParams
      *
      * @return string
      */
-    public function getAdminLink($controllerName, $withToken = true, $extraParams = array())
+    public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
     {
         return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
     }
@@ -244,7 +259,7 @@ EOF;
      */
     public function getYoutubeLink($watchUrl)
     {
-        $embedUrl = str_replace(array('watch?v=', 'youtu.be/'), array('embed/', 'youtube.com/embed/'), $watchUrl);
+        $embedUrl = str_replace(['watch?v=', 'youtu.be/'], ['embed/', 'youtube.com/embed/'], $watchUrl);
 
         return '<iframe width="560" height="315" src="' . $embedUrl .
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';

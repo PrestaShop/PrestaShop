@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,21 +18,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\Loader;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+use PrestaShopBundle\Translation\DomainNormalizer;
 use Symfony\Component\Translation\Loader\LoaderInterface;
-use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
-use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use PrestaShopBundle\Translation\Exception\LegacyFileFormattingException;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Able to convert old translation files (in translations/es.php) into
@@ -40,58 +39,60 @@ use PrestaShopBundle\Translation\Exception\LegacyFileFormattingException;
 final class LegacyFileLoader implements LoaderInterface
 {
     /**
-     * @var string the expected format of a legacy translation key
+     * @var LegacyFileReader
      */
-    const LEGACY_TRANSLATION_FORMAT = '#\<\{(?<module>[\w-]+)\}prestashop\>(?<domain>[\w-]+)_(?<id>[\w-]+)#';
+    private $fileReader;
 
     /**
-     * @var Converter the locale Converter
+     * @var DomainNormalizer
      */
-    private $localeConverter;
+    private $domainNormalizer;
 
-    public function __construct(Converter $converter)
+    /**
+     * @param LegacyFileReader $fileReader
+     */
+    public function __construct(LegacyFileReader $fileReader)
     {
-        $this->localeConverter = $converter;
+        $this->fileReader = $fileReader;
+        $this->domainNormalizer = new DomainNormalizer();
     }
 
     /**
      * {@inheritdoc}
+     *
+     * Note that parameter "domain" is useless, as domain is inferred from source files
+     *
+     * @throws \PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
      */
     public function load($path, $locale, $domain = 'messages')
     {
-        // Each legacy file declare this variable to store the translations
-        $_MODULE = [];
         $catalogue = new MessageCatalogue($locale);
-        $shopLocale = $this->localeConverter->toLegacyLocale($locale);
-        $filePath = $path . "$shopLocale.php";
 
-        if (!file_exists($filePath)) {
-            throw UnsupportedLocaleException::fileNotFound($filePath, $locale);
-        }
+        $tokens = $this->fileReader->load($path, $locale);
 
-        // Load a global array $_MODULE
-        include_once $filePath;
-
-        foreach ($_MODULE as $translationKey => $translationValue) {
-            $id = $this->getId($translationKey);
-            $catalogue->set($id, $translationValue, $domain);
+        foreach ($tokens as $translationKey => $translationValue) {
+            $parsed = LegacyTranslationKey::buildFromString($translationKey);
+            $id = $parsed->getHash();
+            $catalogue->set($id, $translationValue, $this->buildDomain($parsed));
         }
 
         return $catalogue;
     }
 
     /**
-     * @param string $key the translation key
+     * Builds the domain using information in the translation key
      *
-     * @return string the translation id
+     * @param LegacyTranslationKey $translationKey
+     *
+     * @return string
      */
-    private function getId($key)
+    private function buildDomain(LegacyTranslationKey $translationKey)
     {
-        preg_match_all(self::LEGACY_TRANSLATION_FORMAT, $key, $matches);
-        if (empty($matches['id'][0])) {
-            throw LegacyFileFormattingException::fileIsInvalid();
-        }
+        $newDomain = DomainHelper::buildModuleDomainFromLegacySource(
+            $translationKey->getModule(),
+            $translationKey->getSource()
+        );
 
-        return $matches['id'][0];
+        return $this->domainNormalizer->normalize($newDomain);
     }
 }

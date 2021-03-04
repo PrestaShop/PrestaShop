@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='page.tpl'}
 
@@ -35,7 +35,15 @@
       <article id="store-{$store.id}" class="store-item card">
         <div class="store-item-container clearfix">
           <div class="col-md-3 store-picture hidden-sm-down">
-            <img src="{$store.image.bySize.stores_default.url}" alt="{$store.image.legend}" title="{$store.image.legend}">
+            <img
+              src="{$store.image.bySize.stores_default.url}"
+              {if !empty($store.image.legend)}
+                alt="{$store.image.legend}"
+                title="{$store.image.legend}"
+              {else}
+                alt="{$store.name}"
+              {/if}
+            >
           </div>
           <div class="col-md-5 col-sm-7 col-xs-12 store-description">
             <p class="h3 card-title">{$store.name}</p>
@@ -63,11 +71,11 @@
         </div>
         <footer id="about-{$store.id}" class="collapse">
           <div class="store-item-footer divide-top">
-            <div class="card-block">
-              {if $store.note}
-                <p class="text-justify">{$store.note}<p>
-              {/if}
-            </div>
+            {if $store.note}
+              <div class="card-block">
+                <p class="text-justify">{$store.note}</p>
+              </div>
+            {/if}
             <ul class="card-block">
               {if $store.phone}
                 <li><i class="material-icons">&#xE0B0;</i>{$store.phone}</li>

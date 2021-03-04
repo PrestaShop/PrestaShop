@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,69 +17,75 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
  */
-class MaintenanceConfiguration implements DataConfigurationInterface
+class MaintenanceConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var Configuration
+     * @var array<int, string>
      */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private $fields = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'enable_shop' => $this->configuration->getBoolean('PS_SHOP_ENABLE'),
             'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP'),
             'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT'),
-        );
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $configurationInputValues)
     {
-        if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop']);
-            $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip']);
-            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], ['html' => true]);
+        if ($this->validateConfiguration($configurationInputValues)) {
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAINTENANCE_IP', 'maintenance_ip', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAINTENANCE_TEXT', 'maintenance_text', $configurationInputValues, $shopConstraint, ['html' => true]);
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $configurationInputValues
+     *
+     * @return bool
      */
-    public function validateConfiguration(array $configuration)
+    public function validateConfiguration(array $configurationInputValues)
     {
-        return isset(
-            $configuration['enable_shop'],
-            $configuration['maintenance_ip'],
-            $configuration['maintenance_text']
-        );
+        // add multistore fields in list of expected fields
+        foreach ($this->fields as $value) {
+            $this->fields[] = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $value;
+        }
+
+        // check all given fields are expected
+        foreach ($configurationInputValues as $key => $value) {
+            if (!in_array($key, $this->fields)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

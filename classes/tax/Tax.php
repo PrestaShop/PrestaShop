@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class TaxCore extends ObjectModel
 {
-    /** @var string Name */
+    const TAX_DEFAULT_PRECISION = 3;
+
+    /** @var array<int,string> Name */
     public $name;
 
     /** @var float Rate (%) */
@@ -40,25 +42,25 @@ class TaxCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'tax',
         'primary' => 'id_tax',
         'multilang' => true,
-        'fields' => array(
-            'rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'active' => array('type' => self::TYPE_BOOL),
-            'deleted' => array('type' => self::TYPE_BOOL),
+        'fields' => [
+            'rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'active' => ['type' => self::TYPE_BOOL],
+            'deleted' => ['type' => self::TYPE_BOOL],
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+        ],
+    ];
 
-    protected static $_product_country_tax = array();
-    protected static $_product_tax_via_rules = array();
+    protected static $_product_country_tax = [];
+    protected static $_product_tax_via_rules = [];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'taxes',
-    );
+    ];
 
     public function delete()
     {
@@ -75,7 +77,7 @@ class TaxCore extends ObjectModel
     /**
      * Save the object with the field deleted to true.
      *
-     *  @return bool
+     * @return bool
      */
     public function historize()
     {
@@ -141,6 +143,9 @@ class TaxCore extends ObjectModel
     /**
      * Get all available taxes.
      *
+     * @param int $id_lang
+     * @param bool $active_only (true by default)
+     *
      * @return array Taxes
      */
     public static function getTaxes($id_lang = false, $active_only = true)
@@ -189,7 +194,7 @@ class TaxCore extends ObjectModel
     /**
      * Returns the ecotax tax rate.
      *
-     * @param id_address
+     * @param int $id_address
      *
      * @return float $tax_rate
      */
@@ -206,7 +211,8 @@ class TaxCore extends ObjectModel
     /**
      * Returns the carrier tax rate.
      *
-     * @param id_address
+     * @param int $id_carrier
+     * @param int $id_address
      *
      * @return float $tax_rate
      */
@@ -226,6 +232,8 @@ class TaxCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $id_country
+     * @param int $id_state
+     * @param string $zipcode
      *
      * @return Tax
      *
@@ -244,12 +252,13 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns the product tax.
+     * Returns the product tax rate.
      *
      * @param int $id_product
-     * @param int $id_country
+     * @param int $id_address
+     * @param Context $context
      *
-     * @return Tax
+     * @return float
      */
     public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
     {

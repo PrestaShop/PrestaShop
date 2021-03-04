@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
@@ -60,25 +60,25 @@ class MemcacheServerManager
      */
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
-        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
+        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', [
             'serverIp' => $serverIp,
             'serverPort' => (int) $serverPort,
             'serverWeight' => (int) $serverWeight,
-        ));
+        ]);
 
-        return array(
+        return [
             'id' => $this->connection->lastInsertId(),
             'server_ip' => $serverIp,
             'server_port' => $serverPort,
             'server_weight' => $serverWeight,
-        );
+        ];
     }
 
     /**
      * Test if a Memcache configuration is valid.
      *
      * @param string $serverIp
-     * @param string @serverPort
+     * @param string $serverPort
      *
      * @return bool
      */
@@ -92,19 +92,21 @@ class MemcacheServerManager
             return is_array($version) && false === in_array('255.255.255', $version, true);
         }
 
-        return true === @memcache_connect($serverIp, $serverPort);
+        $memcache = new Memcache();
+
+        return true === $memcache->connect($serverIp, $serverPort);
     }
 
     /**
      * Delete a memcache server (a deletion returns the number of rows deleted).
      *
-     * @param int $serverId_server id (in database)
+     * @param int $serverId Server ID (in database)
      *
      * @return bool
      */
     public function deleteServer($serverId)
     {
-        $deletionSuccess = $this->connection->delete($this->tableName, array('id_memcached_server' => $serverId));
+        $deletionSuccess = $this->connection->delete($this->tableName, ['id_memcached_server' => $serverId]);
 
         return 1 === $deletionSuccess;
     }
@@ -116,6 +118,6 @@ class MemcacheServerManager
      */
     public function getServers()
     {
-        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, array());
+        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, []);
     }
 }

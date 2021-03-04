@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
@@ -33,6 +33,8 @@ class OrderDetailControllerCore extends FrontController
     public $ssl = true;
 
     protected $order_to_display;
+
+    protected $reference;
 
     /**
      * Start forms process.
@@ -46,11 +48,11 @@ class OrderDetailControllerCore extends FrontController
             $msgText = Tools::getValue('msgText');
 
             if (!$idOrder || !Validate::isUnsignedId($idOrder)) {
-                $this->errors[] = $this->trans('The order is no longer valid.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('The order is no longer valid.', [], 'Shop.Notifications.Error');
             } elseif (empty($msgText)) {
-                $this->errors[] = $this->trans('The message cannot be blank.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('The message cannot be blank.', [], 'Shop.Notifications.Error');
             } elseif (!Validate::isMessage($msgText)) {
-                $this->errors[] = $this->trans('This message is invalid (HTML is not allowed).', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('This message is invalid (HTML is not allowed).', [], 'Shop.Notifications.Error');
             }
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
@@ -106,18 +108,18 @@ class OrderDetailControllerCore extends FrontController
                             'order_customer_comment',
                             $this->trans(
                                 'Message from a customer',
-                                array(),
+                                [],
                                 'Emails.Subject'
                             ),
-                            array(
+                            [
                                 '{lastname}' => $customer->lastname,
                                 '{firstname}' => $customer->firstname,
                                 '{email}' => $customer->email,
                                 '{id_order}' => (int) $order->id,
                                 '{order_name}' => $order->getUniqReference(),
-                                '{message}' => Tools::nl2br($msgText),
+                                '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8($msgText)),
                                 '{product_name}' => $product_name,
-                            ),
+                            ],
                             $to,
                             $toName,
                             (string) Configuration::get('PS_SHOP_EMAIL'),
@@ -167,22 +169,24 @@ class OrderDetailControllerCore extends FrontController
             $this->redirect();
         } else {
             if (Tools::getIsset('errorQuantity')) {
-                $this->errors[] = $this->trans('You do not have enough products to request an additional merchandise return.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have enough products to request an additional merchandise return.', [], 'Shop.Notifications.Error');
             } elseif (Tools::getIsset('errorMsg')) {
-                $this->errors[] = $this->trans('Please provide an explanation for your RMA.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('Please provide an explanation for your RMA.', [], 'Shop.Notifications.Error');
             } elseif (Tools::getIsset('errorDetail1')) {
-                $this->errors[] = $this->trans('Please check at least one product you would like to return.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('Please check at least one product you would like to return.', [], 'Shop.Notifications.Error');
             } elseif (Tools::getIsset('errorDetail2')) {
-                $this->errors[] = $this->trans('For each product you wish to add, please specify the desired quantity.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('For each product you wish to add, please specify the desired quantity.', [], 'Shop.Notifications.Error');
             } elseif (Tools::getIsset('errorNotReturnable')) {
-                $this->errors[] = $this->trans('This order cannot be returned', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('This order cannot be returned', [], 'Shop.Notifications.Error');
             } elseif (Tools::getIsset('messagesent')) {
-                $this->success[] = $this->trans('Message successfully sent', array(), 'Shop.Notifications.Success');
+                $this->success[] = $this->trans('Message successfully sent', [], 'Shop.Notifications.Success');
             }
 
             $order = new Order($id_order);
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                 $this->order_to_display = (new OrderPresenter())->present($order);
+
+                $this->reference = $order->reference;
 
                 $this->context->smarty->assign([
                     'order' => $this->order_to_display,
@@ -204,10 +208,17 @@ class OrderDetailControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
-        $breadcrumb['links'][] = array(
-            'title' => $this->trans('Order history', array(), 'Shop.Theme.Customeraccount'),
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Order history', [], 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('history'),
-        );
+        ];
+
+        if (!empty($this->reference)) {
+            $breadcrumb['links'][] = [
+                'title' => $this->reference,
+                'url' => '#',
+            ];
+        }
 
         return $breadcrumb;
     }

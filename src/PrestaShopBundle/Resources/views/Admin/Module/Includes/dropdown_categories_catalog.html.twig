@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="ps-dropdown dropdown btn-group bordered mb-1">
   {% for menu in topMenuData %}
@@ -32,25 +32,22 @@
       <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
     </div>
 
-    <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
-      <ul class="items-list js-items-list">
-        <li class="module-category-reset">
-          <a class="dropdown-item" href="#">
-            {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
-          </a>
-        </li>
+    <div class="ps-dropdown-menu dropdown-menu module-category-selector items-list js-items-list" aria-labelledby="{{refMenu}}">
+        <a class="dropdown-item module-category-reset">
+          {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
+        </a>
+
         {% for subMenu in menu.subMenu %}
-          <li class="module-category-menu"
+          <a 
+            class="dropdown-item" 
+            class="module-category-menu"
             {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
             data-category-ref="{{subMenu.refMenu}}"
             data-category-display-name="{{subMenu.name}}"
           >
-            <a  class="dropdown-item" href="#">
-              {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
-            </a>
-          </li>
+            {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
+          </a>
         {% endfor %}
-      </ul>
     </div>
   {% endfor %}
 </div>

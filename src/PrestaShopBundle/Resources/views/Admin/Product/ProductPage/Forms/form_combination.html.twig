@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 <tr class="combination loaded" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}">
   <td width="1%"><input class="js-combination" type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}"></td>
@@ -29,15 +29,15 @@
     <td class="attribute-price">
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">{{ default_currency }}</span>
+                <span class="input-group-text">{{ default_currency_symbol }}</span>
             </div>
             <input type="text" class="attribute_priceTE form-control text-sm-right" value="{{ form.vars.value.attribute_price }}">
         </div>
     </td>
     <td class="attribute-finalprice text-sm-right">
-      <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
+      <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency_symbol }}
     </td>
-    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+    {% if configuration('PS_STOCK_MANAGEMENT') %}
       <td class="attribute-quantity">
           <div>
               <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-sm-right">
@@ -65,7 +65,7 @@
                 </h2>
                 {{ form_widget(form.attribute_default) }}
                 <div class="row">
-                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                  {% if configuration('PS_STOCK_MANAGEMENT') %}
                     <div class="col-md-2">
                       <fieldset class="form-group">
                           <label class="form-control-label">
@@ -161,11 +161,11 @@
                         </fieldset>
                     </div>
                     <div class="col-md-3">
-                      <small class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
+                      <small class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency_symbol }}</small>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+                    <div class="col-md-3 {% if configuration('PS_USE_ECOTAX') != 1 %}hide{% endif %}">
                         <fieldset class="form-group">
                             <label class="form-control-label">{{ form.attribute_ecotax.vars.label }}</label>
                             {{ form_errors(form.attribute_ecotax) }}
@@ -188,7 +188,7 @@
                             <label class="form-control-label">{{ form.attribute_weight.vars.label }}</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                                    <span class="input-group-text">{{ configuration('PS_WEIGHT_UNIT') }}</span>
                                 </div>
                                 {{ form_errors(form.attribute_weight) }}
                                 {{ form_widget(form.attribute_weight) }}
@@ -223,6 +223,13 @@
                             <label class="form-control-label">{{ form.attribute_upc.vars.label }}</label>
                             {{ form_errors(form.attribute_upc) }}
                             {{ form_widget(form.attribute_upc) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_mpn.vars.label }}</label>
+                            {{ form_errors(form.attribute_mpn) }}
+                            {{ form_widget(form.attribute_mpn) }}
                         </fieldset>
                     </div>
                 </div>

@@ -5,7 +5,12 @@
       <trans-unit id="104d9898c04874d0fbac36e125fa1369">
         <source>Discount</source>
         <target>Discount</target>
-        <note>Line: 1541</note>
+        <note>Line: 1542</note>
+      </trans-unit>
+      <trans-unit id="af342023e90ca45b0d69be497168ac56">
+        <source>Unit discount</source>
+        <target>Unit discount</target>
+        <note>Line: 1563</note>
       </trans-unit>
     </body>
   </file>
@@ -14,12 +19,12 @@
       <trans-unit id="9dea4016dbcc290b773ab2fae678aaa8">
         <source>Items</source>
         <target>Items</target>
-        <note>Line: 1068</note>
+        <note>Line: 1048</note>
       </trans-unit>
       <trans-unit id="7d74f3b92b19da5e606d737d339a9679">
         <source>Item</source>
         <target>Item</target>
-        <note>Line: 1068</note>
+        <note>Line: 1048</note>
       </trans-unit>
     </body>
   </file>
@@ -47,7 +52,7 @@
       <trans-unit id="01f7ac959c1e6ebbb2e0ee706a7a5255">
         <source>Best sellers</source>
         <target>Best sellers</target>
-        <note>Line: 80</note>
+        <note>Line: 87</note>
       </trans-unit>
     </body>
   </file>
@@ -56,7 +61,7 @@
       <trans-unit id="aa89fd8bf65df5c1a1c11474bf2c16b5">
         <source>Category: %category_name%</source>
         <target>Category: %category_name%</target>
-        <note>Line: 269</note>
+        <note>Line: 270</note>
       </trans-unit>
     </body>
   </file>
@@ -65,7 +70,7 @@
       <trans-unit id="bd51980476ab3cd93603c9548fb78775">
         <source>List of all brands</source>
         <target>List of all brands</target>
-        <note>Line: 92</note>
+        <note>Line: 93</note>
       </trans-unit>
     </body>
   </file>
@@ -74,7 +79,7 @@
       <trans-unit id="eb6b06cab0dd72e04c4da68d511facf2">
         <source>Search results</source>
         <target>Search results</target>
-        <note>Line: 93</note>
+        <note>Line: 112</note>
       </trans-unit>
     </body>
   </file>
@@ -83,12 +88,12 @@
       <trans-unit id="108b413416adf90e7c6f21a68bb02dd2">
         <source>%number% products</source>
         <target>%number% products</target>
-        <note>Line: 190</note>
+        <note>Line: 191</note>
       </trans-unit>
       <trans-unit id="8e7fb1213c4692b195ed6b7cf580d7f3">
         <source>%number% product</source>
         <target>%number% product</target>
-        <note>Line: 191</note>
+        <note>Line: 192</note>
       </trans-unit>
       <trans-unit id="d9e0619813f9247f8a506b9b1e61599f">
         <source>List of all suppliers</source>
@@ -99,6 +104,15 @@
         <source>List of products by supplier %supplier_name%</source>
         <target>List of products by supplier %supplier_name%</target>
         <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/front/catalog/active-filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cfff8593a3adedd98a18631f85152d23">
+        <source>%1$s: </source>
+        <target>%1$s: </target>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>
@@ -150,76 +164,81 @@
       <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
         <source>New product</source>
         <target>New product</target>
-        <note>Line: 225</note>
+        <note>Line: 226</note>
       </trans-unit>
       <trans-unit id="03de921a8ea82897e13d33d66c28b4db">
         <source>Online only</source>
         <target>Online only</target>
-        <note>Line: 434</note>
+        <note>Line: 437</note>
       </trans-unit>
       <trans-unit id="800e90e940e7f1fb938b0fda5137f38c">
         <source>On sale!</source>
         <target>On sale!</target>
-        <note>Line: 441</note>
+        <note>Line: 444</note>
       </trans-unit>
       <trans-unit id="63b539babcf7978229d66ba4052ca71f">
         <source>Reduced price</source>
         <target>Reduced price</target>
-        <note>Line: 451</note>
+        <note>Line: 462</note>
       </trans-unit>
       <trans-unit id="4492081ca02b059f9e8af4ddaf0f7292">
         <source>Pack</source>
         <target>Pack</target>
-        <note>Line: 465</note>
+        <note>Line: 477</note>
       </trans-unit>
       <trans-unit id="cb3c718c905f00adbb6735f55bfb38ef">
         <source>Product available with different options</source>
         <target>Product available with different options</target>
-        <note>Line: 776</note>
+        <note>Line: 847</note>
       </trans-unit>
       <trans-unit id="348325afced7f3da215310efbe21f1c1">
         <source>Last items in stock</source>
         <target>Last items in stock</target>
-        <note>Line: 801</note>
+        <note>Line: 872</note>
       </trans-unit>
       <trans-unit id="a3b6a4d0897451813950029a3066f219">
         <source>ean13</source>
         <target>ean13</target>
-        <note>Line: 817</note>
+        <note>Line: 888</note>
       </trans-unit>
       <trans-unit id="6496117322fd76fa12ac1b87d8a4db6c">
         <source>isbn</source>
         <target>isbn</target>
-        <note>Line: 819</note>
+        <note>Line: 890</note>
       </trans-unit>
       <trans-unit id="2f9e567efb6a38663162f65eaac2d73b">
         <source>upc</source>
         <target>upc</target>
-        <note>Line: 821</note>
+        <note>Line: 892</note>
       </trans-unit>
       <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
         <source>Used</source>
         <target>Used</target>
-        <note>Line: 231</note>
+        <note>Line: 232</note>
       </trans-unit>
       <trans-unit id="6da03a74721a0554b7143254225cc08a">
         <source>Refurbished</source>
         <target>Refurbished</target>
-        <note>Line: 238</note>
+        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>Line: 458</note>
+        <note>Line: 470</note>
+      </trans-unit>
+      <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
+        <source>MPN</source>
+        <target>MPN</target>
+        <note>Line: 894</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Product/Search/SortOrderFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Product/Search/SortOrdersCollection.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
         <source>Relevance</source>
         <target>Relevance</target>
-        <note>Line: 44</note>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
@@ -269,7 +288,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="eae99cd6a931f3553123420b16383812">
         <source>All best sellers</source>
         <target>All best sellers</target>
-        <note>Line: 35</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -278,7 +297,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="e18a22d145b38e4fff582663b5b4ec1e">
         <source>All brands</source>
         <target>All brands</target>
-        <note>Line: 28</note>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>
@@ -338,7 +357,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="40dec546414c1ebdfde8d9858f0938c3">
         <source>All products</source>
         <target>All products</target>
-        <note>Line: 35</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -352,7 +371,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="60efcc704ef1456678f77eb9ee20847b">
         <source>All new products</source>
         <target>All new products</target>
-        <note>Line: 36</note>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -413,7 +432,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="f95ceb82c51c99dc9b9e5678b291c44b">
         <source>All sale products</source>
         <target>All sale products</target>
-        <note>Line: 36</note>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -422,7 +441,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="ecf253735ac0cba84a9d2eeff1f1b87c">
         <source>All suppliers</source>
         <target>All suppliers</target>
-        <note>Line: 28</note>
+        <note>Line: 33</note>
       </trans-unit>
     </body>
   </file>
@@ -440,7 +459,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_viewedproduct/views/template/hook/ps_viewedproduct.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_viewedproduct/views/templates/hook/ps_viewedproduct.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="43560641f91e63dc83682bc598892fa1">
         <source>Viewed products</source>
@@ -460,9 +479,9 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
   </file>
   <file original="themes/classic/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="cfff8593a3adedd98a18631f85152d23">
-        <source>%1$s: </source>
-        <target>%1$s: </target>
+      <trans-unit id="734346d44245de59214137842ab17744">
+        <source>%1$s:</source>
+        <target>%1$s:</target>
         <note>Line: 35</note>
       </trans-unit>
     </body>
@@ -472,7 +491,7 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
         <source>Price</source>
         <target>Price</target>
-        <note>Line: 72</note>
+        <note>Line: 71</note>
       </trans-unit>
       <trans-unit id="4d8adffdc001189e0202c01ac529a3a9">
         <source>Regular price</source>
@@ -580,6 +599,11 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
         <target>(%unit_price%)</target>
         <note>Line: 62</note>
       </trans-unit>
+      <trans-unit id="6f3455d187a23443796efdcbe044096b">
+        <source>No tax</source>
+        <target>No tax</target>
+        <note>Line: 94</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/catalog/_partials/products-top.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -619,27 +643,27 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="56e11b516943cb38a57c9a53219a8370">
         <source>This pack contains</source>
         <target>This pack contains</target>
-        <note>Line: 113</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
-        <note>Line: 157</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="b8900d8adf598b6653bb8c071bc49a1d">
         <source>Product Details</source>
         <target>Product Details</target>
-        <note>Line: 167</note>
+        <note>Line: 163</note>
       </trans-unit>
       <trans-unit id="7e2708aeb65763c54052f57ed1a1ec1d">
         <source>Attachments</source>
         <target>Attachments</target>
-        <note>Line: 176</note>
+        <note>Line: 172</note>
       </trans-unit>
       <trans-unit id="3767d4f3efe17bd95a1bc7cf4194bb93">
         <source>You might also like</source>
         <target>You might also like</target>
-        <note>Line: 236</note>
+        <note>Line: 232</note>
       </trans-unit>
     </body>
   </file>

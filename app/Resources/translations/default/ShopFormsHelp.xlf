@@ -5,7 +5,12 @@
       <trans-unit id="b8760dae14ad4963c909f83424de3e7f">
         <source>(E.g.: %date_format%)</source>
         <target>(E.g.: %date_format%)</target>
-        <note>Line: 200</note>
+        <note>Line: 215</note>
+      </trans-unit>
+      <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
+        <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
+        <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
+        <note>Line: 139</note>
       </trans-unit>
     </body>
   </file>
@@ -39,6 +44,15 @@
         <source>How can we help?</source>
         <target>How can we help?</target>
         <note>Line: 106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2ba94226eab6f98a094a2accf82746c0">
+        <source>At least 5 characters long</source>
+        <target>At least 5 characters long</target>
+        <note>Line: 139</note>
       </trans-unit>
     </body>
   </file>

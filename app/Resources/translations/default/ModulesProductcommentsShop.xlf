@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/productcomments/controllers/front/ListComments.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93ba210a7ea13de4214e57bf9d3f0096">
+        <source>Deleted account</source>
+        <target>Deleted account</target>
+        <note>Line: 72</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/controllers/front/PostComment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="26474f5707c33bcb467e9012ea7dbc55">
+        <source>You need to be [1]logged in[/1] or [2]create an account[/2] to post your review.</source>
+        <target>You need to be [1]logged in[/1] or [2]create an account[/2] to post your review.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="dd7164fb6342eb2622b10568c0240bbf">
+        <source>You are not allowed to post a review at the moment, please try again later.</source>
+        <target>You are not allowed to post a review at the moment, please try again later.</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="95ba76c5c7b555be8efe6a3da26f0e4e">
+        <source>Title cannot be empty</source>
+        <target>Title cannot be empty</target>
+        <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="6860ebb8b4811bad4d66ee12171d9919">
+        <source>Title cannot be more than %s characters</source>
+        <target>Title cannot be more than %s characters</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="eb51e9ce995a1a8ca09f3a4369bb8720">
+        <source>Customer name cannot be empty</source>
+        <target>Customer name cannot be empty</target>
+        <note>Line: 176</note>
+      </trans-unit>
+      <trans-unit id="8928e4374410046ab21285fc9090ee19">
+        <source>Customer name cannot be more than %s characters</source>
+        <target>Customer name cannot be more than %s characters</target>
+        <note>Line: 178</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/controllers/front/ReportComment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b6a3b2fdf3c89e9f83dfb44b34336fb">
+        <source>You need to be logged in to report a review.</source>
+        <target>You need to be logged in to report a review.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="95a184e3d0444294153577d952e9791f">
+        <source>You already reported this review as abusive.</source>
+        <target>You already reported this review as abusive.</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/controllers/front/UpdateCommentUsefulness.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="198645056f217f726ff1dc6e65ccc322">
+        <source>Cannot find the requested product review.</source>
+        <target>Cannot find the requested product review.</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="4ab403bbf7563d87b327f2a9b2e04baa">
+        <source>This feature is not enabled.</source>
+        <target>This feature is not enabled.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="9104797eca16236af6aaf8d857728a3d">
+        <source>You need to be [1]logged in[/1] or [2]create an account[/2] to give your appreciation of a review.</source>
+        <target>You need to be [1]logged in[/1] or [2]create an account[/2] to give your appreciation of a review.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/alert-modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e0aa021e21dddbd6d8cecec71e9cf564">
+        <source>OK</source>
+        <target>OK</target>
+        <note>Line: 56</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/average-grade-stars.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b3b9db8c9784468094acde0f8bf7071">
+        <source>Grade</source>
+        <target>Grade</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/confirm-modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/empty-product-comment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fbe2625bf3673be380d043a4bf873f28">
+        <source>Be the first to write your review</source>
+        <target>Be the first to write your review</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="08c7d6f84301ee7d0aab0a5f67edc419">
+        <source>No customer reviews for the moment.</source>
+        <target>No customer reviews for the moment.</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/post-comment-modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="101d699ab80f40c7110be34095759b08">
+        <source>Sorry, your review cannot be posted.</source>
+        <target>Sorry, your review cannot be posted.</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="b78a3223503896721cca1303f776159b">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="221e705c06e231636fdbccfdd14f4d5c">
+        <source>Your name</source>
+        <target>Your name</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="457dd55184faedb7885afd4009d70163">
+        <source>Review</source>
+        <target>Review</target>
+        <note>Line: 109</note>
+      </trans-unit>
+      <trans-unit id="70397c4b252a5168c5ec003931cea215">
+        <source>Required fields</source>
+        <target>Required fields</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Line: 124</note>
+      </trans-unit>
+      <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
+        <source>Send</source>
+        <target>Send</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="b20968d9aecd2d075519992e9e2f1ffe">
+        <source>Your comment has been submitted and will be available once approved by a moderator.</source>
+        <target>Your comment has been submitted and will be available once approved by a moderator.</target>
+        <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="9a2ccd41653469a8bd94fbb84b271a14">
+        <source>Your comment has been added!</source>
+        <target>Your comment has been added!</target>
+        <note>Line: 141</note>
+      </trans-unit>
+      <trans-unit id="b0e34b92ce3d4073d645119d68c5d551">
+        <source>Review sent</source>
+        <target>Review sent</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="ffe435d2d09dddbaa6927987bc8466a7">
+        <source>Your review cannot be sent</source>
+        <target>Your review cannot be sent</target>
+        <note>Line: 152</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/product-additional-info.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a71a0229e164fecdcde3c4e0f40473fa">
+        <source>Read user reviews</source>
+        <target>Read user reviews</target>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/product-comment-item-prototype.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="577d847ca6cea77d6c44cc567c81fbff">
+        <source>By %1$s</source>
+        <target>By %1$s</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="28b3b1e564a00f572c5d4e21da986d49">
+        <source>Report abuse</source>
+        <target>Report abuse</target>
+        <note>Line: 51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/productcomments/views/templates/hook/product-comments-list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7966126831926ad29c528b239d69f855">
+        <source>Write your review</source>
+        <target>Write your review</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="926d083c719119e1a02ccab444ebb2bc">
+        <source>Sorry, your review appreciation cannot be sent.</source>
+        <target>Sorry, your review appreciation cannot be sent.</target>
+        <note>Line: 26</note>
+      </trans-unit>
+      <trans-unit id="9a2fa15ec74c5fdad04227a184425637">
+        <source>Sorry, your abuse report cannot be sent.</source>
+        <target>Sorry, your abuse report cannot be sent.</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="8413c683b4b27cc3f4dbd4c90329d8ba">
+        <source>Comments</source>
+        <target>Comments</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="71e8650db4e9d91dedc7ddf8b0dd2c21">
+        <source>Your review appreciation cannot be sent</source>
+        <target>Your review appreciation cannot be sent</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="49e1ec421718259de522cdd347e5bba6">
+        <source>Report comment</source>
+        <target>Report comment</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="ab51a81c76d95ddc762194d58ec5db63">
+        <source>Are you sure that you want to report this comment?</source>
+        <target>Are you sure that you want to report this comment?</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="1e1669fa3b08541f2e785fb96309df65">
+        <source>Report sent</source>
+        <target>Report sent</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="2b15bb3a34368bc47f59833e7e6ef09b">
+        <source>Your report has been submitted and will be considered by a moderator.</source>
+        <target>Your report has been submitted and will be considered by a moderator.</target>
+        <note>Line: 82</note>
+      </trans-unit>
+      <trans-unit id="40273f71e8d680ae64c2ac1d6026d8b3">
+        <source>Your report cannot be sent</source>
+        <target>Your report cannot be sent</target>
+        <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

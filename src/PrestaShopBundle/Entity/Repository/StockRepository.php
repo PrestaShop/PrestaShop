@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Entity\Repository;
@@ -51,12 +51,12 @@ class StockRepository extends StockManagementRepository
     /**
      * @var array
      */
-    private $orderStates = array();
+    private $orderStates = [];
 
     /**
      * @var array
      */
-    private $totalCombinations = array();
+    private $totalCombinations = [];
 
     /**
      * StockRepository constructor.
@@ -67,7 +67,7 @@ class StockRepository extends StockManagementRepository
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param StockManager $stockManager
-     * @param $tablePrefix
+     * @param string $tablePrefix
      */
     public function __construct(
         ContainerInterface $container,
@@ -131,9 +131,9 @@ class StockRepository extends StockManagementRepository
                     $delta,
                     $this->contextAdapter->getContext()->shop->id,
                     true,
-                    array(
+                    [
                         'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
-                    )
+                    ]
                 );
             }
 
@@ -179,13 +179,7 @@ class StockRepository extends StockManagementRepository
         $this->foundRows = $this->getFoundRows();
 
         if (count($rows) === 0) {
-            throw new ProductNotFoundException(
-                sprintf(
-                    'Product with id %d and combination id %d can not be found',
-                    $productIdentity->getProductId(),
-                    $productIdentity->getCombinationId()
-                )
-            );
+            throw new ProductNotFoundException(sprintf('Product with id %d and combination id %d can not be found', $productIdentity->getProductId(), $productIdentity->getCombinationId()));
         }
 
         $rows = $this->addAdditionalData($rows);
@@ -210,8 +204,8 @@ class StockRepository extends StockManagementRepository
     }
 
     /**
-     * @param $offset int
-     * @param $limit int
+     * @param int $offset
+     * @param int $limit
      * @param QueryParamsCollection $queryParams
      *
      * @return array
@@ -241,22 +235,25 @@ class StockRepository extends StockManagementRepository
         }
 
         $combinationNameQuery = $this->getCombinationNameSubquery();
+        $attributeNameQuery = $this->getAttributeNameSubquery();
 
         return str_replace(
-            array(
+            [
                 '{and_where}',
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
                 '{combination_name}',
-            ),
-            array(
+                '{attribute_name}',
+            ],
+            [
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
                 $combinationNameQuery,
-            ),
+                $attributeNameQuery,
+            ],
             'SELECT SQL_CALC_FOUND_ROWS
           p.id_product                                                                      AS product_id,
           COALESCE(pa.id_product_attribute, 0)                                              AS combination_id,
@@ -275,7 +272,8 @@ class StockRepository extends StockManagementRepository
                       "N/A"))                                                               AS product_low_stock_threshold,
           IF(COALESCE(pa.id_product_attribute, 0) > 0, IF(sa.quantity <= pas.low_stock_threshold, 1, 0),
              IF(sa.quantity <= ps.low_stock_threshold, 1, 0))                               AS product_low_stock_alert,
-          {combination_name}
+          {combination_name},
+          {attribute_name}
         FROM {table_prefix}product p
           LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
           LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = :language_id)
@@ -290,7 +288,7 @@ class StockRepository extends StockManagementRepository
           LEFT JOIN {table_prefix}product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)
           LEFT JOIN {table_prefix}product_attribute_shop pas
             ON (pas.id_product = pa.id_product AND pas.id_product_attribute = pa.id_product_attribute AND
-                pas.id_shop = :shop_id)                     
+                pas.id_shop = :shop_id)
         WHERE
           p.state = :state
           {and_where}
@@ -375,19 +373,19 @@ class StockRepository extends StockManagementRepository
         $router = $this->container->get('router');
 
         foreach ($rows as &$row) {
-            $row['combinations_product_url'] = $router->generate('api_stock_list_product_combinations', array(
+            $row['combinations_product_url'] = $router->generate('api_stock_list_product_combinations', [
                 'productId' => $row['product_id'],
-            ));
+            ]);
 
             if (!empty($row['combination_id'])) {
-                $row['edit_url'] = $router->generate('api_stock_edit_product_combination', array(
+                $row['edit_url'] = $router->generate('api_stock_edit_product_combination', [
                     'productId' => $row['product_id'],
                     'combinationId' => $row['combination_id'],
-                ));
+                ]);
             } else {
-                $row['edit_url'] = $router->generate('api_stock_edit_product', array(
+                $row['edit_url'] = $router->generate('api_stock_edit_product', [
                     'productId' => $row['product_id'],
-                ));
+                ]);
             }
         }
 

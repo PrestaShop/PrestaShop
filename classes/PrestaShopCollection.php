@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -48,7 +48,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * @var array Object definition
      */
-    protected $definition = array();
+    protected $definition = [];
 
     /**
      * @var DbQuery
@@ -58,7 +58,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * @var array Collection of objects in an array
      */
-    protected $results = array();
+    protected $results = [];
 
     /**
      * @var bool Is current collection already hydrated
@@ -85,11 +85,11 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      */
     protected $page_size = 0;
 
-    protected $fields = array();
-    protected $alias = array();
+    protected $fields = [];
+    protected $alias = [];
     protected $alias_iterator = 0;
-    protected $join_list = array();
-    protected $association_definition = array();
+    protected $join_list = [];
+    protected $association_definition = [];
 
     const LANG_ALIAS = 'l';
 
@@ -131,11 +131,11 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             $definition = $this->getDefinition($association);
             $on = '{' . $definition['asso']['complete_field'] . '} = {' . $definition['asso']['complete_foreign_field'] . '}';
             $type = self::LEFT_JOIN;
-            $this->join_list[$association] = array(
+            $this->join_list[$association] = [
                 'table' => ($definition['is_lang']) ? $definition['table'] . '_lang' : $definition['table'],
                 'alias' => $this->generateAlias($association),
-                'on' => array(),
-            );
+                'on' => [],
+            ];
         }
 
         if ($on) {
@@ -389,7 +389,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Retrieve the first result.
      *
-     * @return ObjectModel
+     * @return ObjectModel|bool
      */
     public function getFirst()
     {
@@ -399,6 +399,21 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         }
 
         return $this[0];
+    }
+
+    /**
+     * Retrieve the last result.
+     *
+     * @return ObjectModel|false
+     */
+    public function getLast()
+    {
+        $this->getAll();
+        if (!count($this)) {
+            return false;
+        }
+
+        return $this[count($this) - 1];
     }
 
     /**
@@ -665,7 +680,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     {
         $info = $this->getFieldInfo($field);
         if (is_array($value)) {
-            $results = array();
+            $results = [];
             foreach ($value as $item) {
                 $results[] = ObjectModel::formatValue($item, $info['type'], true);
             }
@@ -720,12 +735,12 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 $type = $definition['fields'][$fieldname]['type'];
             }
 
-            $this->fields[$field] = array(
+            $this->fields[$field] = [
                 'name' => $fieldname,
                 'association' => $association,
                 'alias' => $this->generateAlias($association),
                 'type' => $type,
-            );
+            ];
         }
 
         return $this->fields[$field];

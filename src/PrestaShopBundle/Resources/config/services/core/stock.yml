@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.stock.stock_manager:
+        class: 'PrestaShop\PrestaShop\Core\Stock\StockManager'

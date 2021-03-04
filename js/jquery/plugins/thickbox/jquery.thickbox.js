@@ -7,7 +7,7 @@
  * Patched Version by Jamie Thompson - Fixes IE7 Positioning Issues
  * http://jamazon.co.uk/web/2008/03/17/thickbox-31-ie7-positioning-bug/
  * Patched Version by PrestaShop - Translated fields
- * http://www.prestashop.com
+ * https://www.prestashop.com
 */
 
 

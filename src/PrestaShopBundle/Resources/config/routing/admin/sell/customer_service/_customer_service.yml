@@ -1,0 +1,11 @@
+_order_message:
+  resource: "order_message.yml"
+  prefix: /order-messages/
+
+_merchandise_return:
+  resource: "merchandise_return.yml"
+  prefix: /merchandise-return/
+
+_customer_threads:
+  resource: "customer_threads.yml"
+  prefix: /customer-threads/

@@ -1,18 +1,23 @@
 About PrestaShop
 --------
 
-[![Build Status](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.org/PrestaShop/PrestaShop)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a798dc20a1254776aa7a8a0d8bd8d331)](https://www.codacy.com/app/PrestaShop/PrestaShop?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PrestaShop/PrestaShop&amp;utm_campaign=Badge_Grade)
-[![Gitter chat](https://badges.gitter.im/PrestaShop/PrestaShop.png)](https://gitter.im/PrestaShop/General)
+[![Travis build Status](https://travis-ci.com/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.com/PrestaShop/PrestaShop)
+![PHPStan status](https://github.com/PrestaShop/PrestaShop/workflows/PHP%20Static%20Analysis/badge.svg)
+[![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop.com%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop.com/)
 
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
+[![GitHub release](https://img.shields.io/github/v/release/prestashop/prestashop)](https://github.com/PrestaShop/PrestaShop)
+[![Slack chat](https://img.shields.io/badge/Chat-on%20Slack-red)](https://github.com/PrestaShop/open-source/blob/master/slack/readme.md)
+[![GitHub forks](https://img.shields.io/github/forks/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/network)
+[![GitHub stars](https://img.shields.io/github/stars/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/stargazers)
 
 PrestaShop is an Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][available-features].
 
 <p align="center">
-  <img src="https://www.prestashop.com/1.7/assets/img/product.png" alt="PrestaShop 1.7 back office"/>
+  <img src="https://user-images.githubusercontent.com/1009343/61462749-8fb19f00-a949-11e9-801f-70ab0a84192d.png" alt="PrestaShop 1.7 back office"/>
 </p>
 
-This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 1.7), please go to [the download page][2] on the official PrestaShop site.
+This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 1.7), please go to [the download page][download] on the official PrestaShop site.
 
 
 About the 'develop' branch
@@ -22,12 +27,12 @@ The 'develop' branch of this repository contains the work in progress source cod
  
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
-PRESTASHOP 1.7 IS NOW PRODUCTION-READY! Its first stable version, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](http://build.prestashop.com/tag/1.7/).
+The first stable version of PrestaShop 1.7, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop.com/tag/1.7/).
 
 Server configuration
 --------
 
-To install PrestaShop 1.7, you need a web server running PHP 5.6+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).
+To install the latest PrestaShop 1.7, you need a web server running PHP 7.1+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.). Versions between 1.7.0 and 1.7.6 work with PHP 5.6+.
 
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
 We recommend the Apache or Nginx web servers (check out our [example Nginx configuration file][example-nginx]).
@@ -57,7 +62,7 @@ MySQL credentials can also be found and modified in this file if needed.
 
 **Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
 If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data` 
-as write access to the whole workspace.
+has write access to the whole workspace.
 
 Documentation
 --------
@@ -82,9 +87,11 @@ PrestaShop is an Open Source project, and it wouldn't be possible without the he
 
 If you want to contribute code to PrestaShop, read the [CONTRIBUTING.md][contributing-md] file in this repository or read the [tutorials about contribution][contributing-tutorial] on the documentation site.
 
+Don't know where to start? Check the [good first issue](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) label to have a look at all beginner-friendly improvements and bug fixes.
+
 If you want to help translate PrestaShop in your language, [join us on Crowdin][crowdin]!
 
-Current Crowdin status (for 69 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
+Current Crowdin status (for more than 75 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
 
 Reporting Issues
 --------
@@ -101,7 +108,7 @@ Responsible (and private) disclosure is a standard practice when someone encount
 
 The PrestaShop team tries to be very proactive when preventing security problems. Even so, critical issues might surface without notice.
 
-This is why we have set up the [security@prestashop.com](mailto:security@prestashop.com) email address: anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
+This is why we have set up a [Bug Bounty Program](https://yeswehack.com/programs/prestashop) where anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
 
 Understanding a security issue means knowing how the attacker got in and hacked the site. If you have those details, then please do contact us privately about it (and please do not publish those details before we answer). If you do not know how the attacker got in, please ask for help on the support forums.
 
@@ -117,31 +124,32 @@ Themes and modules can be obtained (and sold!) on [PrestaShop Addons][addons], t
 Community forums
 --------
 
-You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums].
+You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums] or on the [PrestaShop Slack channel][chat].
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
-[user-doc]: http://doc.prestashop.com
+[chat]: https://github.com/PrestaShop/open-source/blob/master/slack/readme.md
+[user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
-[contributing-tutorial]: http://doc.prestashop.com/display/PS16/Contributing+to+PrestaShop
+[contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
-[getting-started]: http://doc.prestashop.com/display/PS17/Getting+Started
-[user-guide]: http://doc.prestashop.com/display/PS17/User+Guide
-[updating-guide]: http://doc.prestashop.com/display/PS16/Updating+PrestaShop
-[merchant-guide]: http://doc.prestashop.com/display/PS16/Merchant%27s+Guide
-[faq-17]: http://build.prestashop.com/news/prestashop-1-7-faq/
-[troubleshooting]: http://doc.prestashop.com/display/PS16/Troubleshooting
-[sysadmin-guide]: http://doc.prestashop.com/display/PS16/System+Administrator+Guide
+[getting-started]: https://doc.prestashop.com/display/PS17/Getting+Started
+[user-guide]: https://doc.prestashop.com/display/PS17/User+Guide
+[updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
+[merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
+[faq-17]: https://devdocs.prestashop.com/1.7/faq/
+[troubleshooting]: https://doc.prestashop.com/display/PS16/Troubleshooting
+[sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [addons]: https://addons.prestashop.com/
 [contributors-md]: CONTRIBUTORS.md
-[example-nginx]: docs/server_config/nginx.conf.dist
+[example-nginx]: https://devdocs.prestashop.com/1.7/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
 [install-guide-dev]: https://devdocs.prestashop.com/1.7/basics/installation/
 [system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/
-[install-guide]: http://doc.prestashop.com/display/PS17/Installing+PrestaShop
+[install-guide]: https://doc.prestashop.com/display/PS17/Installing+PrestaShop
 [devdocs]: https://devdocs.prestashop.com/
 [create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
 [reporting-issues]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/

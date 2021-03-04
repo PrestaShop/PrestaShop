@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
@@ -89,16 +89,30 @@ class ModifyTranslationsType extends TranslatorAwareType
 
         $builder
             ->add('translation_type', ChoiceType::class, [
+                'label' => $this->trans('Type of translation', 'Admin.International.Feature'),
+                'attr' => [
+                    'class' => 'js-translation-type',
+                ],
                 'choices' => $this->translationTypeChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('email_content_type', ChoiceType::class, [
+                'label' => $this->trans('Select the type of email content', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-email-form-group d-none',
+                ],
+                'attr' => [
+                    'class' => 'js-email-content-type',
+                ],
                 'choices' => $this->emailContentTypeChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('theme', ChoiceType::class, [
-                'choices' => [$noTheme => 0] +
-                $this->themeChoices,
+                'label' => $this->trans('Select your theme', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-theme-form-group d-none',
+                ],
+                'choices' => [$noTheme => 0] + $this->themeChoices,
                 'choice_attr' => [
                     $noTheme => [
                         'class' => 'js-no-theme',
@@ -107,11 +121,20 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('module', ChoiceType::class, [
+                'label' => $this->trans('Select your module', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-module-form-group d-none',
+                ],
                 'placeholder' => '---',
+                'attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => 'select2',
+                ],
                 'choices' => $this->moduleChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('language', ChoiceType::class, [
+                'label' => $this->trans('Select your language', 'Admin.International.Feature'),
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,

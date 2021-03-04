@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,26 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 class StockManagementOptionHandler {
   constructor() {
     this.handle();
 
-    $('input[name="form[stock][stock_management]"]').on('change', () => this.handle());
+    $('input[name="stock[stock_management]"]').on('change', () => this.handle());
   }
 
   handle() {
-    const stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
-    const isStockManagementEnabled = parseInt(stockManagementVal);
+    const stockManagementVal = $('input[name="stock[stock_management]"]:checked').val();
+    const isStockManagementEnabled = parseInt(stockManagementVal, 10);
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
     this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
@@ -48,13 +48,13 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-    const allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
+    const allowOrderingOosRadios = $('input[name="stock[allow_ordering_oos]"]');
 
     if (isStockManagementEnabled) {
-        allowOrderingOosRadios.removeAttr('disabled');
+      allowOrderingOosRadios.removeAttr('disabled');
     } else {
-        allowOrderingOosRadios.val([1]);
-        allowOrderingOosRadios.attr('disabled', 'disabled');
+      allowOrderingOosRadios.val([1]);
+      allowOrderingOosRadios.attr('disabled', 'disabled');
     }
   }
 
@@ -66,13 +66,13 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-    const displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
+    const displayQuantitiesRadio = $('input[name="page[display_quantities]"]');
 
     if (isStockManagementEnabled) {
-        displayQuantitiesRadio.removeAttr('disabled');
+      displayQuantitiesRadio.removeAttr('disabled');
     } else {
-        displayQuantitiesRadio.val([0]);
-        displayQuantitiesRadio.attr('disabled', 'disabled');
+      displayQuantitiesRadio.val([0]);
+      displayQuantitiesRadio.attr('disabled', 'disabled');
     }
   }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\View;
@@ -32,9 +32,19 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder
 {
+    /**
+     * @var string
+     */
     private $locale;
+    /**
+     * @var string
+     */
     private $theme;
 
+    /**
+     * @param string $locale
+     * @param string $theme
+     */
     public function __construct($locale, $theme)
     {
         $this->locale = $locale;
@@ -52,44 +62,42 @@ class TreeBuilder
         $provider->setLocale($this->locale);
 
         if ('theme' === $provider->getIdentifier()) {
-            $translations = $provider->getMessageCatalogue()->all();
+            $defaultCatalogue = $provider->getMessageCatalogue();
         } else {
-            $translations = $provider->getDefaultCatalogue()->all();
+            $defaultCatalogue = $provider->getDefaultCatalogue();
         }
 
-        $xliffCatalog = $provider->getXliffCatalogue()->all();
-        $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
+        $xliffCatalogue = $provider->getXliffCatalogue();
+        $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme);
 
-        foreach ($translations as $domain => $messages) {
+        $translations = [];
+
+        foreach ($defaultCatalogue->all() as $domain => $messages) {
             $missingTranslations = 0;
-            $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
-                $data = array(
-                    'xlf' => (array_key_exists($domain, $xliffCatalog) &&
-                    array_key_exists($translationKey, $xliffCatalog[$domain]) ?
-                        $xliffCatalog[$domain][$translationKey] : null),
-                    'db' => (array_key_exists($domainDatabase, $databaseCatalogue) &&
-                    array_key_exists($translationKey, $databaseCatalogue[$domainDatabase]) ?
-                        $databaseCatalogue[$domainDatabase][$translationKey] : null),
-                );
+                $data = [
+                    'xlf' => $xliffCatalogue->defines($translationKey, $domain)
+                        ? $xliffCatalogue->get($translationKey, $domain)
+                        : null,
+                    'db' => $databaseCatalogue->defines($translationKey, $domain)
+                        ? $databaseCatalogue->get($translationKey, $domain)
+                        : null,
+                ];
 
                 // if search is empty or is in catalog default|xlf|database
-                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(array('default' => $translationKey), $data))) {
+                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(['default' => $translationKey], $data))) {
                     $translations[$domain][$translationKey] = $data;
 
-                    if (
-                        empty($data['xlf']) &&
-                        empty($data['db'])
+                    if (empty($data['xlf'])
+                        && empty($data['db'])
                     ) {
                         ++$missingTranslations;
                     }
-                } else {
-                    unset($translations[$domain][$translationKey]);
                 }
             }
 
-            $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
+            $translations[$domain]['__metadata'] = ['missing_translations' => $missingTranslations];
         }
 
         ksort($translations);
@@ -100,8 +108,8 @@ class TreeBuilder
     /**
      * Check if data contains search word.
      *
-     * @param $search
-     * @param $data
+     * @param string|array|null $search
+     * @param array $data
      *
      * @return bool
      */
@@ -139,21 +147,22 @@ class TreeBuilder
 
         foreach ($catalogue as $domain => $messages) {
             $tableisedDomain = Inflector::tableize($domain);
-            list($basename) = explode('.', $tableisedDomain);
-            $parts = array_reverse(explode('_', $basename));
+            // the third component of the domain may have underscores, so we need to limit pieces to 3
+            $parts = explode('_', $tableisedDomain, 3);
+            /** @var array $subtree */
             $subtree = &$translationsTree;
 
-            while (count($parts) > 0) {
-                $subdomain = ucfirst(array_pop($parts));
+            foreach ($parts as $part) {
+                $subdomain = ucfirst($part);
 
                 if (!array_key_exists($subdomain, $subtree)) {
-                    $subtree[$subdomain] = array();
+                    $subtree[$subdomain] = [];
                 }
 
                 $subtree = &$subtree[$subdomain];
             }
 
-            $subtree['__messages'] = array($domain => $messages);
+            $subtree['__messages'] = [$domain => $messages];
             if (isset($messages['__metadata'])) {
                 $subtree['__fixed_length_id'] = '_' . sha1($domain);
                 list($subtree['__domain']) = explode('.', $domain);
@@ -169,7 +178,7 @@ class TreeBuilder
     /**
      * Clean tree to use it with the new API system.
      *
-     * @param $tree
+     * @param array $tree
      * @param Router $router
      * @param null $theme
      * @param null $search
@@ -281,25 +290,25 @@ class TreeBuilder
 
     /**
      * @param Router $router
-     * @param $tree
-     * @param $index
-     * @param $name
-     * @param $fullName
+     * @param array $tree
+     * @param int $index
+     * @param string $name
+     * @param string $fullName
      * @param bool $theme
      * @param null $search
-     * @param null $module
+     * @param bool $module
      *
      * @return mixed
      */
     private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false, $search = null, $module = false)
     {
         if (!isset($tree[$index])) {
-            $routeParams = array(
+            $routeParams = [
                 'locale' => $this->locale,
                 'domain' => $fullName,
                 'theme' => $theme,
                 'module' => $module,
-            );
+            ];
 
             if (!empty($search)) {
                 $routeParams['search'] = $search;
@@ -310,7 +319,7 @@ class TreeBuilder
             $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', $routeParams);
             $tree[$index]['total_translations'] = 0;
             $tree[$index]['total_missing_translations'] = 0;
-            $tree[$index]['children'] = array();
+            $tree[$index]['children'] = [];
         }
 
         return $tree;

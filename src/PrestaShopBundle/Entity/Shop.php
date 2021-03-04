@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Entity;
@@ -57,6 +57,13 @@ class Shop
      * @ORM\Column(name="name", type="string", length=64)
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     *  @ORM\Column(name="color", type="string", length=50)
+     */
+    private $color;
 
     /**
      * @var int
@@ -118,6 +125,26 @@ class Shop
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $color
+     *
+     * @return Shop
+     */
+    public function setColor(string $color): Shop
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor(): ?string
+    {
+        return $this->color;
     }
 
     /**

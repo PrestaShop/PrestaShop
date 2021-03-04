@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedExcepti
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use Shop;
@@ -108,8 +107,6 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {
             $this->updatePasswordInCookie($employee);
         }
-
-        return new EmployeeId((int) $employee->id);
     }
 
     /**
@@ -125,12 +122,12 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->firstname = $command->getFirstName()->getValue();
         $employee->lastname = $command->getLastName()->getValue();
         $employee->email = $command->getEmail()->getValue();
-        $employee->optin = $command->isSubscribedToNewsletter();
         $employee->default_tab = $command->getDefaultPageId();
         $employee->id_lang = $command->getLanguageId();
         $employee->id_last_order = $employee->getLastElementsForNotify('order');
         $employee->id_last_customer_message = $employee->getLastElementsForNotify('customer_message');
         $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
+        $employee->has_enabled_gravatar = $command->hasEnabledGravatar();
 
         // Allow changing profile and active status only when editing not own account.
         if ($employee->id != $this->contextEmployeeProvider->getId()) {
@@ -141,9 +138,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $shopAssociation = $command->getShopAssociation();
 
         if (!$employee->isSuperAdmin() && empty($shopAssociation)) {
-            throw new MissingShopAssociationException(
-                'Employee must be associated to at least one shop.'
-            );
+            throw new MissingShopAssociationException('Employee must be associated to at least one shop.');
         }
 
         if (null !== $command->getPlainPassword()) {
@@ -151,9 +146,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         }
 
         if (false === $employee->update()) {
-            throw new EmployeeException(
-                sprintf('Cannot update employee with id "%s"', $employee->id)
-            );
+            throw new EmployeeException(sprintf('Cannot update employee with id "%s"', $employee->id));
         }
 
         if ($employee->isSuperAdmin()) {
@@ -180,10 +173,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         }
 
         if (Employee::employeeExists($email)) {
-            throw new EmailAlreadyUsedException(
-                $email,
-                'An account already exists for this email address'
-            );
+            throw new EmailAlreadyUsedException($email, 'An account already exists for this email address');
         }
     }
 

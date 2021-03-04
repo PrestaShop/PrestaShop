@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -32,13 +32,13 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
  */
 class EmployeeCore extends ObjectModel
 {
-    /** @var int $id Employee ID */
+    /** @var int Employee ID */
     public $id;
 
-    /** @var string Determine employee profile */
+    /** @var int Employee profile */
     public $id_profile;
 
-    /** @var string employee language */
+    /** @var int Employee language */
     public $id_lang;
 
     /** @var string Lastname */
@@ -53,7 +53,7 @@ class EmployeeCore extends ObjectModel
     /** @var string Password */
     public $passwd;
 
-    /** @var datetime Password */
+    /** @var string Password */
     public $last_passwd_gen;
 
     public $stats_date_from;
@@ -79,7 +79,7 @@ class EmployeeCore extends ObjectModel
     /** @var int employee desired screen width */
     public $bo_width;
 
-    /** @var bool, false */
+    /** @var bool */
     public $bo_menu = 1;
 
     /* Deprecated */
@@ -88,9 +88,6 @@ class EmployeeCore extends ObjectModel
     /** @var bool Status */
     public $active = 1;
 
-    /** @var bool Optin status */
-    public $optin = 1;
-
     public $remote_addr;
 
     /* employee notifications */
@@ -98,61 +95,66 @@ class EmployeeCore extends ObjectModel
     public $id_last_customer_message;
     public $id_last_customer;
 
-    /** @var string Unique token for forgot passsword feature */
+    /** @var string Unique token for forgot password feature */
     public $reset_password_token;
 
     /** @var string token validity date for forgot password feature */
     public $reset_password_validity;
 
     /**
+     * @var bool
+     */
+    public $has_enabled_gravatar = false;
+
+    /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'employee',
         'primary' => 'id_employee',
-        'fields' => array(
-            'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
-            'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255),
-            'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),
-            'last_passwd_gen' => array('type' => self::TYPE_STRING),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'optin' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'id_profile' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'bo_color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-            'default_tab' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'bo_theme' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
-            'bo_css' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
-            'bo_width' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'bo_menu' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'stats_date_from' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'stats_date_to' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'stats_compare_from' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'stats_compare_to' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'stats_compare_option' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'preselect_date_range' => array('type' => self::TYPE_STRING, 'size' => 32),
-            'id_last_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_last_customer_message' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_last_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'reset_password_token' => array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
-            'reset_password_validity' => array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
-        ),
-    );
+        'fields' => [
+            'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
+            'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
+            'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
+            'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255],
+            'last_passwd_gen' => ['type' => self::TYPE_STRING],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'id_profile' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'bo_color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
+            'default_tab' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'bo_theme' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32],
+            'bo_css' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64],
+            'bo_width' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'bo_menu' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'stats_date_from' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'stats_date_to' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'stats_compare_from' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'stats_compare_to' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'stats_compare_option' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'preselect_date_range' => ['type' => self::TYPE_STRING, 'size' => 32],
+            'id_last_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_last_customer_message' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_last_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'reset_password_token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
+            'reset_password_validity' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false],
+            'has_enabled_gravatar' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_lang' => array('xlink_resource' => 'languages'),
-            'last_passwd_gen' => array('setter' => null),
-            'stats_date_from' => array('setter' => null),
-            'stats_date_to' => array('setter' => null),
-            'stats_compare_from' => array('setter' => null),
-            'stats_compare_to' => array('setter' => null),
-            'passwd' => array('setter' => 'setWsPasswd'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_lang' => ['xlink_resource' => 'languages'],
+            'last_passwd_gen' => ['setter' => null],
+            'stats_date_from' => ['setter' => null],
+            'stats_date_to' => ['setter' => null],
+            'stats_compare_from' => ['setter' => null],
+            'stats_compare_to' => ['setter' => null],
+            'passwd' => ['setter' => 'setWsPasswd'],
+        ],
+    ];
 
-    protected $associated_shops = array();
+    protected $associated_shops = [];
 
     /**
      * EmployeeCore constructor.
@@ -216,7 +218,6 @@ class EmployeeCore extends ObjectModel
     public function add($autoDate = true, $nullValues = true)
     {
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_BACK') . 'minutes'));
-        $this->saveOptin();
         $this->updateTextDirection();
 
         return parent::add($autoDate, $nullValues);
@@ -244,28 +245,9 @@ class EmployeeCore extends ObjectModel
 
         $currentEmployee = new Employee((int) $this->id);
 
-        if ($currentEmployee->optin != $this->optin) {
-            $this->saveOptin();
-        }
-
         $this->updateTextDirection();
 
         return parent::update($nullValues);
-    }
-
-    protected function saveOptin()
-    {
-        if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS')) {
-            $language = new Language($this->id_lang);
-            $params = http_build_query(array(
-                'email' => $this->email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $language->iso_code,
-                'visitorType' => 1,
-                'source' => 'backoffice',
-            ));
-            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?' . $params);
-        }
     }
 
     /**
@@ -384,7 +366,7 @@ class EmployeeCore extends ObjectModel
 		    SELECT `id_employee`
 		    FROM `' . _DB_PREFIX_ . 'employee`
 		    WHERE `email` = \'' . pSQL($email) . '\'
-        ');
+        ', false);
     }
 
     /**
@@ -480,8 +462,16 @@ class EmployeeCore extends ObjectModel
         if (!Cache::isStored('isLoggedBack' . $this->id)) {
             /* Employee is valid only if it can be load and if cookie password is the same as database one */
             $result = (
-                $this->id && Validate::isUnsignedId($this->id) && Context::getContext()->cookie && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
-                    && (!isset(Context::getContext()->cookie->remote_addr) || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
+                $this->id
+                && Validate::isUnsignedId($this->id)
+                && Context::getContext()->cookie
+                && Context::getContext()->cookie->isSessionAlive()
+                && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
+                && (
+                    !isset(Context::getContext()->cookie->remote_addr)
+                    || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr())
+                    || !Configuration::get('PS_COOKIE_CHECKIP')
+                )
             );
             Cache::store('isLoggedBack' . $this->id, $result);
 
@@ -500,6 +490,7 @@ class EmployeeCore extends ObjectModel
             Context::getContext()->cookie->logout();
             Context::getContext()->cookie->write();
         }
+
         $this->id = null;
     }
 
@@ -608,11 +599,40 @@ class EmployeeCore extends ObjectModel
      */
     public function getImage()
     {
-        if (!Validate::isLoadedObject($this)) {
-            return Tools::getAdminImageUrl('prestashop-avatar.png');
+        $defaultSystem = Tools::getAdminImageUrl('pr/default.jpg');
+        $imageUrl = null;
+
+        // Default from Profile
+        $profile = new Profile($this->id_profile);
+        $defaultProfile = (int) $profile->id === (int) $this->id_profile ? $profile->getProfileImage() : null;
+        $imageUrl = $imageUrl ?? $defaultProfile;
+
+        // Gravatar
+        if ($this->has_enabled_gravatar) {
+            $imageUrl = $imageUrl ?? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=' . urlencode($defaultSystem);
         }
 
-        return Tools::getShopProtocol() . 'profile.prestashop.com/' . urlencode($this->email) . '.jpg';
+        // Local Image
+        $imagePath = $this->image_dir . $this->id . '.jpg';
+        if (file_exists($imagePath)) {
+            $imageUrl = $imageUrl ?? Context::getContext()->link->getMediaLink(
+                str_replace($this->image_dir, _THEME_EMPLOYEE_DIR_, $imagePath)
+            );
+        }
+
+        // Default from System
+        $imageUrl = $imageUrl ?? $defaultSystem;
+
+        // Hooks
+        Hook::exec(
+            'actionOverrideEmployeeImage',
+            [
+                'employee' => $this,
+                'imageUrl' => &$imageUrl,
+            ]
+        );
+
+        return $imageUrl;
     }
 
     /**
@@ -720,7 +740,7 @@ class EmployeeCore extends ObjectModel
     {
         $access = Profile::getProfileAccess($this->id_profile, Tab::getIdFromClassName($tab));
 
-        return $access[$action] == '1';
+        return is_array($access) && $access[$action] == '1';
     }
 
     /**

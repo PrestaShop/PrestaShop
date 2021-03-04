@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
+use PrestaShopBundle\Exception\InvalidLanguageException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use Symfony\Component\Validator\Constraints\Locale;
 
 class TranslationController extends ApiController
 {
@@ -52,6 +52,8 @@ class TranslationController extends ApiController
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -67,24 +69,21 @@ class TranslationController extends ApiController
 
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
-            $theme = $request->attributes->get('theme', $this->getSelectedTheme());
+            $theme = $request->attributes->get('theme');
             $module = $request->query->get('module');
             $search = $request->query->get('search');
 
-            $icuLocale = Converter::toPrestaShopLocale($locale);
-            $validationErrors = $this->container->get('validator')->validate($icuLocale, [
-                new Locale(),
-            ]);
-
-            // If the locale is invalid, no need to call the translation provider.
-            if ($locale !== 'default' && count($validationErrors) > 0) {
+            try {
+                $this->translationService->findLanguageByLocale($locale);
+            } catch (InvalidLanguageException $e) {
+                // If the locale is invalid, no need to call the translation provider.
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 
             $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
-            $info = array(
+            $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
-            );
+            ];
 
             $catalog['info'] = array_merge(
                 $catalog['info'],
@@ -118,6 +117,8 @@ class TranslationController extends ApiController
     /**
      * Show tree for translation page with some params.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -136,14 +137,30 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (in_array($type, array('modules', 'themes')) && empty($selected)) {
+            if (in_array($type, ['modules', 'themes']) && empty($selected)) {
                 throw new Exception('This \'selected\' param is not valid.');
             }
 
-            if ('modules' === $type) {
-                $tree = $this->getModulesTree($lang, $type, $selected, $search);
-            } else {
-                $tree = $this->getNormalTree($lang, $type, $selected, $search);
+            switch ($type) {
+                case 'themes':
+                    $tree = $this->getNormalTree($lang, $type, $selected, $search);
+                    break;
+
+                case 'modules':
+                    $tree = $this->getModulesTree($lang, $selected, $search);
+                    break;
+
+                case 'mails':
+                    $tree = $this->getMailsSubjectTree($lang, $search);
+                    break;
+
+                case 'mails_body':
+                    $tree = $this->getMailsBodyTree($lang, $search);
+                    break;
+
+                default:
+                    $tree = $this->getNormalTree($lang, $type, null, $search);
+                    break;
             }
 
             return $this->jsonResponse($tree, $request);
@@ -154,6 +171,8 @@ class TranslationController extends ApiController
 
     /**
      * Route to edit translation.
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -171,7 +190,7 @@ class TranslationController extends ApiController
             $response = [];
             foreach ($translations as $translation) {
                 if (empty($translation['theme'])) {
-                    $translation['theme'] = $this->getSelectedTheme();
+                    $translation['theme'] = null;
                 }
 
                 try {
@@ -199,6 +218,8 @@ class TranslationController extends ApiController
 
     /**
      * Route to reset translation.
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -266,7 +287,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $content
+     * @param array $content
      */
     private function guardAgainstInvalidTranslationEditRequest($content)
     {
@@ -286,7 +307,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $content
+     * @param array $content
      */
     protected function guardAgainstInvalidTranslationResetRequest($content)
     {
@@ -305,68 +326,90 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $lang
-     * @param $type
-     * @param $selected
+     * @param string $lang
+     * @param string|null $type
+     * @param string $theme Selected theme name
      * @param null $search
      *
      * @return array
      */
-    private function getNormalTree($lang, $type, $selected, $search = null)
+    private function getNormalTree($lang, $type, $theme, $search = null)
     {
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $this->getSelectedTheme());
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $this->getSelectedTheme(), $search);
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $theme, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
+        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
     }
 
     /**
-     * @param $lang
-     * @param $type
-     * @param $selected
+     * @param string $lang Two-letter iso code
+     * @param string $selectedModuleName Selected module name
+     * @param string|null $search
+     *
+     * @return array
+     */
+    private function getModulesTree($lang, $selectedModuleName, $search = null)
+    {
+        $theme = null;
+        $locale = $this->translationService->langToLocale($lang);
+
+        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
+        $moduleProvider->setModuleName($selectedModuleName);
+
+        $treeBuilder = new TreeBuilder($locale, $theme);
+        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
+
+        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search, $selectedModuleName);
+    }
+
+    /**
+     * @param string $lang Two-letter iso code
      * @param null $search
      *
      * @return array
      */
-    private function getModulesTree($lang, $type, $selected, $search = null)
+    private function getMailsSubjectTree($lang, $search = null)
     {
-        $locale = $this->translationService->langToLocale($lang);
-        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
-        $moduleProvider->setModuleName($selected);
+        $theme = null;
 
-        $treeBuilder = new TreeBuilder($locale, $this->getSelectedTheme());
-        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search, $selected);
+        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+    }
+
+    /**
+     * @param string $lang Two-letter iso code
+     * @param null $search
+     *
+     * @return array
+     */
+    private function getMailsBodyTree($lang, $search = null)
+    {
+        $theme = null;
+
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
+
+        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
     }
 
     /**
      * Make final tree.
      *
      * @param TreeBuilder $treeBuilder
-     * @param $catalogue
-     * @param $type
-     * @param $selected
+     * @param array $catalogue
+     * @param string|null $theme
      * @param string|null $search
      * @param string|null $module
      *
      * @return array
      */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null, $module = null)
+    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $theme, $search = null, $module = null)
     {
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $this->getSelectedTheme(), $search, $module);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search, $module);
 
         return $translationsTree;
-    }
-
-    /**
-     * @return \PrestaShop\PrestaShop\Core\Addon\Theme\Theme
-     *
-     * @todo: When the theme will be selectable in the form, this function should be updated accordingly.
-     */
-    private function getSelectedTheme()
-    {
-        return $this->container->get('prestashop.adapter.legacy.context')->getContext()->shop->theme->getName();
     }
 }

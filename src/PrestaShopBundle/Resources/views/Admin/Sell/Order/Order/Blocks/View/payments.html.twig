@@ -1,0 +1,155 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="card mt-2" id="view_order_payments_block">
+  <div class="card-header">
+    <h3 class="card-header-title">
+      {{ 'Payment'|trans({}, 'Admin.Global') }} ({{ orderForViewing.payments.payments|length }})
+    </h3>
+  </div>
+
+  <div class="card-body">
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig' with {
+        'payments': orderForViewing.payments,
+        'linkedOrders': orderForViewing.linkedOrders
+    } %}
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="table-head-date">{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-payment">{{ 'Payment method'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          <th class="table-head-transaction">{{ 'Transaction ID'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          <th class="table-head-amount">{{ 'Amount'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-invoice">{{ 'Invoice'|trans({}, 'Admin.Global') }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for payment in orderForViewing.payments.payments %}
+        <tr>
+          <td>{{ payment.date|date_format_full }}</td>
+          <td>{{ payment.paymentMethod }}</td>
+          <td>{{ payment.transactionId }}</td>
+          <td>{{ payment.amount }}</td>
+          <td>{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
+          <td class="text-right">
+            <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
+              {{ 'Details'|trans({}, 'Admin.Global') }}
+            </button>
+          </td>
+        </tr>
+        <tr class="d-none">
+          <td colspan="6">
+            <p class="mb-0">
+              <strong>{{ 'Card number'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+              {% if payment.cardNumber %}
+                {{ payment.cardNumber }}
+              {% else %}
+                {{ 'Not defined'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              {% endif %}
+            </p>
+            <p class="mb-0">
+              <strong>{{ 'Card type'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
+              {% if payment.cardBrand %}
+                {{ payment.cardBrand }}
+              {% else %}
+                {{ 'Not defined'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              {% endif %}
+            </p>
+            <p class="mb-0">
+              <strong>{{ 'Expiration date'|trans({}, 'Admin.Catalog.Feature') }}</strong>&nbsp;
+              {% if payment.cardExpiration %}
+                {{ payment.cardExpiration }}
+              {% else %}
+                {{ 'Not defined'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              {% endif %}
+            </p>
+            <p class="mb-0">
+              <strong>{{ 'Cardholder name'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
+              {% if payment.cardHolder %}
+                {{ payment.cardHolder }}
+              {% else %}
+                {{ 'Not defined'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              {% endif %}
+            </p>
+          </td>
+        </tr>
+      {% endfor %}
+      <tr class="d-print-none">
+        {{ form_start(addOrderPaymentForm, {'action': path('admin_orders_add_payment', {'orderId': orderForViewing.id})}) }}
+          <td>
+            {{ form_widget(addOrderPaymentForm.date) }}
+          </td>
+          <td>
+            {{ form_widget(addOrderPaymentForm.payment_method) }}
+          </td>
+          <td>
+            {{ form_widget(addOrderPaymentForm.transaction_id) }}
+          </td>
+          <td>
+            <div class="input-group">
+              {{ form_widget(addOrderPaymentForm.amount) }}
+              {{ form_widget(addOrderPaymentForm.id_currency) }}
+            </div>
+          </td>
+          <td>
+            <div {% if addOrderPaymentForm.id_invoice.vars.choices is empty %}class="d-none"{% endif %}>
+              {{ form_widget(addOrderPaymentForm.id_invoice) }}
+            </div>
+          </td>
+          <td>
+            <button type="submit" class="btn btn-primary btn-sm">{{ 'Add'|trans({}, 'Admin.Actions') }}</button>
+          </td>
+        {{ form_end(addOrderPaymentForm) }}
+      </tr>
+      </tbody>
+    </table>
+
+    {% if not orderForViewing.valid and changeOrderCurrencyForm.new_currency_id.vars.choices|length %}
+      {{ form_start(changeOrderCurrencyForm, {'action': path('admin_orders_change_currency', {'orderId': orderForViewing.id})}) }}
+        <div class="form-group row d-print-none">
+          <label class="form-control-label">{{ 'Change currency'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+          <div class="col-sm">
+            <div class="input-group">
+              {{ form_widget(changeOrderCurrencyForm.new_currency_id) }}
+              <button class="btn btn-outline-secondary btn-sm ml-2">
+                {{ 'Change'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+
+            <div class="d-none">
+              {{ form_rest(changeOrderCurrencyForm) }}
+            </div>
+
+            <small class="text-muted">
+              {{ 'Do not forget to update your exchange rate before making this change.'|trans({}, 'Admin.Orderscustomers.Help') }}
+            </small>
+          </div>
+        </div>
+      {{ form_end(changeOrderCurrencyForm) }}
+    {% endif %}
+  </div>
+</div>

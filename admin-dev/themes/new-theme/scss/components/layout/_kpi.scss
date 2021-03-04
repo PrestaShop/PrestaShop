@@ -1,11 +1,70 @@
 .kpi-container {
   position: relative;
-  text-decoration: none;
-  background: $gray-soft;
-  padding-top: .9375rem;
-  padding-bottom: .9375rem;
-  text-align: center;
   display: block;
+  padding-top: 0.9375rem;
+  padding-bottom: 0.9375rem;
+  text-align: center;
+  text-decoration: none;
+  background: #fff;
+  @include border-radius($card-border-radius);
+
+  @include media-breakpoint-down(sm) {
+    background: none;
+
+    &:not(.box-stats) {
+      padding: 0;
+    }
+
+    &.box-stats {
+      width: max-content;
+      min-width: 13rem;
+      padding: 1rem;
+      background-color: #fff;
+      box-shadow: 0 8px 16px 0 rgba(#000, 0.1);
+      @include border-radius($card-border-radius);
+    }
+
+    .kpi-content {
+      padding-left: 35px;
+
+      .title {
+        font-size: 0.875rem;
+      }
+
+      .kpi-description {
+        .value {
+          font-size: 0.875rem;
+        }
+      }
+    }
+
+    > .row {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      // stylelint-disable
+      justify-content: flex-start !important;
+      padding: 1.1rem 0.6rem;
+      padding-top: 0.5rem;
+      margin: 0 -1rem !important;
+      overflow: scroll;
+      // stylelint-enable
+
+      > div {
+        margin: 0 0.5rem;
+
+        &:last-child {
+          .box-stats {
+            margin-right: 1rem;
+          }
+        }
+
+        i {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
 
   &:hover {
     text-decoration: none;
@@ -14,15 +73,21 @@
 
 .kpi-refresh {
   position: absolute;
-  z-index: 1;
   top: 0;
   right: 0;
+  z-index: 1;
+
+  @include media-breakpoint-down(sm) {
+    button {
+      display: none;
+    }
+  }
 }
 
 .kpi-content {
   position: relative;
-  text-align: left;
   padding-left: 40px;
+  text-align: left;
 
   > .material-icons {
     position: absolute;
@@ -33,46 +98,72 @@
   }
 
   &.-color2 {
-    > .value,
+    .value,
     > .material-icons {
       color: $danger;
     }
   }
 
   &.-color3 {
-    > .value,
+    .value,
     > .material-icons {
       color: $success;
     }
   }
 
-  > .title,
-  > .subtitle,
-  > .value {
+  .title,
+  .subtitle,
+  .value {
+    padding-left: 0.125rem;
     font-size: 0.75rem;
-    padding-left: .125rem;
     color: $gray-dark;
   }
-  
-  > .title {
+
+  .title {
     display: inline-block;
   }
-  
-  > .subtitle {
-    text-transform: uppercase;
-    color: $gray-medium;
+
+  .subtitle {
     display: block;
+    color: $gray-medium;
+    text-transform: uppercase;
   }
-  > .value {
+
+  .value {
+    display: block;
     font-size: 1.25rem;
     color: $primary;
-    display: block;
+  }
+}
+
+// specific design for orders page. If design tends to repeat use this for all kpi's in all pages
+.orders-kpi {
+  .kpi-content {
+    .kpi-description {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: flex-end;
+
+      .value {
+        padding-right: 10px;
+        color: $gray-dark;
+      }
+    }
   }
 }
 
 .container-fluid {
   > .kpi-container {
-    padding-left: 1rem;
     padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+.card-kpis {
+  @include media-breakpoint-down(sm) {
+    background-color: inherit;
+    border: none;
+    box-shadow: inherit;
   }
 }

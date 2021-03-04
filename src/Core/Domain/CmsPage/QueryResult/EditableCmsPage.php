@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult;
@@ -64,7 +64,7 @@ class EditableCmsPage
     /**
      * @var string[]
      */
-    private $LocalizedMetaKeyword;
+    private $localizedMetaKeyword;
 
     /**
      * @var string[]
@@ -92,17 +92,25 @@ class EditableCmsPage
     private $shopAssociation;
 
     /**
+     * Url for opening FO page on save and preview action
+     *
+     * @var string
+     */
+    private $previewUrl;
+
+    /**
      * @param int $cmsPageId
      * @param int $cmsPageCategoryId
      * @param string[] $localizedTitle
      * @param string[] $localizedMetaTitle
      * @param string[] $localizedMetaDescription
-     * @param string[] $LocalizedMetaKeyword
+     * @param string[] $localizedMetaKeyword
      * @param string[] $localizedFriendlyUrl
      * @param string[] $localizedContent
      * @param bool $indexedForSearch
      * @param bool $displayed
      * @param array $shopAssociation
+     * @param string $previewUrl
      *
      * @throws CmsPageCategoryException
      * @throws CmsPageException
@@ -113,24 +121,26 @@ class EditableCmsPage
         array $localizedTitle,
         array $localizedMetaTitle,
         array $localizedMetaDescription,
-        array $LocalizedMetaKeyword,
+        array $localizedMetaKeyword,
         array $localizedFriendlyUrl,
         array $localizedContent,
         $indexedForSearch,
         $displayed,
-        array $shopAssociation
+        array $shopAssociation,
+        $previewUrl
     ) {
         $this->cmsPageId = new CmsPageId($cmsPageId);
         $this->cmsPageCategoryId = new CmsPageCategoryId($cmsPageCategoryId);
         $this->localizedTitle = $localizedTitle;
         $this->localizedMetaTitle = $localizedMetaTitle;
         $this->localizedMetaDescription = $localizedMetaDescription;
-        $this->LocalizedMetaKeyword = $LocalizedMetaKeyword;
+        $this->localizedMetaKeyword = $localizedMetaKeyword;
         $this->localizedFriendlyUrl = $localizedFriendlyUrl;
         $this->localizedContent = $localizedContent;
         $this->indexedForSearch = $indexedForSearch;
         $this->displayed = $displayed;
         $this->shopAssociation = $shopAssociation;
+        $this->previewUrl = $previewUrl;
     }
 
     /**
@@ -178,7 +188,7 @@ class EditableCmsPage
      */
     public function getLocalizedMetaKeyword()
     {
-        return $this->LocalizedMetaKeyword;
+        return $this->localizedMetaKeyword;
     }
 
     /**
@@ -219,5 +229,13 @@ class EditableCmsPage
     public function getShopAssociation()
     {
         return $this->shopAssociation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreviewUrl()
+    {
+        return $this->previewUrl;
     }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 
@@ -67,25 +67,30 @@ class ProductAssemblerCore
 
         $sql = "SELECT
                     p.*,
+                    ps.*,
                     pl.*,
                     sa.out_of_stock,
                     IFNULL(sa.quantity, 0) as quantity,
                     (DATEDIFF(
-				p.`date_add`,
-				DATE_SUB(
-					'$now',
-					INTERVAL $nbDaysNewProduct DAY
-				)
-			) > 0) as new
+                        p.`date_add`,
+                        DATE_SUB(
+                            '$now',
+                            INTERVAL $nbDaysNewProduct DAY
+                        )
+                    ) > 0) as new
                 FROM {$prefix}product p
                 LEFT JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
                 LEFT JOIN {$prefix}stock_available sa
-			        ON sa.id_product = p.id_product 
+			        ON sa.id_product = p.id_product
 			        AND sa.id_shop = $idShop
-			    WHERE p.id_product = $idProduct";
+                LEFT JOIN {$prefix}product_shop ps
+			        ON ps.id_product = p.id_product
+			        AND ps.id_shop = $idShop
+			    WHERE p.id_product = $idProduct
+			    LIMIT 1";
 
         $rows = Db::getInstance()->executeS($sql);
         if ($rows === false) {

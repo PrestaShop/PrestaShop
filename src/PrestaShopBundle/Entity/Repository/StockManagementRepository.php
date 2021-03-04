@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Entity\Repository;
@@ -98,14 +98,14 @@ abstract class StockManagementRepository
     /**
      * @var array
      */
-    protected $productFeatures = array();
+    protected $productFeatures = [];
 
     /**
      * @param ContainerInterface $container
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
-     * @param $tablePrefix
+     * @param string $tablePrefix
      *
      * @throws NotImplementedException
      */
@@ -229,7 +229,7 @@ abstract class StockManagementRepository
     /**
      * @param QueryParamsCollection $queryParams
      *
-     * @return bool|string
+     * @return int
      */
     public function countPages(QueryParamsCollection $queryParams)
     {
@@ -258,14 +258,14 @@ abstract class StockManagementRepository
     protected function andWhere(QueryParamsCollection $queryParams)
     {
         $filters = $queryParams->getSqlFilters();
-        $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], array(
+        $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], [
             '{product_id}' => 'p.id_product',
             '{supplier_id}' => 'p.id_supplier',
             '{id_employee}' => 'sm.id_employee',
             '{date_add}' => 'sm.date_add',
             '{id_stock_mvt_reason}' => 'sm.id_stock_mvt_reason',
             '{active}' => 'p.active',
-        ));
+        ]);
 
         return $filters;
     }
@@ -283,12 +283,12 @@ abstract class StockManagementRepository
             return '';
         }
 
-        return strtr($filters['having'], array(
+        return strtr($filters['having'], [
             '{combination_name}' => 'combination_name',
             '{product_reference}' => 'product_reference',
             '{supplier_name}' => 'supplier_name',
             '{product_name}' => 'product_name',
-        ));
+        ]);
     }
 
     /**
@@ -307,7 +307,7 @@ abstract class StockManagementRepository
             $productColumns = 'product_id DESC, combination_id DESC';
         }
 
-        return strtr($orderByClause, array(
+        return strtr($orderByClause, [
             '{product} DESC' => $productColumns,
             '{product}' => $productColumns,
             '{reference}' => 'product_reference',
@@ -317,7 +317,7 @@ abstract class StockManagementRepository
             '{id_stock_mvt}' => 'id_stock_mvt',
             '{date_add}' => 'date_add',
             '{product_low_stock_alert}' => 'product_low_stock_alert',
-        ));
+        ]);
     }
 
     /**
@@ -415,6 +415,35 @@ abstract class StockManagementRepository
     }
 
     /**
+     * Get the attribute name subquery to be used in the select field of the main query.
+     *
+     * @return string
+     */
+    protected function getAttributeNameSubquery()
+    {
+        return '(SELECT GROUP_CONCAT(
+                        DISTINCT CONCAT(agl.name)
+                        SEPARATOR ", "
+                    )
+                    FROM ' . $this->tablePrefix . 'product_attribute pa2
+                    JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
+                        pac.id_product_attribute = pa2.id_product_attribute
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute a ON (
+                        a.id_attribute = pac.id_attribute
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
+                        ag.id_attribute_group = a.id_attribute_group
+                    )
+                    JOIN ' . $this->tablePrefix . 'attribute_group_lang agl ON (
+                        ag.id_attribute_group = agl.id_attribute_group
+                        AND agl.id_lang = :language_id
+                    )
+                    WHERE pa2.id_product=p.id_product AND pa2.id_product_attribute=pa.id_product_attribute)
+                    AS attribute_name';
+    }
+
+    /**
      * Get the combination name subquery to be used in the select field of the main query.
      *
      * @return string
@@ -428,7 +457,7 @@ abstract class StockManagementRepository
                     FROM ' . $this->tablePrefix . 'product_attribute pa2
                     JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
                         pac.id_product_attribute = pa2.id_product_attribute
-                    )                    
+                    )
                     JOIN ' . $this->tablePrefix . 'attribute a ON (
                         a.id_attribute = pac.id_attribute
                     )
@@ -442,7 +471,7 @@ abstract class StockManagementRepository
                     JOIN ' . $this->tablePrefix . 'attribute_group_lang agl ON (
                         ag.id_attribute_group = agl.id_attribute_group
                         AND agl.id_lang = :language_id
-                    )                    
+                    )
                     WHERE pa2.id_product=p.id_product AND pa2.id_product_attribute=pa.id_product_attribute)
                     AS combination_name';
     }
@@ -490,7 +519,7 @@ abstract class StockManagementRepository
      */
     protected function getCombinationCoverId(array $row)
     {
-        $query = 'SELECT id_image 
+        $query = 'SELECT id_image
                   FROM ' . $this->tablePrefix . 'product_attribute_image pai
                   WHERE id_product_attribute=:id_product_attribute
                   LIMIT 1';
@@ -520,7 +549,7 @@ abstract class StockManagementRepository
                         )
                         JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
                             ag.id_attribute_group = a.id_attribute_group
-                        )                    
+                        )
                     WHERE pac.id_product_attribute=:id_product_attribute';
         $statement = $this->connection->prepare($query);
         $statement->bindValue('id_product_attribute', (int) $row['combination_id'], \PDO::PARAM_INT);

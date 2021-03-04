@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Unit\Core\Grid\Presenter;
@@ -29,6 +29,7 @@ namespace LegacyTests\Unit\Core\Grid\Presenter;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
@@ -70,6 +71,7 @@ class GridPresenterTest extends TestCase
             'pagination' => ['offset', 'limit'],
             'sorting' => ['order_by', 'order_way'],
             'filters' => [],
+            'view_options' => [],
         ];
 
         $this->assertInternalType('array', $presentedGrid);
@@ -102,6 +104,8 @@ class GridPresenterTest extends TestCase
             ->willReturn(new BulkActionCollection());
         $definition->method('getGridActions')
             ->willReturn(new GridActionCollection());
+        $definition->method('getViewOptions')
+            ->willReturn(new ViewOptionsCollection());
         $definition->method('getFilters')
             ->willReturn(new FilterCollection());
 

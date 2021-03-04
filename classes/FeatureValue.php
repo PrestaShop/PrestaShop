@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -32,7 +32,7 @@ class FeatureValueCore extends ObjectModel
     /** @var int Group id which attribute belongs */
     public $id_feature;
 
-    /** @var string Name */
+    /** @var string|array Name */
     public $value;
 
     /** @var bool Custom */
@@ -41,31 +41,31 @@ class FeatureValueCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'feature_value',
         'primary' => 'id_feature_value',
         'multilang' => true,
-        'fields' => array(
-            'id_feature' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'custom' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        'fields' => [
+            'id_feature' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'custom' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
-            'value' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
-        ),
-    );
+            'value' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'product_feature_values',
         'objectNodeName' => 'product_feature_value',
-        'fields' => array(
-            'id_feature' => array('xlink_resource' => 'product_features'),
-        ),
-    );
+        'fields' => [
+            'id_feature' => ['xlink_resource' => 'product_features'],
+        ],
+    ];
 
     /**
      * Get all values for a given feature.
      *
-     * @param bool $idFeature Feature id
+     * @param int $idFeature Feature id
      *
      * @return array Array with feature's values
      */
@@ -83,7 +83,7 @@ class FeatureValueCore extends ObjectModel
      * Get all values for a given feature and language.
      *
      * @param int $idLang Language id
-     * @param bool $idFeature Feature id
+     * @param int $idFeature Feature id
      *
      * @return array Array with feature's values
      */
@@ -103,7 +103,7 @@ class FeatureValueCore extends ObjectModel
     /**
      * Get all language for a given value.
      *
-     * @param bool $idFeatureValue Feature value id
+     * @param int $idFeatureValue Feature value id
      *
      * @return array Array with value's languages
      */
@@ -207,7 +207,7 @@ class FeatureValueCore extends ObjectModel
     {
         $return = parent::add($autoDate, $nullValues);
         if ($return) {
-            Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
+            Hook::exec('actionFeatureValueSave', ['id_feature_value' => $this->id]);
         }
 
         return $return;
@@ -227,7 +227,7 @@ class FeatureValueCore extends ObjectModel
     {
         $return = parent::update($nullValues);
         if ($return) {
-            Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
+            Hook::exec('actionFeatureValueSave', ['id_feature_value' => $this->id]);
         }
 
         return $return;
@@ -251,7 +251,7 @@ class FeatureValueCore extends ObjectModel
         $return = parent::delete();
 
         if ($return) {
-            Hook::exec('actionFeatureValueDelete', array('id_feature_value' => $this->id));
+            Hook::exec('actionFeatureValueDelete', ['id_feature_value' => $this->id]);
         }
 
         return $return;

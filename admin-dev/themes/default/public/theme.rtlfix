@@ -25,10 +25,10 @@
   font-weight: 300;
 }
 .bootstrap body.lang-fa, body.lang-fa, .lang-fa #content.bootstrap .panel .panel-heading a.btn, .lang-fa #content.bootstrap #dash_version .panel-heading a.btn, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn, .lang-fa #notification .dropdown-menu .notifications .nav-tabs .nav-item .nav-link, .lang-fa .bootstrap .tooltip, .lang-fa .bootstrap .btn-group-action .btn, .lang-fa .bootstrap .page-head h2.page-title, .lang-fa .bootstrap .page-head h4.page-subtitle, .lang-fa .bootstrap #dashboard section > section header .small, .lang-fa .bootstrap #login-panel #shop_name, .bootstrap #login-panel #reset_name, .bootstrap #login-panel #reset_confirm_name, .bootstrap #login-panel #forgot_name, .bootstrap #login-panel #forgot_confirm_name, .bootstrap h1, .lang-fa .bootstrap h2, .lang-fa .bootstrap h3, .lang-fa .bootstrap h4, .lang-fa .bootstrap h5, .lang-fa .bootstrap h6, .lang-fa .bootstrap .h1, .lang-fa .bootstrap .h2, .lang-fa .bootstrap .h3, .lang-fa .bootstrap .h4, .lang-fa .bootstrap .h5, .lang-fa .bootstrap .h6, .lang-fa #content.bootstrap .panel .panel-heading, .lang-fa #content.bootstrap #dash_version .panel-heading, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading, .bootstrap .nav-tabs li a, .bootstrap .list-empty .list-empty-msg, .bootstrap #dashboard #dashtrends dt, .bootstrap #dashboard #dashproducts nav, .lang-fa .bootstrap #dashboard .tooltip-panel-heading {
-	font-family:"Vazir",Helvetica,Arial,sans-serif;
+  font-family:"Vazir",Helvetica,Arial,sans-serif;
 }
 .lang-fa .bootstrap input[type="text"], .lang-fa .bootstrap input[type="search"], .lang-fa .bootstrap input[type="password"], .lang-fa .bootstrap input[type="email"], .lang-fa .bootstrap input[type="tel"] {
-	font-family:"Vazir",Helvetica,Arial,sans-serif !important;
+  font-family:"Vazir",Helvetica,Arial,sans-serif !important;
 }
 .rtl-flip:not(.rtl-no-flip) {
   -moz-transform: scaleX(-1);
@@ -126,4 +126,28 @@ svg {
 /* fix stock quantity arrow direction */
 .stock-app .stock-overview .table .qty-update .material-icons {
   transform: scaleX(-1);
+}
+
+@keyframes showcase-img-appearance-rtl {
+  from {
+    -webkit-transform: translate(-20px) translateX(-1);
+    -ms-transform: translate(-20px) translateX(-1);
+    -webkit-transform: translate(-20px) translateX(-1);
+    transform: translate(-20px) translateX(-1);
+    opacity: 0;
+ }
+  to {
+    -webkit-transform: translate(0) translateX(-1);
+    -ms-transform: translate(0) translateX(-1);
+    -webkit-transform: translate(0) translateX(-1);
+    transform: translate(0) translateX(-1);
+    opacity: 1;
+ }
+}
+
+/* Fixes image flipping for RTL language */
+.img-rtl {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  animation: showcase-img-appearance-rtl .4s;
 }
