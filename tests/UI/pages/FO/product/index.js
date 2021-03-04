@@ -2,7 +2,7 @@ require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
 class Product extends FOBasePage {
-  constructor() {d
+  constructor() {
     super();
 
     // Selectors for product page
