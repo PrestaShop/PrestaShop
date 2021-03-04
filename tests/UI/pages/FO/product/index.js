@@ -10,7 +10,6 @@ class Product extends FOBasePage {
     this.productCoverImg = '#content .product-cover img';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
-    this.colorInput = color => `#group_2 li input[title=${color}]`;
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -20,6 +19,7 @@ class Product extends FOBasePage {
     this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
     this.productSizeOption = size => `#group_1 option[title=${size}]`;
+    this.productSizeSelect = '#group_1';
     this.productColorInput = color => `#group_2 input[title=${color}]`;
     this.metaLink = '#main > meta';
     // Product prices block
@@ -52,27 +52,41 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Select product combination
+   * @param page
+   * @param quantity
+   * @param combination
+   * @returns {Promise<void>}
+   */
+  async selectCombination(page, quantity, combination) {
+    await page.waitForTimeout(1000);
+    if (combination.color !== null) {
+      await Promise.all([
+        this.waitForVisibleSelector(page, this.productColorInput(combination.color)),
+        page.click(this.productColorInput(combination.color)),
+      ]);
+    }
+    if (combination.size !== null) {
+      await Promise.all([
+        this.waitForVisibleSelector(page, this.productSizeSelect),
+        this.selectByVisibleText(page, this.productSizeSelect, combination.size),
+      ]);
+    }
+  }
+
+  /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page
    * @param quantity
-   * @param attributeToChoose
+   * @param combination
    * @param proceedToCheckout
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page, quantity = 1, attributeToChoose = '', proceedToCheckout = true) {
-    await page.waitForTimeout(1000);
-    if (attributeToChoose.color) {
-      await Promise.all([
-        this.waitForVisibleSelector(page, this.colorInput(attributeToChoose.color)),
-        page.click(this.colorInput(attributeToChoose.color)),
-      ]);
+  async addProductToTheCart(page, quantity = 1, combination, proceedToCheckout = true) {
+    await this.selectCombination(page, quantity, combination);
+    if (quantity !== 1) {
+      await this.setValue(page, this.productQuantity, quantity);
     }
-    if (quantity !== 1 && attributeToChoose !== '') {
-      await this.setValue(page, this.productQuantity, attributeToChoose.quantity.toString());
-    } else if (quantity !== 1) {
-      await this.setValue(page, this.productQuantity, quantity.toString());
-    }
-
     await this.waitForSelectorAndClick(page, this.addToCartButton);
     await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
 
