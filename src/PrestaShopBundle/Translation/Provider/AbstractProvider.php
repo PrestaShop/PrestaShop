@@ -268,7 +268,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
         if (!is_array($paths)) {
-            $paths = array($paths);
+            $paths = [$paths];
         }
         
         return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
