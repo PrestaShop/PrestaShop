@@ -92,7 +92,7 @@
                   "price": "{Product::getPriceStatic($product->id, true, $id_product_combination)|round:'2'}",
                   "url": "{$product.url}",
                   "priceValidUntil": "{($smarty.now + (int) (60*60*24*15))|date_format:"%Y-%m-%d"}",
-                  "image": "{if $combination.id_image > 0}{$link->getImageLink($product->link_rewrite, $combination.id_image, 'home_default')|escape:'html':'UTF-8'}{else}{$product.cover.bySize.home_default.url}{/if}",
+                  "image": "{if $combination.id_image > 0}{$link->getImageLink($product->link_rewrite, $combination.id_image, 'home_default')|escape:'html':'UTF-8'}{else}{if !empty($product.cover)}{$product.cover.bySize.home_default.url}{/if}{/if}",
                   "sku": "{$combination.reference}",
                   "mpn": "{if $combination.mpn}{$combination.mpn}{else}{$combination.reference}{/if}",
                   {if $combination.ean13}"gtin13": "{$combination.ean13}",{else if $combination.upc}"gtin13": "0{$combination.upc}",{/if}
