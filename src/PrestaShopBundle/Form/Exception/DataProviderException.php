@@ -24,45 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+namespace PrestaShopBundle\Form\Exception;
 
-/**
- * This class is responsible of managing the data manipulated using forms
- * in "Configure > Advanced Parameters > Administration" page.
- */
-final class FormDataProvider implements FormDataProviderInterface
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use Throwable;
+
+class DataProviderException extends DomainException
 {
-    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 1;
-    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 2;
-    public const ERROR_COOKIE_SAMESITE_NONE = 3;
-
     /**
-     * @var DataConfigurationInterface
+     * @var InvalidConfigurationDataErrorCollection
      */
-    private $dataConfiguration;
+    private $InvalidConfigurationDataErrors;
 
-    public function __construct(
-        DataConfigurationInterface $dataConfiguration
-    ) {
-        $this->dataConfiguration = $dataConfiguration;
+    public function __construct($message = '', $code = 0, Throwable $previous = null, ?InvalidConfigurationDataErrorCollection $InvalidConfigurationDataErrors = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->InvalidConfigurationDataErrors = $InvalidConfigurationDataErrors ?: new InvalidConfigurationDataErrorCollection();
     }
 
     /**
-     * {@inheritdoc}
+     * @return InvalidConfigurationDataErrorCollection
      */
-    public function getData()
+    public function getInvalidConfigurationDataErrors(): InvalidConfigurationDataErrorCollection
     {
-        return $this->dataConfiguration->getConfiguration();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        return $this->dataConfiguration->updateConfiguration($data);
+        return $this->InvalidConfigurationDataErrors;
     }
 }

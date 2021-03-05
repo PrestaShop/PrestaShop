@@ -24,45 +24,62 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+namespace PrestaShopBundle\Form\Exception;
 
-/**
- * This class is responsible of managing the data manipulated using forms
- * in "Configure > Advanced Parameters > Administration" page.
- */
-final class FormDataProvider implements FormDataProviderInterface
+class InvalidConfigurationDataError
 {
-    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 1;
-    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 2;
-    public const ERROR_COOKIE_SAMESITE_NONE = 3;
+    /**
+     * @var int
+     */
+    private $errorCode;
 
     /**
-     * @var DataConfigurationInterface
+     * @var string
      */
-    private $dataConfiguration;
+    private $fieldName;
 
-    public function __construct(
-        DataConfigurationInterface $dataConfiguration
-    ) {
-        $this->dataConfiguration = $dataConfiguration;
+    /**
+     * @var int|null
+     */
+    private $languageId;
+
+    /**
+     * InvalidConfigurationDataError constructor.
+     *
+     * @param int $errorCode
+     * @param string $fieldName
+     * @param int|null $languageId
+     */
+    public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
+    {
+        $this->errorCode = $errorCode;
+        $this->fieldName = $fieldName;
+        $this->languageId = $languageId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    public function getData()
+    public function getErrorCode(): int
     {
-        return $this->dataConfiguration->getConfiguration();
+        return $this->errorCode;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function setData(array $data)
+    public function getFieldName(): string
     {
-        return $this->dataConfiguration->updateConfiguration($data);
+        return $this->fieldName;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLanguageId(): ?int
+    {
+        return $this->languageId;
     }
 }
