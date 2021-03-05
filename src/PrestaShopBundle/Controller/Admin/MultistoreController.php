@@ -74,7 +74,7 @@ class MultistoreController extends FrameworkBundleAdminController
         } else {
             // use ShopGroup object as a the container for "all shops" context so that it can be used transparently in twig
             $currentContext = new ShopGroup();
-            $currentContext->setName($this->trans('All shops', 'Admin.Shop'));
+            $currentContext->setName($this->trans('All shops', 'Admin.Global'));
             $currentContext->setColor('');
         }
 
