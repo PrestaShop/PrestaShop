@@ -102,7 +102,7 @@
                     <a class="multishop-modal-shop-name" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>
                   </div>
                   {% if shop.hasMainUrl() %}
-                    <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
+                    <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
                   {% else %}
                     <a class="multishop-modal-shop-view" href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id}) }}" rel="noreferrer">{{ "Configure URL"|trans({}, 'Admin.Shop') }} <i class="material-icons">visibility</i></a>
                   {% endif %}
