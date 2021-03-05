@@ -2747,7 +2747,7 @@ class OrderCore extends ObjectModel
             $new_cart->updateQty(
                 $product['product_quantity'],
                 (int) $product['product_id'],
-                (int) $product['product_attribute_id'],
+                isset($product['product_attribute_id']) ? (int) $product['product_attribute_id'] : null,
                 false,
                 'up',
                 0,
