@@ -81,7 +81,7 @@
 								{l s='Stay logged in' d='Admin.Login.Feature'}
 							</label>
 						</div>
-						<a href="#" class="show-forgot-password pull-right" >
+						<a href="#" id="forgot-password-link" class="show-forgot-password pull-right" >
 							{l s='I forgot my password' d='Admin.Login.Feature'}
 						</a>
 					</div>
@@ -133,7 +133,7 @@
 							<i class="icon-caret-left"></i>
 							{l s='Cancel' d='Admin.Actions'}
 						</button>
-						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
+						<button id="reset-password-button" class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 							<i class="icon-ok text-success"></i>
 							{l s='Send reset link' d='Admin.Login.Feature'}
 						</button>
