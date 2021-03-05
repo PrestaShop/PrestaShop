@@ -44,7 +44,7 @@ class CustomizationsManager {
     this.$customizationsContainer.on('click', ProductMap.customizations.addCustomizationBtn, () => {
       this.addCustomizationField();
     });
-    this.$customizationsContainer.on('click', ProductMap.customizations.removeCustomizationBtn, (e) => {
+    this.$customizationsContainer.on('click', ProductMap.customizations.removeCustomizationBtn, e => {
       this.removeCustomizationField(e);
     });
   }
@@ -69,4 +69,4 @@ class CustomizationsManager {
   }
 }
 
-export default EventHOC(CustomizationsManager);
+export default EventHOC(CustomizationsManager, ['getIndex']);

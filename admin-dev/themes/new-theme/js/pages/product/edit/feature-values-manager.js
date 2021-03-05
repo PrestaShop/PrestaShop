@@ -27,10 +27,11 @@ import ProductMap from '@pages/product/product-map';
 import Router from '@components/router';
 import ConfirmModal from '@components/modal';
 import ProductEventMap from '@pages/product/product-event-map';
+import EventHOC from '@components/event-hoc';
 
 const {$} = window;
 
-export default class FeatureValuesManager {
+export class FeatureValuesManager {
   /**
    * @param eventEmitter {EventEmitter}
    */
@@ -59,7 +60,7 @@ export default class FeatureValuesManager {
   }
 
   watchDeleteButtons() {
-    $(this.$collectionContainer).on('click', ProductMap.featureValues.deleteFeatureValue, (event) => {
+    $(this.$collectionContainer).on('click', ProductMap.featureValues.deleteFeatureValue, event => {
       const $deleteButton = $(event.currentTarget);
       const $collectionRow = $deleteButton.closest(ProductMap.featureValues.collectionRow);
       const modal = new ConfirmModal(
@@ -68,19 +69,19 @@ export default class FeatureValuesManager {
           confirmTitle: $deleteButton.data('modal-title'),
           confirmMessage: $deleteButton.data('modal-message'),
           confirmButtonLabel: $deleteButton.data('modal-apply'),
-          closeButtonLabel: $deleteButton.data('modal-cancel'),
+          closeButtonLabel: $deleteButton.data('modal-cancel')
         },
         () => {
           $collectionRow.remove();
           this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
-        },
+        }
       );
       modal.show();
     });
   }
 
   watchCustomInputs() {
-    $(this.$collectionContainer).on('keyup change', ProductMap.featureValues.customValueInput, (event) => {
+    $(this.$collectionContainer).on('keyup change', ProductMap.featureValues.customValueInput, event => {
       const $changedInput = $(event.target);
       const $collectionRow = $changedInput.closest(ProductMap.featureValues.collectionRow);
 
@@ -103,7 +104,7 @@ export default class FeatureValuesManager {
   }
 
   watchFeatureSelectors() {
-    $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, (event) => {
+    $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, event => {
       const $selector = $(event.target);
       const idFeature = $selector.val();
       const $collectionRow = $selector.closest(ProductMap.featureValues.collectionRow);
@@ -116,22 +117,28 @@ export default class FeatureValuesManager {
       $featureValueSelector.val('');
       $customFeatureIdInput.val('');
 
-      $.get(this.router.generate('admin_feature_get_feature_values', {idFeature}))
-        .then((featureValuesData) => {
-          $featureValueSelector.prop('disabled', featureValuesData.length === 0);
-          $featureValueSelector.empty();
-          $.each(featureValuesData, (index, featureValue) => {
-            // The placeholder shouldn't be posted.
-            if (featureValue.id === '0') {
-              featureValue.id = '';
-            }
+      $.get(
+        this.router.generate('admin_feature_get_feature_values', {
+          idFeature
+        })
+      ).then(featureValuesData => {
+        $featureValueSelector.prop('disabled', featureValuesData.length === 0);
+        $featureValueSelector.empty();
+        $.each(featureValuesData, (index, featureValue) => {
+          // The placeholder shouldn't be posted.
+          if (featureValue.id === '0') {
+            featureValue.id = '';
+          }
 
-            $featureValueSelector
-              .append($('<option></option>')
-                .attr('value', featureValue.id)
-                .text(featureValue.value));
-          });
+          $featureValueSelector.append(
+            $('<option></option>')
+              .attr('value', featureValue.id)
+              .text(featureValue.value)
+          );
         });
+      });
     });
   }
 }
+
+export default EventHOC(FeatureValuesManager);

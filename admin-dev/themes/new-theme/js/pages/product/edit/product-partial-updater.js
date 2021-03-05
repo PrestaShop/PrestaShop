@@ -25,6 +25,7 @@
 
 import _ from 'lodash';
 import ProductEventMap from '@pages/product/product-event-map';
+import EventHOC from '@components/event-hoc';
 
 const {$} = window;
 
@@ -38,7 +39,7 @@ const {$} = window;
  * It also disabled the submit button as long as no data has been
  * modified by the user.
  */
-export default class ProductPartialUpdater {
+export class ProductPartialUpdater {
   /**
    * @param eventEmitter {EventEmitter}
    * @param $productForm {jQuery}
@@ -78,7 +79,7 @@ export default class ProductPartialUpdater {
    * Rich editors apply a layer over initial textarea fields therefore they need to be watched differently.
    */
   initFormattedTextarea() {
-    this.eventEmitter.on('tinymceEditorSetup', (event) => {
+    this.eventEmitter.on('tinymceEditorSetup', event => {
       event.editor.on('change', () => this.updateSubmitButtonState());
     });
   }
@@ -138,9 +139,9 @@ export default class ProductPartialUpdater {
     const $updatedForm = this.$productForm.clone();
     $updatedForm.empty();
     $updatedForm.prop('class', '');
-    Object.keys(updatedData).forEach((fieldName) => {
+    Object.keys(updatedData).forEach(fieldName => {
       if (Array.isArray(updatedData[fieldName])) {
-        updatedData[fieldName].forEach((value) => {
+        updatedData[fieldName].forEach(value => {
           this.appendInputToForm($updatedForm, fieldName, value);
         });
       } else {
@@ -171,7 +172,7 @@ export default class ProductPartialUpdater {
     const currentData = this.getFormDataAsObject();
     // Loop through current form data and remove the one that did not change
     // This way only updated AND new values remain
-    Object.keys(this.initialData).forEach((fieldName) => {
+    Object.keys(this.initialData).forEach(fieldName => {
       const fieldValue = this.initialData[fieldName];
 
       // Field is absent in the new data (it was not in the initial) we force it to empty string (not null
@@ -194,9 +195,9 @@ export default class ProductPartialUpdater {
       // We need the form CSRF token
       'product[_token]',
       // If method is not POST or GET a hidden type input is used to simulate it (like PATCH)
-      '_method',
+      '_method'
     ];
-    permanentParameters.forEach((permanentParameter) => {
+    permanentParameters.forEach(permanentParameter => {
       if (Object.prototype.hasOwnProperty.call(this.initialData, permanentParameter)) {
         currentData[permanentParameter] = this.initialData[permanentParameter];
       }
@@ -214,7 +215,7 @@ export default class ProductPartialUpdater {
     const formArray = this.$productForm.serializeArray();
     const serializedForm = {};
 
-    formArray.forEach((formField) => {
+    formArray.forEach(formField => {
       let {value} = formField;
 
       // Input names can be identical when expressing array of values for same field (like multiselect checkboxes)
@@ -244,10 +245,14 @@ export default class ProductPartialUpdater {
    * @private
    */
   appendInputToForm($form, name, value) {
-    $('<input>').attr({
-      name,
-      type: 'hidden',
-      value,
-    }).appendTo($form);
+    $('<input>')
+      .attr({
+        name,
+        type: 'hidden',
+        value
+      })
+      .appendTo($form);
   }
 }
+
+export default EventHOC(ProductPartialUpdater);

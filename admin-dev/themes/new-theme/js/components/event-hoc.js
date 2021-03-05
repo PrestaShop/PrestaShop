@@ -25,25 +25,26 @@
 
 import EventEmitterClass from 'events';
 
-function overloadProperties(obj, afterFn) {
-  Object.getOwnPropertyNames(obj).forEach((propName) => {
+function overloadProperties(obj, ignoreList, afterFn) {
+  console.log(Object.getOwnPropertyNames(obj));
+  Object.getOwnPropertyNames(obj).forEach(propName => {
     const prop = obj[propName];
 
-    if (Object.prototype.toString.call(prop) === '[object Function]') {
-      obj[propName] = (function (fnName) {
-        return function (...args) {
+    if (Object.prototype.toString.call(prop) === '[object Function]' && !ignoreList.includes(propName)) {
+      obj[propName] = (function(fnName) {
+        return function(...args) {
           prop.apply(this, args);
           afterFn.call(this, fnName, args);
         };
-      }(propName));
+      })(propName);
     }
   });
 }
 
-export default function EventHOC(Component) {
+export default function EventHOC(Component, ignoreList = []) {
   const EventEmitter = new EventEmitterClass();
 
-  overloadProperties(Component.prototype, (fnName, args) => {
+  overloadProperties(Component.prototype, ignoreList, (fnName, args) => {
     console.log(`${Component.name}.${fnName}`, args);
     EventEmitter.emit(`${Component.name}.${fnName}`, args);
   });

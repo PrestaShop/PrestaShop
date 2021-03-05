@@ -24,6 +24,7 @@
  */
 
 import EntitySearchInput from '@components/entity-search-input';
+import EventHOC from '@components/event-hoc';
 
 const {$} = window;
 
@@ -36,7 +37,7 @@ const {$} = window;
  * When the type is changed the component automatically updates the labels, remote search urls
  * and values of the target.
  */
-export default class RedirectOptionManager {
+export class RedirectOptionManager {
   constructor($redirectTypeInput, $redirectTargetInput) {
     this.$redirectTypeInput = $redirectTypeInput;
     this.$redirectTargetInput = $redirectTargetInput;
@@ -92,3 +93,5 @@ export default class RedirectOptionManager {
     this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput);
   }
 }
+
+export default EventHOC(RedirectOptionManager);
