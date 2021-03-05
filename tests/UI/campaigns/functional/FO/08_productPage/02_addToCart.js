@@ -245,4 +245,20 @@ describe('Add product to cart', async () => {
       });
     });
   });
+
+  // 3 - Check share links from product page
+  describe('Check share links from product page', async () => {
+    ['Facebook', 'Twitter', 'Pinterest'].forEach((test) => {
+      it(`should check share link of '${test}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${test}`, baseContext);
+
+        page = await productPage.goToSocialSharingLink(page, test);
+
+        const url = await productPage.getCurrentURL(page);
+        await expect(url).to.contains(test.toLowerCase());
+
+        page = await productPage.closePage(browserContext, page, 0);
+      });
+    });
+  });
 });
