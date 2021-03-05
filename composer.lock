@@ -9697,16 +9697,16 @@
         },
         {
             "name": "prestashop/phpstan-prestashop",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/phpstan-prestashop.git",
-                "reference": "f6eec01334d6ef2e7c6a92796d9f0ba2c45d1944"
+                "reference": "e68212a2d5a2ad9e53f66960dae07f7a83b8f8c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/phpstan-prestashop/zipball/f6eec01334d6ef2e7c6a92796d9f0ba2c45d1944",
-                "reference": "f6eec01334d6ef2e7c6a92796d9f0ba2c45d1944",
+                "url": "https://api.github.com/repos/PrestaShop/phpstan-prestashop/zipball/e68212a2d5a2ad9e53f66960dae07f7a83b8f8c4",
+                "reference": "e68212a2d5a2ad9e53f66960dae07f7a83b8f8c4",
                 "shasum": ""
             },
             "require": {
@@ -9740,12 +9740,18 @@
             "license": [
                 "MIT"
             ],
-            "description": "PrestaShop extensions for PHPStan",
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop extension for PHPStan",
             "support": {
                 "issues": "https://github.com/PrestaShop/phpstan-prestashop/issues",
-                "source": "https://github.com/PrestaShop/phpstan-prestashop/tree/1.0.0"
+                "source": "https://github.com/PrestaShop/phpstan-prestashop/tree/1.1.0"
             },
-            "time": "2021-01-07T16:32:53+00:00"
+            "time": "2021-03-04T09:09:27+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
