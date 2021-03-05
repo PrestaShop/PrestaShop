@@ -28,7 +28,7 @@ import EventHOC from '@components/event-hoc';
 
 const {$} = window;
 
-export class ProductSuppliersManager {
+class ProductSuppliersManager {
   constructor() {
     this.$productSuppliersCollection = $(ProductMap.suppliers.productSuppliersCollection);
     this.$supplierIdsGroup = $(ProductMap.suppliers.supplierIdsInput).closest('.form-group');
@@ -53,13 +53,13 @@ export class ProductSuppliersManager {
       this.memorizeCurrentSuppliers();
     });
 
-    this.$supplierIdsGroup.on('change', 'input', e => {
+    this.$supplierIdsGroup.on('change', 'input', (e) => {
       const input = e.currentTarget;
 
       if (input.checked) {
         this.addSupplier({
           id: input.value,
-          name: input.dataset.label
+          name: input.dataset.label,
         });
       } else {
         this.removeSupplier(input.value);
@@ -102,7 +102,7 @@ export class ProductSuppliersManager {
 
     // Custom incremental index since this.suppliers uses the supplierId as key
     let supplierIndex = 0;
-    this.suppliers.forEach(supplier => {
+    this.suppliers.forEach((supplier) => {
       if (supplier.removed) {
         return;
       }
@@ -127,7 +127,7 @@ export class ProductSuppliersManager {
     this.$supplierIdsGroup.find('input:checked').each((index, input) => {
       selectedSuppliers.push({
         name: input.dataset.label,
-        id: input.value
+        id: input.value,
       });
     });
 
@@ -145,7 +145,7 @@ export class ProductSuppliersManager {
     }
 
     this.showDefaultSuppliers();
-    const selectedSupplierIds = suppliers.map(supplier => supplier.id);
+    const selectedSupplierIds = suppliers.map((supplier) => supplier.id);
 
     this.$defaultSupplierGroup.find('input').each((key, input) => {
       const isValid = selectedSupplierIds.includes(input.value);
@@ -196,7 +196,7 @@ export class ProductSuppliersManager {
         reference: $(ProductMap.suppliers.productSupplierRow.referenceInput(index)).val(),
         price: $(ProductMap.suppliers.productSupplierRow.priceInput(index)).val(),
         currencyId: $(ProductMap.suppliers.productSupplierRow.currencyIdInput(index)).val(),
-        removed: false
+        removed: false,
       };
     });
   }
@@ -214,11 +214,11 @@ export class ProductSuppliersManager {
       removed: false,
       productSupplierId: this.collectDataFromRow(
         ProductMap.suppliers.productSupplierRow.productSupplierIdInput,
-        rowPrototype
+        rowPrototype,
       ),
       reference: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.referenceInput, rowPrototype),
       price: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.priceInput, rowPrototype),
-      currencyId: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.currencyIdInput, rowPrototype)
+      currencyId: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.currencyIdInput, rowPrototype),
     };
   }
 

@@ -37,7 +37,7 @@ const {$} = window;
  * When the type is changed the component automatically updates the labels, remote search urls
  * and values of the target.
  */
-export class RedirectOptionManager {
+class RedirectOptionManager {
   constructor($redirectTypeInput, $redirectTargetInput) {
     this.$redirectTypeInput = $redirectTypeInput;
     this.$redirectTargetInput = $redirectTargetInput;
