@@ -5,6 +5,8 @@ class Home extends FOBasePage {
   constructor() {
     super();
 
+    this.pageTitle = global.INSTALL.SHOP_NAME;
+
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
     this.popularProductTitle = '#content section h2';
@@ -17,7 +19,6 @@ class Home extends FOBasePage {
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
     this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
-    this.searchInput = '#search_widget input.ui-autocomplete-input';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -41,6 +42,7 @@ class Home extends FOBasePage {
 
     // Block Cart Modal
     this.blockCartModalDiv = '#blockcart-modal';
+    this.blockCartModalCloseButton = `${this.blockCartModalDiv} button.close`;
     this.cartModalProductNameBlock = `${this.blockCartModalDiv} .product-name`;
     this.cartModalProductPriceBlock = `${this.blockCartModalDiv} .product-price`;
     this.cartModalProductSizeBlock = `${this.blockCartModalDiv} .size strong`;
@@ -91,18 +93,6 @@ class Home extends FOBasePage {
    */
   async isNewFlagVisible(page, id = 1) {
     return this.elementVisible(page, this.newFlag(id), 1000);
-  }
-
-  /**
-   * Search product
-   * @param page
-   * @param productName
-   * @returns {Promise<void>}
-   */
-  async searchProduct(page, productName) {
-    await this.setValue(page, this.searchInput, productName);
-    await page.keyboard.press('Enter');
-    await page.waitForNavigation();
   }
 
   /**
@@ -221,6 +211,17 @@ class Home extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
 
     return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
+  }
+
+  /**
+   * Close block cart modal
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async closeBlockCartModal(page) {
+    await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
+
+    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
   }
 
   /**
