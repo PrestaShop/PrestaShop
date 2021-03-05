@@ -9,6 +9,7 @@ class Product extends FOBasePage {
     this.productName = '#main h1[itemprop="name"]';
     this.productCoverImg = '#content .product-cover img';
     this.productQuantity = '#quantity_wanted';
+    this.shortDescription = '#product-description-short-1';
     this.productDescription = '#description';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
@@ -18,9 +19,11 @@ class Product extends FOBasePage {
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
-    this.productSizeOption = size => `#group_1 option[title=${size}]`;
     this.productSizeSelect = '#group_1';
-    this.productColorInput = color => `#group_2 input[title=${color}]`;
+    this.productSizeOption = size => `${this.productSizeSelect} option[title=${size}]`;
+    this.productColorUl = '#group_2';
+    this.productColorInput = color => `${this.productColorUl} input[title=${color}]`;
+    this.productColors = 'div.product-variants div:nth-child(2)';
     this.metaLink = '#main > meta';
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
@@ -45,9 +48,24 @@ class Product extends FOBasePage {
   async getProductInformation(page) {
     return {
       name: await this.getTextContent(page, this.productName),
-      price: parseFloat(await this.getAttributeContent(page, this.productPrice, 'content')),
+      regularPrice: await this.getPriceFromText(page, this.regularPrice),
+      price: await this.getPriceFromText(page, this.productPrice, 'content'),
+      discountPercentage: await this.getTextContent(page, this.discountPercentageSpan),
+      shortDescription: await this.getTextContent(page, this.shortDescription),
       description: await this.getTextContent(page, this.productDescription),
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
+    };
+  }
+
+  /**
+   * Get product attributes
+   * @param page
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getProductAttributes(page) {
+    return {
+      size: await this.getTextContent(page, this.productSizeSelect),
+      color: await this.getTextContent(page, this.productColors),
     };
   }
 
