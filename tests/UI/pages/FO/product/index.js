@@ -27,6 +27,9 @@ class Product extends FOBasePage {
     this.productColorInput = color => `${this.productColorUl} input[title=${color}]`;
     this.productColors = 'div.product-variants div:nth-child(2)';
     this.metaLink = '#main > meta';
+    this.facebookSocialSharing = '.social-sharing .facebook a';
+    this.twitterSocialSharing = '.social-sharing .twitter a';
+    this.pinterestSocialSharing = '.social-sharing .pinterest a';
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
     this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
@@ -109,6 +112,34 @@ class Product extends FOBasePage {
         this.selectByVisibleText(page, this.productSizeSelect, combination.size),
       ]);
     }
+  }
+
+  /**
+   * Go to social sharing link
+   * @param page
+   * @param socialSharing
+   * @returns {Promise<void>}
+   */
+  async goToSocialSharingLink(page, socialSharing) {
+    let selector;
+    switch (socialSharing) {
+      case 'Facebook':
+        selector = this.facebookSocialSharing;
+        break;
+
+      case 'Twitter':
+        selector = this.twitterSocialSharing;
+        break;
+
+      case 'Pinterest':
+        selector = this.pinterestSocialSharing;
+        break;
+
+      default:
+        throw new Error(`${socialSharing} was not found`);
+    }
+
+    return this.openLinkWithTargetBlank(page, selector, 'body');
   }
 
   /**
