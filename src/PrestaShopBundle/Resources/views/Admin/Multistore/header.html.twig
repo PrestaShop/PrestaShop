@@ -97,7 +97,7 @@
                   {% if isShopContext and currentContext.id == shop.id %}
                     <i class="material-icons">check</i>
                   {% else %}
-                    <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Shop') }}" data-original-title="" title=""></a>
+                    <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Actions') }}" data-original-title="" title=""></a>
                   {% endif %}
                     <a class="multishop-modal-shop-name" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>
                   </div>
