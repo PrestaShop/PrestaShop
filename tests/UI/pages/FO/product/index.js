@@ -127,6 +127,31 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Click on Add to cart button then on Proceed to checkout button in the modal
+   * @param page
+   * @param quantity
+   * @param combination
+   * @param proceedToCheckout
+   * @returns {Promise<void>}
+   */
+  async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
+    await this.selectCombination(page, quantity, combination);
+    if (quantity !== 1) {
+      await this.setValue(page, this.productQuantity, quantity);
+    }
+    await this.waitForSelectorAndClick(page, this.addToCartButton);
+    await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
+
+    if (proceedToCheckout) {
+      await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
+      await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
+    } else {
+      await this.waitForSelectorAndClick(page, this.continueShoppingButton);
+      await page.waitForSelector(this.continueShoppingButton, {hidden: true});
+    }
+  }
+
+  /**
    * Go to social sharing link
    * @param page
    * @param socialSharing
@@ -152,31 +177,6 @@ class Product extends FOBasePage {
     }
 
     return this.openLinkWithTargetBlank(page, selector, 'body');
-  }
-
-  /**
-   * Click on Add to cart button then on Proceed to checkout button in the modal
-   * @param page
-   * @param quantity
-   * @param combination
-   * @param proceedToCheckout
-   * @returns {Promise<void>}
-   */
-  async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
-    await this.selectCombination(page, quantity, combination);
-    if (quantity !== 1) {
-      await this.setValue(page, this.productQuantity, quantity);
-    }
-    await this.waitForSelectorAndClick(page, this.addToCartButton);
-    await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
-
-    if (proceedToCheckout) {
-      await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
-      await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
-    } else {
-      await this.waitForSelectorAndClick(page, this.continueShoppingButton);
-      await page.waitForSelector(this.continueShoppingButton, {hidden: true});
-    }
   }
 
   /**
