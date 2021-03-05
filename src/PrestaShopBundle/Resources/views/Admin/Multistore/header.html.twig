@@ -88,7 +88,7 @@
                 {% else %}
                 <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Actions') }}" data-original-title="" title=""></a>
                   {% endif %}
-                  <a class="multishop-modal-group-name" href="{{ app.request.requestURI ~ '&setShopContext=g-' ~ group.id }}">{{ "Group"|trans({}, 'Admin.Shop') ~ ' ' ~ group.name }}</a>
+                  <a class="multishop-modal-group-name" href="{{ app.request.requestURI ~ '&setShopContext=g-' ~ group.id }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
               </li>
 
               {% for shop in group.shops %}
