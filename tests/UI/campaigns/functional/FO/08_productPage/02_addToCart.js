@@ -28,7 +28,8 @@ let browserContext;
 let page;
 const quantity = 6;
 const totalPrice = 137.66;
-const combination = {color: 'Black', size: 'M'};
+const firstCombination = {color: 'White', size: 'XL'};
+const secondCombination = {color: 'Black', size: 'M'};
 const productToCreate = {
   type: 'Standard product',
   productHasCombinations: false,
@@ -38,10 +39,13 @@ const productToCreate = {
 const productData = new ProductFaker(productToCreate);
 
 /*
+Check product details
 Change product quantity
 Choose combination( size, color)
-Add product to cart
+Edit combination and add to cart
 Check product details on the cart
+Change image from product page
+Check share links
  */
 
 describe('Add product to cart', async () => {
@@ -64,7 +68,7 @@ describe('Add product to cart', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  // 1 - Add to cart and check details
+  // 1 - Check details and choose combination
   describe('Add product to cart and check details', async () => {
     it('should go to product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
@@ -97,10 +101,37 @@ describe('Add product to cart', async () => {
       ]);
     });
 
-    it('should choose combination and add product to the cart', async function () {
+    it('should choose combination and check product details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseCombination', baseContext);
+
+      await productPage.selectCombination(page, 1, firstCombination);
+
+      let result = await productPage.getProductInformation(page);
+      await Promise.all([
+        await expect(result.name).to.equal(Products.demo_1.name),
+        await expect(result.regularPrice).to.equal(Products.demo_1.regularPrice),
+        await expect(result.price).to.equal(Products.demo_1.finalPrice),
+        await expect(result.discountPercentage).to.contains(Products.demo_1.discount),
+        await expect(result.shortDescription).to.equal(Products.demo_1.shortDescription),
+        await expect(result.description).to.equal(Products.demo_1.description),
+        await expect(result.coverImage).to.contains(Products.demo_1.coverImage),
+        await expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
+      ]);
+
+      result = await productPage.getSelectedProductAttributes(page);
+      await Promise.all([
+        await expect(result.size).to.equal(firstCombination.size),
+        await expect(result.color).to.equal(firstCombination.color),
+      ]);
+    });
+  });
+
+  // 2 - Modify combination, add to cart and check details
+  describe('Add product to cart and check details', async () => {
+    it('should modify combination and add product to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await productPage.addProductToTheCart(page, quantity, combination);
+      await productPage.addProductToTheCart(page, quantity, secondCombination);
 
       const pageTitle = await cartPage.getPageTitle(page);
       await expect(pageTitle).to.equal(cartPage.pageTitle);
@@ -119,13 +150,13 @@ describe('Add product to cart', async () => {
 
       result = await cartPage.getProductAttributes(page, 1);
       await Promise.all([
-        expect(result.size).to.equal(combination.size),
-        expect(result.color).to.equal(combination.color),
+        expect(result.size).to.equal(secondCombination.size),
+        expect(result.color).to.equal(secondCombination.color),
       ]);
     });
   });
 
-  // 2 - Change image from product page
+  // 3 - Change image from product page
   describe('Change image from product page', async () => {
     describe('Go to BO and create product with 2 images', async () => {
       before(async () => {
@@ -182,7 +213,6 @@ describe('Add product to cart', async () => {
     });
 
     describe('Check change product images on quick view modal', async () => {
-
       it('should search for the created product and go to product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchForProductAndQuickView', baseContext);
 
@@ -246,7 +276,7 @@ describe('Add product to cart', async () => {
     });
   });
 
-  // 3 - Check share links from product page
+  // 4 - Check share links from product page
   describe('Check share links from product page', async () => {
     ['Facebook', 'Twitter', 'Pinterest'].forEach((test) => {
       it(`should check share link of '${test}'`, async function () {

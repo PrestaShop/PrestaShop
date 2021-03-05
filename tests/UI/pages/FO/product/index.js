@@ -76,6 +76,18 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Get selected product attributes
+   * @param page
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getSelectedProductAttributes(page) {
+    return {
+      size: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
+      color: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title'),
+    };
+  }
+
+  /**
    * Select thumb image
    * @param page
    * @param id
