@@ -23,24 +23,23 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 
-{* not big fan of this code but it's is the only way to do it without module *}
 {if isset($listing.pagination) && $listing.pagination.should_be_displayed}
-    {assign page_nb 1}
+    {$page_nb = 1}
     {if isset($smarty.get.page)}
-        {assign page_nb $smarty.get.page|intval}
+        {$page_nb = $smarty.get.page|intval|default:1}
     {/if}
     {$queryPage = '?page='|cat:$page_nb}
     {$page.canonical = $page.canonical|replace:$queryPage:''}
 
-    {assign var="prev" value=false}
-        {assign var="next" value=false}
+    {$prev = false}
+    {$next = false}
     {if ($page_nb - 1) == 1}
-        {assign prev $page.canonical}
+        {$prev = $page.canonical}
     {elseif $page_nb > 2}
-        {assign var="prev"  value=($page['canonical']|cat:'?page='|cat:($page_nb - 1))}
+        {$prev = ($page['canonical']|cat:'?page='|cat:($page_nb - 1))}
     {/if}
     {if $listing.pagination.total_items > $listing.pagination.items_shown_to}
-        {assign var="next"  value=($page['canonical']|cat:'?page='|cat:($page_nb + 1))}
+        {$next = ($page['canonical']|cat:'?page='|cat:($page_nb + 1))}
     {/if}
 
     {if $prev}<link rel="prev" href="{$prev}">{/if}

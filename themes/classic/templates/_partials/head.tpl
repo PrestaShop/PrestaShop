@@ -48,11 +48,15 @@
     {/foreach}
   {/block}
   
-  {include file="_partials/microdata/head-jsonld.tpl"}
+  {block name='head_microdata'}
+    {include file="_partials/microdata/head-jsonld.tpl"}
+  {/block}
   
   {block name='head_microdata_special'}{/block}
   
-  {include file="_partials/pagination-seo.tpl"}
+  {block name='head_pagination_seo'}
+    {include file="_partials/pagination-seo.tpl"}
+  {/block}
 
   <meta property="og:title" content="{$page.meta.title}" />
   <meta property="og:description" content="{$page.meta.description}" />
