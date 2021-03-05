@@ -8,6 +8,8 @@ class Product extends FOBasePage {
     // Selectors for product page
     this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
+    this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
+    this.thumbSecondImg = '#content li:nth-child(2) img.js-thumb';
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short-1';
     this.productDescription = '#description';
@@ -54,6 +56,7 @@ class Product extends FOBasePage {
       shortDescription: await this.getTextContent(page, this.shortDescription),
       description: await this.getTextContent(page, this.productDescription),
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
+      thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
     };
   }
 
@@ -67,6 +70,23 @@ class Product extends FOBasePage {
       size: await this.getTextContent(page, this.productSizeSelect),
       color: await this.getTextContent(page, this.productColors),
     };
+  }
+
+  /**
+   * Select thumb image
+   * @param page
+   * @param id
+   * @returns {Promise<string>}
+   */
+  async selectThumbImage(page, id) {
+    if (id === 1) {
+      await this.waitForSelectorAndClick(page, this.thumbFirstImg);
+      await page.waitForSelector(`${this.thumbFirstImg}.selected`, {state: 'visible'});
+    } else {
+      await this.waitForSelectorAndClick(page, this.thumbSecondImg);
+      await page.waitForSelector(`${this.thumbSecondImg}.selected`, {state: 'visible'});
+    }
+    return this.getAttributeContent(page, this.productCoverImg, 'src');
   }
 
   /**
