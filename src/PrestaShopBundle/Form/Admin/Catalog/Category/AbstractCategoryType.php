@@ -53,7 +53,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 abstract class AbstractCategoryType extends TranslatorAwareType
 {
-    private const MAX_TITLE_LENGTH = 128;
+    public const MAX_TITLE_LENGTH = 128;
 
     /**
      * @var array
