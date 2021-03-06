@@ -901,7 +901,7 @@ class CategoryController extends FrameworkBundleAdminController
             ),
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
-                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error',
+                    'Max file size allowed is "%d" bytes.', 'Admin.Notifications.Error',
                     [$iniConfig->getUploadMaxSizeInBytes()]
                 ),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
