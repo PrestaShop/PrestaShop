@@ -68,6 +68,46 @@ class CleanHtmlWithIframeValidatorTest extends ConstraintValidatorTestCase
         $this->context->getViolations();
     }
 
+    public function testItSucceedsWhenFormIsGiven()
+    {
+        $htmlTag = '<form> <input name="your-card-number"> </form>';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->assertNoViolation();
+        $this->context->getViolations();
+    }
+
+    public function testItSucceedsWhenInputIsGiven()
+    {
+        $htmlTag = '<input name="your-card-number">';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->assertNoViolation();
+        $this->context->getViolations();
+    }
+
+    public function testItSucceedsWhenEmbedIsGiven()
+    {
+        $htmlTag = '<embed type="image/jpg" src="funny_cat.jpg" width="300" height="200">';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->assertNoViolation();
+        $this->context->getViolations();
+    }
+
+    public function testItSucceedsWhenObjectIsGiven()
+    {
+        $htmlTag = '<object data="funny_cat.jpg" width="300" height="200"></object> ';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->assertNoViolation();
+        $this->context->getViolations();
+    }
+
     protected function createValidator()
     {
         return new CleanHtmlValidator(true);
