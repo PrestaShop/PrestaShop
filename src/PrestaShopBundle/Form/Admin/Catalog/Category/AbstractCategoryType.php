@@ -321,7 +321,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                                 'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
+                                    '%limit%' => static::MAX_TITLE_LENGTH,
                                 ]
                             ),
                         ]),
