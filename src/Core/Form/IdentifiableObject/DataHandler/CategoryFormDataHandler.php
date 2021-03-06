@@ -83,7 +83,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        if (count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
+        if (!isset($data['menu_thumbnail_images']) || count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
             throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
         }
         $command = $this->createAddCategoryCommand($data);
