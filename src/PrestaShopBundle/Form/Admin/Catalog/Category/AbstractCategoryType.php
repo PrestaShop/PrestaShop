@@ -128,7 +128,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
                 'options' => [
                     'attr' => [
-                        'maxlength' => self::MAX_TITLE_LENGTH,
+                        'maxlength' => static::MAX_TITLE_LENGTH,
                     ],
                     'constraints' => [
                         new Regex([
@@ -136,12 +136,12 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                         new Length([
-                            'max' => self::MAX_TITLE_LENGTH,
+                            'max' => static::MAX_TITLE_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
+                                    '%limit%' => static::MAX_TITLE_LENGTH,
                                 ]
                             ),
                         ]),
@@ -308,7 +308,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
                 'options' => [
                     'attr' => [
-                        'maxlength' => self::MAX_TITLE_LENGTH,
+                        'maxlength' => static::MAX_TITLE_LENGTH,
                     ],
                     'constraints' => [
                         new Regex([
@@ -316,7 +316,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                         new Length([
-                            'max' => self::MAX_TITLE_LENGTH,
+                            'max' => static::MAX_TITLE_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
