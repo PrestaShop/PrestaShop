@@ -68,6 +68,18 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
+    public function testItFailsWhenIframeWithSpacesIsGiven()
+    {
+        $htmlTag = '< iframe >';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
     public function testItFailsWhenFormIsGiven()
     {
         $htmlTag = '<form>';
