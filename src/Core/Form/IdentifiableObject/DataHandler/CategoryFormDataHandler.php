@@ -113,7 +113,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $availableKeys = $this->getAvailableKeys((int) $categoryId);
 
         if (!isset($data['menu_thumbnail_images']) || count($data['menu_thumbnail_images']) > count($availableKeys)) {
-            throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%s"', $categoryId));
+            throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%d"', $categoryId));
         }
         $command = $this->createEditCategoryCommand($categoryId, $data);
 
