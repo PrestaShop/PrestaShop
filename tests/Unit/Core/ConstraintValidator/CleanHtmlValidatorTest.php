@@ -70,7 +70,7 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
     public function testItFailsWhenFormIsGiven()
     {
-        $htmlTag = '<form> <input name="your-card-number"> </form>';
+        $htmlTag = '<form>';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 

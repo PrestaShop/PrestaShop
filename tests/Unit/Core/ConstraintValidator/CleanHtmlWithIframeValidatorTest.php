@@ -70,7 +70,7 @@ class CleanHtmlWithIframeValidatorTest extends ConstraintValidatorTestCase
 
     public function testItSucceedsWhenFormIsGiven()
     {
-        $htmlTag = '<form> <input name="your-card-number"> </form>';
+        $htmlTag = '<form>';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
