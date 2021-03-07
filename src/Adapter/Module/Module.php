@@ -179,6 +179,9 @@ class Module implements ModuleInterface
         // Unfortunately, we can sometime have an array, and sometimes an object.
         // This is the first place where this value *always* exists
         $this->attributes->set('price', (array) $this->attributes->get('price'));
+
+        // Set module instance
+        $this->instance = $this->getInstance();
     }
 
     /**
