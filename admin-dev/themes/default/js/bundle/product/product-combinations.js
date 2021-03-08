@@ -1,4 +1,12 @@
 /**
+ * Function for removing bad characters from localization formating.
+ */
+function replaceBadLocaleCharacters() {
+    $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
+        $(this).val($(this).val().replace("−", "-")); // replace U+002D with U+2212
+    });
+}
+/**
  * Combination management
  */
 var combinations = (function() {
@@ -226,6 +234,7 @@ var combinations = (function() {
           }
 
           /** init combination tax include price */
+          replaceBadLocaleCharacters();
           priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
 
           contentElem.insertBefore('#form-nav').removeClass('hide').show();
