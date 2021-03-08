@@ -83,16 +83,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater
         arguments:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
-# @todo: remove update_combination_from_listing_handler because bulk handler will take its place
-    prestashop.adapter.product.combination.command_handler.update_combination_from_listing_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationFromListingHandler
-        arguments:
-            - '@prestashop.adapter.product.combination.repository.combination_repository'
-            - '@prestashop.adapter.product.combination.update.default_combination_updater'
-            - '@prestashop.adapter.product.combination.update.combination_stock_updater'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand
 
     prestashop.adapter.product.combination.command_handler.bulk_update_combinations_from_listing_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\BulkUpdateCombinationsFromListingHandler
