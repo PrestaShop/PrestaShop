@@ -41,4 +41,3 @@ final class CombinationCommandBuilder implements ProductCommandBuilderInterface
         // @todo: BulkUpdateCombinationFromListing command instead of single update
     }
 }
-

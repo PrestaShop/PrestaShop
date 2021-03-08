@@ -56,13 +56,18 @@ export default class CombinationsGridRenderer {
       this.$combinationsTableBody.append(row);
 
       // fill inputs
-      $(ProductMap.combinations.tableRow.combinationIdCell(rowIndex)).val(combination.id);
-      $(ProductMap.combinations.tableRow.combinationNameCell(rowIndex)).val(combination.name);
+      const $combinationIdCell = $(ProductMap.combinations.tableRow.combinationIdCell(rowIndex));
+      const $combinationNameCell = $(ProductMap.combinations.tableRow.combinationNameCell(rowIndex));
+      const $finalPriceCell = $(ProductMap.combinations.tableRow.finalPriceTeCell(rowIndex));
+      $combinationIdCell.val(combination.id);
+      $combinationIdCell.parent().text(combination.id);
+      $combinationNameCell.val(combination.name);
+      $combinationNameCell.parent().text(combination.name);
+      $finalPriceCell.val(combination.finalPriceTe);
+      $finalPriceCell.parent().text(combination.finalPriceTe);
       $(ProductMap.combinations.tableRow.impactOnPriceCell(rowIndex)).val(combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.finalPriceTeCell(rowIndex)).val(combination.finalPriceTe);
       $(ProductMap.combinations.tableRow.quantityCell(rowIndex)).val(combination.quantity);
       $(ProductMap.combinations.tableRow.isDefaultCell(rowIndex)).val(combination.isDefault);
-
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
       rowIndex += 1;
