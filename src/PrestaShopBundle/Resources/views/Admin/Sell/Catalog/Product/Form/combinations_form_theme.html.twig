@@ -33,6 +33,7 @@
   <tr>
     <td>
       {{ form_widget(form.is_selected) }}
+      {{ form_widget(form.combination_id) }}
     </td>
     <td>
 {#      todo: modify widget rendering to look like simple text (not input)#}
@@ -65,7 +66,7 @@
   <table {{ block('widget_attributes') }}>
     <thead>
     <tr>
-      <th></th>
+      <th>Id</th>
 {#        @todo: translate#}
       <th>Combination</th>
       <th>Impact on price (tax excl.)</th>
