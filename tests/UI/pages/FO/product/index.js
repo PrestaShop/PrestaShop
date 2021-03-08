@@ -11,7 +11,7 @@ class Product extends FOBasePage {
     this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
     this.thumbSecondImg = '#content li:nth-child(2) img.js-thumb';
     this.productQuantity = '#quantity_wanted';
-    this.shortDescription = '#product-description-short-1';
+    this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
@@ -45,6 +45,17 @@ class Product extends FOBasePage {
     this.unitDiscountValue = `${this.discountTable} td:nth-child(2)`;
   }
 
+  // Methods
+
+  /**
+   * Get product page URL
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getProductPageURL(page) {
+    return this.getAttributeContent(page, this.metaLink, 'content');
+  }
+
   /**
    * Get Product information (Product name, price, description)
    * @param page
@@ -53,14 +64,19 @@ class Product extends FOBasePage {
   async getProductInformation(page) {
     return {
       name: await this.getTextContent(page, this.productName),
-      regularPrice: await this.getPriceFromText(page, this.regularPrice),
       price: await this.getPriceFromText(page, this.productPrice, 'content'),
-      discountPercentage: await this.getTextContent(page, this.discountPercentageSpan),
-      shortDescription: await this.getTextContent(page, this.shortDescription),
+      shortDescription: await this.getTextContent(page, this.shortDescription, false),
       description: await this.getTextContent(page, this.productDescription),
-      coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
-      thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
     };
+  }
+
+  /**
+   * get regular price
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getRegularPrice(page) {
+    return this.getPriceFromText(page, this.regularPrice);
   }
 
   /**
@@ -85,6 +101,76 @@ class Product extends FOBasePage {
       size: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
       color: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title'),
     };
+  }
+
+  /**
+   * Get product image urls
+   * @param page
+   * @returns {Promise<{thumbImage: string, coverImage: string}>}
+   */
+  async getProductImageUrls(page) {
+    return {
+      coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
+      thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
+    };
+  }
+
+  /**
+   * Get discount column title
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountColumnTitle(page) {
+    return this.getTextContent(page, this.unitDiscountColumn);
+  }
+
+  /**
+   * Get quantity discount value from volume discounts table
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getQuantityDiscountValue(page) {
+    return this.getNumberFromText(page, this.quantityDiscountValue);
+  }
+
+  /**
+   * Get discount value from volume discounts table
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountValue(page) {
+    return this.getTextContent(page, this.unitDiscountValue);
+  }
+
+  /**
+   * Get discount amount
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountAmount(page) {
+    return this.getTextContent(page, this.discountAmountSpan);
+  }
+
+  /**
+   * Get discount percentage
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountPercentage(page) {
+    return this.getTextContent(page, this.discountPercentageSpan);
+  }
+
+  getProductAvailabilityLabel(page) {
+    return this.getTextContent(page, this.productAvailability, false);
+  }
+
+  /**
+   * Get delivery information text
+   * @param page
+   * @return {Promise<string>}
+   */
+  getDeliveryInformationText(page) {
+    return this.getTextContent(page, this.deliveryInformationSpan);
   }
 
   /**
@@ -249,75 +335,12 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get product page URL
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getProductPageURL(page) {
-    return this.getAttributeContent(page, this.metaLink, 'content');
-  }
-
-  /**
-   * Get discount column title
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountColumnTitle(page) {
-    return this.getTextContent(page, this.unitDiscountColumn);
-  }
-
-  /**
-   * Get quantity discount value from volume discounts table
-   * @param page
-   * @returns {Promise<number>}
-   */
-  getQuantityDiscountValue(page) {
-    return this.getNumberFromText(page, this.quantityDiscountValue);
-  }
-
-  /**
-   * Get discount value from volume discounts table
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountValue(page) {
-    return this.getTextContent(page, this.unitDiscountValue);
-  }
-
-  /**
-   * Get discount amount
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountAmount(page) {
-    return this.getTextContent(page, this.discountAmountSpan);
-  }
-
-  /**
-   * Get discount percentage
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountPercentage(page) {
-    return this.getTextContent(page, this.discountPercentageSpan);
-  }
-
-  /**
    * Is add to cart button enabled
    * @param page
    * @returns {boolean}
    */
   isAddToCartButtonEnabled(page) {
     return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
-  }
-
-  /**
-   * Get product availability label
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getProductAvailabilityLabel(page) {
-    return this.getTextContent(page, this.productAvailability, false);
   }
 
   /**
@@ -330,13 +353,10 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get delivery information text
+   * Get product availability label
    * @param page
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
-  getDeliveryInformationText(page) {
-    return this.getTextContent(page, this.deliveryInformationSpan);
-  }
 }
 
 module.exports = new Product();

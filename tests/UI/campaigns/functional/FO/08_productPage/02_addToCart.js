@@ -85,19 +85,27 @@ describe('Add product to cart', async () => {
       let result = await productPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(Products.demo_1.name),
-        await expect(result.regularPrice).to.equal(Products.demo_1.regularPrice),
         await expect(result.price).to.equal(Products.demo_1.finalPrice),
-        await expect(result.discountPercentage).to.contains(Products.demo_1.discount),
         await expect(result.shortDescription).to.equal(Products.demo_1.shortDescription),
         await expect(result.description).to.equal(Products.demo_1.description),
-        await expect(result.coverImage).to.contains(Products.demo_1.coverImage),
-        await expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
       ]);
+
+      result = await productPage.getRegularPrice(page);
+      await expect(result).to.equal(Products.demo_1.regularPrice);
+
+      result = await productPage.getDiscountPercentage(page);
+      await expect(result).to.contains(Products.demo_1.discount);
 
       result = await productPage.getProductAttributes(page);
       await Promise.all([
         await expect(result.size).to.equal(Products.demo_1.combination.size),
         await expect(result.color).to.equal(`Color ${Products.demo_1.combination.color}`),
+      ]);
+
+      result = await productPage.getProductImageUrls(page);
+      await Promise.all([
+        await expect(result.coverImage).to.contains(Products.demo_1.coverImage),
+        await expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
       ]);
     });
 
@@ -109,11 +117,19 @@ describe('Add product to cart', async () => {
       let result = await productPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(Products.demo_1.name),
-        await expect(result.regularPrice).to.equal(Products.demo_1.regularPrice),
         await expect(result.price).to.equal(Products.demo_1.finalPrice),
-        await expect(result.discountPercentage).to.contains(Products.demo_1.discount),
         await expect(result.shortDescription).to.equal(Products.demo_1.shortDescription),
         await expect(result.description).to.equal(Products.demo_1.description),
+      ]);
+
+      result = await productPage.getDiscountPercentage(page);
+      await expect(result).to.contains(Products.demo_1.discount);
+
+      result = await productPage.getRegularPrice(page);
+      await expect(result).to.equal(Products.demo_1.regularPrice);
+
+      result = await productPage.getProductImageUrls(page);
+      await Promise.all([
         await expect(result.coverImage).to.contains(Products.demo_1.coverImage),
         await expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
       ]);
