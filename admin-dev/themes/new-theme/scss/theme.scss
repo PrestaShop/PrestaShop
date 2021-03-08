@@ -1,5 +1,9 @@
+// Settings
+@import "config/settings";
+@import "config/keyframes";
+
 // Tools
-@import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
+@import "~prestakit/scss/application";
 @import "~dropzone/dist/min/dropzone.min.css";
 @import "~magnific-popup/dist/magnific-popup.css";
 @import "~bourbon/app/assets/stylesheets/bourbon";
@@ -13,9 +17,6 @@
 @import "mixins/cards";
 @import "mixins/hover";
 @import "mixins/stars";
-// Settings
-@import "config/settings";
-@import "config/keyframes";
 
 // Tools with vars overwritten
 @import "~bootstrap/scss/mixins/transition";

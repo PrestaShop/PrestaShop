@@ -38,7 +38,8 @@
 
   .notifications {
     top: 42px;
-    right: 5px;
+    // stylelint-disable-next-line
+    right: 5px !important;
     min-width: 25rem;
     padding: 0;
     margin: 0;
@@ -87,7 +88,7 @@
         &.active {
           color: $gray-dark;
           border-top: 0;
-          border-bottom: 2px solid $nav-tabs-active-link-hover-border-color;
+          border-bottom: 2px solid $brand-primary;
         }
 
         &:hover {
