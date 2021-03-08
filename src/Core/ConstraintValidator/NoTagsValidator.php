@@ -44,7 +44,7 @@ class NoTagsValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, NoTags::class);
         }
 
-        if (!$value) {
+        if ($value === '') {
             return;
         }
 
