@@ -120,6 +120,7 @@ export default class DynamicGridPaginator {
   }
 
   updatePaginatorForLastPage() {
+    this.toggleFirstPageAvailability(true);
     this.toggleNextPageAvailability(false);
     this.toggleLastPageAvailability(false);
     this.updatePreviousPageBtnData(this.getPagesCount() - 1);
