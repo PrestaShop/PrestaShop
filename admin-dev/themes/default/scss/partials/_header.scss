@@ -443,6 +443,11 @@ $search-border-color: #bbcdd2;
             a {
               color: #6c868e;
 
+              &:hover {
+                color: #25b9d7;
+                background-color: inherit;
+              }
+
               @include media-breakpoint-down(sm) {
                 display: flex;
                 align-items: center;
@@ -452,11 +457,11 @@ $search-border-color: #bbcdd2;
                 i {
                   color: $brand-danger;
                 }
-              }
 
-              &:hover {
-                color: #25b9d7;
-                background-color: inherit;
+                &:hover {
+                  color: #fff;
+                  background-color: #f54c3e;
+                }
               }
             }
           }
