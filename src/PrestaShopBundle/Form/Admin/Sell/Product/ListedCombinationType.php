@@ -31,9 +31,9 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ListedCombinationType extends AbstractType
@@ -44,10 +44,10 @@ class ListedCombinationType extends AbstractType
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
             ])
-            ->add('combination_id', TextType::class)
-            ->add('name', TextType::class)
+            ->add('combination_id', HiddenType::class)
+            ->add('name', HiddenType::class)
             ->add('impact_on_price', MoneyType::class)
-            ->add('final_price_te', TextType::class)
+            ->add('final_price_te', HiddenType::class)
             ->add('quantity', NumberType::class)
             ->add('is_default', SwitchType::class)
             ->add('edit', ButtonType::class)
