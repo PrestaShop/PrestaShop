@@ -94,7 +94,7 @@ module.exports = class FOBasePage extends CommonPage {
         break;
 
       case 'Logo':
-        selector = this.desktopLogo;
+        selector = this.desktopLogoLink;
         break;
 
       default:
