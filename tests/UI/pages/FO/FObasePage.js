@@ -24,7 +24,19 @@ module.exports = class FOBasePage extends CommonPage {
     this.currencySelectorDiv = '#_desktop_currency_selector';
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
-    // footer
+
+    // Footer links
+    // Products links selectors
+    this.pricesDropLink = '#link-product-page-prices-drop-1';
+    this.newProductsLink = '#link-product-page-new-products-1';
+    this.bestSalesLink = '#link-product-page-best-sales-1';
+    // Our company links selectors
+    this.deliveryLink = '#link-cms-page-1-2';
+    this.legalNoticeLink = '#link-cms-page-2-2';
+    this.termsAndConditionsOfUseLink = '#link-cms-page-3-2';
+    this.aboutUsLink = '#link-cms-page-4-2';
+    this.securePaymentLink = '#link-cms-page-5-2';
+    this.contactUsLink = '#link-static-page-contact-2';
     this.siteMapLink = '#link-static-page-sitemap-2';
     this.storesLink = '#link-static-page-stores-2';
     // Your account links selectors
@@ -46,6 +58,8 @@ module.exports = class FOBasePage extends CommonPage {
     this.alertSuccessBlock = '.alert-success ul li';
   }
 
+  // Methods
+
   /**
    * Go to Fo page
    * @param page
@@ -66,34 +80,12 @@ module.exports = class FOBasePage extends CommonPage {
   }
 
   /**
-   * Go to category
-   * @param page
-   * @param categoryID, category id from the BO
-   * @returns {Promise<void>}
-   */
-  async goToCategory(page, categoryID) {
-    await this.waitForSelectorAndClick(page, this.categoryMenu(categoryID));
-  }
-
-  /**
-   * Go to subcategory
-   * @param page
-   * @param categoryID, category id from the BO
-   * @param subCategoryID, subcategory id from the BO
-   * @returns {Promise<void>}
-   */
-  async goToSubCategory(page, categoryID, subCategoryID) {
-    await page.hover(this.categoryMenu(categoryID));
-    await this.waitForSelectorAndClick(page, this.categoryMenu(subCategoryID));
-  }
-
-  /**
    * Go to login Page
    * @param page
    * @return {Promise<void>}
    */
   async goToLoginPage(page) {
-    await this.clickOnHeaderLink(page, 'Sign in');
+    await this.clickAndWaitForNavigation(page, this.userInfoLink);
   }
 
   /**
@@ -104,16 +96,6 @@ module.exports = class FOBasePage extends CommonPage {
   async logout(page) {
     await this.clickAndWaitForNavigation(page, this.logoutLink);
   }
-
-  /**
-   * Logout from FO
-   * @param page
-   * @return {Promise<void>}
-   */
-  async logout(page) {
-    await this.clickAndWaitForNavigation(page, this.logoutLink);
-  }
-
   /**
    * Check if customer is connected
    * @param page
@@ -238,7 +220,7 @@ module.exports = class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCartPage(page) {
-    await this.clickOnHeaderLink(page, 'Cart');
+    await this.clickAndWaitForNavigation(page, this.cartLink);
   }
 
   // Footer methods
@@ -263,15 +245,6 @@ module.exports = class FOBasePage extends CommonPage {
       this.wrapperSubmenuItemLink(position),
       all => all.map(el => el.textContent.trim()),
     );
-  }
-
-  /**
-   * Get store information
-   * @param page
-   * @returns {Promise<string>}
-   */
-  async getStoreInformation(page) {
-    return this.getTextContent(page, this.wrapperContactBlockDiv);
   }
 
   /**
