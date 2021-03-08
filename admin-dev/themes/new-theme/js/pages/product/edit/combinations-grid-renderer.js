@@ -25,6 +25,7 @@
 
 import ProductMap from '@pages/product/product-map';
 import Router from '@components/router';
+import EventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -41,7 +42,7 @@ export default class CombinationsGridRenderer {
 
   render(page, limit) {
     this.fetchData(page, limit);
-    this.eventEmitter.on('combinationsDataFetched', (data) => {
+    this.eventEmitter.on(EventMap.combinations.combinationsDataFetched, (data) => {
       this.renderCombinations(data.combinations);
     });
   }
@@ -75,8 +76,7 @@ export default class CombinationsGridRenderer {
       page,
       limit,
     })).then((response) => {
-      //@todo: event map
-      this.eventEmitter.emit('combinationsDataFetched', {combinations: response.combinations});
+      this.eventEmitter.emit(EventMap.combinations.combinationsDataFetched, {combinations: response.combinations});
     });
   }
 
