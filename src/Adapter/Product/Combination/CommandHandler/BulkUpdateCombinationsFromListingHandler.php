@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
@@ -33,16 +32,15 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationFromListingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkUpdateCombinationsFromListingCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\BulkUpdateCombinationsFromListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ListedCombinationForEditing;
 
 /**
- * Handles @see UpdateCombinationFromListingCommand using legacy object model
- *
- * @todo: remove this class & its command with interface because bulk handler will take its place
+ * Handles @see BulkUpdateCombinationsFromListingCommand using legacy object model
  */
-final class UpdateCombinationFromListingHandler implements UpdateCombinationFromListingHandlerInterface
+final class BulkUpdateCombinationsFromListingHandler implements BulkUpdateCombinationsFromListingHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -77,42 +75,52 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCombinationFromListingCommand $command): void
+    public function handle(BulkUpdateCombinationsFromListingCommand $command): void
     {
-        $combination = $this->combinationRepository->get($command->getCombinationId());
+        foreach ($command->getListedCombinationsForEditing() as $listedCombinationForEditing) {
+            $this->updateOne($listedCombinationForEditing);
+        }
+    }
+
+    /**
+     * @param ListedCombinationForEditing $listedCombinationForEditing
+     */
+    private function updateOne(ListedCombinationForEditing $listedCombinationForEditing): void
+    {
+        $combination = $this->combinationRepository->get($listedCombinationForEditing->getCombinationId());
         $this->combinationRepository->partialUpdate(
             $combination,
-            $this->fillUpdatableProperties($combination, $command),
+            $this->fillUpdatableProperties($combination, $listedCombinationForEditing),
             CannotUpdateCombinationException::FAILED_UPDATE_LISTED_COMBINATION
         );
 
-        if (true === $command->isDefault()) {
-            $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
+        if (true === $listedCombinationForEditing->isDefault()) {
+            $this->defaultCombinationUpdater->setDefaultCombination($listedCombinationForEditing->getCombinationId());
         }
 
         $this->combinationStockUpdater->update(
-            $command->getCombinationId(),
-            new CombinationStockProperties($command->getQuantity())
+            $listedCombinationForEditing->getCombinationId(),
+            new CombinationStockProperties($listedCombinationForEditing->getQuantity())
         );
     }
 
     /**
      * @param Combination $combination
-     * @param UpdateCombinationFromListingCommand $command
+     * @param ListedCombinationForEditing $listedCombinationForEditing
      *
      * @return array<int, string>
      */
-    private function fillUpdatableProperties(Combination $combination, UpdateCombinationFromListingCommand $command): array
+    private function fillUpdatableProperties(Combination $combination, ListedCombinationForEditing $listedCombinationForEditing): array
     {
         $updatableProperties = [];
 
-        if (null !== $command->getImpactOnPrice()) {
-            $combination->price = (float) (string) $command->getImpactOnPrice();
+        if (null !== $listedCombinationForEditing->getImpactOnPrice()) {
+            $combination->price = (float) (string) $listedCombinationForEditing->getImpactOnPrice();
             $updatableProperties[] = 'price';
         }
 
-        if (null !== $command->getQuantity()) {
-            $combination->quantity = $command->getQuantity();
+        if (null !== $listedCombinationForEditing->getQuantity()) {
+            $combination->quantity = $listedCombinationForEditing->getQuantity();
             $updatableProperties[] = 'quantity';
         }
 
