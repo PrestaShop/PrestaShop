@@ -1,8 +1,8 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-from-listing
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combinations-from-listing
 @reset-database-before-feature
 @clear-cache-before-feature
 @update-combination
-@update-combination-from-listing
+@update-combinations-from-listing
 Feature: Update product combination from listing in Back Office (BO)
   As an employee
   I need to be able to update product combination from listing in BO
@@ -41,16 +41,11 @@ Feature: Update product combination from listing in Back Office (BO)
       | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 100.99      | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 100.99      | 0        | false      |
     And product product1 default combination should be "product1SWhite"
-    When I update combination "product1Blue" from list with following values:
-      | impact on price | 5    |
-      | quantity        | 10   |
-      | is default      | true |
-    And I update combination "product1MWhite" from list with following values:
-      | impact on price | -4.99 |
-      | quantity        | 9     |
-      | is default      | false |
-    And I update combination "product1MBlack" from list with following values:
-      | quantity | 50 |
+    When I update combinations list for product "product1" with following values:
+      | reference      | impact on price | quantity | is default |
+      | product1Blue   | 5               | 10       | true       |
+      | product1MWhite | -4.99           | 9        | false      |
+      | product1MBlack |                 | 50       |            |
     Then product product1 should have following list of combinations:
       | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 100.99      | 0        | false      |
