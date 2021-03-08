@@ -396,7 +396,7 @@ class CMSCategoryCore extends ObjectModel
 		WHERE `id_parent` = ' . (int) $this->id . '
 		' . ($active ? 'AND `active` = 1' : '') . '
 		GROUP BY c.`id_cms_category`
-		ORDER BY `name` ASC');
+		ORDER BY `position` ASC');
 
         // Modify SQL result
         foreach ($result as &$row) {
