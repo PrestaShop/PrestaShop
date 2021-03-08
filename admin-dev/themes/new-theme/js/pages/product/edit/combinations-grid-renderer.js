@@ -56,6 +56,7 @@ export default class CombinationsGridRenderer {
       this.$combinationsTableBody.append(row);
 
       // fill inputs
+      $(ProductMap.combinations.tableRow.combinationIdCell(rowIndex)).val(combination.id);
       $(ProductMap.combinations.tableRow.combinationNameCell(rowIndex)).val(combination.name);
       $(ProductMap.combinations.tableRow.impactOnPriceCell(rowIndex)).val(combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.finalPriceTeCell(rowIndex)).val(combination.finalPriceTe);

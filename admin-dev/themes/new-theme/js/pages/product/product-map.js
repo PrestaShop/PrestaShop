@@ -84,6 +84,7 @@ export default {
     lastPageBtn: 'button.page-link.last',
     pageLink: 'button.page-link',
     tableRow: {
+      combinationIdCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_combination_id`,
       combinationNameCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_name`,
       impactOnPriceCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_impact_on_price`,
       finalPriceTeCell: (rowIndex) => `#product_combinations_combinations_list_${rowIndex}_final_price_te`,
