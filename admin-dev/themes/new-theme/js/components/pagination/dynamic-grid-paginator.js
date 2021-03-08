@@ -46,9 +46,8 @@ export default class DynamicGridPaginator {
   init() {
     this.$paginationContainer.on('click', this.selectorsMap.pageLink, (e) => {
       const page = this.extractPageFromDataset(e.currentTarget);
-      const limit = this.getLimit();
-      this.updatePaginator(page, limit);
-      this.gridRenderer.render(page, limit);
+      this.updatePaginator(page);
+      this.gridRenderer.render(page, this.getLimit());
     });
     this.$paginationContainer.find(this.selectorsMap.jumpToPageInput).keypress((e) => {
       if (e.which === 13) {
@@ -56,17 +55,23 @@ export default class DynamicGridPaginator {
         const page = this.validatePageNumber(Number(e.currentTarget.value));
         const limit = this.getLimit();
         this.gridRenderer.render(page, limit);
-        this.updatePaginator(page, limit);
+        this.updatePaginator(page);
       }
+    });
+    this.$paginationContainer.on('change', this.selectorsMap.limitSelect, () => {
+      const page = 1;
+      this.updatePaginator(page);
+      this.gridRenderer.render(page, this.getLimit());
     });
   }
 
   /**
    * @param {Number} currentPage
-   * @param {Number} limit
    */
-  updatePaginator(currentPage, limit) {
+  updatePaginator(currentPage) {
     this.setCurrentPageInput(currentPage);
+    this.refreshLastPageNumber();
+
     if (currentPage === this.getPagesCount()) {
       this.updatePaginatorForLastPage();
     } else if (currentPage === 1) {
@@ -77,7 +82,7 @@ export default class DynamicGridPaginator {
   }
 
   getLimit() {
-    return this.$paginationContainer.data('limit');
+    return this.$paginationContainer.find(this.selectorsMap.limitSelect).val();
   }
 
   getPagesCount() {
@@ -148,6 +153,13 @@ export default class DynamicGridPaginator {
       this.$paginationContainer.find(this.selectorsMap.nextPageBtn),
       page,
     );
+  }
+
+  refreshLastPageNumber() {
+    const lastPage = this.getPagesCount();
+    const lastPageItem = this.$paginationContainer.find(this.selectorsMap.lastPageBtn);
+    lastPageItem.data('page', lastPage);
+    lastPageItem.text(lastPage);
   }
 
   updateUrl(button, page) {
@@ -231,7 +243,7 @@ export default class DynamicGridPaginator {
     }
 
     this.selectorsMap = {
-      jumpToPageInput: 'input[name="paginator_jump_page"]',
+      jumpToPageInput: 'input[name="paginator-jump-page"]',
       firstPageBtn: 'button.page-link.first',
       firstPageItem: 'li.page-item.first',
       nextPageBtn: 'button.page-link.next',
@@ -241,6 +253,7 @@ export default class DynamicGridPaginator {
       lastPageItem: 'li.page-item.last',
       lastPageBtn: 'button.page-link.last',
       pageLink: 'button.page-link',
+      limitSelect: '#paginator-limit',
     };
   }
 }

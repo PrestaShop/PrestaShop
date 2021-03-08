@@ -1,5 +1,3 @@
-{#todo: limit should be modifyable#}
-{% set limit = 10 %}
 {% set pageCount = (totalCombinations/limit)|round(0, 'ceil') %}
 {% set firstUrl = url('admin_products_combinations', {'productId': productId,'page': 1, 'limit': limit}) %}
 {% set nextUrl = url('admin_products_combinations', {'productId': productId,'page': 2, 'limit': limit}) %}
@@ -21,7 +19,7 @@
     <li class="page-item current active">
       <label>
         <input
-          name="paginator_jump_page"
+          name="paginator-jump-page"
           class="jump-to-page"
           type="text"
           value="1"
@@ -44,4 +42,19 @@
       <button type="button" class="page-link last" data-page="{{ pageCount }}" data-url="{{ lastUrl }}">{{ pageCount }}</button>
     </li>
   </ul>
+  <div class="mx-3">
+    <div class="form-group row mb-0">
+      <label for="paginator-limit" class="col-form-label mr-2">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
+      <div>
+        <select name="paginator-limit" id="paginator-limit" class="pagination-link custom-select">
+          {% if limit not in limitChoices %}
+            <option value="{{ limit }}" selected="selected">{{ limit }}</option>
+          {% endif %}
+          {% for limitChoice in limitChoices %}
+            <option value="{{ limitChoice }}" {% if limit==limitChoice %}selected="selected"{% endif %}>{{ limitChoice }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
 </div>
