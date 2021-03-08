@@ -66,14 +66,13 @@
   <table {{ block('widget_attributes') }}>
     <thead>
     <tr>
-      <th>Id</th>
-{#        @todo: translate#}
-      <th>Combination</th>
-      <th>Impact on price (tax excl.)</th>
-      <th>Final price (tax excl.)</th>
-      <th>Quantity</th>
-      <th>Default combination</th>
-      <th>Actions</th>
+      <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Combination'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+      <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Default combination'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
     </tr>
     </thead>
     <tbody>
