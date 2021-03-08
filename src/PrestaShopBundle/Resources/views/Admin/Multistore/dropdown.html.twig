@@ -1,0 +1,67 @@
+<div class="btn-group multistore-dropdown js-multistore-dropdown">
+  <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="material-icons">storefront</i>
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
+    <div class="multistore-dropdown-search-container">
+      <i class="material-icons">search</i>
+      <input type="text" class="form-control multistore-dropdown-search js-multistore-dropdown-search" placeholder="Search shop name" data-no-results="{{ "No results found for"|trans({}, 'Admin.Shop') }}" data-searching="{{ "Searching for"|trans({}, 'Admin.Shop') }}">
+    </div>
+
+    <div class="multistore-dropdown-content js-multistore-scrollbar">
+      <ul class="multistore-dropdown-group">
+        <li class="multistore-dropdown-group-item">
+          <a class="multistore-dropdown-group-name" href="#">Group 1</a>
+
+          <ul class="multistore-dropdown-shops">
+            <li class="multistore-dropdown-shop">
+              <a class="multistore-dropdown-shop-name" href="#">Shop name number one</a>
+              <p class="multistore-dropdown-shop-status">
+                {{ "Inherited"|trans({}, 'Admin.Shop') }}
+              </p>
+            </li>
+            <li class="multistore-dropdown-shop">
+              <a class="multistore-dropdown-shop-name" href="#">Shop name number two</a>
+              <p class="multistore-dropdown-shop-status">
+                {{ "Inherited"|trans({}, 'Admin.Shop') }}
+              </p>
+            </li>
+            <li class="multistore-dropdown-shop">
+              <a class="multistore-dropdown-shop-name" href="#">Shop name number three</a>
+              <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
+                <i class="material-icons">https</i>
+                {{ "Customized"|trans({}, 'Admin.Shop') }}
+              </p>
+            </li>
+          </ul>
+        </li>
+
+        <li class="multistore-dropdown-group-item">
+          <a class="multistore-dropdown-group-name" href="#">Group 2</a>
+
+          <ul class="multistore-dropdown-shops">
+            <li class="multistore-dropdown-shop">
+              <a class="multistore-dropdown-shop-name" href="#">Shop name number one</a>
+              <p class="multistore-dropdown-shop-status">
+                {{ "Inherited"|trans({}, 'Admin.Shop') }}
+              </p>
+            </li>
+            <li class="multistore-dropdown-shop">
+              <a class="multistore-dropdown-shop-name" href="#">Shop name number two</a>
+              <p class="multistore-dropdown-shop-status">
+                {{ "Inherited"|trans({}, 'Admin.Shop') }}
+              </p>
+            </li>
+            <li class="multistore-dropdown-shop">
+              <a class="multistore-dropdown-shop-name" href="#">Shop name number three</a>
+              <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
+                <i class="material-icons">https</i>
+                {{ "Customized"|trans({}, 'Admin.Shop') }}
+              </p>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
