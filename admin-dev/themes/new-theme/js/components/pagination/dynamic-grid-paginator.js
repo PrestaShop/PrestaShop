@@ -114,7 +114,7 @@ export default class DynamicGridPaginator {
   updatePaginatorForFirstPage() {
     this.toggleFirstPageAvailability(false);
     this.togglePreviousPageAvailability(false);
-    this.updateNextPageBtnData(2);
+    this.updateNextPageUrl(2);
     this.toggleNextPageAvailability(true);
     this.toggleLastPageAvailability(true);
   }
@@ -123,55 +123,55 @@ export default class DynamicGridPaginator {
     this.toggleFirstPageAvailability(true);
     this.toggleNextPageAvailability(false);
     this.toggleLastPageAvailability(false);
-    this.updatePreviousPageBtnData(this.getPagesCount() - 1);
+    this.updatePreviousPageUrl(this.getPagesCount() - 1);
     this.togglePreviousPageAvailability(true);
   }
 
   updatePaginatorForMiddlePage(page) {
-    this.updatePreviousPageBtnData(page - 1);
-    this.updateNextPageBtnData(page + 1);
+    this.updatePreviousPageUrl(page - 1);
+    this.updateNextPageUrl(page + 1);
     this.toggleFirstPageAvailability(true);
     this.togglePreviousPageAvailability(true);
     this.toggleNextPageAvailability(true);
     this.toggleLastPageAvailability(true);
   }
 
-  updatePreviousPageBtnData(page) {
-    const previousPageBtn = this.$paginationContainer.find(this.selectorsMap.previousPageBtn);
-    previousPageBtn.data('url', this.router.generate(this.routing.route, this.mergeParamsToKeep({
-      [this.routing.pageKey]: page,
-      [this.routing.limitKey]: this.getLimit(),
-    })));
-    previousPageBtn.data('page', page);
+  updatePreviousPageUrl(page) {
+    this.updateUrl(
+      this.$paginationContainer.find(this.selectorsMap.previousPageBtn),
+      page,
+    );
   }
 
-  updateNextPageBtnData(page) {
-    const nextPageBtn = this.$paginationContainer.find(this.selectorsMap.nextPageBtn);
-    nextPageBtn.data('url', this.router.generate(this.routing.route, this.mergeParamsToKeep({
+  updateNextPageUrl(page) {
+    this.updateUrl(
+      this.$paginationContainer.find(this.selectorsMap.nextPageBtn),
+      page,
+    );
+  }
+
+  updateUrl(button, page) {
+    button.data('url', this.router.generate(this.routing.route, this.mergeParamsToKeep({
       [this.routing.pageKey]: page,
       [this.routing.limitKey]: this.getLimit(),
     })));
-    nextPageBtn.data('page', page);
+    button.data('page', page);
   }
 
   toggleFirstPageAvailability(enable) {
-    const firstPageItem = this.$paginationContainer.find(this.selectorsMap.firstPageItem);
-    this.toggleTargetAvailability(firstPageItem, enable);
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.firstPageItem), enable);
   }
 
   toggleLastPageAvailability(enable) {
-    const lastPageItem = this.$paginationContainer.find(this.selectorsMap.lastPageItem);
-    this.toggleTargetAvailability(lastPageItem, enable);
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.lastPageItem), enable);
   }
 
   togglePreviousPageAvailability(enable) {
-    const previousPageItem = this.$paginationContainer.find(this.selectorsMap.previousPageItem);
-    this.toggleTargetAvailability(previousPageItem, enable);
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.previousPageItem), enable);
   }
 
   toggleNextPageAvailability(enable) {
-    const nextPageItem = this.$paginationContainer.find(this.selectorsMap.nextPageItem);
-    this.toggleTargetAvailability(nextPageItem, enable);
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.nextPageItem), enable);
   }
 
   toggleTargetAvailability(target, enable) {
