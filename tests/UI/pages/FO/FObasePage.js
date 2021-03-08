@@ -93,7 +93,7 @@ module.exports = class FOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async goToLoginPage(page) {
-    await this.clickOnHeaderLink(page, 'Sign in');
+    await this.clickAndWaitForNavigation(page, this.userInfoLink);
   }
 
   /**
