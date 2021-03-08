@@ -146,6 +146,9 @@ class ProductController extends FrameworkBundleAdminController
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+            //@todo: hardcoded. Make configurable?
+            'combinationLimitChoices' => [10, 20, 50, 100],
+            'combinationsLimit' => 10,
         ]);
     }
 
