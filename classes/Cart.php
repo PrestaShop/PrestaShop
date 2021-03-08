@@ -497,7 +497,7 @@ class CartCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
                     cd.`id_cart_rule` = crl.`id_cart_rule`
-                    AND crl.id_lang = ' . (int) $this->id_lang . '
+                    AND crl.id_lang = ' . (int) $this->getAssociatedLanguage()->getId() . '
                 )
                 WHERE `id_cart` = ' . (int) $this->id . '
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
@@ -567,7 +567,7 @@ class CartCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
                 LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
                     cd.`id_cart_rule` = crl.`id_cart_rule`
-                    AND crl.id_lang = ' . (int) $this->id_lang . '
+                    AND crl.id_lang = ' . (int) $this->getAssociatedLanguage()->getId() . '
                 )
                 WHERE `id_cart` = ' . (int) $this->id . '
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
