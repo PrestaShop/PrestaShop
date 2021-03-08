@@ -44,6 +44,7 @@ class ListedCombinationType extends AbstractType
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
             ])
+            ->add('combination_id', TextType::class)
             ->add('name', TextType::class)
             ->add('impact_on_price', MoneyType::class)
             ->add('final_price_te', TextType::class)

@@ -341,6 +341,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         foreach ($combinationsList->getCombinations() as $combinationForListing) {
             $combinationsForForm[] = [
                 'is_selected' => false,
+                'combination_id' => $combinationForListing->getCombinationId(),
                 'name' => $combinationForListing->getCombinationName(),
                 //@todo: do I need to get image link here or in QueryResult?
                 'impact_on_price' => (string) $combinationForListing->getImpactOnPrice(),

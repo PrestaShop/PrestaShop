@@ -48,7 +48,7 @@ export default class CombinationsGridRenderer {
   }
 
   renderCombinations(combinations) {
-    this.cleanTable();
+    this.$combinationsTableBody.empty();
 
     let rowIndex = 0;
     combinations.forEach((combination) => {
@@ -78,10 +78,6 @@ export default class CombinationsGridRenderer {
     })).then((response) => {
       this.eventEmitter.emit(EventMap.combinations.combinationsDataFetched, {combinations: response.combinations});
     });
-  }
-
-  cleanTable() {
-    this.$combinationsTableBody.empty();
   }
 
   getPrototypeRow(rowIndex) {
