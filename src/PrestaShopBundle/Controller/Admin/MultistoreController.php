@@ -37,7 +37,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class is responsible for preparing multistore elements that will be displayed in the BO
- * For now there is only the multistore header.
  */
 class MultistoreController extends FrameworkBundleAdminController
 {
@@ -104,5 +103,12 @@ class MultistoreController extends FrameworkBundleAdminController
             'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
             'lockedToAllShopContext' => $lockedToAllShopContext,
         ]);
+    }
+
+    public function configurationDropdown()
+    {
+        if (!$this->multistoreFeature->isUsed()) {
+            return;
+        }
     }
 }
