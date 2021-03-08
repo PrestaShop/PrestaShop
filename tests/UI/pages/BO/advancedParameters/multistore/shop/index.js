@@ -113,7 +113,7 @@ class ShopSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   async deleteShop(page, row) {
-    this.dialogListener(page);
+    await this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
