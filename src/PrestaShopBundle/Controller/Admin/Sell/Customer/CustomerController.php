@@ -311,14 +311,6 @@ class CustomerController extends AbstractAdminController
                     (int) $customerId,
                     $data['note']
                 ));
-
-                if ($request->isXmlHttpRequest()) {
-                    return $this->json([
-                        'success' => true,
-                        'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
-                    ]);
-                }
-
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
                 $this->addFlash(

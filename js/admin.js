@@ -1567,25 +1567,6 @@ function checkLangPack(token){
 
 function redirect(new_page) { window.location = new_page; }
 
-function saveCustomerNote() {
-  var $customerNoteForm = $('#customer_note');
-  var noteContent = $('#noteContent').val();
-
-  $.ajax({
-    type: "POST",
-    url: $customerNoteForm.attr('action'),
-    data: {
-      'private_note': {
-        'note': noteContent
-      }
-    },
-    async : true,
-    success: function(r) {
-      showSuccessMessage(r.message);
-    }
-  });
-}
-
 function isCleanHtml(content)
 {
   var events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
