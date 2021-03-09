@@ -43,6 +43,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class GenerateByStatusType extends TranslatorAwareType
 {
+    public const FIELD_ORDER_STATES = 'order_states';
+
     /**
      * @var array
      */
@@ -75,7 +77,7 @@ class GenerateByStatusType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('order_states', ChoiceType::class, [
+            ->add(static::FIELD_ORDER_STATES, ChoiceType::class, [
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
