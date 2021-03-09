@@ -45,7 +45,7 @@ export default class DynamicGridPaginator {
 
   init() {
     this.$paginationContainer.on('click', this.selectorsMap.pageLink, (e) => {
-      const page = this.extractPageFromDataset(e.currentTarget);
+      const page = Number($(e.currentTarget).data('page'));
       this.updatePaginator(page);
       this.gridRenderer.render(page, this.getLimit());
     });
@@ -53,8 +53,7 @@ export default class DynamicGridPaginator {
       if (e.which === 13) {
         e.preventDefault();
         const page = this.validatePageNumber(Number(e.currentTarget.value));
-        const limit = this.getLimit();
-        this.gridRenderer.render(page, limit);
+        this.gridRenderer.render(page, this.getLimit());
         this.updatePaginator(page);
       }
     });
@@ -69,7 +68,7 @@ export default class DynamicGridPaginator {
    * @param {Number} currentPage
    */
   updatePaginator(currentPage) {
-    this.setCurrentPageInput(currentPage);
+    $(this.selectorsMap.jumpToPageInput).val(currentPage);
     this.refreshLastPageNumber();
 
     if (currentPage === this.getPagesCount()) {
@@ -81,41 +80,6 @@ export default class DynamicGridPaginator {
     }
   }
 
-  getLimit() {
-    return this.$paginationContainer.find(this.selectorsMap.limitSelect).val();
-  }
-
-  getPagesCount() {
-    const limit = this.getLimit();
-    const total = this.getTotal();
-
-    return Math.ceil(total / limit);
-  }
-
-  getTotal() {
-    return this.$paginationContainer.data('total');
-  }
-
-  validatePageNumber(page) {
-    if (page > this.getPagesCount()) {
-      return this.getPagesCount();
-    }
-
-    if (page < 1) {
-      return 1;
-    }
-
-    return page;
-  }
-
-  extractPageFromDataset(target) {
-    return Number($(target).data('page'));
-  }
-
-  setCurrentPageInput(page) {
-    $(this.selectorsMap.jumpToPageInput).val(page);
-  }
-
   updatePaginatorForFirstPage() {
     this.toggleFirstPageAvailability(false);
     this.togglePreviousPageAvailability(false);
@@ -125,11 +89,11 @@ export default class DynamicGridPaginator {
   }
 
   updatePaginatorForLastPage() {
-    this.toggleFirstPageAvailability(true);
     this.toggleNextPageAvailability(false);
     this.toggleLastPageAvailability(false);
-    this.updatePreviousPageUrl(this.getPagesCount() - 1);
+    this.toggleFirstPageAvailability(true);
     this.togglePreviousPageAvailability(true);
+    this.updatePreviousPageUrl(this.getPagesCount() - 1);
   }
 
   updatePaginatorForMiddlePage(page) {
@@ -139,6 +103,30 @@ export default class DynamicGridPaginator {
     this.togglePreviousPageAvailability(true);
     this.toggleNextPageAvailability(true);
     this.toggleLastPageAvailability(true);
+  }
+
+  toggleFirstPageAvailability(enable) {
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.firstPageItem), enable);
+  }
+
+  toggleLastPageAvailability(enable) {
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.lastPageItem), enable);
+  }
+
+  togglePreviousPageAvailability(enable) {
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.previousPageItem), enable);
+  }
+
+  toggleNextPageAvailability(enable) {
+    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.nextPageItem), enable);
+  }
+
+  toggleTargetAvailability(target, enable) {
+    if (enable) {
+      target.removeClass('disabled');
+    } else {
+      target.addClass('disabled');
+    }
   }
 
   updatePreviousPageUrl(page) {
@@ -170,28 +158,24 @@ export default class DynamicGridPaginator {
     button.data('page', page);
   }
 
-  toggleFirstPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.firstPageItem), enable);
+  getLimit() {
+    return this.$paginationContainer.find(this.selectorsMap.limitSelect).val();
   }
 
-  toggleLastPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.lastPageItem), enable);
+  getPagesCount() {
+    return Math.ceil(this.$paginationContainer.data('total') / this.getLimit());
   }
 
-  togglePreviousPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.previousPageItem), enable);
-  }
-
-  toggleNextPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.nextPageItem), enable);
-  }
-
-  toggleTargetAvailability(target, enable) {
-    if (enable) {
-      target.removeClass('disabled');
-    } else {
-      target.addClass('disabled');
+  validatePageNumber(page) {
+    if (page > this.getPagesCount()) {
+      return this.getPagesCount();
     }
+
+    if (page < 1) {
+      return 1;
+    }
+
+    return page;
   }
 
   mergeParamsToKeep(params) {
@@ -207,7 +191,6 @@ export default class DynamicGridPaginator {
 
     return finalParams;
   }
-
 
   setRoutingOptions(options) {
     this.routing = {};
