@@ -97,7 +97,7 @@ describe('Bulk actions shop Urls', async () => {
   // 3 : Create 2 shop urls
   Array(2).fill(0, 0, 2).forEach((test, index) => {
     describe(`Create shop Url n°${index + 1}`, async () => {
-      const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}Shop`});
+      const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}`});
       it('should go to add shop URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddURL${index}`, baseContext);
 
@@ -112,6 +112,20 @@ describe('Bulk actions shop Urls', async () => {
 
         const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
         await expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
+      });
+    });
+  });
+
+  // 7 : Delete all shops created
+  describe('delete all shops created', async () => {
+    new Array(2).fill(0, 0, 2).forEach((test, index) => {
+      it(`should delete the shop url contains 'ToDelete${index + 1}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `deleteShopUrl${index}_`, baseContext);
+
+        await shopUrlPage.filterTable(page, 'input', 'url', `ToDelete${index + 1}`);
+
+        const textResult = await shopUrlPage.deleteShopURL(page, 1);
+        await expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
       });
     });
   });
