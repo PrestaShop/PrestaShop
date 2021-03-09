@@ -28,6 +28,13 @@ import Router from '@components/router';
 const {$} = window;
 
 export default class DynamicGridPaginator {
+  /**
+   * @param {String} containerSelector
+   * @param {Object} dataProvider
+   * @param {Object} gridRenderer
+   * @param {Number|null} startingPage If provided it will load the provided page data on page load
+   * @param {Object|null} selectorsMap If provided it will override css selectors used for all the actions.
+   */
   constructor(
     containerSelector,
     dataProvider,
@@ -40,16 +47,22 @@ export default class DynamicGridPaginator {
     this.dataProvider = dataProvider;
     this.gridRenderer = gridRenderer;
     this.setSelectorsMap(selectorsMap);
-    // if starting page is not provided, then paginator is not initialized on page load
+    this.init();
     if (startingPage !== null) {
-      this.init(startingPage);
+      this.paginate(startingPage);
     }
+
+    return {
+      paginate: (page) => this.paginate(page),
+    };
   }
 
-  init(startingPage) {
-    if (startingPage !== null) {
-      this.paginate(Number(startingPage));
-    }
+  /**
+   * Initiates the pagination component
+   *
+   * @private
+   */
+  init() {
     this.$paginationContainer.on('click', this.selectorsMap.pageLink, (e) => {
       this.paginate(Number($(e.currentTarget).data('page')));
     });
@@ -84,6 +97,9 @@ export default class DynamicGridPaginator {
     this.gridRenderer.render(data);
   }
 
+  /**
+   * @private
+   */
   updatePaginatorForFirstPage() {
     this.toggleFirstPageAvailability(false);
     this.togglePreviousPageAvailability(false);
@@ -91,6 +107,9 @@ export default class DynamicGridPaginator {
     this.toggleLastPageAvailability(true);
   }
 
+  /**
+   * @private
+   */
   updatePaginatorForLastPage() {
     this.toggleNextPageAvailability(false);
     this.toggleLastPageAvailability(false);
@@ -98,6 +117,9 @@ export default class DynamicGridPaginator {
     this.togglePreviousPageAvailability(true);
   }
 
+  /**
+   * @private
+   */
   updatePaginatorForMiddlePage() {
     this.toggleFirstPageAvailability(true);
     this.togglePreviousPageAvailability(true);
@@ -105,28 +127,59 @@ export default class DynamicGridPaginator {
     this.toggleLastPageAvailability(true);
   }
 
+  /**
+   * @param {Number} page
+   *
+   * @private
+   */
   refreshButtonsData(page) {
     this.$paginationContainer.find(this.selectorsMap.nextPageBtn).data('page', page + 1);
     this.$paginationContainer.find(this.selectorsMap.previousPageBtn).data('page', page - 1);
     this.$paginationContainer.find(this.selectorsMap.lastPageBtn).data('page', this.pagesCount);
   }
 
+  /**
+   * @param {Boolean} enable
+   *
+   * @private
+   */
   toggleFirstPageAvailability(enable) {
     this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.firstPageItem), enable);
   }
 
+  /**
+   * @param {Boolean} enable
+   *
+   * @private
+   */
   toggleLastPageAvailability(enable) {
     this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.lastPageItem), enable);
   }
 
+  /**
+   * @param {Boolean} enable
+   *
+   * @private
+   */
   togglePreviousPageAvailability(enable) {
     this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.previousPageItem), enable);
   }
 
+  /**
+   * @param {boolean} enable
+   *
+   * @private
+   */
   toggleNextPageAvailability(enable) {
     this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.nextPageItem), enable);
   }
 
+  /**
+   * @param {Object} target
+   * @param {Boolean} enable
+   *
+   * @private
+   */
   toggleTargetAvailability(target, enable) {
     if (enable) {
       target.removeClass('disabled');
@@ -135,6 +188,11 @@ export default class DynamicGridPaginator {
     }
   }
 
+  /**
+   * @param {Number} total
+   *
+   * @private
+   */
   countPages(total) {
     this.pagesCount = Math.ceil(total / this.getLimit());
     const lastPageItem = this.$paginationContainer.find(this.selectorsMap.lastPageBtn);
@@ -142,10 +200,21 @@ export default class DynamicGridPaginator {
     lastPageItem.text(this.pagesCount);
   }
 
+  /**
+   * @returns {Number}
+   *
+   * @private
+   */
   getLimit() {
     return this.$paginationContainer.find(this.selectorsMap.limitSelect).val();
   }
 
+  /**
+   *
+   * @param page
+   *
+   * @returns {Number}
+   */
   validatePageNumber(page) {
     if (page > this.pagesCount) {
       return this.pagesCount;
@@ -158,6 +227,9 @@ export default class DynamicGridPaginator {
     return page;
   }
 
+  /**
+   * @param {Object} selectorsMap
+   */
   setSelectorsMap(selectorsMap) {
     if (selectorsMap) {
       this.selectorsMap = selectorsMap;

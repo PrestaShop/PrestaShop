@@ -42,6 +42,8 @@ export default class CombinationsGridRenderer {
     this.renderCombinations(data.combinations);
   }
 
+  // @todo: handle on change of new inputs of price quantity and is_default when they are ready
+  // @todo: they should call related endpoints to update combination
   renderCombinations(combinations) {
     this.$combinationsTableBody.empty();
 
