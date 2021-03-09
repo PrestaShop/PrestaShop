@@ -25,13 +25,11 @@
 
 import ProductMap from '@pages/product/product-map';
 import Router from '@components/router';
-import EventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
 export default class CombinationsGridRenderer {
-  constructor(productId) {
-    this.productId = productId;
+  constructor() {
     this.router = new Router();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
@@ -40,11 +38,8 @@ export default class CombinationsGridRenderer {
     this.prototypeName = this.$combinationsTable.data('prototypeName');
   }
 
-  render(page, limit) {
-    this.fetchData(page, limit);
-    this.eventEmitter.on(EventMap.combinations.combinationsDataFetched, (data) => {
-      this.renderCombinations(data.combinations);
-    });
+  render(data) {
+    this.renderCombinations(data.combinations);
   }
 
   renderCombinations(combinations) {
@@ -71,18 +66,6 @@ export default class CombinationsGridRenderer {
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
       rowIndex += 1;
-    });
-  }
-
-  fetchData(page, limit) {
-    // @todo: data provider class?
-
-    $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      page,
-      limit,
-    })).then((response) => {
-      this.eventEmitter.emit(EventMap.combinations.combinationsDataFetched, {combinations: response.combinations});
     });
   }
 

@@ -23,35 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '@pages/product/product-map';
 import Router from '@components/router';
-import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
-import CombinationsProvider from '@pages/product/api/combinations-provider';
-import DynamicGridPaginator from '@components/pagination/dynamic-grid-paginator';
 
 const {$} = window;
 
-export default class CombinationsManager {
-  constructor() {
-    this.$productForm = $(ProductMap.productForm);
+export default class CombinationsProvider {
+  constructor(productId) {
+    this.productId = productId;
     this.router = new Router();
-    this.init();
   }
 
-  init() {
-    const productId = this.getProductId();
-    const paginator = new DynamicGridPaginator(
-      ProductMap.combinations.paginationContainer,
-      new CombinationsProvider(productId),
-      new CombinationsGridRenderer(),
-    );
-
-    this.$productForm.on('click', ProductMap.combinations.navigationTab, () => {
-      paginator.init(1);
-    });
-  }
-
-  getProductId() {
-    return Number(this.$productForm.data('productId'));
+  get(page, limit) {
+    return $.get(this.router.generate('admin_products_combinations', {
+      productId: this.productId,
+      page,
+      limit,
+    }));
   }
 }

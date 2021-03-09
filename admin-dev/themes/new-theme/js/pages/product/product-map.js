@@ -69,6 +69,7 @@ export default {
     customizationFieldRow: '.customization-field-row',
   },
   combinations: {
+    navigationTab: '#combinations-tab-nav',
     combinationsTable: '#combinations table',
     combinationsTableBody: '#combinations table tbody',
     paginationContainer: '#combinations-pagination',

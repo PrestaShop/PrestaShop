@@ -30,60 +30,63 @@ const {$} = window;
 export default class DynamicGridPaginator {
   constructor(
     containerSelector,
+    dataProvider,
     gridRenderer,
-    routingOptions,
+    startingPage = null,
     selectorsMap = null,
   ) {
     this.$paginationContainer = $(containerSelector);
     this.router = new Router();
-    this.routingOptions = routingOptions;
+    this.dataProvider = dataProvider;
     this.gridRenderer = gridRenderer;
-    this.setRoutingOptions(routingOptions);
     this.setSelectorsMap(selectorsMap);
-    this.init();
+    // if starting page is not provided, then paginator is not initialized on page load
+    if (startingPage !== null) {
+      this.init(startingPage);
+    }
   }
 
-  init() {
+  init(startingPage) {
+    if (startingPage !== null) {
+      this.paginate(Number(startingPage));
+    }
     this.$paginationContainer.on('click', this.selectorsMap.pageLink, (e) => {
-      const page = Number($(e.currentTarget).data('page'));
-      this.updatePaginator(page);
-      this.gridRenderer.render(page, this.getLimit());
+      this.paginate(Number($(e.currentTarget).data('page')));
     });
     this.$paginationContainer.find(this.selectorsMap.jumpToPageInput).keypress((e) => {
       if (e.which === 13) {
         e.preventDefault();
         const page = this.validatePageNumber(Number(e.currentTarget.value));
-        this.gridRenderer.render(page, this.getLimit());
-        this.updatePaginator(page);
+        this.paginate(page);
       }
     });
     this.$paginationContainer.on('change', this.selectorsMap.limitSelect, () => {
-      const page = 1;
-      this.updatePaginator(page);
-      this.gridRenderer.render(page, this.getLimit());
+      this.paginate(1);
     });
   }
 
   /**
-   * @param {Number} currentPage
+   * @param {Number} page
    */
-  updatePaginator(currentPage) {
-    $(this.selectorsMap.jumpToPageInput).val(currentPage);
-    this.refreshLastPageNumber();
+  async paginate(page) {
+    const data = await this.dataProvider.get(page, this.getLimit());
+    $(this.selectorsMap.jumpToPageInput).val(page);
+    this.countPages(data.total);
+    this.refreshButtonsData(page);
 
-    if (currentPage === this.getPagesCount()) {
+    if (page === this.pagesCount) {
       this.updatePaginatorForLastPage();
-    } else if (currentPage === 1) {
+    } else if (page === 1) {
       this.updatePaginatorForFirstPage();
     } else {
-      this.updatePaginatorForMiddlePage(currentPage);
+      this.updatePaginatorForMiddlePage();
     }
+    this.gridRenderer.render(data);
   }
 
   updatePaginatorForFirstPage() {
     this.toggleFirstPageAvailability(false);
     this.togglePreviousPageAvailability(false);
-    this.updateNextPageUrl(2);
     this.toggleNextPageAvailability(true);
     this.toggleLastPageAvailability(true);
   }
@@ -93,16 +96,19 @@ export default class DynamicGridPaginator {
     this.toggleLastPageAvailability(false);
     this.toggleFirstPageAvailability(true);
     this.togglePreviousPageAvailability(true);
-    this.updatePreviousPageUrl(this.getPagesCount() - 1);
   }
 
-  updatePaginatorForMiddlePage(page) {
-    this.updatePreviousPageUrl(page - 1);
-    this.updateNextPageUrl(page + 1);
+  updatePaginatorForMiddlePage() {
     this.toggleFirstPageAvailability(true);
     this.togglePreviousPageAvailability(true);
     this.toggleNextPageAvailability(true);
     this.toggleLastPageAvailability(true);
+  }
+
+  refreshButtonsData(page) {
+    this.$paginationContainer.find(this.selectorsMap.nextPageBtn).data('page', page + 1);
+    this.$paginationContainer.find(this.selectorsMap.previousPageBtn).data('page', page - 1);
+    this.$paginationContainer.find(this.selectorsMap.lastPageBtn).data('page', this.pagesCount);
   }
 
   toggleFirstPageAvailability(enable) {
@@ -129,46 +135,20 @@ export default class DynamicGridPaginator {
     }
   }
 
-  updatePreviousPageUrl(page) {
-    this.updateUrl(
-      this.$paginationContainer.find(this.selectorsMap.previousPageBtn),
-      page,
-    );
-  }
-
-  updateNextPageUrl(page) {
-    this.updateUrl(
-      this.$paginationContainer.find(this.selectorsMap.nextPageBtn),
-      page,
-    );
-  }
-
-  refreshLastPageNumber() {
-    const lastPage = this.getPagesCount();
+  countPages(total) {
+    this.pagesCount = Math.ceil(total / this.getLimit());
     const lastPageItem = this.$paginationContainer.find(this.selectorsMap.lastPageBtn);
-    lastPageItem.data('page', lastPage);
-    lastPageItem.text(lastPage);
-  }
-
-  updateUrl(button, page) {
-    button.data('url', this.router.generate(this.routing.route, this.mergeParamsToKeep({
-      [this.routing.pageKey]: page,
-      [this.routing.limitKey]: this.getLimit(),
-    })));
-    button.data('page', page);
+    lastPageItem.data('page', this.pagesCount);
+    lastPageItem.text(this.pagesCount);
   }
 
   getLimit() {
     return this.$paginationContainer.find(this.selectorsMap.limitSelect).val();
   }
 
-  getPagesCount() {
-    return Math.ceil(this.$paginationContainer.data('total') / this.getLimit());
-  }
-
   validatePageNumber(page) {
-    if (page > this.getPagesCount()) {
-      return this.getPagesCount();
+    if (page > this.pagesCount) {
+      return this.pagesCount;
     }
 
     if (page < 1) {
@@ -176,46 +156,6 @@ export default class DynamicGridPaginator {
     }
 
     return page;
-  }
-
-  mergeParamsToKeep(params) {
-    const finalParams = {};
-
-    if (!this.routing.paramsToKeep) {
-      return params;
-    }
-
-    Object.keys(this.routing.paramsToKeep).forEach((key) => {
-      finalParams[key] = this.routing.paramsToKeep[key];
-    });
-
-    return finalParams;
-  }
-
-  setRoutingOptions(options) {
-    this.routing = {};
-    if (options.route === 'undefined') {
-      console.log('route is missing in dynamic paginator routing options');
-      return;
-    }
-
-    this.routing.route = options.route;
-
-    if (typeof options.paramsToKeep !== 'undefined') {
-      this.routing.paramsToKeep = options.paramsToKeep;
-    }
-
-    if (typeof options.pageKey !== 'undefined') {
-      this.routing.pageKey = options.pageKey;
-    } else {
-      this.routing.pageKey = 'page';
-    }
-
-    if (typeof options.limitKey !== 'undefined') {
-      this.routing.limitKey = options.limitKey;
-    } else {
-      this.routing.limitKey = 'limit';
-    }
   }
 
   setSelectorsMap(selectorsMap) {
