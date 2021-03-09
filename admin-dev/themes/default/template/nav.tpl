@@ -1,4 +1,4 @@
-<nav class="nav-bar d-none d-md-block" role="navigation" id="nav-sidebar">
+<nav class="nav-bar" role="navigation" id="nav-sidebar">
 	<span class="menu-collapse" data-toggle-url="{$toggle_navigation_url}">
 		<i class="material-icons">chevron_left</i>
 		<i class="material-icons">chevron_left</i>
