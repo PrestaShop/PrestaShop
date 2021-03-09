@@ -533,6 +533,7 @@ class ProductCore extends ObjectModel
             'tax_rules_group' => ['type' => self::HAS_ONE],
             'categories' => ['type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'],
             'stock_availables' => ['type' => self::HAS_MANY, 'field' => 'id_stock_available', 'object' => 'StockAvailable', 'association' => 'stock_availables'],
+            'attachments' => ['type' => self::HAS_MANY, 'field' => 'id_attachment', 'object' => 'Attachment', 'association' => 'product_attachment'],
         ],
     ];
 
@@ -635,6 +636,13 @@ class ProductCore extends ObjectModel
                     'id_product_attribute' => ['required' => true],
                 ],
                 'setter' => false,
+            ],
+            'attachments' => [
+                'resource' => 'attachment',
+                'api' => 'attachments',
+                'fields' => [
+                    'id' => ['required' => true],
+                ],
             ],
             'accessories' => [
                 'resource' => 'product',
@@ -3032,7 +3040,7 @@ class ProductCore extends ObjectModel
 
         $id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         $ids = Address::getCountryAndState($id_address);
-        $id_country = $ids['id_country'] ? (int) $ids['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
+        $id_country = isset($ids['id_country']) ? (int) $ids['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
 
         return SpecificPrice::getProductIdByDate(
             $context->shop->id,
@@ -7129,10 +7137,38 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Webservice getter : Get Tag identifiers
+     * Webservice getter: Get product attachments ids of current product for association
      *
-     * @return array
+     * @return array<int, array{id: string}>
      */
+    public function getWsAttachments(): array
+    {
+        return Db::getInstance()->executeS(
+            'SELECT a.`id_attachment` AS id ' .
+            'FROM `' . _DB_PREFIX_ . 'product_attachment` pa ' .
+            'INNER JOIN `' . _DB_PREFIX_ . 'attachment` a ON (pa.id_attachment = a.id_attachment) ' .
+            Shop::addSqlAssociation('attachment', 'a') . ' ' .
+            'WHERE pa.`id_product` = ' . (int) $this->id
+        );
+    }
+
+    /**
+     * Webservice setter: set product attachments ids of current product for association
+     *
+     * @param array<array{id: int|string}> $attachments ids
+     */
+    public function setWsAttachments(array $attachments): bool
+    {
+        $this->deleteAttachments(true);
+        foreach ($attachments as $attachment) {
+            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment`
+    				(`id_product`, `id_attachment`) VALUES (' . (int) $this->id . ', ' . (int) $attachment['id'] . ')');
+        }
+        Product::updateCacheAttachment((int) $this->id);
+
+        return true;
+    }
+
     public function getWsTags()
     {
         return Db::getInstance()->executeS('

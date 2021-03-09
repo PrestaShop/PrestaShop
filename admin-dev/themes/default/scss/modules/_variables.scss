@@ -103,13 +103,18 @@ $table-bg-hover: #edf7fb;
 $btn-default-color: $main-color;
 $btn-default-bg: #fff;
 $btn-default-border: #bbcdd2;
-$btn-primary-color: $btn-default-color;
+$btn-primary-color: #fff;
 $btn-primary-bg: $primary-color;
 $btn-primary-border: $primary-color;
+$btn-primary-active-bg: #21a6c1;
+
+$btn-secondary-hover: #889da2;
+$btn-secondary-active-color: #889da2;
+$btn-secondary-color: #fff;
 
 // Forms
 $input-bg: #fff;
-$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2);
+$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 6);
 $input-group-addon-bg: #f5f8f9;
 $input-border: #bbcdd2;
 $input-focus-background: #f4fcfd;

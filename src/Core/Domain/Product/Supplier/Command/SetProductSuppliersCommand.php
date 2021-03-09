@@ -112,7 +112,6 @@ class SetProductSuppliersCommand
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
                 $productSupplier['price_tax_excluded'],
-                $productSupplier['combination_id'],
                 $productSupplier['product_supplier_id'] ?? null
             );
         }
@@ -126,7 +125,7 @@ class SetProductSuppliersCommand
         $defaultSupplierId = $this->getDefaultSupplierId()->getValue();
 
         foreach ($this->productSuppliers as $productSupplier) {
-            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
+            if ($productSupplier->getSupplierId()->getValue() === $defaultSupplierId) {
                 return;
             }
         }

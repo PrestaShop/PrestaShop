@@ -140,6 +140,15 @@ $product-description-height: 70px;
     background: #fff;
   }
 
+  .product {
+    padding: 0;
+
+    @at-root .page-index &, .page-search & {
+      width: 25%;
+      min-width: 250px;
+    }
+  }
+
   .product-miniature {
     margin: 0 0.8125rem;
 

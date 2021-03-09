@@ -631,14 +631,14 @@ class ModuleController extends ModuleAbstractController
                 ),
             ];
         } catch (Exception $e) {
-            if (isset($moduleName)) {
-                $moduleManager->disable($moduleName);
+            try {
+                if (isset($moduleName)) {
+                    $moduleManager->disable($moduleName);
+                }
+            } catch (Exception $subE) {
             }
 
-            $installationResponse = [
-                'status' => false,
-                'msg' => $e->getMessage(),
-            ];
+            throw $e;
         }
 
         return new JsonResponse($installationResponse);

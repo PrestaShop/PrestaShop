@@ -12,7 +12,7 @@ Feature: Delete virtual product file from BO (Back Office).
       | is_virtual  | true        |
     And product "product1" should not have a file
     And product product1 type should be virtual
-    And I add virtual product file "file1" to "product1" with following details:
+    And I add virtual product file "file1" to product "product1" with following details:
       | filename reference | filename_file1  |
       | display name       | puffin-logo.png |
       | file name          | app_icon.png    |

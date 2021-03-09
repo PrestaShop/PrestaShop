@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +22,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-{* Generate HTML code for printing Invoice Icon with link *}
-{if Configuration::get('PS_INVOICE')}
-	<span style="width:20px; margin-right:5px;">
-		<a href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateInvoicePDF', 'id_order_invoice' => $id_invoice])|escape:'html':'UTF-8'}"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>
-	</span>
-{/if}
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Controller\Exception;
+
+use Exception;
+
+/**
+ * Class FieldNotFoundException
+ *
+ * Thrown when field for error message is not found
+ */
+class FieldNotFoundException extends Exception
+{
+}

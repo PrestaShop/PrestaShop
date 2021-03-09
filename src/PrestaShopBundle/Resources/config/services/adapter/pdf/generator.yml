@@ -30,3 +30,6 @@ services:
       - '@translator'
       - '%database_prefix%'
       - '@doctrine.dbal.default_connection'
+
+  prestashop.adapter.pdf.generator.single_invoice:
+    class: PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator

@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {block name='product_miniature_item'}
-<div>
+<div class="product">
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
@@ -40,7 +40,7 @@
           </a>
         {else}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
-            <img 
+            <img
               src="{$urls.no_picture_image.bySize.home_default.url}"
               loading="lazy"
               width="250"

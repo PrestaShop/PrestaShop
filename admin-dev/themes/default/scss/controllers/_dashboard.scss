@@ -355,6 +355,17 @@
     .data_trend {
       display: none;
     }
+
+    .btn-group {
+      > .btn {
+        display: flex;
+        align-items: center;
+
+        > i {
+          height: auto;
+        }
+      }
+    }
   }
 
   .tooltip-panel {
@@ -439,6 +450,18 @@
 
     button.btn-default {
       padding: 5px;
+    }
+  }
+}
+
+.dash_news {
+  h3 {
+    // stylelint-disable-next-line
+    font-size: 14px !important;
+
+    i {
+      font-size: 20px;
+      color: $medium-gray;
     }
   }
 }

@@ -12,7 +12,7 @@ Feature: Add virtual product file from BO (Back Office).
       | is_virtual  | true        |
     And product "product1" should not have a file
     And product product1 type should be virtual
-    When I add virtual product file "file1" to "product1" with following details:
+    When I add virtual product file "file1" to product "product1" with following details:
       | display name | puffin-logo.png |
       | file name    | app_icon.png    |
     Then product "product1" should have a virtual product file "file1" with following details:
@@ -28,7 +28,7 @@ Feature: Add virtual product file from BO (Back Office).
       | is_virtual  | true          |
     And product "product2" should not have a file
     And product product2 type should be virtual
-    When I add virtual product file "file2" to "product2" with following details:
+    When I add virtual product file "file2" to product "product2" with following details:
       | file name            | app_icon.png        |
       | display name         | puffin-logo2.png    |
       | access days          | 3                   |
@@ -46,7 +46,7 @@ Feature: Add virtual product file from BO (Back Office).
       | is_virtual  | true          |
     And product "product3" should not have a file
     And product product3 type should be virtual
-    When I add virtual product file "file3" to "product3" with following details:
+    When I add virtual product file "file3" to product "product3" with following details:
       | file name            | dummy_zip.zip       |
       | display name         | zipped files pack   |
       | access days          | 5                   |
@@ -65,7 +65,7 @@ Feature: Add virtual product file from BO (Back Office).
       | is_virtual  | false         |
     And product product4 type should be standard
     And product "product4" should not have a file
-    When I add virtual product file "file4" to "product4" with following details:
+    When I add virtual product file "file4" to product "product4" with following details:
       | file name    | dummy_zip.zip     |
       | display name | zipped files pack |
     Then I should get error that only virtual product can have file
@@ -77,7 +77,7 @@ Feature: Add virtual product file from BO (Back Office).
       | is_virtual  | true          |
     And product product5 type should be virtual
     And product "product5" should not have a file
-    When I add virtual product file "file5" to "product5" with following details:
+    When I add virtual product file "file5" to product "product5" with following details:
       | file name    | dummy_zip.zip                      |
       | display name | zipped files pack for fith product |
     Then product "product5" should have a virtual product file "file5" with following details:
@@ -85,7 +85,7 @@ Feature: Add virtual product file from BO (Back Office).
       | access days          | 0                                  |
       | download times limit | 0                                  |
       | expiration date      |                                    |
-    When I add virtual product file "file5-5" to "product5" with following details:
+    When I add virtual product file "file5-5" to product "product5" with following details:
       | file name    | app_icon.png     |
       | display name | puffin-logo2.png |
     Then I should get error that product already has a file
@@ -102,16 +102,16 @@ Feature: Add virtual product file from BO (Back Office).
       | is_virtual  | true         |
     And product product6 type should be virtual
     And product "product6" should not have a file
-    When I add virtual product file "file6" to "product6" with following details:
+    When I add virtual product file "file6" to product "product6" with following details:
       | file name    | dummy_zip.zip |
       | display name | {my filename} |
     Then I should get error that product file "display name" is invalid
-    When I add virtual product file "file6" to "product6" with following details:
+    When I add virtual product file "file6" to product "product6" with following details:
       | file name    | dummy_zip.zip                       |
       | display name | zipped files pack for sixth product |
       | access days  | -1                                  |
     Then I should get error that product file "access days" is invalid
-    When I add virtual product file "file6" to "product6" with following details:
+    When I add virtual product file "file6" to product "product6" with following details:
       | file name            | dummy_zip.zip                       |
       | display name         | zipped files pack for sixth product |
       | download times limit | -10                                 |
