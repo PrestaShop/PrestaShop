@@ -287,6 +287,13 @@ describe('Default pack stock management', async () => {
         const deleteTextResult = await productsPage.deleteProduct(page, test.args.productToCreate);
         await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
       });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilters${index}`, baseContext);
+
+        const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfProducts).to.be.above(0);
+      });
     });
   });
 });

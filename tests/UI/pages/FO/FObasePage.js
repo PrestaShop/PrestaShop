@@ -6,6 +6,7 @@ module.exports = class FOBasePage extends CommonPage {
     super();
 
     // Selectors for home page
+    // Header links
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
@@ -78,7 +79,6 @@ module.exports = class FOBasePage extends CommonPage {
     await this.clickAndWaitForNavigation(page, this.desktopLogoLink);
   }
 
-  // Header methods
   /**
    * Go to login Page
    * @param page
@@ -96,7 +96,6 @@ module.exports = class FOBasePage extends CommonPage {
   async logout(page) {
     await this.clickAndWaitForNavigation(page, this.logoutLink);
   }
-
   /**
    * Check if customer is connected
    * @param page
@@ -198,6 +197,15 @@ module.exports = class FOBasePage extends CommonPage {
   }
 
   /**
+   * Get store information
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getStoreInformation(page) {
+    return this.getTextContent(page, this.wrapperContactBlockDiv);
+  }
+
+  /**
    * Get cart notifications number
    * @param page
    * @returns {Promise<number>}
@@ -237,15 +245,6 @@ module.exports = class FOBasePage extends CommonPage {
       this.wrapperSubmenuItemLink(position),
       all => all.map(el => el.textContent.trim()),
     );
-  }
-
-  /**
-   * Get store information
-   * @param page
-   * @returns {Promise<string>}
-   */
-  async getStoreInformation(page) {
-    return this.getTextContent(page, this.wrapperContactBlockDiv);
   }
 
   /**
