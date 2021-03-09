@@ -30,7 +30,10 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
@@ -170,6 +173,16 @@ class InvoicesController extends FrameworkBundleAdminController
                     'No invoice has been found for this period.',
                     'Admin.Orderscustomers.Notification'
                 );
+            case InvoicesByStatusDataProvider::ERROR_NO_ORDER_STATE_SELECTED:
+                return $this->trans(
+                    'You must select at least one order status.',
+                    'Admin.Orderscustomers.Notification'
+                );
+            case InvoiceByStatusFormHandler::ERROR_NO_INVOICES_FOUND_FOR_STATUS:
+                return $this->trans(
+                    'No invoice has been found for this status.',
+                    'Admin.Orderscustomers.Notification'
+                );
         }
 
         return $this->trans(
@@ -200,6 +213,11 @@ class InvoicesController extends FrameworkBundleAdminController
                 return $this->trans(
                     'To',
                     'Admin.Global'
+                );
+            case GenerateByStatusType::FIELD_ORDER_STATES:
+                return $this->trans(
+                    'Order statuses',
+                    'Admin.Orderscustomers.Feature'
                 );
         }
 
