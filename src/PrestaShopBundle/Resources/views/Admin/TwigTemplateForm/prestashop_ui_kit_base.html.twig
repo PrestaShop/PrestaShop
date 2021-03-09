@@ -939,6 +939,7 @@
 {% endblock %}
 
 {% block text_widget %}
+  {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
   {% if data_list is not null %}
     {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
   {% endif %}
