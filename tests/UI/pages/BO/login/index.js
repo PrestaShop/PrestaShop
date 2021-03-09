@@ -18,6 +18,8 @@ class Login extends BOBasePage {
     this.resetPasswordEmailFormField = '#email_forgot';
     this.resetPasswordButton = '#reset-password-button';
     this.resetPasswordSuccessConfirmationText = '#forgot_confirm_name';
+    // reset password success text
+    this.resetPasswordSuccessText = 'Please, check your mailbox.';
   }
 
   /*
@@ -59,9 +61,9 @@ class Login extends BOBasePage {
    * @param employeeEmail
    * @returns {Promise<void>}
    */
-  async sendBOResetPasswordLink(page, employeeEmail) {
+  async sendResetPasswordLink(page, employeeEmail) {
     await page.click(this.forgotPasswordLink);
-    await page.waitForSelector(this.resetPasswordButton);
+    await this.waitForVisibleSelector(page, this.resetPasswordButton);
     await this.setValue(page, this.resetPasswordEmailFormField, employeeEmail);
     await page.click(this.resetPasswordButton);
   }
@@ -69,9 +71,9 @@ class Login extends BOBasePage {
   /**
    * Get and return reset password success message text
    * @param page
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
-  async checkSendResetPasswordLinkSuccess(page) {
+  async getResetPasswordSuccessMessage(page) {
     return this.getTextContent(page, this.resetPasswordSuccessConfirmationText);
   }
 }

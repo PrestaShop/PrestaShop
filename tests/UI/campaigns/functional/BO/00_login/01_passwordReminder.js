@@ -1,6 +1,6 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
@@ -16,7 +16,7 @@ const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 
 // Import datas
-const {DefaultCustomer} = require('@data/demo/customer');
+const { DefaultCustomer } = require('@data/demo/customer');
 const EmployeeFaker = require('@data/faker/employee');
 
 // Import test context
@@ -27,9 +27,10 @@ const baseContext = 'functional_BO_login_passwordReminder';
 let browserContext;
 let page;
 let numberOfEmployees = 0;
-// maildev
+
+// maildev config and vars
 let newMail;
-const {smtpServer, smtpPort} = global.maildevConfig;
+const { smtpServer, smtpPort } = global.maildevConfig;
 const resetPasswordSuccessText = 'Please, check your mailbox.';
 const testMailSubject = 'Test message -- Prestashop';
 const resetPasswordMailSubject = 'Your new password';
@@ -49,6 +50,8 @@ describe('BO Password reminder', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Start listening to maildev server
     mailHelper.startListener(mailListener);
     // Handle every new email
     mailListener.on('new', (email) => {
@@ -58,6 +61,8 @@ describe('BO Password reminder', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
     mailHelper.stopListener(mailListener);
   });
 
@@ -95,19 +100,6 @@ describe('BO Password reminder', async () => {
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
 
-    it('should check successful message after sending test email', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail', baseContext);
-
-      const textResult = await emailPage.sendTestEmail(page, global.BO.EMAIL);
-      await expect(textResult).to.contains(emailPage.sendTestEmailSuccessfulMessage);
-    });
-
-    it('should check if test mail is received', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMailBox', baseContext);
-
-      await expect(newMail.subject).to.contains(testMailSubject);
-    });
-
     it('should logout from BO', async function () {
       await loginCommon.logoutBO(this, page);
     });
@@ -126,8 +118,6 @@ describe('BO Password reminder', async () => {
         dashboardPage.advancedParametersLink,
         dashboardPage.teamLink,
       );
-
-      await employeesPage.closeSfToolBar(page);
 
       const pageTitle = await employeesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(employeesPage.pageTitle);
@@ -153,9 +143,6 @@ describe('BO Password reminder', async () => {
 
       const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
       await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
-
-      const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
     });
 
     it('should logout from BO', async function () {
@@ -174,9 +161,9 @@ describe('BO Password reminder', async () => {
 
     it('should send reset password mail', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordMailAndCheckSuccess', baseContext);
-      await loginPage.sendBOResetPasswordLink(page, createEmployeeData.email);
+      await loginPage.sendResetPasswordLink(page, createEmployeeData.email);
 
-      const successTextContent = await loginPage.checkSendResetPasswordLinkSuccess(page);
+      const successTextContent = await loginPage.getResetPasswordSuccessMessage(page);
       await expect(successTextContent).to.contains(resetPasswordSuccessText);
     });
 
@@ -232,17 +219,9 @@ describe('BO Password reminder', async () => {
       const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
-
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
-    });
   });
 
   describe('Go to BO and reset to default mail parameters', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
 
     it('should go to email setup page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
