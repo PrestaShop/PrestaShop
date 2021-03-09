@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShopBundle\Translation\DomainNormalizer;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
@@ -144,10 +144,17 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     public function getDefaultCatalogue(string $locale): MessageCatalogue
     {
+        // There are 2 kind of modules : Native (built with core) and Non-Native (the modules installed by user himself)
+        // For Native modules, translations are in the default core translations directory
+        // For non native modules, the catalogue is built from templates
+
+        // First we search in translation directory in case the module is native
+        // If no translation file is found, we extract the catalogue from the module's templates
+
         try {
-            $defaultCatalogue = $this->getDefaultCatalogueProvider($locale)->getCatalogue($locale);
-        } catch (FileNotFoundException $e) {
-            $defaultCatalogue = $this->getCachedDefaultCatalogue($locale);
+            $defaultCatalogue = $this->getDefaultCatalogueProvider()->getCatalogue($locale);
+        } catch (TranslationFilesNotFoundException $e) {
+            $defaultCatalogue = $this->getDefaultCatalogueExtractedFromTemplates($locale);
         }
 
         return $defaultCatalogue;
@@ -162,7 +169,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     {
         try {
             return $this->getFileTranslatedCatalogueProvider()->getCatalogue($locale);
-        } catch (FileNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException $exception) {
             return $this->buildTranslationCatalogueFromLegacyFiles($locale);
         }
     }
@@ -176,17 +183,15 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     }
 
     /**
-     * @param string $locale
-     *
      * @return DefaultCatalogueProvider
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
-    private function getDefaultCatalogueProvider(string $locale): DefaultCatalogueProvider
+    private function getDefaultCatalogueProvider(): DefaultCatalogueProvider
     {
         if (null === $this->defaultCatalogueProvider) {
             $this->defaultCatalogueProvider = new DefaultCatalogueProvider(
-                $this->translationsDirectory . DIRECTORY_SEPARATOR . $locale,
+                $this->translationsDirectory . DIRECTORY_SEPARATOR . 'default',
                 $this->filenameFilters
             );
         }
@@ -197,7 +202,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     /**
      * @return FileTranslatedCatalogueProvider
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     private function getFileTranslatedCatalogueProvider(): FileTranslatedCatalogueProvider
     {
@@ -292,12 +297,12 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      *
      * @return MessageCatalogue
      */
-    private function getCachedDefaultCatalogue(string $locale): MessageCatalogue
+    private function getDefaultCatalogueExtractedFromTemplates(string $locale): MessageCatalogue
     {
         $catalogueCacheKey = $this->moduleName . '|' . $locale;
 
         if (!isset($this->defaultCatalogueCache[$catalogueCacheKey])) {
-            $this->defaultCatalogueCache[$catalogueCacheKey] = $this->buildFreshDefaultCatalogue($locale);
+            $this->defaultCatalogueCache[$catalogueCacheKey] = $this->buildFreshDefaultCatalogueFromTemplates($locale);
         }
 
         return $this->defaultCatalogueCache[$catalogueCacheKey];
@@ -310,33 +315,16 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      *
      * @return MessageCatalogue
      */
-    private function buildFreshDefaultCatalogue(string $locale): MessageCatalogue
+    private function buildFreshDefaultCatalogueFromTemplates(string $locale): MessageCatalogue
     {
-        // There are 2 kind of modules : Native (built with core) and Non-Native (the modules installed by user himself)
-        // For Native modules, translations are in the default core translations directory
-        // For non native modules, the catalogue is built from templates
-
-        // First we search in translation directory in case the module is native
-        // If no translation file is found, we extract the catalogue from the module's templates
         $defaultCatalogue = new MessageCatalogue($locale);
-
         try {
-            // look up files in the core translations
-            $defaultCatalogue = (new DefaultCatalogueProvider(
-                $this->translationsDirectory . DIRECTORY_SEPARATOR . 'default',
-                $this->filenameFilters
-            ))
-                ->getCatalogue($locale);
-        } catch (FileNotFoundException $exception) {
-            // there are no xliff files for this module in the core
-            try {
-                // analyze template files and extract wordings
-                /** @var MessageCatalogue $additionalDefaultCatalogue */
-                $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
-                $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
-            } catch (UnsupportedLocaleException $exception) {
-                // Do nothing as support of legacy files is deprecated
-            }
+            // analyze template files and extract wordings
+            /** @var MessageCatalogue $additionalDefaultCatalogue */
+            $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
+            $defaultCatalogue = $this->convertDomainsAndFilterCatalogue($additionalDefaultCatalogue);
+        } catch (UnsupportedLocaleException $exception) {
+            // Do nothing as support of legacy files is deprecated
         }
 
         return $defaultCatalogue;
@@ -353,7 +341,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      *
      * @return MessageCatalogue
      */
-    private function filterDomains(MessageCatalogue $catalogue): MessageCatalogue
+    private function convertDomainsAndFilterCatalogue(MessageCatalogue $catalogue): MessageCatalogue
     {
         $normalizer = new DomainNormalizer();
         $newCatalogue = new MessageCatalogue($catalogue->getLocale());

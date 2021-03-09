@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Finder;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -50,7 +50,7 @@ class TranslationFinder
      *
      * @return MessageCatalogue
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
     {
@@ -88,7 +88,7 @@ class TranslationFinder
      *
      * @return Finder
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     private function getTranslationFilesFromPath(array $paths, string $pattern): Finder
     {
@@ -101,11 +101,11 @@ class TranslationFinder
         try {
             $translationFiles = $finder->files()->notName('index.php')->in($paths);
         } catch (\InvalidArgumentException $e) {
-            throw new FileNotFoundException(sprintf('Could not crawl for translation files: %s', $e->getMessage()), self::ERR_DIRECTORY_NOT_FOUND, $e);
+            throw new TranslationFilesNotFoundException(sprintf('Could not crawl for translation files: %s', $e->getMessage()), self::ERR_DIRECTORY_NOT_FOUND, $e);
         }
 
         if (count($translationFiles) === 0) {
-            throw new FileNotFoundException('There are no translation file available.', self::ERR_NO_FILES_IN_DIRECTORY);
+            throw new TranslationFilesNotFoundException('There are no translation file available.', self::ERR_NO_FILES_IN_DIRECTORY);
         }
 
         return $translationFiles;

@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Finder\TranslationFinder;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -53,12 +53,12 @@ class FileTranslatedCatalogueProvider extends AbstractCatalogueProvider
      * @param string $translatedCatalogueDirectory
      * @param array $filenameFilters
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function __construct(string $translatedCatalogueDirectory, array $filenameFilters)
     {
         if (!is_dir($translatedCatalogueDirectory) || !is_readable($translatedCatalogueDirectory)) {
-            throw new FileNotFoundException(sprintf('Directory %s does not exist', $translatedCatalogueDirectory));
+            throw new TranslationFilesNotFoundException(sprintf('Directory %s does not exist', $translatedCatalogueDirectory));
         }
 
         if (!$this->assertIsArrayOfString($filenameFilters)) {
@@ -76,7 +76,7 @@ class FileTranslatedCatalogueProvider extends AbstractCatalogueProvider
      *
      * @return MessageCatalogue
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getCatalogue(string $locale): MessageCatalogue
     {

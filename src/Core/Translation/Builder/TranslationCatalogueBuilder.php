@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
 use Exception;
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\DTO\DomainTranslation;
 use PrestaShop\PrestaShop\Core\Translation\DTO\MessageTranslation;
 use PrestaShop\PrestaShop\Core\Translation\DTO\Translations;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
 use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\BackofficeProviderDefinition;
@@ -167,7 +167,7 @@ class TranslationCatalogueBuilder
      * @return Translations
      *
      * @throws UnexpectedTranslationTypeException
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getRawCatalogue(
         string $type,

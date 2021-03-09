@@ -29,7 +29,7 @@ namespace Tests\Unit\Core\Translation\Provider;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueLayersProviderInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\DefaultCatalogueProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
@@ -79,7 +79,7 @@ class DefaultCatalogueProviderTest extends TestCase
 
     public function testItFailsWhenDirectoryNotExists()
     {
-        $this->expectException(FileNotFoundException::class);
+        $this->expectException(TranslationFilesNotFoundException::class);
         new DefaultCatalogueProvider('someFakeDirectory', ['filter']);
     }
 

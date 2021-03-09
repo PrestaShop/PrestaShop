@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopException;
@@ -136,7 +136,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
      *
      * @return MessageCatalogue
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue
     {
@@ -152,7 +152,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
 
             // overwrite with the theme's own catalogue
             $catalogue->addCatalogue($fileTranslatedCatalogue);
-        } catch (FileNotFoundException $e) {
+        } catch (TranslationFilesNotFoundException $e) {
             // there are no translation files, ignore them
             return new MessageCatalogue($locale);
         }

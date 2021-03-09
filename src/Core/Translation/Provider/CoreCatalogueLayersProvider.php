@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -104,7 +104,7 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getDefaultCatalogue(string $locale): MessageCatalogue
     {
@@ -130,7 +130,7 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
     /**
      * @return DefaultCatalogueProvider
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     private function getDefaultCatalogueProvider(): DefaultCatalogueProvider
     {
@@ -147,7 +147,7 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
     /**
      * @return FileTranslatedCatalogueProvider
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     private function getFileTranslatedCatalogueProvider(): FileTranslatedCatalogueProvider
     {
