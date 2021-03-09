@@ -52,20 +52,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @param CommandBusInterface $queryBus
-     * @param int $contextLangId
      */
     public function __construct(
-        CommandBusInterface $queryBus,
-        int $contextLangId
+        CommandBusInterface $queryBus
     ) {
         $this->queryBus = $queryBus;
-        $this->contextLangId = $contextLangId;
     }
 
     /**
