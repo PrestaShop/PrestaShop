@@ -41,8 +41,8 @@ const createEmployeeData = new EmployeeFaker({
   permissionProfile: 'Salesman',
 });
 
-// init mailListener
-const mailListener = mailHelper.createMailListener();
+// mailListener
+let mailListener
 
 describe('BO Password reminder', async () => {
   // before and after functions
@@ -51,6 +51,7 @@ describe('BO Password reminder', async () => {
     page = await helper.newTab(browserContext);
 
     // Start listening to maildev server
+    mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
     // Handle every new email
     mailListener.on('new', (email) => {
