@@ -32,6 +32,8 @@ use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider;
 use PrestaShopBundle\Form\Exception\DataProviderException;
@@ -183,6 +185,11 @@ class InvoicesController extends FrameworkBundleAdminController
                     'No invoice has been found for this status.',
                     'Admin.Orderscustomers.Notification'
                 );
+            case InvoiceOptionsDataProvider::ERROR_INCORRECT_INVOICE_NUMBER:
+                return $this->trans(
+                    'Invoice number must be greater than the last invoice number, or 0 if you want to keep the current number.',
+                    'Admin.Orderscustomers.Notification'
+                );
         }
 
         return $this->trans(
@@ -217,6 +224,21 @@ class InvoicesController extends FrameworkBundleAdminController
             case GenerateByStatusType::FIELD_ORDER_STATES:
                 return $this->trans(
                     'Order statuses',
+                    'Admin.Orderscustomers.Feature'
+                );
+            case InvoiceOptionsType::INVOICE_PREFIX:
+                return $this->trans(
+                    'Invoice prefix',
+                    'Admin.Orderscustomers.Feature'
+                );
+            case InvoiceOptionsType::LEGAL_FREE_TEXT:
+                return $this->trans(
+                    'Legal free text',
+                    'Admin.Orderscustomers.Feature'
+                );
+            case InvoiceOptionsType::FOOTER_TEXT:
+                return $this->trans(
+                    'Footer text',
                     'Admin.Orderscustomers.Feature'
                 );
         }
