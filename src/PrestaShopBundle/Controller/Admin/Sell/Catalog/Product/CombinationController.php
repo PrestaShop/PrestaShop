@@ -30,13 +30,14 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class CombinationController extends FrameworkBundleAdminController
 {
     /**
-     * @todo: security annotation
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param Request $request
