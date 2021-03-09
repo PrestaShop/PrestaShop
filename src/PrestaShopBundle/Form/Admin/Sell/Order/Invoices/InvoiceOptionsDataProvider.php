@@ -42,7 +42,6 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
     public const ERROR_INCORRECT_INVOICE_NUMBER = 'error_incorrect_invoice_number';
     public const ERROR_CONTAINS_HTML_TAGS = 'error_contains_html_tags';
 
-
     /**
      * @var DataConfigurationInterface
      */
