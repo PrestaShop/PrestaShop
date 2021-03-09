@@ -27,7 +27,11 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * Class is responsible of managing the data manipulated using invoice options form
@@ -35,6 +39,10 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  */
 final class InvoiceOptionsDataProvider implements FormDataProviderInterface
 {
+    public const ERROR_INCORRECT_INVOICE_NUMBER = 'error_incorrect_invoice_number';
+    public const ERROR_CONTAINS_HTML_TAGS = 'error_contains_html_tags';
+
+
     /**
      * @var DataConfigurationInterface
      */
@@ -70,9 +78,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
+        $this->validate($data);
 
         return $this->invoiceOptionsConfiguration->updateConfiguration($data);
     }
@@ -82,21 +88,64 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array Array of errors if any
+     * @return void
+     *
+     * @throws TypeException|DataProviderException
      */
     private function validate(array $data)
     {
-        $errors = [];
-        $invoiceNumber = $data['invoice_number'];
+        $errorCollection = new InvalidConfigurationDataErrorCollection();
 
-        if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
-            $errors[] = [
-                'key' => 'Invoice number must be greater than the last invoice number, or 0 if you want to keep the current number.',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+        if (isset($data[InvoiceOptionsType::INVOICE_NUMBER])) {
+            $invoiceNumber = $data[InvoiceOptionsType::INVOICE_NUMBER];
+            if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        static::ERROR_INCORRECT_INVOICE_NUMBER,
+                        InvoiceOptionsType::INVOICE_NUMBER
+                    )
+                );
+            }
         }
 
-        return $errors;
+        if (isset($data[InvoiceOptionsType::INVOICE_PREFIX]) && is_array($data[InvoiceOptionsType::INVOICE_PREFIX])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::INVOICE_PREFIX], InvoiceOptionsType::INVOICE_PREFIX, $errorCollection);
+        }
+
+        if (isset($data[InvoiceOptionsType::LEGAL_FREE_TEXT]) && is_array($data[InvoiceOptionsType::LEGAL_FREE_TEXT])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::LEGAL_FREE_TEXT], InvoiceOptionsType::LEGAL_FREE_TEXT, $errorCollection);
+        }
+
+        if (isset($data[InvoiceOptionsType::FOOTER_TEXT]) && is_array($data[InvoiceOptionsType::FOOTER_TEXT])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::FOOTER_TEXT], InvoiceOptionsType::FOOTER_TEXT, $errorCollection);
+        }
+
+        if (!$errorCollection->isEmpty()) {
+            throw new DataProviderException('Invalid invoice options form data', 0, null, $errorCollection);
+        }
+    }
+
+    /**
+     * If any of values of multilang field contain html tags and if they do add error.
+     *
+     * @param array $data
+     * @param string $key
+     * @param InvalidConfigurationDataErrorCollection $errorCollection
+     *
+     * @throws TypeException
+     */
+    private function validateContainsNoTags(array $data, string $key, InvalidConfigurationDataErrorCollection $errorCollection): void
+    {
+        foreach ($data as $languageId => $value) {
+            if ($value !== null && $value !== strip_tags($value)) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        static::ERROR_CONTAINS_HTML_TAGS,
+                        $key,
+                        $languageId
+                    )
+                );
+            }
+        }
     }
 }
