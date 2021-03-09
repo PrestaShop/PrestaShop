@@ -1,4 +1,3 @@
-
 # @todo: what should be proper naming for this? can it be indexAction even though it returns only json?
 admin_products_combinations:
     path: /{productId}/combinations
@@ -8,3 +7,36 @@ admin_products_combinations:
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getList
         _legacy_controller: AdminProducts
+
+admin_products_combinations_update_impact_on_price:
+    path: /combinations/{combinationId}/update-impact-on-price
+    methods: [POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateImpactOnPrice
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+
+
+admin_products_combinations_update_quantity:
+    path: /combinations/{combinationId}/update-quantity
+    methods: [POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateQuantity
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+
+
+admin_products_combinations_mark_as_default:
+    path: /combinations/{combinationId}/mark-as-default
+    methods: [POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:markAsDefault
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+
