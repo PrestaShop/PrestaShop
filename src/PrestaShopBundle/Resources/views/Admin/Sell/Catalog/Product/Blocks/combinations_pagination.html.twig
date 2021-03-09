@@ -1,17 +1,10 @@
-{% set pageCount = (totalCombinations/limit)|round(0, 'ceil') %}
-{% set firstUrl = url('admin_products_combinations', {'productId': productId,'page': 1, 'limit': limit}) %}
-{% set nextUrl = url('admin_products_combinations', {'productId': productId,'page': 2, 'limit': limit}) %}
-{% set lastUrl = url('admin_products_combinations', {'productId': productId,'page': pageCount, 'limit': limit}) %}
-
 <div
   class="row justify-content-center"
   id="combinations-pagination"
-  data-total="{{ totalCombinations }}"
-  data-limit="{{ limit }}"
 >
   <ul class="pagination mb-0">
     <li class="page-item first disabled">
-      <button type="button" class="page-link" data-page="1" data-url="{{ firstUrl }}">1</button>
+      <button type="button" class="page-link">1</button>
     </li>
     <li class="page-item previous disabled">
       <button type="button" class="page-link previous" aria-label="Previous"><span class="sr-only">Previous</span></button>
@@ -23,8 +16,6 @@
           class="jump-to-page"
           type="text"
           value="1"
-          data-url="{{ firstUrl }}"
-          max="{{ pageCount }}"
         />
       </label>
     </li>
@@ -33,13 +24,12 @@
         type="button"
         class="page-link next"
         aria-label="Next"
-        data-page="2"
-        data-url="{{ nextUrl }}">
+        data-page="2">
         <span class="sr-only">Next</span>
       </button>
     </li>
     <li class="page-item last">
-      <button type="button" class="page-link last" data-page="{{ pageCount }}" data-url="{{ lastUrl }}">{{ pageCount }}</button>
+      <button type="button" class="page-link last"></button>
     </li>
   </ul>
   <div class="mx-3">
