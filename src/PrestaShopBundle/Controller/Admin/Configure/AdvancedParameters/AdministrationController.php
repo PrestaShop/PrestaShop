@@ -207,7 +207,12 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @return array
+     *
+     * @throws FieldNotFoundException
+     *
      * @var InvalidConfigurationDataErrorCollection
+     *
      */
     private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
     {
@@ -257,7 +262,6 @@ class AdministrationController extends FrameworkBundleAdminController
             'Admin.Notifications.Error',
             [
                 $this->getFieldLabel($error->getFieldName()),
-                GeneralDataProvider::MAX_COOKIE_VALUE,
             ]
         );
     }
