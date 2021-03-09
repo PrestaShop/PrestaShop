@@ -67,7 +67,9 @@
       {% block product_tab_combinations %}
         <div role="tabpanel" class="form-contenttab tab-pane" id="combinations-tab">
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', {
-            'productForm': productForm,
+            'combinationsForm': combinationsForm,
+            'combinationsLimit': combinationsLimit,
+            'combinationsLimitChoices': combinationLimitChoices,
           }) }}
         </div>
       {% endblock %}

@@ -22,12 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% form_theme productForm.combinations '@PrestaShop/Admin/Sell/Catalog/Product/Form/combinations_form_theme.html.twig' %}
+{% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combinations_form_theme.html.twig' %}
 
 {% block form_product_combinations %}
-  {{ form_row(productForm.combinations) }}
+  {{ form_row(combinationsForm) }}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations_pagination.html.twig', {
-    'totalCombinations': productForm.combinations.total_combinations_count.vars.value,
+    'totalCombinations': combinationsForm.total_combinations_count.vars.value,
     'limit': combinationsLimit,
     'limitChoices': combinationLimitChoices,
   }) }}
