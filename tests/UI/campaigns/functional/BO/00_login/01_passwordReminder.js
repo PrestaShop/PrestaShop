@@ -31,7 +31,6 @@ let numberOfEmployees = 0;
 // maildev config and vars
 let newMail;
 const {smtpServer, smtpPort} = global.maildevConfig;
-const resetPasswordSuccessText = 'Please, check your mailbox.';
 const resetPasswordMailSubject = 'Your new password';
 
 // new employee datas
@@ -164,7 +163,7 @@ describe('BO Password reminder', async () => {
       await loginPage.sendResetPasswordLink(page, createEmployeeData.email);
 
       const successTextContent = await loginPage.getResetPasswordSuccessMessage(page);
-      await expect(successTextContent).to.contains(resetPasswordSuccessText);
+      await expect(successTextContent).to.contains(loginPage.resetPasswordSuccessText);
     });
 
     it('should check if reset password mail is in mailbox', async function () {

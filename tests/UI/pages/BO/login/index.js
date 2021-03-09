@@ -7,6 +7,7 @@ class Login extends BOBasePage {
 
     this.pageTitle = 'PrestaShop';
     this.loginErrorText = 'The employee does not exist, or the password provided is incorrect.';
+    this.resetPasswordSuccessText = 'Please, check your mailbox.';
 
     this.emailInput = '#email';
     this.passwordInput = '#passwd';
@@ -18,8 +19,6 @@ class Login extends BOBasePage {
     this.resetPasswordEmailFormField = '#email_forgot';
     this.resetPasswordButton = '#reset-password-button';
     this.resetPasswordSuccessConfirmationText = '#forgot_confirm_name';
-    // reset password success text
-    this.resetPasswordSuccessText = 'Please, check your mailbox.';
   }
 
   /*
