@@ -26,7 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * Class is responsible of managing the data manipulated using invoice generation by order status form
@@ -34,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  */
 final class InvoicesByStatusDataProvider implements FormDataProviderInterface
 {
+    public const ERROR_NO_ORDER_STATE_SELECTED = 'error_no_order_state_selected';
+
     /**
      * {@inheritdoc}
      */
@@ -57,18 +63,27 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
      * @param array $data
      *
      * @return array Array of errors if any
+     *
+     * @throws DataProviderException|TypeException
      */
     private function validate(array $data)
     {
         $errors = [];
-        $orderStates = $data['order_states'];
 
-        if (!is_array($orderStates) || !count($orderStates)) {
-            $errors[] = [
-                'key' => 'You must select at least one order status.',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+        if (!isset($data[GenerateByStatusType::FIELD_ORDER_STATES])
+            || !is_array($data[GenerateByStatusType::FIELD_ORDER_STATES])
+            || !count($data[GenerateByStatusType::FIELD_ORDER_STATES]))
+        {
+            $errorCollection = new InvalidConfigurationDataErrorCollection();
+
+            $errorCollection->add(
+                new InvalidConfigurationDataError(
+                    static::ERROR_NO_ORDER_STATE_SELECTED,
+                    GenerateByStatusType::FIELD_ORDER_STATES
+                )
+            );
+
+            throw new DataProviderException('No order state selected', 0, null, $errorCollection);
         }
 
         return $errors;

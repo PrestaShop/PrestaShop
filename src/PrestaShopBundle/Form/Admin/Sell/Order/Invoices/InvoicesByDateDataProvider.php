@@ -39,9 +39,9 @@ use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
  */
 final class InvoicesByDateDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_INVALID_DATE_FROM = 1;
-    public const ERROR_INVALID_DATE_TO = 2;
-    public const ERROR_NO_INVOICES_FOUND = 3;
+    public const ERROR_INVALID_DATE_FROM = 'error_invalid_date_from';
+    public const ERROR_INVALID_DATE_TO = 'error_invalid_date_to';
+    public const ERROR_NO_INVOICES_FOUND = 'error_no_invoices_found';
 
     /**
      * @var OrderInvoiceDataProviderInterface
@@ -72,7 +72,9 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
     public function setData(array $data)
     {
         // This form doesn't need to save any data, so it only validates the data
-        return $this->validate($data);
+        $this->validate($data);
+
+        return [];
     }
 
     /**
