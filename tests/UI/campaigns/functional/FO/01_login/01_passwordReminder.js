@@ -33,7 +33,7 @@ const testMailSubject = 'Test message -- Prestashop';
 const resetPasswordMailSubject = 'Password query confirmation';
 
 // mailListener
-let mailListener
+let mailListener;
 
 
 /*

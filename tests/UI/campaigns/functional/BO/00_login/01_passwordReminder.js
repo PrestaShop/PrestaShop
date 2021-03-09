@@ -41,7 +41,7 @@ const createEmployeeData = new EmployeeFaker({
 });
 
 // mailListener
-let mailListener
+let mailListener;
 
 describe('BO Password reminder', async () => {
   // before and after functions
