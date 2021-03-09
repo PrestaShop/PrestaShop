@@ -40,6 +40,7 @@ class ListedCombinationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // @todo: impact_on_price and quantity needs new type component similar as in Catalog->stocks page.
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,

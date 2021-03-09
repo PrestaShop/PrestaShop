@@ -34,7 +34,7 @@ export default {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',
     defaultSupplierInput: '#product_suppliers_default_supplier_id',
-    //@todo: why its called productsTable and not productSuppliers|suppliers table? is it a mistake?
+    // @todo: why its called productsTable and not productSuppliers|suppliers table? is it a mistake?
     productsTable: `${productSuppliersId} table`,
     productsTableBody: `${productSuppliersId} table tbody`,
     productSupplierRow: {
@@ -83,8 +83,6 @@ export default {
       isDefaultCell: (rowIndex) => `#combinations_combinations_list_${rowIndex}_is_default`,
       editButton: (rowIndex) => `#combinations_combinations_list_${rowIndex}_edit`,
       deleteButton: (rowIndex) => `#combinations_combinations_list_${rowIndex}_delete`,
-      //@todo: we could do something as follows to allow extending easily, but that would require coupling the response and js.
-      cell: (rowIndex, cellName) => `#combinations_combinations_list_${rowIndex}_${cellName}`,
     },
   },
 };
