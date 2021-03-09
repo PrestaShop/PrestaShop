@@ -305,4 +305,8 @@
 
 select[multiple] {
   overflow: auto;
+
+  option {
+    width: max-content;
+  }
 }
