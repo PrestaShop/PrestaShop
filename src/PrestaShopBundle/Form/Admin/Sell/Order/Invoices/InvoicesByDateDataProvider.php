@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * Class is responsible of managing the data manipulated using invoice generation by date form
@@ -36,6 +39,10 @@ use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
  */
 final class InvoicesByDateDataProvider implements FormDataProviderInterface
 {
+    public const ERROR_INVALID_DATE_FROM = 1;
+    public const ERROR_INVALID_DATE_TO = 2;
+    public const ERROR_NO_INVOICES_FOUND = 3;
+
     /**
      * @var OrderInvoiceDataProviderInterface
      */
@@ -73,39 +80,38 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array Array of errors if any
+     * @return void
      */
     private function validate(array $data)
     {
-        $errors = [];
+        $errorCollection = new InvalidConfigurationDataErrorCollection();
 
-        $dateFrom = date_create($data['date_from']);
-        $dateTo = date_create($data['date_to']);
-
-        if (false === $dateFrom) {
-            $errors[] = [
-                'key' => 'Invalid "From" date',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+        if (!isset($data[GenerateByDateType::FIELD_DATE_FROM]) || false === $data[GenerateByDateType::FIELD_DATE_FROM]) {
+            $errorCollection->add(new InvalidConfigurationDataError(static::ERROR_INVALID_DATE_FROM, GenerateByDateType::FIELD_DATE_FROM));
         }
 
-        if (false === $dateTo) {
-            $errors[] = [
-                'key' => 'Invalid "To" date',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+        if (!isset($data[GenerateByDateType::FIELD_DATE_TO]) || false === $data[GenerateByDateType::FIELD_DATE_TO]) {
+            $errorCollection->add(new InvalidConfigurationDataError(static::ERROR_INVALID_DATE_TO, GenerateByDateType::FIELD_DATE_TO));
         }
 
-        if (empty($errors) && !$this->orderInvoiceDataProvider->getByDateInterval($dateFrom, $dateTo)) {
-            $errors[] = [
-                'key' => 'No invoice has been found for this period.',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+        if (!$errorCollection->isEmpty()) {
+            throw new DataProviderException('Invalid invoices by date form', 0, null, $errorCollection);
         }
 
-        return $errors;
+        $dateFrom = date_create($data[GenerateByDateType::FIELD_DATE_FROM]);
+        $dateTo = date_create($data[GenerateByDateType::FIELD_DATE_TO]);
+
+        if (!$this->orderInvoiceDataProvider->getByDateInterval($dateFrom, $dateTo)) {
+            $errorCollection->add(
+                new InvalidConfigurationDataError(
+                    static::ERROR_NO_INVOICES_FOUND,
+                    GenerateByDateType::FIELD_DATE_TO
+                )
+            );
+        }
+
+        if (!$errorCollection->isEmpty()) {
+            throw new DataProviderException('Invalid invoices by date form', 0, null, $errorCollection);
+        }
     }
 }
