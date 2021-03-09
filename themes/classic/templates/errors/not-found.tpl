@@ -24,7 +24,7 @@
  *}
 <section id="content" class="page-content page-not-found">
   {block name='page_content'}
-    {block name="errorContent"}
+    {block name="error_content"}
       {if isset($errorContent)}
         {$errorContent nofilter}
       {else}
