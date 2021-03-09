@@ -1,5 +1,5 @@
 
-# @todo: what should be proper naming for this? can it be indexAction even though it returns only json?
+# @todo: can we improve routes naming?
 admin_products_combinations:
     path: /{productId}/combinations
     methods: [GET]
@@ -8,3 +8,16 @@ admin_products_combinations:
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getList
         _legacy_controller: AdminProducts
+    requirements:
+        productId: \d+
+
+admin_products_combinations_update_impact_on_price:
+    path: /combinations/{combinationId}/update-impact-on-price
+    methods: [POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateImpactOnPrice
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+

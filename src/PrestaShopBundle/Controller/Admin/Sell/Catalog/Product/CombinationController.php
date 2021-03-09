@@ -27,16 +27,20 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CombinationController extends FrameworkBundleAdminController
 {
     /**
-     * @todo: security annotation
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param Request $request
@@ -56,6 +60,40 @@ class CombinationController extends FrameworkBundleAdminController
         ));
 
         return $this->json($this->formatResponse($combinationsList));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $combinationId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateImpactOnPriceAction(int $combinationId, Request $request): JsonResponse
+    {
+        $impactOnPrice = $request->request->get('impactOnPrice');
+
+        if (!$impactOnPrice) {
+            return $this->json(
+                ['message' => 'Missing impactOnPrice'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $command = new UpdateCombinationFromListingCommand($combinationId);
+        $command->setImpactOnPrice($impactOnPrice);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getFallbackErrorMessage(get_class($e), $e->getCode(), $e->getMessage())],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([]);
     }
 
     /**
