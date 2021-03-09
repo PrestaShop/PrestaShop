@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Form\Exception;
 class InvalidConfigurationDataError
 {
     /**
-     * @var int
+     * @var string
      */
     private $errorCode;
 
@@ -52,7 +52,7 @@ class InvalidConfigurationDataError
      * @param string $fieldName
      * @param int|null $languageId
      */
-    public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
+    public function __construct(string $errorCode, string $fieldName, ?int $languageId = null)
     {
         $this->errorCode = $errorCode;
         $this->fieldName = $fieldName;
@@ -60,9 +60,9 @@ class InvalidConfigurationDataError
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getErrorCode(): int
+    public function getErrorCode(): string
     {
         return $this->errorCode;
     }
