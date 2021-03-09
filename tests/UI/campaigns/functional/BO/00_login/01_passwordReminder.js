@@ -1,6 +1,6 @@
 require('module-alias/register');
 
-const { expect } = require('chai');
+const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
@@ -16,7 +16,7 @@ const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 
 // Import datas
-const { DefaultCustomer } = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const EmployeeFaker = require('@data/faker/employee');
 
 // Import test context
@@ -30,9 +30,8 @@ let numberOfEmployees = 0;
 
 // maildev config and vars
 let newMail;
-const { smtpServer, smtpPort } = global.maildevConfig;
+const {smtpServer, smtpPort} = global.maildevConfig;
 const resetPasswordSuccessText = 'Please, check your mailbox.';
-const testMailSubject = 'Test message -- Prestashop';
 const resetPasswordMailSubject = 'Your new password';
 
 // new employee datas
@@ -222,7 +221,6 @@ describe('BO Password reminder', async () => {
   });
 
   describe('Go to BO and reset to default mail parameters', async () => {
-
     it('should go to email setup page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
 
