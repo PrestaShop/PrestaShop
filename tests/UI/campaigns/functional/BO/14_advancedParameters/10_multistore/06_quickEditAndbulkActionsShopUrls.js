@@ -19,17 +19,21 @@ const ShopFaker = require('@data/faker/shop');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParameters_multistore_bulkActionsShopUrls';
+const baseContext = 'functional_BO_advancedParameters_multistore_quickEditAndBulkActionsShopUrls';
 
 let browserContext;
 let page;
+let numberOfShopUrls = 0;
 
 /*
 Enable multistore
-
+Create 2 shop urls
+Quick edit (enable, disable)
+Bulk actions (enable, disable)
+Deleted created shop urls
 Disable multistore
  */
-describe('Bulk actions shop Urls', async () => {
+describe('Quick edit and bulk actions shop Urls', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -92,6 +96,13 @@ describe('Bulk actions shop Urls', async () => {
       const pageTitle = await multiStorePage.getPageTitle(page);
       await expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
+
+    it('should reset filter and get the number of shop urls', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      numberOfShopUrls = await shopUrlPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfShopUrls).to.be.above(0);
+    });
   });
 
   // 3 : Create 2 shop urls
@@ -116,8 +127,54 @@ describe('Bulk actions shop Urls', async () => {
     });
   });
 
+  // 4 : Quick edit first created shop url
+  describe('Quick edit first shop url', async () => {
+    it('should filter list by URL', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForEnableDisable', baseContext);
+
+      await shopUrlPage.filterTable(page, 'input', 'url', 'ToDelete1');
+
+      const numberOfShopUrlsAfterFilter = await shopUrlPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfShopUrlsAfterFilter; i++) {
+        const textColumn = await shopUrlPage.getTextColumn(page, i, 'url');
+        await expect(textColumn).to.contains('ToDelete1');
+      }
+    });
+
+    const tests = [
+      {args: {column: 5, columnName: 'Is it the mail URL', action: 'enable', enabledValue: true}},
+      {args: {column: 5, columnName: 'Is it the mail URL', action: 'disable', enabledValue: false}},
+      {args: {column: 6, columnName: 'Enabled', action: 'enable', enabledValue: true}},
+      {args: {column: 6, columnName: 'Enabled', action: 'disable', enabledValue: false}},
+    ];
+
+    tests.forEach((test) => {
+      it(`should ${test.args.action} the column '${test.args.columnName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ShopUrl`, baseContext);
+
+        const isActionPerformed = await shopUrlPage.setStatus(page, 1, test.args.column, test.args.enabledValue);
+
+        if (isActionPerformed) {
+          const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
+          await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
+        }
+
+        const carrierStatus = await shopUrlPage.getStatus(page, 1, test.args.column);
+        await expect(carrierStatus).to.be.equal(test.args.enabledValue);
+      });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterEnableDisable', baseContext);
+
+      const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 2);
+    });
+  });
+
   // 7 : Delete all shops created
-  describe('delete all shops created', async () => {
+  /*describe('delete all shops created', async () => {
     new Array(2).fill(0, 0, 2).forEach((test, index) => {
       it(`should delete the shop url contains 'ToDelete${index + 1}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteShopUrl${index}_`, baseContext);
@@ -128,9 +185,9 @@ describe('Bulk actions shop Urls', async () => {
         await expect(textResult).to.contains(shopUrlPage.successfulDeleteMessage);
       });
     });
-  });
+  });*/
 
-  // 8 : Disable multi store
+  /*// 8 : Disable multi store
   describe('Disable multistore', async () => {
     it('should go to "Shop parameters > General" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
@@ -153,5 +210,5 @@ describe('Bulk actions shop Urls', async () => {
       const result = await generalPage.setMultiStoreStatus(page, false);
       await expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
-  });
+  });*/
 });

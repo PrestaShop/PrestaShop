@@ -24,6 +24,8 @@ class ShopURLSettings extends BOBasePage {
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
     this.tableColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+    this.columnValidIcon = (row, column) => `${this.tableColumn(row, column)} a[title='Enabled']`;
+    this.columnNotValidIcon = (row, column) => `${this.tableColumn(row, column)} a[title='Disabled']`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -279,6 +281,39 @@ class ShopURLSettings extends BOBasePage {
     }
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  // Quick edit methods
+  /**
+   * Get Value of column Displayed in table
+   * @param page
+   * @param row, row in table
+   * @param column, column in table
+   * @return {Promise<boolean>}
+   */
+  async getStatus(page, row, column) {
+    return this.elementVisible(page, this.columnValidIcon(row, column), 100);
+  }
+
+  /**
+   * Quick edit toggle column value in table
+   * @param page
+   * @param row, row in table
+   * @param column, column in table
+   * @param valueWanted, Value wanted in column
+   * @return {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async setStatus(page, row, column, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumn(row, column), 2000);
+    if (await this.getStatus(page, row, column) !== valueWanted) {
+      page.click(this.tableColumn(row, column));
+      await this.waitForVisibleSelector(page,
+        (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)(row, column),
+      );
+      return true;
+    }
+
+    return false;
   }
 }
 
