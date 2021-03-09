@@ -28,6 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType;
+use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -122,6 +128,90 @@ class InvoicesController extends FrameworkBundleAdminController
     }
 
     /**
+     * @return array
+     *
+     * @throws FieldNotFoundException
+     *
+     * @var InvalidConfigurationDataErrorCollection
+     *
+     */
+    private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
+    {
+        $messages = [];
+
+        foreach ($errors as $error) {
+            $messages[] = $this->getErrorMessage($error);
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param InvalidConfigurationDataError $error
+     *
+     * @return string
+     *
+     * @throws FieldNotFoundException
+     */
+    private function getErrorMessage(InvalidConfigurationDataError $error): string
+    {
+        switch ($error->getErrorCode()) {
+            case InvoicesByDateDataProvider::ERROR_INVALID_DATE_TO:
+            case InvoicesByDateDataProvider::ERROR_INVALID_DATE_FROM:
+            return $this->trans(
+                    'Invalid "%s" date.',
+                    'Admin.Orderscustomers.Notification',
+                    [
+                        $this->getFieldLabel($error->getFieldName())
+                    ]
+                );
+            case InvoicesByDateDataProvider::ERROR_NO_INVOICES_FOUND:
+                return $this->trans(
+                    'No invoice has been found for this period.',
+                    'Admin.Orderscustomers.Notification'
+                );
+        }
+
+        return $this->trans(
+            '%s is invalid.',
+            'Admin.Notifications.Error',
+            [
+                $this->getFieldLabel($error->getFieldName()),
+            ]
+        );
+    }
+
+    /**
+     * @param string $fieldName
+     *
+     * @return string
+     *
+     * @throws FieldNotFoundException
+     */
+    private function getFieldLabel(string $fieldName): string
+    {
+        switch ($fieldName) {
+            case GenerateByDateType::FIELD_DATE_FROM:
+                return $this->trans(
+                    'From',
+                    'Admin.Global.Advparameters.Feature'
+                );
+            case GenerateByDateType::FIELD_DATE_TO:
+                return $this->trans(
+                    'To',
+                    'Admin.Global'
+                );
+        }
+
+        throw new FieldNotFoundException(
+            sprintf(
+                'Field name for field %s not found',
+                $fieldName
+            )
+        );
+    }
+
+    /**
      * Processes the form in a generic way.
      *
      * @param FormHandlerInterface $formHandler
@@ -135,8 +225,10 @@ class InvoicesController extends FrameworkBundleAdminController
         $form->submit($request->request->get($form->getName()));
 
         if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
+            try {
+                $formHandler->save($form->getData());
+            } catch (DataProviderException $e) {
+                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
 
                 return false;
             }
