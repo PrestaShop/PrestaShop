@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  */
 final class FormDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 1;
-    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 2;
-    public const ERROR_COOKIE_SAMESITE_NONE = 3;
+    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 'error_not_numeric_or_lower_than_zero';
+    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 'error_cookie_lifetime_max_value_exceeded';
+    public const ERROR_COOKIE_SAMESITE_NONE = 'error_cookie_samesite_none';
 
     /**
      * @var DataConfigurationInterface
