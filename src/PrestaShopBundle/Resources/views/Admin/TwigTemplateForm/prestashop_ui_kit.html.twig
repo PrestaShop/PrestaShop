@@ -68,7 +68,7 @@
       {{ form_label(form) }}
       <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
         {{ form_widget(form) }}
-        {{ form_errors(form) }}
+        {{ form_errors(form, {'attr': {'fieldError': true}}) }}
       </div>
     </div>
 
