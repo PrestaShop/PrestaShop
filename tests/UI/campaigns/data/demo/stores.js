@@ -27,7 +27,7 @@ module.exports = {
       enabled: true,
     },
     contact: {
-      name: 'prestashop',
+      name: global.INSTALL.SHOP_NAME,
       email: 'demo@prestashop.com',
       registrationNumber: ' ',
       address1: null,
