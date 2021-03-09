@@ -39,6 +39,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GenerateByDateType extends TranslatorAwareType
 {
+    public const FIELD_DATE_FROM = 'date_from';
+    public const FIELD_DATE_TO = 'date_to';
+
     /**
      * {@inheritdoc}
      */
@@ -46,7 +49,7 @@ class GenerateByDateType extends TranslatorAwareType
     {
         $builder
             ->add(
-                'date_from',
+                static::FIELD_DATE_FROM,
                 DatePickerType::class,
                 [
                     'required' => false,
@@ -55,11 +58,11 @@ class GenerateByDateType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'date_to',
+                static::FIELD_DATE_TO,
                 DatePickerType::class,
                 [
                     'required' => false,
-                    'label' => $this->trans('Name', 'Admin.Global'),
+                    'label' => $this->trans('To', 'Admin.Global'),
                     'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
                 ]
             );
