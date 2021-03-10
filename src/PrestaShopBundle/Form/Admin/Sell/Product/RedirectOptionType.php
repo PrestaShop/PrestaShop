@@ -158,7 +158,6 @@ class RedirectOptionType extends TranslatorAwareType
                     break;
             }
 
-
             // Adapt target options
             $targetOptions['mapping_type'] = $dataEntity;
             $targetOptions['label'] = $entityAttributes[$dataEntity]['label'];
