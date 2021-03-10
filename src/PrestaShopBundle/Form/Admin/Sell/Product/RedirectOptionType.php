@@ -145,7 +145,8 @@ class RedirectOptionType extends TranslatorAwareType
             $form = $event->getForm();
             $targetField = $form->get('target');
             $targetOptions = $targetField->getConfig()->getOptions();
-            $dataEntity = 'product';
+            $dataType = $data['type'] ?? RedirectType::TYPE_PRODUCT_PERMANENT;
+            switch ($dataType)
             if (isset($data['type'])) {
                 switch ($data['type']) {
                     case RedirectType::TYPE_CATEGORY_PERMANENT:
