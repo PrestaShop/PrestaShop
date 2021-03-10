@@ -48,7 +48,7 @@ class InvalidConfigurationDataError
     /**
      * InvalidConfigurationDataError constructor.
      *
-     * @param int $errorCode
+     * @param string $errorCode
      * @param string $fieldName
      * @param int|null $languageId
      */
