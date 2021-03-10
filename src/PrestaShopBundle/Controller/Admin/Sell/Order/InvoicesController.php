@@ -193,12 +193,13 @@ class InvoicesController extends FrameworkBundleAdminController
                 if ($error->getLanguageId()) {
                     $langRepository = $this->get('prestashop.core.admin.lang.repository');
                     $lang = $langRepository->findOneBy(['id' => $error->getLanguageId()]);
+
                     return $this->trans(
                         'Field "%s" in language "%s" is invalid. Field must not contain HTML tags.',
                         'Admin.Orderscustomers.Notification',
                         [
                             $this->getFieldLabel($error->getFieldName()),
-                            $lang->getName()
+                            $lang->getName(),
                         ]
                     );
                 }
