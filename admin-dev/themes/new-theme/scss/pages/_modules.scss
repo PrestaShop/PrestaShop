@@ -73,6 +73,8 @@
 }
 
 .module-menu-readmore {
+  width: calc(100% + 2.8rem);
+  margin: 0 -1.4rem;
   margin-top: 2px;
 }
 
@@ -115,8 +117,13 @@
 
         img {
           width: 40px;
+          height: 40px;
           margin-right: 1rem;
         }
+      }
+
+      button.close {
+        padding: 0 1rem;
       }
     }
 
