@@ -34,7 +34,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class CombinationsType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('combinations_list', CollectionType::class, [
