@@ -78,7 +78,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable, int $limit): void
     {
-        $this->assertPaginatedCombinationList($productReference, $dataTable->getColumnsHash(), $limit, $page);
+        $offset = $this->countOffset($page, $limit);
+
+        $this->assertPaginatedCombinationList($productReference, $dataTable->getColumnsHash(), $limit, $offset);
     }
 
     /**
@@ -90,7 +92,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertNoCombinationsInPage(string $productReference, int $page, int $limit): void
     {
-        $this->assertPaginatedCombinationList($productReference, [], $limit, $page);
+        $offset = $this->countOffset($page, $limit);
+
+        $this->assertPaginatedCombinationList($productReference, [], $limit, $offset);
     }
 
     /**
@@ -120,14 +124,25 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
+     * @param int $page
+     * @param int $limit
+     *
+     * @return int
+     */
+    private function countOffset(int $page, int $limit): int
+    {
+        return (1 === $page) ? 0 : ($page - 1) * $limit;
+    }
+
+    /**
      * @param string $productReference
      * @param array $dataRows
      * @param int|null $limit
-     * @param int|null $page
+     * @param int|null $offset
      */
-    private function assertPaginatedCombinationList(string $productReference, array $dataRows, ?int $limit = null, ?int $page = null): void
+    private function assertPaginatedCombinationList(string $productReference, array $dataRows, ?int $limit = null, ?int $offset = null): void
     {
-        $combinationsList = $this->getCombinationsList($productReference, $limit, $page);
+        $combinationsList = $this->getCombinationsList($productReference, $limit, $offset);
 
         Assert::assertEquals(
             count($dataRows),
