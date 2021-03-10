@@ -86,6 +86,7 @@ export default class DynamicGridPaginator {
     $(this.selectorsMap.jumpToPageInput).val(page);
     this.countPages(data.total);
     this.refreshButtonsData(page);
+    this.refreshInfoLabel(page, data.total);
 
     if (page === this.pagesCount) {
       this.updatePaginatorForLastPage();
@@ -136,6 +137,25 @@ export default class DynamicGridPaginator {
     this.$paginationContainer.find(this.selectorsMap.nextPageBtn).data('page', page + 1);
     this.$paginationContainer.find(this.selectorsMap.previousPageBtn).data('page', page - 1);
     this.$paginationContainer.find(this.selectorsMap.lastPageBtn).data('page', this.pagesCount);
+  }
+
+  /**
+   * @param {Number} page
+   * @param {Number} total
+   */
+  refreshInfoLabel(page, total) {
+    const infoLabel = this.$paginationContainer.find(this.selectorsMap.paginationInfoLabel);
+    const limit = this.getLimit();
+    const from = page === 1 ? 1 : Math.round((page - 1) * limit);
+    const to = page === this.pagesCount ? total : Math.round(page * limit);
+    const modifiedInfoText = infoLabel.data('pagination-info')
+      .replace(/%from%/g, from)
+      .replace(/%to%/g, to)
+      .replace(/%total%/g, total)
+      .replace(/%current_page%/g, page)
+      .replace(/%page_count%/g, this.pagesCount);
+
+    this.$paginationContainer.find(this.selectorsMap.paginationInfoLabel).text(modifiedInfoText);
   }
 
   /**
@@ -194,6 +214,7 @@ export default class DynamicGridPaginator {
    * @private
    */
   countPages(total) {
+    this.lastTotal = total;
     this.pagesCount = Math.ceil(total / this.getLimit());
     const lastPageItem = this.$paginationContainer.find(this.selectorsMap.lastPageBtn);
     lastPageItem.data('page', this.pagesCount);
@@ -249,6 +270,7 @@ export default class DynamicGridPaginator {
       lastPageBtn: 'button.page-link.last',
       pageLink: 'button.page-link',
       limitSelect: '#paginator-limit',
+      paginationInfoLabel: '#pagination-info',
     };
   }
 }

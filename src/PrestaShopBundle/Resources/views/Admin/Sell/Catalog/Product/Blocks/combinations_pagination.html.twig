@@ -33,6 +33,18 @@
     </li>
   </ul>
   <div class="mx-3">
+    <label class="col-form-label" id="pagination-info"
+       data-pagination-info="{{ "Viewing %from%-%to% on %total% (page %current_page% / %page_count%)"|trans({
+         '%from%': '%from%',
+         '%to%': '%to%',
+         '%total%': '%total%',
+         '%current_page%': '%current_page%',
+         '%page_count%': '%page_count%'
+       }, 'Admin.Catalog.Feature') }}"
+    >
+    </label>
+  </div>
+  <div class="mx-3">
     <div class="form-group row mb-0">
       <label for="paginator-limit" class="col-form-label mr-2">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
       <div>
