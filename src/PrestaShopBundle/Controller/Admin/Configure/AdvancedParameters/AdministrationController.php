@@ -212,7 +212,6 @@ class AdministrationController extends FrameworkBundleAdminController
      * @throws FieldNotFoundException
      *
      * @var InvalidConfigurationDataErrorCollection
-     *
      */
     private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
     {
