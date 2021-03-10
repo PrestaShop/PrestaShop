@@ -68,11 +68,7 @@ final class ZoneFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Get zone form data with given ID
-     *
-     * @param int $id
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getData($id): array
     {
