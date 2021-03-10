@@ -38,7 +38,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ListedCombinationType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // @todo: impact_on_price and quantity needs new type component similar as in Catalog->stocks page.
         $builder

@@ -62,7 +62,7 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @param CombinationListForEditing $combinationListForEditing
      *
-     * @return array<string, array<string, string|int|bool>>
+     * @return array<string, array<int, array<string,bool|int|string>>|int>
      */
     private function formatResponse(CombinationListForEditing $combinationListForEditing): array
     {
