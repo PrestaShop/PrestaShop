@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Zone\QueryResult\EditableZone;
 
+/**
+ * Provides data for zone add/edit form.
+ */
 final class ZoneFormDataProvider implements FormDataProviderInterface
 {
     /**
