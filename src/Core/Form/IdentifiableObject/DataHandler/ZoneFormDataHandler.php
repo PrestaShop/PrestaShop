@@ -55,7 +55,7 @@ final class ZoneFormDataHandler implements FormDataHandlerInterface
      *
      * @return int
      */
-    public function create(array $data)
+    public function create(array $data): int
     {
         if (!isset($data['shop_association']) || !$data['shop_association']) {
             $data['shop_association'] = [];
@@ -72,7 +72,7 @@ final class ZoneFormDataHandler implements FormDataHandlerInterface
      *
      * @throws ZoneException
      */
-    public function update($id, array $data)
+    public function update($id, array $data): void
     {
         $command = (new EditZoneCommand($id))
             ->setName((string) $data['name'])
