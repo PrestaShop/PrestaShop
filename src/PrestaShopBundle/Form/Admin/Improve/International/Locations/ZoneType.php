@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Locations;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ZoneType extends AbstractType
@@ -69,6 +71,24 @@ class ZoneType extends AbstractType
             ->add('name', TextType::class, [
                 'required' => true,
                 'help' => $this->translator->trans('Zone name (e.g. Africa, West Coast, Neighboring Countries).', [], 'Admin.International.Help'),
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new Length([
+                        'max' => 64,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 64],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new TypedRegex([
+                        'type' => 'generic_name',
+                    ]),
+                ],
             ])
             ->add('enabled', SwitchType::class, [
                 'required' => false,
