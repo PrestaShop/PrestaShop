@@ -58,7 +58,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
             ->select('z.*')
@@ -74,12 +74,12 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria)->select('COUNT(DISTINCT z.id_zone)');
     }
 
-    private function getQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    private function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'zone', 'z')
@@ -101,7 +101,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param QueryBuilder $builder
      * @param SearchCriteriaInterface $criteria
      */
-    private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $criteria)
+    private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $criteria): void
     {
         $allowedFilters = [
             'id_zone',
