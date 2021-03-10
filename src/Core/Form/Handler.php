@@ -84,7 +84,8 @@ class Handler implements FormHandlerInterface
         string $form,
         $hookName,
         $formName = 'form'
-    ) {
+    )
+    {
         $this->formFactory = $formFactory;
         $this->hookDispatcher = $hookDispatcher;
         $this->formDataProvider = $formDataProvider;
