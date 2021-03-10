@@ -102,6 +102,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'primary_field' => 'id_zone',
                         'route' => 'admin_zones_toggle_status',
                         'route_param_name' => 'zoneId',
+                        'sortable' => false,
                     ])
             )
             ->add(
