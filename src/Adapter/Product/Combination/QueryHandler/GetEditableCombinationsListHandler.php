@@ -170,6 +170,13 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 $impactOnPrice,
                 $productPrice->plus($impactOnPrice),
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity
+// @todo:
+//      Missing combination image:
+//      Old page retrieves it through src/PrestaShopBundle/Controller/Admin/AttributeController::getFormImagesAction.
+//      we could simply get Product::getCombinationImageById and load new Image()->getbasePath,
+//      but not all combinations seems to have associated images with product
+//      (the old page still shows images for all of them - not sure if that is good behavior)
+//      also it is unclear how old page appends suffixes "small_default, home_default" (it seems controller only provides base path)
             );
         }
 

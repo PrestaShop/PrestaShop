@@ -75,7 +75,7 @@ class CombinationController extends FrameworkBundleAdminController
                 'id' => $combination->getCombinationId(),
                 'isSelected' => false,
                 'name' => $combination->getCombinationName(),
-                //@todo: do I need to get image link here or in QueryResult?
+                //@todo: don't forget image path when implemented in the query
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 //@todo: calculate final price. Need a service to be used in formData provider and here
                 'finalPriceTe' => 0,
