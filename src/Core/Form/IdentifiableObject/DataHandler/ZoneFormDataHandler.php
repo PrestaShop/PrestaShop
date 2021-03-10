@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Command\AddZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\EditZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 
+/**
+ * Handles submitted zone form data.
+ */
 final class ZoneFormDataHandler implements FormDataHandlerInterface
 {
     /**
