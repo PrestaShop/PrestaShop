@@ -50,7 +50,7 @@ const {$} = window;
  *```
  *  There is also a possibility to provide custom selectorsMap as 5th argument. See this.setSelectorsMap().
  *
- * Data provider must have a method get(page, limit) which returns data.{any resources name} & data.total
+ * Data provider must have a method get(offset, limit) which returns data.{any resources name} & data.total
  * e.g.
  * ```
  * class FooDataProvider {
@@ -129,7 +129,8 @@ export default class DynamicPaginator {
    * @param {Number} page
    */
   async paginate(page) {
-    const data = await this.dataProvider.get(page, this.getLimit());
+    const limit = this.getLimit();
+    const data = await this.dataProvider.get(this.calculateOffset(page, limit), limit);
     $(this.selectorsMap.jumpToPageInput).val(page);
     this.countPages(data.total);
     this.refreshButtonsData(page);
@@ -143,6 +144,10 @@ export default class DynamicPaginator {
       this.updatePaginatorForMiddlePage();
     }
     this.renderer.render(data);
+  }
+
+  calculateOffset(page, limit) {
+    return (page === 1) ? 0 : (page - 1) * limit;
   }
 
   /**

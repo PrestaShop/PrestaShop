@@ -54,24 +54,24 @@ class GetEditableCombinationsList
     /**
      * @var int|null
      */
-    private $page;
+    private $offset;
 
     /**
      * @param int $productId
      * @param int $languageId
      * @param int|null $limit
-     * @param int|null $page
+     * @param int|null $offset
      */
     public function __construct(
         int $productId,
         int $languageId,
         ?int $limit = null,
-        ?int $page = null
+        ?int $offset = null
     ) {
         $this->productId = new ProductId($productId);
         $this->languageId = new LanguageId($languageId);
         $this->limit = $limit;
-        $this->page = $page;
+        $this->offset = $offset;
     }
 
     /**
@@ -101,8 +101,8 @@ class GetEditableCombinationsList
     /**
      * @return int|null
      */
-    public function getPage(): ?int
+    public function getOffset(): ?int
     {
-        return $this->page;
+        return $this->offset;
     }
 }

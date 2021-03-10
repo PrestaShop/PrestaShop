@@ -33,10 +33,10 @@ export default class CombinationsProvider {
     this.router = new Router();
   }
 
-  get(page, limit) {
+  get(offset, limit) {
     return $.get(this.router.generate('admin_products_combinations', {
       productId: this.productId,
-      page,
+      offset,
       limit,
     }));
   }
