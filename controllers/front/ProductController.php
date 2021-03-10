@@ -1210,7 +1210,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function getBreadcrumbLinks()
     {
-        $breadcrumb = ProductPresentingFrontControllerCore::getBreadcrumbLinks();
+        $breadcrumb = parent::getBreadcrumbLinks();
         
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
