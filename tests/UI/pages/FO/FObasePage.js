@@ -24,6 +24,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.currencySelectorDiv = '#_desktop_currency_selector';
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
+    this.searchInput = '#search_widget input.ui-autocomplete-input';
 
     // Footer links
     // Products links selectors
@@ -69,6 +70,40 @@ module.exports = class FOBasePage extends CommonPage {
     await this.goTo(page, global.FO.URL);
   }
 
+  // Header methods
+  /**
+   * Go to header link
+   * @param page
+   * @param link
+   * @returns {Promise<void>}
+   */
+  async clickOnHeaderLink(page, link) {
+    let selector;
+
+    switch (link) {
+      case 'Contact us':
+        selector = this.contactLink;
+        break;
+
+      case 'Sign in':
+        selector = this.userInfoLink;
+        break;
+
+      case 'Cart':
+        selector = this.cartLink;
+        break;
+
+      case 'Logo':
+        selector = this.desktopLogoLink;
+        break;
+
+      default:
+        throw new Error(`The page ${link} was not found`);
+    }
+
+    return this.clickAndWaitForNavigation(page, selector);
+  }
+
   /**
    * Go to the home page
    * @param page
@@ -96,6 +131,7 @@ module.exports = class FOBasePage extends CommonPage {
   async logout(page) {
     await this.clickAndWaitForNavigation(page, this.logoutLink);
   }
+
   /**
    * Check if customer is connected
    * @param page
@@ -221,6 +257,18 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToCartPage(page) {
     await this.clickAndWaitForNavigation(page, this.cartLink);
+  }
+
+  /**
+   * Search product
+   * @param page
+   * @param productName
+   * @returns {Promise<void>}
+   */
+  async searchProduct(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    await page.keyboard.press('Enter');
+    await page.waitForNavigation('networkidle');
   }
 
   // Footer methods
