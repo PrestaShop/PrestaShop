@@ -47,13 +47,13 @@ class CombinationController extends FrameworkBundleAdminController
     public function getListAction(int $productId, Request $request): JsonResponse
     {
         $limit = (int) $request->query->get('limit');
-        $page = (int) $request->query->get('page');
+        $offset = (int) $request->query->get('offset');
 
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
             $limit ?? null,
-            $page ?? null
+            $offset ?? null
         ));
 
         return $this->json($this->formatResponse($combinationsList));

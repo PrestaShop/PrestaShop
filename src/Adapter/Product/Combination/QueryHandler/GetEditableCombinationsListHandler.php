@@ -96,7 +96,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         $combinations = $this->combinationRepository->getProductCombinations(
             $productId,
             $query->getLimit(),
-            $this->countOffset($query->getLimit(), $query->getPage())
+            $query->getOffset()
         );
 
         $combinationIds = array_map(function ($combination): int {
@@ -114,21 +114,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             $attributesInformation,
             $this->combinationRepository->getTotalCombinationsCount($productId)
         );
-    }
-
-    /**
-     * @param int|null $limit
-     * @param int|null $page
-     *
-     * @return int|null
-     */
-    private function countOffset(?int $limit, ?int $page): ?int
-    {
-        if (!$page || !$limit) {
-            return null;
-        }
-
-        return (1 === $page) ? 0 : ($page - 1) * $limit;
     }
 
     /**
