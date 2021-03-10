@@ -71,7 +71,7 @@ final class ZoneFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    public function getData($id)
+    public function getData($id): array
     {
         /**
          * @var EditableZone
@@ -94,7 +94,7 @@ final class ZoneFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultData()
+    public function getDefaultData(): array
     {
         $data = [
             'name' => '',
