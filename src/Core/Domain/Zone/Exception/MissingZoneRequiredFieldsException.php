@@ -55,7 +55,7 @@ class MissingZoneRequiredFieldsException extends ZoneException
     /**
      * @return string[]
      */
-    public function getMissingRequiredFields()
+    public function getMissingRequiredFields(): array
     {
         return $this->missingRequiredFields;
     }
