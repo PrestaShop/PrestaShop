@@ -1503,3 +1503,12 @@ services:
         - '@=service("prestashop.adapter.multistore_feature").isActive()'
       tags:
         - name: form.type
+
+    prestashop.bundle.form.admin.configure.advanced_parameters.experimental_feature:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExperimentalFeature\FeatureFlagsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.feature_flags.configuration'
+        tags:
+            - { name: form.type }
