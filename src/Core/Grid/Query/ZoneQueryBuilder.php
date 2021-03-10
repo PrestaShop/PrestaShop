@@ -60,8 +60,9 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria);
-        $qb->select('z.*');
+        $qb = $this->getQueryBuilder($searchCriteria)
+            ->select('z.*')
+            ->groupBy('z.id_zone');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -75,7 +76,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->getQueryBuilder($searchCriteria)->select('COUNT(z.id_zone)');
+        return $this->getQueryBuilder($searchCriteria)->select('COUNT(DISTINCT z.id_zone)');
     }
 
     private function getQueryBuilder(SearchCriteriaInterface $searchCriteria)
