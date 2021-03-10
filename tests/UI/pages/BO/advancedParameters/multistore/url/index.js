@@ -5,6 +5,7 @@ class ShopURLSettings extends BOBasePage {
   constructor() {
     super();
 
+    this.successUpdateMessage = 'The status has been successfully updated.';
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Header selectors
