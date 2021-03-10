@@ -32,6 +32,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
+/**
+ * Builds search and count query builders for zone grid.
+ */
 final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
