@@ -274,7 +274,7 @@ class OrderProductQuantityUpdater
             abs($deltaQuantity),
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
-            false,
+            $orderDetail->id_customization,
             $deltaQuantity < 0 ? 'down' : 'up',
             0,
             new Shop($cart->id_shop),
