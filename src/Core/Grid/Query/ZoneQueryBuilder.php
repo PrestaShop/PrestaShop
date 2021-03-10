@@ -120,7 +120,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $builder->andWhere('z.' . $filterName . ' LIKE :' . $filterName);
-            $builder->setParameter($filterName, $filterValue);
+            $builder->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
 }
