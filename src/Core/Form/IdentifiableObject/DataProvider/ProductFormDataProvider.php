@@ -169,7 +169,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param int $productId
      *
-     * @return array
+     * @return array<string, array<int, array<string, int|array<int, string>>>>
      */
     private function extractFeatureValues(int $productId): array
     {
@@ -244,7 +244,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array
+     * @return array<string, array<int, string>>
      */
     private function extractSEOData(ProductForEditing $productForEditing): array
     {
@@ -260,7 +260,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array
+     * @return array<string, int|string>
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {
@@ -294,6 +294,11 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
     }
 
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
     private function extractOptionsData(ProductForEditing $productForEditing): array
     {
         $options = $productForEditing->getOptions();
@@ -317,9 +322,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * * @param ProductForEditing $productForEditing
+     * @param ProductForEditing $productForEditing
      *
-     * @return array
+     * @return array<string, array<int, mixed>>
      */
     private function extractCustomizationsData(ProductForEditing $productForEditing): array
     {
@@ -365,7 +370,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array
+     * @return array<string, int|array<int, int|array<string, string|int>>>
      */
     private function extractSuppliersData(ProductForEditing $productForEditing): array
     {
