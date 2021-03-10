@@ -6,71 +6,54 @@ class Zones extends BOBasePage {
     super();
 
     this.pageTitle = 'Zones •';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.successfulUpdateMessage = 'Update successful';
 
-    // Header selectors
-    this.addNewZoneLink = '#page-header-desc-zone-new_zone';
-    // SubTab selectors
+    // Selectors
+    // SubTab
     this.countriesSubTab = '#subtab-AdminCountries';
     this.statesSubTab = '#subtab-AdminStates';
 
-    // Form selectors
-    this.gridForm = '#form-zone';
-    this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
-    this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
+    // Header
+    this.addNewZoneLink = 'a#page-header-desc-configuration-add';
 
-    // Table selectors
-    this.gridTable = '#table-zone';
+    // Grid
+    this.zonesGridPanelDiv = '#zone_grid_panel';
+    this.gridHeaderTitle = `${this.zonesGridPanelDiv} h3.card-header-title`;
 
-    // Filter selectors
-    this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='zoneFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtonzone';
-    this.filterResetButton = 'button[name=\'submitResetzone\']';
+    // Bulk actions
+    this.bulkActionsToggleButton = `${this.zonesGridPanelDiv} button.js-bulk-actions-btn`;
+    this.enableSelectionButton = `${this.zonesGridPanelDiv} #zone_grid_bulk_action_enable_selection`;
+    this.disableSelectionButton = `${this.zonesGridPanelDiv} #zone_grid_bulk_action_disable_selection`;
+    this.deleteSelectionButton = `${this.zonesGridPanelDiv} #zone_grid_bulk_action_delete_selection`;
+    this.selectAllLabel = `${this.zonesGridPanelDiv} #zone_grid tr.column-filters .md-checkbox i`;
+    this.zonesGridTable = `${this.zonesGridPanelDiv} #zone_grid_table`;
+    this.confirmDeleteModal = '#zone-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
-    // Table body selectors
-    this.tableBody = `${this.gridTable} tbody`;
-    this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    // Filters
+    this.zonesFilterColumnInput = filterBy => `${this.zonesGridTable} #zone_${filterBy}`;
+    this.resetFilterButton = `${this.zonesGridTable} .grid-reset-button`;
+    this.searchFilterButton = `${this.zonesGridTable} .grid-search-button`;
+    this.zonesGridRow = row => `${this.zonesGridTable} tbody tr:nth-child(${row})`;
+    this.zonesGridColumn = (row, column) => `${this.zonesGridRow(row)} td.column-${column}`;
+    this.zonesGridStatusColumn = row => `${this.zonesGridColumn(row, 'active')} .ps-switch`;
+    this.zonesGridStatusColumnToggleInput = row => `${this.zonesGridStatusColumn(row)} input`;
+    this.zonesGridActionsColumn = row => this.zonesGridColumn(row, 'actions');
+    this.zonesGridColumnEditLink = row => `${this.zonesGridActionsColumn(row)} a.grid-edit-row-link`;
+    this.zonesGridColumnToggleDropdown = row => `${this.zonesGridActionsColumn(row)} a[data-toggle='dropdown']`;
+    this.zonesGridDeleteLink = row => `${this.zonesGridActionsColumn(row)} a.grid-delete-row-link`;
 
-    // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='zoneBox[]']`;
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnStatusLink = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
-    this.tableColumnStatusDisableLink = row => `${this.tableColumnStatusLink(row)}.action-disabled`;
-
-    // Column actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.columnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.columnActionsDropdownButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.columnActionsDeleteLink = row => `${this.tableColumnActions(row)} a.delete`;
-
-    // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
-
-    // Bulk actions selectors
-    this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = '#bulk_action_menu_zone';
-    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
-    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
-    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
-    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
-
-    // Sort Selectors
-    this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    // Sort
+    this.tableHead = `${this.zonesGridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
 
-    // Pagination selectors
-    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
-    this.paginationDiv = `${this.gridForm} .pagination`;
-    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
-    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
-    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+    // Pagination
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.zonesGridPanelDiv} .col-form-label`;
+    this.paginationNextLink = `${this.zonesGridPanelDiv} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.zonesGridPanelDiv} [aria-label='Previous']`;
   }
 
   /* Header methods */
@@ -108,10 +91,10 @@ class Zones extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    if (!(await this.elementNotVisible(page, this.resetFilterButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.resetFilterButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.searchFilterButton, 2000);
   }
 
   /**
@@ -120,7 +103,7 @@ class Zones extends BOBasePage {
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
-    return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
+    return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
   /**
@@ -141,23 +124,21 @@ class Zones extends BOBasePage {
    * @param value
    * @return {Promise<void>}
    */
-  async filterZones(page, filterType, filterBy, value) {
+  async filterZones(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.setValue(page, this.zonesFilterColumnInput(filterBy), value);
         break;
 
       case 'select':
-        await Promise.all([
-          page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
-        ]);
+        await this.selectByVisibleText(page, this.zonesFilterColumnInput(filterBy), value ? 'Yes' : 'No');
         break;
 
       default:
         throw new Error(`Filter ${filterBy} was not found`);
     }
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.searchFilterButton);
   }
 
   /* Column methods */
@@ -170,22 +151,7 @@ class Zones extends BOBasePage {
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'id_zone':
-        columnSelector = this.tableColumnId(row);
-        break;
-
-      case 'name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
-    }
-
-    return this.getTextContent(page, columnSelector);
+    return this.getTextContent(page, this.zonesGridColumn(row, columnName));
   }
 
   /**
@@ -194,8 +160,15 @@ class Zones extends BOBasePage {
    * @param row
    * @return {Promise<boolean>}
    */
-  getZoneStatus(page, row) {
-    return this.elementVisible(page, this.tableColumnStatusEnableLink(row), 1000);
+  async getZoneStatus(page, row) {
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.zonesGridStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -203,12 +176,15 @@ class Zones extends BOBasePage {
    * @param page
    * @param row
    * @param wantedStatus
-   * @return {Promise<void>}
+   * @return {Promise<boolean>}, true if click has been performed
    */
   async setZoneStatus(page, row, wantedStatus) {
     if (wantedStatus !== await this.getZoneStatus(page, row)) {
-      await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
+      await this.clickAndWaitForNavigation(page, this.zonesGridStatusColumn(row));
+      return true;
     }
+
+    return false;
   }
 
   /**
@@ -218,7 +194,7 @@ class Zones extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditZonePage(page, row) {
-    await this.clickAndWaitForNavigation(page, this.columnActionsEditLink(row));
+    await this.clickAndWaitForNavigation(page, this.zonesGridColumnEditLink(row));
   }
 
   /**
@@ -228,17 +204,21 @@ class Zones extends BOBasePage {
    * @return {Promise<string>}
    */
   async deleteZone(page, row) {
-    // Open dropdown link list
-    await page.click(this.columnActionsDropdownButton(row));
+    // Add listener to dialog to accept deletion
+    this.dialogListener(page, true);
+    // Click on dropDown
+    await Promise.all([
+      page.click(this.zonesGridColumnToggleDropdown(row)),
+      this.waitForVisibleSelector(page, `${this.zonesGridColumnToggleDropdown(row)}[aria-expanded='true']`),
+    ]);
 
-    // Click on delete link
-    await page.click(this.columnActionsDeleteLink(row));
-
-    // Confirm delete in modal
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
-
-    // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.zonesGridDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -267,54 +247,52 @@ class Zones extends BOBasePage {
    * @return {Promise<void>}
    */
   async bulkSelectRows(page) {
-    await page.click(this.bulkActionMenuButton);
-
+    // Click on Select All
     await Promise.all([
-      page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      page.$eval(this.selectAllLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
   }
 
   /**
    * Bulk delete
    * @param page
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
   async bulkDeleteZones(page) {
-    // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
-
-    // Select all rows
     await this.bulkSelectRows(page);
 
-    // Perform delete
-    await page.click(this.bulkActionMenuButton);
-    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
-
-    // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    // Click on Button Bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteSelectionButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Bulk set status
    * @param page
    * @param wantedStatus
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
   async bulkSetStatus(page, wantedStatus) {
     // Select all rows
     await this.bulkSelectRows(page);
-
-    // Set status
+    // Click on Button Bulk actions
     await Promise.all([
-      page.click(this.bulkActionMenuButton),
-      this.waitForVisibleSelector(page, this.bulkEnableLink),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
-
-    await this.clickAndWaitForNavigation(
-      page,
-      wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
-    );
+    // Click to change status
+    await this.clickAndWaitForNavigation(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -325,23 +303,16 @@ class Zones extends BOBasePage {
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
-    let columnSelector;
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    switch (sortBy) {
-      case 'id_zone':
-        columnSelector = this.sortColumnDiv(2);
-        break;
-
-      case 'name':
-        columnSelector = this.sortColumnDiv(3);
-        break;
-
-      default:
-        throw new Error(`Column ${sortBy} was not found`);
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
     }
 
-    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
-    await this.clickAndWaitForNavigation(page, sortColumnButton);
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /* Pagination methods */
@@ -351,7 +322,7 @@ class Zones extends BOBasePage {
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
-    return this.getTextContent(page, this.paginationActiveLabel);
+    return this.getTextContent(page, this.paginationLabel);
   }
 
   /**
@@ -361,9 +332,7 @@ class Zones extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
-    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
-
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
     return this.getPaginationLabel(page);
   }
 
