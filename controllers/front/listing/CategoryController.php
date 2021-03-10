@@ -226,11 +226,11 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getBreadcrumbLinks()
     {
-  
-        $breadcrumb = parent::getBreadcrumbLinks();     
-        
-        foreach ($this->category->getAllParents() as $category) {           
-            if ($category->id_parent != 0 && !$category->is_root_category && $category->active  ) {
+
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        foreach ($this->category->getAllParents() as $category) {
+            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
                 $breadcrumb['links'][] = [
                     'title' => $category->name,
                     'url' => $this->context->link->getCategoryLink($category),
@@ -244,7 +244,7 @@ class CategoryControllerCore extends ProductListingFrontController
                 'url' => $this->context->link->getCategoryLink($this->category),
             ];
         }
-       
+
         return $breadcrumb;
     }
 
