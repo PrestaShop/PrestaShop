@@ -29,18 +29,22 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -50,12 +54,12 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'zone';
+    public const GRID_ID = 'zone';
 
     /**
      * {@inheritdoc}
      */
-    protected function getId()
+    protected function getId(): string
     {
         return self::GRID_ID;
     }
@@ -63,7 +67,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getName()
+    protected function getName(): string
     {
         return $this->trans('Zones', [], 'Admin.International.Feature');
     }
@@ -71,7 +75,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getColumns()
+    protected function getColumns(): ColumnCollectionInterface
     {
         return (new ColumnCollection())
             ->add(
@@ -117,7 +121,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getFilters()
+    protected function getFilters(): FilterCollectionInterface
     {
         return (new FilterCollection())
             ->add(
@@ -164,7 +168,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @return RowActionCollection
      */
-    private function getRowActions()
+    private function getRowActions(): RowActionCollection
     {
         $rowActionCollection = new RowActionCollection();
         $rowActionCollection
@@ -193,7 +197,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getGridActions()
+    protected function getGridActions(): GridActionCollectionInterface
     {
         return (new GridActionCollection())
             ->add(
@@ -216,7 +220,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getBulkActions()
+    protected function getBulkActions(): BulkActionCollectionInterface
     {
         return (new BulkActionCollection())
             ->add(
