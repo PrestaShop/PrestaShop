@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Router from '@components/router';
-
 const {$} = window;
 
 /**
@@ -54,7 +52,7 @@ const {$} = window;
  * e.g.
  * ```
  * class FooDataProvider {
- *  get(page, limit) {
+ *  fetch(offset, limit) {
  *    return $.get(this.router.generate('admin_products_combinations', {
  *      productId: this.productId,
  *      page,
@@ -90,7 +88,6 @@ export default class DynamicPaginator {
     selectorsMap = null,
   ) {
     this.$paginationContainer = $(containerSelector);
-    this.router = new Router();
     this.dataProvider = dataProvider;
     this.renderer = renderer;
     this.setSelectorsMap(selectorsMap);
@@ -116,7 +113,7 @@ export default class DynamicPaginator {
     this.$paginationContainer.find(this.selectorsMap.jumpToPageInput).keypress((e) => {
       if (e.which === 13) {
         e.preventDefault();
-        const page = this.validatePageNumber(Number(e.currentTarget.value));
+        const page = this.getValidPageNumber(Number(e.currentTarget.value));
         this.paginate(page);
       }
     });
@@ -130,54 +127,28 @@ export default class DynamicPaginator {
    */
   async paginate(page) {
     const limit = this.getLimit();
-    const data = await this.dataProvider.get(this.calculateOffset(page, limit), limit);
+    const data = await this.dataProvider.fetch(this.calculateOffset(page, limit), limit);
     $(this.selectorsMap.jumpToPageInput).val(page);
     this.countPages(data.total);
     this.refreshButtonsData(page);
     this.refreshInfoLabel(page, data.total);
 
-    if (page === this.pagesCount) {
-      this.updatePaginatorForLastPage();
-    } else if (page === 1) {
-      this.updatePaginatorForFirstPage();
-    } else {
-      this.updatePaginatorForMiddlePage();
-    }
+    this.toggleFirstPageAvailability(page > 1);
+    this.togglePreviousPageAvailability(page > 1);
+    this.toggleNextPageAvailability(page < this.pagesCount);
+    this.toggleLastPageAvailability(page < this.pagesCount);
+
     this.renderer.render(data);
   }
 
+  /**
+   * @param page
+   * @param limit
+   *
+   * @returns {Number}
+   */
   calculateOffset(page, limit) {
     return (page === 1) ? 0 : (page - 1) * limit;
-  }
-
-  /**
-   * @private
-   */
-  updatePaginatorForFirstPage() {
-    this.toggleFirstPageAvailability(false);
-    this.togglePreviousPageAvailability(false);
-    this.toggleNextPageAvailability(true);
-    this.toggleLastPageAvailability(true);
-  }
-
-  /**
-   * @private
-   */
-  updatePaginatorForLastPage() {
-    this.toggleNextPageAvailability(false);
-    this.toggleLastPageAvailability(false);
-    this.toggleFirstPageAvailability(true);
-    this.togglePreviousPageAvailability(true);
-  }
-
-  /**
-   * @private
-   */
-  updatePaginatorForMiddlePage() {
-    this.toggleFirstPageAvailability(true);
-    this.togglePreviousPageAvailability(true);
-    this.toggleNextPageAvailability(true);
-    this.toggleLastPageAvailability(true);
   }
 
   /**
@@ -207,7 +178,7 @@ export default class DynamicPaginator {
       .replace(/%current_page%/g, page)
       .replace(/%page_count%/g, this.pagesCount);
 
-    this.$paginationContainer.find(this.selectorsMap.paginationInfoLabel).text(modifiedInfoText);
+    infoLabel.text(modifiedInfoText);
   }
 
   /**
@@ -238,7 +209,7 @@ export default class DynamicPaginator {
   }
 
   /**
-   * @param {boolean} enable
+   * @param {Boolean} enable
    *
    * @private
    */
@@ -266,7 +237,6 @@ export default class DynamicPaginator {
    * @private
    */
   countPages(total) {
-    this.lastTotal = total;
     this.pagesCount = Math.ceil(total / this.getLimit());
     const lastPageItem = this.$paginationContainer.find(this.selectorsMap.lastPageBtn);
     lastPageItem.data('page', this.pagesCount);
@@ -288,7 +258,7 @@ export default class DynamicPaginator {
    *
    * @returns {Number}
    */
-  validatePageNumber(page) {
+  getValidPageNumber(page) {
     if (page > this.pagesCount) {
       return this.pagesCount;
     }

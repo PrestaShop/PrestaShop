@@ -28,12 +28,27 @@ import Router from '@components/router';
 const {$} = window;
 
 export default class CombinationsProvider {
+  /**
+   * @param {Number} productId
+   *
+   * @returns {{fetch: (function(*=, *=): *)}}
+   */
   constructor(productId) {
     this.productId = productId;
     this.router = new Router();
+
+    return {
+      fetch: (offset, limit) => this.fetch(offset, limit),
+    };
   }
 
-  get(offset, limit) {
+  /**
+   * @param {Number} offset
+   * @param {Number} limit
+   *
+   * @returns {Promise}
+   */
+  fetch(offset, limit) {
     return $.get(this.router.generate('admin_products_combinations', {
       productId: this.productId,
       offset,

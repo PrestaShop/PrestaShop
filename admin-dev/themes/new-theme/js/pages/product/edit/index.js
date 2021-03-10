@@ -79,5 +79,6 @@ $(() => {
   new ProductSuppliersManager();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
+  // @todo: avoid initializing this component if product has no combinations
   new CombinationsManager();
 });
