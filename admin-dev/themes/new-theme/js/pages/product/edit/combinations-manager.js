@@ -47,7 +47,7 @@ export default class CombinationsManager {
     );
 
     this.$productForm.on('click', ProductMap.combinations.navigationTab, () => {
-      paginator.init(1);
+      paginator.paginate(1);
     });
   }
 
