@@ -52,7 +52,7 @@ class ZoneId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->zoneId;
     }
@@ -60,7 +60,7 @@ class ZoneId
     /**
      * @param int $zoneId
      */
-    private function assertIntegerIsGreaterThanZero(int $zoneId)
+    private function assertIntegerIsGreaterThanZero(int $zoneId): void
     {
         if (0 >= $zoneId) {
             throw new ZoneException(sprintf('Zone id %d is invalid. Zone id have to be number bigger than zero.', $zoneId));
