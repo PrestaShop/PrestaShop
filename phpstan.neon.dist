@@ -20,8 +20,6 @@ parameters:
 		- OrderInvoice
 		- Product
 
-includes:
-    - vendor/prestashop/phpstan-prestashop/extension.neon
 
 services:
   strictTypesForNewClassesRuleConfigurationFileLoader:
