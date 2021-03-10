@@ -42,11 +42,11 @@ final class CleanHtmlValidator extends ConstraintValidator
     /**
      * @var bool
      */
-    private $allowIframe;
+    private $allowEmbeddableHtml;
 
-    public function __construct(bool $allowIframe)
+    public function __construct(bool $allowEmbeddableHtml)
     {
-        $this->allowIframe = $allowIframe;
+        $this->allowEmbeddableHtml = $allowEmbeddableHtml;
     }
 
     /**
@@ -69,7 +69,7 @@ final class CleanHtmlValidator extends ConstraintValidator
         $containsScriptTags = preg_match('/<[\s]*script/ims', $value) || preg_match('/.*script\:/ims', $value);
         $containsJavascriptEvents = preg_match('/(' . $this->getJavascriptEvents() . ')[\s]*=/ims', $value);
 
-        $iframe = !$this->allowIframe && preg_match(self::EMBEDDABLE_HTML_PATTERN, $value);
+        $iframe = !$this->allowEmbeddableHtml && preg_match(self::EMBEDDABLE_HTML_PATTERN, $value);
         if ($containsScriptTags || $containsJavascriptEvents || $iframe) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
