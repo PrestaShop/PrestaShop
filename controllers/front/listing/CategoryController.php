@@ -227,7 +227,7 @@ class CategoryControllerCore extends ProductListingFrontController
     public function getBreadcrumbLinks()
     {
   
-        $breadcrumb = ProductListingFrontController::getBreadcrumbLinks();     
+        $breadcrumb = parent::getBreadcrumbLinks();     
         
         foreach ($this->category->getAllParents() as $category) {           
             if ($category->id_parent != 0 && !$category->is_root_category && $category->active  ) {
