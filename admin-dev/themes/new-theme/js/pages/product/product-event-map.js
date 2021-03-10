@@ -29,7 +29,4 @@ export default {
     rowRemoved: 'customizationRowRemoved',
     rowAdded: 'customizationRowAdded',
   },
-  combinations: {
-    combinationsDataFetched: 'combinationsDataFetched',
-  },
 };

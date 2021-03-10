@@ -24,26 +24,42 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import Router from '@components/router';
 
 const {$} = window;
 
+/**
+ * Renders the list of combinations in product edit page
+ */
 export default class CombinationsGridRenderer {
+  /**
+   * @returns {{render: (function(*=): void)}}
+   */
   constructor() {
-    this.router = new Router();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
     this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
     this.prototypeTemplate = this.$combinationsTable.data('prototype');
     this.prototypeName = this.$combinationsTable.data('prototypeName');
+
+    return {
+      render: (data) => this.render(data),
+    };
   }
 
+  /**
+   * @param {Object} data expected structure: {combinations: [{Object}, {Object}...], total: {Number}}
+   */
   render(data) {
     this.renderCombinations(data.combinations);
   }
 
-  // @todo: handle on change of new inputs of price quantity and is_default when they are ready
-  // @todo: they should call related endpoints to update combination
+  /**
+   * @todo: handle on change of new inputs of price quantity and is_default when they are ready
+   * @todo: they should call related endpoints to update combination
+   * @param {Array} combinations
+   *
+   * @private
+   */
   renderCombinations(combinations) {
     this.$combinationsTableBody.empty();
 
@@ -53,24 +69,31 @@ export default class CombinationsGridRenderer {
       this.$combinationsTableBody.append(row);
 
       // fill inputs
-      const $combinationIdCell = $(ProductMap.combinations.tableRow.combinationIdCell(rowIndex));
-      const $combinationNameCell = $(ProductMap.combinations.tableRow.combinationNameCell(rowIndex));
-      const $finalPriceCell = $(ProductMap.combinations.tableRow.finalPriceTeCell(rowIndex));
+      const $combinationIdCell = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex));
+      const $combinationNameCell = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex));
+      const $finalPriceCell = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex));
       $combinationIdCell.val(combination.id);
-      $combinationIdCell.parent().text(combination.id);
+      $combinationIdCell.closest('td').text(combination.id);
       $combinationNameCell.val(combination.name);
-      $combinationNameCell.parent().text(combination.name);
+      $combinationNameCell.closest('td').text(combination.name);
       $finalPriceCell.val(combination.finalPriceTe);
-      $finalPriceCell.parent().text(combination.finalPriceTe);
-      $(ProductMap.combinations.tableRow.impactOnPriceCell(rowIndex)).val(combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.quantityCell(rowIndex)).val(combination.quantity);
-      $(ProductMap.combinations.tableRow.isDefaultCell(rowIndex)).val(combination.isDefault);
+      $finalPriceCell.closest('td').text(combination.finalPriceTe);
+      $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex)).val(combination.impactOnPrice);
+      $(ProductMap.combinations.tableRow.quantityInput(rowIndex)).val(combination.quantity);
+      $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).val(combination.isDefault);
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
       rowIndex += 1;
     });
   }
 
+  /**
+   * @param {Number} rowIndex
+   *
+   * @returns {String}
+   *
+   * @private
+   */
   getPrototypeRow(rowIndex) {
     return this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex);
   }
