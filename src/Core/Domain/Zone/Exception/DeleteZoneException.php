@@ -36,10 +36,10 @@ class DeleteZoneException extends ZoneException
     /**
      * When fails to delete single zone
      */
-    const FAILED_DELETE = 1;
+    public const FAILED_DELETE = 1;
 
     /**
      * When fails to delete zones in bulk actions
      */
-    const FAILED_BULK_DELETE = 2;
+    public const FAILED_BULK_DELETE = 2;
 }
