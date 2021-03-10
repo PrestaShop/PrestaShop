@@ -27,7 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import Router from '@components/router';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
 import CombinationsProvider from '@pages/product/api/combinations-provider';
-import DynamicGridPaginator from '@components/pagination/dynamic-grid-paginator';
+import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 const {$} = window;
 
@@ -40,15 +40,13 @@ export default class CombinationsManager {
 
   init() {
     const productId = this.getProductId();
-    const paginator = new DynamicGridPaginator(
+    const paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
       new CombinationsProvider(productId),
       new CombinationsGridRenderer(),
     );
 
-    this.$productForm.on('click', ProductMap.combinations.navigationTab, () => {
-      paginator.paginate(1);
-    });
+    this.$productForm.on('click', ProductMap.combinations.navigationTab, () => paginator.paginate(1));
   }
 
   getProductId() {

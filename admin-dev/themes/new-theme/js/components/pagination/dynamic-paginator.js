@@ -27,25 +27,72 @@ import Router from '@components/router';
 
 const {$} = window;
 
-export default class DynamicGridPaginator {
+/**
+ * Related html template src/PrestaShopBundle/Resources/views/Admin/Common/javascript_pagination.html.twig
+ *
+ * Usage
+ *```
+ *  $paginator new DynamicPaginator(
+ *    '#foo-container',
+ *    FooDataProvider,
+ *    FooRenderer
+ *  );
+ *  this.eventEmitter.on('fooEventThatShouldTriggerPagination', () => $paginator.paginate(1));
+ *```
+ * You can also provide the starting page to initiate it automatically on page load:
+ *```
+ *  $paginator new DynamicPaginator(
+ *    '#foo-container',
+ *    FooDataProvider,
+ *    FooRenderer,
+ *    1
+ *  );
+ *```
+ *  There is also a possibility to provide custom selectorsMap as 5th argument. See this.setSelectorsMap().
+ *
+ * Data provider must have a method get(page, limit) which returns data.{any resources name} & data.total
+ * e.g.
+ * ```
+ * class FooDataProvider {
+ *  get(page, limit) {
+ *    return $.get(this.router.generate('admin_products_combinations', {
+ *      productId: this.productId,
+ *      page,
+ *      limit,
+ *    }));
+ *  }
+ * }
+ *```
+ *  * In this case the action of route `admin_products_combinations` returns following json:
+ * ```
+ * {
+ *   total: 100,
+ *   combinations: [{combinationId: 1, name: foo...}, {combinationId: 2, name: bar...}]
+ * }
+ *```
+ *
+ * The renderer must have a method render(data) which accepts the data from DataProvider
+ * and renders it depending on needs
+ */
+export default class DynamicPaginator {
   /**
    * @param {String} containerSelector
    * @param {Object} dataProvider
-   * @param {Object} gridRenderer
+   * @param {Object} renderer
    * @param {Number|null} startingPage If provided it will load the provided page data on page load
    * @param {Object|null} selectorsMap If provided it will override css selectors used for all the actions.
    */
   constructor(
     containerSelector,
     dataProvider,
-    gridRenderer,
+    renderer,
     startingPage = null,
     selectorsMap = null,
   ) {
     this.$paginationContainer = $(containerSelector);
     this.router = new Router();
     this.dataProvider = dataProvider;
-    this.gridRenderer = gridRenderer;
+    this.renderer = renderer;
     this.setSelectorsMap(selectorsMap);
     this.init();
     if (startingPage !== null) {
@@ -95,7 +142,7 @@ export default class DynamicGridPaginator {
     } else {
       this.updatePaginatorForMiddlePage();
     }
-    this.gridRenderer.render(data);
+    this.renderer.render(data);
   }
 
   /**
