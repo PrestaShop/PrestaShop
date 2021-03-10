@@ -302,3 +302,11 @@
 .multiple-checkboxes {
   padding-left: 25px;
 }
+
+select[multiple] {
+  overflow: auto;
+
+  option {
+    width: max-content;
+  }
+}
