@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryExcept
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
@@ -342,7 +343,7 @@ class CategoryController extends FrameworkBundleAdminController
             if (!$editableCategory->isRootCategory()) {
                 return $this->redirectToRoute('admin_categories_edit', ['categoryId' => $categoryId]);
             }
-        } catch (CategoryNotFoundException $e) {
+        } catch (CannotEditRootCategoryException | CategoryNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_categories_index');
@@ -811,6 +812,10 @@ class CategoryController extends FrameworkBundleAdminController
             ),
             CannotAddCategoryException::class => $this->trans(
                 'An error occurred while creating the category.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotEditRootCategoryException::class => $this->trans(
+                'The root category of a shop cannot be edited.',
                 'Admin.Catalog.Notification'
             ),
             CannotEditCategoryException::class => $this->trans(

@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditRootCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 
@@ -44,6 +45,7 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
      *
      * @throws CannotEditCategoryException
      * @throws CategoryNotFoundException
+     * @throws CannotEditRootCategoryException
      */
     public function handle(EditRootCategoryCommand $command)
     {
@@ -51,6 +53,10 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
 
         if (!$category->id) {
             throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue()));
+        }
+
+        if ($category->isRootCategory()) {
+            throw new CannotEditRootCategoryException();
         }
 
         $this->updateRootCategoryFromCommandData($category, $command);
