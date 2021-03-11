@@ -8,6 +8,7 @@ class Search extends BOBasePage {
     this.pageTitle = 'Search •';
     this.successfulCreationMessage = 'Creation successful';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // Header links
@@ -61,6 +62,11 @@ class Search extends BOBasePage {
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
     this.bulkEnableButton = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.bulkDisableButton = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+
+    // Search form
+    this.aliasForm = '#alias_fieldset_search';
+    this.fuzzySearchLabel = toggle => `label[for='PS_SEARCH_FUZZY_${toggle}']`;
+    this.saveFormButton = `${this.aliasForm} button[name='submitOptionsalias']`;
   }
 
   /*
@@ -232,7 +238,7 @@ class Search extends BOBasePage {
    * @returns {Promise<string>}
    */
   async bulkDeleteAliases(page) {
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -292,6 +298,19 @@ class Search extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  // Methods for search form
+  /**
+   * Enable/Disable fuzzy search
+   * @param page
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setFuzzySearch(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 
