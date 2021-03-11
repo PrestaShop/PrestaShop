@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Controller\Admin\MultistoreController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormInterface;
 
@@ -71,20 +72,28 @@ class MultistoreCheckboxEnabler
     private $multiStoreContext;
 
     /**
+     * @var MultistoreController
+     */
+    private $multistoreController;
+
+    /**
      * MultistoreCheckboxEnabler constructor.
      *
      * @param FeatureInterface $multistoreFeature
      * @param ShopConfigurationInterface $configuration
      * @param Context $multiStoreContext
+     * @param MultistoreController $multistoreController
      */
     public function __construct(
         FeatureInterface $multistoreFeature,
         ShopConfigurationInterface $configuration,
-        Context $multiStoreContext
+        Context $multiStoreContext,
+        MultistoreController $multistoreController
     ) {
         $this->multistoreFeature = $multistoreFeature;
         $this->configuration = $configuration;
         $this->multiStoreContext = $multiStoreContext;
+        $this->multistoreController = $multistoreController;
     }
 
     /**
@@ -139,6 +148,9 @@ class MultistoreCheckboxEnabler
                     'class' => 'multistore-checkbox',
                     'multistore_configuration_key' => $options['attr']['multistore_configuration_key'],
                 ],
+                'multistore_dropdown' => $this->multistoreController->configurationDropdown(
+                    $this->configuration,
+                    $options['attr']['multistore_configuration_key'])->getContent(),
             ]);
         }
     }

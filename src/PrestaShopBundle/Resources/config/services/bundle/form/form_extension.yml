@@ -45,3 +45,4 @@ services:
             - '@prestashop.adapter.feature.multistore'
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.adapter.shop.context'
+            - '@prestashop.core.admin.multistore'
