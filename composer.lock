@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "45d9dc2faceaf34ec09b58cf16d5342f",
+    "content-hash": "eff19a464a2fab10cd1b4413723c62d7",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5533,39 +5533,6 @@
             "description": "PrestaShop module statsdata",
             "homepage": "https://github.com/PrestaShop/statsdata",
             "time": "2020-07-15T13:10:39+00:00"
-        },
-        {
-            "name": "prestashop/statsequipment",
-            "version": "v2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/statsequipment.git",
-                "reference": "4b0c3f75d55bdd18b2903f8263ce3b48b6cf30ec"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsequipment/zipball/4b0c3f75d55bdd18b2903f8263ce3b48b6cf30ec",
-                "reference": "4b0c3f75d55bdd18b2903f8263ce3b48b6cf30ec",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL - Academic Free License (AFL 3.0)"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module statsequipment",
-            "homepage": "https://github.com/PrestaShop/statsequipment",
-            "abandoned": true,
-            "time": "2017-01-31T17:01:36+00:00"
         },
         {
             "name": "prestashop/statsforecast",
