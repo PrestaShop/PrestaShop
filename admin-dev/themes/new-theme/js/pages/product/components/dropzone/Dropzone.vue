@@ -129,6 +129,8 @@
       removeSelection() {
         this.selectedFiles.forEach(file => {
           this.dropzone.removeFile(file);
+
+          this.files = this.files.filter(e => file !== e);
         })
 
         this.selectedFiles = [];
