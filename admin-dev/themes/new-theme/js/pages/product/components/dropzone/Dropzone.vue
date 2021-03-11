@@ -64,6 +64,8 @@
   import DropzoneWindow from './DropzoneWindow'
   import Router from "@components/router";
 
+  const {$} = window;
+
   export default {
     name: 'Dropzone',
     data() {
@@ -90,28 +92,47 @@
       // we also could fet the full list of images on upload and refresh the list
       this.configuration.url = router.generate('admin_products_v2_add_image', {productId: 20});
       this.configuration.previewTemplate = document.querySelector('.dz-template').innerHTML;
-      this.dropzone = new window.Dropzone(".dropzone-container", this.configuration);
 
-      this.dropzone.on('addedfile', file => {
-        file.previewElement.addEventListener('click', () => {
-          const input = file.previewElement.querySelector('.md-checkbox input');
-          input.checked = !input.checked;
-
-          if(input.checked) {
-            if(!this.selectedFiles.includes(file)) {
-              this.selectedFiles.push(file);
-              file.previewElement.classList.toggle('selected');
-            }
-          }else {
-            this.selectedFiles = this.selectedFiles.filter(e => e !== file);
-            file.previewElement.classList.toggle('selected');
-          }
-        })
-
-        this.files.push(file);
-      })
+      this.initProductImages();
     },
     methods: {
+      async initProductImages() {
+        const router = new Router();
+        const imagesUrl = router.generate('admin_products_v2_get_images', {productId: 20});
+
+        const response = await fetch(imagesUrl);
+        const images = await response.json();
+        const container = $('#product-images-dropzone');
+        images.forEach((image) => {
+          const preview = $(this.configuration.previewTemplate);
+          preview.find('img').first().prop('src', image.path);
+          container.append(preview);
+        });
+
+        this.initDropZone();
+      },
+      initDropZone() {
+        this.dropzone = new window.Dropzone(".dropzone-container", this.configuration);
+
+        this.dropzone.on('addedfile', file => {
+          file.previewElement.addEventListener('click', () => {
+            const input = file.previewElement.querySelector('.md-checkbox input');
+            input.checked = !input.checked;
+
+            if(input.checked) {
+              if(!this.selectedFiles.includes(file)) {
+                this.selectedFiles.push(file);
+                file.previewElement.classList.toggle('selected');
+              }
+            }else {
+              this.selectedFiles = this.selectedFiles.filter(e => e !== file);
+              file.previewElement.classList.toggle('selected');
+            }
+          })
+
+          this.files.push(file);
+        })
+      },
       selectAll() {
         this.selectedFiles = this.files;
 

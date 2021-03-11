@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -138,6 +140,32 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->renderProductForm($productForm, $productId);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function getImagesAction(int $productId): JsonResponse
+    {
+        /** @var ProductImage[] $images */
+        $images = $this->getQueryBus()->handle(new GetProductImages($productId));
+
+        $data = [];
+        foreach ($images as $image) {
+            $data[] = [
+                'image_id' => $image->getImageId(),
+                'is_cover' => $image->isCover(),
+                'position' => $image->getPosition(),
+                'path' => _THEME_PROD_DIR_ . $image->getPath(),
+                'legends' => $image->getLocalizedLegends(),
+            ];
+        }
+
+        return new JsonResponse($data);
     }
 
     /**
