@@ -31,9 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Customization;
 use DateTime;
 use Pack;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -53,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
@@ -80,18 +83,34 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $virtualProductFileRepository;
 
     /**
+     * @var TaxRulesGroupRepository
+     */
+    private $taxRulesGroupRepository;
+
+    /**
+     * @var int
+     */
+    private $countryId;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     * @param int $countryId
      */
     public function __construct(
         NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
-        VirtualProductFileRepository $virtualProductFileRepository
+        VirtualProductFileRepository $virtualProductFileRepository,
+        TaxRulesGroupRepository $taxRulesGroupRepository,
+        int $countryId
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+        $this->countryId = $countryId;
     }
 
     /**
@@ -153,8 +172,20 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
+        $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
+        $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails(new TaxRulesGroupId((int) $product->id_tax_rules_group));
+        if (!empty($taxRulesGroup['rates'])) {
+            // Use the tax rate associated to context country, or the first one as fallback
+            $countryTaxRate = $taxRulesGroup['rates'][$this->countryId] ?? reset($taxRulesGroup['rates']);
+        } else {
+            $countryTaxRate = 0;
+        }
+        $taxRatio = new DecimalNumber((string) (1 + ($countryTaxRate / 100)));
+        $priceTaxIncluded = $priceTaxExcluded->times($taxRatio);
+
         return new ProductPricesInformation(
-            $this->numberExtractor->extract($product, 'price'),
+            $priceTaxExcluded,
+            $priceTaxIncluded,
             $this->numberExtractor->extract($product, 'ecotax'),
             (int) $product->id_tax_rules_group,
             (bool) $product->on_sale,
@@ -329,8 +360,6 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
         $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id));
 
         return new ProductStockInformation(
-            (bool) $product->advanced_stock_management,
-            (bool) $stockAvailable->depends_on_stock,
             (int) $product->pack_stock_type,
             (int) $stockAvailable->out_of_stock,
             (int) $stockAvailable->quantity,
