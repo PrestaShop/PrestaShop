@@ -45,8 +45,6 @@ $(() => {
     'TextWithLengthCounter'
   ]);
 
-  initDropzone();
-
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
 
@@ -82,6 +80,8 @@ $(() => {
     },
     $('#product_preview').data('seo-url')
   );
+
+  initDropzone(productId);
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
