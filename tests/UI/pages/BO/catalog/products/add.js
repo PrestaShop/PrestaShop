@@ -473,7 +473,6 @@ class AddProduct extends BOBasePage {
     // Set Stock form
     await this.setValue(page, this.stockLocationInput, product.stockLocation);
     await this.setValue(page, this.lowStockLevelInput, product.lowStockLevel);
-    await this.scrollTo(page, this.labelWhenInStockInput);
     // Set Availability preferences form
     switch (product.behaviourOutOfStock) {
       case 'Deny orders':
@@ -491,6 +490,7 @@ class AddProduct extends BOBasePage {
       default:
         throw new Error(`Column ${product.behaviourOutOfStock} was not found`);
     }
+    await this.scrollTo(page, this.labelWhenInStockInput);
     await this.waitForSelectorAndClick(page, columnSelector);
     await this.setValue(page, this.labelWhenInStockInput, product.labelWhenInStock);
     await this.setValue(page, this.labelWhenOutOfStock, product.LabelWhenOutOfStock);
