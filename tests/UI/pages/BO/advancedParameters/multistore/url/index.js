@@ -56,6 +56,14 @@ class ShopURLSettings extends BOBasePage {
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_shop_url';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
   }
 
   /* Methods */
@@ -315,6 +323,43 @@ class ShopURLSettings extends BOBasePage {
     }
 
     return false;
+  }
+
+  // Bulk actions methods
+  /**
+   * Select All rows
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Enable/Disable shop url
+   * @param page
+   * @param wantedStatus
+   * @returns {Promise<void>}
+   */
+  async bulkSetStatus(page, wantedStatus) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Set status
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkEnableLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
+    );
   }
 }
 
