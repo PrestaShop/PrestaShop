@@ -83,7 +83,7 @@ final class ZoneFormDataHandler implements FormDataHandlerInterface
 
         if (isset($data['shop_association'])) {
             $shopAssociation = $data['shop_association'] ?: [];
-            $shopAssociation = array_map(function ($shopId) { return (int) $shopId; }, $shopAssociation);
+            $shopAssociation = array_map('intval', $shopAssociation);
 
             $command->setShopAssociation($shopAssociation);
         }
