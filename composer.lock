@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6bf683ef1d05231309b344aa441696b2",
+    "content-hash": "d78a818e4c7cacb007a75b3405b58672",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5789,42 +5789,6 @@
             "description": "PrestaShop module statsstock",
             "homepage": "https://github.com/PrestaShop/statsstock",
             "time": "2017-01-31T17:24:06+00:00"
-        },
-        {
-            "name": "prestashop/statsvisits",
-            "version": "v2.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/statsvisits.git",
-                "reference": "95aa7494f4329dcf8e0dd0386eb6513eb2976f44"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/95aa7494f4329dcf8e0dd0386eb6513eb2976f44",
-                "reference": "95aa7494f4329dcf8e0dd0386eb6513eb2976f44",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module statsvisits",
-            "homepage": "https://github.com/PrestaShop/statsvisits",
-            "support": {
-                "source": "https://github.com/PrestaShop/statsvisits/tree/v2.0.3"
-            },
-            "abandoned": true,
-            "time": "2020-11-06T09:13:57+00:00"
         },
         {
             "name": "prestashop/translationtools-bundle",
