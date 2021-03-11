@@ -46,7 +46,12 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var int[]
      */
     private $contextShopIds;
-
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     * @param array $contextShopIds
+     */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
@@ -82,6 +87,11 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
         return $this->getQueryBuilder($searchCriteria)->select('COUNT(DISTINCT z.id_zone)');
     }
 
+    /**
+     * @param SearchCriteriaInterface $criteria
+     *
+     * @return QueryBuilder
+     */
     private function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
