@@ -89,7 +89,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * @param SearchCriteriaInterface $criteria
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
