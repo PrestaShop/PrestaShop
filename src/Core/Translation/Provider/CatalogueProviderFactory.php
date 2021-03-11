@@ -100,6 +100,16 @@ class CatalogueProviderFactory
      * @TODO We keep for now the dependency to PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
      *   We will create, in the core, a TranslationRepositoryInterface and inject to DatabaseTransloader the LangRepositoryInterface and TranslationRepositoryInterface as dependencies
      *   to be fully independent from PrestaShopBundle
+     *
+     * @param DatabaseTranslationLoader $databaseTranslationLoader
+     * @param LegacyModuleExtractorInterface $legacyModuleExtractor
+     * @param LoaderInterface $legacyFileLoader
+     * @param ThemeExtractor $themeExtractor
+     * @param ThemeRepository $themeRepository
+     * @param Filesystem $filesystem
+     * @param string $themesDirectory
+     * @param string $modulesDirectory
+     * @param string $translationsDirectory
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
