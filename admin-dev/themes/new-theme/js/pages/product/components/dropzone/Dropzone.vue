@@ -32,7 +32,7 @@
     </div>
     
 
-    <dropzone-window class="dropzone-window" v-if="selectedFiles.length > 0" :selectedFiles="selectedFiles" :dropzone="dropzone" @unselectAll="unselectAll" @removeSelection="removeSelection" @selectAll="selectAll" />
+    <dropzone-window class="dropzone-window" v-if="selectedFiles.length > 0" :selectedFiles="selectedFiles" :dropzone="dropzone" @unselectAll="unselectAll" @removeSelection="removeSelection" @selectAll="selectAll" :files="files" />
 
     <div class="dz-template d-none">
       <div class="dz-preview dz-file-preview">

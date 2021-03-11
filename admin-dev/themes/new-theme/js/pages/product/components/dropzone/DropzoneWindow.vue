@@ -37,7 +37,8 @@
       </div>
     </div>
 
-    <p class="dropzone-window-unselect" @click="$emit('selectAll')">Select all</p>
+    <p class="dropzone-window-select" @click="$emit('selectAll')" v-if="files.length > 0 && selectedFiles.length !== files.length">Select all</p>
+    <p class="dropzone-window-unselect" v-if="selectedFiles.length === files.length" @click="$emit('unselectAll')">Unselect all</p>
 
     <div class="md-checkbox" v-if="selectedFiles.length === 1">
       <label>
@@ -54,6 +55,10 @@
     name: 'DropzoneWindow',
     props: {
       selectedFiles: {
+        type: Array,
+        default: () => []
+      },
+      files: {
         type: Array,
         default: () => []
       }
