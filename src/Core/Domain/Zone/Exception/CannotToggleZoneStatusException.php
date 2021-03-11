@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Zone\Exception;
 
+/**
+ * Is thrown when cannot toggle zone.
+ */
 class CannotToggleZoneStatusException extends ZoneException
 {
 }
