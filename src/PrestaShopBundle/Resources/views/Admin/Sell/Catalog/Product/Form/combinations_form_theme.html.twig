@@ -32,22 +32,17 @@
 {%- block listed_combination_row -%}
   <tr>
     <td>
-      <span>{{ form_widget(form.is_selected) }}</span>
-      <span>
-        {{ form_widget(form.combination_id) }}
-        {{ form.combination_id.vars.value }}
-      </span>
+      {{ form_widget(form.is_selected) }}
+      {{ form_widget(form.combination_id) }}
     </td>
     <td>
       {{ form_widget(form.name) }}
-      {{ form.name.vars.value }}
     </td>
     <td>
       {{ form_widget(form.impact_on_price) }}
     </td>
     <td>
-      <span>{{ form_widget(form.final_price_te) }}</span>
-      <span>{{ form.final_price_te.vars.value }}</span>
+      {{ form_widget(form.final_price_te) }}
     </td>
     <td>
       {{ form_widget(form.quantity) }}

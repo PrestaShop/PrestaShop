@@ -69,15 +69,18 @@ export default class CombinationsGridRenderer {
       this.$combinationsTableBody.append(row);
 
       // fill inputs
-      const $combinationIdCell = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex));
-      const $combinationNameCell = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex));
-      const $finalPriceCell = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex));
-      $combinationIdCell.val(combination.id);
-      $combinationIdCell.closest('td').text(combination.id);
-      $combinationNameCell.val(combination.name);
-      $combinationNameCell.closest('td').text(combination.name);
-      $finalPriceCell.val(combination.finalPriceTe);
-      $finalPriceCell.closest('td').text(combination.finalPriceTe);
+      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex));
+      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex));
+      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex));
+      $combinationIdInput.val(combination.id);
+      $combinationNameInput.val(combination.name);
+      $finalPriceInput.val(combination.finalPriceTe);
+
+      // This adds a text after the cell children (do not use text which replaces everything)
+      $combinationIdInput.closest('td').append(combination.id);
+      $combinationNameInput.closest('td').append(combination.name);
+      $finalPriceInput.closest('td').append(combination.finalPriceTe);
+
       $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex)).val(combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.quantityInput(rowIndex)).val(combination.quantity);
       $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).val(combination.isDefault);

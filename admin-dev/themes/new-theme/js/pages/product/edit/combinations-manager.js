@@ -46,7 +46,8 @@ export default class CombinationsManager {
       new CombinationsGridRenderer(),
     );
 
-    this.$productForm.on('click', ProductMap.combinations.navigationTab, () => paginator.paginate(1));
+    // Paginate to first page when tab is shown
+    this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => paginator.paginate(1));
   }
 
   /**

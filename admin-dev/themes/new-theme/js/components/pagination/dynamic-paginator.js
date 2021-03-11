@@ -48,7 +48,7 @@ const {$} = window;
  *```
  *  There is also a possibility to provide custom selectorsMap as 5th argument. See this.setSelectorsMap().
  *
- * Data provider must have a method get(offset, limit) which returns data.{any resources name} & data.total
+ * Data provider must have a method fetch(offset, limit) which returns data.{any resources name} & data.total
  * e.g.
  * ```
  * class FooDataProvider {
@@ -133,10 +133,10 @@ export default class DynamicPaginator {
     this.refreshButtonsData(page);
     this.refreshInfoLabel(page, data.total);
 
-    this.toggleFirstPageAvailability(page > 1);
-    this.togglePreviousPageAvailability(page > 1);
-    this.toggleNextPageAvailability(page < this.pagesCount);
-    this.toggleLastPageAvailability(page < this.pagesCount);
+    this.toggleTargetAvailability(this.selectorsMap.firstPageItem, page > 1);
+    this.toggleTargetAvailability(this.selectorsMap.previousPageItem, page > 1);
+    this.toggleTargetAvailability(this.selectorsMap.nextPageItem, page < this.pagesCount);
+    this.toggleTargetAvailability(this.selectorsMap.lastPageItem, page < this.pagesCount);
 
     this.renderer.render(data);
   }
@@ -182,48 +182,14 @@ export default class DynamicPaginator {
   }
 
   /**
+   * @param {String} targetSelector
    * @param {Boolean} enable
    *
    * @private
    */
-  toggleFirstPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.firstPageItem), enable);
-  }
+  toggleTargetAvailability(targetSelector, enable) {
+    const target = this.$paginationContainer.find(targetSelector);
 
-  /**
-   * @param {Boolean} enable
-   *
-   * @private
-   */
-  toggleLastPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.lastPageItem), enable);
-  }
-
-  /**
-   * @param {Boolean} enable
-   *
-   * @private
-   */
-  togglePreviousPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.previousPageItem), enable);
-  }
-
-  /**
-   * @param {Boolean} enable
-   *
-   * @private
-   */
-  toggleNextPageAvailability(enable) {
-    this.toggleTargetAvailability(this.$paginationContainer.find(this.selectorsMap.nextPageItem), enable);
-  }
-
-  /**
-   * @param {Object} target
-   * @param {Boolean} enable
-   *
-   * @private
-   */
-  toggleTargetAvailability(target, enable) {
     if (enable) {
       target.removeClass('disabled');
     } else {
