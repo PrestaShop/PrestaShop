@@ -65,7 +65,7 @@ class AddProduct extends BOBasePage {
     this.minimumQuantityInput = '#form_step3_minimal_quantity';
     this.stockLocationInput = '#form_step3_location';
     this.lowStockLevelInput = '#form_step3_low_stock_threshold';
-    this.behaviourOutOfStockInput = id => `#form_step3_out_of_stock_${id}`;
+    this.behaviourOutOfStockDiv = id => `#form_step3_out_of_stock div:nth-child(${id})`;
     this.labelWhenInStockInput = '#form_step3_available_now_1';
     this.labelWhenOutOfStock = '#form_step3_available_later_1';
     // Selector of Step 5 : SEO
@@ -476,15 +476,15 @@ class AddProduct extends BOBasePage {
     // Set Availability preferences form
     switch (product.behaviourOutOfStock) {
       case 'Deny orders':
-        columnSelector = this.behaviourOutOfStockInput(0);
+        columnSelector = this.behaviourOutOfStockDiv(1);
         break;
 
       case 'Allow orders':
-        columnSelector = this.behaviourOutOfStockInput(1);
+        columnSelector = this.behaviourOutOfStockDiv(2);
         break;
 
       case 'Default behavior':
-        columnSelector = this.behaviourOutOfStockInput(2);
+        columnSelector = this.behaviourOutOfStockDiv(3);
         break;
 
       default:
