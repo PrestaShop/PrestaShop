@@ -361,6 +361,25 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  Scenario: Update quantity of customized product
+    When I create an empty cart "dummy_cart3" for customer "testCustomer"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart3"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart3"
+    And I add order "bo_order_custo" with the following details:
+      | cart                | dummy_cart3         |
+      | message             | test                |
+      | payment module name | dummy_payment       |
+      | status              | Payment accepted    |
+    Then order "bo_order_custo" should have 1 products in total
+    When I edit product "Customizable Mug" to order "bo_order_custo" with following products details:
+      | amount        | 3                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 3 products in total
+    When I edit product "Customizable Mug" to order "bo_order_custo" with following products details:
+      | amount        | 4                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 4 products in total
+
   Scenario: Update product in order with zero quantity is forbidden
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 0                       |
