@@ -223,13 +223,13 @@ describe('Quick edit and bulk actions shop Urls', async () => {
         const textResult = await shopUrlPage.bulkSetStatus(page, test.args.enable);
         await expect(textResult, 'Status is not updated!').to.be.equal(shopUrlPage.successfulUpdateStatusMessage);
       });
+    });
 
-      it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkActions', baseContext);
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkActions', baseContext);
 
-        const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
-      });
+      const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
     });
   });
 
