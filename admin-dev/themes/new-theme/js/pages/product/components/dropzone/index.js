@@ -25,8 +25,10 @@
 import Vue from 'vue';
 import Dropzone from './Dropzone.vue';
 
-new Vue({
-  el: '.dropzone',
-  template: '<dropzone />',
-  components: {Dropzone}
-});
+export default function initDropzone() {
+  return new Vue({
+    el: '#product-images-container',
+    template: '<dropzone />',
+    components: {Dropzone}
+  });
+}

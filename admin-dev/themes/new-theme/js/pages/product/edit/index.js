@@ -32,19 +32,20 @@ import ProductMap from '@pages/product/product-map';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
+import initDropzone from '@pages/product/components/dropzone';
 
 const {$} = window;
 
 $(() => {
-  window.prestashop.component.initComponents(
-    [
-      'TranslatableField',
-      'TinyMCEEditor',
-      'TranslatableInput',
-      'EventEmitter',
-      'TextWithLengthCounter',
-    ],
-  );
+  window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TinyMCEEditor',
+    'TranslatableInput',
+    'EventEmitter',
+    'TextWithLengthCounter'
+  ]);
+
+  initDropzone();
 
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
@@ -77,9 +78,9 @@ $(() => {
       watchedDescription: '.serp-watched-description',
       watchedMetaUrl: '.serp-watched-url:input',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector,
+      multiLanguageItem: translatorInput.localeItemSelector
     },
-    $('#product_preview').data('seo-url'),
+    $('#product_preview').data('seo-url')
   );
 
   // From here we init component specific to edition
