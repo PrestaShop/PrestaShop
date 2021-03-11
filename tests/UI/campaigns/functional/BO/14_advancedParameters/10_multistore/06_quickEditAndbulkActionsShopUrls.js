@@ -225,7 +225,7 @@ describe('Quick edit and bulk actions shop Urls', async () => {
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulk actions', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterBulkActions', baseContext);
 
         const numberOfShopUrlsAfterReset = await shopUrlPage.resetAndGetNumberOfLines(page);
         await expect(numberOfShopUrlsAfterReset).to.be.equal(numberOfShopUrls + 1);
