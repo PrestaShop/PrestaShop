@@ -490,8 +490,8 @@ class AddProduct extends BOBasePage {
       default:
         throw new Error(`Column ${product.behaviourOutOfStock} was not found`);
     }
-    await this.scrollTo(page, this.labelWhenInStockInput);
     await this.waitForSelectorAndClick(page, columnSelector);
+    await this.scrollTo(page, this.labelWhenInStockInput);
     await this.setValue(page, this.labelWhenInStockInput, product.labelWhenInStock);
     await this.setValue(page, this.labelWhenOutOfStock, product.LabelWhenOutOfStock);
   }
