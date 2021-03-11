@@ -111,6 +111,8 @@
         const container = $('#product-images-dropzone');
         images.forEach((image) => {
           const preview = $(this.configuration.previewTemplate);
+          preview.removeClass('dz-file-preview');
+          preview.addClass('dz-processing dz-image-preview dz-success dz-complete');
           preview.find('img').first().prop('src', image.path);
           container.append(preview);
         });
