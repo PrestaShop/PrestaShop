@@ -81,7 +81,7 @@
                 </a>
               </li>
 
-            {% for group in groupList %}
+            {% for group in groupList if group.shops is not empty %}
               <li class="multishop-modal-group-item multishop-modal-item">
                 {% if isGroupContext and currentContext.id == group.id %}
                   <i class="material-icons">check</i>
