@@ -60,6 +60,16 @@ use Symfony\Component\HttpFoundation\Response;
 class ProductController extends FrameworkBundleAdminController
 {
     /**
+     * Default number of combinations per page
+     */
+    private const DEFAULT_COMBINATIONS_NUMBER = 10;
+
+    /**
+     * Options used for the number of combinations per page
+     */
+    private const COMBINATIONS_PAGINATION_OPTIONS = [10, 20, 50, 100];
+
+    /**
      * Used to validate connected user authorizations.
      */
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
@@ -148,8 +158,8 @@ class ProductController extends FrameworkBundleAdminController
             'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
             //@todo: hardcoded. Make configurable?
-            'combinationLimitChoices' => [10, 20, 50, 100],
-            'combinationsLimit' => 10,
+            'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
+            'combinationsLimit' => self::DEFAULT_COMBINATIONS_NUMBER,
             'combinationsForm' => $this->createForm(CombinationsType::class)->createView(),
         ]);
     }

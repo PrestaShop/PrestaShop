@@ -148,7 +148,7 @@ export default class DynamicPaginator {
    * @returns {Number}
    */
   calculateOffset(page, limit) {
-    return (page === 1) ? 0 : (page - 1) * limit;
+    return (page - 1) * limit;
   }
 
   /**
