@@ -46,6 +46,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var int[]
      */
     private $contextShopIds;
+
     /**
      * @param Connection $connection
      * @param string $dbPrefix
