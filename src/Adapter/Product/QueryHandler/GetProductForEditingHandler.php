@@ -174,7 +174,12 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     {
         $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
         $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails(new TaxRulesGroupId((int) $product->id_tax_rules_group));
-        $countryTaxRate = $taxRulesGroup['rates_by_country'][$this->countryId] ?? 0;
+        if (!empty($taxRulesGroup['rates'])) {
+            // Use the tax rate associated to context country, or the first one as fallback
+            $countryTaxRate = $taxRulesGroup['rates'][$this->countryId] ?? reset($taxRulesGroup['rates']);
+        } else {
+            $countryTaxRate = 0;
+        }
         $taxRatio = new DecimalNumber((string) (1 + ($countryTaxRate / 100)));
         $priceTaxIncluded = $priceTaxExcluded->times($taxRatio);
 

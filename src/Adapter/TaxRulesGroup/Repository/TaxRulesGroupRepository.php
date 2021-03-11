@@ -62,14 +62,19 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
         $this->dbPrefix = $dbPrefix;
     }
 
+    /**
+     * @param TaxRulesGroupId $taxRulesGroupId
+     *
+     * @return array
+     */
     public function getTaxRulesGroupDetails(TaxRulesGroupId $taxRulesGroupId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('trg.*, tr.id_country, tr.id_state, t.rate')
+            ->select('trg.id_tax_rules_group, trg.name, trg.active, trg.deleted, tr.id_country, t.rate')
             ->from($this->dbPrefix . 'tax_rules_group', 'trg')
-            ->leftJoin('trg', $this->dbPrefix . 'tax_rule', 'tr', 'tr.id_tax_rules_group = trg.id_tax_rules_group')
-            ->leftJoin('tr', $this->dbPrefix . 'tax', 't', 't.id_tax = tr.id_tax')
+            ->innerJoin('trg', $this->dbPrefix . 'tax_rule', 'tr', 'tr.id_tax_rules_group = trg.id_tax_rules_group')
+            ->innerJoin('tr', $this->dbPrefix . 'tax', 't', 't.id_tax = tr.id_tax')
             ->andWhere('trg.id_tax_rules_group = :taxRulesGroupId')
             ->setParameter('taxRulesGroupId', $taxRulesGroupId->getValue())
         ;
@@ -81,11 +86,13 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
         $firstRow = reset($rawData);
         $taxRulesGroup = [
             'id_tax_rules_group' => (int) $firstRow['id_tax_rules_group'],
+            'name' => $firstRow['name'],
             'active' => (bool) $firstRow['active'],
-            'rates_by_country' => [],
+            'deleted' => (bool) $firstRow['deleted'],
+            'rates' => [],
         ];
         foreach ($rawData as $taxData) {
-            $taxRulesGroup['rates_by_country'][(int) $taxData['id_country']] = (float) $taxData['rate'];
+            $taxRulesGroup['rates'][(int) $taxData['id_country']] = (float) $taxData['rate'];
         }
 
         return $taxRulesGroup;
