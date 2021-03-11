@@ -28,11 +28,26 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
-use PrestaShop\PrestaShop\Core\Translation\Provider\BackofficeCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\FrontofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\MailsBodyProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\MailsProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\OthersProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ThemeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\ModuleCatalogueLayersProvider;
+use PrestaShop\PrestaShop\Core\Translation\Provider\ThemeCatalogueLayersProvider;
+use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 
 class CatalogueProviderFactoryTest extends TestCase
 {
@@ -44,25 +59,80 @@ class CatalogueProviderFactoryTest extends TestCase
     protected function setUp()
     {
         $databaseTranslationLoader = $this->createMock(DatabaseTranslationLoader::class);
+        $legacyModuleExtractor = $this->createMock(LegacyModuleExtractorInterface::class);
+        $legacyFileLoader = $this->createMock(LoaderInterface::class);
+        $themeExtractor = $this->createMock(ThemeExtractor::class);
+        $themeRepository = $this->createMock(ThemeRepository::class);
+        $filesystem = $this->createMock(Filesystem::class);
 
-        $this->factory = new CatalogueProviderFactory($databaseTranslationLoader, 'resourceDirectory');
+        $themeRepository
+            ->method('getInstanceByName')
+            ->willReturn(new Theme([
+                'name' => 'classic',
+                'directory' => '',
+            ])); //doesn't really matter
+
+        $this->factory = new CatalogueProviderFactory(
+            $databaseTranslationLoader,
+            $legacyModuleExtractor,
+            $legacyFileLoader,
+            $themeExtractor,
+            $themeRepository,
+            $filesystem,
+            'themesDirectory',
+            'modulesDirectory',
+            'translationsDirectory'
+        );
     }
 
     public function testGetProviderFailsWhenWrongTypeIsGiven()
     {
         $this->expectException(UnexpectedTranslationTypeException::class);
-        $this->factory->getProvider('wrongType');
+        $this->factory->getProvider(
+            $this->createMock(ProviderDefinitionInterface::class)
+        );
     }
 
-    public function testGetProvider()
+    /**
+     * @dataProvider getProviderData
+     *
+     * @throws UnexpectedTranslationTypeException
+     */
+    public function testGetProvider($providerDefinition, $providerClass): void
     {
-        $providersByType = [
-            TranslationCatalogueBuilder::TYPE_BACK => BackofficeCatalogueLayersProvider::class,
-        ];
+        $provider = $this->factory->getProvider($providerDefinition);
+        $this->assertInstanceOf($providerClass, $provider);
+    }
 
-        foreach ($providersByType as $providerType => $providerClass) {
-            $provider = $this->factory->getProvider($providerType);
-            $this->assertInstanceOf($providerClass, $provider);
-        }
+    public function getProviderData(): iterable
+    {
+        yield [
+            new BackofficeProviderDefinition(),
+            CoreCatalogueLayersProvider::class,
+        ];
+        yield [
+            new FrontofficeProviderDefinition(),
+            CoreCatalogueLayersProvider::class,
+        ];
+        yield [
+            new MailsProviderDefinition(),
+            CoreCatalogueLayersProvider::class,
+        ];
+        yield [
+            new MailsBodyProviderDefinition(),
+            CoreCatalogueLayersProvider::class,
+        ];
+        yield [
+            new OthersProviderDefinition(),
+            CoreCatalogueLayersProvider::class,
+        ];
+        yield [
+            new ModuleProviderDefinition('module'),
+            ModuleCatalogueLayersProvider::class,
+        ];
+        yield [
+            new ThemeProviderDefinition('classic'),
+            ThemeCatalogueLayersProvider::class,
+        ];
     }
 }

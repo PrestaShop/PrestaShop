@@ -29,12 +29,13 @@ namespace Tests\Integration\Core\Translation\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Translation\Provider\CoreCatalogueLayersProvider;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\OthersProviderDefinition;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Test the provider of backOffice translations
+ * Test the provider of frontOffice translations
  */
-class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
+class OthersCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
 {
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
@@ -45,11 +46,10 @@ class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProvi
         $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
         $expected = [
-            'AdminActions' => [
-                'count' => 90,
+            'messages' => [
+                'count' => 522,
                 'translations' => [
-                    'Save and stay' => 'Enregistrer et rester',
-                    'Uninstall' => 'Désinstaller',
+                    'Attributes generator' => 'Générateur de déclinaisons de produits',
                 ],
             ],
         ];
@@ -67,11 +67,10 @@ class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProvi
         $catalogue = $this->getDefaultCatalogue('fr-FR');
 
         $expected = [
-            'AdminActions' => [
-                'count' => 91,
+            'messages' => [
+                'count' => 522,
                 'translations' => [
-                    'Save and stay' => '',
-                    'Uninstall' => '',
+                    'Attributes generator' => '',
                 ],
             ],
         ];
@@ -80,21 +79,69 @@ class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProvi
         $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
-    public function testItLoadsCustomizedTranslationsFromDatabase(): void
+    public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
     {
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
                 'key' => 'Uninstall',
-                'translation' => 'Traduction customisée',
-                'domain' => 'AdminActions',
+                'translation' => 'Uninstall Traduction customisée',
+                'domain' => 'messages',
+                'theme' => 'classic',
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Install',
+                'translation' => 'Install Traduction customisée',
+                'domain' => 'messages',
+                'theme' => 'classic',
+            ],
+        ];
+
+        // load catalogue from database translations
+        $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // If the theme name is null, the translations which have theme = 'classic' are taken
+        $this->assertEmpty($domains);
+        $this->assertEmpty($messages);
+    }
+
+    public function testItLoadsCustomizedTranslationsWithNoThemeFromDatabase(): void
+    {
+        $databaseContent = [
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Uninstall',
+                'translation' => 'Uninstall Traduction customisée',
+                'domain' => 'messages',
                 'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
-                'key' => 'Some made up text',
-                'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
+                'key' => 'Install',
+                'translation' => 'Install Traduction customisée',
+                'domain' => 'messages',
+                'theme' => null,
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Some made up text 1',
+                'translation' => 'Un texte inventé 1',
+                'domain' => 'AdminActions',
+                'theme' => 'classic',
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Some made up text 2',
+                'translation' => 'Un texte inventé 2',
+                'domain' => 'ModuleWirepaymentShop',
                 'theme' => 'classic',
             ],
         ];
@@ -103,11 +150,11 @@ class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProvi
         $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
         $expected = [
-            'AdminActions' => [
-                'count' => 1,
+            'messages' => [
+                'count' => 2,
                 'translations' => [
-                    'Save and stay' => 'Save and stay',
-                    'Uninstall' => 'Traduction customisée',
+                    'Uninstall' => 'Uninstall Traduction customisée',
+                    'Install' => 'Install Traduction customisée',
                 ],
             ],
         ];
@@ -123,7 +170,7 @@ class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProvi
      */
     protected function getProvider(array $databaseContent = []): CoreCatalogueLayersProvider
     {
-        $providerDefinition = new BackofficeProviderDefinition();
+        $providerDefinition = new OthersProviderDefinition();
 
         return new CoreCatalogueLayersProvider(
             new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),

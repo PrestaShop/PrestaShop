@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Finder\TranslationFinder;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -45,27 +45,27 @@ class FileTranslatedCatalogueProvider extends AbstractCatalogueProvider
     private $translatedCatalogueDirectory;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $filenameFilters;
 
     /**
-     * @param string $directory
+     * @param string $translatedCatalogueDirectory
      * @param array $filenameFilters
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
-    public function __construct(string $directory, array $filenameFilters)
+    public function __construct(string $translatedCatalogueDirectory, array $filenameFilters)
     {
-        if (!is_dir($directory) || !is_readable($directory)) {
-            throw new FileNotFoundException(sprintf('Directory %s does not exist', $directory));
+        if (!is_dir($translatedCatalogueDirectory) || !is_readable($translatedCatalogueDirectory)) {
+            throw new TranslationFilesNotFoundException(sprintf('Directory %s does not exist', $translatedCatalogueDirectory));
         }
 
         if (!$this->assertIsArrayOfString($filenameFilters)) {
             throw new \InvalidArgumentException('Given filename filters are invalid. An array of strings was expected.');
         }
 
-        $this->translatedCatalogueDirectory = $directory;
+        $this->translatedCatalogueDirectory = $translatedCatalogueDirectory;
         $this->filenameFilters = $filenameFilters;
     }
 
@@ -76,7 +76,7 @@ class FileTranslatedCatalogueProvider extends AbstractCatalogueProvider
      *
      * @return MessageCatalogue
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getCatalogue(string $locale): MessageCatalogue
     {

@@ -27,18 +27,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Returns the 3 layers of translation catalogues related to the Backoffice interface translations.
- * The default catalogue is in app/Resources/translations/default, in any file starting with "Admin"
- * The file catalogue is in app/Resources/translations/LOCALE, in any file starting with "Admin"
- * The user catalogue is stored in DB, domain starting with Admin and theme is NULL.
+ * Returns the 3 layers of translation catalogues related to the Core interface translations.
+ * The files pattern depends on the desired Type
+ * The default catalogue is in app/Resources/translations/default, in any file starting with "files pattern"
+ * The file catalogue is in app/Resources/translations/LOCALE, in any file starting with "files pattern"
+ * The user catalogue is stored in DB, domain starting with "files pattern" and theme is NULL.
  *
  * @see CatalogueLayersProviderInterface to understand the 3 layers.
  */
-class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterface
+class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
 {
     /**
      * We need a connection to DB to load user translated catalogue.
@@ -49,7 +51,6 @@ class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterf
 
     /**
      * This is the directory where Default and FileTranslated translations are stored.
-     * For the Backoffice catalogue,
      *   - Default catalogue is within resourceDirectory/default
      *   - FileTranslated catalogue is in resourceDirectory/locale
      *
@@ -73,19 +74,37 @@ class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterf
     private $userTranslatedCatalogueProvider;
 
     /**
+     * @var array
+     */
+    private $filenameFilters;
+
+    /**
+     * @var array
+     */
+    private $translationDomains;
+
+    /**
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param string $resourceDirectory
+     * @param array<int, string> $filenameFilters
+     * @param array<int, string> $translationDomains
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
-        string $resourceDirectory
+        string $resourceDirectory,
+        array $filenameFilters,
+        array $translationDomains
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->resourceDirectory = $resourceDirectory;
+        $this->filenameFilters = $filenameFilters;
+        $this->translationDomains = $translationDomains;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws TranslationFilesNotFoundException
      */
     public function getDefaultCatalogue(string $locale): MessageCatalogue
     {
@@ -109,61 +128,48 @@ class BackofficeCatalogueLayersProvider implements CatalogueLayersProviderInterf
     }
 
     /**
-     * This is for Default and FileTranslated catalogue.
-     * In the translations directory, we will take any file starting with 'Admin' and followed by alphabetical characters.
+     * @return DefaultCatalogueProvider
      *
-     * @return string[]
+     * @throws TranslationFilesNotFoundException
      */
-    protected function getFilenameFilters(): array
-    {
-        return [
-            '#^Admin[A-Z]#',
-        ];
-    }
-
-    /**
-     * This is for UserTranslated catalogue.
-     * In the translations table, we will take any translation having domain starting with 'Admin' and followed by alphabetical characters.
-     *
-     * @return string[]
-     */
-    protected function getTranslationDomains(): array
-    {
-        return [
-            '^Admin[A-Z]',
-        ];
-    }
-
     private function getDefaultCatalogueProvider(): DefaultCatalogueProvider
     {
         if (null === $this->defaultCatalogueProvider) {
             $this->defaultCatalogueProvider = new DefaultCatalogueProvider(
                 $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
-                $this->getFilenameFilters()
+                $this->filenameFilters
             );
         }
 
         return $this->defaultCatalogueProvider;
     }
 
+    /**
+     * @return FileTranslatedCatalogueProvider
+     *
+     * @throws TranslationFilesNotFoundException
+     */
     private function getFileTranslatedCatalogueProvider(): FileTranslatedCatalogueProvider
     {
         if (null === $this->fileTranslatedCatalogueProvider) {
             $this->fileTranslatedCatalogueProvider = new FileTranslatedCatalogueProvider(
                 $this->resourceDirectory,
-                $this->getFilenameFilters()
+                $this->filenameFilters
             );
         }
 
         return $this->fileTranslatedCatalogueProvider;
     }
 
+    /**
+     * @return UserTranslatedCatalogueProvider
+     */
     private function getUserTranslatedCatalogueProvider(): UserTranslatedCatalogueProvider
     {
         if (null === $this->userTranslatedCatalogueProvider) {
             $this->userTranslatedCatalogueProvider = new UserTranslatedCatalogueProvider(
                 $this->databaseTranslationLoader,
-                $this->getTranslationDomains()
+                $this->translationDomains
             );
         }
 

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -54,8 +54,6 @@ interface CatalogueLayersProviderInterface
      *
      * @param string $locale the language for which you need translations
      *
-     * @throws FileNotFoundException
-     *
      * @return MessageCatalogue
      */
     public function getDefaultCatalogue(string $locale): MessageCatalogue;
@@ -66,7 +64,7 @@ interface CatalogueLayersProviderInterface
      *
      * @param string $locale
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      *
      * @return MessageCatalogue
      */
@@ -77,8 +75,6 @@ interface CatalogueLayersProviderInterface
      * It's done from the Admin and stored in DB.
      *
      * @param string $locale
-     *
-     * @throws FileNotFoundException
      *
      * @return MessageCatalogue
      */

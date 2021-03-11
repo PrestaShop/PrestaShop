@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="/home/isow/workspace/PrestaShop/tests/Resources/themes/fakeThemeForTranslations/templates/checkout/cart.tpl" source-language="fr-FR" target-language="fr-FR" datatype="plaintext">
+    <body>
+      <trans-unit id="d1a2ba84e96d5baba4aff54f471d44d4">
+        <source>Cancel cart</source>
+        <target>Cancel cart</target>
+        <note>Line: 26</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -41,7 +41,7 @@ class UserTranslatedCatalogueProvider extends AbstractCatalogueProvider
     private $databaseTranslationReader;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $translationDomains;
 
@@ -55,7 +55,7 @@ class UserTranslatedCatalogueProvider extends AbstractCatalogueProvider
      * If not given, the translations returns will be the ones with 'theme IS NULL'
      *
      * @param DatabaseTranslationLoader $databaseTranslationReader
-     * @param array $translationDomains
+     * @param array<int, string> $translationDomains
      * @param string|null $themeName
      */
     public function __construct(
