@@ -21,6 +21,7 @@ const baseContext = 'functional_FO_search_searchProduct';
 
 let browserContext;
 let page;
+const productName = 'Hugbird printed sweater';
 
 /*
 Go to FO
@@ -70,9 +71,16 @@ describe('Search product', async () => {
   it('should search product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await homePage.searchProduct(page, Products.demo_3.name);
+    await homePage.searchProduct(page, productName);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+  });
+
+  it('should check search result number', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkProductNumber', baseContext);
+
+    const resultNumber = await searchResultsPage.getSearchResultsNumber(page);
+    await expect(resultNumber, 'Product number is incorrect!').to.be.equal(1);
   });
 });
