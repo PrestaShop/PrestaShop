@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea9aad14151874d97e955985299cc671",
+    "content-hash": "45d9dc2faceaf34ec09b58cf16d5342f",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5213,39 +5213,6 @@
             "description": "PrestaShop module ps_wirepayment",
             "homepage": "https://github.com/PrestaShop/ps_wirepayment",
             "time": "2020-06-24T19:32:51+00:00"
-        },
-        {
-            "name": "prestashop/sekeywords",
-            "version": "v2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/sekeywords.git",
-                "reference": "f174c055da105af3054690a4f6c48208849b5241"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/sekeywords/zipball/f174c055da105af3054690a4f6c48208849b5241",
-                "reference": "f174c055da105af3054690a4f6c48208849b5241",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL - Academic Free License (AFL 3.0)"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module sekeywords",
-            "homepage": "https://github.com/PrestaShop/sekeywords",
-            "abandoned": true,
-            "time": "2017-01-30T15:46:25+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
