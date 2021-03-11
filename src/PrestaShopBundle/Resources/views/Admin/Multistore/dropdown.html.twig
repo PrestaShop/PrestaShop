@@ -10,57 +10,28 @@
 
     <div class="multistore-dropdown-content js-multistore-scrollbar">
       <ul class="multistore-dropdown-group">
+        {% for group in groupList %}
         <li class="multistore-dropdown-group-item">
-          <a class="multistore-dropdown-group-name" href="#">Group 1</a>
+          <a class="multistore-dropdown-group-name" href="{{ app.request.requestURI ~ '&setShopContext=g-' ~ group.id }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
 
           <ul class="multistore-dropdown-shops">
-            <li class="multistore-dropdown-shop">
-              <a class="multistore-dropdown-shop-name" href="#">Shop name number one</a>
-              <p class="multistore-dropdown-shop-status">
-                {{ "Inherited"|trans({}, 'Admin.Shop') }}
-              </p>
-            </li>
-            <li class="multistore-dropdown-shop">
-              <a class="multistore-dropdown-shop-name" href="#">Shop name number two</a>
-              <p class="multistore-dropdown-shop-status">
-                {{ "Inherited"|trans({}, 'Admin.Shop') }}
-              </p>
-            </li>
-            <li class="multistore-dropdown-shop">
-              <a class="multistore-dropdown-shop-name" href="#">Shop name number three</a>
-              <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
-                <i class="material-icons">https</i>
-                {{ "Customized"|trans({}, 'Admin.Shop') }}
-              </p>
-            </li>
+            {% for shop in group.shops %}
+              <li class="multistore-dropdown-shop">
+                <a class="multistore-dropdown-shop-name" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>
+                {% if shop.isOveridden == true %}
+                  <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
+                    <i class="material-icons">https</i>
+                    {{ "Customized"|trans({}, 'Admin.Shop') }}
+                {% else %}
+                  <p class="multistore-dropdown-shop-status">
+                    {{ "Inherited"|trans({}, 'Admin.Shop') }}
+                {% endif %}
+                  </p>
+              </li>
+            {% endfor %}
           </ul>
         </li>
-
-        <li class="multistore-dropdown-group-item">
-          <a class="multistore-dropdown-group-name" href="#">Group 2</a>
-
-          <ul class="multistore-dropdown-shops">
-            <li class="multistore-dropdown-shop">
-              <a class="multistore-dropdown-shop-name" href="#">Shop name number one</a>
-              <p class="multistore-dropdown-shop-status">
-                {{ "Inherited"|trans({}, 'Admin.Shop') }}
-              </p>
-            </li>
-            <li class="multistore-dropdown-shop">
-              <a class="multistore-dropdown-shop-name" href="#">Shop name number two</a>
-              <p class="multistore-dropdown-shop-status">
-                {{ "Inherited"|trans({}, 'Admin.Shop') }}
-              </p>
-            </li>
-            <li class="multistore-dropdown-shop">
-              <a class="multistore-dropdown-shop-name" href="#">Shop name number three</a>
-              <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
-                <i class="material-icons">https</i>
-                {{ "Customized"|trans({}, 'Admin.Shop') }}
-              </p>
-            </li>
-          </ul>
-        </li>
+        {% endfor %}
       </ul>
     </div>
   </div>
