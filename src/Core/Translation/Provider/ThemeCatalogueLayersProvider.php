@@ -27,12 +27,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Provider;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Translation\Exception\InvalidThemeException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopException;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -183,10 +184,10 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
         try {
             $theme = $this->themeRepository->getInstanceByName($this->themeName);
             if (!$theme instanceof Theme) {
-                throw new PrestaShopException();
+                throw new InvalidThemeException();
             }
             $this->theme = $theme;
-        } catch (PrestaShopException $e) {
+        } catch (Exception $e) {
             throw new RuntimeException(sprintf('The theme "%s" doesn\'t exist', $this->themeName), 0, $e);
         }
     }
