@@ -3,8 +3,11 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
+const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
+const dashboardPage = require('@pages/BO/dashboard');
+const searchPage = require('@pages/BO/shopParameters/search');
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
@@ -35,6 +38,26 @@ describe('Search product', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
+
+  it('should go to \'Shop parameters > Search\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
+
+    await dashboardPage.goToSubMenu(page, dashboardPage.shopParametersParentLink, dashboardPage.searchLink);
+
+    const pageTitle = await searchPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(searchPage.pageTitle);
+  });
+
+  it('disable fuzzy search', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'DisableFuzzySearch', baseContext);
+
+    const result = await searchPage.setFuzzySearch(page, false);
+    await expect(result).to.contains(searchPage.successfulUpdateMessage);
+  });
+
   it('should go to FO home page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
@@ -47,7 +70,7 @@ describe('Search product', async () => {
   it('should search product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await homePage.searchProduct(page, Products.demo_8.name);
+    await homePage.searchProduct(page, Products.demo_3.name);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
