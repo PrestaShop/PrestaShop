@@ -30,7 +30,6 @@
       </div>
       <div class="dz-message"></div>
     </div>
-    
 
     <dropzone-window class="dropzone-window" v-if="selectedFiles.length > 0" :selectedFiles="selectedFiles" :dropzone="dropzone" @unselectAll="unselectAll" @removeSelection="removeSelection" @selectAll="selectAll" :files="files" />
 
@@ -63,6 +62,7 @@
 
 <script>
   import DropzoneWindow from './DropzoneWindow'
+  import Router from "@components/router";
 
   export default {
     name: 'Dropzone',
@@ -72,7 +72,7 @@
         configuration: {
           url: '#',
           clickable: '.openfilemanager',
-          previewTemplate: null 
+          previewTemplate: null
         },
         files: [],
         selectedFiles: [],
@@ -85,6 +85,10 @@
     computed: {
     },
     mounted() {
+      const router = new Router();
+      // @todo: seems to be enough to configure the post URL, but upload response needs to be handled (especially in case of error)
+      // we also could fet the full list of images on upload and refresh the list
+      this.configuration.url = router.generate('admin_products_v2_add_image', {productId: 20});
       this.configuration.previewTemplate = document.querySelector('.dz-template').innerHTML;
       this.dropzone = new window.Dropzone(".dropzone-container", this.configuration);
 
@@ -104,7 +108,7 @@
           }
         })
 
-        this.files.push(file); 
+        this.files.push(file);
       })
     },
     methods: {
