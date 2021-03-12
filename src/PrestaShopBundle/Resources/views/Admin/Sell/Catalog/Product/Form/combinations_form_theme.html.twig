@@ -23,13 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{%- block combinations_row -%}
+{%- block combination_list_row -%}
   <div {{ block('widget_attributes') }}>
     {{- block('form_rows') -}}
   </div>
-{%- endblock combinations_row -%}
+{%- endblock -%}
 
-{%- block listed_combination_row -%}
+{%- block combination_item_row -%}
   <tr>
     <td>
       {{ form_widget(form.is_selected) }}
@@ -57,7 +57,7 @@
       {{ form_widget(form.delete) }}
     </td>
   </tr>
-{%- endblock listed_combination_row -%}
+{%- endblock -%}
 
 {%- block collection_row -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
@@ -77,4 +77,4 @@
     {{- block('form_rows') -}}
     </tbody>
   </table>
-{%- endblock collection_row -%}
+{%- endblock -%}

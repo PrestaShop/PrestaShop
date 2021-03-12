@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class CombinationsType extends TranslatorAwareType
+class CombinationListType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -40,8 +40,8 @@ class CombinationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('combinations_list', CollectionType::class, [
-                'entry_type' => ListedCombinationType::class,
+            ->add('combinations', CollectionType::class, [
+                'entry_type' => CombinationItemType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype_name' => '__COMBINATION_INDEX__',

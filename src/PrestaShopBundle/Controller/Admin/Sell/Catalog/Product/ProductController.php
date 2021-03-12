@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAsso
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
@@ -160,7 +160,7 @@ class ProductController extends FrameworkBundleAdminController
             //@todo: hardcoded. Make configurable?
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => self::DEFAULT_COMBINATIONS_NUMBER,
-            'combinationsForm' => $this->createForm(CombinationsType::class)->createView(),
+            'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
         ]);
     }
 

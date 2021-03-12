@@ -1409,15 +1409,15 @@ services:
             - '@form.form_cloner'
         public: true
 
-    form.type.sell.product.combinations_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType'
+    form.type.sell.product.combination_list_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
-    form.type.sell.product.listed_combination_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\ListedCombinationType'
+    form.type.sell.product.combination_item_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
         public: true
         tags:
             - { name: form.type }

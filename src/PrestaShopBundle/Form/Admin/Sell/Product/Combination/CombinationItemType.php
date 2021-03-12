@@ -36,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ListedCombinationType extends AbstractType
+class CombinationItemType extends AbstractType
 {
     /**
      * {@inheritdoc}
