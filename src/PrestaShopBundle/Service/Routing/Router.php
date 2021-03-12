@@ -98,8 +98,8 @@ class Router extends BaseRouter
 
         $url = $baseUrl . '?' . http_build_query($queryParams, '', '&');
         if (isset($components['fragment']) && $components['fragment'] !== '') {
-            /** This copy-paste from Symfony's UrlGenerator */
-            $url .= '#'.strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
+            /* This copy-paste from Symfony's UrlGenerator */
+            $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
         }
 
         return $url;
