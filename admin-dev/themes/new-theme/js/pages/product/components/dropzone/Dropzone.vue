@@ -64,7 +64,7 @@
   import DropzoneWindow from './DropzoneWindow'
   import Router from "@components/router";
 
-  const {$} = window;
+  const router = new Router();
 
   export default {
     name: 'Dropzone',
@@ -72,7 +72,9 @@
       return {
         dropzone: null,
         configuration: {
-          url: '#',
+          // @todo: seems to be enough to configure the post URL, but upload response needs to be handled (especially in case of error)
+          // we also could fet the full list of images on upload and refresh the list
+          url: router.generate('admin_products_v2_add_image', {productId: this.productId}),
           clickable: '.openfilemanager',
           previewTemplate: null
         },
@@ -93,31 +95,22 @@
     computed: {
     },
     mounted() {
-      const router = new Router();
-      // @todo: seems to be enough to configure the post URL, but upload response needs to be handled (especially in case of error)
-      // we also could fet the full list of images on upload and refresh the list
-      this.configuration.url = router.generate('admin_products_v2_add_image', {productId: this.productId});
       this.configuration.previewTemplate = document.querySelector('.dz-template').innerHTML;
 
       this.initProductImages();
     },
     methods: {
       async initProductImages() {
-        const router = new Router();
         const imagesUrl = router.generate('admin_products_v2_get_images', {productId: this.productId});
 
         const response = await fetch(imagesUrl);
-        const images = await response.json();
-        const container = $('#product-images-dropzone');
-        images.forEach((image) => {
-          const preview = $(this.configuration.previewTemplate);
-          preview.removeClass('dz-file-preview');
-          preview.addClass('dz-processing dz-image-preview dz-success dz-complete');
-          preview.find('img').first().prop('src', image.path);
-          container.append(preview);
-        });
 
         this.initDropZone();
+
+        const images = await response.json();
+        images.forEach((image) => {
+          this.dropzone.displayExistingFile(image, image.path);
+        });
       },
       initDropZone() {
         this.dropzone = new window.Dropzone(".dropzone-container", this.configuration);
