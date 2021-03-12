@@ -24,34 +24,62 @@
  *-->
 <template>
   <div id="product-images-container">
-    <div id="product-images-dropzone" class="dropzone dropzone-container">
+    <div
+      id="product-images-dropzone"
+      class="dropzone dropzone-container"
+    >
       <div class="dz-preview openfilemanager">
         <div><span><i class="material-icons">add_a_photo</i></span></div>
       </div>
-      <div class="dz-message"></div>
+      <div class="dz-message" />
     </div>
 
-    <dropzone-window class="dropzone-window" v-if="selectedFiles.length > 0" :selectedFiles="selectedFiles" :dropzone="dropzone" @unselectAll="unselectAll" @removeSelection="removeSelection" @selectAll="selectAll" :files="files" />
+    <dropzone-window
+      class="dropzone-window"
+      v-if="selectedFiles.length > 0"
+      :selected-files="selectedFiles"
+      :dropzone="dropzone"
+      @unselectAll="unselectAll"
+      @removeSelection="removeSelection"
+      @selectAll="selectAll"
+      :files="files"
+    />
 
     <div class="dz-template d-none">
       <div class="dz-preview dz-file-preview">
         <div class="dz-image">
-          <img data-dz-thumbnail />
+          <img data-dz-thumbnail>
         </div>
         <div class="dz-details">
-          <div class="dz-filename"><span data-dz-name></span></div>
-          <div class="dz-size" data-dz-size></div>
+          <div class="dz-filename">
+            <span data-dz-name />
+          </div>
+          <div
+            class="dz-size"
+            data-dz-size
+          />
         </div>
-        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-        <div class="dz-success-mark"><span>✔</span></div>
-        <div class="dz-error-mark"><span>✘</span></div>
-        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+        <div class="dz-progress">
+          <span
+            class="dz-upload"
+            data-dz-uploadprogress
+          />
+        </div>
+        <div class="dz-success-mark">
+          <span>✔</span>
+        </div>
+        <div class="dz-error-mark">
+          <span>✘</span>
+        </div>
+        <div class="dz-error-message">
+          <span data-dz-errormessage />
+        </div>
         <div class="dz-hover">
           <i class="material-icons drag-indicator">drag_indicator</i>
           <div class="md-checkbox">
             <label>
-              <input type="checkbox"/>
-              <i class="md-checkbox-control"></i>
+              <input type="checkbox">
+              <i class="md-checkbox-control" />
             </label>
           </div>
         </div>
@@ -61,8 +89,8 @@
 </template>
 
 <script>
-  import DropzoneWindow from './DropzoneWindow'
-  import Router from "@components/router";
+  import Router from '@components/router';
+  import DropzoneWindow from './DropzoneWindow';
 
   const router = new Router();
 
@@ -72,25 +100,23 @@
       return {
         dropzone: null,
         configuration: {
-          // @todo: seems to be enough to configure the post URL, but upload response needs to be handled (especially in case of error)
-          // we also could fet the full list of images on upload and refresh the list
           url: router.generate('admin_products_v2_add_image', {productId: this.productId}),
           clickable: '.openfilemanager',
-          previewTemplate: null
+          previewTemplate: null,
         },
         files: [],
         selectedFiles: [],
-        translations: []
-      }
+        translations: [],
+      };
     },
     props: {
       productId: {
         type: String,
         required: true,
-      }
+      },
     },
     components: {
-      DropzoneWindow
+      DropzoneWindow,
     },
     computed: {
     },
@@ -113,51 +139,51 @@
         });
       },
       initDropZone() {
-        this.dropzone = new window.Dropzone(".dropzone-container", this.configuration);
+        this.dropzone = new window.Dropzone('.dropzone-container', this.configuration);
 
-        this.dropzone.on('addedfile', file => {
+        this.dropzone.on('addedfile', (file) => {
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector('.md-checkbox input');
             input.checked = !input.checked;
 
-            if(input.checked) {
-              if(!this.selectedFiles.includes(file)) {
+            if (input.checked) {
+              if (!this.selectedFiles.includes(file)) {
                 this.selectedFiles.push(file);
                 file.previewElement.classList.toggle('selected');
               }
-            }else {
-              this.selectedFiles = this.selectedFiles.filter(e => e !== file);
+            } else {
+              this.selectedFiles = this.selectedFiles.filter((e) => e !== file);
               file.previewElement.classList.toggle('selected');
             }
-          })
+          });
 
           this.files.push(file);
-        })
+        });
       },
       selectAll() {
         this.selectedFiles = this.files;
 
-        this.selectedFiles.forEach(file => {
+        this.selectedFiles.forEach((file) => {
           const input = file.previewElement.querySelector('.md-checkbox input');
           input.checked = true;
           file.previewElement.classList.add('selected');
-        })
+        });
       },
       unselectAll() {
-        this.selectedFiles.forEach(file => {
+        this.selectedFiles.forEach((file) => {
           const input = file.previewElement.querySelector('.md-checkbox input');
           input.checked = !input.checked;
           file.previewElement.classList.toggle('selected');
-        })
+        });
 
         this.selectedFiles = [];
       },
       removeSelection() {
-        this.selectedFiles.forEach(file => {
+        this.selectedFiles.forEach((file) => {
           this.dropzone.removeFile(file);
 
-          this.files = this.files.filter(e => file !== e);
-        })
+          this.files = this.files.filter((e) => file !== e);
+        });
 
         this.selectedFiles = [];
       },

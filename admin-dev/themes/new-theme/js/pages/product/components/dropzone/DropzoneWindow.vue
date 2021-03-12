@@ -27,23 +27,44 @@
     <div class="dropzone-window-header">
       <div class="dropzone-window-header-left">
         <p class="dropzone-window-number">
-          <span>{{selectedFiles.length}} selected files</span> 
+          <span>{{ selectedFiles.length }} selected files</span>
         </p>
       </div>
       <div class="dropzone-window-header-right">
         <i class="material-icons">search</i>
-        <i class="material-icons" @click="$emit('removeSelection')">delete</i>
-        <i class="material-icons" @click="$emit('unselectAll')">close</i>
+        <i
+          class="material-icons"
+          @click="$emit('removeSelection')"
+        >delete</i>
+        <i
+          class="material-icons"
+          @click="$emit('unselectAll')"
+        >close</i>
       </div>
     </div>
 
-    <p class="dropzone-window-select" @click="$emit('selectAll')" v-if="files.length > 0 && selectedFiles.length !== files.length">Select all</p>
-    <p class="dropzone-window-unselect" v-if="selectedFiles.length === files.length" @click="$emit('unselectAll')">Unselect all</p>
+    <p
+      class="dropzone-window-select"
+      @click="$emit('selectAll')"
+      v-if="files.length > 0 && selectedFiles.length !== files.length"
+    >
+      Select all
+    </p>
+    <p
+      class="dropzone-window-unselect"
+      v-if="selectedFiles.length === files.length"
+      @click="$emit('unselectAll')"
+    >
+      Unselect all
+    </p>
 
-    <div class="md-checkbox" v-if="selectedFiles.length === 1">
+    <div
+      class="md-checkbox"
+      v-if="selectedFiles.length === 1"
+    >
       <label>
-        <input type="checkbox"/>
-        <i class="md-checkbox-control"></i>
+        <input type="checkbox">
+        <i class="md-checkbox-control" />
         Use as cover image
       </label>
     </div>
@@ -56,12 +77,12 @@
     props: {
       selectedFiles: {
         type: Array,
-        default: () => []
+        default: () => [],
       },
       files: {
         type: Array,
-        default: () => []
-      }
+        default: () => [],
+      },
     },
     mounted() {
     },
@@ -85,5 +106,5 @@
         align-items: center;
       }
     }
-  } 
+  }
 </style>

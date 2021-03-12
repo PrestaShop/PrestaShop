@@ -42,7 +42,7 @@ $(() => {
     'TinyMCEEditor',
     'TranslatableInput',
     'EventEmitter',
-    'TextWithLengthCounter'
+    'TextWithLengthCounter',
   ]);
 
   const $productForm = $(ProductMap.productForm);
@@ -76,9 +76,9 @@ $(() => {
       watchedDescription: '.serp-watched-description',
       watchedMetaUrl: '.serp-watched-url:input',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector
+      multiLanguageItem: translatorInput.localeItemSelector,
     },
-    $('#product_preview').data('seo-url')
+    $('#product_preview').data('seo-url'),
   );
 
   initDropzone(productId);
