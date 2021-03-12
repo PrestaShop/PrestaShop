@@ -173,7 +173,6 @@ abstract class GridControllerTestCase extends WebTestCase
         $crawler = $this->client->request('GET', $createEntityUrl);
 
         $submitButton = $crawler->selectButton($this->saveButtonId);
-
         $entityForm = $submitButton->form();
 
         $entityForm = $this->formFiller->fillForm($entityForm, $this->getCreateEntityFormModifications());
