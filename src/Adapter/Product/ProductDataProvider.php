@@ -165,6 +165,8 @@ class ProductDataProvider
     }
 
     /**
+     * @todo Should be replaced by another more recent service
+     *
      * Gets price with tax.
      *
      * @param int $productId
