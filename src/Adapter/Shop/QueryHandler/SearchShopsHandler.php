@@ -70,23 +70,26 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
         $searchTerm = $query->getSearchTerm();
         $shopGroupList = $this->shopGroupRepository->findBySearchTerm($searchTerm);
         $shopList = $this->shopRepository->findBySearchTerm($searchTerm);
+        $result = [];
 
-        $result = array_map(function (array $shopGroup) {
-            return new FoundShopGroup(
-                $shopGroup['id'],
-                $shopGroup['color'] ?? '',
-                $shopGroup['name']
-            );
-        }, $shopGroupList);
+        foreach ($shopGroupList as $shopGroup) {
+            if (!$shopGroup->getShops()->isEmpty()) {
+                $result[] = new FoundShopGroup(
+                    $shopGroup->getId(),
+                    $shopGroup->getColor() ?? '',
+                    $shopGroup->getName()
+                );
+            }
+        }
 
         foreach ($shopList as $shop) {
             $result[] = new FoundShop(
-                $shop['id'],
-                $shop['color'] ?? '',
-                $shop['name'],
-                $shop['shopGroup']['id'],
-                $shop['shopGroup']['name'],
-                $shop['shopGroup']['color']
+                $shop->getId(),
+                $shop->getColor() ?? '',
+                $shop->getName(),
+                $shop->getShopGroup()->getId(),
+                $shop->getShopGroup()->getName(),
+                $shop->getShopGroup()->getColor()
             );
         }
 
