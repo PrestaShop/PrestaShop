@@ -21,7 +21,7 @@ const baseContext = 'functional_FO_search_searchProduct';
 
 let browserContext;
 let page;
-const productName = 'Hugbird printed sweater';
+const productName = 'Hummingbird';
 
 /*
 Go to FO
@@ -66,6 +66,14 @@ describe('Search product', async () => {
 
     const isHomePage = await homePage.isHomePage(page);
     await expect(isHomePage).to.be.true;
+  });
+
+  it('should search product and check the autocomplete list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
+
+    const result = await homePage.getAutocompleteSearchResult(page, productName);
+    //expect (result)
+    console.log(result);
   });
 
   it('should search product', async function () {
