@@ -27,7 +27,7 @@
     <div class="dropzone-window-header">
       <div class="dropzone-window-header-left">
         <p class="dropzone-window-number">
-          <span>{{ selectedFiles.length }} selected files</span>
+          <span>{{ selectedFiles.length }} {{ $t('window.selectedFiles') }}</span>
         </p>
       </div>
       <div class="dropzone-window-header-right">
@@ -55,7 +55,7 @@
       v-if="selectedFiles.length === files.length"
       @click="$emit('unselectAll')"
     >
-      Unselect all
+      {{ $t('window.unselectAll') }}
     </p>
 
     <div
@@ -65,7 +65,7 @@
       <label>
         <input type="checkbox">
         <i class="md-checkbox-control" />
-        Use as cover image
+        {{ $t('window.useAsCover') }}
       </label>
     </div>
   </div>
