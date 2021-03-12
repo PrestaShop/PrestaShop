@@ -22,6 +22,8 @@ const baseContext = 'functional_FO_search_searchProduct';
 let browserContext;
 let page;
 const productName = 'Hummingbird';
+const searchResult = 'Men > Hummingbird printed t-shirtHome Accessories > Hummingbird cushionWomen > '
+  + 'Hummingbird printed sweaterArt > Hummingbird - Vector graphicsStationery > Hummingbird notebook';
 
 /*
 Go to FO
@@ -72,8 +74,7 @@ describe('Search product', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
 
     const result = await homePage.getAutocompleteSearchResult(page, productName);
-    //expect (result)
-    console.log(result);
+    await expect(result, 'Search result is incorrect!').to.be.equal(searchResult);
   });
 
   it('should search product', async function () {
@@ -89,6 +90,6 @@ describe('Search product', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductNumber', baseContext);
 
     const resultNumber = await searchResultsPage.getSearchResultsNumber(page);
-    await expect(resultNumber, 'Product number is incorrect!').to.be.equal(1);
+    await expect(resultNumber, 'Product number is incorrect!').to.be.equal(5);
   });
 });
