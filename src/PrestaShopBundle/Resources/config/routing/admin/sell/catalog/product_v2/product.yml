@@ -18,24 +18,6 @@ admin_products_search:
         redirectRoute: admin_products_v2_index
         _legacy_controller: AdminProducts
 
-admin_product_edit_price:
-    path: /{productId}/edit-price
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:editPrice
-        _legacy_controller: AdminProducts
-    requirements:
-        productId: \d+
-
-admin_product_edit_quantity:
-    path: /{productId}/edit-quantity
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:editQuantity
-        _legacy_controller: AdminProducts
-    requirements:
-        productId: \d+
-
 admin_products_v2_create:
   path: /create
   methods: [GET, POST]
