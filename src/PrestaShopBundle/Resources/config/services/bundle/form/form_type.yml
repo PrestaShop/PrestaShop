@@ -1410,14 +1410,14 @@ services:
         public: true
 
     form.type.sell.product.combinations_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CombinationsType'
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
     form.type.sell.product.listed_combination_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ListedCombinationType'
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\ListedCombinationType'
         public: true
         tags:
             - { name: form.type }

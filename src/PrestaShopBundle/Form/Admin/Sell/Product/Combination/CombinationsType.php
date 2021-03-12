@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
