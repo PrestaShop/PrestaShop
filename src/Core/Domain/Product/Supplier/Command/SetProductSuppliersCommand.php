@@ -56,7 +56,7 @@ class SetProductSuppliersCommand
 
     /**
      * @param int $productId
-     * @param array<string, mixed> $productSuppliers
+     * @param array<int, array<string, mixed>> $productSuppliers
      * @param int $defaultSupplierId
      *
      * @see SetProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
@@ -94,7 +94,7 @@ class SetProductSuppliersCommand
     }
 
     /**
-     * @param array[] $productSuppliers
+     * @param array<int, array<string, mixed>> $productSuppliers
      */
     private function setProductSuppliers(array $productSuppliers): void
     {

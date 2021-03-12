@@ -1409,6 +1409,19 @@ services:
             - '@form.form_cloner'
         public: true
 
+    form.type.sell.product.combination_list_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.combination_item_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
+        public: true
+        tags:
+            - { name: form.type }
+
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
       parent: 'form.type.translatable.aware'
