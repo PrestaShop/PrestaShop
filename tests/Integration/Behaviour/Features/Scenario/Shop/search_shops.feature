@@ -13,6 +13,7 @@ Feature: Search shops given a search term (BO)
 
   Scenario: I search for existing shops and shop groups
     Given I add a shop group "shopGroup2" with name "test_second_shop_group" and color "green"
+    Given I add a shop group "shopGroup3" with name "empty_shop_group" and color "blue"
     And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "test_second_shop_group"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     When I search for the term "test" I should get the following results:
@@ -33,5 +34,6 @@ Feature: Search shops given a search term (BO)
     When I search for the term "second_shop_group" I should get the following results:
       | name                    | group_name      | color | group_color | is_shop_group |
       | test_second_shop_group  |                 | green |             | true          |
+    When I search for the term "empty_shop_group" I should not get any results
     When I search for the term "doesnt_exist" I should not get any results
     When I search for the term " " I should get a SearchShopException

@@ -50,6 +50,6 @@ class ShopGroupRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere('LOWER(sg.name) LIKE :searchTerm')
             ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%');
 
-        return $qb->getQuery()->getArrayResult();
+        return $qb->getQuery()->getResult();
     }
 }
