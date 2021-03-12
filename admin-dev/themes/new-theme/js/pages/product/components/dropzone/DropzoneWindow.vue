@@ -24,20 +24,29 @@
  *-->
 <template>
   <div class="dropzone-window">
-    <div class="dropzone-window-header">
+    <div class="dropzone-window-header row">
       <div class="dropzone-window-header-left">
         <p class="dropzone-window-number">
           <span>{{ selectedFiles.length }} {{ $t('window.selectedFiles') }}</span>
         </p>
       </div>
       <div class="dropzone-window-header-right">
-        <i class="material-icons">search</i>
         <i
           class="material-icons"
+
+          data-toggle="pstooltip"
+          :data-original-title="$t('window.zoom')"
+        >search</i>
+        <i
+          class="material-icons"
+          data-toggle="pstooltip"
+          :data-original-title="$t('window.delete')"
           @click="$emit('removeSelection')"
         >delete</i>
         <i
           class="material-icons"
+          data-toggle="pstooltip"
+          :data-original-title="$t('window.close')"
           @click="$emit('unselectAll')"
         >close</i>
       </div>
@@ -68,6 +77,20 @@
         {{ $t('window.useAsCover') }}
       </label>
     </div>
+
+    <label
+      for="caption-textarea"
+      class="control-label"
+    >{{ $t('Caption') }}</label>
+    <textarea
+      id="caption-textarea"
+      name="caption-textarea"
+      class="form-control"
+    />
+
+    <button class="btn btn-primary save-image-settings">
+      {{ $t('window.saveImage') }}
+    </button>
   </div>
 </template>
 
@@ -85,6 +108,7 @@
       },
     },
     mounted() {
+      window.prestaShopUiKit.initToolTips();
     },
     methods: {
     },
@@ -104,6 +128,21 @@
       &-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
+
+        p {
+          margin-bottom: 0;
+        }
+
+        .material-icons {
+          cursor: pointer;
+          color: $gray-500;
+          transition: .25s ease-out;
+
+          &:hover {
+            color: primary;
+          }
+        }
       }
     }
   }

@@ -34,15 +34,19 @@
           {
             'window.selectAll': 'Select all'|trans({}, 'Admin.Catalog.Feature'),
             'window.unselectAll': 'Unselect all'|trans({}, 'Admin.Catalog.Feature'),
-            'window.selectedFiles': '%nb_files% selected files'|trans({}, 'Admin.Catalog.Feature'),
+            'window.selectedFiles': 'selected files'|trans({}, 'Admin.Catalog.Feature'),
             'window.useAsCover': 'Use as cover image'|trans({}, 'Admin.Catalog.Feature'),
-            "Delete": "Delete"|trans({}, 'Admin.Actions'),
+            'window.saveImage': 'Save image settings'|trans({}, 'Admin.Catalog.Feature'),
+            "window.delete": "Delete selection"|trans({}, 'Admin.Actions'),
+            "window.close": "Close window"|trans({}, 'Admin.Actions'),
+            "window.zoom": "Zoom on selection"|trans({}, 'Admin.Actions'),
             "ToLargeFile": "The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB."|trans({}, 'Admin.Notifications.Error')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
             "Drop images here": "Drop images here"|trans({}, 'Admin.Catalog.Feature'),
             "or select files": "or select files"|trans({}, 'Admin.Catalog.Feature'),
             "files recommandations": "Recommended size 800 x 800px for default theme."|trans({}, 'Admin.Catalog.Feature'),
             "files recommandations2": "JPG, GIF or PNG format."|trans({}, 'Admin.Catalog.Feature'),
             "Cover": "Cover"|trans({}, 'Admin.Catalog.Feature'),
+            "Caption": "Caption"|trans({}, 'Admin.Catalog.Feature'),
           }|json_encode
         }}" 
       >

@@ -50,15 +50,6 @@
         <div class="dz-image">
           <img data-dz-thumbnail>
         </div>
-        <div class="dz-details">
-          <div class="dz-filename">
-            <span data-dz-name />
-          </div>
-          <div
-            class="dz-size"
-            data-dz-size
-          />
-        </div>
         <div class="dz-progress">
           <span
             class="dz-upload"
