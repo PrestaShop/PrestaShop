@@ -2,6 +2,31 @@ _combinations:
     resource: 'combination.yml'
     prefix: /products/
 
+admin_products_v2_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:index
+    _legacy_controller: AdminProducts
+
+admin_cart_rules_search_grid:
+    path: /
+    methods: POST
+    defaults:
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.cart_rule
+        redirectRoute: admin_products_v2_index
+        _legacy_controller: AdminProducts
+
+admin_product_edit_price:
+    path: /{productId}/edit-price
+    methods: GET
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:editPrice
+        _legacy_controller: AdminProducts
+    requirements:
+        productId: \d+
+
 admin_products_v2_create:
   path: /create
   methods: [GET, POST]
