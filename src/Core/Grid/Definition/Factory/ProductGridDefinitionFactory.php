@@ -147,9 +147,10 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_excluded',
-                        'route' => 'admin_product_edit_price',
-                        'route_param_name' => 'productId',
+                        'route' => 'admin_product_form',
+                        'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
+                        'fragment' => 'tab-step2'
                     ])
             )
             ->add(
@@ -158,9 +159,10 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'price_tax_included',
                         'sortable' => false,
-                        'route' => 'admin_product_edit_price',
-                        'route_param_name' => 'productId',
+                        'route' => 'admin_product_form',
+                        'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
+                        'fragment' => 'tab-step2'
                     ])
             )
             ->add(
@@ -229,9 +231,10 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
-                        'route' => 'admin_product_edit_quantity',
-                        'route_param_name' => 'productId',
+                        'route' => 'admin_product_form',
+                        'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
+                        'fragment' => 'tab-step3'
                     ])
             );
         }
