@@ -216,7 +216,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getCondition()
     {
-        if (empty($this->product['show_condition'])) {
+        if ($this->product['show_condition'] = '0') {
             return false;
         }
 
