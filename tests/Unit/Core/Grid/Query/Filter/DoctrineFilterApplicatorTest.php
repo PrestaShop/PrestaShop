@@ -114,28 +114,4 @@ class DoctrineFilterApplicatorTest extends TestCase
         $wherePart = $queryBuilder->getQueryPart('where');
         self::assertSame('ps.`price` <= :price_tax_excluded_max', (string) $wherePart);
     }
-
-    /** Tests min max price filter when min and max are equal */
-    public function testMinMaxPriceFilterBothEqual(): void
-    {
-        $priceMinMaxFilters = new SqlFilters();
-        $priceMinMaxFilters->addFilter(
-            'price_tax_excluded',
-            'ps.`price`',
-            5
-        );
-
-        $filterValues = [
-            'price_tax_excluded' => [
-                'min_field' => '10',
-                'max_field' => '10',
-            ],
-        ];
-
-        $queryBuilder = new QueryBuilder($this->createMock(Connection::class));
-
-        $this->doctrineFilterApplicator->apply($queryBuilder, $priceMinMaxFilters, $filterValues);
-        $wherePart = $queryBuilder->getQueryPart('where');
-        self::assertSame('ps.`price` = :price_tax_excluded', (string) $wherePart);
-    }
 }
