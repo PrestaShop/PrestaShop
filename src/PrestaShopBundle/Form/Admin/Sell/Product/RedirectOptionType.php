@@ -145,7 +145,8 @@ class RedirectOptionType extends TranslatorAwareType
             $form = $event->getForm();
             $targetField = $form->get('target');
             $targetOptions = $targetField->getConfig()->getOptions();
-            switch ($data['type']) {
+            $dataType = $data['type'] ?? RedirectType::TYPE_NOT_FOUND;
+            switch ($dataType) {
                 case RedirectType::TYPE_CATEGORY_PERMANENT:
                 case RedirectType::TYPE_CATEGORY_TEMPORARY:
                     $dataEntity = 'category';
