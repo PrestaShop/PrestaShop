@@ -163,18 +163,10 @@
       selectAll() {
         this.selectedFiles = this.files;
 
-        this.selectedFiles.forEach((file) => {
-          const input = file.previewElement.querySelector('.md-checkbox input');
-          input.checked = true;
-          file.previewElement.classList.add('selected');
-        });
+        this.editCheckboxes(true);
       },
       unselectAll() {
-        this.selectedFiles.forEach((file) => {
-          const input = file.previewElement.querySelector('.md-checkbox input');
-          input.checked = !input.checked;
-          file.previewElement.classList.toggle('selected');
-        });
+        this.editCheckboxes(false);
 
         this.selectedFiles = [];
       },
@@ -186,6 +178,14 @@
         });
 
         this.selectedFiles = [];
+      },
+      editCheckboxes(checked) {
+        this.selectedFiles.forEach((file) => {
+          const input = file.previewElement.querySelector('.md-checkbox input');
+          input.checked = typeof checked !== 'undefined' ? checked : !input.checked;
+
+          file.previewElement.classList.toggle('selected', checked);
+        });
       },
     },
   };
