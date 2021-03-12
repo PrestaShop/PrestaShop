@@ -26,15 +26,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
+namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 
+use Currency;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 
 /**
- * Gets modified data for product grid.
+ * Decorates original grid data and returns modified prices for grid display as well as calculated price with taxes.
  */
 final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
 {
@@ -44,26 +49,56 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     private $productGridDataFactory;
 
     /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
+     * @var ProductDataProvider
+     */
+    private $productDataProvider;
+
+    /**
      * @var ImageProviderInterface
      */
     private $productImageProvider;
 
     /**
      * @param GridDataFactoryInterface $productGridDataFactory
+     * @param Repository $localeRepository
+     * @param string $contextLocale
+     * @param int $defaultCurrencyId
+     * @param ProductDataProvider $productDataProvider
      * @param ImageProviderInterface $productImageProvider
      */
     public function __construct(
         GridDataFactoryInterface $productGridDataFactory,
+        Repository $localeRepository,
+        string $contextLocale,
+        int $defaultCurrencyId,
+        ProductDataProvider $productDataProvider,
         ImageProviderInterface $productImageProvider
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
+
+        $this->locale = $localeRepository->getLocale(
+            $contextLocale
+        );
+
+        $this->defaultCurrencyId = $defaultCurrencyId;
+        $this->productDataProvider = $productDataProvider;
         $this->productImageProvider = $productImageProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function getData(SearchCriteriaInterface $searchCriteria): GridData
     {
         $productData = $this->productGridDataFactory->getData($searchCriteria);
 
@@ -87,7 +122,19 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      */
     private function applyModification(array $products): array
     {
+        $currency = new Currency($this->defaultCurrencyId);
+
         foreach ($products as $i => $product) {
+            $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
+                $products[$i]['price_tax_excluded'],
+                $currency->iso_code
+            );
+
+            $products[$i]['price_tax_included'] = $this->locale->formatPrice(
+                $this->productDataProvider->getPriceWithTax((int) $product['id_product']),
+                $currency->iso_code
+            );
+
             $products[$i]['image'] = $this->productImageProvider->getPath($product['id_image']);
         }
 
