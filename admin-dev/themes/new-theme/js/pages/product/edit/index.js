@@ -47,6 +47,24 @@ $(() => {
   );
 
   const $productForm = $(ProductMap.productForm);
+  const productId = parseInt($productForm.data('productId'), 10);
+
+  // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
+  // selected on load, but only when productId exists (edition mode)
+  if (productId) {
+    new CombinationsManager();
+  }
+  new NavbarHandler(ProductMap.navigationBar);
+
+  // Init the product/category search field for redirection target
+  const $redirectTypeInput = $(ProductMap.redirectOption.typeInput);
+  const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
+  new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
+
+  // Form has no productId data means that we are in creation mode
+  if (!productId) {
+    return;
+  }
 
   // Init Serp component to preview Search engine display
   const translatorInput = window.prestashop.instance.translatableInput;
@@ -64,24 +82,10 @@ $(() => {
     $('#product_preview').data('seo-url'),
   );
 
-  new NavbarHandler(ProductMap.navigationBar);
-
-  // Init the product/category search field for redirection target
-  const $redirectTypeInput = $(ProductMap.redirectOption.typeInput);
-  const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
-  new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
-
-  // Form has no productId data means that we are in creation mode
-  if (!$productForm.data('productId')) {
-    return;
-  }
-
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
   new ProductSuppliersManager();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
-  // @todo: avoid initializing this component if product has no combinations
-  new CombinationsManager();
 });

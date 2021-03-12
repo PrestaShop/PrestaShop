@@ -33,6 +33,7 @@ const {$} = window;
 export default class CombinationsManager {
   constructor() {
     this.$productForm = $(ProductMap.productForm);
+    this.initialized = false;
     this.init();
 
     return {};
@@ -40,14 +41,23 @@ export default class CombinationsManager {
 
   init() {
     const productId = this.getProductId();
-    const paginator = new DynamicPaginator(
+    this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
       new CombinationsService(productId),
       new CombinationsGridRenderer(),
     );
 
     // Paginate to first page when tab is shown
-    this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => paginator.paginate(1));
+    this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
+  }
+
+  firstInit() {
+    if (this.initialized) {
+      return;
+    }
+
+    this.initialized = true;
+    this.paginator.paginate(1);
   }
 
   /**
