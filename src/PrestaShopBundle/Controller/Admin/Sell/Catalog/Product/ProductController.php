@@ -88,6 +88,7 @@ class ProductController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
         ]);
     }
@@ -195,6 +196,22 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @return array
+     */
+    private function getProductToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_product_new'),
+            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
     }
 
     /**
