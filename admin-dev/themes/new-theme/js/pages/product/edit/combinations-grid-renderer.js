@@ -38,11 +38,13 @@ export default class CombinationsGridRenderer {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
     this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
+    this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.prototypeTemplate = this.$combinationsTable.data('prototype');
     this.prototypeName = this.$combinationsTable.data('prototypeName');
 
     return {
       render: (data) => this.render(data),
+      toggleLoading: (loading) => this.toggleLoading(loading),
     };
   }
 
@@ -51,6 +53,13 @@ export default class CombinationsGridRenderer {
    */
   render(data) {
     this.renderCombinations(data.combinations);
+  }
+
+  /**
+   * @param {Boolean} loading
+   */
+  toggleLoading(loading) {
+    this.$loadingSpinner.toggle(loading);
   }
 
   /**

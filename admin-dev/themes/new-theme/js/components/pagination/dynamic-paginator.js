@@ -126,6 +126,7 @@ export default class DynamicPaginator {
    * @param {Number} page
    */
   async paginate(page) {
+    this.renderer.toggleLoading(true);
     const limit = this.getLimit();
     const data = await this.dataProvider.fetch(this.calculateOffset(page, limit), limit);
     $(this.selectorsMap.jumpToPageInput).val(page);
@@ -139,6 +140,7 @@ export default class DynamicPaginator {
     this.toggleTargetAvailability(this.selectorsMap.lastPageItem, page < this.pagesCount);
 
     this.renderer.render(data);
+    this.renderer.toggleLoading(false);
   }
 
   /**

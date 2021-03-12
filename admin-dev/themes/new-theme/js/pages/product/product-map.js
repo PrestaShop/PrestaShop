@@ -74,6 +74,7 @@ export default {
     combinationsTable: '#combinations table',
     combinationsTableBody: '#combinations table tbody',
     paginationContainer: '#combinations-pagination',
+    loadingSpinner: '#productCombinationsLoading',
     tableRow: {
       combinationIdInput: (rowIndex) => `#combinations_combinations_list_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `#combinations_combinations_list_${rowIndex}_name`,

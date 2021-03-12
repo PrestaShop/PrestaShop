@@ -25,7 +25,13 @@
 {% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combinations_form_theme.html.twig' %}
 
 {% block form_product_combinations %}
-  {{ form_row(combinationsForm) }}
+  <div class="row justify-content-center" id="combinations-list">
+    <div class="spinner-product-combinations-container" id="productCombinationsLoading">
+      <div class="spinner spinner-primary"></div>
+    </div>
+    {{ form_row(combinationsForm) }}
+  </div>
+
   <div class="row justify-content-center" id="combinations-pagination">
     {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
       'limit': combinationsLimit,
