@@ -31,10 +31,9 @@ use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidFilterDataException;
 
 final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterface
 {
-    private const CASE_BOTH_FIELDS_EXIST_NOT_EQUAL = 1;
+    private const CASE_BOTH_FIELDS_EXIST = 1;
     private const CASE_ONLY_MIN_FIELD_EXISTS = 2;
     private const CASE_ONLY_MAX_FIELD_EXISTS = 3;
-    private const CASE_BOTH_FIELDS_ARE_EQUAL = 4;
 
     /**
      * {@inheritdoc}
@@ -88,15 +87,11 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
 
                     break;
                 case SqlFilters::MIN_MAX:
-                    if (!isset($value['min_field']) && !isset($value['max_field'])) {
-                        break;
-                    }
-
                     $minFieldSqlCondition = "$sqlField >= :{$filterName}_min";
                     $maxFieldSqlCondition = "$sqlField <= :{$filterName}_max";
 
                     switch ($this->computeMinMaxCase($value)) {
-                        case self::CASE_BOTH_FIELDS_EXIST_NOT_EQUAL:
+                        case self::CASE_BOTH_FIELDS_EXIST:
                             $qb->andWhere("$minFieldSqlCondition AND $maxFieldSqlCondition");
                             $qb->setParameter("{$filterName}_min", $value['min_field']);
                             $qb->setParameter("{$filterName}_max", $value['max_field']);
@@ -108,10 +103,6 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
                         case self::CASE_ONLY_MAX_FIELD_EXISTS:
                             $qb->andWhere($maxFieldSqlCondition);
                             $qb->setParameter("{$filterName}_max", $value['max_field']);
-                            break;
-                        case self::CASE_BOTH_FIELDS_ARE_EQUAL:
-                            $qb->andWhere("$sqlField = :$filterName");
-                            $qb->setParameter($filterName, $value['min_field']);
                             break;
                     }
                     break;
@@ -128,11 +119,9 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
     {
         $minFieldExists = isset($value['min_field']);
         $maxFieldExists = isset($value['max_field']);
-        $bothFieldsExist = $minFieldExists && $maxFieldExists;
-        $bothFieldsAreEqual = $bothFieldsExist && $value['min_field'] === $value['max_field'];
 
-        if ($minFieldExists && $maxFieldExists && !$bothFieldsAreEqual) {
-            return self::CASE_BOTH_FIELDS_EXIST_NOT_EQUAL;
+        if ($minFieldExists && $maxFieldExists) {
+            return self::CASE_BOTH_FIELDS_EXIST;
         }
 
         if ($minFieldExists && !$maxFieldExists) {
@@ -141,10 +130,6 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
 
         if ($maxFieldExists && !$minFieldExists) {
             return self::CASE_ONLY_MAX_FIELD_EXISTS;
-        }
-
-        if ($bothFieldsAreEqual) {
-            return self::CASE_BOTH_FIELDS_ARE_EQUAL;
         }
 
         throw new InvalidFilterDataException('Min max filter wasn\'t applied correctly');
