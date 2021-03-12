@@ -27,7 +27,7 @@ import Router from '@components/router';
 
 const {$} = window;
 
-export default class CombinationsProvider {
+export default class CombinationsService {
   /**
    * @param {Number} productId
    */

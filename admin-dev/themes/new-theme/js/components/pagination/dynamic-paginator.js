@@ -32,7 +32,7 @@ const {$} = window;
  *```
  *  $paginator new DynamicPaginator(
  *    '#foo-container',
- *    FooDataProvider,
+ *    FooDataService,
  *    FooRenderer
  *  );
  *  this.eventEmitter.on('fooEventThatShouldTriggerPagination', () => $paginator.paginate(1));
@@ -41,17 +41,17 @@ const {$} = window;
  *```
  *  $paginator new DynamicPaginator(
  *    '#foo-container',
- *    FooDataProvider,
+ *    FooDataService,
  *    FooRenderer,
  *    1
  *  );
  *```
  *  There is also a possibility to provide custom selectorsMap as 5th argument. See this.setSelectorsMap().
  *
- * Data provider must have a method fetch(offset, limit) which returns data.{any resources name} & data.total
+ * Pagination service must have a method fetch(offset, limit) which returns data.{any resources name} & data.total
  * e.g.
  * ```
- * class FooDataProvider {
+ * class FooDataService {
  *  fetch(offset, limit) {
  *    return $.get(this.router.generate('admin_products_combinations', {
  *      productId: this.productId,
@@ -69,26 +69,26 @@ const {$} = window;
  * }
  *```
  *
- * The renderer must have a method render(data) which accepts the data from DataProvider
+ * The renderer must have a method render(data) which accepts the data from PaginationService
  * and renders it depending on needs
  */
 export default class DynamicPaginator {
   /**
    * @param {String} containerSelector
-   * @param {Object} dataProvider
+   * @param {Object} paginationService
    * @param {Object} renderer
    * @param {Number|null} startingPage If provided it will load the provided page data on page load
    * @param {Object|null} selectorsMap If provided it will override css selectors used for all the actions.
    */
   constructor(
     containerSelector,
-    dataProvider,
+    paginationService,
     renderer,
     startingPage = null,
     selectorsMap = null,
   ) {
     this.$paginationContainer = $(containerSelector);
-    this.dataProvider = dataProvider;
+    this.paginationService = paginationService;
     this.renderer = renderer;
     this.setSelectorsMap(selectorsMap);
     this.init();
@@ -128,7 +128,7 @@ export default class DynamicPaginator {
   async paginate(page) {
     this.renderer.toggleLoading(true);
     const limit = this.getLimit();
-    const data = await this.dataProvider.fetch(this.calculateOffset(page, limit), limit);
+    const data = await this.paginationService.fetch(this.calculateOffset(page, limit), limit);
     $(this.selectorsMap.jumpToPageInput).val(page);
     this.countPages(data.total);
     this.refreshButtonsData(page);

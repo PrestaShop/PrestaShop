@@ -25,7 +25,7 @@
 
 import ProductMap from '@pages/product/product-map';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
-import CombinationsProvider from '@pages/product/api/combinations-provider';
+import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 const {$} = window;
@@ -42,7 +42,7 @@ export default class CombinationsManager {
     const productId = this.getProductId();
     const paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
-      new CombinationsProvider(productId),
+      new CombinationsService(productId),
       new CombinationsGridRenderer(),
     );
 
