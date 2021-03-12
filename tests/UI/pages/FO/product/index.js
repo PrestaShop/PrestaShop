@@ -200,13 +200,14 @@ class Product extends FOBasePage {
   async selectCombination(page, quantity, combination) {
     if (combination.color !== null) {
       await Promise.all([
-        this.waitForVisibleSelector(page, this.productColorInput(combination.color)),
+        this.waitForVisibleSelector(page, `${this.productColorInput(combination.color)}[checked]`),
         page.click(this.productColorInput(combination.color)),
       ]);
     }
+
     if (combination.size !== null) {
       await Promise.all([
-        this.waitForVisibleSelector(page, this.productSizeSelect),
+        page.waitForSelector(`${this.productSizeOption(combination.size)}[selected]`, {state: 'attached'}),
         this.selectByVisibleText(page, this.productSizeSelect, combination.size),
       ]);
     }
