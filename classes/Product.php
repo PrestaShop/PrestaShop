@@ -717,7 +717,7 @@ class ProductCore extends ObjectModel
             $this->price = Product::getPriceStatic((int) $this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
             $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
             $this->tags = Tag::getProductTags((int) $this->id);
-
+            $this->show_condition = $this->getShowCondition($id_product); //Temporary Solution to be removed later
             $this->loadStockData();
         }
 
@@ -726,6 +726,16 @@ class ProductCore extends ObjectModel
         }
     }
 
+    /**
+     * Temporary Solution to be removed later
+     * 
+     */
+    public function getShowCondition($id_product) {
+        $sql = 'SELECT `show_condition`
+        FROM `' . _DB_PREFIX_ . 'product`
+        WHERE `id_product` = ' . (int) $id_product;
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+    }
     /**
      * @see ObjectModel::getFieldsShop()
      *
