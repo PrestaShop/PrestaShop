@@ -28,7 +28,15 @@
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
   <div class="row">
     <div class="col-md-9 left-column">
-      <div id="product-images-container"></div>
+      <div 
+        id="product-images-container"
+        data-translations="{{
+        {
+          'window.selectAll': 'Select all'|trans({}, 'Admin.Product.Feature'),
+      }|json_encode
+        }}" 
+      >
+      </div>
       {{ form_widget(productForm.basic) }}
 
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {

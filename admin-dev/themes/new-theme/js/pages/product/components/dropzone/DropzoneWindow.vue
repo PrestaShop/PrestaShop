@@ -48,7 +48,7 @@
       @click="$emit('selectAll')"
       v-if="files.length > 0 && selectedFiles.length !== files.length"
     >
-      Select all
+      {{ $t('window.selectAll') }}
     </p>
     <p
       class="dropzone-window-unselect"

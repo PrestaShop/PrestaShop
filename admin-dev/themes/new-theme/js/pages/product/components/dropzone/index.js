@@ -23,12 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import Dropzone from './Dropzone.vue';
+
+Vue.use(VueI18n);
+
+const i18n = new VueI18n({
+  locale: 'en',
+  formatter: new ReplaceFormatter(),
+  messages: {en: JSON.parse(document.querySelector('#product-images-container').dataset.translations)},
+});
 
 export default function initDropzone(productId) {
   return new Vue({
     el: '#product-images-container',
     template: `<dropzone product-id=${productId} />`,
     components: {Dropzone},
+    i18n,
   });
 }

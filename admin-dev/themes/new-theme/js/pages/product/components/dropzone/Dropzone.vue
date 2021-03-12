@@ -126,6 +126,9 @@
       this.initProductImages();
     },
     methods: {
+      /**
+       * This methods is used to initialize product images we already have uploaded
+       */
       async initProductImages() {
         const imagesUrl = router.generate('admin_products_v2_get_images', {productId: this.productId});
 
@@ -138,6 +141,10 @@
           this.dropzone.displayExistingFile(image, image.path);
         });
       },
+      /**
+       * Method to initialize the dropzone, using the configuration's state and adding files
+       * we already have in database.
+       */
       initDropZone() {
         this.dropzone = new window.Dropzone('.dropzone-container', this.configuration);
 
@@ -160,16 +167,25 @@
           this.files.push(file);
         });
       },
+      /**
+       * Method to select every files by checking checkboxes and add files to the files state
+       */
       selectAll() {
         this.selectedFiles = this.files;
 
         this.editCheckboxes(true);
       },
+      /**
+       * Method to unselect every files by unchecking checkboxes and empty files state
+       */
       unselectAll() {
         this.editCheckboxes(false);
 
         this.selectedFiles = [];
       },
+      /**
+       * Method to remove every selected files from the dropzone
+       */
       removeSelection() {
         this.selectedFiles.forEach((file) => {
           this.dropzone.removeFile(file);
@@ -179,6 +195,9 @@
 
         this.selectedFiles = [];
       },
+      /**
+       * Method to manage checkboxes of files mainly used on selectAll and unselectAll
+       */
       editCheckboxes(checked) {
         this.selectedFiles.forEach((file) => {
           const input = file.previewElement.querySelector('.md-checkbox input');
