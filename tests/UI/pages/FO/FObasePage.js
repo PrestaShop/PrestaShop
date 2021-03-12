@@ -25,7 +25,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input';
-    this.autocompleteSearchResult = '.ui-autocomplete .product';
+    this.autocompleteSearchResult = '.ui-autocomplete';
 
     // Footer links
     // Products links selectors
