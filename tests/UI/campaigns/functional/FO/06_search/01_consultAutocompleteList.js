@@ -11,13 +11,10 @@ const searchPage = require('@pages/BO/shopParameters/search');
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
-// Import data
-const {Products} = require('@data/demo/products');
-
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_FO_search_searchProduct';
+const baseContext = 'functional_FO_search_consultAutocompleteList';
 
 let browserContext;
 let page;
@@ -26,11 +23,13 @@ const searchResult = 'Men > Hummingbird printed t-shirtHome Accessories > Hummin
   + 'Hummingbird printed sweaterArt > Hummingbird - Vector graphicsStationery > Hummingbird notebook';
 
 /*
+Disable Fuzzy search in BO
 Go to FO
-Search Product
+Search Product and check result
+Check the products number
  */
 
-describe('Search product', async () => {
+describe('Search product and consult autocomplete list', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +45,7 @@ describe('Search product', async () => {
   });
 
   it('should go to \'Shop parameters > Search\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPageToDisable', baseContext);
 
     await dashboardPage.goToSubMenu(page, dashboardPage.shopParametersParentLink, dashboardPage.searchLink);
 
@@ -54,24 +53,20 @@ describe('Search product', async () => {
     await expect(pageTitle).to.contains(searchPage.pageTitle);
   });
 
-  it('disable fuzzy search', async function () {
+  it('should disable fuzzy search', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'DisableFuzzySearch', baseContext);
 
     const result = await searchPage.setFuzzySearch(page, false);
     await expect(result).to.contains(searchPage.successfulUpdateMessage);
   });
 
-  it('should go to FO home page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+  it('should go to FO and search product to check the autocomplete list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
 
-    await homePage.goToFo(page);
+    page = await searchPage.viewMyShop(page);
 
     const isHomePage = await homePage.isHomePage(page);
     await expect(isHomePage).to.be.true;
-  });
-
-  it('should search product and check the autocomplete list', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
 
     const result = await homePage.getAutocompleteSearchResult(page, productName);
     await expect(result, 'Search result is incorrect!').to.be.equal(searchResult);
@@ -90,6 +85,15 @@ describe('Search product', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductNumber', baseContext);
 
     const resultNumber = await searchResultsPage.getSearchResultsNumber(page);
-    await expect(resultNumber, 'Product number is incorrect!').to.be.equal(5);
+    await expect(resultNumber, 'Product searched number is incorrect!').to.be.equal(5);
+
+    page = await searchResultsPage.closePage(browserContext, page, 0);
+  });
+
+  it('should enable fuzzy search', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'EnableFuzzySearch', baseContext);
+
+    const result = await searchPage.setFuzzySearch(page, true);
+    await expect(result).to.contains(searchPage.successfulUpdateMessage);
   });
 });
