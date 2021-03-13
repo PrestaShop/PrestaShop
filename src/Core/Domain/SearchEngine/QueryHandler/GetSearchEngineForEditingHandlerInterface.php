@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing;
-use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\EditableSearchEngine;
+use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\SearchEngineForEditing;
 
 /**
  * Defines contract for GetSearchEngineForEditingHandler.
@@ -39,7 +39,7 @@ interface GetSearchEngineForEditingHandlerInterface
     /**
      * @param GetSearchEngineForEditing $query
      *
-     * @return EditableSearchEngine
+     * @return SearchEngineForEditing
      */
-    public function handle(GetSearchEngineForEditing $query): EditableSearchEngine;
+    public function handle(GetSearchEngineForEditing $query): SearchEngineForEditing;
 }

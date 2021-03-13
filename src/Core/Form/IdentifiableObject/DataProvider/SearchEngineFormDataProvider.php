@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing;
-use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\EditableSearchEngine;
+use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\SearchEngineForEditing;
 
 /**
  * Provides data for search engine add/edit form.
@@ -55,7 +55,7 @@ final class SearchEngineFormDataProvider implements FormDataProviderInterface
      */
     public function getData($searchEngineId): array
     {
-        /** @var EditableSearchEngine $editableSearchEngine */
+        /** @var SearchEngineForEditing $editableSearchEngine */
         $editableSearchEngine = $this->queryBus->handle(new GetSearchEngineForEditing($searchEngineId));
 
         return [
