@@ -45,7 +45,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class SearchEngineFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I add new search engine :searchEngineReference with following properties:
+     * @When I add a new search engine :searchEngineReference with following properties:
      *
      * @param string $searchEngineReference
      * @param TableNode $table
@@ -63,7 +63,7 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit search engine :searchEngineReference with following properties:
+     * @When I edit the search engine :searchEngineReference with following properties:
      *
      * @param string $searchEngineReference
      * @param TableNode $table
@@ -90,7 +90,7 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete search engine :searchEngineReference
+     * @When I delete the search engine :searchEngineReference
      *
      * @param string $searchEngineReference
      */
@@ -118,7 +118,7 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then search engine :searchEngineReference server value should be :server
+     * @Then the search engine :searchEngineReference server value should be :server
      *
      * @param string $searchEngineReference
      * @param string $server
@@ -134,7 +134,7 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then search engine :searchEngineReference getvar value should be :getvar
+     * @Then the search engine :searchEngineReference getvar value should be :getvar
      *
      * @param string $searchEngineReference
      * @param string $getvar
@@ -150,7 +150,7 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then search engine :searchEngineReference should be deleted
+     * @Then the search engine :searchEngineReference should be deleted
      *
      * @param string $searchEngineReference
      */
