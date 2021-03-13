@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\DeleteSearchEngineE
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\SearchEngineException;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\SearchEngineNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing;
-use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\EditableSearchEngine;
+use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\SearchEngineForEditing;
 use PrestaShop\PrestaShop\Core\Search\Filters\SearchEngineFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -143,7 +143,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var EditableSearchEngine $editableSearchEngine */
+        /** @var SearchEngineForEditing $editableSearchEngine */
         $editableSearchEngine = $this->getQueryBus()->handle(new GetSearchEngineForEditing($searchEngineId));
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/SearchEngines/edit.html.twig', [

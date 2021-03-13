@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\SearchEngine\ValueObject\SearchEngineId;
 /**
  * Transfers editable search engine data.
  */
-class EditableSearchEngine
+class SearchEngineForEditing
 {
     /**
      * @var SearchEngineId
