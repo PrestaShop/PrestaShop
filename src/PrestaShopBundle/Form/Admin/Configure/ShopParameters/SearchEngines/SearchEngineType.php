@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\SearchEngines;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,6 +54,9 @@ class SearchEngineType extends TranslatorAwareType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
+                    new TypedRegex([
+                        'type' => 'url',
+                    ]),
                 ],
             ])
             ->add('getvar', TextType::class, [
@@ -63,6 +67,9 @@ class SearchEngineType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
+                    ]),
+                    new TypedRegex([
+                        'type' => 'module_name',
                     ]),
                 ],
             ]);
