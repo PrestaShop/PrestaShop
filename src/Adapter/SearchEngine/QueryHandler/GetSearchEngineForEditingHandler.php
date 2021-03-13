@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\SearchEngine\AbstractSearchEngineHandler;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Exception\SearchEngineException;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\Query\GetSearchEngineForEditing;
 use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryHandler\GetSearchEngineForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\EditableSearchEngine;
+use PrestaShop\PrestaShop\Core\Domain\SearchEngine\QueryResult\SearchEngineForEditing;
 
 /**
  * Handles query what gets search engine for editing.
@@ -44,11 +44,11 @@ final class GetSearchEngineForEditingHandler extends AbstractSearchEngineHandler
      *
      * @throws SearchEngineException
      */
-    public function handle(GetSearchEngineForEditing $query): EditableSearchEngine
+    public function handle(GetSearchEngineForEditing $query): SearchEngineForEditing
     {
         $searchEngine = $this->getSearchEngine($query->getSearchEngineId());
 
-        return new EditableSearchEngine(
+        return new SearchEngineForEditing(
             $query->getSearchEngineId(),
             $searchEngine->server,
             $searchEngine->getvar
