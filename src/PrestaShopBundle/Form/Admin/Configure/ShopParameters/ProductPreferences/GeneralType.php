@@ -33,6 +33,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Class generates "General" form
@@ -46,16 +48,61 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('catalog_mode', SwitchType::class)
-            ->add('catalog_mode_with_prices', SwitchType::class)
+            ->add('catalog_mode', SwitchType::class,
+            [
+                'label' => $this->trans('Catalog mode', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.', 'Admin.Shopparameters.Help')
+                    . '<br>' .
+                    $this->trans('Have specific needs? Edit particular groups to let them see prices or not.', 'Admin.Shopparameters.Help'),
+            ])
+            ->add('catalog_mode_with_prices', SwitchType::class, [
+                'row_attr' => [
+                    'class' => 'catalog-mode-option',
+                ],
+                'label' => $this->trans('Show prices', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Display product prices when in catalog mode.', 'Admin.Shopparameters.Help'),
+            ])
             ->add('new_days_number', IntegerType::class, [
                 'required' => false,
+                'label' => $this->trans('Number of days for which the product is considered \'new\'', 'Admin.Shopparameters.Feature'),
+                'constraints' => [
+                    new Type(
+                        [
+                            'value' => 'numeric',
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                    new GreaterThanOrEqual(
+                        [
+                            'value' => 0,
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                ],
             ])
             ->add('short_description_limit', TextWithUnitType::class, [
+                'label' => $this->trans('Max size of product summary', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Set the maximum size of the summary of your product description (in characters).', 'Admin.Shopparameters.Help'),
+                'constraints' => [
+                    new Type(
+                        [
+                            'value' => 'numeric',
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                    new GreaterThanOrEqual(
+                        [
+                            'value' => 0,
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                ],
                 'required' => false,
                 'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
             ])
             ->add('quantity_discount', ChoiceType::class, [
+                'label' => $this->trans('Quantity discounts based on', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('How to calculate quantity discounts.', 'Admin.Shopparameters.Help'),
                 'choices' => [
                     'Products' => 0,
                     'Combinations' => 1,
@@ -63,8 +110,14 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ])
-            ->add('force_friendly_url', SwitchType::class)
-            ->add('default_status', SwitchType::class);
+            ->add('force_friendly_url', SwitchType::class, [
+                'label' => $this->trans('Force update of friendly URL', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('When active, friendly URL will be updated on every save.', 'Admin.Shopparameters.Help'),
+            ])
+            ->add('default_status', SwitchType::class, [
+                'label' => $this->trans('Default activation status', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('When active, new products will be activated by default during creation.', 'Admin.Shopparameters.Help'),
+            ]);
     }
 
     /**

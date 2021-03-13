@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,12 +47,131 @@ class ProductPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
         $generalForm = $this->getGeneralFormHandler()->getForm();
         $pageForm = $this->getPageFormHandler()->getForm();
         $paginationForm = $this->getPaginationFormHandler()->getForm();
         $stockForm = $this->getStockFormHandler()->getForm();
+
+        return $this->renderForm($request, $generalForm, $pageForm, $paginationForm, $stockForm);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_product_preferences"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function processGeneralFormAction(Request $request)
+    {
+        $pageForm = $this->getPageFormHandler()->getForm();
+        $paginationForm = $this->getPaginationFormHandler()->getForm();
+        $stockForm = $this->getStockFormHandler()->getForm();
+
+        $generalForm = $this->processForm(
+            $request,
+            $this->getGeneralFormHandler(),
+            'General'
+        );
+
+        return $this->renderForm($request, $generalForm, $pageForm, $paginationForm, $stockForm);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_product_preferences"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function processPageFormAction(Request $request)
+    {
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $paginationForm = $this->getPaginationFormHandler()->getForm();
+        $stockForm = $this->getStockFormHandler()->getForm();
+
+        $pageForm = $this->processForm(
+            $request,
+            $this->getPageFormHandler(),
+            'Page'
+        );
+
+        return $this->renderForm($request, $generalForm, $pageForm, $paginationForm, $stockForm);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_product_preferences"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function processPaginationFormAction(Request $request)
+    {
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $pageForm = $this->getPageFormHandler()->getForm();
+        $stockForm = $this->getStockFormHandler()->getForm();
+
+        $paginationForm = $this->processForm(
+            $request,
+            $this->getPaginationFormHandler(),
+            'Pagination'
+        );
+
+        return $this->renderForm($request, $generalForm, $pageForm, $paginationForm, $stockForm);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_product_preferences"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function processStockFormAction(Request $request)
+    {
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $pageForm = $this->getPageFormHandler()->getForm();
+        $paginationForm = $this->getPaginationFormHandler()->getForm();
+
+        $stockForm = $this->processForm(
+            $request,
+            $this->getStockFormHandler(),
+            'Stock'
+        );
+
+        return $this->renderForm($request, $generalForm, $pageForm, $paginationForm, $stockForm);
+    }
+
+    /**
+     * @param Request $request
+     * @param FormInterface $generalForm
+     * @param FormInterface $pageForm
+     * @param FormInterface $paginationForm
+     * @param FormInterface $stockForm
+     *
+     * @return Response
+     */
+    protected function renderForm(
+        Request $request,
+        FormInterface $generalForm,
+        FormInterface $pageForm,
+        FormInterface $paginationForm,
+        FormInterface $stockForm
+    ): Response {
+        $legacyController = $request->attributes->get('_legacy_controller');
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/product_preferences.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -71,91 +190,15 @@ class ProductPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_product_preferences"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processGeneralFormAction(Request $request)
-    {
-        return $this->processForm(
-            $request,
-            $this->getGeneralFormHandler(),
-            'General'
-        );
-    }
-
-    /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_product_preferences"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processPageFormAction(Request $request)
-    {
-        return $this->processForm(
-            $request,
-            $this->getPageFormHandler(),
-            'Page'
-        );
-    }
-
-    /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_product_preferences"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processPaginationFormAction(Request $request)
-    {
-        return $this->processForm(
-            $request,
-            $this->getPaginationFormHandler(),
-            'Pagination'
-        );
-    }
-
-    /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_product_preferences"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processStockFormAction(Request $request)
-    {
-        return $this->processForm(
-            $request,
-            $this->getStockFormHandler(),
-            'Stock'
-        );
-    }
-
-    /**
      * Process the Product Preferences configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
      * @param string $hookName
      *
-     * @return RedirectResponse
+     * @return FormInterface
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): FormInterface
     {
         $this->dispatchHook(
             'actionAdminShopParametersProductPreferencesControllerPostProcess' . $hookName . 'Before',
@@ -167,7 +210,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $saveErrors = $formHandler->save($data);
 
@@ -178,7 +221,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_product_preferences');
+        return $form;
     }
 
     /**

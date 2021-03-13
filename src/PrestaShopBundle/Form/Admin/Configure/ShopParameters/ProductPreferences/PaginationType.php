@@ -26,17 +26,19 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Class generates "Pagination" form
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class PaginationType extends AbstractType
+class PaginationType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -44,8 +46,27 @@ class PaginationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('products_per_page', IntegerType::class)
+            ->add('products_per_page', IntegerType::class, [
+                'label' => $this->trans('Products per page', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Number of products displayed per page. Default is 10.', 'Admin.Shopparameters.Help'),
+                'constraints' => [
+                    new Type(
+                        [
+                            'value' => 'numeric',
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                    new GreaterThanOrEqual(
+                        [
+                            'value' => 0,
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                ],
+            ])
             ->add('default_order_by', ChoiceType::class, [
+                'label' => $this->trans('Default order by', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('The order in which products are displayed in the product list.', 'Admin.Shopparameters.Help'),
                 'choices' => [
                     'Product name' => 0,
                     'Product price' => 1,
@@ -59,6 +80,8 @@ class PaginationType extends AbstractType
                 'required' => true,
             ])
             ->add('default_order_way', ChoiceType::class, [
+                'label' => $this->trans('Default order method', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Default order method for product list.', 'Admin.Shopparameters.Help'),
                 'choices' => [
                     'Ascending' => 0,
                     'Descending' => 1,
