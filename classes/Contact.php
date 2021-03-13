@@ -70,9 +70,9 @@ class ContactCore extends ObjectModel
                 'size' => 255,
             ],
             'description' => [
-                'type' => self::TYPE_HTML,
+                'type' => self::TYPE_STRING,
                 'lang' => true,
-                'validate' => 'isCleanHtml',
+                'validate' => 'isString',
             ],
         ],
     ];
