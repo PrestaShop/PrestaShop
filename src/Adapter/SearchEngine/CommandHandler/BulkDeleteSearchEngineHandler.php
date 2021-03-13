@@ -52,7 +52,13 @@ final class BulkDeleteSearchEngineHandler extends AbstractSearchEngineHandler im
 
             try {
                 if (!$searchEngine->delete()) {
-                    throw new DeleteSearchEngineException(sprintf('Cannot delete Search Engine object with id "%d"', $searchEngineId->getValue()), DeleteSearchEngineException::FAILED_BULK_DELETE);
+                    throw new DeleteSearchEngineException(
+                        sprintf(
+                            'Cannot delete Search Engine object with id "%d"',
+                            $searchEngineId->getValue()
+                        ),
+                        DeleteSearchEngineException::FAILED_BULK_DELETE
+                    );
                 }
             } catch (PrestaShopException $e) {
                 throw new SearchEngineException(sprintf('An error occurred when deleting Search Engine with id "%d"', $searchEngineId->getValue()));
