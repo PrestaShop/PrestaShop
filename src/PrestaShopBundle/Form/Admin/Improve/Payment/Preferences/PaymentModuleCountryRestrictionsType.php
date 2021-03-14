@@ -98,10 +98,9 @@ class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsPare
         foreach ($this->paymentModules as $paymentModule) {
             $limitedCountries = $paymentModule->get('limited_countries');
 
+            $countryChoices = $this->countryChoices;
             if (is_array($limitedCountries) && !empty($limitedCountries)) {
                 $countryChoices = $this->getLimitedCountryChoices($limitedCountries);
-            } else {
-                $countryChoices = $this->countryChoices;
             }
 
             $multipleChoices[] = [
