@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NoTags;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -121,9 +121,9 @@ class ContactType extends TranslatorAwareType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new CleanHtml([
+                        new NoTags([
                             'message' => $this->trans(
-                                '%s is invalid.',
+                                'Field %s is invalid. Field must not contain HTML tags.',
                                 'Admin.Notifications.Error'
                             ),
                         ]),
