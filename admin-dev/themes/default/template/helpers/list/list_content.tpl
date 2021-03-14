@@ -26,7 +26,7 @@
 <tbody>
 {if count($list)}
 {foreach $list AS $index => $tr}
-	<tr{if $position_identifier} id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if} class="{if isset($tr.class)}{$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"{if isset($tr.color) && $color_on_bg} style="background-color: {$tr.color}"{/if} >
+	<tr{if $position_identifier} id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if} class="{if isset($tr.class)}{$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"{if isset($tr[$params.color]) && $color_on_bg} style="background-color: {$tr[$params.color]}"{/if} >
 		{if $bulk_actions && $has_bulk_actions}
 			<td class="row-selector text-center">
 				{if isset($list_skip_actions.delete)}
@@ -141,7 +141,7 @@
 					{block name="default_field"}--{/block}
 				{/if}
 				{if isset($params.suffix)}{$params.suffix}{/if}
-				{if isset($params.color) && isset($tr.color)}
+				{if isset($params.color) && isset($tr[$params.color])}
 					</span>
 				{/if}
 				{if isset($params.badge_danger) && $params.badge_danger && isset($tr.badge_danger) && $tr.badge_danger == $params.badge_danger}</span>{/if}
