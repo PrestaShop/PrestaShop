@@ -108,9 +108,6 @@ class InvoiceOptionsType extends TranslatorAwareType
             ])
             ->add(static::INVOICE_PREFIX, TranslatableType::class, [
                 'options' => [
-                    'constraints' => [
-                        new NoTags(),
-                    ],
                 ],
                 'required' => false,
                 'type' => TextType::class,
@@ -153,22 +150,12 @@ class InvoiceOptionsType extends TranslatorAwareType
             ])
             ->add(static::LEGAL_FREE_TEXT, TranslatableType::class, [
                 'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new NoTags(),
-                    ],
-                ],
                 'type' => TextareaType::class,
                 'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', 'Admin.Orderscustomers.Help'),
             ])
             ->add(static::FOOTER_TEXT, TranslatableType::class, [
                 'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new NoTags(),
-                    ],
-                ],
                 'type' => TextType::class,
                 'label' => $this->trans('Footer text', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans('This text will appear at the bottom of the invoice, below your company details.', 'Admin.Orderscustomers.Help'),
