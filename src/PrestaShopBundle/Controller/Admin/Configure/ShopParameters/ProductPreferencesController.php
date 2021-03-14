@@ -28,6 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralFormDataProvider;
+use PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -169,16 +175,80 @@ class ProductPreferencesController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $saveErrors = $formHandler->save($data);
-
-            if (0 === count($saveErrors)) {
+            try {
+                $formHandler->save($data);
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($saveErrors);
+
+            } catch (DataProviderException $e) {
+                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
             }
         }
 
         return $this->redirectToRoute('admin_product_preferences');
+    }
+
+    /**
+     * @var InvalidConfigurationDataErrorCollection
+     */
+    private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
+    {
+        $messages = [];
+
+        foreach ($errors as $error) {
+            $messages[] = $this->getErrorMessage($error);
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param InvalidConfigurationDataError $error
+     *
+     * @return string
+     *
+     * @throws FieldNotFoundException
+     */
+    private function getErrorMessage(InvalidConfigurationDataError $error): string
+    {
+        switch ($error->getErrorCode()) {
+            case GeneralFormDataProvider::ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER:
+                return $this->trans(
+                    '%s is invalid. Please enter an integer greater or equal to 0.',
+                    'Admin.Notifications.Error',
+                    [$this->getFieldLabel($error->getFieldName())]
+                );
+        }
+
+        return $this->trans(
+            'The %s field is invalid.',
+            'Admin.Notifications.Error',
+            [
+                $this->getFieldLabel($error->getFieldName()),
+            ]
+        );
+    }
+
+    /**
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    private function getFieldLabel(string $fieldName): string
+    {
+        switch ($fieldName) {
+            case GeneralType::FIELD_SHORT_DESCRIPTION_LIMIT:
+                return $this->trans(
+                    'Max size of product summary',
+                    'Admin.Shopparameters.Feature'
+                );
+        }
+
+        throw new FieldNotFoundException(
+            sprintf(
+                'Field name for field %s not found',
+                $fieldName
+            )
+        );
     }
 
     /**

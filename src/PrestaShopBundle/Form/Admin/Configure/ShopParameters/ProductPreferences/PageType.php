@@ -41,16 +41,24 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class PageType extends TranslatorAwareType
 {
+    public const FIELD_DISPLAY_QUANTITIES = 'display_quantities';
+    public const FIELD_DISPLAY_LAST_QUANTITIES = 'display_last_quantities';
+    public const FIELD_DISPLAY_UNAVAILABLE_ATTRIBUTES = 'display_unavailable_attributes';
+    public const FIELD_ALLOW_ADD_VARIANT_TO_CART_FROM_LISTING = 'allow_add_variant_to_cart_from_listing';
+    public const FIELD_ATTRIBUTE_ANCHOR_SEPARATOR = 'attribute_anchor_separator';
+    public const FIELD_DISPLAY_DISCOUNT_PRICE = 'display_discount_price';
+
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('display_quantities', SwitchType::class, [
+            ->add(static::FIELD_DISPLAY_QUANTITIES, SwitchType::class, [
                 'label' => $this->trans('Display available quantities on the product page', 'Admin.Shopparameters.Feature'),
             ])
-            ->add('display_last_quantities', IntegerType::class, [
+            ->add(static::FIELD_DISPLAY_LAST_QUANTITIES, IntegerType::class, [
                 'label' => $this->trans('Display remaining quantities when the quantity is lower than', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Set to "0" to disable this feature.', 'Admin.Shopparameters.Help'),
                 'constraints' => [
@@ -68,11 +76,11 @@ class PageType extends TranslatorAwareType
                     ),
                 ],
             ])
-            ->add('display_unavailable_attributes', SwitchType::class, [
+            ->add(static::FIELD_DISPLAY_UNAVAILABLE_ATTRIBUTES, SwitchType::class, [
                 'label' => $this->trans('Display unavailable attributes on the product page', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('If an attribute is not available in every product combination, it will not be displayed.', 'Admin.Shopparameters.Help'),
             ])
-            ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
+            ->add(static::FIELD_ALLOW_ADD_VARIANT_TO_CART_FROM_LISTING, SwitchType::class, [
                 'label' => $this->trans(
                     'Display the "%add_to_cart_label%" button when a product has attributes',
                     'Admin.Shopparameters.Feature',
@@ -82,7 +90,7 @@ class PageType extends TranslatorAwareType
                 ),
                 'help' => $this->trans('Note that this setting does not work with the default theme anymore.', 'Admin.Shopparameters.Help'),
             ])
-            ->add('attribute_anchor_separator', ChoiceType::class, [
+            ->add(static::FIELD_ATTRIBUTE_ANCHOR_SEPARATOR, ChoiceType::class, [
                 'choices' => [
                     '-' => '-',
                     ',' => ',',
@@ -91,7 +99,7 @@ class PageType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'label' => $this->trans('Separator of attribute anchor on the product links', 'Admin.Shopparameters.Feature'),
             ])
-            ->add('display_discount_price', SwitchType::class, [
+            ->add(static::FIELD_DISPLAY_DISCOUNT_PRICE, SwitchType::class, [
                 'label' => $this->trans('Display discounted price', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").', 'Admin.Shopparameters.Help'),
             ]);

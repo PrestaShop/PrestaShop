@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 
 use PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -37,6 +40,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class PaginationFormDataProvider implements FormDataProviderInterface
 {
+    public const ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER = 2;
+
     /**
      * @var PaginationConfiguration
      */
@@ -68,9 +73,7 @@ class PaginationFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
+        $this->validate($data);
 
         return $this->configuration->updateConfiguration($data);
     }
@@ -80,20 +83,25 @@ class PaginationFormDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array Returns array of errors
+     * @return void
      */
-    protected function validate(array $data)
+    protected function validate(array $data): void
     {
-        $errors = [];
-        $productsPerPage = $data['products_per_page'];
-        if (!is_numeric($productsPerPage) || 0 > $productsPerPage) {
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature')],
-            ];
+        $errorCollection = new InvalidConfigurationDataErrorCollection();
+        if (isset($data[PaginationType::FIELD_PRODUCTS_PER_PAGE])) {
+            $productsPerPage = $data[PaginationType::FIELD_PRODUCTS_PER_PAGE];
+            if (!is_numeric($productsPerPage) || 0 >= $productsPerPage) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        static::ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER,
+                        PageType::FIELD_DISPLAY_LAST_QUANTITIES
+                    )
+                );
+            }
         }
 
-        return $errors;
+        if (!$errorCollection->isEmpty()) {
+            throw new DataProviderException('Invalid product preferences pagination form', 0, null, $errorCollection);
+        }
     }
 }

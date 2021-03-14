@@ -28,7 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShop\PrestaShop\Adapter\Product\PageConfiguration;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -37,6 +41,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class PageFormDataProvider implements FormDataProviderInterface
 {
+    public const ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER = 2;
+
     /**
      * @var PageConfiguration
      */
@@ -68,9 +74,7 @@ class PageFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
+        $this->validate($data);
 
         return $this->configuration->updateConfiguration($data);
     }
@@ -80,24 +84,28 @@ class PageFormDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array Returns array of errors
+     * @return void
+     *
+     * @throws DataProviderException
+     * @throws TypeException
      */
-    protected function validate(array $data)
+    protected function validate(array $data): void
     {
-        $errors = [];
-        $displayLastQuantities = $data['display_last_quantities'];
-        if (!is_numeric($displayLastQuantities) || 0 > $displayLastQuantities) {
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$this->translator->trans(
-                    'Display remaining quantities when the quantity is lower than',
-                    [],
-                    'Admin.Shopparameters.Feature'
-                )],
-            ];
+        $errorCollection = new InvalidConfigurationDataErrorCollection();
+        if (isset($data[PageType::FIELD_DISPLAY_LAST_QUANTITIES])) {
+            $displayLastQuantities = $data[PageType::FIELD_DISPLAY_LAST_QUANTITIES];
+            if (!is_numeric($displayLastQuantities) || 0 >= $displayLastQuantities) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        static::ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER,
+                        PageType::FIELD_DISPLAY_LAST_QUANTITIES
+                    )
+                );
+            }
         }
 
-        return $errors;
+        if (!$errorCollection->isEmpty()) {
+            throw new DataProviderException('Invalid product preferences page form', 0, null, $errorCollection);
+        }
     }
 }

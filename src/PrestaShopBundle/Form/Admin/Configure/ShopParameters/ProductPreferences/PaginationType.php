@@ -40,13 +40,16 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class PaginationType extends TranslatorAwareType
 {
+    public const FIELD_PRODUCTS_PER_PAGE = 'products_per_page';
+    public const FIELD_DEFAULT_ORDER_BY = 'default_order_by';
+    public const FIELD_DEFAULT_ORDER_WAY = 'default_order_way';
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('products_per_page', IntegerType::class, [
+            ->add(static::FIELD_PRODUCTS_PER_PAGE, IntegerType::class, [
                 'label' => $this->trans('Products per page', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Number of products displayed per page. Default is 10.', 'Admin.Shopparameters.Help'),
                 'constraints' => [
@@ -64,7 +67,7 @@ class PaginationType extends TranslatorAwareType
                     ),
                 ],
             ])
-            ->add('default_order_by', ChoiceType::class, [
+            ->add(static::FIELD_DEFAULT_ORDER_BY, ChoiceType::class, [
                 'label' => $this->trans('Default order by', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('The order in which products are displayed in the product list.', 'Admin.Shopparameters.Help'),
                 'choices' => [
@@ -79,7 +82,7 @@ class PaginationType extends TranslatorAwareType
                 ],
                 'required' => true,
             ])
-            ->add('default_order_way', ChoiceType::class, [
+            ->add(static::FIELD_DEFAULT_ORDER_WAY, ChoiceType::class, [
                 'label' => $this->trans('Default order method', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Default order method for product list.', 'Admin.Shopparameters.Help'),
                 'choices' => [
