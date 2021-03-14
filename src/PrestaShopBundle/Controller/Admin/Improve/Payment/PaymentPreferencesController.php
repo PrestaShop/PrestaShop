@@ -65,21 +65,23 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
         $isSingleShopContext = $shopContext->isSingleShopContext();
 
         $paymentModulesCount = 0;
-        if (!$isSingleShopContext) {
-            $carrierRestrictionsForm = $countryRestrictionsForm = $currencyRestrictionsForm = $groupRestrictionsForm = null;
-        }
+        $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
 
         if ($isSingleShopContext) {
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
+            $carrierRestrictionsView = $carrierRestrictionsForm->createView();
+            $countryRestrictionsView = $countryRestrictionsForm->createView();
+            $currencyRestrictionsView = $currencyRestrictionsForm->createView();
+            $groupRestrictionsView = $groupRestrictionsForm->createView();
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'paymentCurrencyRestrictionsForm' => $currencyRestrictionsForm->createView(),
-            'paymentCountryRestrictionsForm' => $countryRestrictionsForm->createView(),
-            'paymentGroupRestrictionsForm' => $groupRestrictionsForm->createView(),
-            'paymentCarrierRestrictionsForm' => $carrierRestrictionsForm->createView(),
+            'paymentCurrencyRestrictionsForm' => $currencyRestrictionsView,
+            'paymentCountryRestrictionsForm' => $countryRestrictionsView,
+            'paymentGroupRestrictionsForm' => $groupRestrictionsView,
+            'paymentCarrierRestrictionsForm' => $carrierRestrictionsView,
             'isSingleShopContext' => $isSingleShopContext,
             'paymentModulesCount' => $paymentModulesCount,
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
