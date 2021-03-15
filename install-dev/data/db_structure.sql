@@ -2854,6 +2854,8 @@ CREATE TABLE `PREFIX_employee_session` (
   `id_employee_session` int(11) unsigned NOT NULL auto_increment,
   `id_employee` int(10) unsigned DEFAULT NULL,
   `token` varchar(40) DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
   PRIMARY KEY `id_employee_session` (`id_employee_session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -2861,5 +2863,7 @@ CREATE TABLE `PREFIX_customer_session` (
   `id_customer_session` int(11) unsigned NOT NULL auto_increment,
   `id_customer` int(10) unsigned DEFAULT NULL,
   `token` varchar(40) DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
   PRIMARY KEY `id_customer_session` (`id_customer_session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
