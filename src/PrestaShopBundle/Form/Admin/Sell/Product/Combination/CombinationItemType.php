@@ -28,12 +28,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\UpdatableInputType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class CombinationItemType extends AbstractType
@@ -50,9 +50,14 @@ class CombinationItemType extends AbstractType
             ])
             ->add('combination_id', HiddenType::class)
             ->add('name', HiddenType::class)
-            ->add('impact_on_price', MoneyType::class)
+            ->add('impact_on_price', UpdatableInputType::class, [
+                'type' => MoneyType::class,
+                'route' => 'admin_products_combinations_update_combination_from_listing',
+            ])
             ->add('final_price_te', HiddenType::class)
-            ->add('quantity', NumberType::class)
+            ->add('quantity', UpdatableInputType::class, [
+                'route' => 'admin_products_combinations_update_combination_from_listing',
+            ])
             ->add('is_default', SwitchType::class)
             ->add('edit', ButtonType::class)
             ->add('delete', ButtonType::class)

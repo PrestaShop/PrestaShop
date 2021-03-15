@@ -1458,3 +1458,8 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.updatable_input:
+        class: 'PrestaShopBundle\Form\Admin\Type\UpdatableInputType'
+        tags:
+            - { name: form.type }
