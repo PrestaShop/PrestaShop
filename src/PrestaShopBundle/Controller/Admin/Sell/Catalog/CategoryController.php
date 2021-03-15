@@ -180,7 +180,7 @@ class CategoryController extends FrameworkBundleAdminController
          */
         $configRootCategory = $this->configuration->getInt('PS_ROOT_CATEGORY');
         if ($parentId === $configRootCategory) {
-            $parentId = $configRootCategory;
+            $parentId = $this->configuration->getInt('PS_HOME_CATEGORY');
         }
 
         $categoryForm = $categoryFormBuilder->getForm(['id_parent' => $parentId]);
