@@ -26,14 +26,43 @@
   <div id="product-images-container">
     <div
       id="product-images-dropzone"
-      class="dropzone dropzone-container"
+      :class="['dropzone', 'dropzone-container', { full: files.length <= 0 }]"
     >
-      <div class="dz-preview openfilemanager">
+      <div
+        :class="[
+          'dz-preview',
+          'openfilemanager',
+          { 'd-none': loading || files.length <= 0 },
+        ]"
+      >
         <div>
           <span><i class="material-icons">add_a_photo</i></span>
         </div>
       </div>
-      <div class="dz-message" />
+      <div
+        :class="[
+          'dz-default',
+          'dz-message',
+          'openfilemanager',
+          'dz-clickable',
+          { 'd-none': loading || files.length > 0 },
+        ]"
+      >
+        <i class="material-icons">add_a_photo</i><br>
+        {{ $t('Drop images here') }}<br>
+        <a>{{ $t('or select files') }}</a><br>
+        <small>
+          {{ $t('files recommandations') }}<br>
+          {{ $t('files recommandations2') }}
+        </small>
+      </div>
+
+      <div
+        class="dropzone-loading"
+        v-if="loading"
+      >
+        <div class="spinner" />
+      </div>
     </div>
 
     <dropzone-window
@@ -104,6 +133,7 @@
         files: [],
         selectedFiles: [],
         translations: [],
+        loading: true,
       };
     },
     props: {
@@ -133,10 +163,11 @@
         });
 
         const response = await fetch(imagesUrl);
+        const images = await response.json();
 
+        this.loading = false;
         this.initDropZone();
 
-        const images = await response.json();
         images.forEach((image) => {
           this.dropzone.displayExistingFile(image, image.path);
         });
@@ -225,15 +256,20 @@
 @import "~@scss/config/_settings.scss";
 
 .product-page #product-images-dropzone {
+  &.full {
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .dropzone-loading {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 10rem;
+  }
+
   &.dropzone-container {
-    .dz-default {
-      display: none;
-    }
-
-    .dz-message {
-      display: none;
-    }
-
     .dz-preview {
       position: relative;
       cursor: pointer;
