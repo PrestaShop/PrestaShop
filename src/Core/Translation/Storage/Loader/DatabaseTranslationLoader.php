@@ -68,7 +68,7 @@ class DatabaseTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages', $theme = null): MessageCatalogue
     {
-        static $langs = [];
+        static $languages = [];
         $catalogue = new MessageCatalogue($locale);
 
         // do not try and load translations for a locale that cannot be saved to DB anyway
@@ -76,13 +76,13 @@ class DatabaseTranslationLoader implements LoaderInterface
             return $catalogue;
         }
 
-        if (!array_key_exists($locale, $langs)) {
-            $langs[$locale] = $this->languageRepository->findOneBy(['locale' => $locale]);
+        if (!array_key_exists($locale, $languages)) {
+            $languages[$locale] = $this->languageRepository->findOneBy(['locale' => $locale]);
         }
 
         $queryBuilder = $this->translationRepository->createQueryBuilder('t');
 
-        $this->addLangConstraint($queryBuilder, $langs[$locale]);
+        $this->addLangConstraint($queryBuilder, $languages[$locale]);
 
         $this->addThemeConstraint($queryBuilder, $theme);
 

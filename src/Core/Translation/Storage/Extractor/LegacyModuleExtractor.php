@@ -117,7 +117,7 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
         $allWordings = $extractedCatalogue->all();
 
         // move default domain into the new domain (avoiding to overwrite existing translations)
-        $allWordings[$newDomain] = (isset($allWordings[$newDomain]))
+        $allWordings[$newDomain] = (isset($allWordings[$newDomain]) && is_array($allWordings[$newDomain]))
             ? array_merge($allWordings[$newDomain], $allWordings[$defaultDomain])
             : $allWordings[$defaultDomain];
 

@@ -28,30 +28,25 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Exception;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Throwable;
+
 /**
  * Thrown when an invalid key is found in a legacy translation file
  */
-class InvalidLegacyTranslationKeyException extends \Exception
+class InvalidLegacyTranslationKeyException extends CoreException
 {
     /**
      * @var string The invalid key
      */
-    private $key = '';
+    private $key;
 
-    /**
-     * @param string $missingElement The missing element
-     * @param string $key The offending key
-     *
-     * @return InvalidLegacyTranslationKeyException
-     */
-    public static function missingElementFromKey(string $missingElement, string $key): self
+    public function __construct(string $missingElement, string $key, $code = 0, Throwable $previous = null)
     {
-        $instance = new self(
-            sprintf('Invalid key in legacy translation file: "%s" (missing %s)', $key, $missingElement)
-        );
-        $instance->setKey($key);
+        $message = sprintf('Invalid key in legacy translation file: "%s" (missing %s)', $key, $missingElement);
+        $this->key = $key;
 
-        return $instance;
+        parent::__construct($message, $code, $previous);
     }
 
     /**
@@ -60,13 +55,5 @@ class InvalidLegacyTranslationKeyException extends \Exception
     public function getKey(): string
     {
         return $this->key;
-    }
-
-    /**
-     * @param string $key
-     */
-    private function setKey(string $key)
-    {
-        $this->key = $key;
     }
 }

@@ -26,10 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Translation;
 
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectRepository;
+
 /**
  * Interface TranslationRepositoryInterface allows to fetch a TranslationInterface
  * via different methods.
  */
-interface TranslationRepositoryInterface
+interface TranslationRepositoryInterface extends ObjectRepository
 {
+    /**
+     * @param mixed $alias
+     * @param mixed|null $indexBy
+     *
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder($alias, $indexBy = null);
 }

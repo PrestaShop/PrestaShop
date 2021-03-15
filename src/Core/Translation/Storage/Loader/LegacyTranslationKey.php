@@ -122,7 +122,7 @@ class LegacyTranslationKey
 
         foreach (['module', 'theme', 'source', 'hash'] as $item) {
             if (!isset($matches[$item])) {
-                throw InvalidLegacyTranslationKeyException::missingElementFromKey($item, $key);
+                throw new InvalidLegacyTranslationKeyException($item, $key);
             }
         }
 
