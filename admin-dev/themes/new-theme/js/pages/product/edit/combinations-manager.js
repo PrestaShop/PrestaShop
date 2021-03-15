@@ -27,6 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
+import UpdatableInput from '@components/form/updatable-input';
 
 const {$} = window;
 
@@ -46,6 +47,7 @@ export default class CombinationsManager {
       new CombinationsService(productId),
       new CombinationsGridRenderer(),
     );
+    new UpdatableInput();
 
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
