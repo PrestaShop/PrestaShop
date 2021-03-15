@@ -143,7 +143,7 @@ export default class EmployeeForm {
   private toggleShopTree(): void {
     const $employeeProfileDropdown = $(this.employeeProfileSelector);
     const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
-    const isSuperAdminProfile = parseInt($employeeProfileDropdown.val()) === superAdminProfileId;
+    const isSuperAdminProfile = parseInt($employeeProfileDropdown.val(), 10) === superAdminProfileId;
     $(this.shopChoiceTreeSelector)
       .closest('.form-group')
       .toggleClass('d-none', isSuperAdminProfile);
