@@ -24,7 +24,10 @@
  *-->
 <template>
   <div id="product-images-container">
-    <div id="product-images-dropzone" class="dropzone dropzone-container">
+    <div
+      id="product-images-dropzone"
+      class="dropzone dropzone-container"
+    >
       <div class="dz-preview openfilemanager">
         <div>
           <span><i class="material-icons">add_a_photo</i></span>
@@ -47,10 +50,13 @@
     <div class="dz-template d-none">
       <div class="dz-preview dz-file-preview">
         <div class="dz-image">
-          <img data-dz-thumbnail />
+          <img data-dz-thumbnail>
         </div>
         <div class="dz-progress">
-          <span class="dz-upload" data-dz-uploadprogress />
+          <span
+            class="dz-upload"
+            data-dz-uploadprogress
+          />
         </div>
         <div class="dz-success-mark">
           <span>✔</span>
@@ -65,7 +71,7 @@
           <i class="material-icons drag-indicator">drag_indicator</i>
           <div class="md-checkbox">
             <label>
-              <input type="checkbox" />
+              <input type="checkbox">
               <i class="md-checkbox-control" />
             </label>
           </div>
@@ -76,144 +82,143 @@
 </template>
 
 <script>
-import Router from "@components/router";
-import DropzoneWindow from "./DropzoneWindow";
+  import Router from '@components/router';
+  import DropzoneWindow from './DropzoneWindow';
 
-const { $ } = window;
+  const {$} = window;
 
-const router = new Router();
+  const router = new Router();
 
-export default {
-  name: "Dropzone",
-  data() {
-    return {
-      dropzone: null,
-      configuration: {
-        url: router.generate("admin_products_v2_add_image", {
-          productId: this.productId,
-        }),
-        clickable: ".openfilemanager",
-        previewTemplate: null,
+  export default {
+    name: 'Dropzone',
+    data() {
+      return {
+        dropzone: null,
+        configuration: {
+          url: router.generate('admin_products_v2_add_image', {
+            productId: this.productId,
+          }),
+          clickable: '.openfilemanager',
+          previewTemplate: null,
+        },
+        files: [],
+        selectedFiles: [],
+        translations: [],
+      };
+    },
+    props: {
+      productId: {
+        type: String,
+        required: true,
       },
-      files: [],
-      selectedFiles: [],
-      translations: [],
-    };
-  },
-  props: {
-    productId: {
-      type: String,
-      required: true,
     },
-  },
-  components: {
-    DropzoneWindow,
-  },
-  computed: {},
-  mounted() {
-    this.configuration.previewTemplate = document.querySelector(
-      ".dz-template"
-    ).innerHTML;
-
-    this.initProductImages();
-  },
-  methods: {
-    /**
-     * This methods is used to initialize product images we already have uploaded
-     */
-    async initProductImages() {
-      const imagesUrl = router.generate("admin_products_v2_get_images", {
-        productId: this.productId,
-      });
-
-      const response = await fetch(imagesUrl);
-
-      this.initDropZone();
-
-      const images = await response.json();
-      images.forEach((image) => {
-        this.dropzone.displayExistingFile(image, image.path);
-      });
+    components: {
+      DropzoneWindow,
     },
-    /**
-     * Method to initialize the dropzone, using the configuration's state and adding files
-     * we already have in database.
-     */
-    initDropZone() {
-      this.dropzone = new window.Dropzone(
-        ".dropzone-container",
-        this.configuration
-      );
+    computed: {},
+    mounted() {
+      this.configuration.previewTemplate = document.querySelector(
+        '.dz-template',
+      ).innerHTML;
 
-      this.dropzone.on("addedfile", (file) => {
-        file.previewElement.addEventListener("click", () => {
-          const input = file.previewElement.querySelector(".md-checkbox input");
-          input.checked = !input.checked;
-
-          if (input.checked) {
-            if (!this.selectedFiles.includes(file)) {
-              this.selectedFiles.push(file);
-              file.previewElement.classList.toggle("selected");
-            }
-          } else {
-            this.selectedFiles = this.selectedFiles.filter((e) => e !== file);
-            file.previewElement.classList.toggle("selected");
-          }
+      this.initProductImages();
+    },
+    methods: {
+      /**
+       * This methods is used to initialize product images we already have uploaded
+       */
+      async initProductImages() {
+        const imagesUrl = router.generate('admin_products_v2_get_images', {
+          productId: this.productId,
         });
 
-        this.files.push(file);
-      });
+        const response = await fetch(imagesUrl);
+
+        this.initDropZone();
+
+        const images = await response.json();
+        images.forEach((image) => {
+          this.dropzone.displayExistingFile(image, image.path);
+        });
+      },
+      /**
+       * Method to initialize the dropzone, using the configuration's state and adding files
+       * we already have in database.
+       */
+      initDropZone() {
+        this.dropzone = new window.Dropzone(
+          '.dropzone-container',
+          this.configuration,
+        );
+
+        this.dropzone.on('addedfile', (file) => {
+          file.previewElement.addEventListener('click', () => {
+            const input = file.previewElement.querySelector('.md-checkbox input');
+            input.checked = !input.checked;
+
+            if (input.checked) {
+              if (!this.selectedFiles.includes(file)) {
+                this.selectedFiles.push(file);
+                file.previewElement.classList.toggle('selected');
+              }
+            } else {
+              this.selectedFiles = this.selectedFiles.filter((e) => e !== file);
+              file.previewElement.classList.toggle('selected');
+            }
+          });
+
+          this.files.push(file);
+        });
+      },
+      /**
+       * Method to select every files by checking checkboxes and add files to the files state
+       */
+      selectAll() {
+        this.selectedFiles = this.files;
+
+        this.editCheckboxes(true);
+      },
+      /**
+       * Method to unselect every files by unchecking checkboxes and empty files state
+       */
+      unselectAll() {
+        this.editCheckboxes(false);
+
+        this.selectedFiles = [];
+
+        $('.tooltip.show').each((i, element) => {
+          $(element).remove();
+        });
+      },
+      /**
+       * Method to remove every selected files from the dropzone
+       */
+      removeSelection() {
+        this.selectedFiles.forEach((file) => {
+          this.dropzone.removeFile(file);
+
+          this.files = this.files.filter((e) => file !== e);
+        });
+
+        this.selectedFiles = [];
+
+        $('.tooltip.show').each((i, element) => {
+          $(element).remove();
+        });
+      },
+      /**
+       * Method to manage checkboxes of files mainly used on selectAll and unselectAll
+       */
+      editCheckboxes(checked) {
+        this.selectedFiles.forEach((file) => {
+          const input = file.previewElement.querySelector('.md-checkbox input');
+          input.checked = typeof checked !== 'undefined' ? checked : !input.checked;
+
+          file.previewElement.classList.toggle('selected', checked);
+        });
+      },
     },
-    /**
-     * Method to select every files by checking checkboxes and add files to the files state
-     */
-    selectAll() {
-      this.selectedFiles = this.files;
-
-      this.editCheckboxes(true);
-    },
-    /**
-     * Method to unselect every files by unchecking checkboxes and empty files state
-     */
-    unselectAll() {
-      $(".dropzone-window i[data-labelledby]").each((element) => {
-        $(element).tooltip("hide");
-      });
-
-      this.editCheckboxes(false);
-
-      this.selectedFiles = [];
-    },
-    /**
-     * Method to remove every selected files from the dropzone
-     */
-    removeSelection() {
-      $(".dropzone-window i[data-labelledby]").each((element) => {
-        $(element).tooltip("hide");
-      });
-
-      this.selectedFiles.forEach((file) => {
-        this.dropzone.removeFile(file);
-
-        this.files = this.files.filter((e) => file !== e);
-      });
-
-      this.selectedFiles = [];
-    },
-    /**
-     * Method to manage checkboxes of files mainly used on selectAll and unselectAll
-     */
-    editCheckboxes(checked) {
-      this.selectedFiles.forEach((file) => {
-        const input = file.previewElement.querySelector(".md-checkbox input");
-        input.checked =
-          typeof checked !== "undefined" ? checked : !input.checked;
-
-        file.previewElement.classList.toggle("selected", checked);
-      });
-    },
-  },
-};
+  };
 </script>
 
 <style lang="scss" type="text/scss">

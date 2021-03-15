@@ -36,22 +36,19 @@
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.zoom')"
-          >search</i
-        >
+        >search</i>
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.delete')"
           @click="$emit('removeSelection')"
-          >delete</i
-        >
+        >delete</i>
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.close')"
           @click="$emit('unselectAll')"
-          >close</i
-        >
+        >close</i>
       </div>
     </div>
 
@@ -75,13 +72,16 @@
       v-if="selectedFiles.length === 1"
     >
       <label>
-        <input type="checkbox" />
+        <input type="checkbox">
         <i class="md-checkbox-control" />
         {{ $t("window.useAsCover") }}
       </label>
     </div>
 
-    <label for="caption-textarea" class="control-label">{{
+    <label
+      for="caption-textarea"
+      class="control-label"
+    >{{
       $t("Caption")
     }}</label>
     <textarea
@@ -99,23 +99,23 @@
 </template>
 
 <script>
-export default {
-  name: "DropzoneWindow",
-  props: {
-    selectedFiles: {
-      type: Array,
-      default: () => [],
+  export default {
+    name: 'DropzoneWindow',
+    props: {
+      selectedFiles: {
+        type: Array,
+        default: () => [],
+      },
+      files: {
+        type: Array,
+        default: () => [],
+      },
     },
-    files: {
-      type: Array,
-      default: () => [],
+    mounted() {
+      window.prestaShopUiKit.initToolTips();
     },
-  },
-  mounted() {
-    window.prestaShopUiKit.initToolTips();
-  },
-  methods: {},
-};
+    methods: {},
+  };
 </script>
 
 <style lang="scss" type="text/scss">
