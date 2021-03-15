@@ -2878,7 +2878,7 @@
     <hook id="actionAdminSecurityControllerPostProcessGeneralBefore">
       <name>actionAdminSecurityControllerPostProcessGeneralBefore</name>
       <title>On post-process in Admin Security Controller</title>
-      <description>This hook is called on Admin Improve Shipping Preferences post-process before processing the General form</description>
+      <description>This hook is called on Admin Security Controller post-process before processing the General form</description>
     </hook>
   </entities>
 </entity_hook>
