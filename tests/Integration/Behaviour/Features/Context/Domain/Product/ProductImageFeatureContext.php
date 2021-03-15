@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use RuntimeException;
@@ -127,6 +128,53 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I delete product image :imageReference
+     *
+     * @param string $imageReference
+     */
+    public function deleteProductImage(string $imageReference): void
+    {
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        $this->getCommandBus()->handle(new DeleteProductImageCommand($imageId));
+    }
+
+    /**
+     * @Then following types for image :imageReference should be removed:
+     *
+     * @param string $imageReference
+     */
+    public function assertProductImageTypesRemoved(string $imageReference, TableNode $tableNode): void
+    {
+        $dataRows = $tableNode->getColumnsHash();
+
+        $imageId = $this->getSharedStorage()->get($imageReference);
+        foreach ($dataRows as $dataRow) {
+            $imgPath = $this->parseGeneratedImagePath($imageId, $dataRow['name']);
+            if (file_exists($imgPath)) {
+                throw new RuntimeException(sprintf('File "%s" should not not exist', $imgPath));
+            }
+        }
+        $imageFolder = $this->getImageGenerationPath($imageId);
+        if (file_exists($imageFolder)) {
+            throw new RuntimeException(sprintf('Folder "%s" should not not exist', $imageFolder));
+        }
+    }
+
+    /**
+     * @param int $imageId
+     *
+     * @return string
+     */
+    private function getImageGenerationPath(int $imageId): string
+    {
+        $directories = str_split((string) $imageId);
+        $path = implode('/', $directories);
+
+        return _PS_PROD_IMG_DIR_ . $path;
+    }
+
+    /**
      * @param int $imageId
      * @param string $imageTypeName
      *
@@ -134,10 +182,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     private function parseGeneratedImagePath(int $imageId, string $imageTypeName): string
     {
-        $directories = str_split((string) $imageId);
-        $path = implode('/', $directories);
-
-        return _PS_PROD_IMG_DIR_ . $path . '/' . $imageId . '-' . $imageTypeName . '.jpg';
+        return $this->getImageGenerationPath($imageId) . '/' . $imageId . '-' . $imageTypeName . '.jpg';
     }
 
     /**
