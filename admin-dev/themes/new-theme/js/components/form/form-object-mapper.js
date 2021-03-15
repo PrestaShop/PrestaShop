@@ -84,11 +84,24 @@ export default class FormObjectMapper {
   }
 
   /**
-   * Get a field from the object based on the model key
+   * Get a field from the object based on the model key, you can even get a sub part of the whole model.
+   * Example: for a model which looks like this:
+   * {
+   *   product: {
+   *     price: {
+   *       taxIncluded: 12.00,
+   *       taxExcluded: 10.00
+   *     }
+   *   }
+   * }
+   *
+   * You could call:
+   * mapper.get('product.price.taxIncluded') => 12.00
+   * mapper.get('product.price') => {taxIncluded: 12.00, taxExcluded: 10.00}
    *
    * @param modelKey (string)
    *
-   * @returns {*|{}}
+   * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
    */
   get(modelKey) {
     const modelKeys = modelKey.split('.');
@@ -154,6 +167,7 @@ export default class FormObjectMapper {
   inputUpdated(event) {
     const target = event.currentTarget;
 
+    // All inputs changes are watched, but not all of them are part of the mapping so we ignore them
     if (!Object.prototype.hasOwnProperty.call(this.formMapping, target.name)) {
       return;
     }
@@ -201,7 +215,7 @@ export default class FormObjectMapper {
   updateInputByName(inputName, value) {
     const $input = $(`[name="${inputName}"]`, this.$form);
     if (!$input.length) {
-      console.error(`Input with name ${inputName} is not rpesent in form.`);
+      console.error(`Input with name ${inputName} is not present in form.`);
 
       return;
     }
