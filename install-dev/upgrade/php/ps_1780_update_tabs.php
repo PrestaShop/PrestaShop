@@ -35,7 +35,7 @@ function ps_1780_update_tabs()
 
     foreach (['AdminSecurity', 'AdminSecuritySessionEmployee', 'AdminSecuritySessionCustomer'] as $className) {
         Db::getInstance()->execute(
-            'UPDATE `' . _DB_PREFIX_ . 'tab` SET `active`= true, `enabled`= true WHERE `class_name` = "' . pSQL($className) . '"'
+            'UPDATE `' . _DB_PREFIX_ . 'tab` SET `active`= false, `enabled`= true WHERE `class_name` = "' . pSQL($className) . '"'
         );
     }
 }
