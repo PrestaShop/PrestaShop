@@ -29,20 +29,20 @@ namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
 use Exception;
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Translation\DTO\DomainTranslation;
-use PrestaShop\PrestaShop\Core\Translation\DTO\MessageTranslation;
-use PrestaShop\PrestaShop\Core\Translation\DTO\Translations;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
 use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\BackofficeProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\FrontofficeProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\MailsBodyProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\MailsProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ModuleProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\OthersProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ProviderDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Translation\Provider\Definition\ThemeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsBodyProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 
 /**
  * This class provides the catalogue represented as an array.
@@ -99,10 +99,10 @@ class TranslationCatalogueBuilder
             $theme,
             $module,
             $domain
-        )->getDomainTranslation($domain);
+        )->getDomain($domain);
 
         if (null === $domainTranslation) {
-            $domainTranslation = new DomainTranslation($domain);
+            $domainTranslation = new Domain($domain);
         }
 
         return [
@@ -164,7 +164,7 @@ class TranslationCatalogueBuilder
      * @param string|null $module
      * @param string|null $domain
      *
-     * @return Translations
+     * @return Catalogue
      *
      * @throws UnexpectedTranslationTypeException
      * @throws TranslationFilesNotFoundException
@@ -176,7 +176,7 @@ class TranslationCatalogueBuilder
         ?string $theme,
         ?string $module,
         ?string $domain = null
-    ): Translations {
+    ): Catalogue {
         $this->validateParameters($type, $locale, $search, $theme, $module);
 
         $definition = null;
@@ -213,33 +213,33 @@ class TranslationCatalogueBuilder
             $defaultCatalogueMessages = [$domain => $defaultCatalogue->all($domain)];
         }
         if (empty($defaultCatalogueMessages)) {
-            return new Translations();
+            return new Catalogue();
         }
         $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
         $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
 
-        $translations = new Translations();
+        $catalogue = new Catalogue();
         foreach ($defaultCatalogueMessages as $domainName => $messages) {
-            $domainTranslation = new DomainTranslation($domainName);
+            $domainTranslation = new Domain($domainName);
 
             foreach ($messages as $translationKey => $translationValue) {
-                $messageTranslation = new MessageTranslation($translationKey);
+                $message = new Message($translationKey);
                 if ($fileTranslatedCatalogue->defines($translationKey, $domainName)) {
-                    $messageTranslation->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
+                    $message->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
                 }
                 if ($userTranslatedCatalogue->defines($translationKey, $domainName)) {
-                    $messageTranslation->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
+                    $message->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
                 }
                 // if search is empty or is in catalog default|project|user
-                if (empty($search) || $messageTranslation->contains($search)) {
-                    $domainTranslation->addMessageTranslation($messageTranslation);
+                if (empty($search) || $message->contains($search)) {
+                    $domainTranslation->addMessage($message);
                 }
             }
 
-            $translations->addDomainTranslation($domainTranslation);
+            $catalogue->addDomain($domainTranslation);
         }
 
-        return $translations;
+        return $catalogue;
     }
 
     /**

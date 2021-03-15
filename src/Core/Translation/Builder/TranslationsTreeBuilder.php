@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Translation\DTO\Translations;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
@@ -131,7 +131,7 @@ class TranslationsTreeBuilder
         }
 
         foreach ($metadataSubtree as $name => $value) {
-            if ($name === Translations::METADATA_KEY_NAME) {
+            if ($name === Catalogue::METADATA_KEY_NAME) {
                 $current['total_translations'] = $value['count'];
                 $current['total_missing_translations'] = $value['missing_translations'];
                 continue;
