@@ -243,6 +243,9 @@
           file.previewElement.classList.toggle('selected', checked);
         });
       },
+      /**
+       * We sometime need to remove tooltip because Vue kick the markup of the component
+       */
       removeTooltips() {
         $('.tooltip.show').each((i, element) => {
           $(element).remove();
