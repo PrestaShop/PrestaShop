@@ -65,6 +65,13 @@ export default class FormObjectMapper {
     this.initFormMapping();
     this.watchUpdates();
     this.updateFullObject();
+
+    return {
+      getObject: () => this.getObject(),
+      getInput: (modelKey) => this.getInput(modelKey),
+      get: (modelKey) => this.get(modelKey),
+      set: (modelKey, value) => this.set(modelKey, value),
+    };
   }
 
   /**
@@ -125,6 +132,8 @@ export default class FormObjectMapper {
 
   /**
    * Watches if changes happens from the form or via an event.
+   *
+   * @private
    */
   watchUpdates() {
     this.$form.on('keyup change dp.change', ':input', _.debounce(
@@ -139,6 +148,8 @@ export default class FormObjectMapper {
    * Triggered when a form input has been changed.
    *
    * @param event {Object}
+   *
+   * @private
    */
   inputUpdated(event) {
     const target = event.currentTarget;
@@ -163,6 +174,8 @@ export default class FormObjectMapper {
    *
    * @param modelKey {string}
    * @param value {*|{}}
+   *
+   * @private
    */
   updateInputValue(modelKey, value) {
     const modelInputs = this.fullModelMapping[modelKey];
@@ -182,9 +195,16 @@ export default class FormObjectMapper {
    *
    * @param inputName {string}
    * @param value {*|{}}
+   *
+   * @private
    */
   updateInputByName(inputName, value) {
-    const $input = $(`[name="${inputName}"]`);
+    const $input = $(`[name="${inputName}"]`, this.$form);
+    if (!$input.length) {
+      console.error(`Input with name ${inputName} is not rpesent in form.`);
+
+      return;
+    }
 
     // This check is important to avoid infinite loops, we don't use strict equality on purpose because it would result
     // into a potential infinite loop if type don't match, which can easily happen with a number value and a text input.
@@ -200,6 +220,8 @@ export default class FormObjectMapper {
    * emit an event for external components that may need the update.
    *
    * This method is called when this component initializes or when triggered by an external event.
+   *
+   * @private
    */
   updateFullObject() {
     const serializedForm = this.$form.serializeJSON();
@@ -220,6 +242,8 @@ export default class FormObjectMapper {
    *
    * @param modelKey {string}
    * @param value
+   *
+   * @private
    */
   updateObjectByKey(modelKey, value) {
     const modelKeys = modelKey.split('.');
@@ -245,6 +269,8 @@ export default class FormObjectMapper {
   /**
    * Reverse the initial mapping Model->Form to the opposite Form->Model
    * This simplifies the sync in when data updates.
+   *
+   * @private
    */
   initFormMapping() {
     this.formMapping = {};
@@ -266,6 +292,8 @@ export default class FormObjectMapper {
   /**
    * @param formName {string}
    * @param modelMapping {string}
+   *
+   * @private
    */
   addFormMapping(formName, modelMapping) {
     if (Object.prototype.hasOwnProperty.call(this.formMapping, formName)) {
