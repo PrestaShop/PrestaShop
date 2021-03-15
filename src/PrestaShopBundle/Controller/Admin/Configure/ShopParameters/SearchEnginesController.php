@@ -42,7 +42,6 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use function array_map;
 
 class SearchEnginesController extends FrameworkBundleAdminController
 {
