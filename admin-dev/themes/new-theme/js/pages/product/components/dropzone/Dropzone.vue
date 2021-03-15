@@ -186,9 +186,7 @@
 
         this.selectedFiles = [];
 
-        $('.tooltip.show').each((i, element) => {
-          $(element).remove();
-        });
+        this.removeTooltips();
       },
       /**
        * Method to remove every selected files from the dropzone
@@ -201,10 +199,7 @@
         });
 
         this.selectedFiles = [];
-
-        $('.tooltip.show').each((i, element) => {
-          $(element).remove();
-        });
+        this.removeTooltips();
       },
       /**
        * Method to manage checkboxes of files mainly used on selectAll and unselectAll
@@ -215,6 +210,11 @@
           input.checked = typeof checked !== 'undefined' ? checked : !input.checked;
 
           file.previewElement.classList.toggle('selected', checked);
+        });
+      },
+      removeTooltips() {
+        $('.tooltip.show').each((i, element) => {
+          $(element).remove();
         });
       },
     },
