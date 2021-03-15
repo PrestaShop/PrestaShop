@@ -162,15 +162,19 @@
           productId: this.productId,
         });
 
-        const response = await fetch(imagesUrl);
-        const images = await response.json();
+        try {
+          const response = await fetch(imagesUrl);
+          const images = await response.json();
 
-        this.loading = false;
-        this.initDropZone();
+          this.loading = false;
+          this.initDropZone();
 
-        images.forEach((image) => {
-          this.dropzone.displayExistingFile(image, image.path);
-        });
+          images.forEach((image) => {
+            this.dropzone.displayExistingFile(image, image.path);
+          });
+        } catch (error) {
+          window.$.growl.error({message: error});
+        }
       },
       /**
        * Method to initialize the dropzone, using the configuration's state and adding files
