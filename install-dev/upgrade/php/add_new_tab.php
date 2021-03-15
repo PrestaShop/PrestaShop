@@ -30,7 +30,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
  * Common method to handle the tab registration
  * @internal
  */
-function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
+function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '', string $routeName = '')
 {
     if (null !== $parentTab && !empty($parentTab) && strtolower(trim($parentTab)) !== 'null') {
         $id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
@@ -43,8 +43,10 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
     }
 
     if (!(int)Db::getInstance()->getValue('SELECT count(id_tab) FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($className).'\' ')) {
-        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\',
-									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'))');
+        Db::getInstance()->execute(
+            'INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`, `route_name`) ' .
+            'VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\', ' .
+            '(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'), \'' . $routeName . '\')');
     }
 
     $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
@@ -111,9 +113,9 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
  *
  * @return int|null Tab id if requested
  */
-function add_new_tab_17($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
+function add_new_tab_17($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '', string $routeName = '')
 {
-    register_tab($className, $name, $id_parent, $returnId, $parentTab, $module);
+    register_tab($className, $name, $id_parent, $returnId, $parentTab, $module, $routeName);
 
     // Preliminary - Get Parent class name for slug generation
     $parentClassName = null;
