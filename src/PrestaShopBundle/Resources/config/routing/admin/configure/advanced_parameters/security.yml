@@ -14,6 +14,14 @@ admin_security_general_save:
         _legacy_controller: AdminSecurity
         _legacy_link: AdminSecurity
 
+admin_security_sessions_customer_clear:
+    path: /session/customer/clear
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:clearCustomerSession'
+        _legacy_controller: AdminSecuritySessionCustomer
+        _legacy_link: AdminSecuritySessionCustomer
+
 admin_security_sessions_customer_list:
     path: /session/customer
     methods: [GET]
@@ -31,6 +39,14 @@ admin_security_sessions_customer_delete:
         _legacy_link: AdminSecuritySessionCustomer
     requirements:
         sessionId: \d+
+
+admin_security_sessions_employee_clear:
+    path: /session/employee/clear
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:clearEmployeeSession'
+        _legacy_controller: AdminSecuritySessionEmployee
+        _legacy_link: AdminSecuritySessionEmployee
 
 admin_security_sessions_employee_list:
     path: /session/employee
