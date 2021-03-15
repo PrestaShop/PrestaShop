@@ -27,28 +27,31 @@
     <div class="dropzone-window-header row">
       <div class="dropzone-window-header-left">
         <p class="dropzone-window-number">
-          <span>{{ selectedFiles.length }} {{ $t('window.selectedFiles') }}</span>
+          <span>{{ selectedFiles.length }}</span>
+          {{ $t("window.selectedFiles") }}
         </p>
       </div>
       <div class="dropzone-window-header-right">
         <i
           class="material-icons"
-
           data-toggle="pstooltip"
           :data-original-title="$t('window.zoom')"
-        >search</i>
+          >search</i
+        >
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.delete')"
           @click="$emit('removeSelection')"
-        >delete</i>
+          >delete</i
+        >
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.close')"
           @click="$emit('unselectAll')"
-        >close</i>
+          >close</i
+        >
       </div>
     </div>
 
@@ -57,93 +60,141 @@
       @click="$emit('selectAll')"
       v-if="files.length > 0 && selectedFiles.length !== files.length"
     >
-      {{ $t('window.selectAll') }}
+      {{ $t("window.selectAll") }}
     </p>
     <p
       class="dropzone-window-unselect"
       v-if="selectedFiles.length === files.length"
       @click="$emit('unselectAll')"
     >
-      {{ $t('window.unselectAll') }}
+      {{ $t("window.unselectAll") }}
     </p>
 
     <div
-      class="md-checkbox"
+      class="md-checkbox dropzone-window-checkbox"
       v-if="selectedFiles.length === 1"
     >
       <label>
-        <input type="checkbox">
+        <input type="checkbox" />
         <i class="md-checkbox-control" />
-        {{ $t('window.useAsCover') }}
+        {{ $t("window.useAsCover") }}
       </label>
     </div>
 
-    <label
-      for="caption-textarea"
-      class="control-label"
-    >{{ $t('Caption') }}</label>
+    <label for="caption-textarea" class="control-label">{{
+      $t("Caption")
+    }}</label>
     <textarea
       id="caption-textarea"
       name="caption-textarea"
       class="form-control"
     />
 
-    <button class="btn btn-primary save-image-settings">
-      {{ $t('window.saveImage') }}
-    </button>
+    <div class="dropzone-window-button-container">
+      <button class="btn btn-primary save-image-settings">
+        {{ $t("window.saveImage") }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'DropzoneWindow',
-    props: {
-      selectedFiles: {
-        type: Array,
-        default: () => [],
-      },
-      files: {
-        type: Array,
-        default: () => [],
-      },
+export default {
+  name: "DropzoneWindow",
+  props: {
+    selectedFiles: {
+      type: Array,
+      default: () => [],
     },
-    mounted() {
-      window.prestaShopUiKit.initToolTips();
+    files: {
+      type: Array,
+      default: () => [],
     },
-    methods: {
-    },
-  };
+  },
+  mounted() {
+    window.prestaShopUiKit.initToolTips();
+  },
+  methods: {},
+};
 </script>
 
 <style lang="scss" type="text/scss">
-  @import '~@scss/config/_settings.scss';
+@import "~@scss/config/_settings.scss";
 
-  .product-page {
-    .dropzone-window {
-      width: 33%;
-      background-color: darken(#ffffff, 2%);
-      align-self: stretch;
-      padding: 1rem;
+.product-page {
+  .dropzone-window {
+    width: 45%;
+    background-color: darken(#ffffff, 2%);
+    align-self: stretch;
+    padding: 1rem;
 
-      &-header {
+    textarea {
+      margin-bottom: 1rem;
+    }
+
+    &-button {
+      &-container {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
+      }
+    }
 
-        p {
-          margin-bottom: 0;
+    &-checkbox {
+      margin-bottom: 1rem;
+
+      label {
+        font-size: 0.875rem;
+      }
+    }
+
+    &-select,
+    &-unselect {
+      font-weight: 600;
+      font-size: 0.925rem;
+      color: $primary;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    &-number {
+      font-size: 1rem;
+
+      span {
+        color: $primary;
+        font-weight: 600;
+      }
+    }
+
+    &-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+
+      p {
+        margin-bottom: 0;
+      }
+
+      .material-icons {
+        cursor: pointer;
+        color: $gray-500;
+        transition: 0.25s ease-out;
+        font-size: 1.5rem;
+        margin: 0 0.25rem;
+
+        &:last-child {
+          margin-right: 0;
         }
 
-        .material-icons {
-          cursor: pointer;
-          color: $gray-500;
-          transition: .25s ease-out;
+        &:first-child {
+          margin-left: 0;
+        }
 
-          &:hover {
-            color: primary;
-          }
+        &:hover {
+          color: primary;
         }
       }
     }
   }
+}
 </style>
