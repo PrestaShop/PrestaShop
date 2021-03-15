@@ -216,7 +216,7 @@ Tree.prototype =
 					$('#' + idTree).html(content);
 					organizeTree();
 					$('#' + idTree).tree('init');
-					this.$element.find("label.tree-toggler").each(
+					$(this).$element.find("label.tree-toggler").each(
 						function()
 						{
 							$(this).parent().children(".icon-folder-close")
