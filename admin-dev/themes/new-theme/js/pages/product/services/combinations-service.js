@@ -52,38 +52,13 @@ export default class CombinationsService {
 
   /**
    * @param {Number} combinationId
-   * @param {Number} impactOnPrice
+   * @param {Object} data
    *
    * @returns {Promise}
    */
-  updateImpactOnPrice(combinationId, impactOnPrice) {
+  updateListedCombination(combinationId, data) {
     return $.post(this.router.generate('admin_products_combinations_update_impact_on_price', {
-      combinationId,
-      impactOnPrice,
-    }));
-  }
-
-  /**
-   * @param {Number} combinationId
-   * @param {Number} quantity
-   *
-   * @returns {Promise}
-   */
-  updateQuantity(combinationId, quantity) {
-    return $.post(this.router.generate('admin_products_combinations_update_quantity', {
-      combinationId,
-      quantity,
-    }));
-  }
-
-  /**
-   * @param {Number} combinationId
-   *
-   * @returns {Promise}
-   */
-  markAsDefault(combinationId) {
-    return $.post(this.router.generate('admin_products_combinations_mark_as_default', {
-      combinationId,
+      data,
     }));
   }
 }

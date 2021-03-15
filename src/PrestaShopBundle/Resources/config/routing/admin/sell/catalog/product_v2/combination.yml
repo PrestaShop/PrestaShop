@@ -8,35 +8,13 @@ admin_products_combinations:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getList
         _legacy_controller: AdminProducts
 
-admin_products_combinations_update_impact_on_price:
-    path: /combinations/{combinationId}/update-impact-on-price
+admin_products_combinations_update_combination_from_listing:
+    path: /combinations/{combinationId}/update-combination-from-listing
     methods: [POST]
     options:
         expose: true
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateImpactOnPrice
-        _legacy_controller: AdminProducts
-    requirements:
-        combinationId: \d+
-
-admin_products_combinations_update_quantity:
-    path: /combinations/{combinationId}/update-quantity
-    methods: [POST]
-    options:
-        expose: true
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateQuantity
-        _legacy_controller: AdminProducts
-    requirements:
-        combinationId: \d+
-
-admin_products_combinations_mark_as_default:
-    path: /combinations/{combinationId}/mark-as-default
-    methods: [POST]
-    options:
-        expose: true
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:markAsDefault
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateCombinationFromListing
         _legacy_controller: AdminProducts
     requirements:
         combinationId: \d+

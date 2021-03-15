@@ -70,77 +70,23 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function updateImpactOnPriceAction(int $combinationId, Request $request): JsonResponse
+    public function updateCombinationFromListingAction(int $combinationId, Request $request): JsonResponse
     {
         $impactOnPrice = $request->request->get('impactOnPrice');
-
-        if (!$impactOnPrice) {
-            return $this->json(
-                ['message' => 'Missing impactOnPrice'],
-                Response::HTTP_BAD_REQUEST
-            );
-        }
+        $quantity = $request->request->getInt('quantity');
+        $isDefault = $request->request->getBoolean('isDefault');
 
         $command = new UpdateCombinationFromListingCommand($combinationId);
-        $command->setImpactOnPrice($impactOnPrice);
 
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getFallbackErrorMessage(get_class($e), $e->getCode(), $e->getMessage())],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+        if (isset($impactOnPrice)) {
+            $command->setImpactOnPrice($impactOnPrice);
         }
-
-        return $this->json([]);
-    }
-
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
-     * @param int $combinationId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function updateQuantityAction(int $combinationId, Request $request): JsonResponse
-    {
-        $quantity = $request->request->get('quantity');
-
-        if (!$quantity) {
-            return $this->json(
-                ['message' => 'Missing quantity'],
-                Response::HTTP_BAD_REQUEST
-            );
+        if (isset($quantity)) {
+            $command->setQuantity($quantity);
         }
-
-        $command = new UpdateCombinationFromListingCommand($combinationId);
-        $command->setQuantity($quantity);
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getFallbackErrorMessage(get_class($e), $e->getCode(), $e->getMessage())],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+        if (isset($isDefault)) {
+            $command->setDefault($isDefault);
         }
-
-        return $this->json([]);
-    }
-
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
-     * @param int $combinationId
-     *
-     * @return JsonResponse
-     */
-    public function markAsDefaultAction(int $combinationId): JsonResponse
-    {
-        $command = new UpdateCombinationFromListingCommand($combinationId);
-        $command->setDefault(true);
 
         try {
             $this->getCommandBus()->handle($command);
