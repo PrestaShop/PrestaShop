@@ -28,9 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Session\Repository;
 
+use DateInterval;
+use DateTime;
+use Doctrine\DBAL\Connection;
 use EmployeeSession;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteEmployeeSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotClearEmployeeSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteEmployeeSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\EmployeeSessionId;
@@ -41,6 +45,36 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class EmployeeSessionRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @var int
+     */
+    private $cookieLifetime;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param int $cookieLifetime
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix,
+        int $cookieLifetime
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+        $this->cookieLifetime = $cookieLifetime;
+    }
+
     /**
      * @param EmployeeSessionId $sessionId
      *
@@ -94,5 +128,29 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
             $failedIds,
             sprintf('Failed to delete following employees sessions: "%s"', implode(', ', $failedIds))
         );
+    }
+
+    /**
+     * Clear outdated employee sessions
+     *
+     * @return void
+     *
+     * @throws CannotClearEmployeeSessionException
+     */
+    public function clearOutdatedSessions(): void
+    {
+        try {
+            $date = new DateTime();
+            $date->sub(new DateInterval('PT' . $this->cookieLifetime . 'H'));
+
+            $qb = $this->connection->createQueryBuilder();
+            $qb->delete($this->dbPrefix . 'employee_session')
+                ->where('date_upd < :dateUpd')
+                ->setParameter('dateUpd', $date->format('Y-m-d'));
+
+            $qb->execute();
+        } catch (CoreException $e) {
+            throw new CannotClearEmployeeSessionException();
+        }
     }
 }
