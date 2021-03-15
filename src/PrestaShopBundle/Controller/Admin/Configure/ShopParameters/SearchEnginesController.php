@@ -43,6 +43,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Responsible for handling "Configure > Shop Parameters > Traffic & SEO > Search Engines" page.
+ */
 class SearchEnginesController extends FrameworkBundleAdminController
 {
     /**
