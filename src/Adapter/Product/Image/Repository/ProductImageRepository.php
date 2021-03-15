@@ -33,6 +33,7 @@ use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -188,5 +189,15 @@ class ProductImageRepository extends AbstractObjectModelRepository
         );
 
         return $image;
+    }
+
+    /**
+     * @param Image $image
+     *
+     * @throws CannotDeleteProductImageException
+     */
+    public function delete(Image $image): void
+    {
+        $this->deleteObjectModel($image, CannotDeleteProductImageException::class);
     }
 }
