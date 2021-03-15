@@ -104,7 +104,7 @@
 									<div class="form-group">
 									{/if}
 									{foreach $languages as $language}
-                    {if is_array($fields_value[$input.name]) AND isset($fields_value[$input.name][$language.id_lang])}
+                    {if isset($fields_value[$input.name][$language.id_lang])}
                       {assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
                     {else}
                       {assign var='value_text' value=''}
