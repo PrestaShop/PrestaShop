@@ -112,6 +112,7 @@
 
 <script>
   import Router from '@components/router';
+  import {getProductImages} from '@pages/product/services/images';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
@@ -158,13 +159,8 @@
        * This methods is used to initialize product images we already have uploaded
        */
       async initProductImages() {
-        const imagesUrl = router.generate('admin_products_v2_get_images', {
-          productId: this.productId,
-        });
-
         try {
-          const response = await fetch(imagesUrl);
-          const images = await response.json();
+          const images = await getProductImages(this.productId);
 
           this.loading = false;
           this.initDropZone();
