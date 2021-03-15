@@ -1454,7 +1454,7 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.updatable_input:
-        class: 'PrestaShopBundle\Form\Admin\Type\UpdatableInputType'
+    form.type.submittable_input:
+        class: 'PrestaShopBundle\Form\Admin\Type\SubmittableInputType'
         tags:
             - { name: form.type }

@@ -27,7 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
-import UpdatableInput from '@components/form/updatable-input';
+import SubmittableInput from '@components/form/submittable-input';
 
 const {$} = window;
 
@@ -42,12 +42,19 @@ export default class CombinationsManager {
 
   init() {
     const productId = this.getProductId();
+    const combinationsService = new CombinationsService(productId);
+
     this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
-      new CombinationsService(productId),
+      combinationsService,
       new CombinationsGridRenderer(),
     );
-    new UpdatableInput();
+    new SubmittableInput();
+    $(ProductMap.combinations.combinationsTable).on('click', '.ps-submittable-input-wrapper .check-button', (e) => {
+      console.log('todo');
+      //@todo: parse combination id from event and fire combinationService.update?
+      //@todo: maybe return selector name or event name from SubmittableInput to avoid it hardcoding here?
+    });
 
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());

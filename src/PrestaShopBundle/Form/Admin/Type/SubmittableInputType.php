@@ -30,20 +30,21 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UpdatableInputType extends AbstractType
+/**
+ * Adds a button right into specified input and toggles it's availability on change
+ *
+ * Check admin-dev/themes/new-theme/js/components/form/submittable-input.js for related javascript component
+ */
+class SubmittableInputType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('value', $options['type'], $options['type_options']);
-    }
-
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        $view->vars['route'] = $options['route'];
     }
 
     /**
@@ -57,12 +58,10 @@ class UpdatableInputType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired('route')
             ->setDefault('type', NumberType::class)
             ->setDefault('type_options', [])
             ->setAllowedTypes('type', 'string')
             ->setAllowedTypes('type_options', 'array')
-            ->setAllowedTypes('route', 'string')
         ;
     }
 }

@@ -25,11 +25,11 @@
 
 const {$} = window;
 
-export default class UpdatableInput {
+export default class SubmittableInput {
   constructor() {
-    this.wrapperSelector = '.ps-updatable-input-wrapper';
+    this.wrapperSelector = '.ps-submittable-input-wrapper';
     this.buttonSelector = '.check-button';
-    this.inputsSelector = `${this.wrapperSelector} .updatable-input`;
+    this.inputsSelector = `${this.wrapperSelector} .submittable-input`;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
 
     this.init();
@@ -44,10 +44,6 @@ export default class UpdatableInput {
     });
     $(document).on('input', this.inputsSelector, (e) => {
       this.activateButton($(e.currentTarget));
-    });
-    $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e) => {
-      //@todo: use this event (or native). to call ajax outside the component or what?
-      this.eventEmitter.emit('updatableInputClicked', e);
     });
   }
 
