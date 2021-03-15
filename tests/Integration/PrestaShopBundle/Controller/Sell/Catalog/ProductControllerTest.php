@@ -142,7 +142,7 @@ class ProductControllerTest extends GridControllerTestCase
             'product[shipping][additional_shipping_cost]' => 0,
             'product[price][price_tax_excluded]' => $testEntity->price,
             'product[shortcuts][price][price_tax_excluded]' => $testEntity->price,
-            'product[shortcuts][price][price_tax_included]' => $testEntity->price
+            'product[shortcuts][price][price_tax_included]' => $testEntity->price,
         ];
     }
 }
