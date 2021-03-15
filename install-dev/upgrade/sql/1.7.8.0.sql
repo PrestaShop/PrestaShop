@@ -25,7 +25,7 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionFeatureFlagForm', 'Modify feature flag options form content', 'This hook allows to modify the Feature Flag page form FormBuilder', 1),
   (NULL, 'actionFeatureFlagSave', 'Modify feature flag options form saved data', 'This hook allows to modify the Feature Flag data being submitted through the form after it was saved', 1),
   (NULL, 'actionAdminSecurityControllerPostProcessBefore', 'On post-process in Admin Security Controller', 'This hook is called on Admin Security Controller post-process before processing any form', '1'),
-  (NULL, 'actionAdminSecurityControllerPostProcessGeneralBefore', 'On post-process in Admin Security Controller', 'This hook is called on Admin Improve Shipping Preferences post-process before processing the General form', '1')
+  (NULL, 'actionAdminSecurityControllerPostProcessGeneralBefore', 'On post-process in Admin Security Controller', 'This hook is called on Admin Security Controller post-process before processing the General form', '1')
 ;
 
 
