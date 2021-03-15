@@ -49,9 +49,11 @@ export default class OrderPricesRefresher {
     $.getJSON(this.router.generate('admin_orders_product_prices', {orderId})).then(productPricesList => {
       productPricesList.forEach(productPrices => {
         const orderProductTrId = OrderViewPageMap.productsTableRow(productPrices.orderDetailId);
-
+        const quantity = productPrices.quantity > 1
+          ? `<span class="badge badge-secondary rounded-circle">${productPrices.quantity}</span>`
+          : productPrices.quantity;
         $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(productPrices.unitPrice);
-        $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).text(productPrices.quantity);
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).html(quantity);
         $(`${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`).text(productPrices.availableQuantity);
         $(`${orderProductTrId} ${OrderViewPageMap.productEditTotalPrice}`).text(productPrices.totalPrice);
 
