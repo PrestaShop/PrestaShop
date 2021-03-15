@@ -847,16 +847,15 @@
 {% endblock text_widget %}
 
 {% block updatable_input_widget %}
-  <div class="ps-updatable-input-wrapper">
-{# @todo: data-initial-value and value should be taken from form (its hardcoed now because doesn't work with collection#}
+  <div class="ps-submittable-input-wrapper">
     {%- set attr = attr|merge({
-      'class': (attr.class|default('') ~ ' updatable-input')|trim,
-      'data-initial-value': 10,
-      'value': 10
+      'class': (attr.class|default('') ~ ' submittable-input')|trim,
+      'data-initial-value': value,
+      'value': value,
       }) -%}
 
     {{ form_widget(form.value, {'attr': attr}) }}
-    <button type="button" class="check-button d-none" data-route="{{ form.vars.route }}">
+    <button type="button" class="check-button d-none">
       <i class="material-icons">check</i>
     </button>
   </div>
