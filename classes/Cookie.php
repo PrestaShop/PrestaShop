@@ -590,6 +590,9 @@ class CookieCore
         }
 
         if (!empty($session->getId())) {
+            // Update session date_upd
+            $session->save();
+
             return $session;
         }
 
