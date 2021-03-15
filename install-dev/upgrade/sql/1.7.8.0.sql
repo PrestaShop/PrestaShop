@@ -61,3 +61,5 @@ UPDATE `PREFIX_product` SET `redirect_type` = '404' WHERE `redirect_type` = '';
 ALTER TABLE `PREFIX_product` MODIFY COLUMN `redirect_type` ENUM(
     '404', '301-product', '302-product', '301-category', '302-category'
 ) NOT NULL DEFAULT '404';
+
+/* PHP:ps_1780_update_tabs(); */;
