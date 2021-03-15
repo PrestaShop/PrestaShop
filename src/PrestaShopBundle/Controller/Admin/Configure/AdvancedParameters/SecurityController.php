@@ -31,10 +31,14 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearCustomerSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearEmployeeSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteCustomerSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteEmployeeSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotClearCustomerSessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotClearEmployeeSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteCustomerSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotDeleteEmployeeSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
@@ -139,12 +143,21 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function employeeSessionAction(EmployeeFilters $filters): Response
     {
+        $toolbarButtons = [
+            'clear_cache' => [
+                'href' => $this->generateUrl('admin_security_sessions_employee_clear'),
+                'desc' => $this->trans('Clear outdated sessions', 'Admin.Advparameters.Feature'),
+                'icon' => 'delete',
+            ],
+        ];
+
         $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.session.employee');
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
             [
                 'enableSidebar' => true,
+                'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
             ]
@@ -162,12 +175,21 @@ class SecurityController extends FrameworkBundleAdminController
      */
     public function customerSessionAction(CustomerFilters $filters): Response
     {
+        $toolbarButtons = [
+            'clear_cache' => [
+                'href' => $this->generateUrl('admin_security_sessions_customer_clear'),
+                'desc' => $this->trans('Clear outdated sessions', 'Admin.Advparameters.Feature'),
+                'icon' => 'delete',
+            ],
+        ];
+
         $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.session.customer');
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customers.html.twig',
             [
                 'enableSidebar' => true,
+                'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
             ]
@@ -175,12 +197,49 @@ class SecurityController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function clearCustomerSessionAction()
+    {
+        try {
+            $clearSessionCommand = new ClearCustomerSessionCommand();
+
+            $this->getCommandBus()->handle($clearSessionCommand);
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CoreException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_security_sessions_customer_list');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function clearEmployeeSessionAction()
+    {
+        try {
+            $clearSessionCommand = new ClearEmployeeSessionCommand();
+
+            $this->getCommandBus()->handle($clearSessionCommand);
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CoreException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_security_sessions_employee_list');
+    }
+
+    /**
      * Delete an employee session.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to edit this."
-     * )
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $sessionId
      *
@@ -204,10 +263,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Delete a customer session.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to edit this."
-     * )
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $sessionId
      *
@@ -231,10 +287,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Bulk delete customer session.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to edit this."
-     * )
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -260,10 +313,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Bulk delete employee session.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to edit this."
-     * )
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -304,6 +354,10 @@ class SecurityController extends FrameworkBundleAdminController
                 'An error occurred while deleting the object.',
                 'Admin.Notifications.Error'
             ),
+            CannotClearCustomerSessionException::class => $this->trans(
+                'An error occurred while clearing objects.',
+                'Admin.Notifications.Error'
+            ),
             CannotBulkDeleteCustomerSessionException::class => $this->trans(
                 '%s: %s',
                 'Admin.Global',
@@ -317,6 +371,10 @@ class SecurityController extends FrameworkBundleAdminController
             ),
             CannotDeleteEmployeeSessionException::class => $this->trans(
                 'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+            CannotClearEmployeeSessionException::class => $this->trans(
+                'An error occurred while clearing objects.',
                 'Admin.Notifications.Error'
             ),
             CannotBulkDeleteEmployeeSessionException::class => $this->trans(
