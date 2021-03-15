@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -79,8 +80,8 @@ class CmsPageCategoryType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>;=#{}';
-        $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>={}';
+        $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') . TypedRegexValidator::CATALOG_CHARS;
+        $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Global') . TypedRegexValidator::GENERIC_NAME_CHARS;
         $builder
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
