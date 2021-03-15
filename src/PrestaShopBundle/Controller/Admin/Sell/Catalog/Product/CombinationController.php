@@ -59,37 +59,17 @@ class CombinationController extends FrameworkBundleAdminController
             $offset ?? null
         ));
 
-        return $this->json($this->formatResponse($combinationsList));
+        return $this->json($this->formatListResponse($combinationsList));
     }
 
     /**
-     * @param CombinationListForEditing $combinationListForEditing
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @return array<string, array<int, array<string,bool|int|string>>|int>
+     * @param int $combinationId
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    private function formatResponse(CombinationListForEditing $combinationListForEditing): array
-    {
-        $data = [
-            'combinations' => [],
-            'total' => $combinationListForEditing->getTotalCombinationsCount(),
-        ];
-        foreach ($combinationListForEditing->getCombinations() as $combination) {
-            $data['combinations'][] = [
-                'id' => $combination->getCombinationId(),
-                'isSelected' => false,
-                'name' => $combination->getCombinationName(),
-                //@todo: don't forget image path when implemented in the query
-                'impactOnPrice' => (string) $combination->getImpactOnPrice(),
-                //@todo: calculate final price. Need a service to be used in formData provider and here
-                'finalPriceTe' => 0,
-                'quantity' => $combination->getQuantity(),
-                'isDefault' => $combination->isDefault(),
-            ];
-        }
-
-        return $data;
-    }
-
     public function updateImpactOnPriceAction(int $combinationId, Request $request): JsonResponse
     {
         $impactOnPrice = $request->request->get('impactOnPrice');
@@ -172,5 +152,33 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $this->json([]);
+    }
+
+    /**
+     * @param CombinationListForEditing $combinationListForEditing
+     *
+     * @return array<string, array<int, array<string,bool|int|string>>|int>
+     */
+    private function formatListResponse(CombinationListForEditing $combinationListForEditing): array
+    {
+        $data = [
+            'combinations' => [],
+            'total' => $combinationListForEditing->getTotalCombinationsCount(),
+        ];
+        foreach ($combinationListForEditing->getCombinations() as $combination) {
+            $data['combinations'][] = [
+                'id' => $combination->getCombinationId(),
+                'isSelected' => false,
+                'name' => $combination->getCombinationName(),
+                //@todo: don't forget image path when implemented in the query
+                'impactOnPrice' => (string) $combination->getImpactOnPrice(),
+                //@todo: calculate final price. Need a service to be used in formData provider and here
+                'finalPriceTe' => 0,
+                'quantity' => $combination->getQuantity(),
+                'isDefault' => $combination->isDefault(),
+            ];
+        }
+
+        return $data;
     }
 }
