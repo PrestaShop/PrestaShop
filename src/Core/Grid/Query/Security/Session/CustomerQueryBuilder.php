@@ -65,7 +65,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('cs.id_customer_session, c.id_customer, c.firstname, c.lastname, c.email')
+            ->select('cs.id_customer_session, c.id_customer, c.firstname, c.lastname, c.email, cs.date_upd')
         ;
 
         $this->searchCriteriaApplicator
@@ -101,11 +101,12 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         $allowedFilters = [
-            'id_customer_session',
-            'id_customer',
-            'firstname',
-            'lastname',
+            'date_upd',
             'email',
+            'firstname',
+            'id_customer',
+            'id_customer_session',
+            'lastname',
         ];
 
         foreach ($filters as $name => $value) {
@@ -123,6 +124,20 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('id_customer' === $name) {
                 $qb->andWhere('c.id_customer = :' . $name);
                 $qb->setParameter($name, $value);
+
+                continue;
+            }
+
+            if ('date_upd' === $name) {
+                if (isset($value['from'])) {
+                    $qb->andWhere('cs.date_upd >= :date_from');
+                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $value['from']));
+                }
+
+                if (isset($value['to'])) {
+                    $qb->andWhere('cs.date_upd <= :date_to');
+                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $value['to']));
+                }
 
                 continue;
             }
