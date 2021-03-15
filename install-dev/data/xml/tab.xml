@@ -440,7 +440,7 @@
                 <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1" hide_host_mode="0">
                     <class_name>AdminShopUrl</class_name>
                 </tab>
-                <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0">
+                <tab id="Security" id_parent="Advanced_Parameters" active="0" enabled="1" hide_host_mode="0">
                     <class_name>AdminParentSecurity</class_name>
                 </tab>
                     <tab id="Security_1" id_parent="Security" active="1" enabled="1" hide_host_mode="0" route_name="admin_security">
