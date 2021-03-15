@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Translation\Storage\Provider;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -43,11 +43,11 @@ class MockDatabaseTranslationLoader extends DatabaseTranslationLoader
     /**
      * @param array<array{lang: string, key: string, translation: string, domain: string, theme: ?string}> $databaseContent
      */
-    public function __construct(array $databaseContent, $entityManager)
+    public function __construct(array $databaseContent, $languageRepository, $translationRepository)
     {
         $this->databaseContent = $databaseContent;
 
-        parent::__construct($entityManager);
+        parent::__construct($languageRepository, $translationRepository);
     }
 
     /**

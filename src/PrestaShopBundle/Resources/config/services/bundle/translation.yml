@@ -31,7 +31,7 @@ services:
 
     #TRANSLATIONS PROVIDERS
     prestashop.translation.provider.catalogue_provider_factory:
-        class: PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory
         arguments:
             - '@prestashop.translation.database_loader'
             - '@prestashop.translation.legacy_module.extractor'
@@ -164,6 +164,12 @@ services:
         arguments:
             - "@prestashop.compiler.smarty.template"
             - true
+
+
+    prestashop.translation.extractor.theme:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor
+        arguments:
+            - "@prestashop.translation.extractor.smarty.legacy"
 
     prestashop.translation.theme_extractor:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractor

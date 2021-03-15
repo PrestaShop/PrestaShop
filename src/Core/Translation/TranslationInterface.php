@@ -24,34 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Translation;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
-
-class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
+/**
+ * Interface TranslationInterface defines a translation object (id, key, translation, domain)
+ */
+interface TranslationInterface
 {
     /**
-     * @param string $language
-     * @param string $theme
+     * Database id
      *
-     * @return array
+     * @return int
      */
-    public function findByLanguageAndTheme($language, $theme = null)
-    {
-        $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->where('lang = :language');
-        $queryBuilder->setParameter('language', $language);
+    public function getId(): int;
 
-        if (null !== $theme) {
-            $queryBuilder->andWhere('theme = :theme');
-            $queryBuilder->setParameter('theme', $theme);
-        } else {
-            $queryBuilder->andWhere('theme IS NULL');
-        }
+    /**
+     * The translation key (wording)
+     *
+     * @return string
+     */
+    public function getKey(): string;
 
-        $query = $queryBuilder->getQuery();
+    /**
+     * The translated string (message)
+     *
+     * @return string
+     */
+    public function getTranslation(): string;
 
-        return $query->getResult();
-    }
+    /**
+     * The translation domain name
+     *
+     * @return string
+     */
+    public function getDomain(): string;
 }

@@ -32,10 +32,10 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Exception\InvalidThemeException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\FileTranslatedCatalogueFinder;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\UserTranslatedCatalogueFinder;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -129,9 +129,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
         bool $refreshCache = false
     ): MessageCatalogue {
         // Extracts wordings from the theme's templates
-        $catalogue = $this->themeExtractor->extract($this->theme, $locale, $refreshCache);
-
-        return $this->normalize($catalogue);
+        return $this->themeExtractor->extract($this->theme, $locale);
     }
 
     /**
@@ -207,41 +205,5 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
         $this->filesystem->mkdir($resourceDirectory);
 
         return $resourceDirectory;
-    }
-
-    /**
-     * Normalizes domains in a catalogue by removing dots
-     *
-     * @param MessageCatalogue $catalogue
-     *
-     * @return MessageCatalogue
-     */
-    private function normalize(MessageCatalogue $catalogue): MessageCatalogue
-    {
-        $newCatalogue = new MessageCatalogue($catalogue->getLocale());
-
-        foreach ($catalogue->all() as $domain => $messages) {
-            $newDomain = $this->normalizeDomain($domain);
-            $newCatalogue->add($messages, $newDomain);
-        }
-
-        foreach ($catalogue->getMetadata('', '') as $domain => $metadata) {
-            $newDomain = $this->normalizeDomain($domain);
-            foreach ($metadata as $key => $value) {
-                $newCatalogue->setMetadata($key, $value, $newDomain);
-            }
-        }
-
-        return $newCatalogue;
-    }
-
-    /**
-     * @param string $domain
-     *
-     * @return string
-     */
-    private function normalizeDomain(string $domain): string
-    {
-        return strtr($domain, ['.' => '']);
     }
 }

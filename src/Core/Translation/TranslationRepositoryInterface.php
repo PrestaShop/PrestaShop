@@ -24,34 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Translation;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
-
-class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
+/**
+ * Interface TranslationRepositoryInterface allows to fetch a TranslationInterface
+ * via different methods.
+ */
+interface TranslationRepositoryInterface
 {
-    /**
-     * @param string $language
-     * @param string $theme
-     *
-     * @return array
-     */
-    public function findByLanguageAndTheme($language, $theme = null)
-    {
-        $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->where('lang = :language');
-        $queryBuilder->setParameter('language', $language);
-
-        if (null !== $theme) {
-            $queryBuilder->andWhere('theme = :theme');
-            $queryBuilder->setParameter('theme', $theme);
-        } else {
-            $queryBuilder->andWhere('theme IS NULL');
-        }
-
-        $query = $queryBuilder->getQuery();
-
-        return $query->getResult();
-    }
 }

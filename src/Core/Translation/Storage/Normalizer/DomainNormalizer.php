@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,35 +24,34 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Translation\Storage\Normalizer;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
+use RuntimeException;
 
-class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
+/**
+ * Normalizes domain names by removing dots
+ */
+class DomainNormalizer
 {
     /**
-     * @param string $language
-     * @param string $theme
+     * @param string $domain Domain name
      *
-     * @return array
+     * @return string
+     *
+     * @throws RuntimeException
      */
-    public function findByLanguageAndTheme($language, $theme = null)
+    public function normalize(string $domain): string
     {
-        $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->where('lang = :language');
-        $queryBuilder->setParameter('language', $language);
+        // remove up to two dots from the domain name
+        // (because legacy domain translations CAN have dots in the third part)
+        $normalizedDomain = preg_replace('/\./', '', $domain, 2);
 
-        if (null !== $theme) {
-            $queryBuilder->andWhere('theme = :theme');
-            $queryBuilder->setParameter('theme', $theme);
-        } else {
-            $queryBuilder->andWhere('theme IS NULL');
+        if ($normalizedDomain === null) {
+            throw new RuntimeException(sprintf('An error occurred while normalizing domain "%s"', $domain));
         }
 
-        $query = $queryBuilder->getQuery();
-
-        return $query->getResult();
+        return $normalizedDomain;
     }
 }

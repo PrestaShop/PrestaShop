@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,34 +25,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Translation\Storage\Extractor;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
+use Symfony\Component\Translation\MessageCatalogue;
 
-class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
+/**
+ * Parse code content of module, searching for l() calls and retrieve
+ * a Message Catalogue with all the keys and translations.
+ */
+interface LegacyModuleExtractorInterface
 {
     /**
-     * @param string $language
-     * @param string $theme
+     * Extracts the wordings from source code and returns the translation messages.
+     * Note that domain names will contain separating dots.
      *
-     * @return array
+     * @param string $moduleName
+     * @param string $locale The locale used for the message catalogue. Note that wordings won't be translated in this locale.
+     *
+     * @return MessageCatalogue
      */
-    public function findByLanguageAndTheme($language, $theme = null)
-    {
-        $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->where('lang = :language');
-        $queryBuilder->setParameter('language', $language);
-
-        if (null !== $theme) {
-            $queryBuilder->andWhere('theme = :theme');
-            $queryBuilder->setParameter('theme', $theme);
-        } else {
-            $queryBuilder->andWhere('theme IS NULL');
-        }
-
-        $query = $queryBuilder->getQuery();
-
-        return $query->getResult();
-    }
+    public function extract(string $moduleName, string $locale): MessageCatalogue;
 }

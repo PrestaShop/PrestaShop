@@ -27,9 +27,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Translation\Storage\Provider;
 
-use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 
 /**
  * Test the provider of backOffice translations
@@ -126,7 +127,11 @@ class BackofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProvi
         $providerDefinition = new BackofficeProviderDefinition();
 
         return new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader(
+                $databaseContent,
+                $this->createMock(LanguageRepositoryInterface::class),
+                $this->createMock(TranslationRepositoryInterface::class)
+            ),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()

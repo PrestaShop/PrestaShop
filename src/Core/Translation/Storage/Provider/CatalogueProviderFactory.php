@@ -29,14 +29,14 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\AbstractCoreProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
-use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 
@@ -97,10 +97,6 @@ class CatalogueProviderFactory
     private $themesDirectory;
 
     /**
-     * @TODO We keep for now the dependency to PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
-     *   We will create, in the core, a TranslationRepositoryInterface and inject to DatabaseTransloader the LangRepositoryInterface and TranslationRepositoryInterface as dependencies
-     *   to be fully independent from PrestaShopBundle
-     *
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param LegacyModuleExtractorInterface $legacyModuleExtractor
      * @param LoaderInterface $legacyFileLoader

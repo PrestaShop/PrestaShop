@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,35 +24,49 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Translation\Exception;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
-
-class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
+/**
+ * Thrown when an invalid key is found in a legacy translation file
+ */
+class InvalidLegacyTranslationKeyException extends \Exception
 {
     /**
-     * @param string $language
-     * @param string $theme
-     *
-     * @return array
+     * @var string The invalid key
      */
-    public function findByLanguageAndTheme($language, $theme = null)
+    private $key = '';
+
+    /**
+     * @param string $missingElement The missing element
+     * @param string $key The offending key
+     *
+     * @return InvalidLegacyTranslationKeyException
+     */
+    public static function missingElementFromKey(string $missingElement, string $key): self
     {
-        $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->where('lang = :language');
-        $queryBuilder->setParameter('language', $language);
+        $instance = new self(
+            sprintf('Invalid key in legacy translation file: "%s" (missing %s)', $key, $missingElement)
+        );
+        $instance->setKey($key);
 
-        if (null !== $theme) {
-            $queryBuilder->andWhere('theme = :theme');
-            $queryBuilder->setParameter('theme', $theme);
-        } else {
-            $queryBuilder->andWhere('theme IS NULL');
-        }
+        return $instance;
+    }
 
-        $query = $queryBuilder->getQuery();
+    /**
+     * @return string
+     */
+    public function getKey(): string
+    {
+        return $this->key;
+    }
 
-        return $query->getResult();
+    /**
+     * @param string $key
+     */
+    private function setKey(string $key)
+    {
+        $this->key = $key;
     }
 }
