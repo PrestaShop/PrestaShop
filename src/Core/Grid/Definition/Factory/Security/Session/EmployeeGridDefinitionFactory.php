@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -122,6 +123,13 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Email', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'email',
+                    ])
+            )
+            ->add(
+                (new DataColumn('date_upd'))
+                    ->setName($this->trans('Updated at', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'date_upd',
                     ])
             )
             ->add(
@@ -221,6 +229,13 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                     ])
                     ->setAssociatedColumn('email')
+            )
+            ->add(
+                (new Filter('date_upd', DateRangeType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('date_upd')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
