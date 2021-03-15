@@ -151,8 +151,8 @@ export default class FormObjectMapper {
   watchUpdates() {
     this.$form.on('keyup change dp.change', ':input', _.debounce(
       (event) => this.inputUpdated(event),
-      200,
-      {maxWait: 1000},
+      350,
+      {maxWait: 1500},
     ));
     this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject());
   }
