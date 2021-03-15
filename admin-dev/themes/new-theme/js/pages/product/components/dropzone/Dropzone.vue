@@ -202,6 +202,11 @@
             }
           });
 
+          this.dropzone.on('error', (error, message) => {
+            $.growl.error({message});
+          });
+
+
           this.files.push(file);
         });
       },
