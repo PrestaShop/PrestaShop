@@ -297,7 +297,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT => $this->trans(
-                    'An error occurred while deleting this product (can\'t delete last product in order return).',
+                    'You need at least one product.',
                     'Admin.Notifications.Error'
                 ),
                 DeleteOrderReturnProductException::UNEXPECTED_ERROR => $this->trans(
