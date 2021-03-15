@@ -59,31 +59,29 @@
       {% endblock %}
 
       {% block product_tab_stock %}
-        <div role="tabpanel" class="form-contenttab tab-pane" id="stock-tab">
-          {{ form_widget(productForm.stock) }}
-        </div>
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
 
       {% block product_tab_combinations %}
-        <div role="tabpanel" class="form-contenttab tab-pane" id="combinations-tab">
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig', {
-            'combinationsForm': combinationsForm,
-            'combinationsLimit': combinationsLimit,
-            'combinationsLimitChoices': combinationLimitChoices,
-          }) }}
-        </div>
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig', {
+          'combinationsForm': combinationsForm,
+          'combinationsLimit': combinationsLimit,
+          'combinationsLimitChoices': combinationLimitChoices,
+        }) }}
       {% endblock %}
 
       {% block product_tab_pricing %}
-        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="pricing-tab">
-          {{ form_widget(productForm.price) }}
-        </div>
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
 
       {% block product_tab_shipping %}
-        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="shipping-tab">
-          {{ form_widget(productForm.shipping) }}
-        </div>
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/shipping.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
 
       {% block product_tab_seo %}
