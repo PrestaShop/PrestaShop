@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
+use Order;
+use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\BulkDeleteProductFromOrderReturnHandlerInterface;
@@ -43,6 +45,36 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
     {
         $errors = [];
 
+        $orderReturn = new OrderReturn($command->getOrderReturnId()->getValue());
+        $order = new Order($orderReturn->id_order);
+        $details = OrderReturn::getOrdersReturnProducts($command->getOrderReturnId()->getValue(), $order);
+
+        /** Check if products exist in order return */
+        foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
+            if (isset($details[$orderReturnDetailId->getValue()])) {
+                unset($details[$orderReturnDetailId->getValue()]);
+            } else {
+                $errors[] = $orderReturnDetailId->getValue();
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteOrderReturnProductException(
+                $errors,
+                'Some order details don\'t exist in order return',
+                BulkDeleteOrderReturnProductException::CANT_DELETE_PRODUCT_NOT_PART_OF_ORDER_RETURN
+            );
+        }
+
+        /** If there would be no details left after delete then order return would invalid. */
+        if (empty($details)) {
+            throw new BulkDeleteOrderReturnProductException(
+                $errors,
+                'Order return must have at least one product left',
+                BulkDeleteOrderReturnProductException::CANT_DELETE_ALL_PRODUCTS
+            );
+        }
+
         foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
             try {
                 $this->deleteOrderReturnProduct(
@@ -55,7 +87,11 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
         }
 
         if (!empty($errors)) {
-            throw new BulkDeleteOrderReturnProductException($errors, 'Failed to delete some of merchandise return products');
+            throw new BulkDeleteOrderReturnProductException(
+                $errors,
+                'Failed to delete some of merchandise return products',
+                BulkDeleteOrderReturnProductException::UNEXPECTED_ERROR
+            );
         }
     }
 }

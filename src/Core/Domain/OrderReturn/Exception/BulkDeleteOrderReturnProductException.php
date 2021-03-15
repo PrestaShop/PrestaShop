@@ -35,6 +35,10 @@ use Exception;
  */
 class BulkDeleteOrderReturnProductException extends OrderReturnProductException
 {
+    public const CANT_DELETE_PRODUCT_NOT_PART_OF_ORDER_RETURN = 10;
+    public const CANT_DELETE_ALL_PRODUCTS = 20;
+    public const UNEXPECTED_ERROR = 30;
+
     /**
      * @var int[]
      */

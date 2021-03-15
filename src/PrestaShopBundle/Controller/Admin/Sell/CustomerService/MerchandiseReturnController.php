@@ -283,14 +283,28 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
-            BulkDeleteOrderReturnProductException::class => sprintf(
-                '%s: %s',
-                $this->trans(
-                    'An error occurred while deleting this selection.',
+            BulkDeleteOrderReturnProductException::class => [
+                BulkDeleteOrderReturnProductException::UNEXPECTED_ERROR => sprintf(
+                    '%s: %s',
+                    $this->trans(
+                        'An error occurred while deleting this selection.',
+                        'Admin.Notifications.Error'
+                    ),
+                    $e instanceof BulkDeleteOrderReturnProductException ? implode(', ', $e->getOrderReturnDetailIds()) : ''
+                ),
+                BulkDeleteOrderReturnProductException::CANT_DELETE_PRODUCT_NOT_PART_OF_ORDER_RETURN => sprintf(
+                    '%s: %s',
+                    $this->trans(
+                        'An error occurred while deleting this selection.',
+                        'Admin.Notifications.Error'
+                    ),
+                    $e instanceof BulkDeleteOrderReturnProductException ? implode(', ', $e->getOrderReturnDetailIds()) : ''
+                ),
+                BulkDeleteOrderReturnProductException::CANT_DELETE_ALL_PRODUCTS => $this->trans(
+                    'You need at least one product.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof BulkDeleteOrderReturnProductException ? implode(', ', $e->getOrderReturnDetailIds()) : ''
-            ),
+            ],
             DeleteOrderReturnProductException::class => [
                 DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND => $this->trans(
                     'An error occurred while deleting this product (order product not found).',
