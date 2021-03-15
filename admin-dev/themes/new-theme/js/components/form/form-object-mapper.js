@@ -214,6 +214,7 @@ export default class FormObjectMapper {
    */
   updateInputByName(inputName, value) {
     const $input = $(`[name="${inputName}"]`, this.$form);
+
     if (!$input.length) {
       console.error(`Input with name ${inputName} is not present in form.`);
 
