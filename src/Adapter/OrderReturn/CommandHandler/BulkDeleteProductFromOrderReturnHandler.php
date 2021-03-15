@@ -49,7 +49,7 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
         $order = new Order($orderReturn->id_order);
         $details = OrderReturn::getOrdersReturnProducts($command->getOrderReturnId()->getValue(), $order);
 
-        /** Check if products exist in order return */
+        /* Check if products exist in order return */
         foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
             if (isset($details[$orderReturnDetailId->getValue()])) {
                 unset($details[$orderReturnDetailId->getValue()]);
@@ -66,7 +66,7 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
             );
         }
 
-        /** If there would be no details left after delete then order return would invalid. */
+        /* If there would be no details left after delete then order return would invalid. */
         if (empty($details)) {
             throw new BulkDeleteOrderReturnProductException(
                 $errors,
