@@ -169,16 +169,14 @@ class OrderProductQuantityUpdater
             $orderDetail->reduction_percent = 0;
             $orderDetail->update();
 
-            if ($orderDetail->id_customization > 0) {
-                $customization = new Customization($orderDetail->id_customization);
-                $customization->quantity = $newQuantity;
-                $customization->save();
-            }
-
             // Update quantity on the cart and stock
             if ($updateCart) {
                 $updatedProducts = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
                 $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $updatedProducts);
+            } elseif ($orderDetail->id_customization > 0) {
+                $customization = new Customization($orderDetail->id_customization);
+                $customization->quantity = $newQuantity;
+                $customization->save();
             }
         }
 
