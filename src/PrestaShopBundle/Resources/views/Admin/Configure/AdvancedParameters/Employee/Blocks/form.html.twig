@@ -28,11 +28,20 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block employee_form %}
-  <div id="multistore-alert" class="alert alert-info" role="alert">
-    <div class="alert-text">
-      {{ 'Note that this feature is available in all shops context only. It will be added to all your stores.'|trans({}, 'Admin.Advparameters.Help') }}<br>
+  {% if isRestrictedAccess %}
+    <div class="alert alert-info" role="alert">
+      <div class="alert-text">
+        {{ 'Note that this profile will be edited for all the stores with which it is associated.'|trans({}, 'Admin.Advparameters.Help') }}<br>
+      </div>
     </div>
-  </div>
+  {% else %}
+    <div id="multistore-alert" class="alert alert-info" role="alert">
+      <div class="alert-text">
+        {{ 'Note that this feature is available in all shops context only. It will be added to all your stores.'|trans({}, 'Admin.Advparameters.Help') }}<br>
+      </div>
+    </div>
+  {% endif %}
+
   {{ form_start(employeeForm) }}
   <div class="card">
     <h3 class="card-header">
