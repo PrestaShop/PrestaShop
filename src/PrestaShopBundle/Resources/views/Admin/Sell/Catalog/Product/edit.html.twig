@@ -66,12 +66,9 @@
 
       {% block product_tab_combinations %}
         <div role="tabpanel" class="form-contenttab tab-pane" id="combinations-tab">
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig', {
-            'combinationsForm': combinationsForm,
-            'combinationsLimit': combinationsLimit,
-            'combinationsLimitChoices': combinationLimitChoices,
-            'combinationItemForm': combinationItemForm
-          }) }}
+          {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm', {
+            'productId': productId,
+          })) }}
         </div>
       {% endblock %}
 
