@@ -25,6 +25,7 @@
 
 import Bloodhound from 'typeahead.js';
 import Router from '@components/router';
+import AutoCompleteSearch from '@components/auto-complete-search';
 import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
@@ -41,13 +42,6 @@ const initMultistoreHeader = () => {
 
   new PerfectScrollbar('.js-multishop-scrollbar');
 
-  const config = {
-    minLength: 2,
-    highlight: true,
-    cache: false,
-    hint: false,
-  };
-
   const source = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace,
     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -58,8 +52,6 @@ const initMultistoreHeader = () => {
   });
 
   const dataSetConfig = {
-    display: 'name',
-    value: 'id',
     source,
     onSelect(selectedItem) {
       const contextUrlLetter = typeof selectedItem.groupName !== 'undefined' ? 's' : 'g';
@@ -70,37 +62,7 @@ const initMultistoreHeader = () => {
     },
   };
 
-  const defaultTemplates = {
-    // Be careful that your rendering function must return HTML node not pure text so always include the
-    // content in a div at least
-    suggestion: (item) => {
-      let displaySuggestion = item;
-
-      if (typeof dataSetConfig.display === 'function') {
-        dataSetConfig.display(item);
-      } else if (Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)) {
-        displaySuggestion = item[dataSetConfig.display];
-      }
-
-      return `<div class="px-2">${displaySuggestion}</div>`;
-    },
-    pending(query) {
-      return `<div class="px-2">${$searchInput.data('searching')} "${query.query}"</div>`;
-    },
-    notFound(query) {
-      return `<div class="px-2">${$searchInput.data('no-results')} "${query.query}"</div>`;
-    },
-  };
-
-  if (Object.prototype.hasOwnProperty.call(config, 'templates')) {
-    dataSetConfig.templates = {...defaultTemplates, ...config.templates};
-  } else {
-    dataSetConfig.templates = defaultTemplates;
-  }
-
-  $searchInput
-    .typeahead(config, dataSetConfig)
-    .bind('typeahead:select', (e, selectedItem) => dataSetConfig.onSelect(selectedItem, e));
+  new AutoCompleteSearch($searchInput, dataSetConfig);
 
   headerButton.addEventListener('click', () => {
     modalMultishop.classList.toggle('multishop-modal-hidden');
