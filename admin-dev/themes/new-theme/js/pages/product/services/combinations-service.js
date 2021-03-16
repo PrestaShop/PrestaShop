@@ -60,9 +60,9 @@ export default class CombinationsService {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
         combinationId,
-        ...data,
       }),
-      method: 'PATCH',
+      data,
+      type: 'PATCH',
     });
   }
 }
