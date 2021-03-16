@@ -71,6 +71,7 @@ class ZoneType extends AbstractType
             ->add('name', TextType::class, [
                 'required' => true,
                 'help' => $this->translator->trans('Zone name (e.g. Africa, West Coast, Neighboring Countries).', [], 'Admin.International.Help'),
+                'label' => $this->translator->trans('Name', [], 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
@@ -93,6 +94,7 @@ class ZoneType extends AbstractType
             ->add('enabled', SwitchType::class, [
                 'required' => false,
                 'help' => $this->translator->trans('Allow or disallow shipping to this zone.', [], 'Admin.International.Help'),
+                'label' => $this->translator->trans('Active', [], 'Admin.Global'),
             ]);
 
         if ($this->isMultistoreEnabled) {
@@ -105,6 +107,7 @@ class ZoneType extends AbstractType
                         ),
                     ]),
                 ],
+                'label' => $this->translator->trans('Shop association', [], 'Admin.Global'),
             ]);
         }
     }
