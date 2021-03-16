@@ -1337,7 +1337,6 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
             - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
-            - '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
         tags:
             - { name: form.type }
 
@@ -1413,6 +1412,15 @@ services:
     form.type.sell.product.event_listener.product_type_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
         public: true
+
+    form.type.sell.product.manufacturer_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ManufacturerType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
+        tags:
+            - { name: form.type }
 
     form.type.sell.product.combination_list_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
