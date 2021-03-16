@@ -62,7 +62,7 @@ export default class CombinationsManager {
 
       await this.combinationsService.updateListedCombination(
         combinationId,
-        {'combination_item[quantity][value]': input.value, 'combination_item[_token]': combinationToken}
+        {'combination_item[quantity][value]': input.value, 'combination_item[_token]': combinationToken},
       );
     });
 

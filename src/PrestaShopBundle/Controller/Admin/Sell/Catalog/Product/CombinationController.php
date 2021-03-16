@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +41,33 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CombinationController extends FrameworkBundleAdminController
 {
+    /**
+     * Default number of combinations per page
+     */
+    private const DEFAULT_COMBINATIONS_NUMBER = 10;
+
+    /**
+     * Options used for the number of combinations per page
+     */
+    private const COMBINATIONS_PAGINATION_OPTIONS = [10, 20, 50, 100];
+
+    /**
+     * Renders combinations list prototype (which contains form inputs submittable by ajax)
+     * It can only be embedded into another view (does not have a route)
+     *
+     * @return Response
+     */
+    public function listFormAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
+            //@todo: hardcoded. Make configurable?
+            'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
+            'combinationsLimit' => self::DEFAULT_COMBINATIONS_NUMBER,
+            'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
+            'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
+        ]);
+    }
+
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
