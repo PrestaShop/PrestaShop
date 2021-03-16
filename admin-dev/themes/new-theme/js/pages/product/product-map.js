@@ -72,6 +72,7 @@ export default {
   combinations: {
     combinationIdInputsSelector: '.combination-id-input',
     navigationTab: '#combinations-tab-nav',
+    combinationsContainer: '#combination_list',
     combinationsTable: '#combination_list table',
     combinationsTableBody: '#combination_list table tbody',
     paginationContainer: '#combinations-pagination',

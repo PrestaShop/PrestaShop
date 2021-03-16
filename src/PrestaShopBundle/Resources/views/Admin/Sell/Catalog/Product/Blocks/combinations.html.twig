@@ -29,7 +29,9 @@
     <div class="spinner-product-combinations-container" id="productCombinationsLoading">
       <div class="spinner spinner-primary"></div>
     </div>
-    {{ form_row(combinationsForm) }}
+
+    {# Integrate the token that will be required in the combination update request #}
+    {{ form_row(combinationsForm, {'attr': {'data-combination-token': csrf_token(combinationItemForm.vars.name) }}) }}
   </div>
 
   <div class="row justify-content-center" id="combinations-pagination">

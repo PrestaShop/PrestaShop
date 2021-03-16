@@ -55,20 +55,23 @@ export default class CombinationsManager {
   }
 
   initSubmittableInput() {
+    const combinationToken = $(ProductMap.combinations.combinationsContainer).data('combinationToken');
+
     new SubmittableInput('.combination-quantity', async (input) => {
       const combinationId = $(input).closest('tr').find('.combination-id-input').val();
 
       await this.combinationsService.updateListedCombination(
         combinationId,
-        {'combination_item[quantity][value]': input.value},
+        {'combination_item[quantity][value]': input.value, 'combination_item[_token]': combinationToken}
       );
     });
 
     new SubmittableInput('.combination-impact-on-price', async (input) => {
       const combinationId = $(input).closest('tr').find('.combination-id-input').val();
+
       await this.combinationsService.updateListedCombination(
         combinationId,
-        {'combination_item[impact_on_price][value]': input.value},
+        {'combination_item[impact_on_price][value]': input.value, 'combination_item[_token]': combinationToken},
       );
     });
   }
