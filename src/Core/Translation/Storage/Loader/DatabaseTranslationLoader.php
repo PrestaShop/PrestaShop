@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Translation\TranslationInterface;
 use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -41,7 +40,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  * This class is a helper to build the query for retrieving the translations.
  * They depend on parameters like locale, theme or domain.
  */
-class DatabaseTranslationLoader implements LoaderInterface
+class DatabaseTranslationLoader
 {
     /**
      * @var LanguageRepositoryInterface
@@ -62,11 +61,15 @@ class DatabaseTranslationLoader implements LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Loads all user translations according to search parameters
      *
-     * @todo: this method doesn't match the interface
+     * @param string $locale Translation language
+     * @param string $domain Regex for domain pattern search
+     * @param string|null $theme A theme name
+     *
+     * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function load($resource, $locale, $domain = 'messages', $theme = null): MessageCatalogue
+    public function load(string $locale, string $domain = 'messages', ?string $theme = null): MessageCatalogue
     {
         static $languages = [];
         $catalogue = new MessageCatalogue($locale);

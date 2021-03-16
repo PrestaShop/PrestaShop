@@ -85,7 +85,6 @@ class UserTranslatedCatalogueFinder extends AbstractCatalogueFinder
 
         foreach ($this->translationDomains as $translationDomain) {
             $domainCatalogue = $this->databaseTranslationReader->load(
-                null,
                 $locale,
                 $translationDomain,
                 $this->themeName

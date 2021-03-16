@@ -53,7 +53,7 @@ class MockDatabaseTranslationLoader extends DatabaseTranslationLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $locale, $domainSearch = 'messages', $theme = null): MessageCatalogue
+    public function load(string $locale, string $domainSearch = 'messages', ?string $theme = null): MessageCatalogue
     {
         $catalogue = new MessageCatalogue($locale);
 
