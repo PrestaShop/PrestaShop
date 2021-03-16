@@ -38,11 +38,12 @@ final class OptionsCommandBuilder implements ProductCommandBuilderInterface
      */
     public function buildCommand(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['options'])) {
+        if (!isset($formData['options']) && !isset($formData['manufacturer']['manufacturer_id'])) {
             return [];
         }
 
-        $options = $formData['options'];
+        $options = $formData['options'] ?? [];
+        $manufacturer = $formData['manufacturer'] ?? [];
         $command = new UpdateProductOptionsCommand($productId->getValue());
 
         if (isset($options['active'])) {
@@ -66,8 +67,9 @@ final class OptionsCommandBuilder implements ProductCommandBuilderInterface
         if (isset($options['condition'])) {
             $command->setCondition($options['condition']);
         }
-        if (isset($options['manufacturer_id'])) {
-            $command->setManufacturerId((int) $options['manufacturer_id']);
+
+        if (isset($manufacturer['manufacturer_id'])) {
+            $command->setManufacturerId((int) $manufacturer['manufacturer_id']);
         }
 
         return [$command];
