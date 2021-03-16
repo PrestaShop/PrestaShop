@@ -219,7 +219,8 @@ class ProductImageRepository extends AbstractObjectModelRepository
                 ->andWhere('i.cover = 1')
                 ->setParameter('productId', $productId->getValue())
             ;
-            $id = $qb->execute()->fetch();
+            $result = $qb->execute()->fetch();
+            $id = !empty($result['id_image']) ? (int) $result['id_image'] : null;
         } catch (PrestaShopException $e) {
             throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
         }

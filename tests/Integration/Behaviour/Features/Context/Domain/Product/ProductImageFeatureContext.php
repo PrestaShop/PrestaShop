@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -93,6 +94,34 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($imageReference, $imageId->getValue());
+    }
+
+    /**
+     * @When I update image :imageReference with following information:
+     *
+     * @param string $imageReference
+     * @param TableNode $tableNode
+     */
+    public function updateImage(string $imageReference, TableNode $tableNode)
+    {
+        $dataRows = $this->localizeByRows($tableNode);
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        $command = new UpdateProductImageCommand($imageId);
+        if (isset($dataRows['file'])) {
+            $pathName = DummyFileUploader::upload($dataRows['file']);
+            $command->setFilePath($pathName);
+        }
+
+        if (isset($dataRows['cover'])) {
+            $command->setIsCover(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['cover']));
+        }
+
+        if (isset($dataRows['legend'])) {
+            $command->setLocalizedLegends($dataRows['legend']);
+        }
+
+        $this->getCommandBus()->handle($command);
     }
 
     /**

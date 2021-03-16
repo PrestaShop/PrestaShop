@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
@@ -52,14 +53,21 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
      */
     private $productImageUploader;
 
+    /**
+     * @var ImageValidator
+     */
+    private $imageValidator;
+
     public function __construct(
         ProductImageRepository $productImageRepository,
         ProductImageUpdater $productImageUpdater,
-        ProductImageUploader $productImageUploader
+        ProductImageUploader $productImageUploader,
+        ImageValidator $imageValidator
     ) {
         $this->productImageRepository = $productImageRepository;
         $this->productImageUpdater = $productImageUpdater;
         $this->productImageUploader = $productImageUploader;
+        $this->imageValidator = $imageValidator;
     }
 
     /**
@@ -67,13 +75,18 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
      */
     public function handle(UpdateProductImageCommand $command): void
     {
+        if (null !== $command->getFilePath()) {
+            $this->imageValidator->assertFileUploadLimits($command->getFilePath());
+            $this->imageValidator->assertIsValidImageType($command->getFilePath());
+        }
+
         $image = $this->productImageRepository->get($command->getImageId());
 
         if (null !== $command->getLocalizedLegends()) {
             $image->legend = $command->getLocalizedLegends();
             $this->productImageRepository->partialUpdate(
                 $image,
-                ['legend'],
+                ['legend' => array_keys($command->getLocalizedLegends())],
                 CannotUpdateProductImageException::FAILED_UPDATE_COVER
             );
         }

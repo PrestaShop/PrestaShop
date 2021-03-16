@@ -38,3 +38,23 @@ Feature: Update product image from Back Office (BO)
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
 
+  Scenario: I update image file
+    When I update image "image1" with following information:
+      | file | logo.jpg |
+    Then image "image1" should have same file as "logo_generated.jpg"
+
+  Scenario: I update image legend
+    When I update image "image1" with following information:
+      | legend[en-US] | preston is alive |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US]    | position |
+      | image1          | true     | preston is alive | 1        |
+      | image2          | false    |                  | 2        |
+
+  Scenario: I update image cover
+    When I update image "image2" with following information:
+      | cover | true |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | position |
+      | image1          | false    |               | 1        |
+      | image2          | true     |               | 2        |
