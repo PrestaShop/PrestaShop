@@ -66,6 +66,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
     /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param ProductImageValidator $productImageValidator
      */
     public function __construct(
         Connection $connection,
