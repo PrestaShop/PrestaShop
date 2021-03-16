@@ -28,28 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
 
-/**
- * Is thrown when product image constraints are violated
- */
-class ProductImageConstraintException extends ProductImageException
+class CannotUpdateProductImageException extends ProductImageException
 {
     /**
-     * When image id is invalid
+     * When fails to update cover
      */
-    public const INVALID_ID = 10;
+    public const FAILED_UPDATE_COVER = 10;
 
     /**
-     * When image cover is invalid
+     * When fails to update legends
      */
-    public const INVALID_COVER = 20;
-
-    /**
-     * When image legends are invalid
-     */
-    public const INVALID_LEGENDS = 30;
-
-    /**
-     * When image position is invalid
-     */
-    public const INVALID_POSITION = 40;
+    public const FAILED_UPDATE_LEGENDS = 20;
 }

@@ -67,4 +67,38 @@ class ProductImageUpdater
         $this->productImageUploader->remove($image);
         $this->productImageRepository->delete($image);
     }
+
+    /**
+     * @param ImageId $imageId
+     *
+     * @throws CannotUpdateProductImageException
+     */
+    public function updateProductCover(ImageId $imageId): void
+    {
+        $newCover = $this->productImageRepository->get($imageId);
+        $productId = new ProductId((int) $newCover->id_product);
+        $currentCover = $this->productImageRepository->findCover($productId);
+
+        if ($currentCover) {
+            $this->updateCover($currentCover, false);
+        }
+
+        $this->updateCover($newCover, true);
+    }
+
+    /**
+     * @param Image $image
+     * @param bool $isCover
+     *
+     * @throws CannotUpdateProductImageException
+     */
+    private function updateCover(Image $image, bool $isCover): void
+    {
+        $image->cover = $isCover;
+        $this->productImageRepository->partialUpdate(
+            $image,
+            ['cover'],
+            CannotUpdateProductImageException::FAILED_UPDATE_COVER
+        );
+    }
 }

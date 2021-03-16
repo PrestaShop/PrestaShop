@@ -32,8 +32,10 @@ use Doctrine\DBAL\Connection;
 use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -57,15 +59,22 @@ class ProductImageRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var ProductImageValidator
+     */
+    private $productImageValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        ProductImageValidator $productImageValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->productImageValidator = $productImageValidator;
     }
 
     /**
@@ -189,6 +198,50 @@ class ProductImageRepository extends AbstractObjectModelRepository
         );
 
         return $image;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Image|null
+     *
+     * @throws CoreException
+     */
+    public function findCover(ProductId $productId): ?Image
+    {
+        try {
+            $qb = $this->connection->createQueryBuilder();
+            $qb
+                ->addSelect('i.id_image')
+                ->from($this->dbPrefix . 'image', 'i')
+                ->andWhere('i.id_product = :productId')
+                ->andWhere('i.cover = 1')
+                ->setParameter('productId', $productId->getValue())
+            ;
+            $id = $qb->execute()->fetch();
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
+        }
+
+        return $id ? $this->get(new ImageId($id)) : null;
+    }
+
+    /**
+     * @param Image $image
+     * @param array $updatableProperties
+     * @param int $errorCode
+     *
+     * @throws CannotUpdateProductImageException
+     */
+    public function partialUpdate(Image $image, array $updatableProperties, int $errorCode = 0): void
+    {
+        $this->productImageValidator->validate($image);
+        $this->partiallyUpdateObjectModel(
+            $image,
+            $updatableProperties,
+            CannotUpdateProductImageException::class,
+            $errorCode
+        );
     }
 
     /**
