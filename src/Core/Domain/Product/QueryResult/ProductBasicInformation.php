@@ -34,7 +34,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 class ProductBasicInformation
 {
     /**
-     * @var ProductType
+     * @var string
      */
     private $type;
 
@@ -59,14 +59,14 @@ class ProductBasicInformation
     private $localizedTags;
 
     /**
-     * @param ProductType $type
+     * @param string $type
      * @param string[] $localizedNames
      * @param string[] $localizedDescriptions
      * @param string[] $localizedShortDescriptions
      * @param LocalizedTags[] $localizedTags
      */
     public function __construct(
-        ProductType $type,
+        string $type,
         array $localizedNames,
         array $localizedDescriptions,
         array $localizedShortDescriptions,
@@ -80,9 +80,9 @@ class ProductBasicInformation
     }
 
     /**
-     * @return ProductType
+     * @return string
      */
-    public function getType(): ProductType
+    public function getType(): string
     {
         return $this->type;
     }
