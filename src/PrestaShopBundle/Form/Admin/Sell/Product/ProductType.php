@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,17 +50,25 @@ class ProductType extends TranslatorAwareType
     private $productUrlProvider;
 
     /**
+     * @var EventSubscriberInterface
+     */
+    private $productTypeListener;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ProductProvider $productUrlProvider
+     * @param EventSubscriberInterface $productTypeListener
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ProductProvider $productUrlProvider
+        ProductProvider $productUrlProvider,
+        EventSubscriberInterface $productTypeListener
     ) {
         parent::__construct($translator, $locales);
         $this->productUrlProvider = $productUrlProvider;
+        $this->productTypeListener = $productTypeListener;
     }
 
     /**
@@ -102,6 +111,12 @@ class ProductType extends TranslatorAwareType
                 ])
             ;
         }
+
+        /**
+         * This listener adapts the content of the form based on the Product type, it can remove add or transforms some
+         * of the internal fields @see ProductTypeListener
+         */
+        $builder->addEventSubscriber($this->productTypeListener);
     }
 
     /**
