@@ -1,12 +1,12 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add-image
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-image
 @reset-database-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
-@add-image
-Feature: Add product image from Back Office (BO)
-  As an employee I need to be able to add new product image
+@update-image
+Feature: Update product image from Back Office (BO)
+  As an employee I need to be able to update new product image
 
-  Scenario: Add new product image
+  Background: Add new product image
     Given following image types should be applicable to products:
       | reference     | name           | width | height |
       | cartDefault   | cart_default   | 125   | 125    |
@@ -37,3 +37,4 @@ Feature: Add product image from Back Office (BO)
       | large_default  | 800   | 800    |
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
+

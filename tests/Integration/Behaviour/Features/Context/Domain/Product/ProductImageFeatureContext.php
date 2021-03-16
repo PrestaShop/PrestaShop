@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use RuntimeException;
@@ -92,6 +93,30 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($imageReference, $imageId->getValue());
+    }
+
+    /**
+     * @Then image :imageReference should have same file as :fileName
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     */
+    public function assertImageFile(string $imageReference, string $fileName): void
+    {
+        $dummyPathName = DummyFileUploader::getDummyFilesPath() . $fileName;
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        /** @var ProductImage $productImage */
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId));
+        $imagePath = _PS_PROD_IMG_DIR_ . $productImage->getPath();
+
+        if (md5_file($dummyPathName) !== md5_file($imagePath)) {
+            throw new RuntimeException(sprintf(
+                'Expected files %s and %s to be identical',
+                $dummyPathName,
+                $imagePath
+            ));
+        }
     }
 
     /**
