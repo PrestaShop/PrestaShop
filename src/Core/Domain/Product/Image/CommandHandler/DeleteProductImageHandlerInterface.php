@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 
+/**
+ * Defines contract to handle @see DeleteProductImageCommand
+ */
 interface DeleteProductImageHandlerInterface
 {
     /**

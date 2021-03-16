@@ -26,33 +26,45 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image\Update;
 
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 
-/**
- * Deletes product image
- */
-class DeleteProductImageCommand
+class ProductImageUpdater
 {
     /**
-     * @var ImageId
+     * @var ProductImageUploader
      */
-    private $imageId;
+    private $productImageUploader;
 
     /**
-     * @param int $imageId
+     * @var ProductImageRepository
      */
-    public function __construct(int $imageId)
-    {
-        $this->imageId = new ImageId($imageId);
+    private $productImageRepository;
+
+    public function __construct(
+        ProductImageRepository $productImageRepository,
+        ProductImageUploader $productImageUploader
+    ) {
+        $this->productImageRepository = $productImageRepository;
+        $this->productImageUploader = $productImageUploader;
     }
 
     /**
-     * @return ImageId
+     * @param ImageId $imageId
+     *
+     * @throws CannotDeleteProductImageException
+     * @throws CannotUnlinkImageException
      */
-    public function getImageId(): ImageId
+    public function deleteImage(ImageId $imageId)
     {
-        return $this->imageId;
+        $image = $this->productImageRepository->get($imageId);
+
+        $this->productImageUploader->remove($image);
+        $this->productImageRepository->delete($image);
     }
 }

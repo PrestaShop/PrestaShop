@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Image\Exception;
 
+use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
+
 /**
  * Thrown when image file unlink fails
  */
-class CannotUnlinkImageException extends ImageException
+class CannotUnlinkImageException extends CannotUnlinkFileException
 {
 }

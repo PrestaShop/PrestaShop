@@ -28,8 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\DeleteProductImageHandlerInterface;
 
@@ -39,21 +38,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\DeleteProduct
 class DeleteProductImageHandler implements DeleteProductImageHandlerInterface
 {
     /**
-     * @var ProductImageUploader
+     * @var ProductImageUpdater
      */
-    private $productImageUploader;
-
-    /**
-     * @var ProductImageRepository
-     */
-    private $productImageRepository;
+    private $productImageUpdater;
 
     public function __construct(
-        ProductImageUploader $productImageUploader,
-        ProductImageRepository $productImageRepository
+        ProductImageUpdater $productImageUpdater
     ) {
-        $this->productImageUploader = $productImageUploader;
-        $this->productImageRepository = $productImageRepository;
+        $this->productImageUpdater = $productImageUpdater;
     }
 
     /**
@@ -61,9 +53,6 @@ class DeleteProductImageHandler implements DeleteProductImageHandlerInterface
      */
     public function handle(DeleteProductImageCommand $command): void
     {
-        $image = $this->productImageRepository->get($command->getImageId());
-
-        $this->productImageUploader->remove($image);
-        $this->productImageRepository->delete($image);
+        $this->productImageUpdater->deleteImage($command->getImageId());
     }
 }
