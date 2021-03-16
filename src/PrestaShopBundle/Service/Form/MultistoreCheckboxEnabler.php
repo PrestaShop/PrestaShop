@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreCheckboxType;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -139,7 +139,7 @@ class MultistoreCheckboxEnabler
 
             // for each field in the configuration form, we add a multistore checkbox
             $fieldName = self::MULTISTORE_FIELD_PREFIX . $child->getName();
-            $form->add($fieldName, CheckboxType::class, [
+            $form->add($fieldName, MultistoreCheckboxType::class, [
                 'required' => false,
                 'data' => $isOveriddenInCurrentContext,
                 'label' => false,
