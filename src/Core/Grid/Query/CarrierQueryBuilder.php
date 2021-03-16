@@ -88,7 +88,8 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getCarrierQueryBuilder($searchCriteria)
-            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position');
+            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position')
+            ->groupBy('c.id_carrier');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -115,6 +116,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('cl.id_lang = :contextIdLang')
             ->andWhere('cs.id_shop IN (:contextShopIds)')
             ->andWhere('cl.id_shop IN (:contextShopIds)')
+            ->andWhere('c.deleted = 0')
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('contextIdLang', $this->contextIdLang);
 
