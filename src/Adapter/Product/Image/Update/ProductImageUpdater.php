@@ -28,10 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\Update;
 
+use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 
 class ProductImageUpdater
@@ -66,6 +69,14 @@ class ProductImageUpdater
 
         $this->productImageUploader->remove($image);
         $this->productImageRepository->delete($image);
+
+        if ($image->cover) {
+            $images = $this->productImageRepository->getImages(new ProductId((int) $image->id_product));
+            if (count($images) > 0) {
+                $firstImage = $images[0];
+                $this->updateCover($firstImage, true);
+            }
+        }
     }
 
     /**

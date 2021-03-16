@@ -130,7 +130,8 @@ class ProductImageRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'image', 'i')
             ->where('i.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
-            ->orderBy('i.id_image', 'ASC')
+            ->addOrderBy('i.position', 'ASC')
+            ->addOrderBy('i.id_image', 'ASC')
             ->execute()
             ->fetchAll()
         ;

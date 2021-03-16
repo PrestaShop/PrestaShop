@@ -41,7 +41,7 @@ class ProductImageValidator extends AbstractObjectModelValidator
         $this->validateProductImageProperty($image, 'position', ProductImageConstraintException::INVALID_POSITION);
         $this->validateObjectModelLocalizedProperty(
             $image,
-            'legends',
+            'legend',
             ProductImageConstraintException::class,
             ProductImageConstraintException::INVALID_LEGENDS
         );
