@@ -43,7 +43,7 @@ class FeatureFlag
      * @var int
      *
      * @ORM\Id
-     * @ORM\Column(name="id_feature_flag", type="integer", options={"unsigned"=true})
+     * @ORM\Column(name="id_feature_flag", type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -51,14 +51,14 @@ class FeatureFlag
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * @ORM\Column(name="name", type="string", length=191, unique=true)
      */
     private $name;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="state", type="boolean", options={"default":0, "unsigned"=true})
+     * @ORM\Column(name="state", type="boolean", options={"default":0, "unsigned":true})
      */
     private $state;
 
@@ -81,7 +81,7 @@ class FeatureFlag
      */
     public function __construct(string $name)
     {
-        if (!$name) {
+        if ('' === $name) {
             throw new InvalidArgumentException('Feature flag name cannot be empty');
         }
         $this->name = $name;
