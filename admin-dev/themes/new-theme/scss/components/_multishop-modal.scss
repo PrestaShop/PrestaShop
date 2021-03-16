@@ -148,7 +148,7 @@ $component-name: multishop-modal;
     justify-content: space-between;
     width: 100%;
 
-    > .material-icons {
+    > .multishop-modal-color-check .material-icons {
       margin-right: 0.7rem;
       font-size: 1.25rem;
     }
@@ -213,4 +213,17 @@ $component-name: multishop-modal;
       }
     }
   }
+}
+
+.multistore-modal-color-container.multishop-modal-color-check a,
+.multistore-modal-color-container:not(.multishop-modal-color-check) i {
+  display: none;
+}
+
+.multistore-modal-color-container.multishop-modal-color-check:hover i {
+  display: none;
+}
+
+.multistore-modal-color-container.multishop-modal-color-check:hover a {
+  display: block;
 }

@@ -85,11 +85,10 @@
 
             {% for group in groupList if group.shops is not empty %}
               <li class="multishop-modal-group-item multishop-modal-item">
-                {% if isGroupContext and currentContext.id == group.id %}
+                <span class="multistore-modal-color-container{% if isGroupContext and currentContext.id == group.id %} multishop-modal-color-check{% endif %}">
                   <i class="material-icons">check</i>
-                {% else %}
-                <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
-                  {% endif %}
+                  <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
+                </span>
                   <a class="multishop-modal-group-name" href="{{ app.request.requestURI ~ '&setShopContext=g-' ~ group.id }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
               </li>
 
