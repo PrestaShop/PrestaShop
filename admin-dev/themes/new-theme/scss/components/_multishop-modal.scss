@@ -157,6 +157,11 @@ $component-name: multishop-modal;
       display: flex;
       align-items: center;
 
+      > i {
+        font-size: 1.2rem;
+        margin-right: 0.825rem;
+      }
+
       @include media-breakpoint-down(sm) {
         max-width: 80%;
       }
