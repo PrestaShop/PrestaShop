@@ -53,7 +53,7 @@ class MultistoreController extends FrameworkBundleAdminController
     public $entityManager;
 
     /**
-     * @param bool $shopContextSwitchingBlocked
+     * @param bool $lockedToAllShopContext
      * @return Response
      */
     public function header(bool $lockedToAllShopContext): Response
