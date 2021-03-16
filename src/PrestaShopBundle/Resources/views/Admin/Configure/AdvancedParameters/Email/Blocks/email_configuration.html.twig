@@ -48,7 +48,7 @@
               {{ 'You can get the data below from your server administrator or generate it yourself by using one of freely available tools, like dkimcore.org.'|trans({}, 'Admin.Advparameters.Help') }}
             </p>
             <p class="alert-text">
-              {{ 'Also, check if your server is specified in your SPF record as an allowed sender.'|trans({}, 'Admin.Advparameters.Help') }}
+              {{ 'Also, make sure that your server is registered as an authorized sender in your SPF record. '|trans({}, 'Admin.Advparameters.Help') }}
             </p>
           </div>
           {{ form_rest(emailConfigurationForm) }}
