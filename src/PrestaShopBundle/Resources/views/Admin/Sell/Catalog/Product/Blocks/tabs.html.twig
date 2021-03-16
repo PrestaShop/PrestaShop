@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {% set isBasicTabValid = productForm.basic.description.vars.valid and productForm.basic.description_short.vars.valid %}
+{% set isBasicTabValid = isBasicTabValid and productForm.manufacturer.vars.valid %}
+{% set isBasicTabValid = isBasicTabValid and productForm.features.vars.valid %}
+
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}

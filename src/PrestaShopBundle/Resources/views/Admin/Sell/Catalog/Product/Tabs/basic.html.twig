@@ -30,6 +30,8 @@
     <div class="col-md-9 left-column">
       {{ form_widget(productForm.basic) }}
 
+      {{ form_widget(productForm.manufacturer) }}
+
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
         'productForm': productForm,
       }) }}
