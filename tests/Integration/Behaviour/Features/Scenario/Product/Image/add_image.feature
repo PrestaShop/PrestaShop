@@ -2,6 +2,7 @@
 @reset-database-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
+@product-image
 @add-image
 Feature: Add product image from Back Office (BO)
   As an employee I need to be able to add new product image

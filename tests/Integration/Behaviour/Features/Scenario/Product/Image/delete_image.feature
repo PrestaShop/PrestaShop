@@ -2,6 +2,7 @@
 @reset-database-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
+@product-image
 @delete-image
 Feature: Delete product image from Back Office (BO)
   As an employee I need to be able to delete product image

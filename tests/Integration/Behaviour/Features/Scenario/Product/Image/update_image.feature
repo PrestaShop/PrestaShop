@@ -2,6 +2,7 @@
 @reset-database-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
+@product-image
 @update-image
 Feature: Update product image from Back Office (BO)
   As an employee I need to be able to update new product image

@@ -58,6 +58,12 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
      */
     private $imageValidator;
 
+    /**
+     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageUpdater $productImageUpdater
+     * @param ProductImageUploader $productImageUploader
+     * @param ImageValidator $imageValidator
+     */
     public function __construct(
         ProductImageRepository $productImageRepository,
         ProductImageUpdater $productImageUpdater,
