@@ -48,7 +48,11 @@ class CombinationItemType extends AbstractType
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
             ])
-            ->add('combination_id', HiddenType::class)
+            ->add('combination_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'combination-id-input',
+                ],
+            ])
             ->add('name', HiddenType::class)
             ->add('impact_on_price', SubmittableInputType::class, [
                 'type' => MoneyType::class,

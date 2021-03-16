@@ -34,6 +34,7 @@ const {$} = window;
 export default class CombinationsManager {
   constructor() {
     this.$productForm = $(ProductMap.productForm);
+    this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
     this.init();
 
@@ -49,13 +50,10 @@ export default class CombinationsManager {
       combinationsService,
       new CombinationsGridRenderer(),
     );
-    new SubmittableInput();
-    $(ProductMap.combinations.combinationsTable).on('click', '.ps-submittable-input-wrapper .check-button', (e) => {
-      console.log('todo');
-      //@todo: parse combination id from event and fire combinationService.update?
-      //@todo: maybe return selector name or event name from SubmittableInput to avoid it hardcoding here?
+    new SubmittableInput((input) => {
+      //@todo:
+      console.log('todo. We have submitted input, but still need to identify the input & combination id');
     });
-
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
   }
