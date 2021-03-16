@@ -28,9 +28,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -72,25 +73,18 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function updateCombinationFromListingAction(int $combinationId, Request $request): JsonResponse
     {
-        $impactOnPrice = $request->request->get('impactOnPrice');
-        $quantity = $request->request->getInt('quantity');
-        $isDefault = $request->request->getBoolean('isDefault');
-        //@todo: form data handler instead.
-
-        $command = new UpdateCombinationFromListingCommand($combinationId);
-
-        if (isset($impactOnPrice)) {
-            $command->setImpactOnPrice($impactOnPrice);
-        }
-        if (isset($quantity)) {
-            $command->setQuantity($quantity);
-        }
-        if (isset($isDefault)) {
-            $command->setDefault($isDefault);
-        }
+        $form = $this->getCombinationItemFormBuilder()->getFormFor($combinationId, [], [
+            'method' => Request::METHOD_PATCH,
+        ]);
+        $form->handleRequest($request);
 
         try {
-            $this->getCommandBus()->handle($command);
+            $result = $this->getCombinationItemFormHandler()->handleFor($combinationId, $form);
+
+            if (!$result->isValid()) {
+                //@todo: handle errors
+                return $this->json(['errors' => $form->getErrors(true)], Response::HTTP_BAD_REQUEST);
+            }
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getFallbackErrorMessage(get_class($e), $e->getCode(), $e->getMessage())],
@@ -127,5 +121,21 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $data;
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCombinationItemFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.combination_item_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getCombinationItemFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.combination_item_form_builder');
     }
 }
