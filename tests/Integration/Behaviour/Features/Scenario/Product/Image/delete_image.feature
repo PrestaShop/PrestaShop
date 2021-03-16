@@ -24,9 +24,6 @@ Feature: Delete product image from Back Office (BO)
     Then product "product1" should have following images:
       | image reference | is cover | legend[en-US] | position |
       | image1          | true     |               | 1        |
-    Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
     And images "[image1]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
