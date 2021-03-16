@@ -112,7 +112,7 @@ class EmailConfigurationType extends TranslatorAwareType
             ])
             ->add('dkim_selector', TextType::class, [
                 'label' => $this->trans('DKIM selector', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Usually looks like 12345.domain, this selector must match the name of your DNS record.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('A DKIM selector usually looks like 12345.domain. It must match the name of your DNS record.', 'Admin.Advparameters.Help'),
                 'required' => false,
             ])
             ->add('dkim_key', TextareaType::class, [
