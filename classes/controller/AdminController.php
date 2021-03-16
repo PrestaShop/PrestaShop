@@ -587,6 +587,8 @@ class AdminControllerCore extends Controller
      */
     public function initMultistoreHeader(): void
     {
+        if (!isset($this->lockedToAllShopContext)) return;
+
         $this->context->smarty->assign([
             'multistore_header' => $this->container->get('prestashop.core.admin.multistore')->header($this->lockedToAllShopContext)->getContent(),
         ]);
