@@ -100,7 +100,7 @@ class ZoneController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show "Add new" zone form and handles it's submit.
+     * Show "Add new" zone form and handles its submit.
      *
      * @AdminSecurity(
      *     "is_granted('create', request.get('_legacy_controller'))",
@@ -140,7 +140,7 @@ class ZoneController extends FrameworkBundleAdminController
     }
 
     /**
-     * Displays zone edit for and handles it's submit.
+     * Displays zone edit for and handles its submit.
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
