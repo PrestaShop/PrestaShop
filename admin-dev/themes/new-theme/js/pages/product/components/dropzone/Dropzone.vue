@@ -125,6 +125,7 @@
     getProductImages,
     saveImageInformations,
     replaceImage,
+    removeProductImage,
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import DropzoneWindow from './DropzoneWindow';
@@ -295,14 +296,19 @@
        * Method to remove every selected files from the dropzone
        */
       removeSelection() {
-        this.selectedFiles.forEach((file) => {
-          this.dropzone.removeFile(file);
+        try {
+          this.selectedFiles.forEach(async (file) => {
+            await removeProductImage(this.productId);
+            this.dropzone.removeFile(file);
 
-          this.files = this.files.filter((e) => file !== e);
-        });
+            this.files = this.files.filter((e) => file !== e);
+          });
 
-        this.selectedFiles = [];
-        this.removeTooltips();
+          this.selectedFiles = [];
+          this.removeTooltips();
+        } catch (error) {
+          $.growl.error({message: error.message});
+        }
       },
       /**
        * Method to manage checkboxes of files mainly used on selectAll and unselectAll
